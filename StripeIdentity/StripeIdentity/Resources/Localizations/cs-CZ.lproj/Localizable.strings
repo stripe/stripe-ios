@@ -6,8 +6,6 @@
 
 "App Settings" = "Nastavení aplikace";
 
-"Back identity card photo successfully uploaded" = "Fotografie ze zadní strany průkazu totožnosti byla úspěšně nahrána";
-
 "Back of identity card" = "Zadní strana průkazu totožnosti";
 
 "Back of identity document" = "Zadní strana průkazu totožnosti";
@@ -31,10 +29,6 @@
 "Details not visible" = "Detaily nejsou viditelné";
 
 "Flip your identity card over to the other side" = "Převraťte průkaz totožnosti na druhou stranu";
-
-"Front identity card photo successfully uploaded" = "Fotografie z přední strany průkazu totožnosti byla úspěšně nahrána";
-
-"Front of identity card" = "Přední strana průkazu totožnosti";
 
 "Front of identity document" = "Přední strana průkazu totožnosti";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Knihovna fotek";
 
-"Please upload images of the front and back of your identity card" = "Nahrajte prosím obrázky přední a zadní strany vašeho průkazu totožnosti";
-
 "Position your face in the center of the frame." = "Svoji tvář umístěte do středu rámečku.";
-
-"Position your identity card in the center of the frame" = "Umístěte průkaz totožnosti do středu rámečku";
 
 "Retake Photos" = "Znovu pořídit fotografie";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Vyberte místo k nahrání zadní strany vašeho průkazu totožnosti z";
 
 "Select a location to upload the front of your identity document from" = "Vyberte místo k nahrání přední strany vašeho průkazu totožnosti z";
-
-"Select back identity card photo" = "Vyberte fotografii ze zadní strany řidičského průkazu";
-
-"Select front identity card photo" = "Vyberte fotografii z přední strany průkazu totožnosti";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Nahrát fotografii";
 
 "Upload your photo ID" = "Nahrajte svou fotografii";
-
-"Uploading back identity card photo" = "Nahrávání fotografie ze zadní strany průkazu totožnosti";
-
-"Uploading front identity card photo" = "Nahrávání fotografie z přední strany průkazu totožnosti";
 
 "Verify your identity" = "Potvrďte svou totožnost";
 

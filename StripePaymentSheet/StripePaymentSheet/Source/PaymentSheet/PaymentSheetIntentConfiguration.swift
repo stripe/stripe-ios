@@ -165,10 +165,11 @@ public extension PaymentSheet {
 
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.
-        public var confirmHandler: ConfirmHandler
-        
-        
+
         public var CIShouldCatchThis = true
+
+        public var confirmHandler: ConfirmHandler?
+
 
         /// Called when the customer confirms payment using confirmation tokens.
         /// See the documentation for `ConfirmationTokenConfirmHandler` for more details.

@@ -6,8 +6,6 @@
 
 "App Settings" = "Pengaturan Aplikasi";
 
-"Back identity card photo successfully uploaded" = "Foto bagian belakang kartu identitas mengemudi berhasil diunggah";
-
 "Back of identity card" = "Bagian belakang kartu identitas";
 
 "Back of identity document" = "Bagian belakang dokumen identitas";
@@ -31,10 +29,6 @@
 "Details not visible" = "Detail tidak terlihat";
 
 "Flip your identity card over to the other side" = "Balikkan kartu identitas Anda ke sisi yang lain";
-
-"Front identity card photo successfully uploaded" = "Foto bagian depan kartu identitas berhasil diunggah";
-
-"Front of identity card" = "Bagian depan kartu identitas";
 
 "Front of identity document" = "Bagian depan dokumen identitas";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Pustaka Foto";
 
-"Please upload images of the front and back of your identity card" = "Unggah gambar bagian depan dan belakang kartu identitas Anda";
-
 "Position your face in the center of the frame." = "Posisikan wajah Anda di tengah bingkai.";
-
-"Position your identity card in the center of the frame" = "Posisikan kartu identitas Anda di tengah bingkai";
 
 "Retake Photos" = "Ambil Ulang Foto";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Pilih lokasi untuk mengunggah bagian belakang dokumen identitas Anda";
 
 "Select a location to upload the front of your identity document from" = "Pilih lokasi untuk mengunggah bagian depan dokumen identitas Anda";
-
-"Select back identity card photo" = "Pilih foto bagian belakang kartu identitas";
-
-"Select front identity card photo" = "Pilih foto bagian depan kartu identitas";
 
 "Selfie" = "Swafoto";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Unggah Foto";
 
 "Upload your photo ID" = "Unggah ID berfoto Anda";
-
-"Uploading back identity card photo" = "Mengunggah foto bagian belakang kartu identitas";
-
-"Uploading front identity card photo" = "Mengunggah foto bagian depan kartu identitas";
 
 "Verify your identity" = "Verifikasikan identitas Anda";
 

@@ -6,8 +6,6 @@
 
 "App Settings" = "App-Einstellungen";
 
-"Back identity card photo successfully uploaded" = "Das Foto der Rückseite des Ausweisdokuments wurde erfolgreich hochgeladen.";
-
 "Back of identity card" = "Rückseite des Personalausweises";
 
 "Back of identity document" = "Rückseite des Ausweisdokuments";
@@ -31,10 +29,6 @@
 "Details not visible" = "Details sind nicht erkennbar";
 
 "Flip your identity card over to the other side" = "Drehen Sie Ihr Ausweisdokument um";
-
-"Front identity card photo successfully uploaded" = "Das Foto der Vorderseite des Ausweisdokuments wurde erfolgreich hochgeladen.";
-
-"Front of identity card" = "Vorderseite des Personalausweises";
 
 "Front of identity document" = "Vorderseite des Ausweisdokuments";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Fotobibliothek";
 
-"Please upload images of the front and back of your identity card" = "Bitte laden Sie Bilder der Vorder- und Rückseite Ihres Personalausweises hoch";
-
 "Position your face in the center of the frame." = "Platzieren Sie Ihr Gesicht genau in der Mitte des Rahmens.";
-
-"Position your identity card in the center of the frame" = "Platzieren Sie Ihr Ausweisdokument genau in der Mitte des Rahmens.";
 
 "Retake Photos" = "Foto erneut aufnehmen";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Wählen Sie einen Ort zum Hochladen der Rückseite Ihres Ausweisdokuments aus";
 
 "Select a location to upload the front of your identity document from" = "Wählen Sie einen Ort zum Hochladen der Vorderseite Ihres Ausweisdokuments aus";
-
-"Select back identity card photo" = "Foto der Rückseite des Ausweisdokuments auswählen";
-
-"Select front identity card photo" = "Foto der Vorderseite des Ausweisdokuments auswählen";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Foto hochladen";
 
 "Upload your photo ID" = "Lichtbildausweis hochladen";
-
-"Uploading back identity card photo" = "Foto der Rückseite des Ausweisdokuments wird hochgeladen";
-
-"Uploading front identity card photo" = "Foto der Vorderseite des Ausweisdokuments wird hochgeladen";
 
 "Verify your identity" = "Identität verifizieren";
 
