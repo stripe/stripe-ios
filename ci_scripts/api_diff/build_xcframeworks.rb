@@ -30,7 +30,7 @@ def checkout_build_generate(branch, archive_name)
 end
 
 # Find the merge-base (where this branch diverged from master)
-merge_base = `git merge-base master HEAD`.strip
+merge_base = `git merge-base origin/master HEAD`.strip
 puts "Using merge-base: #{merge_base}"
 
 checkout_build_generate(merge_base, "master")

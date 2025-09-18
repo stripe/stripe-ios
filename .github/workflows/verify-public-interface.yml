@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-            fetch-depth: 0
+            fetch-depth: 100
 
       - name: Setup Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
