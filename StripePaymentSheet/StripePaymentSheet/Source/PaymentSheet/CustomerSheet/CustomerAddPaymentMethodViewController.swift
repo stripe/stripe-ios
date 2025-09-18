@@ -295,7 +295,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             addressSpecProvider: AddressSpecProvider.shared,
-            verticalOffset: PaymentSheetUI.navBarPadding
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )
         autoCompleteViewController.delegate = self
 
