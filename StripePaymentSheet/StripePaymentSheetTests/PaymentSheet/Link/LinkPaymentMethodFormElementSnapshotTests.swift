@@ -16,6 +16,14 @@ import UIKit
 // @iOS26
 final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
 
+    override static func setUp() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+    }
+
     override func setUp() {
         super.setUp()
         // `LinkPaymentMethodFormElement` depends on `AddressSectionElement`, which requires
