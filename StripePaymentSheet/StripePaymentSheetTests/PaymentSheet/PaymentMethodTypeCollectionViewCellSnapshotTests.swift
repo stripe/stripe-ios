@@ -18,6 +18,7 @@ class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
         cell.paymentMethodType = .instantDebits
         cell.promoBadgeText = "$5"
+        cell.appearance = .default.applyingLiquidGlassIfPossible()
         verify(cell)
     }
 
