@@ -35,6 +35,7 @@ private class CardScanningEasilyTappableButton: UIButton {
 @objc(STP_Internal_CardScanningView)
 @available(macCatalyst 14.0, *)
 class CardScanningView: UIView, STPCardScannerDelegate {
+
     private(set) weak var cameraView: STPCameraView?
 
     weak var delegate: STP_Internal_CardScanningViewDelegate?
@@ -183,8 +184,8 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         snapshotView = nil
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(theme: ElementsAppearance) {
+        super.init(frame: .zero)
         self.setupBlurView()
 
         let cameraView = STPCameraView(frame: bounds)
@@ -211,7 +212,8 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         let closeButtonInset: CGFloat
         // If Liquid Glass is enabled, we use rounder corners to match the appearance of the text fields and other elements
         // The close button is pushed a bit further away from the edge to compensate
-        if LiquidGlassDetector.isEnabled {
+        // If the user has set a customer corner radius, we do not apply the Liquid Glass style, but we still use our corner radius
+        if theme.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp {
             ios26_applyDefaultCornerConfiguration()
             closeButtonInset = 12
         } else {

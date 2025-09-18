@@ -29,7 +29,7 @@ final class CardSectionWithScannerView: UIView {
         return button
     }()
     lazy var cardScanningView: CardScanningView = {
-        let scanningView = CardScanningView()
+        let scanningView = CardScanningView(theme: theme)
         scanningView.delegate = self
         return scanningView
     }()
