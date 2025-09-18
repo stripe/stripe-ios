@@ -11,6 +11,10 @@ import SwiftUI
 import StripePayments
 
 @_spi(STP)
+@_spi(AppearanceAPIAdditionsPreview)
+import StripePaymentSheet
+
+@_spi(STP)
 import StripePaymentsUI
 
 struct PaymentView: View {
@@ -141,18 +145,18 @@ struct PaymentView: View {
 
                     VStack(spacing: 8) {
                         makePaymentMethodButton(
-                            topLabel: "Apple Pay",
-                            bottomLabel: "Instant",
+                            title: "Apple Pay",
+                            subtitle: "Instant",
                             icon: .systemName("applelogo")
                         )
                         makePaymentMethodButton(
-                            topLabel: "Add Debit / Credit Card",
-                            bottomLabel: "1-5 minutes",
+                            title: "Add Debit / Credit Card",
+                            subtitle: "1-5 minutes",
                             icon: .systemName("creditcard")
                         )
                         makePaymentMethodButton(
-                            topLabel: "Add Bank Account",
-                            bottomLabel: "Free",
+                            title: "Add Bank Account",
+                            subtitle: "Free",
                             icon: .systemName("building.columns"),
                             highlightSubtitle: true
                         )
@@ -206,8 +210,8 @@ struct PaymentView: View {
 
     @ViewBuilder
     private func makePaymentMethodButton(
-        topLabel: String,
-        bottomLabel: String,
+        title: String,
+        subtitle: String,
         icon: PaymentMethodIcon,
         highlightSubtitle: Bool = false
     ) -> some View {
@@ -228,15 +232,18 @@ struct PaymentView: View {
                             .foregroundStyle(.primary)
                     case let .image(image):
                         Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: 24, maxHeight: 24)
                     }
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(topLabel)
+                    Text(title)
                         .font(.body)
                         .foregroundStyle(.primary)
 
-                    Text(bottomLabel)
+                    Text(subtitle)
                         .font(.subheadline)
                         .foregroundColor(highlightSubtitle ? .green : .secondary)
                 }
@@ -258,14 +265,23 @@ struct PaymentView: View {
             let cardBrand = STPCard.brand(from: card.brand)
             let icon = STPImageLibrary.cardBrandImage(for: cardBrand)
             let brandName = STPCardBrandUtilities.stringFrom(cardBrand)
-            let last4 = card.last4
             let fundingType = STPCardFundingType(card.funding)
             let formattedBrandName = String(format: fundingType.displayNameWithBrand, brandName ?? "")
-            let topLabelText = "\(formattedBrandName) •••• \(last4)"
-            let bottomLabel = "\(card.expMonth) / \(card.expYear)"
-            makePaymentMethodButton(topLabel: topLabelText, bottomLabel: bottomLabel, icon: .image(icon))
-        } else if let usBankAccount = token.usBankAccount {
-            EmptyView()
+
+            makePaymentMethodButton(
+                title: "Card",
+                subtitle: "\(formattedBrandName) •••• \(card.last4)",
+                icon: .image(icon)
+            )
+        } else if let bankAccount = token.usBankAccount {
+            let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.bankName)
+            let icon = PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled)
+
+            makePaymentMethodButton(
+                title: "Bank Account",
+                subtitle: "\(bankAccount.bankName) •••• \(bankAccount.last4)",
+                icon: .image(icon)
+            )
         } else {
             EmptyView()
         }
