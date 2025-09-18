@@ -1,8 +1,8 @@
 //
-//  STPLocalizedString+StripeCryptoOnramp.swift
+//  STPLocalizedString.swift
 //  StripeCryptoOnramp
 //
-//  Created by Mat Schmid on 8/14/25.
+//  Created by Mat Schmid on 9/16/25.
 //
 
 import Foundation

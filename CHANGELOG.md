@@ -1,7 +1,16 @@
+## x.x.x yyyy-yy-yy
+## PaymentSheet
+* [Changed] `appearance.cornerRadius` is now nullable. Below iOS 26, When `nil`, the corner radius is 6.0 (ie unchanged from the current default). On iOS 26+, multiple rounder corner configurations are used to match Liquid Glass design.
+
+## 24.23.3 2025-09-17
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
 ## 24.23.2 2025-09-16
+
 ## PaymentSheet
 * [Fixed] Fixed an issue with the Liquid Glass keyboard toolbar where tapping on the sheet immediately above the keyboard didn't have an effect.
-* [Changed] `appearance.cornerRadius` is now nullable. Below iOS 26, When `nil`, the corner radius is 6.0 (ie unchanged from the current default). On iOS 26+, multiple rounder corner configurations are used to match Liquid Glass design.
 
 ## 24.23.1 2025-09-08
 

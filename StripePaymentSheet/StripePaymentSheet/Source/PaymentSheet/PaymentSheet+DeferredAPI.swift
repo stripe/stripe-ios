@@ -167,7 +167,7 @@ extension PaymentSheet {
 
     // MARK: - Helper methods
 
-    /// Convenience method that converts a STPPayymentHandlerActionStatus + error into a PaymentSheetResult
+    /// Convenience method that converts a STPPaymentHandlerActionStatus + error into a PaymentSheetResult
     static func makePaymentSheetResult(for status: STPPaymentHandlerActionStatus, error: Error?) -> PaymentSheetResult {
         switch status {
         case .succeeded:
@@ -189,7 +189,7 @@ extension PaymentSheet {
     ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
-                intentConfig.confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
+                intentConfig.confirmHandler?(paymentMethod, shouldSavePaymentMethod) { result in
                     continuation.resume(with: result)
                 }
             }

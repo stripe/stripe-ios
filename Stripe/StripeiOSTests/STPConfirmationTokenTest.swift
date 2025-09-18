@@ -207,35 +207,6 @@ class STPConfirmationTokenTest: XCTestCase {
 
     // MARK: - Comprehensive Field Tests
 
-    func testConfirmationTokenWithMandateData() {
-        let json = [
-            "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
-            "object": "confirmation_token",
-            "created": 1694025025,
-            "livemode": false,
-            "mandate_data": [
-                "customer_acceptance": [
-                    "type": "online",
-                    "online": [
-                        "ip_address": "127.0.0.1",
-                        "user_agent": "Mozilla/5.0",
-                    ],
-                ],
-            ],
-        ] as [String: Any]
-
-        let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-
-        XCTAssertNotNil(confirmationToken)
-        XCTAssertEqual(confirmationToken?.stripeId, "ctoken_1NnQUf2eZvKYlo2CIObdtbnb")
-
-        let mandateData = confirmationToken?.mandateData
-        XCTAssertNotNil(mandateData)
-        XCTAssertEqual(mandateData?.customerAcceptance.type, .online)
-        XCTAssertEqual(mandateData?.customerAcceptance.onlineParams?.ipAddress, "127.0.0.1")
-        XCTAssertEqual(mandateData?.customerAcceptance.onlineParams?.userAgent, "Mozilla/5.0")
-    }
-
     func testConfirmationTokenWithAllFields() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -302,26 +273,6 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(shipping?.address?.state, "CA")
         XCTAssertEqual(shipping?.address?.postalCode, "94111")
         XCTAssertEqual(shipping?.address?.country, "US")
-    }
-
-    // MARK: - Edge Cases and Error Handling Tests
-
-    func testConfirmationTokenWithMalformedMandateData() {
-        let json = [
-            "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
-            "object": "confirmation_token",
-            "created": 1694025025,
-            "livemode": false,
-            "mandate_data": [
-                // Missing customer_acceptance should cause mandate_data to be nil
-                "other_field": "value"
-            ],
-        ] as [String: Any]
-
-        let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-
-        XCTAssertNotNil(confirmationToken)
-        XCTAssertNil(confirmationToken?.mandateData, "mandateData should be nil when customer_acceptance is missing")
     }
 
     func testConfirmationTokenAllResponseFieldsPreserved() {
