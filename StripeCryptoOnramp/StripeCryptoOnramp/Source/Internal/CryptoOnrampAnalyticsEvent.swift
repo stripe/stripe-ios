@@ -39,8 +39,8 @@ enum CryptoOnrampAnalyticsEvent {
     case collectPaymentMethodStarted(paymentMethodType: String)
     case collectPaymentMethodCompleted(paymentMethodType: String)
     case cryptoPaymentTokenCreated(paymentMethodType: String)
-    case checkoutStarted(onrampSessionId: String, paymentMethodType: String)
-    case checkoutCompleted(onrampSessionId: String, paymentMethodType: String, requiredAction: Bool)
+    case checkoutStarted(onrampSessionId: String)
+    case checkoutCompleted(onrampSessionId: String, requiredAction: Bool)
     case userLoggedOut
     case errorOccurred(during: CryptoOnrampOperation, errorMessage: String)
 
@@ -112,15 +112,11 @@ enum CryptoOnrampAnalyticsEvent {
             return ["payment_method_type": paymentMethodType]
         case let .cryptoPaymentTokenCreated(paymentMethodType):
             return ["payment_method_type": paymentMethodType]
-        case let .checkoutStarted(onrampSessionId, paymentMethodType):
+        case let .checkoutStarted(onrampSessionId):
+            return ["onramp_session_id": onrampSessionId]
+        case let .checkoutCompleted(onrampSessionId, requiredAction):
             return [
                 "onramp_session_id": onrampSessionId,
-                "payment_method_type": paymentMethodType,
-            ]
-        case let .checkoutCompleted(onrampSessionId, paymentMethodType, requiredAction):
-            return [
-                "onramp_session_id": onrampSessionId,
-                "payment_method_type": paymentMethodType,
                 "required_action": requiredAction,
             ]
         case let .errorOccurred(operationName, errorMessage):
