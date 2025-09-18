@@ -10,11 +10,17 @@
 /* Opens the app's settings in the Settings app */
 "App Settings" = "App Settings";
 
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "Back identity card photo successfully uploaded";
+/* Accessibility label when back driver's license, passport, or government issued photo id photo has successfully uploaded */
+"Back %@ photo successfully uploaded" = "Back %@ photo successfully uploaded";
 
-/* Description of back of identity card image */
-"Back of identity card" = "Back of identity card";
+/* Accessibility label when back identity document photo has successfully uploaded */
+"Back identity document photo successfully uploaded" = "Back identity document photo successfully uploaded";
+
+/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+"Back of %@" = "Back of %@";
+
+/* Back of driver's license or government-issued photo ID */
+"Back of driver's license or government-issued photo ID" = "Back of driver's license or government-issued photo ID";
 
 /* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Back of identity document";
@@ -52,17 +58,38 @@
 /* driver's license */
 "driver's license" = "driver's license";
 
+/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+"Flip your %@ over to the other side" = "Flip your %@ over to the other side";
+
+/* Flip your driver's license or government-issued photo ID over to the other side */
+"Flip your driver's license or government-issued photo ID over to the other side" = "Flip your driver's license or government-issued photo ID over to the other side";
+
 /* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
+/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+"Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
 
-/* Description of front of identity card image */
-"Front of identity card" = "Front of identity card";
+/* Accessibility label when front identity document photo has successfully uploaded */
+"Front identity document photo successfully uploaded" = "Front identity document photo successfully uploaded";
+
+/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id  */
+"Front of %@" = "Front of %@";
+
+/* Front of driver's license or government-issued photo ID */
+"Front of driver's license or government-issued photo ID" = "Front of driver's license or government-issued photo ID";
+
+/* Front of driver's license or passport */
+"Front of driver's license or passport" = "Front of driver's license or passport";
+
+/* Front of driver's license, passport, or government-issued photo ID */
+"Front of driver's license, passport, or government-issued photo ID" = "Front of driver's license, passport, or government-issued photo ID";
 
 /* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Front of identity document";
+
+/* Front of passport or government-issued photo ID */
+"Front of passport or government-issued photo ID" = "Front of passport or government-issued photo ID";
 
 /* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Get ready to scan your photo ID";
@@ -140,14 +167,32 @@
 /* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Photo Library";
 
-/* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "Please upload images of the front and back of your identity card";
+/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+"Please upload images of the front and back of your %@" = "Please upload images of the front and back of your %@";
+
+/* Instructions for uploading images of identity document */
+"Please upload images of the front and back of your identity document" = "Please upload images of the front and back of your identity document";
+
+/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+"Position your %@ in the center of the frame" = "Position your %@ in the center of the frame";
+
+/* Position your driver's license or government-issued photo ID in the center of the frame */
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Position your driver's license or government-issued photo ID in the center of the frame";
+
+/* Position your driver's license or passport in the center of the frame */
+"Position your driver's license or passport in the center of the frame" = "Position your driver's license or passport in the center of the frame";
+
+/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Position your driver's license, passport, or government-issued photo ID in the center of the frame";
 
 /* Instructional text for scanning selfies */
 "Position your face in the center of the frame." = "Position your face in the center of the frame.";
 
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "Position your identity card in the center of the frame";
+/* Instructional text for scanning front of a identity document */
+"Position your identity document in the center of the frame" = "Position your identity document in the center of the frame";
+
+/* Position your passport or government-issued photo ID in the center of the frame */
+"Position your passport or government-issued photo ID in the center of the frame" = "Position your passport or government-issued photo ID in the center of the frame";
 
 /* Button text displayed to the user to retake photo */
 "Retake Photos" = "Retake Photos";
@@ -167,11 +212,17 @@
 /* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Select a location to upload the front of your identity document from";
 
-/* Accessibility label to select a photo of back of identity card */
-"Select back identity card photo" = "Select back identity card photo";
+/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+"Select back %@ photo" = "Select back %@ photo";
 
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "Select front identity card photo";
+/* Accessibility label to select a photo of back of identity document */
+"Select back identity document photo" = "Select back identity document photo";
+
+/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+"Select front %@ photo" = "Select front %@ photo";
+
+/* Accessibility label to select a photo of front of identity document */
+"Select front identity document photo" = "Select front identity document photo";
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
@@ -212,13 +263,22 @@
 "Upload a Photo" = "Upload a Photo";
 
 /* Title of document upload screen */
+"Upload your %@" = "Upload your %@";
+
+/* Title of document upload screen */
 "Upload your photo ID" = "Upload your photo ID";
 
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "Uploading back identity card photo";
+/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+"Uploading back %@ photo" = "Uploading back %@ photo";
 
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "Uploading front identity card photo";
+/* Accessibility label while photo of back of identity document is uploading */
+"Uploading back identity document photo" = "Uploading back identity document photo";
+
+/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+"Uploading front %@ photo" = "Uploading front %@ photo";
+
+/* Accessibility label while photo of front of identity document is uploading */
+"Uploading front identity document photo" = "Uploading front identity document photo";
 
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verify your identity";

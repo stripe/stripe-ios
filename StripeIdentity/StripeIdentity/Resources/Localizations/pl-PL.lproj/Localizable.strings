@@ -6,8 +6,6 @@
 
 "App Settings" = "Ustawienia aplikacji";
 
-"Back identity card photo successfully uploaded" = "Przesłano zdjęcie tylnej strony dowodu tożsamości";
-
 "Back of identity card" = "Tylna strona dokumentu tożsamości";
 
 "Back of identity document" = "Tylna strona dokumentu tożsamości";
@@ -31,10 +29,6 @@
 "Details not visible" = "Szczegóły nie są widoczne";
 
 "Flip your identity card over to the other side" = "Obróć dowód tożsamości na drugą stronę";
-
-"Front identity card photo successfully uploaded" = "Przesłano zdjęcie przedniej strony dowodu tożsamości";
-
-"Front of identity card" = "Przednia strona dokumentu tożsamości";
 
 "Front of identity document" = "Przednia strona dokumentu tożsamości";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Biblioteka zdjęć";
 
-"Please upload images of the front and back of your identity card" = "Prześlij zdjęcia przedniej i tylnej strony dokumentu tożsamości";
-
 "Position your face in the center of the frame." = "Umieść twarz w centrum kadru.";
-
-"Position your identity card in the center of the frame" = "Umieść dowód tożsamości w centrum kadru";
 
 "Retake Photos" = "zrób zdjęcia ponownie";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Wybierz lokalizację, z której chcesz przesłać tylną stronę dokumentu tożsamości";
 
 "Select a location to upload the front of your identity document from" = "Wybierz lokalizację, z której chcesz przesłać przednią stronę dokumentu tożsamości";
-
-"Select back identity card photo" = "Wybierz zdjęcie tyłu dowodu tożsamości";
-
-"Select front identity card photo" = "Wybierz zdjęcie tyłu dowodu tożsamości";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Prześlij zdjęcie";
 
 "Upload your photo ID" = "Prześlij dokument tożsamości ze zdjęciem";
-
-"Uploading back identity card photo" = "Przesyłanie zdjęcia tyłu dowodu tożsamości";
-
-"Uploading front identity card photo" = "Przesyłanie zdjęcia przodu dowodu tożsamości";
 
 "Verify your identity" = "Zweryfikuj tożsamość";
 
