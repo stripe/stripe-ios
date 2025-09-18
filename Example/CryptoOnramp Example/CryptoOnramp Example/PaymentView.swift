@@ -100,6 +100,48 @@ struct PaymentView: View {
             .opacity(isLoading.wrappedValue ? 0.5 : 1)
             .padding()
         }
+        .sheet(isPresented: $shouldShowPaymentMethodSheet) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Pay with")
+                        .font(.title2)
+                        .bold()
+                        .padding(.top, 8)
+
+
+                    HStack {
+                        VStack { Divider() }
+
+                        Text("Add New")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+
+                        VStack { Divider() }
+                    }
+
+                    VStack(spacing: 8) {
+                        makePaymentMethodButton(
+                            topLabel: "Apple Pay",
+                            bottomLabel: "Instant",
+                            iconSystemName: "applelogo"
+                        )
+                        makePaymentMethodButton(
+                            topLabel: "Add Debit / Credit Card",
+                            bottomLabel: "1-5 minutes",
+                            iconSystemName: "creditcard"
+                        )
+                        makePaymentMethodButton(
+                            topLabel: "Add Bank Account",
+                            bottomLabel: "Free",
+                            iconSystemName: "building.columns",
+                            highlightSubtitle: true
+                        )
+                    }
+                }
+                .padding()
+            }
+            .presentationDetents([.medium, .large])
+        }
     }
 
     @ViewBuilder
@@ -140,6 +182,49 @@ struct PaymentView: View {
     }
 
     @ViewBuilder
+    private func makePaymentMethodButton(
+        topLabel: String,
+        bottomLabel: String,
+        iconSystemName: String,
+        highlightSubtitle: Bool = false
+    ) -> some View {
+        Button(action: {
+            shouldShowPaymentMethodSheet = false
+        }) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(.background)
+                        .frame(width: 40, height: 40)
+                        .offset(y: 1)
+
+                    Image(systemName: iconSystemName)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(.primary)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(topLabel)
+                        .font(.body)
+                        .foregroundStyle(.primary)
+
+                    Text(bottomLabel)
+                        .font(.subheadline)
+                        .foregroundColor(highlightSubtitle ? .green : .secondary)
+                }
+
+                Spacer()
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.secondarySystemBackground))
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
     private func makePresetAmountButton(_ dollarAmount: Int) -> some View {
         Button {
             amountText = "\(dollarAmount)"
@@ -162,12 +247,12 @@ struct PaymentView: View {
     private func makePaymentMethodButton() -> some View {
         HStack {
             Button {
-
+                shouldShowPaymentMethodSheet = true
             } label: {
                 HStack(spacing: 6) {
                     Text("Select a payment method")
                         .bold()
-
+                        .foregroundStyle(.primary)
                     Image(systemName: "chevron.down")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.secondary)
@@ -177,6 +262,7 @@ struct PaymentView: View {
 
             Spacer()
         }
+        .padding(.bottom, 16)
     }
 
     // MARK: - Input Handling
