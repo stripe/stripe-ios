@@ -14,7 +14,7 @@ final class PollingBudget {
     private var startDate: Date
     /// The polling duration in seconds
     private let duration: TimeInterval
-    /// Whether polling is currently allowed (within budget)
+    /// Whether polling is currently allowed
     private(set) var canPoll: Bool = true
     /// The timestamp of the last recorded poll attempt
     private var lastPollAttempt: Date?
