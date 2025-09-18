@@ -98,9 +98,8 @@ class LinkSheetNavigationBar: SheetNavigationBar {
 
     override func createBackButton() -> UIButton {
         let image = Image.icon_chevron_left_standalone.makeImage(template: true)
-        let resizedImage = image.resized(to: CGSize(width: LinkUI.navigationBarButtonContentSize, height: LinkUI.navigationBarButtonContentSize))
         return Self.createButton(
-            with: resizedImage ?? image,
+            with: image,
             accessibilityLabel: String.Localized.back,
             accessibilityIdentifier: "UIButton.Back",
             appearance: appearance
@@ -119,9 +118,8 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         appearance: PaymentSheet.Appearance
     ) -> UIButton {
         let image = Image.icon_x_standalone.makeImage(template: true)
-        let resizedImage = image.resized(to: CGSize(width: LinkUI.navigationBarButtonContentSize, height: LinkUI.navigationBarButtonContentSize))
         return createButton(
-            with: resizedImage ?? image,
+            with: image,
             accessibilityLabel: String.Localized.close,
             accessibilityIdentifier: accessibilityIdentifier,
             appearance: appearance
@@ -134,8 +132,9 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         accessibilityIdentifier: String,
         appearance: PaymentSheet.Appearance
     ) -> UIButton {
+        let resizedImage = image.resized(to: CGSize(width: LinkUI.navigationBarButtonContentSize, height: LinkUI.navigationBarButtonContentSize))
         let button = SheetNavigationButton(type: .custom)
-        button.setImage(image, for: .normal)
+        button.setImage(resizedImage ?? image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.contentMode = .scaleAspectFit
         button.accessibilityLabel = accessibilityLabel
@@ -143,7 +142,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
 
         button.translatesAutoresizingMaskIntoConstraints = false
 
-        if LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isGlass {
             button.ios26_applyGlassConfiguration()
         } else {
             // Add a background color and center the icon within it
