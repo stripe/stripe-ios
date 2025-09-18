@@ -219,7 +219,7 @@ extension LinkUI {
 extension LinkUI {
 
     static func applyLiquidGlassIfPossible(configuration: PaymentElementConfiguration) {
-        Self.useLiquidGlass = configuration.appearance.cornerRadius == nil
+        Self.useLiquidGlass = configuration.appearance.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp
         Self.useLiquidGlassNavigationBar = configuration.appearance.navigationBarStyle.isGlass
         Self.appearance = createLinkAppearance()
     }
