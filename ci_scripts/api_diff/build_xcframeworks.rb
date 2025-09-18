@@ -31,7 +31,11 @@ end
 
 # Find the merge-base (where this branch diverged from master)
 merge_base = `git merge-base origin/master HEAD`.strip
-puts "Using merge-base: #{merge_base}"
+puts "Using merge-base commit for master: #{merge_base}"
+
+# Get commit details for better visibility
+commit_info = `git log -1 --oneline #{merge_base}`.strip
+puts "Master commit details: #{commit_info}"
 
 checkout_build_generate(merge_base, "master")
 checkout_build_generate(ENV['GITHUB_HEAD_REF'], "new")
