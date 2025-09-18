@@ -35,71 +35,6 @@ struct ECEIndexHTML {
       return JSON.stringify(hash, 0, 2);
     }
 
-// Globals
-var showShopPay = false;
-var shopPayPollerStarted = false;
-var SHOP_PAY_POLL_INTERVAL_MS = 250;
-
-// The real trigger that actually clicks Shop Pay
-function realTriggerShopPayClick() {
-  try {
-    if (
-      typeof expressCheckoutElement !== 'undefined' &&
-      expressCheckoutElement &&
-      typeof expressCheckoutElement._sendNativeSdkClick === 'function'
-    ) {
-      console.log("Triggering Shop Pay via _sendNativeSdkClick");
-      expressCheckoutElement._sendNativeSdkClick({ paymentMethodType: 'shop_pay' });
-      return true;
-    } else {
-      console.warn("expressCheckoutElement or _sendNativeSdkClick not ready yet");
-      return false;
-    }
-  } catch (error) {
-    console.error("Error triggering Shop Pay click:", error);
-    return false;
-  }
-}
-
-// Start polling after ECE is ready
-function startShopPayPolling() {
-  if (shopPayPollerStarted) return;
-  shopPayPollerStarted = true;
-
-  function poll() {
-    try {
-      if (showShopPay) {
-        const triggered = realTriggerShopPayClick();
-        if (triggered) {
-          // Consume the flag so we can be triggered again later
-          showShopPay = false;
-        } else {
-          console.log("Shop Pay not triggered yet; will retry...");
-        }
-      }
-    } catch (e) {
-      console.error("Shop Pay polling error:", e);
-    } finally {
-      setTimeout(poll, SHOP_PAY_POLL_INTERVAL_MS);
-    }
-  }
-
-  setTimeout(poll, SHOP_PAY_POLL_INTERVAL_MS);
-}
-
-
-// Callable from Swift — only sets the flag
-function triggerShopPayClick() {
-  try {
-    showShopPay = true;
-    console.log("showShopPay flag set by native; will trigger on next poll");
-    return true;
-  } catch (error) {
-    console.error("Error setting showShopPay flag:", error);
-    return false;
-  }
-}
-
     var ECE_OPTIONS = JSON.parse(`
       {
         "layout": {
@@ -172,11 +107,6 @@ function triggerShopPayClick() {
         } else {
           expressCheckoutDiv.style.visibility = "initial";
         }
-
-       startShopPayPolling();
-//        setTimeout(() => {
-//            showShopPay = true;
-//        }, 3000);
 
         // Signal to native that ECE is ready for _sendNativeSdkClick
         window.webkit.messageHandlers.ready.postMessage({
@@ -341,21 +271,21 @@ function triggerShopPayClick() {
     }
 
     // Function to trigger Shop Pay click - called from Swift
-//    function triggerShopPayClick() {
-//      try {
-//        if (typeof expressCheckoutElement !== 'undefined' && expressCheckoutElement._sendNativeSdkClick) {
-//          console.log("Triggering Shop Pay click via _sendNativeSdkClick");
-//          expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'});
-//          return true;
-//        } else {
-//          console.error("expressCheckoutElement or _sendNativeSdkClick not available");
-//          return false;
-//        }
-//      } catch (error) {
-//        console.error("Error triggering Shop Pay click:", error);
-//        return false;
-//      }
-//    }
+    function triggerShopPayClick() {
+      try {
+        if (typeof expressCheckoutElement !== 'undefined' && expressCheckoutElement._sendNativeSdkClick) {
+          console.log("Triggering Shop Pay click via _sendNativeSdkClick");
+          expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'});
+          return true;
+        } else {
+          console.error("expressCheckoutElement or _sendNativeSdkClick not available");
+          return false;
+        }
+      } catch (error) {
+        console.error("Error triggering Shop Pay click:", error);
+        return false;
+      }
+    }
 
     console.log("Waiting for bridge to call initializeApp()");
     </script>
