@@ -8,7 +8,6 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
 
 extension StripeAPI {
     /// An object representing parameters used to create a PaymentMethod object.
@@ -30,7 +29,7 @@ extension StripeAPI {
         }()
 
         /// Contains metadata with identifiers for the session and information about the integration
-        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+        @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata?
 
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {

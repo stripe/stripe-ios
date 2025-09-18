@@ -287,7 +287,12 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         var paymentMethodParams: StripeAPI.PaymentMethodParams = StripeAPI.PaymentMethodParams(type: .card)
-        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        paymentMethodParams.clientAttributionMetadata = ClientAttributionMetadata(
+            clientSessionId: clientAttributionMetadata.clientSessionId,
+            elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
+            paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { ClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
+            paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { ClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) }
+        )
         // Stub payment method creation call
         stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata, urlPattern: "/payment_methods")
         let e = expectation(description: "")

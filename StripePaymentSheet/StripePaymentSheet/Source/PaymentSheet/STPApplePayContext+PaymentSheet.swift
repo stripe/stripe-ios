@@ -208,7 +208,7 @@ extension STPApplePayContext {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
-            applePayContext.clientAttributionMetadata = clientAttributionMetadata
+            applePayContext.clientAttributionMetadata = makeClientAttributionMetadata(from: clientAttributionMetadata)
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -313,6 +313,15 @@ private func makeRequiredShippingDetails(from configuration: PaymentElementConfi
         requiredPKContactFields.insert(.phoneNumber)
     }
     return requiredPKContactFields
+}
+
+private func makeClientAttributionMetadata(from clientAttributionMetadata: STPClientAttributionMetadata) -> ClientAttributionMetadata {
+    return ClientAttributionMetadata(
+        clientSessionId: clientAttributionMetadata.clientSessionId,
+        elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
+        paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { ClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
+        paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { ClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) }
+    )
 }
 
 extension PKPaymentNetwork {

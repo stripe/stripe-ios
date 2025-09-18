@@ -10,7 +10,6 @@ import Foundation
 import ObjectiveC
 import PassKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
 
 /// :nodoc:
 @objc public protocol _stpinternal_STPApplePayContextDelegateBase: NSObjectProtocol {
@@ -276,7 +275,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
     /// Contains metadata with identifiers for the session and information about the integration
-    @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata?
 
     // Internal state
     private var paymentState: PaymentState = .notStarted
