@@ -75,8 +75,7 @@ struct PaymentView: View {
 
             Spacer()
 
-            makePaymentMethodButton()
-                .padding(.bottom, 16)
+            makeSelectPaymentMethodButton()
 
             HStack(spacing: 12) {
                 makePresetAmountButton(50)
@@ -218,7 +217,7 @@ struct PaymentView: View {
             .padding(16)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.secondarySystemBackground))
+                    .fill(Color(.secondarySystemBackground).opacity(0.7))
             )
         }
         .buttonStyle(.plain)
@@ -244,15 +243,17 @@ struct PaymentView: View {
     }
 
     @ViewBuilder
-    private func makePaymentMethodButton() -> some View {
+    private func makeSelectPaymentMethodButton() -> some View {
         HStack {
             Button {
                 shouldShowPaymentMethodSheet = true
             } label: {
                 HStack(spacing: 6) {
                     Text("Select a payment method")
+                        .font(.callout)
                         .bold()
                         .foregroundStyle(.primary)
+
                     Image(systemName: "chevron.down")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.secondary)
