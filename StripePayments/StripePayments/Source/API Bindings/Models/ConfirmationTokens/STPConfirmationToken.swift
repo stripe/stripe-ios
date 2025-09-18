@@ -32,9 +32,6 @@ import Foundation
     /// `true` if the object exists in live mode or the value `false` if the object exists in test mode.
     private(set) public var liveMode = false
 
-    /// Data used for generating a Mandate.
-    private(set) var mandateData: STPMandateDataParams?
-
     /// ID of the PaymentIntent this token was used to confirm.
     private(set) public var paymentIntentId: String?
 
@@ -84,11 +81,6 @@ import Foundation
 
         // Parse expires_at timestamp
         confirmationToken.expiresAt = response.stp_date(forKey: "expires_at")
-
-        // Parse mandate data
-        if let mandateDataDict = response["mandate_data"] as? [AnyHashable: Any] {
-            confirmationToken.mandateData = STPMandateDataParams.decodedObject(fromAPIResponse: mandateDataDict)
-        }
 
         // Parse payment intent ID
         confirmationToken.paymentIntentId = response["payment_intent"] as? String
