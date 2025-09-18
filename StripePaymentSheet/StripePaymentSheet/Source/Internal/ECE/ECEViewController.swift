@@ -201,7 +201,7 @@ class ECEViewController: UIViewController {
         contentController.addUserScript(script)
 
         // TODO: It's 500x500 for now for debugging, but set this to 1x1 before release
-        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), configuration: configuration)
+        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 1, height: 1), configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
         #if DEBUG
@@ -210,7 +210,7 @@ class ECEViewController: UIViewController {
         }
         #endif
         webView.isHidden = false // Should not be hidden, so that we actually render it
-        webView.alpha = 1.00 // TODO: Attempt to set to 0.00 if we can get away with it without Safari optimizing it out
+        webView.alpha = 0.01 // TODO: Attempt to set to 0.00 if we can get away with it without Safari optimizing it out
 
         webView.customUserAgent = Self.FakeSafariUserAgent
     }

@@ -96,17 +96,17 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         }
 
         // Present the view controller
-        viewController.present(eceVC, animated: true)
         eceVC.presentationController?.delegate = self
-
-        // Wait for ECE to be ready, then send the native SDK click
-        if eceReady {
-            triggerShopPayClick()
-        } else {
-            pendingPresentCompletion = { [weak self] in
-                self?.triggerShopPayClick()
+        viewController.present(eceVC, animated: true, completion: {
+            // Wait for ECE to be ready, then send the native SDK click
+            if self.eceReady {
+                self.triggerShopPayClick()
+            } else {
+                self.pendingPresentCompletion = { [weak self] in
+                    self?.triggerShopPayClick()
+                }
             }
-        }
+        })
     }
 
     // If the sheet is pulled down
