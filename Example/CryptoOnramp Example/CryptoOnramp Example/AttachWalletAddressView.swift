@@ -19,9 +19,6 @@ struct AttachWalletAddressView: View {
     /// The coordinator used to submit the wallet address.
     let coordinator: CryptoOnrampCoordinator
 
-    /// Binding to inform presenting view that a wallet was successfully attached.
-    @Binding var isWalletAttached: Bool
-
     /// Callback invoked on successful attach with the address and network used.
     let onWalletAttached: ((String, CryptoNetwork) -> Void)?
 
@@ -107,7 +104,6 @@ struct AttachWalletAddressView: View {
                 try await coordinator.registerWalletAddress(walletAddress: address, network: selectedNetwork)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    isWalletAttached = true
                     onWalletAttached?(address, selectedNetwork)
                     dismiss()
                 }
@@ -123,6 +119,6 @@ struct AttachWalletAddressView: View {
 
 #Preview {
     PreviewWrapperView { coordinator in
-        AttachWalletAddressView(coordinator: coordinator, isWalletAttached: .constant(false), onWalletAttached: nil)
+        AttachWalletAddressView(coordinator: coordinator, onWalletAttached: nil)
     }
 }
