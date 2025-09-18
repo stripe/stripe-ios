@@ -8,12 +8,21 @@
 import Foundation
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
+@_spi(STP) import StripeUICore
 import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
 // @iOS26
 final class WalletViewControllerSnapshotTests: STPSnapshotTestCase {
+
+    override static func setUp() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+    }
 
     func testDefault() {
         let sut = makeSUT()
