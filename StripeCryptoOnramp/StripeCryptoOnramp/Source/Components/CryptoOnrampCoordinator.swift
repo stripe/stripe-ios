@@ -25,8 +25,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
+    /// - Parameter cryptoCustomerID: The crypto customer's ID, if available.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
-    static func create(apiClient: STPAPIClient, appearance: LinkAppearance) async throws -> Self
+    static func create(
+        apiClient: STPAPIClient,
+        appearance: LinkAppearance,
+        cryptoCustomerID: String?
+    ) async throws -> Self
 
     /// Whether or not the provided email is associated with an existing Link consumer.
     ///
@@ -150,6 +155,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
         /// An unexpected error occurred internally. `selectedPaymentSource` was not set to an expected value.
         case invalidSelectedPaymentSource
+
+        /// A crypto customer ID is missing but required.
+        case missingCryptoCustomerID
     }
 
     private let linkController: LinkController
@@ -158,6 +166,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
     private var selectedPaymentSource: SelectedPaymentSource?
+    private var cryptoCustomerId: String?
 
     /// Dedicated API client configured with the platform publishable key
     private var platformApiClient: STPAPIClient?
@@ -178,11 +187,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     private init(
         linkController: LinkController,
+        cryptoCustomerID: String?,
         apiClient: STPAPIClient = .shared,
         appearance: LinkAppearance,
         analyticsClient: CryptoOnrampAnalyticsClient
     ) {
         self.linkController = linkController
+        self.cryptoCustomerId = cryptoCustomerID
         self.apiClient = apiClient
         self.appearance = appearance
         self.analyticsClient = analyticsClient
@@ -190,7 +201,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     // MARK: - CryptoOnrampCoordinatorProtocol
 
-    public static func create(apiClient: STPAPIClient = .shared, appearance: LinkAppearance) async throws -> CryptoOnrampCoordinator {
+    public static func create(
+        apiClient: STPAPIClient = .shared,
+        appearance: LinkAppearance = .init(),
+        cryptoCustomerID: String? = nil
+    ) async throws -> CryptoOnrampCoordinator {
         let analyticsClient = CryptoOnrampAnalyticsClient()
 
         do {
@@ -204,6 +219,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
             let coordinator = CryptoOnrampCoordinator(
                 linkController: linkController,
+                cryptoCustomerID: cryptoCustomerID,
                 apiClient: apiClient,
                 appearance: appearance,
                 analyticsClient: analyticsClient
@@ -268,6 +284,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
         do {
             let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+            self.cryptoCustomerId = customerId
             analyticsClient.log(.linkRegistrationCompleted)
             return customerId
         } catch {
@@ -295,6 +312,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             case .completed:
                 do {
                     let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+                    self.cryptoCustomerId = customerId
                     analyticsClient.log(.linkUserAuthenticationCompleted)
                     return .completed(customerId: customerId)
                 } catch {
@@ -316,6 +334,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             case .consented:
                 do {
                     let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+                    self.cryptoCustomerId = customerId
                     analyticsClient.log(.linkAuthorizationCompleted(consented: true))
                     return .consented(customerId: customerId)
                 } catch {
@@ -692,8 +711,12 @@ private extension CryptoOnrampCoordinator {
             return platformApiClient
         }
 
+        guard let cryptoCustomerId else {
+            throw Error.missingCryptoCustomerID
+        }
+
         // Fetch platform settings and create API client
-        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
+        let platformSettings = try await apiClient.getPlatformSettings(cryptoCustomerId: cryptoCustomerId)
         let newPlatformApiClient = STPAPIClient(publishableKey: platformSettings.publishableKey)
         platformApiClient = newPlatformApiClient
         return newPlatformApiClient

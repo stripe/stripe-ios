@@ -148,19 +148,17 @@ extension STPAPIClient {
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameter linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+        cryptoCustomerId: String
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        var parameters: [String: Any] = [:]
-        if let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret {
-            parameters["credentials"] = ["consumer_session_client_secret": consumerSessionClientSecret]
-        }
-
+        let parameters: [String: Any] = [
+            "crypto_customer_id": cryptoCustomerId
+        ]
         return try await get(resource: endpoint, parameters: parameters)
     }
 
