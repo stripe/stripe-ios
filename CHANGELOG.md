@@ -1,6 +1,8 @@
 ## x.x.x yyyy-yy-yy
 
 ## PaymentSheet
+* [Added] PaymentSheet now offers a refreshed design for iOS 26. Calling Appearance.applyLiquidGlass() will change the default values of the `Appearance` object used by PaymentSheet, PaymentSheet.FlowController, EmbeddedPaymentElement, CustomerSheet, and AddressViewController to match Liquid Glass when building with Xcode 26 or later and running on iOS 26. This includes `appearance.cornerRadius`, `appearance.borderWidth`, `appearance.navigationBarStyle`, `colors.background`, and others.
+* [Added] Appearance.navigationBarStyle. Setting to `.glass` will change the sheet navigation bar to a glassy appearance when building with Xcode 26 or latter and running on iOS 26. Calling `Appearance.applyLiquidGlass()` will set this value to `.glass`.
 * [Changed] `appearance.cornerRadius` is now nullable. Below iOS 26, When `nil`, the corner radius is 6.0 (ie unchanged from the current default). On iOS 26+, multiple rounder corner configurations are used to match Liquid Glass design.
 * [Fixed] Improved the cancellation UX when paying with Amazon Pay, Revolut Pay, P24, Twint, Swish, and 3DS2 card.
 

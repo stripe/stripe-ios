@@ -90,14 +90,14 @@ public extension PaymentSheet {
         }
 
         /// Describes the style of navigation bar style
-        @_spi(STP) public var navigationBarStyle: NavigationBarStyle = .plain
+        public var navigationBarStyle: NavigationBarStyle = .plain
 
         /// Internal variable to determine if applyLiquidGlass() was called. Strictly intended for analytics.
         internal var didCallApplyLiquidGlass: Bool = false
 
         // MARK: NavigationBar
         /// Describes navigation bar styles
-        @_spi(STP) public enum NavigationBarStyle {
+        public enum NavigationBarStyle {
             case plain
 
             @available(iOS 26, *)
@@ -319,7 +319,7 @@ public extension PaymentSheet.Appearance {
     /// - Note: This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
     @available(iOS 26.0, *)
     @available(visionOS, unavailable)
-    @_spi(STP) mutating func applyLiquidGlass() {
+    mutating func applyLiquidGlass() {
         guard LiquidGlassDetector.meetsCompilerRequirements else {
              assertionFailure("applyLiquidGlass() requires Xcode 26.")
              return
@@ -339,8 +339,6 @@ public extension PaymentSheet.Appearance {
         navigationBarStyle = .glass
         cornerRadius = nil
         didCallApplyLiquidGlass = true
-        // Enable feature gate while still under development
-        LiquidGlassDetector.allowNewDesign = true
     }
 }
 
