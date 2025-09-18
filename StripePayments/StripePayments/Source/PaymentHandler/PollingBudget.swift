@@ -61,14 +61,6 @@ final class PollingBudget {
         self.duration = duration
     }
 
-    /// Records a polling attempt and updates the budget status if needed.
-    func recordPollAttempt() {
-        lastPollAttempt = Date()
-        if elapsedTime > duration {
-            canPoll = false
-        }
-    }
-
     /// Executes a block after the recommended delay and automatically records the poll attempt
     /// - Parameter block: Block to execute after the delay
     func pollAfter(block: @escaping () -> Void) {
@@ -77,7 +69,10 @@ final class PollingBudget {
         let optimizedDelay = max(0, 1.0 - timeSinceLastPoll)
         stpAssert(canPoll, "pollAfter should not be called when polling budget is exhausted")
         DispatchQueue.main.asyncAfter(deadline: .now() + optimizedDelay) {
-            self.recordPollAttempt()
+            self.lastPollAttempt = Date()
+            if self.elapsedTime > self.duration {
+                self.canPoll = false
+            }
             block()
         }
     }

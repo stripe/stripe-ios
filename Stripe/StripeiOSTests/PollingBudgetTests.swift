@@ -51,10 +51,15 @@ final class PollingBudgetTests: XCTestCase {
     }
 
     func testPollingBudget_recordPollAttemptWithinBudget() {
-        let budget = PollingBudget(startDate: Date(), duration: 1.0)
+        let budget = PollingBudget(startDate: Date(), duration: 1.5)
+        let expectation = XCTestExpectation(description: "Poll attempt within budget")
 
-        budget.recordPollAttempt()
-        XCTAssertTrue(budget.canPoll)
+        budget.pollAfter {
+            XCTAssertTrue(budget.canPoll)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 2.0)
     }
 
     func testPollingBudget_budgetExhaustion() {
@@ -64,8 +69,13 @@ final class PollingBudgetTests: XCTestCase {
 
         XCTAssertTrue(budget.canPoll, "Should allow one poll even after budget expires")
 
-        budget.recordPollAttempt()
-        XCTAssertFalse(budget.canPoll, "Should not allow polling after recording attempt beyond budget")
+        let expectation = XCTestExpectation(description: "Budget exhaustion")
+        budget.pollAfter {
+            XCTAssertFalse(budget.canPoll, "Should not allow polling after recording attempt beyond budget")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
     }
 
     // MARK: - "One Final Poll" Behavior Tests
@@ -77,25 +87,45 @@ final class PollingBudgetTests: XCTestCase {
 
         XCTAssertTrue(budget.canPoll, "Should allow the final poll even well beyond budget expiration")
 
-        budget.recordPollAttempt()
-        XCTAssertFalse(budget.canPoll, "Should not allow further polling after final poll attempt")
+        let expectation = XCTestExpectation(description: "Final poll")
+        budget.pollAfter {
+            XCTAssertFalse(budget.canPoll, "Should not allow further polling after final poll attempt")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
         XCTAssertFalse(budget.canPoll, "Should remain false on subsequent checks")
     }
 
     func testPollingBudget_multiplePollsWithinBudget() {
-        let budget = PollingBudget(startDate: Date(), duration: 0.1)
+        let budget = PollingBudget(startDate: Date(), duration: 3.0)
 
         XCTAssertTrue(budget.canPoll)
-        budget.recordPollAttempt()
-        XCTAssertTrue(budget.canPoll)
-        budget.recordPollAttempt()
-        XCTAssertTrue(budget.canPoll)
+        let expectation1 = XCTestExpectation(description: "First poll")
+        budget.pollAfter {
+            XCTAssertTrue(budget.canPoll)
+            expectation1.fulfill()
+        }
+        wait(for: [expectation1], timeout: 2.0)
 
-        Thread.sleep(forTimeInterval: 0.12)
+        let expectation2 = XCTestExpectation(description: "Second poll")
+        budget.pollAfter {
+            XCTAssertTrue(budget.canPoll)
+            expectation2.fulfill()
+        }
+        wait(for: [expectation2], timeout: 2.0)
 
+        Thread.sleep(forTimeInterval: 2.0)
+
+        // After the time has expired, canPoll should still be true (allowing one final poll)
+        // But once we call pollAfter, it should detect the budget is exhausted and set canPoll to false
         XCTAssertTrue(budget.canPoll, "Should allow final poll after expiration")
-        budget.recordPollAttempt()
-        XCTAssertFalse(budget.canPoll, "Should not allow polling after final attempt")
+        let expectation3 = XCTestExpectation(description: "Final poll after expiration")
+        budget.pollAfter {
+            XCTAssertFalse(budget.canPoll, "Should not allow polling after final attempt")
+            expectation3.fulfill()
+        }
+        wait(for: [expectation3], timeout: 1.0)
     }
 
     func testPollingBudget_withCardPaymentMethodDuration() {
@@ -103,8 +133,12 @@ final class PollingBudgetTests: XCTestCase {
 
         XCTAssertTrue(budget.canPoll)
 
-        budget.recordPollAttempt()
-        XCTAssertTrue(budget.canPoll)
+        let expectation = XCTestExpectation(description: "Card payment method poll")
+        budget.pollAfter {
+            XCTAssertTrue(budget.canPoll)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 2.0)
     }
 
     func testPollingBudget_withWalletPaymentMethodDuration() {
@@ -112,22 +146,12 @@ final class PollingBudgetTests: XCTestCase {
 
         XCTAssertTrue(budget.canPoll)
 
-        budget.recordPollAttempt()
-        XCTAssertTrue(budget.canPoll)
-    }
-
-    func testPollingBudget_behaviorConsistency() {
-        let budget1 = PollingBudget(startDate: Date(), duration: 0.01)
-        let budget2 = PollingBudget(startDate: Date(), duration: 0.01)
-
-        Thread.sleep(forTimeInterval: 0.02)
-
-        XCTAssertEqual(budget1.canPoll, budget2.canPoll)
-
-        budget1.recordPollAttempt()
-        budget2.recordPollAttempt()
-
-        XCTAssertEqual(budget1.canPoll, budget2.canPoll)
+        let expectation = XCTestExpectation(description: "LPM payment method poll")
+        budget.pollAfter {
+            XCTAssertTrue(budget.canPoll)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 2.0)
     }
 
     // MARK: - Edge Cases
@@ -138,8 +162,12 @@ final class PollingBudgetTests: XCTestCase {
 
         XCTAssertTrue(budget.canPoll)
 
-        budget.recordPollAttempt()
-        XCTAssertFalse(budget.canPoll)
+        let expectation = XCTestExpectation(description: "Past start date poll")
+        budget.pollAfter {
+            XCTAssertFalse(budget.canPoll)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 1.0)
     }
 
     func testPollingBudget_veryShortDuration() {
@@ -148,8 +176,12 @@ final class PollingBudgetTests: XCTestCase {
         Thread.sleep(forTimeInterval: 0.01)
         XCTAssertTrue(budget.canPoll)
 
-        budget.recordPollAttempt()
-        XCTAssertFalse(budget.canPoll)
+        let expectation = XCTestExpectation(description: "Very short duration poll")
+        budget.pollAfter {
+            XCTAssertFalse(budget.canPoll)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 1.0)
     }
 
     // MARK: - Timing Optimization Tests
@@ -174,7 +206,11 @@ final class PollingBudgetTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Fast request should respect 1-second intervals")
 
         // Record a poll attempt and wait a short time
-        budget.recordPollAttempt()
+        let initialExpectation = XCTestExpectation(description: "Initial poll")
+        budget.pollAfter {
+            initialExpectation.fulfill()
+        }
+        wait(for: [initialExpectation], timeout: 2.0)
         Thread.sleep(forTimeInterval: 0.3)
 
         let startTime = Date()
@@ -190,11 +226,15 @@ final class PollingBudgetTests: XCTestCase {
     }
 
     func testPollAfter_slowRequestTiming() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
+        let budget = PollingBudget(startDate: Date(), duration: 3.0)
         let expectation = XCTestExpectation(description: "Slow request should poll immediately")
 
         // Record a poll attempt and wait longer than target interval
-        budget.recordPollAttempt()
+        let initialExpectation = XCTestExpectation(description: "Initial slow poll")
+        budget.pollAfter {
+            initialExpectation.fulfill()
+        }
+        wait(for: [initialExpectation], timeout: 2.0)
         Thread.sleep(forTimeInterval: 1.1)
 
         let startTime = Date()
@@ -209,7 +249,7 @@ final class PollingBudgetTests: XCTestCase {
     }
 
     func testPollAfter_multipleQuickPolls() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
+        let budget = PollingBudget(startDate: Date(), duration: 3.0)
         let expectation = XCTestExpectation(description: "Multiple quick polls should respect timing")
         expectation.expectedFulfillmentCount = 3
 
@@ -219,7 +259,6 @@ final class PollingBudgetTests: XCTestCase {
         func performPoll(_ pollNumber: Int) {
             let pollStart = Date()
             budget.pollAfter {
-                let elapsed = Date().timeIntervalSince(pollStart)
                 pollTimes.append(Date().timeIntervalSince(overallStart))
 
                 if pollNumber < 3 {
