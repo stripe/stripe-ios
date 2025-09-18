@@ -295,7 +295,6 @@ extension STPPaymentIntentParams: NSCopying {
         copy.receiptEmail = receiptEmail
         copy.savePaymentMethod = savePaymentMethod
         copy.setAsDefaultPM = setAsDefaultPM
-        copy.radarOptions = radarOptions
         copy.returnURL = returnURL
         copy.setupFutureUsage = setupFutureUsage
         copy.useStripeSDK = useStripeSDK
