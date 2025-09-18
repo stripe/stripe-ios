@@ -120,6 +120,17 @@ extension PayWithLinkViewController {
             return LinkHintMessageView(message: hintMessage)
         }()
 
+        private var cardDetailsRecollectionElements: [Element]? {
+            var elements: [Element] = []
+            if viewModel.shouldRecollectCardExpiryDate {
+                elements.append(expiryDateElement)
+            }
+            if viewModel.shouldRecollectCardCVC {
+                elements.append(cvcElement)
+            }
+            return elements.isEmpty ? nil : elements
+        }
+
         private lazy var cardDetailsRecollectionSection: SectionElement = {
             let sectionElement = SectionElement(
                 elements: [
@@ -167,6 +178,14 @@ extension PayWithLinkViewController {
             stackView.directionalLayoutMargins = preferredContentMargins
             return stackView
         }()
+
+        private var bottomInset: CGFloat {
+            if #available(iOS 26.0, *) {
+                0
+            } else {
+                LinkUI.bottomInset
+            }
+        }
 
         private var containerViewBottomConstraint: NSLayoutConstraint!
 
@@ -220,7 +239,7 @@ extension PayWithLinkViewController {
 
             containerViewBottomConstraint = containerView.bottomAnchor.constraint(
                 equalTo: contentView.safeAreaLayoutGuide.bottomAnchor,
-                constant: -LinkUI.bottomInset
+                constant: -bottomInset
             )
 
             NSLayoutConstraint.activate([
@@ -271,10 +290,12 @@ extension PayWithLinkViewController {
                 animated: animated
             )
 
-            UIView.performWithoutAnimation {
-                expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
-                cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
-                cardDetailsRecollectionSection.view.layoutIfNeeded()
+            if let cardDetailsRecollectionElements {
+                UIView.performWithoutAnimation {
+                    cardDetailsRecollectionSection.elements = [
+                        SectionElement.MultiElementRow(cardDetailsRecollectionElements, theme: theme)
+                    ]
+                }
             }
 
             confirmButton.update(
@@ -826,7 +847,7 @@ private extension PayWithLinkViewController.WalletViewController {
         let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
 
         if notification.name == UIResponder.keyboardWillHideNotification {
-            containerViewBottomConstraint.constant = -LinkUI.bottomInset
+            containerViewBottomConstraint.constant = -bottomInset
         } else {
             containerViewBottomConstraint.constant = -keyboardInViewHeight - LinkUI.contentSpacing
         }
