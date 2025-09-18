@@ -179,6 +179,14 @@ extension PayWithLinkViewController {
             return stackView
         }()
 
+        private var bottomInset: CGFloat {
+            if #available(iOS 26.0, *) {
+                0
+            } else {
+                LinkUI.bottomInset
+            }
+        }
+
         private var containerViewBottomConstraint: NSLayoutConstraint!
 
         #if !os(visionOS)
@@ -231,7 +239,7 @@ extension PayWithLinkViewController {
 
             containerViewBottomConstraint = containerView.bottomAnchor.constraint(
                 equalTo: contentView.safeAreaLayoutGuide.bottomAnchor,
-                constant: -LinkUI.bottomInset
+                constant: -bottomInset
             )
 
             NSLayoutConstraint.activate([
@@ -839,7 +847,7 @@ private extension PayWithLinkViewController.WalletViewController {
         let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
 
         if notification.name == UIResponder.keyboardWillHideNotification {
-            containerViewBottomConstraint.constant = -LinkUI.bottomInset
+            containerViewBottomConstraint.constant = -bottomInset
         } else {
             containerViewBottomConstraint.constant = -keyboardInViewHeight - LinkUI.contentSpacing
         }
