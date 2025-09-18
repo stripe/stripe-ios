@@ -31,18 +31,9 @@ end
 
 # Find the merge-base (where this branch diverged from master)
 merge_base = `git merge-base origin/master HEAD`.strip
-puts "Using merge-base commit for master: #{merge_base}"
 
 # Get current HEAD commit before any checkouts
 current_commit = `git rev-parse HEAD`.strip
-puts "Current branch commit: #{current_commit}"
-
-# Get commit details for better visibility
-commit_info = `git log -1 --oneline #{merge_base}`.strip
-puts "Master commit details: #{commit_info}"
-
-current_commit_info = `git log -1 --oneline #{current_commit}`.strip
-puts "Current commit details: #{current_commit_info}"
 
 checkout_build_generate(merge_base, "master")
 checkout_build_generate(current_commit, "new")
