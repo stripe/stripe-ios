@@ -15,7 +15,7 @@ final class RowButtonFloating: RowButton {
 
     /// The view that manages corner radius and shadows and selection border
     private lazy var selectableRectangle: ShadowedRoundedRectangle = {
-        return ShadowedRoundedRectangle(appearance: appearance, isCapsule: true)
+        return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .capsule)
     }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
     private var contentInsets: CGFloat {

@@ -92,7 +92,7 @@ extension SavedPaymentMethodCollectionView {
             light: .systemGray5, dark: .tertiaryLabel))
         lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.colors.primary)
         lazy var selectableRectangle: ShadowedRoundedRectangle = {
-            return ShadowedRoundedRectangle(appearance: appearance, isCapsule: false)
+            return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .uniform)
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .edit, iconStyle: appearance.iconStyle)

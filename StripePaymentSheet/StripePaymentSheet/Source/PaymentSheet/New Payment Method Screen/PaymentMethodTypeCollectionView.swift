@@ -25,13 +25,13 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 
     // MARK: - Constants
     internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
-    static let capsuleCornerCellHeight: CGFloat = 64
-    static let uniformCornerCellHeight: CGFloat = 52
+    static let liquidGlassCornerCellHeight: CGFloat = 64
+    static let defaultCornerCellHeight: CGFloat = 52
 
     var cellHeight: CGFloat {
         return sizingInstance.selectableRectangle.didSetCornerConfiguration
-            ? Self.capsuleCornerCellHeight
-            : Self.uniformCornerCellHeight
+            ? Self.liquidGlassCornerCellHeight
+            : Self.defaultCornerCellHeight
     }
     internal static let minInteritemSpacing: CGFloat = 12
 
@@ -242,7 +242,7 @@ extension PaymentMethodTypeCollectionView {
             PromoBadgeView(appearance: appearance, tinyMode: true)
         }()
         private(set) lazy var selectableRectangle: ShadowedRoundedRectangle = {
-            return ShadowedRoundedRectangle(appearance: appearance, isCapsule: false)
+            return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .uniform)
         }()
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
@@ -261,13 +261,13 @@ extension PaymentMethodTypeCollectionView {
             isAccessibilityElement = true
             contentView.addAndPinSubview(selectableRectangle)
             selectableRectangle.frame = bounds
-            let isUsingCapsule: Bool = frame.height == PaymentMethodTypeCollectionView.capsuleCornerCellHeight
+            let isUsingLiquidGlass: Bool = frame.height == PaymentMethodTypeCollectionView.liquidGlassCornerCellHeight
 
             NSLayoutConstraint.activate([
                 paymentMethodLogo.topAnchor.constraint(
-                    equalTo: selectableRectangle.topAnchor, constant: isUsingCapsule ? 16 : 12),
+                    equalTo: selectableRectangle.topAnchor, constant: isUsingLiquidGlass ? 16 : 12),
                 paymentMethodLogo.leadingAnchor.constraint(
-                    equalTo: selectableRectangle.leadingAnchor, constant: isUsingCapsule ? 16 : 12),
+                    equalTo: selectableRectangle.leadingAnchor, constant: isUsingLiquidGlass ? 16 : 12),
                 paymentMethodLogo.heightAnchor.constraint(
                     equalToConstant: PaymentMethodTypeCollectionView.paymentMethodLogoSize.height),
                 paymentMethodLogoWidthConstraint,
