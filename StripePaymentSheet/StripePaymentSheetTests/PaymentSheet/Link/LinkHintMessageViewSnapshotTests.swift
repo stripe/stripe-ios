@@ -16,6 +16,14 @@ import UIKit
 // @iOS26
 class LinkHintMessageViewSnapshotTests: STPSnapshotTestCase {
 
+    override static func setUp() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+    }
+
     func testNormalLengthMessage() {
         let hintView = LinkHintMessageView(message: "Debit is most likely to be accepted.")
         hintView.frame = CGRect(x: 0, y: 0, width: 320, height: 44)

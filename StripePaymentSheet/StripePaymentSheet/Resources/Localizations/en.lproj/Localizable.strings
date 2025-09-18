@@ -202,10 +202,6 @@ to be saved and used in future checkout sessions. */
 /* Title for the Link signup screen */
 "Fast, secure checkout" = "Fast, secure checkout";
 
-/* A text notice shown when the user selects a card that requires
-re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
-
 /* Select a bank dropdown for FPX */
 "FPX Bank" = "FPX Bank";
 
@@ -439,9 +435,6 @@ is not supported by the merchant */
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
-
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";

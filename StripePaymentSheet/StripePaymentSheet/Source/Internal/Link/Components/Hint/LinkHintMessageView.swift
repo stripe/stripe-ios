@@ -15,7 +15,6 @@ final class LinkHintMessageView: UIView {
         static let spacing: CGFloat = LinkUI.smallContentSpacing
         static let margins: NSDirectionalEdgeInsets = LinkUI.compactButtonMargins
         static let iconSize: CGSize = .init(width: 16, height: 16)
-        static let cornerRadius: CGFloat = LinkUI.cornerRadius
         static let minimumHeight: CGFloat = LinkUI.minimumButtonHeight
     }
 
@@ -79,7 +78,12 @@ final class LinkHintMessageView: UIView {
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
         backgroundColor = .linkSurfaceSecondary
-        layer.cornerRadius = Constants.cornerRadius
+
+        if let cornerRadius = LinkUI.appearance.cornerRadius {
+            layer.cornerRadius = cornerRadius
+        } else {
+            ios26_applyDefaultCornerConfiguration()
+        }
 
         heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minimumHeight).isActive = true
     }

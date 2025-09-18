@@ -13,9 +13,18 @@ import UIKit
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 // @iOS26
 class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
+
+    override class func setUp() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+    }
 
     func testNormal() {
         let mockDataSource = MockDataSource()
