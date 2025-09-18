@@ -33,13 +33,16 @@ end
 merge_base = `git merge-base origin/master HEAD`.strip
 puts "Using merge-base commit for master: #{merge_base}"
 
+# Get current HEAD commit before any checkouts
+current_commit = `git rev-parse HEAD`.strip
+puts "Current branch commit: #{current_commit}"
+
 # Get commit details for better visibility
 commit_info = `git log -1 --oneline #{merge_base}`.strip
 puts "Master commit details: #{commit_info}"
 
-checkout_build_generate(merge_base, "master")
+current_commit_info = `git log -1 --oneline #{current_commit}`.strip
+puts "Current commit details: #{current_commit_info}"
 
-# In CI, checkout the current HEAD instead of trying to checkout by branch name
-current_commit = `git rev-parse HEAD`.strip
-puts "Building from current commit: #{current_commit}"
+checkout_build_generate(merge_base, "master")
 checkout_build_generate(current_commit, "new")
