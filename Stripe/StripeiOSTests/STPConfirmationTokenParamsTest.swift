@@ -25,6 +25,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertNil(params.shipping)
         XCTAssertNil(params.mandateData)
         XCTAssertNil(params.setAsDefaultPM)
+        XCTAssertNil(params.clientAttributionMetadata)
         XCTAssertNotNil(params.additionalAPIParameters)
         XCTAssertEqual(params.additionalAPIParameters.count, 0)
     }
@@ -74,6 +75,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertTrue(description.contains("shipping"))
         XCTAssertTrue(description.contains("mandateData"))
         XCTAssertTrue(description.contains("setAsDefaultPM"))
+        XCTAssertTrue(description.contains("clientAttributionMetadata"))
     }
 
     func testDescriptionWithPopulatedProperties() {
@@ -126,6 +128,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertEqual(mapping["shipping"], "shipping")
         XCTAssertEqual(mapping["mandateData"], "mandate_data")
         XCTAssertEqual(mapping["setAsDefaultPM"], "set_as_default_payment_method")
+        XCTAssertEqual(mapping["clientAttributionMetadata"], "client_attribution_metadata")
     }
 
     // MARK: - Individual Property Tests
@@ -221,6 +224,19 @@ class STPConfirmationTokenParamsTest: XCTestCase {
 
         params.paymentMethodOptions = nil
         XCTAssertNil(params.paymentMethodOptions)
+    }
+
+    func testClientAttributionMetadataProperty() {
+        let params = STPConfirmationTokenParams()
+
+        XCTAssertNil(params.clientAttributionMetadata)
+
+        let clientMetadata = STPClientAttributionMetadata()
+        params.clientAttributionMetadata = clientMetadata
+        XCTAssertEqual(params.clientAttributionMetadata, clientMetadata)
+
+        params.clientAttributionMetadata = nil
+        XCTAssertNil(params.clientAttributionMetadata)
     }
 
     // MARK: - Additional API Parameters Tests
@@ -352,12 +368,17 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         // Set setup future usage
         params.setupFutureUsage = STPPaymentIntentSetupFutureUsage.offSession
 
+        // Add client attribution metadata
+        let clientMetadata = STPClientAttributionMetadata()
+        params.clientAttributionMetadata = clientMetadata
+
         // Verify all properties are set
         XCTAssertNotNil(params.paymentMethodData)
         XCTAssertEqual(params.returnURL, "https://example.com/return")
         XCTAssertNotNil(params.mandateData)
         XCTAssertNotNil(params.shipping)
         XCTAssertEqual(params.setupFutureUsage, STPPaymentIntentSetupFutureUsage.offSession)
+        XCTAssertNotNil(params.clientAttributionMetadata)
 
         // Add setAsDefaultPM
         params.setAsDefaultPM = NSNumber(value: true)
@@ -370,6 +391,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertNotNil(encoded["shipping"])
         XCTAssertEqual(encoded["setup_future_usage"] as? String, "off_session")
         XCTAssertEqual(encoded["set_as_default_payment_method"] as? NSNumber, NSNumber(value: true))
+        XCTAssertNotNil(encoded["client_attribution_metadata"])
     }
 
     func testPropertyMutationAfterInit() {
@@ -424,6 +446,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertNil(encoded["return_url"])
         XCTAssertNil(encoded["shipping"])
         XCTAssertNil(encoded["mandate_data"])
+        XCTAssertNil(encoded["client_attribution_metadata"])
 
         // setup_future_usage should not be present when .none
         XCTAssertNil(encoded["setup_future_usage"])
