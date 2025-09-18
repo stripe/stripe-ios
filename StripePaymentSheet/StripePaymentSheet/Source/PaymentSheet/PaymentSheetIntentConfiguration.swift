@@ -124,7 +124,7 @@ public extension PaymentSheet {
             }
             validate()
         }
-
+// trigger ci
         /// Creates a `PaymentSheet.IntentConfiguration` with a confirmation token handler
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
