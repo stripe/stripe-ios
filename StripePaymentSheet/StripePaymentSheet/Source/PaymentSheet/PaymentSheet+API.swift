@@ -164,7 +164,6 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
-//        let radarOptions: STPRadarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
         let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
 
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
