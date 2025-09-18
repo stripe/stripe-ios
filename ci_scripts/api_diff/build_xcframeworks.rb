@@ -38,4 +38,8 @@ commit_info = `git log -1 --oneline #{merge_base}`.strip
 puts "Master commit details: #{commit_info}"
 
 checkout_build_generate(merge_base, "master")
-checkout_build_generate(ENV['GITHUB_HEAD_REF'], "new")
+
+# In CI, checkout the current HEAD instead of trying to checkout by branch name
+current_commit = `git rev-parse HEAD`.strip
+puts "Building from current commit: #{current_commit}"
+checkout_build_generate(current_commit, "new")
