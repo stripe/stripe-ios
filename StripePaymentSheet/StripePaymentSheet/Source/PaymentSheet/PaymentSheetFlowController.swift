@@ -660,7 +660,6 @@ extension PaymentSheet {
                 loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                previousLinkConfirmOption: self.viewController.linkConfirmOption,
                 previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
@@ -704,7 +703,6 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            previousLinkConfirmOption: LinkConfirmOption? = nil,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -726,7 +724,6 @@ extension PaymentSheet {
                     previousPaymentOption: previousPaymentOption
                 )
             }
-            controller.linkConfirmOption = previousLinkConfirmOption
             return controller
         }
     }
@@ -846,8 +843,6 @@ extension PaymentOption {
     var canLaunchLink: Bool {
         let hasLinkAccount = LinkAccountContext.shared.account?.isRegistered ?? false
         switch self {
-        case .saved(let paymentMethod, _):
-            return (paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode) && hasLinkAccount
         case .link(let confirmOption):
             switch confirmOption {
             case .signUp, .withPaymentMethod:
@@ -857,7 +852,7 @@ extension PaymentOption {
             case .withPaymentDetails:
                 return true
             }
-        case .applePay, .new, .external:
+        case .applePay, .new, .external, .saved:
             return false
         }
     }
