@@ -1,6 +1,7 @@
-## x.x.x x.x.x
+## x.x.x yyyy-yy-yy
 
 ## PaymentSheet
+* [Changed] `appearance.cornerRadius` is now nullable. Below iOS 26, When `nil`, the corner radius is 6.0 (ie unchanged from the current default). On iOS 26+, multiple rounder corner configurations are used to match Liquid Glass design.
 * [Fixed] Improved the cancellation UX when paying with Amazon Pay and Revolut Pay.
 
 ## 24.23.3 2025-09-17
