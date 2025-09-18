@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 extension StripeAPI.PaymentMethod {
     /// A callback to be run with a PaymentMethod response from the Stripe API.

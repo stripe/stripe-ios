@@ -10,6 +10,7 @@ import Foundation
 import ObjectiveC
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 /// :nodoc:
 @objc public protocol _stpinternal_STPApplePayContextDelegateBase: NSObjectProtocol {

@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 extension StripeAPI {
     /// An object representing parameters used to create a PaymentMethod object.

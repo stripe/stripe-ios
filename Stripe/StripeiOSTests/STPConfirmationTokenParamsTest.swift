@@ -5,7 +5,6 @@
 //  Created by Nick Porter on 9/3/25.
 //
 
-@testable@_spi(STP) import StripeCore
 @testable@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
 import XCTest
 
