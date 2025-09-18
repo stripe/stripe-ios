@@ -13,6 +13,7 @@ protocol SelectableRectangle: UIView {
 }
 
 @available(iOS 26.0, *)
+// TODO(iOS 26): Remove this class, replace with ShadowedRoundedRectangle
 class LiquidGlassRectangle: UIView, SelectableRectangle {
     private let roundedRectangle: UIView
     private let isCapsule: Bool
@@ -43,11 +44,7 @@ class LiquidGlassRectangle: UIView, SelectableRectangle {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
 
-        if isCapsule {
-            roundedRectangle.ios26_applyCapsuleCornerConfiguration()
-        } else {
-            roundedRectangle.ios26_applyDefaultCornerConfiguration()
-        }
+        roundedRectangle.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: isCapsule ? .capsule : .uniform)
 
         // Border
         if isSelected {
