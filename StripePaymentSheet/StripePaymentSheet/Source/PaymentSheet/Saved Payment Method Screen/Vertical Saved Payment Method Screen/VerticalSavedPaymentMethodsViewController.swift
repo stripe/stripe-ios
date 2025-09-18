@@ -426,7 +426,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         do {
             // Update the payment method
             let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-
+            updatedPaymentMethod.updateLocalFields(from: paymentMethod)
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
         } catch {
@@ -493,6 +493,12 @@ private extension STPPaymentMethod {
             return type != .card
         }
         return linkPaymentDetails.isNotCard
+    }
+
+    func updateLocalFields(from original: STPPaymentMethod) {
+        // We don't receive the following fields as part of the update response, so we need to copy them over
+        linkPaymentDetails = original.linkPaymentDetails
+        isLinkPassthroughMode = original.isLinkPassthroughMode
     }
 }
 
