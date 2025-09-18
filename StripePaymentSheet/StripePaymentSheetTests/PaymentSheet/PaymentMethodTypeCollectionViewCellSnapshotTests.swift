@@ -17,7 +17,7 @@ class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
 
     func test_withPromoBadge() {
         let appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible()
-        let height = appearance.cornerRadius == nil ? PaymentMethodTypeCollectionView.capsuleCornerCellHeight : PaymentMethodTypeCollectionView.uniformCornerCellHeight
+        let height = appearance.cornerRadius == nil ? PaymentMethodTypeCollectionView.liquidGlassCornerCellHeight : PaymentMethodTypeCollectionView.defaultCornerCellHeight
 
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell(frame: CGRect(x: 0, y: 0, width: 120, height: height))
         cell.paymentMethodType = .instantDebits
@@ -32,7 +32,7 @@ class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
         appearance.primaryButton.successTextColor = .black
         appearance.primaryButton.successBackgroundColor = .red
 
-        let height = appearance.cornerRadius == nil ? PaymentMethodTypeCollectionView.capsuleCornerCellHeight : PaymentMethodTypeCollectionView.uniformCornerCellHeight
+        let height = appearance.cornerRadius == nil ? PaymentMethodTypeCollectionView.liquidGlassCornerCellHeight : PaymentMethodTypeCollectionView.defaultCornerCellHeight
 
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell(frame: CGRect(x: 0, y: 0, width: 120, height: height))
         cell.paymentMethodType = .instantDebits

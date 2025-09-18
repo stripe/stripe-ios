@@ -23,8 +23,8 @@ class PaymentTypeCellSnapshotTests: STPSnapshotTestCase {
         cell.frame = CGRect(
             origin: .zero,
             size: CGSize(
-                width: PaymentMethodTypeCollectionView.uniformCornerCellHeight,
-                height: PaymentMethodTypeCollectionView.uniformCornerCellHeight
+                width: PaymentMethodTypeCollectionView.defaultCornerCellHeight,
+                height: PaymentMethodTypeCollectionView.defaultCornerCellHeight
             )
         )
         STPSnapshotVerifyView(cell)
@@ -36,8 +36,8 @@ class PaymentTypeCellSnapshotTests: STPSnapshotTestCase {
         cell.frame = CGRect(
             origin: .zero,
             size: CGSize(
-                width: PaymentMethodTypeCollectionView.uniformCornerCellHeight,
-                height: PaymentMethodTypeCollectionView.uniformCornerCellHeight
+                width: PaymentMethodTypeCollectionView.defaultCornerCellHeight,
+                height: PaymentMethodTypeCollectionView.defaultCornerCellHeight
             )
         )
         cell.isSelected = true
@@ -51,8 +51,8 @@ class PaymentTypeCellSnapshotTests: STPSnapshotTestCase {
         cell.frame = CGRect(
             origin: .zero,
             size: CGSize(
-                width: PaymentMethodTypeCollectionView.uniformCornerCellHeight,
-                height: PaymentMethodTypeCollectionView.uniformCornerCellHeight
+                width: PaymentMethodTypeCollectionView.defaultCornerCellHeight,
+                height: PaymentMethodTypeCollectionView.defaultCornerCellHeight
             )
         )
         STPSnapshotVerifyView(cell)
@@ -66,8 +66,8 @@ class PaymentTypeCellSnapshotTests: STPSnapshotTestCase {
         cell.frame = CGRect(
             origin: .zero,
             size: CGSize(
-                width: PaymentMethodTypeCollectionView.uniformCornerCellHeight,
-                height: PaymentMethodTypeCollectionView.uniformCornerCellHeight
+                width: PaymentMethodTypeCollectionView.defaultCornerCellHeight,
+                height: PaymentMethodTypeCollectionView.defaultCornerCellHeight
             )
         )
         cell.isSelected = true
