@@ -133,7 +133,7 @@ extension PayWithLinkViewController {
                 coordinator?.accountUpdated(linkAccount)
             case .canceled:
                 if isUsingWebviewFallback {
-                    // Webview was canceled - return to payment sheet (same as cancel button in WalletViewController)
+                    // Webview was canceled - return to payment sheet
                     coordinator?.cancel(shouldReturnToPaymentSheet: true)
                 } else {
                     // Embedded verification was canceled - logout
