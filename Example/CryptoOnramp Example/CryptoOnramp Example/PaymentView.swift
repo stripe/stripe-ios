@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+@_spi(STP)
+import StripePayments
+
+@_spi(STP)
+import StripePaymentsUI
+
 struct PaymentView: View {
     private enum NumberPadKey: String, Identifiable {
         case zero
@@ -29,12 +35,20 @@ struct PaymentView: View {
         }
     }
 
+    private enum PaymentMethodIcon {
+        case systemName(String)
+        case image(UIImage)
+    }
+
+    let customerId: String
     let onContinue: () -> Void
 
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
 
     @State private var amountText: String = "0"
+    @State private var shouldShowPaymentMethodSheet: Bool = false
+    @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
 
     // This example UI is intended for USD ($) only, but we respect the
     // current locale’s decimal separator.
@@ -107,6 +121,13 @@ struct PaymentView: View {
                         .bold()
                         .padding(.top, 8)
 
+                    if !paymentTokens.isEmpty {
+                        LazyVStack(spacing: 8) {
+                            ForEach(paymentTokens, id: \.id) { token in
+                                makePaymentMethodButton(using: token)
+                            }
+                        }
+                    }
 
                     HStack {
                         VStack { Divider() }
@@ -122,17 +143,17 @@ struct PaymentView: View {
                         makePaymentMethodButton(
                             topLabel: "Apple Pay",
                             bottomLabel: "Instant",
-                            iconSystemName: "applelogo"
+                            icon: .systemName("applelogo")
                         )
                         makePaymentMethodButton(
                             topLabel: "Add Debit / Credit Card",
                             bottomLabel: "1-5 minutes",
-                            iconSystemName: "creditcard"
+                            icon: .systemName("creditcard")
                         )
                         makePaymentMethodButton(
                             topLabel: "Add Bank Account",
                             bottomLabel: "Free",
-                            iconSystemName: "building.columns",
+                            icon: .systemName("building.columns"),
                             highlightSubtitle: true
                         )
                     }
@@ -140,6 +161,9 @@ struct PaymentView: View {
                 .padding()
             }
             .presentationDetents([.medium, .large])
+        }
+        .onAppear {
+            fetchPaymentTokens()
         }
     }
 
@@ -184,7 +208,7 @@ struct PaymentView: View {
     private func makePaymentMethodButton(
         topLabel: String,
         bottomLabel: String,
-        iconSystemName: String,
+        icon: PaymentMethodIcon,
         highlightSubtitle: Bool = false
     ) -> some View {
         Button(action: {
@@ -197,9 +221,14 @@ struct PaymentView: View {
                         .frame(width: 40, height: 40)
                         .offset(y: 1)
 
-                    Image(systemName: iconSystemName)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(.primary)
+                    switch icon {
+                    case let .systemName(name):
+                        Image(systemName: name)
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(.primary)
+                    case let .image(image):
+                        Image(uiImage: image)
+                    }
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
@@ -221,6 +250,25 @@ struct PaymentView: View {
             )
         }
         .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func makePaymentMethodButton(using token: PaymentTokensResponse.PaymentToken) -> some View {
+        if let card = token.card {
+            let cardBrand = STPCard.brand(from: card.brand)
+            let icon = STPImageLibrary.cardBrandImage(for: cardBrand)
+            let brandName = STPCardBrandUtilities.stringFrom(cardBrand)
+            let last4 = card.last4
+            let fundingType = STPCardFundingType(card.funding)
+            let formattedBrandName = String(format: fundingType.displayNameWithBrand, brandName ?? "")
+            let topLabelText = "\(formattedBrandName) •••• \(last4)"
+            let bottomLabel = "\(card.expMonth) / \(card.expYear)"
+            makePaymentMethodButton(topLabel: topLabelText, bottomLabel: bottomLabel, icon: .image(icon))
+        } else if let usBankAccount = token.usBankAccount {
+            EmptyView()
+        } else {
+            EmptyView()
+        }
     }
 
     @ViewBuilder
@@ -325,8 +373,46 @@ struct PaymentView: View {
             amountText = "0"
         }
     }
+
+    private func fetchPaymentTokens() {
+        isLoading.wrappedValue = true
+        Task {
+            do {
+                let response = try await APIClient.shared.fetchPaymentTokens(cryptoCustomerToken: customerId)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    paymentTokens = response.data
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                }
+            }
+        }
+    }
+}
+
+private extension STPCardFundingType {
+    var displayNameWithBrand: String {
+        switch self {
+        case .credit: String.Localized.Funding.credit
+        case .debit: String.Localized.Funding.debit
+        case .prepaid: String.Localized.Funding.prepaid
+        case .other: String.Localized.Funding.default
+        @unknown default: ""
+        }
+    }
+
+    init(_ typeString: String) {
+        self = switch typeString {
+        case "debit": .debit
+        case "credit": .credit
+        case "prepaid": .prepaid
+        default: .other
+        }
+    }
 }
 
 #Preview {
-    PaymentView(onContinue: {})
+    PaymentView(customerId: "cus_example", onContinue: {})
 }

@@ -132,7 +132,7 @@ struct CryptoOnrampExampleView: View {
                             flowCoordinator.advanceAfterWalletSelection(wallet)
                         }
                     case let .payment(customerId, wallet):
-                        PaymentView {
+                        PaymentView(customerId: customerId) {
                             flowCoordinator.advanceAfterPayment()
                         }
                     case let .authenticated(customerId, wallet):
