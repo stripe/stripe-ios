@@ -35,6 +35,7 @@ private class CardScanningEasilyTappableButton: UIButton {
 @objc(STP_Internal_CardScanningView)
 @available(macCatalyst 14.0, *)
 class CardScanningView: UIView, STPCardScannerDelegate {
+
     private(set) weak var cameraView: STPCameraView?
 
     weak var delegate: STP_Internal_CardScanningViewDelegate?
@@ -183,8 +184,8 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         snapshotView = nil
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(theme: ElementsAppearance) {
+        super.init(frame: .zero)
         self.setupBlurView()
 
         let cameraView = STPCameraView(frame: bounds)
@@ -203,12 +204,23 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         addSubview(errorLabel)
         addSubview(closeButton)
 
-        layer.cornerRadius = CardScanningView.cornerRadius
         self.cameraView = cameraView
-        cameraView.layer.cornerRadius = CardScanningView.cornerRadius
         self.cameraView?.translatesAutoresizingMaskIntoConstraints = false
         // The first few frames of the camera view will be black, so our background should be black too.
         self.cameraView?.backgroundColor = UIColor.black
+
+        let closeButtonInset: CGFloat
+        // If Liquid Glass is enabled, we use rounder corners to match the appearance of the text fields and other elements
+        // The close button is pushed a bit further away from the edge to compensate
+        // If the user has set a customer corner radius, we do not apply the Liquid Glass style, but we still use our corner radius
+        if theme.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyDefaultCornerConfiguration()
+            closeButtonInset = 12
+        } else {
+            layer.cornerRadius = Self.cornerRadius
+            cameraView.layer.cornerRadius = Self.cornerRadius
+            closeButtonInset = 8
+        }
 
         // To get the right animation, we'll add a breakable bottom constraint
         // and enable clipsToBounds. Then, when hidden, the view will shrink while
@@ -239,8 +251,8 @@ class CardScanningView: UIView, STPCardScannerDelegate {
                     equalTo: cardOutlineView.rightAnchor, constant: -8),
                 errorLabel.centerYAnchor.constraint(equalTo: cardOutlineView.centerYAnchor),
 
-                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8),
-                closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
+                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -closeButtonInset),
+                closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: closeButtonInset),
 
                 cardOutlineView.heightAnchor.constraint(
                     equalTo: cardOutlineView.widthAnchor, multiplier: CardScanningView.cardSizeRatio),
