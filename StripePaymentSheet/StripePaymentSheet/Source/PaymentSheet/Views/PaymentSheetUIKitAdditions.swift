@@ -20,10 +20,12 @@ enum PaymentSheetUI {
     static let defaultPadding: CGFloat = 20
 
 #if os(visionOS)
-    static let navBarPadding: CGFloat = 30
+    static func navBarPadding(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return 30
+    }
 #else
-    static var navBarPadding: CGFloat {
-        return LiquidGlassDetector.isEnabled ? 16 : defaultPadding
+    static func navBarPadding(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return appearance.navigationBarStyle.isGlass ? 16 : defaultPadding
     }
 #endif
 
