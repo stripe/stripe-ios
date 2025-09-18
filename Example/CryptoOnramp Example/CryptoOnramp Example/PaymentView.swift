@@ -127,7 +127,7 @@ struct PaymentView: View {
 
                     if !paymentTokens.isEmpty {
                         LazyVStack(spacing: 8) {
-                            ForEach(paymentTokens, id: \.id) { token in
+                            ForEach(paymentTokens) { token in
                                 makePaymentMethodButton(using: token)
                             }
                         }
