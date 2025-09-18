@@ -55,7 +55,10 @@ extension PayWithLinkViewController {
             callToAction: viewModel.confirmButtonCallToAction,
             showProcessingLabel: context.showProcessingLabel,
             compact: viewModel.shouldUseCompactConfirmButton,
-            linkAppearance: viewModel.linkAppearance
+            linkAppearance: viewModel.linkAppearance,
+            didTapWhenDisabled: { [weak self] in
+                self?.cardDetailsRecollectionSection.showAllValidationErrors()
+            }
         ) { [weak self] in
             guard let self else {
                 return
@@ -107,12 +110,6 @@ extension PayWithLinkViewController {
             return TextFieldElement(configuration: configuration, theme: theme)
         }()
 
-        private lazy var expiredCardNoticeView: LinkNoticeView = {
-            let noticeView = LinkNoticeView(type: .error)
-            noticeView.text = viewModel.noticeText
-            return noticeView
-        }()
-
         private lazy var debitCardHintView: LinkHintMessageView? = {
             guard let hintMessage = viewModel.debitCardHintIfSupported(for: linkAccount) else {
                 return nil
@@ -135,8 +132,6 @@ extension PayWithLinkViewController {
                 arrangedSubviews.append(debitCardHintView)
             }
 
-            arrangedSubviews.append(contentsOf: [mandateView, expiredCardNoticeView])
-
             let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
@@ -155,12 +150,11 @@ extension PayWithLinkViewController {
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
                 errorLabel,
+                mandateView,
                 confirmButton,
             ])
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPickerContainerView)
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: cardDetailsRecollectionSection.view)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = preferredContentMargins
             return stackView
@@ -261,13 +255,6 @@ extension PayWithLinkViewController {
             paymentPickerContainerView.toggleArrangedSubview(
                 mandateView,
                 shouldShow: viewModel.shouldShowMandate,
-                animated: animated
-            )
-
-            expiredCardNoticeView.text = viewModel.noticeText
-            containerView.toggleArrangedSubview(
-                expiredCardNoticeView,
-                shouldShow: viewModel.shouldShowNotice,
                 animated: animated
             )
 
