@@ -77,13 +77,20 @@ private enum CaptchaResult {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let startTime = Date()
                 let result = await withCheckedContinuation { (continuation: CheckedContinuation<CaptchaResult, Never>) in
+                    // Prevent Swift Task continuation misuse
+                    var isResumed = false
+                    let resumeOnce = { (result: CaptchaResult) in
+                        guard !isResumed else { return }
+                        isResumed = true
+                        continuation.resume(returning: result)
+                    }
                     hcaptcha.didFinishLoading {
                         hcaptcha.validate { result in
                             do {
                                 let token = try result.dematerialize()
-                                continuation.resume(returning: .success(token))
+                                resumeOnce(.success(token))
                             } catch {
-                                continuation.resume(returning: .error(error))
+                                resumeOnce(.error(error))
                             }
                         }
                     }
