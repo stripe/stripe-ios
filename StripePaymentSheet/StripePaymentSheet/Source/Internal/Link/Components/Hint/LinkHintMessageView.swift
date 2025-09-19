@@ -18,6 +18,29 @@ final class LinkHintMessageView: UIView {
         static let minimumHeight: CGFloat = LinkUI.minimumButtonHeight
     }
 
+    enum Style {
+        case filled
+        case outlined
+
+        var backgroundColor: UIColor {
+            switch self {
+            case .filled:
+                return .linkSurfaceSecondary
+            case .outlined:
+                return .linkSurfacePrimary
+            }
+        }
+
+        var textColor: UIColor {
+            switch self {
+            case .filled:
+                return .linkTextTertiary
+            case .outlined:
+                return .linkTextSecondary
+            }
+        }
+    }
+
     var text: String? {
         get {
             return textLabel.text
@@ -43,14 +66,17 @@ final class LinkHintMessageView: UIView {
 
     private lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .linkTextTertiary
+        label.textColor = style.textColor
         label.font = LinkUI.font(forTextStyle: .detail)
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         return label
     }()
 
-    init(message: String) {
+    private let style: Style
+
+    init(message: String, style: Style) {
+        self.style = style
         super.init(frame: .zero)
         setupUI()
         configureImage()
@@ -77,7 +103,16 @@ final class LinkHintMessageView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
-        backgroundColor = .linkSurfaceSecondary
+        backgroundColor = style.backgroundColor
+
+        if style == .outlined {
+            // This color isn't semantically correct, but linkBorderDefault is the same
+            // as the background in dark mode and we want to make the border stand out.
+            layer.borderColor = traitCollection.userInterfaceStyle == .dark
+                ? UIColor.linkSurfaceTertiary.cgColor
+                : UIColor.linkBorderDefault.cgColor
+            layer.borderWidth = 1.0
+        }
 
         if let cornerRadius = LinkUI.appearance.cornerRadius {
             layer.cornerRadius = cornerRadius
