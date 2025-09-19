@@ -189,7 +189,7 @@ extension PaymentSheet {
 
         // MARK: - New Payment Method
         case let .new(confirmParams):
-            Task {
+            Task { @MainActor in
                 let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
                 let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                 let paymentMethodType: STPPaymentMethodType = {
@@ -330,7 +330,7 @@ extension PaymentSheet {
             // - paymentMethodParams: The params to use for the payment.
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
-                Task {
+                Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                     paymentMethodParams.radarOptions = radarOptions
@@ -393,7 +393,7 @@ extension PaymentSheet {
                 }
             }
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethod, linkAccount, shouldSave in
-                Task {
+                Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
