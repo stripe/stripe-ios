@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 import UIKit
 
 /// An object representing parameters used to create a PaymentMethod object.

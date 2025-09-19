@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// An object representing parameters used to confirm a PaymentIntent object.
 /// A PaymentIntent must have a PaymentMethod or Source associated in order to successfully confirm it.
