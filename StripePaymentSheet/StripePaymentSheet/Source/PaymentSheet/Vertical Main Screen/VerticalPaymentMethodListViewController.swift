@@ -43,6 +43,12 @@ class VerticalPaymentMethodListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func clearSelection() {
+        currentSelection = nil
+        initialSelection = nil
+        refreshContent()
+    }
+
     init(
         initialSelection: RowButtonType?,
         savedPaymentMethods: [STPPaymentMethod],
