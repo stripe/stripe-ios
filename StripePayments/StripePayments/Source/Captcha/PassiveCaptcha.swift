@@ -78,19 +78,16 @@ private enum CaptchaResult {
                 let startTime = Date()
                 let result = await withCheckedContinuation { (continuation: CheckedContinuation<CaptchaResult, Never>) in
                     // Prevent Swift Task continuation misuse
-                    var isResumed = false
-                    let resumeOnce = { (result: CaptchaResult) in
-                        guard !isResumed else { return }
-                        isResumed = true
-                        continuation.resume(returning: result)
-                    }
+                    var nillableContinuation: CheckedContinuation<CaptchaResult, Never>? = continuation
                     hcaptcha.didFinishLoading {
                         hcaptcha.validate { result in
                             do {
                                 let token = try result.dematerialize()
-                                resumeOnce(.success(token))
+                                nillableContinuation?.resume(returning: .success(token))
+                                nillableContinuation = nil
                             } catch {
-                                resumeOnce(.error(error))
+                                nillableContinuation?.resume(returning: .error(error))
+                                nillableContinuation = nil
                             }
                         }
                     }
