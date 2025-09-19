@@ -507,10 +507,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             }()
 
-            let token = try await apiClient.createPaymentToken(
-                for: paymentMethodId,
-                linkAccountInfo: linkAccountInfo
-            )
+            let token = try await apiClient.createPaymentToken(for: paymentMethodId)
             analyticsClient.log(.cryptoPaymentTokenCreated(paymentMethodType: selectedPaymentSource.analyticsValue))
             return token.id
         } catch {
