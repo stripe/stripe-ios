@@ -33,18 +33,12 @@ extension PayWithLinkViewController {
 
         private let linkAppearance: LinkAppearance?
 
-        private lazy var thisIsYourDefaultLabel: UILabel = {
-            let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.textColor = .linkTextSecondary
-            label.adjustsFontForContentSizeCategory = true
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = STPLocalizedString(
+        private lazy var thisIsYourDefaultView: LinkHintMessageView = {
+            let message = STPLocalizedString(
                 "This is your default",
                 "Text of a label indicating that a payment method is the default."
             )
-            return label
+            return LinkHintMessageView(message: message)
         }()
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
@@ -120,7 +114,7 @@ extension PayWithLinkViewController {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentMethodEditElement.view,
                 errorLabel,
-                thisIsYourDefaultLabel,
+                thisIsYourDefaultView,
                 updateButton,
             ])
 
@@ -132,10 +126,10 @@ extension PayWithLinkViewController {
             contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.bottomInset))
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
-                thisIsYourDefaultLabel.isHidden = true
+                thisIsYourDefaultView.isHidden = true
                 stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: paymentMethodEditElement.view)
             } else {
-                stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: thisIsYourDefaultLabel)
+                stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: thisIsYourDefaultView)
             }
 
             updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
