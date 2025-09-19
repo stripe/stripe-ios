@@ -35,7 +35,7 @@ enum Image: String, ImageMaker {
 
 extension UIImage {
     func applyFinancialConnectionsBackButtonEdgeInsets() -> UIImage {
-        if FinancialConnectionsLiquidGlassDetector.isEnabled {
+        if LiquidGlassDetector.isEnabledInMerchantApp {
             return self
         } else {
             return withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -13, bottom: -2, right: 0))
@@ -45,7 +45,7 @@ extension UIImage {
 
 extension UIBarButtonItem {
     func applyFinancialConnectionsCloseButtonEdgeInsets() {
-        if !FinancialConnectionsLiquidGlassDetector.isEnabled {
+        if !LiquidGlassDetector.isEnabledInMerchantApp {
             imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         }
     }
