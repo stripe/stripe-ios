@@ -74,7 +74,7 @@ typealias CaptchaResult = Result<String, Error>
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let startTime = Date()
                 let result = await withCheckedContinuation { (continuation: CheckedContinuation<CaptchaResult, Never>) in
-                    // Prevent Swift Task continuation misuse
+                    // Prevent Swift Task continuation misuse - hcaptcha.validate can be called unexpectedly multiple times
                     var nillableContinuation: CheckedContinuation<CaptchaResult, Never>? = continuation
                     hcaptcha.didFinishLoading {
                         hcaptcha.validate { result in
