@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An object representing parameters used to create a ConfirmationToken object.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
@@ -37,6 +38,9 @@ import Foundation
     /// This should be a boolean NSNumber, so that it can be `nil`
     @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
 
+    /// Contains metadata with identifiers for the session and information about the integration
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -51,6 +55,7 @@ import Foundation
             "shipping = \(String(describing: shipping))",
             "mandateData = \(String(describing: mandateData))",
             "setAsDefaultPM = \(String(describing: setAsDefaultPM))",
+            "clientAttributionMetadata = \(String(describing: clientAttributionMetadata))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
@@ -72,6 +77,7 @@ import Foundation
             NSStringFromSelector(#selector(getter: shipping)): "shipping",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
+            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
         ]
     }
 
