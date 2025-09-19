@@ -890,7 +890,7 @@ extension PaymentSheetFormFactory {
         return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
     }
 
-    func makeInstantDebits(countries: [String]? = nil) -> PaymentMethodElement {
+    func makeInstantDebits(countries: [String]?) -> PaymentMethodElement {
         let titleElement: SubtitleElement? = if case .paymentElement = configuration {
             makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
         } else {
