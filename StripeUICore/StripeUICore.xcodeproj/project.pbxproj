@@ -91,6 +91,7 @@
 		B1B177526E04EE65A9D1C64A /* DynamicHeightContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E7CFED5747279A5976D7BA /* DynamicHeightContainerView.swift */; };
 		B6107E5E2D6E116417D22DD9 /* StripeUICoreBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68363D1C6BB6468AC1DDA4C /* StripeUICoreBundleLocator.swift */; };
 		B65F5B032E60C5EB001425CC /* LiquidGlassHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F5B022E60C5EB001425CC /* LiquidGlassHelpers.swift */; };
+		B6F905562E7E0BC800942BA5 /* ElementsAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F905552E7E0BC500942BA5 /* ElementsAppearance.swift */; };
 		BC40443B2A2F7130351589A7 /* NSAttributedString+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8AFA3891DA214D9FBEF650 /* NSAttributedString+StripeUICore.swift */; };
 		BE42104922DCA4DCB3919DD4 /* AddressSectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5CCD5D11A49D48D8D21C62 /* AddressSectionElement.swift */; };
 		BEB4F0E3B6218CA3E5DE95F9 /* STPBlikCodeValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055BFB32FE9CF519DC25C8F /* STPBlikCodeValidatorTest.swift */; };
@@ -273,6 +274,7 @@
 		B32FABC26C892C74FD444E88 /* TextFieldFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatterTest.swift; sourceTree = "<group>"; };
 		B65F5B022E60C5EB001425CC /* LiquidGlassHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassHelpers.swift; sourceTree = "<group>"; };
 		B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
+		B6F905552E7E0BC500942BA5 /* ElementsAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsAppearance.swift; sourceTree = "<group>"; };
 		B844EED0578B990F4772CD01 /* AddressSpecProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProvider.swift; sourceTree = "<group>"; };
 		B871CED2EB8A1F7EEC0FE087 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B8DC1E33CDF3B3FE549A7210 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -389,19 +391,20 @@
 			isa = PBXGroup;
 			children = (
 				17217EBC2C89A90814900B85 /* Checkbox */,
+				4893E4B43FEFCE920D432F0C /* ContainerElement.swift */,
+				B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */,
+				5BAD4C8EE686B0F9E86DBC8D /* DropdownFieldElement.swift */,
+				EAB02AB36074791D39F0CDC1 /* Element.swift */,
+				B6F905552E7E0BC500942BA5 /* ElementsAppearance.swift */,
+				85AC8D5E9700C8471D225C22 /* ElementsUI.swift */,
 				F08533861A4AC1BB01315CCE /* Factories */,
 				0737F3733178B902986E6128 /* Form */,
 				CF2B7051099FA08B7F0C446F /* PhoneNumber */,
 				B15F8A0D7BC00200896F00FD /* PickerField */,
 				B3A1C7E17AE91C2352DE42DB /* Section */,
-				82B232DB32C55ABC81F03EEA /* TextField */,
-				4893E4B43FEFCE920D432F0C /* ContainerElement.swift */,
-				B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */,
-				5BAD4C8EE686B0F9E86DBC8D /* DropdownFieldElement.swift */,
-				EAB02AB36074791D39F0CDC1 /* Element.swift */,
-				85AC8D5E9700C8471D225C22 /* ElementsUI.swift */,
 				583B93BE0152CDF7383A37E7 /* StaticElement.swift */,
 				614197FC2D944A3200529A5F /* SubtitleElement.swift */,
+				82B232DB32C55ABC81F03EEA /* TextField */,
 				EDD864C601BFB09A851715FA /* TextOrDropdownElement.swift */,
 			);
 			path = Elements;
@@ -975,6 +978,7 @@
 				5936629C4665BC698C3458B1 /* TextFieldElementConfiguration.swift in Sources */,
 				39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */,
 				986924FDA1EEF4146CD81B50 /* TextFieldView.swift in Sources */,
+				B6F905562E7E0BC800942BA5 /* ElementsAppearance.swift in Sources */,
 				495D530E2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift in Sources */,
 				A29B5AC2F03116E2F48970EE /* TextOrDropdownElement.swift in Sources */,
 				36376E12AE7ABA21FFC474E6 /* Events.swift in Sources */,
