@@ -132,6 +132,11 @@ import Foundation
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
     case mcOptionSelectEmbeddedSavedPM = "mc_embedded_paymentoption_savedpm_select"
 
+    // MARK: - PaymentSheet Wallet Button Taps
+    case mcWalletButtonTapApplePay = "mc_wallet_button_tap_applepay"
+    case mcWalletButtonTapLink = "mc_wallet_button_tap_link"
+    case mcWalletButtonTapShopPay = "mc_wallet_button_tap_shoppay"
+
     // MARK: - PaymentSheet Saved Payment Method Removed
     case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
     case mcOptionRemoveCompleteSavedPM = "mc_complete_paymentoption_removed"

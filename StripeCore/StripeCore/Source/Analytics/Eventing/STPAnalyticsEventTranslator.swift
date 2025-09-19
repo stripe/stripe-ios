@@ -75,6 +75,14 @@ struct STPAnalyticsEventTranslator {
             }
             return .removedSavedPaymentMethod(.init(paymentMethodType: paymentMethodType))
 
+        // Wallet Button Taps
+        case .mcWalletButtonTapApplePay:
+            return .tappedWalletButton(.init(walletType: "apple_pay"))
+        case .mcWalletButtonTapLink:
+            return .tappedWalletButton(.init(walletType: "link"))
+        case .mcWalletButtonTapShopPay:
+            return .tappedWalletButton(.init(walletType: "shop_pay"))
+
         default:
             return nil
         }
