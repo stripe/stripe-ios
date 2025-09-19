@@ -213,7 +213,7 @@ class PaymentSheetFormFactory {
     func make() -> PaymentMethodElement {
         switch paymentMethod {
         case .instantDebits, .linkCardBrand:
-            return makeInstantDebits()
+            return makeInstantDebits(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
         case .external(let externalPaymentOption):
             return makeExternalPaymentMethodForm(subtitle: externalPaymentOption.displaySubtext,
                                                  disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection)
