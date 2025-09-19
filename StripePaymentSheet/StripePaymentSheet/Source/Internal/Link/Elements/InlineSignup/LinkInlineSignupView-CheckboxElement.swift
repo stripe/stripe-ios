@@ -50,7 +50,7 @@ extension LinkInlineSignupView {
                 switch mode {
                 case .signupOptIn:
                     return STPLocalizedString(
-                        "Create an account with Link for faster checkout across the web",
+                        "Create a Link account for fast checkout across the web",
                         """
                         Label for a checkbox that when checked allows the payment information
                         to be saved and used in future checkout sessions.
