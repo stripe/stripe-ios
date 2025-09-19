@@ -30,6 +30,15 @@ final class LinkHintMessageView: UIView {
                 return .linkSurfacePrimary
             }
         }
+
+        var textColor: UIColor {
+            switch self {
+            case .filled:
+                return .linkTextTertiary
+            case .outlined:
+                return .linkTextSecondary
+            }
+        }
     }
 
     var text: String? {
@@ -57,7 +66,7 @@ final class LinkHintMessageView: UIView {
 
     private lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.textColor = style == .filled ? .linkTextTertiary : .linkTextSecondary
+        label.textColor = style.textColor
         label.font = LinkUI.font(forTextStyle: .detail)
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
@@ -97,7 +106,11 @@ final class LinkHintMessageView: UIView {
         backgroundColor = style.backgroundColor
 
         if style == .outlined {
-            layer.borderColor = UIColor.linkBorderDefault.cgColor
+            // This color isn't semantically correct, but linkBorderDefault is the same
+            // as the background in dark mode and we want to make the border stand out.
+            layer.borderColor = traitCollection.userInterfaceStyle == .dark
+                ? UIColor.linkTextTertiary.cgColor
+                : UIColor.linkBorderDefault.cgColor
             layer.borderWidth = 1.0
         }
 
