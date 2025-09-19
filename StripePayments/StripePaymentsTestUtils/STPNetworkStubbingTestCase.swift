@@ -35,7 +35,7 @@ import XCTest
     open override func setUp() {
         super.setUp()
 
-        AnalyticsHelper.shared.clearSessionID()
+        AnalyticsHelper.shared.generateSessionID()
 
         recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
         disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
@@ -205,6 +205,8 @@ import XCTest
 
     open override func tearDown() {
         super.tearDown()
+
+        AnalyticsHelper.shared.clearSessionID()
 
         if disableMocking {
             // No teardown needed
