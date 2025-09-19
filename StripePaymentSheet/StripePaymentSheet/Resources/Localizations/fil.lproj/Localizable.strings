@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Magdagdag ng iyong impormasyon sa pagbabayad";
 
-"Agree and continue" = "Sumang-ayon at magpatuloy";
-
 "Approve payment" = "Aprubahan ang pagbabayad";
 
 "Are you sure you want to remove this card?" = "Sigurado ka bang nais mong alisin ang kard na ito?";
@@ -81,6 +79,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagbibigay ng iyong numero ng telepono, sumasang-ayon ka na gumawa ng Link account at i-save ang impormasyon ng iyong pagbabayad sa Link, alinsunod sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy> ng Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pag-save ng iyong account sa bangko para sa %@ sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagsusumite ng iyong order sa %1$@ at %2$@, sumasang-ayon kang i-save ang iyong impormasyon sa %3$@ para sa mga pagbili sa hinaharap, at sumasang-ayon kang pahintulutan ang mga pagbabayad alinsunod sa <terms> mga tuntuning ito</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagsusumite ng iyong order sa %@, sumasang-ayon kang pahintulutan ang mga pagbabayad alinsunod sa <terms> mga tuntuning ito</terms>.";
 

@@ -30,8 +30,7 @@ final class LinkInlineSignupView: UIView {
     private var combinedEmailNameSectionTheme: ElementsAppearance {
         var themeCopy = theme
         themeCopy.borderWidth = viewModel.combinedEmailNameSectionBorderWidth
-        if LiquidGlassDetector.isEnabled && viewModel.mode == .checkbox {
-            // TODO: This doesn't have any impact yet; waiting for another pull request to be merged first
+        if LinkUI.useLiquidGlass && viewModel.mode == .checkbox {
             // Use a smaller corner radius than the container
             themeCopy.cornerRadius = LinkUI.nestedInlineSignupSectionCornerRadius
         }
@@ -269,7 +268,12 @@ final class LinkInlineSignupView: UIView {
 
     private func updateAppearance() {
         backgroundColor = viewModel.containerBackground
-        layer.cornerRadius = viewModel.containerCornerRadius
+
+        if let containerCornerRadius = viewModel.containerCornerRadius {
+            layer.cornerRadius = containerCornerRadius
+        } else {
+            ios26_applyDefaultCornerConfiguration()
+        }
 
         // If the borders are hidden give Link a default 1.0 border that contrasts with the background color
         let hasInvisibleBorder = viewModel.configuration.appearance.borderWidth == 0.0 ||

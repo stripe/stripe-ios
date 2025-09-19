@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Tilføj dine betalingsoplysninger";
 
-"Agree and continue" = "Acceptér og fortsæt";
-
 "Approve payment" = "Godkend betaling";
 
 "Are you sure you want to remove this card?" = "Er du sikker på, at du vil fjerne dette kort?";
@@ -81,6 +79,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du angiver dit telefonnummer, accepterer du at oprette en Link-konto og gemme dine betalingsoplysninger på Link i henhold til Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at gemme din bankkonto for %@ accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at indsende din ordre til %1$@ og %2$@ accepterer du, at dine oplysninger gemmes hos %3$@ til senere køb, og accepterer, at betalinger godkendes i henhold til <terms>disse vilkår</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at indsende din ordre til %@ accepterer du at autorisere betalinger i henhold til <terms>disse vilkår</terms>.";
 

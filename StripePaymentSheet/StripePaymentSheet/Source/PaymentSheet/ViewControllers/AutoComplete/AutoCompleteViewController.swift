@@ -138,14 +138,21 @@ class AutoCompleteViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
 
-        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButton])
+        let buttonContainer = UIView()
+        buttonContainer.addAndPinSubview(manualEntryButton, insets: NSDirectionalEdgeInsets(top: 0, leading: configuration.appearance.formInsets.leading, bottom: 8, trailing: configuration.appearance.formInsets.trailing))
+        buttonContainer.addSubview(manualEntryButton)
+        manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
         stackView.setCustomSpacing(0, after: separatorView)
-        stackView.setCustomSpacing(0, after: tableView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
+        view.addSubview(buttonContainer)
+
+        buttonContainer.translatesAutoresizingMaskIntoConstraints = false
 
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
@@ -155,9 +162,29 @@ class AutoCompleteViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
+
+            buttonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            buttonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            buttonContainer.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+
             manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
         ])
 
+        // Set up proper content inset for table view after layout
+        view.layoutIfNeeded()
+        updateTableViewInsets()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateTableViewInsets()
+    }
+
+    private func updateTableViewInsets() {
+        // Add bottom content inset to tableview to account for floating button
+        let buttonHeight = manualEntryButton.frame.height + 16
+        tableView.contentInset.bottom = buttonHeight
+        tableView.verticalScrollIndicatorInsets.bottom = buttonHeight
     }
 
     private func registerForKeyboardNotifications() {

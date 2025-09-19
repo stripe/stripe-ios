@@ -408,7 +408,6 @@ extension PaymentSheet {
                     paymentIntentParams.paymentMethodOptions = paymentOptions
                     paymentIntentParams.radarOptions = radarOptions
                     paymentIntentParams.mandateData = mandateData
-                    paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
@@ -425,7 +424,6 @@ extension PaymentSheet {
                     setupIntentParams.returnURL = configuration.returnURL
                     setupIntentParams.mandateData = mandateData
                     setupIntentParams.radarOptions = radarOptions
-                    setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
@@ -438,7 +436,7 @@ extension PaymentSheet {
                     )
                 case .deferredIntent(let intentConfig):
                     handleDeferredIntentConfirmation(
-                        confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata),
+                        confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
                         configuration: configuration,
                         intentConfig: intentConfig,
                         authenticationContext: authenticationContext,

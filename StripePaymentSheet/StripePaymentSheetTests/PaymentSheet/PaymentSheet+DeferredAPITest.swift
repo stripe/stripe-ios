@@ -458,7 +458,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let originalConfirmHandler = intentConfig.confirmHandler
         intentConfig.confirmHandler = { paymentMethod, shouldSave, callback in
             intentCreationCallbackInvoked = true
-            originalConfirmHandler(paymentMethod, shouldSave, callback)
+            originalConfirmHandler?(paymentMethod, shouldSave, callback)
         }
 
         // When

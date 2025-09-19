@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Lisää maksutiedot";
 
-"Agree and continue" = "Hyväksy ja jatka";
-
 "Approve payment" = "Hyväksy maksu";
 
 "Are you sure you want to remove this card?" = "Haluatko varmasti poistaa tämän kortin?";
@@ -81,6 +79,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Antamalla puhelinnumerosi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi kohteille %1$@ ja %2$@ valtuutat tallentamaan tietosi kohteen %3$@ kanssa tulevia ostoksia varten, ja valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi yritykselle %@, valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
 

@@ -67,6 +67,7 @@ let JSONKeyObject = "object"
         endpoint: String,
         additionalHeaders: [String: String] = [:],
         parameters: [String: Any],
+        timeout: TimeInterval? = nil,
         completion: @escaping STPAPIResponseBlock
     ) {
         // Build url
@@ -76,6 +77,10 @@ let JSONKeyObject = "object"
         var request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
         request.stp_addParameters(toURL: parameters)
         request.httpMethod = HTTPMethodGET
+
+        if let timeout {
+            request.timeoutInterval = timeout
+        }
 
         // Perform request
         apiClient.urlSession.stp_performDataTask(
@@ -91,10 +96,11 @@ let JSONKeyObject = "object"
         _ apiClient: STPAPIClient,
         endpoint: String,
         additionalHeaders: [String: String] = [:],
+        timeout: TimeInterval? = nil,
         parameters: [String: Any]
     ) async throws -> ResponseType {
         return try await withCheckedThrowingContinuation { continuation in
-            getWith(apiClient, endpoint: endpoint, additionalHeaders: additionalHeaders, parameters: parameters) { responseObject, _, error in
+            getWith(apiClient, endpoint: endpoint, additionalHeaders: additionalHeaders, parameters: parameters, timeout: timeout) { responseObject, _, error in
                 guard let responseObject else {
                     continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                     return
@@ -123,7 +129,7 @@ let JSONKeyObject = "object"
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
-                self.parseResponse(response, method: "DELETE" ,body: body, error: error, completion: completion)
+                self.parseResponse(response, method: "DELETE", body: body, error: error, completion: completion)
             }
         )
     }

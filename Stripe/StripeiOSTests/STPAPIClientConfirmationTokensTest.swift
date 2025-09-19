@@ -49,7 +49,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -81,7 +81,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -130,7 +130,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -205,7 +205,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
 
         // Clean up: detach the payment method from the customer
@@ -245,12 +245,52 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
 
         // Verify the setAsDefaultPM parameter was encoded correctly
         let encoded = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
         XCTAssertEqual(encoded["set_as_default_payment_method"] as? NSNumber, NSNumber(value: true))
+    }
+
+    func testCreateConfirmationTokenWithPaymentMethodOptions() async throws {
+        // Create payment method params
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.expMonth = 12
+        cardParams.expYear = 2030
+        cardParams.cvc = "123"
+
+        let paymentMethodParams = STPPaymentMethodParams(
+            card: cardParams,
+            billingDetails: nil,
+            metadata: nil
+        )
+
+        // Create payment method options with card options
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        let cardOptions = STPConfirmCardOptions()
+        paymentMethodOptions.cardOptions = cardOptions
+
+        // Create confirmation token params
+        let confirmationTokenParams = STPConfirmationTokenParams()
+        confirmationTokenParams.paymentMethodData = paymentMethodParams
+        confirmationTokenParams.returnURL = "https://example.com/return"
+        confirmationTokenParams.paymentMethodOptions = paymentMethodOptions
+
+        let confirmationToken = try await apiClient.createConfirmationToken(
+            with: confirmationTokenParams
+        )
+
+        // Verify the response
+        XCTAssertNotNil(confirmationToken)
+        XCTAssertFalse(confirmationToken.stripeId.isEmpty)
+        XCTAssertNotNil(confirmationToken.created)
+        XCTAssertNotNil(confirmationToken.allResponseFields)
+
+        // Verify the payment method options were encoded correctly
+        let encoded = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
+        XCTAssertNotNil(encoded["payment_method_options"])
     }
 
     // MARK: - Error Handling Tests

@@ -58,6 +58,17 @@ struct ECEFullAddress: Codable {
         case postalCode = "postal_code"
         case country
     }
+
+    var stpPaymentMethodAddress: STPPaymentMethodAddress {
+        let address = STPPaymentMethodAddress()
+        address.line1 = line1
+        address.line2 = line2
+        address.city = city
+        address.state = state
+        address.postalCode = postalCode
+        address.country = country
+        return address
+    }
 }
 
 // MARK: - Shipping Rate Types

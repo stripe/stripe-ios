@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Добавете своята информация за плащането";
 
-"Agree and continue" = "Съгласяване и продължаване";
-
 "Approve payment" = "Одобряване на плащането";
 
 "Are you sure you want to remove this card?" = "Сигурни ли сте, че желаете да премахнете тази банкова карта?";
@@ -81,6 +79,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С предоставяне на телефонния си номер, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правила за защита на личните данни</privacy>на Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да оторизирате плащания съгласно <terms>тези условия</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %1$@ и %2$@ се съгласявате да запазите информацията си в %3$@ за бъдещи покупки и се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %@ Вие се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
 

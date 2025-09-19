@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Tambahkan informasi pembayaran Anda";
 
-"Agree and continue" = "Setuju dan lanjutkan";
-
 "Approve payment" = "Setujui pembayaran";
 
 "Are you sure you want to remove this card?" = "Anda yakin ingin menghapus kartu ini?";
@@ -81,6 +79,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon, berarti Anda menyetujui pembuatan akun Link serta penyimpanan informasi pembayaran pada Link, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan rekening bank Anda untuk %@, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan mengirimkan pesanan ke %1$@ dan %2$@, Anda setuju untuk menyimpan informasi Anda dengan %3$@ untuk pembelian di masa mendatang, dan setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan ini</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan mengirimkan pesanan Anda ke %@, Anda setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan ini</terms>.";
 

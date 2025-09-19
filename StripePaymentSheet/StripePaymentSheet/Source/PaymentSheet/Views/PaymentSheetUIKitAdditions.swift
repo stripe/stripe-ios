@@ -20,15 +20,15 @@ enum PaymentSheetUI {
     static let defaultPadding: CGFloat = 20
 
 #if os(visionOS)
-    static let navBarPadding: CGFloat = 30
+    static func navBarPadding(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return 30
+    }
 #else
-    static var navBarPadding: CGFloat {
-        return LiquidGlassDetector.isEnabled ? 16 : defaultPadding
+    static func navBarPadding(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return appearance.navigationBarStyle.isGlass ? 16 : defaultPadding
     }
 #endif
 
-    static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
-        leading: defaultPadding, bottom: 40, trailing: defaultPadding)
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
     static let defaultAnimationDuration: TimeInterval = 0.2
     static let quickAnimationDuration: TimeInterval = 0.1
@@ -103,6 +103,9 @@ extension UIViewController {
             fromVC.willMove(toParent: nil)
             fromVC.removeFromParent()
 
+            #if compiler(>=6.2)
+            self.bottomSheetController?.preAnimateHeightChange()
+            #endif
             animateHeightChange(
                 {
                     containerView.updateHeight()
@@ -114,6 +117,9 @@ extension UIViewController {
                     if let contentOffsetPercentage {
                         self.bottomSheetController?.contentOffsetPercentage = contentOffsetPercentage
                     }
+                    #if compiler(>=6.2)
+                    self.bottomSheetController?.postLayoutAnimations(containerView: containerView, toView: toVC.view)
+                    #endif
                 },
                 completion: { _ in
                     toVC.endAppearanceTransition()

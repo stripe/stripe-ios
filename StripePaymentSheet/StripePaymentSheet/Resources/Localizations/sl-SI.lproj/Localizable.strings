@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Dodajte podatke o plačilu";
 
-"Agree and continue" = "Strinjam se in nadaljuj";
-
 "Approve payment" = "Odobrite plačilo";
 
 "Are you sure you want to remove this card?" = "Ali res želite odstraniti to kartico?";
@@ -81,6 +79,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če navedete svojo telefonsko številko, se strinjate z ustvarjanjem računa Link in shranjevanjem podatkov o plačilu v storitev Link v skladu s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy> storitve Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila %1$@ in %2$@ se strinjate, da bodo vaši podatki shranjeni pri %3$@ za prihodnje nakupe, in se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila podjetju %@ se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
 

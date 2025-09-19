@@ -16,8 +16,6 @@
 
 "Add your payment information" = "支払い情報を追加";
 
-"Agree and continue" = "同意して続行";
-
 "Approve payment" = "支払いを承認する";
 
 "Are you sure you want to remove this card?" = "このカードを削除しますか？";
@@ -81,6 +79,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号を入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "ご注文を %1$@ および %2$@ に送信することにより、お客様は今後の購入のためにお客様の情報を %3$@ に保存することに同意し、<terms>本規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ に注文を送信することにより、<terms>これらの規約</terms> に従って決済を承認することに同意したものとみなされます。";
 

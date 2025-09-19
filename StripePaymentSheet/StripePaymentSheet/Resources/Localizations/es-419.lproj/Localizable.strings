@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Agrega la información de pago";
 
-"Agree and continue" = "Acepta y continúa";
-
 "Approve payment" = "Aprobar pago";
 
 "Are you sure you want to remove this card?" = "¿Deseas quitar esta tarjeta?";
@@ -81,6 +79,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Al proporcionar tu número de teléfono, aceptas crear una cuenta de Link y guardar tus datos de pago en Link, conforme a las <terms>Condiciones</terms> y la <privacy>Política de privacidad</privacy> de Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al guardar tu cuenta bancaria para %@, aceptas autorizar pagos conforme a estas <terms>condiciones</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Si envías tu pedido a %1$@ y %2$@, aceptas guardar tu información con %3$@ para futuras compras y autorizar pagos conforme <terms>estas Condiciones</terms>.";
 
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al enviarle tu pedido a %@, aceptas autorizar pagos conforme a <terms>estas Condiciones</terms>.";
 
