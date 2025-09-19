@@ -1,0 +1,110 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3S97n3Iq2LmpyICo1iExde63\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=eIXq-JEy4PS63WrLMf0Vijiv5NW9PqgONDuC6Mh_uFYSNHaaj73B88IaK_FxT_HdIUxUjB22jU2rAhZ1
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_2l24Eg6WvEcqQQ
+Content-Length: 2119
+Vary: Origin
+Date: Fri, 19 Sep 2025 17:08:10 GMT
+original-request: req_2l24Eg6WvEcqQQ
+stripe-version: 2020-08-27
+idempotency-key: e858d16d-c066-437b-8644-51406beec2a3
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3S97n3Iq2LmpyICo1iExde63_secret_yZqT1tr8VMUNR8lBUHyxO7Qfb&expand\[0]=payment_method&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[email]=foo%40bar\.com&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=standard&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=konbini&payment_method_options\[konbini]\[confirmation_number]=&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "jpy",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "konbini_display_details",
+    "konbini_display_details" : {
+      "stores" : {
+        "ministop" : {
+          "confirmation_number" : "88527021638",
+          "payment_code" : "123456"
+        },
+        "seicomart" : {
+          "confirmation_number" : "88527021638",
+          "payment_code" : "123456"
+        },
+        "familymart" : {
+          "confirmation_number" : "88527021638",
+          "payment_code" : "123456"
+        },
+        "lawson" : {
+          "confirmation_number" : "88527021638",
+          "payment_code" : "123456"
+        }
+      },
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/konbini\/voucher\/test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLF9UNUlOcFdCWUJQT0RqS0NjTXJIMnlWU0wzMnpjSDlU01005uBwXA2M",
+      "expires_at" : 1758639599
+    }
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "konbini" : {
+
+    },
+    "id" : "pm_1S97n4Iq2LmpyICoAdbUpcwT",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1758301690,
+    "allow_redisplay" : "unspecified",
+    "type" : "konbini",
+    "customer" : null
+  },
+  "client_secret" : "pi_3S97n3Iq2LmpyICo1iExde63_secret_yZqT1tr8VMUNR8lBUHyxO7Qfb",
+  "id" : "pi_3S97n3Iq2LmpyICo1iExde63",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "konbini"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1758301689,
+  "description" : null
+}

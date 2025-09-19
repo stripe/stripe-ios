@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=HSqQjRQBPUzLM9DE0GLsY2S6eFrknm52-ethUsr_UfiSYL09jcm8TyunHvw-avewTUhokXo86f-WW_Tu
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=l40nTJhQs3THX9kyxxdaZRR_tGU_73KTXp2s9sunpZhcMP4Qq2Rsd2Z9Z942iUAHOIwLrMWXNeNip-6G
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_ZwPRDI5xjJ3ye8
+request-id: req_ipAsx275KA5J1O
 Content-Length: 510
 Vary: Origin
-Date: Thu, 07 Aug 2025 16:13:43 GMT
-original-request: req_ZwPRDI5xjJ3ye8
+Date: Fri, 19 Sep 2025 17:06:48 GMT
+original-request: req_ipAsx275KA5J1O
 stripe-version: 2020-08-27
-idempotency-key: 38744bd5-9fc3-472e-ace2-8ecbadc17267
+idempotency-key: b92732cf-4f97-4398-8d84-1bd625432aae
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bname%5D=Joh
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RtWRnFY0qyl6XeWXkP05zUH",
+  "id" : "pm_1S97lkFY0qyl6XeWO08vk1eN",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bname%5D=Joh
     "bank" : "arzte_und_apotheker_bank"
   },
   "livemode" : false,
-  "created" : 1754583223,
+  "created" : 1758301608,
   "allow_redisplay" : "unspecified",
   "type" : "eps",
   "customer" : null

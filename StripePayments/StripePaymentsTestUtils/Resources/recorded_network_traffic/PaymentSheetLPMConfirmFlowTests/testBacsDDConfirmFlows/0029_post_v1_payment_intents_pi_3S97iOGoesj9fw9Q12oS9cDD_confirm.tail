@@ -1,0 +1,71 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3S97iOGoesj9fw9Q12oS9cDD\/confirm$
+400
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=40_teSnbEzDGRehdR7ePHErTI7uLexCg-lZF-_C_JiwiOAvLumrY4KgZy0bbTMNaS_QGUUnu_6uUb_vj
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+request-id: req_NhGWk8YrTjtGZs
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1435
+Vary: Origin
+Date: Fri, 19 Sep 2025 17:03:21 GMT
+original-request: req_NhGWk8YrTjtGZs
+stripe-version: 2020-08-27
+idempotency-key: b7a4cb9c-bc0f-45c3-ac6b-5659ea536c16
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+Content-Language: en-us
+X-Stripe-Mock-Request: client_secret=pi_3S97iOGoesj9fw9Q12oS9cDD_secret_LIArpHXYhpPIXAVrCN93BCx3f&confirmation_token=ctoken_1S97iOGoesj9fw9QxaZlVDsQ&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "error" : {
+    "code" : "parameter_missing",
+    "message" : "When confirming a PaymentIntent with a `bacs_debit` PaymentMethod and `setup_future_usage` value of off_session, `mandate_data` is required.",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_NhGWk8YrTjtGZs?t=1758301401",
+    "payment_intent" : {
+      "payment_method_configuration_details" : null,
+      "canceled_at" : null,
+      "source" : null,
+      "amount" : 5050,
+      "capture_method" : "automatic",
+      "livemode" : false,
+      "shipping" : null,
+      "status" : "requires_confirmation",
+      "object" : "payment_intent",
+      "currency" : "gbp",
+      "last_payment_error" : null,
+      "automatic_payment_methods" : null,
+      "cancellation_reason" : null,
+      "next_action" : null,
+      "payment_method" : "pm_1S97iOGoesj9fw9QyskqFBtH",
+      "client_secret" : "pi_3S97iOGoesj9fw9Q12oS9cDD_secret_LIArpHXYhpPIXAVrCN93BCx3f",
+      "id" : "pi_3S97iOGoesj9fw9Q12oS9cDD",
+      "confirmation_method" : "automatic",
+      "amount_details" : {
+        "tip" : {
+
+        }
+      },
+      "excluded_payment_method_types" : null,
+      "processing" : null,
+      "receipt_email" : null,
+      "payment_method_types" : [
+        "bacs_debit"
+      ],
+      "setup_future_usage" : "off_session",
+      "created" : 1758301400,
+      "description" : null
+    },
+    "type" : "invalid_request_error",
+    "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/parameter-missing"
+  }
+}

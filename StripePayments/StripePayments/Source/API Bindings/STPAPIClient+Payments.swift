@@ -1538,7 +1538,7 @@ extension STPAPIClient {
     ///   - confirmationTokenParams:  The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
     ///   - ephemeralKeySecret: The ephemeral key secret to use for authentication if working with customer-scoped objects.
     /// - Returns: The created ConfirmationToken object.
-    @_spi(ConfirmationTokensPublicPreview) public func createConfirmationToken(
+    @_spi(STP) public func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
         ephemeralKeySecret: String? = nil
     ) async throws -> STPConfirmationToken {

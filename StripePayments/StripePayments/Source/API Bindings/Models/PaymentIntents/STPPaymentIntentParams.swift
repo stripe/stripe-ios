@@ -47,6 +47,19 @@ public class STPPaymentIntentParams: NSObject {
         self.init(clientSecret: "")
     }
 
+    /// Initialize this `STPPaymentIntentParams` with a `clientSecret` and `confirmationToken`.
+    /// Use this initializer for PaymentIntents confirmed using confirmation tokens.
+    /// - Parameter clientSecret: the client secret for this PaymentIntent
+    /// - Parameter confirmationToken: the confirmation token to use for this PaymentIntent confirmation
+    @_spi(STP) public init(
+        clientSecret: String,
+        confirmationToken: STPConfirmationToken
+    ) {
+        self.clientSecret = clientSecret
+        super.init()
+        self.confirmationToken = confirmationToken.stripeId
+    }
+
     /// The Stripe id of the PaymentIntent, extracted from the clientSecret.
     @objc public var stripeId: String? {
         return STPPaymentIntent.id(fromClientSecret: clientSecret)

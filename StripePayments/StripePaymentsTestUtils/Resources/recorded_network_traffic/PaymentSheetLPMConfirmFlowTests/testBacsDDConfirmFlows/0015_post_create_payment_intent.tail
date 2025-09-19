@@ -1,0 +1,18 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
+402
+text/html
+Content-Type: text/html;charset=utf-8
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Set-Cookie: rack.session=P29tTMgE1D0PaehBGHatzJnhOnlSEd%2B%2FGIAUn5LxuVJuiwT%2F27jL3hk7UJiKn8bL7bE0hxK%2BmTWtRPDuOUyejqsV4j5th3n4z8D7V1Gccec0PyAQ2ABUJwltuGH97M9uaGLSS8qocs%2B%2Btr5G2Ys3fkFjk6ytCOwWelbZIiPtp38gcawwgHQz4XWAGc%2BLZDR2lntN6rrcExpxSgmChZbYkfh3sP4JETaJ8Xc%2B%2BH33rHs%3D; path=/
+Server: Google Frontend
+x-cloud-trace-context: 7aa8752ca424c44559159395fc18cb33
+Via: 1.1 google
+x-xss-protection: 1; mode=block
+Date: Fri, 19 Sep 2025 17:03:15 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 220
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+
+Error creating PaymentIntent: This PaymentIntent requires a mandate, but no existing mandate was found. Collect mandate acceptance from the customer and try again, providing acceptance data in the mandate_data parameter.

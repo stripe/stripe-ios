@@ -1,0 +1,77 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1S97iiFY0qyl6XeWS0jdkx8P\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KntfvTaCJYv1l8yO1VZEWUCO7ZMOposufP2UZj_uZuS2UUw5zwX5P7AMCfqFjQma6NtOAErBuFjohfd0
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_BFFPGqF7UPpc3l
+Content-Length: 1275
+Vary: Origin
+Date: Fri, 19 Sep 2025 17:03:41 GMT
+original-request: req_BFFPGqF7UPpc3l
+stripe-version: 2020-08-27
+idempotency-key: 58682079-ba6c-44aa-9f88-374a89f626ca
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1S97iiFY0qyl6XeWS0jdkx8P_secret_T5IJscYH1HN0v1bVyHK3eHgLQRkDR7w&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1S97iiFY0qyl6XeWQjJeYRAa&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1S97iiFY0qyl6XeWS0jdkx8P",
+  "description" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_T5IJ3EWYym0m75FpGFHIHr9p3mKcM2L"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1S97iiFY0qyl6XeWQjJeYRAa",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1758301420,
+    "allow_redisplay" : "unspecified",
+    "type" : "bancontact",
+    "customer" : null,
+    "bancontact" : {
+
+    }
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "bancontact"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1758301420,
+  "client_secret" : "seti_1S97iiFY0qyl6XeWS0jdkx8P_secret_T5IJscYH1HN0v1bVyHK3eHgLQRkDR7w",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

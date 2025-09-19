@@ -1,0 +1,18 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
+402
+text/html
+Content-Type: text/html;charset=utf-8
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Set-Cookie: rack.session=xrgYDi%2BQOftlM%2FGXPtSLVshqHQig2L%2FYmM9ZOLIXHKw4kA2FXdJltoH2SWh0fSPyDgOY16suGTrWqnofTRiSsa7u34JnZvmPImHGK4EogHb6ENlJPhiefgdJ3Ej80lgEbmDDSmTvqaMqE2CzentXcNSM7PP66VsTvefWTGCkPniX51e3NMmVWkmbP8o61fTweggxZAAbFfvU5%2F5koj4zX14%2BFvcEGaXi2i3hjb4oAGo%3D; path=/
+Server: Google Frontend
+x-cloud-trace-context: 5398e3b3819a05609158f7ef2e4f625d
+Via: 1.1 google
+x-xss-protection: 1; mode=block
+Date: Fri, 19 Sep 2025 17:03:02 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 173
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+
+Error creating PaymentIntent: When confirming a PaymentIntent with a `au_becs_debit` PaymentMethod and `setup_future_usage` value of off_session, `mandate_data` is required.

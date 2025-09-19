@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=go810UHmKPEiZouwIEYD-z-Pi7DPosImkzMlx2d_9jjracb8gQdvsaeGcbZgB5K-JZ8gLRNTwadiVcXi
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=eIXq-JEy4PS63WrLMf0Vijiv5NW9PqgONDuC6Mh_uFYSNHaaj73B88IaK_FxT_HdIUxUjB22jU2rAhZ1
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_w6lHKXQUOgxaji
+request-id: req_kveiHvFkVIuNwg
 Content-Length: 477
 Vary: Origin
-Date: Thu, 07 Aug 2025 16:14:21 GMT
-original-request: req_w6lHKXQUOgxaji
+Date: Fri, 19 Sep 2025 17:07:40 GMT
+original-request: req_kveiHvFkVIuNwg
 stripe-version: 2020-08-27
-idempotency-key: eebae361-56d0-43c1-9f0e-a0aa7f3e2a60
+idempotency-key: 32d32a10-4a50-4e70-a7c7-29a72cf5a588
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Baddress%5D%
   "klarna" : {
 
   },
-  "id" : "pm_1RtWSPFY0qyl6XeWo6uovRAL",
+  "id" : "pm_1S97maFY0qyl6XeWg3XjbUrq",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Baddress%5D%
     }
   },
   "livemode" : false,
-  "created" : 1754583261,
+  "created" : 1758301660,
   "allow_redisplay" : "unspecified",
   "type" : "klarna",
   "customer" : null

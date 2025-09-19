@@ -106,6 +106,20 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         self.init(clientSecret: "")
     }
 
+    /// Initialize this `STPSetupIntentConfirmParams` with a `clientSecret` and `confirmationToken`.
+    /// Use this initializer for SetupIntents confirmed using confirmation tokens.
+    /// - Parameter clientSecret: the client secret for this SetupIntent
+    /// - Parameter confirmationToken: the confirmation token to use for this SetupIntent confirmation
+    @_spi(STP) public init(
+        clientSecret: String,
+        confirmationToken: STPConfirmationToken
+    ) {
+        self.clientSecret = clientSecret
+        super.init()
+        additionalAPIParameters = [:]
+        self.confirmationToken = confirmationToken.stripeId
+    }
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [

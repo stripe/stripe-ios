@@ -1,0 +1,63 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3S97k0FY0qyl6XeW1cXhnlpx\?client_secret=pi_3S97k0FY0qyl6XeW1cXhnlpx_secret_E3oNymYy3ytm0udLYh6RZLjPp&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=WCs9mrReSWaUULZXQ6eiJ-ZYfUByxdNWDKJ0zCL8meKaI1S8CIua3F3hQcr62bmsogoTYFITRovoCxNf
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Fri, 19 Sep 2025 17:05:01 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 954
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_NGGX1cUTAjwbso
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_payment_method",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : null,
+  "client_secret" : "pi_3S97k0FY0qyl6XeW1cXhnlpx_secret_E3oNymYy3ytm0udLYh6RZLjPp",
+  "id" : "pi_3S97k0FY0qyl6XeW1cXhnlpx",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1758301500,
+  "description" : null
+}

@@ -1,0 +1,18 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
+402
+text/html
+Content-Type: text/html;charset=utf-8
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Set-Cookie: rack.session=kk8nFcJg6MPZamdp7UGoBNujvc2OYPntuS5DHimYQ7%2FH%2Fzx3hfWYj0h0iXujBO7CGnE2VnkxDmgNJVEQIaR7PfSIdSFJh43VQyQVcqkRnbtv0nh0LbBsyDPK9oH%2FHDq3Y6w6VAYomEihIVDacXCcN%2B4soq8AXvg5XsvEA9UuOyQ4pi6R%2Fm3qS0VGJQZ72wMswxDIJLMs1yWs78TtkRtschl22JD%2FYeTeM5gL8bH%2ByxE%3D; path=/
+Server: Google Frontend
+x-cloud-trace-context: 7690a500f0f3953932fd3ab7a8873214
+Via: 1.1 google
+x-xss-protection: 1; mode=block
+Date: Fri, 19 Sep 2025 17:11:28 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 170
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+
+Error creating PaymentIntent: When confirming a PaymentIntent with a `sepa_debit` PaymentMethod and `setup_future_usage` value of off_session, `mandate_data` is required.

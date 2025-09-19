@@ -9,7 +9,7 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(ConfirmationTokensPublicPreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import SwiftUI
@@ -940,6 +940,34 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 ("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
 
+            // Confirmation token variations
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), confirmationTokenConfirmHandler2: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer
+                )
+            })
+
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), confirmationTokenConfirmHandler2: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer,
+                    confirm: true,
+                    otherParams: ["confirmation_token": confirmationToken.stripeId]
+                )
+            })
+
+            intents += [
+                ("Deferred PaymentIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                ("Deferred PaymentIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+            ]
+
             return intents
         case .paymentIntentWithSetupFutureUsage:
             let paymentIntent: STPPaymentIntent = try await {
@@ -978,10 +1006,37 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                     otherParams: otherParams
                 )
             }
+            // Confirmation token variations
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession), confirmationTokenConfirmHandler2: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer
+                )
+            })
+            
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession), confirmationTokenConfirmHandler2: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer,
+                    confirm: true,
+                    otherParams: [
+                        "confirmation_token": confirmationToken.stripeId
+                    ]
+                )
+            })
+            
             return [
                 ("PaymentIntent w/ setup_future_usage", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
+                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
         case .setupIntent:
             let setupIntent: STPSetupIntent = try await {
@@ -994,10 +1049,21 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { paymentMethod, _ in
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: paramsForServerSideConfirmation)
             }
+            // Confirmation token variations
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), confirmationTokenConfirmHandler2: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer)
+            })
+            
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), confirmationTokenConfirmHandler2: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, confirm: true, otherParams: ["confirmation_token": confirmationToken.stripeId])
+            })
+            
             return [
                 ("SetupIntent", .setupIntent(setupIntent)),
                 ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
+                ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
         }
     }

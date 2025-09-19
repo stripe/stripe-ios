@@ -1,0 +1,18 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_setup_intent$
+402
+text/html
+Content-Type: text/html;charset=utf-8
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Set-Cookie: rack.session=SPcbDVp2eo%2FpOucgAmJ%2F2nGmv3bam72hT0ibJD5bkzTsXayWijjzdgLo3DIduVfBfRSklb3ANq0FaZ5IIFsGnBV%2BUihRgdSiLkys6Akbzu7ETg9%2F44%2F5ogNGk%2FCM85tCBeyFvQkNfOomlTZ7Dy9FXoXTAdeGn5SaWaMFMTjkacKpxqBk5y8y5NwYRG%2F1pZpaiSrXAnCz7YW2wrpvmbGIUBjB7FrfmymxgvyEC3nj63w%3D; path=/
+Server: Google Frontend
+x-cloud-trace-context: 26f5c3d978bd4d10bcb16164cf33537b
+Via: 1.1 google
+x-xss-protection: 1; mode=block
+Date: Fri, 19 Sep 2025 17:03:45 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 65
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+
+Error creating SetupIntent: Missing required param: mandate_data.

@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(ConfirmationTokensPublicPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -396,8 +396,8 @@ class PlaygroundController: ObservableObject {
         if settings.apmsEnabled == .off {
             paymentMethodTypes = self.paymentMethodTypes
         }
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
-            self?.confirmHandler($0, $1, $2)
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] in
+            self?.confirmHandler($0, $1)
         }
 
         switch settings.mode {
@@ -406,7 +406,7 @@ class PlaygroundController: ObservableObject {
                 mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler,
+                confirmationTokenConfirmHandler: confirmHandler,
                 requireCVCRecollection: settings.requireCVCRecollection == .on
             )
         case .paymentWithSetup:
@@ -414,7 +414,7 @@ class PlaygroundController: ObservableObject {
                 mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler,
+                confirmationTokenConfirmHandler: confirmHandler,
                 requireCVCRecollection: settings.requireCVCRecollection == .on
             )
         case .setup:
@@ -422,7 +422,7 @@ class PlaygroundController: ObservableObject {
                 mode: .setup(currency: settings.currency.rawValue, setupFutureUsage: .offSession),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler
+                confirmationTokenConfirmHandler: confirmHandler
             )
         }
     }
@@ -965,14 +965,8 @@ extension PlaygroundController {
     }
 
     // Deferred confirmation handler
-    func confirmHandler(_ paymentMethod: STPPaymentMethod,
-                        _ shouldSavePaymentMethod: Bool,
+    func confirmHandler(_ confirmationToken: STPConfirmationToken,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        // Sanity check the payment method
-        if paymentMethod.type == .card {
-            assert(paymentMethod.card != nil)
-        }
-
         switch settings.integrationType {
         case .deferred_mp:
             // multiprocessor
@@ -993,9 +987,8 @@ extension PlaygroundController {
 
         let body = [
             "client_secret": clientSecret!,
-            "payment_method_id": paymentMethod.stripeId,
+            "confirmation_token_id": confirmationToken.stripeId,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
-            "should_save_payment_method": shouldSavePaymentMethod,
             "mode": intentConfig.mode.requestBody,
             "link_mode": settings.linkEnabledMode.rawValue,
             "return_url": configuration.returnURL ?? "",

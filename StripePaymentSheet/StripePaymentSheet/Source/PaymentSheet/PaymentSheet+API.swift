@@ -252,7 +252,7 @@ extension PaymentSheet {
                 )
             // MARK: ↪ Deferred Intent
             case .deferredIntent(let intentConfig):
-                handleDeferredIntentConfirmation(
+                routeDeferredIntentConfirmation(
                     confirmType: .new(
                         params: confirmParams.paymentMethodParams,
                         paymentOptions: confirmParams.confirmPaymentMethodOptions,
@@ -311,7 +311,7 @@ extension PaymentSheet {
                     ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
-                handleDeferredIntentConfirmation(
+                routeDeferredIntentConfirmation(
                     confirmType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata),
                     configuration: configuration,
                     intentConfig: intentConfig,
@@ -367,7 +367,7 @@ extension PaymentSheet {
                         }
                     )
                 case .deferredIntent(let intentConfig):
-                    handleDeferredIntentConfirmation(
+                    routeDeferredIntentConfirmation(
                         confirmType: .new(
                             params: paymentMethodParams,
                             paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -435,7 +435,7 @@ extension PaymentSheet {
                         }
                     )
                 case .deferredIntent(let intentConfig):
-                    handleDeferredIntentConfirmation(
+                    routeDeferredIntentConfirmation(
                         confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
                         configuration: configuration,
                         intentConfig: intentConfig,
