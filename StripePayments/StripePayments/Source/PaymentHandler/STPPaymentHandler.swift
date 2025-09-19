@@ -168,6 +168,8 @@ public class STPPaymentHandler: NSObject {
         return STPPaymentHandler.inProgress
     }
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
+    /// Date at which `confirm` or `handleNextAction` is called. Used to report how long the call took.
+    internal var startTime: Date?
 
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
