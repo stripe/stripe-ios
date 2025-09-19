@@ -568,6 +568,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 callback: { [weak self] confirmOption, _ in
                     guard let self else { return }
                     self.linkConfirmOption = confirmOption
+                    if confirmOption == nil {
+                        // The Link row was selected before we launched the Link flow, but the user decided to
+                        // drop out of the Link flow. We clear the selection to avoid having Link stay selected.
+                        self.clearSelection()
+                    }
                     self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
                 }
             )
@@ -687,6 +692,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 }
             }
         }
+    }
+
+    func clearSelection() {
+        paymentMethodListViewController?.clearSelection()
+        updatePrimaryButton()
     }
 
     @objc func didTapPrimaryButton() {
