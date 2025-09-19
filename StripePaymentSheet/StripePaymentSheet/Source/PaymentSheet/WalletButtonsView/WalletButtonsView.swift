@@ -126,7 +126,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     func checkoutTapped(_ expressType: ExpressType) {
         // Log wallet button tap analytics
         flowController.analyticsHelper.logWalletButtonTapped(walletType: expressType)
-        
+
         switch expressType {
         case .applePay:
             // Launch directly into Apple Pay and confirm the payment

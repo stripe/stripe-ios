@@ -48,11 +48,15 @@ class STPAnalyticsTranslatedEventTest: XCTestCase {
                                 translatedEventName: .removedSavedPaymentMethod(.init(paymentMethodType: "card")))
     }
     func testWalletButtonTaps() {
-        _testTranslationMapping(event: .mcWalletButtonTapApplePay, payload: payloadWithoutLPM,
+        let applePayPayload: [String: Any] = ["selected_lpm": "apple_pay"]
+        let linkPayload: [String: Any] = ["selected_lpm": "link"]
+        let shopPayPayload: [String: Any] = ["selected_lpm": "shop_pay"]
+        
+        _testTranslationMapping(event: .mcWalletButtonTapped, payload: applePayPayload,
                                 translatedEventName: .tappedWalletButton(.init(walletType: "apple_pay")))
-        _testTranslationMapping(event: .mcWalletButtonTapLink, payload: payloadWithoutLPM,
+        _testTranslationMapping(event: .mcWalletButtonTapped, payload: linkPayload,
                                 translatedEventName: .tappedWalletButton(.init(walletType: "link")))
-        _testTranslationMapping(event: .mcWalletButtonTapShopPay, payload: payloadWithoutLPM,
+        _testTranslationMapping(event: .mcWalletButtonTapped, payload: shopPayPayload,
                                 translatedEventName: .tappedWalletButton(.init(walletType: "shop_pay")))
     }
     func testAnalyticNotTranslated() {

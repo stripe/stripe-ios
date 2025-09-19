@@ -230,17 +230,17 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logWalletButtonTapped(walletType: PaymentSheet.WalletButtonsVisibility.ExpressType) {
-        let event: STPAnalyticEvent = {
+        let selectedLPM: String = {
             switch walletType {
             case .applePay:
-                return .mcWalletButtonTapApplePay
+                return "apple_pay"
             case .link:
-                return .mcWalletButtonTapLink
+                return "link"
             case .shopPay:
-                return .mcWalletButtonTapShopPay
+                return "shop_pay"
             }
         }()
-        log(event: event)
+        log(event: .mcWalletButtonTapped, selectedLPM: selectedLPM)
     }
 
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
