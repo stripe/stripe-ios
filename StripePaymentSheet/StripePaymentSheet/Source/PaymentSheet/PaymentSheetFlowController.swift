@@ -468,11 +468,6 @@ extension PaymentSheet {
             selectedPaymentDetailsID: String? = nil,
             returnToPaymentSheet: @escaping () -> Void
         ) {
-            let verificationDismissed: () -> Void = { [weak self] in
-                self?.didDismissLinkVerificationDialog = true
-                returnToPaymentSheet()
-            }
-
             let completionCallback: (PaymentSheet.LinkConfirmOption?, Bool) -> Void = { [weak self] confirmOption, shouldReturnToPaymentSheet in
                 guard let self else { return }
 
@@ -505,7 +500,6 @@ extension PaymentSheet {
                     intent: intent,
                     elementsSession: elementsSession,
                     analyticsHelper: analyticsHelper,
-                    verificationDismissed: verificationDismissed,
                     hcaptchaToken: hcaptchaToken,
                     callback: completionCallback
                 )
