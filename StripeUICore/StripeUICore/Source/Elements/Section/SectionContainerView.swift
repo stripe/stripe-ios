@@ -45,7 +45,7 @@ class SectionContainerView: UIView {
     /**
      - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
      */
-    init(views: [UIView], theme: ElementsAppearance = .default) {
+    init(views: [UIView], theme: ElementsAppearance) {
         self.views = views
         self.theme = theme
         super.init(frame: .zero)
@@ -201,7 +201,7 @@ extension SectionContainerView: EventHandler {
 
 extension SectionContainerView {
     class MultiElementRowView: UIView {
-        init(views: [UIView], theme: ElementsAppearance = .default) {
+        init(views: [UIView], theme: ElementsAppearance) {
             super.init(frame: .zero)
 
             // Add dividers between the views
@@ -234,7 +234,7 @@ extension SectionContainerView {
 
 /// Builds the primary stack view that contains all others.
 /// ⚠️ Don't modify stackView properties outside of this or it won't carry over when we call `buildStackView` again in `updateUI`
-private func buildStackView(views: [UIView], theme: ElementsAppearance = .default) -> StackViewWithSeparator {
+private func buildStackView(views: [UIView], theme: ElementsAppearance) -> StackViewWithSeparator {
     let stackView = StackViewWithSeparator(arrangedSubviews: views)
     stackView.axis = .vertical
     stackView.spacing = theme.separatorWidth

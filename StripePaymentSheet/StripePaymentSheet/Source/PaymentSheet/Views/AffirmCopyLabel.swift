@@ -15,7 +15,7 @@ class AffirmCopyLabel: UIView {
 
     let logo = NSTextAttachment()
 
-    convenience init(theme: ElementsAppearance = .default) {
+    convenience init(theme: ElementsAppearance) {
         self.init(frame: .zero)
         let affirmLabel = UILabel()
 

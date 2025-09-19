@@ -4,8 +4,8 @@
 //
 //  Created by Yuki Tokuhiro on 9/19/25.
 //
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /// Describes the appearance of an Element
 /// A superset of `StripePaymentSheet.PaymentSheetAppearance`. This exists b/c we can't see that type from `StripeUICore`, and we don't want to the public StripePaymentSheet API to be a typealias of this.
