@@ -195,6 +195,12 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` used in Link has the correct height
     func testConfirmButtonInLinkUI() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+
         var appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
         // This should not have any effect when rendered in Link
         appearance.primaryButton.height = 30

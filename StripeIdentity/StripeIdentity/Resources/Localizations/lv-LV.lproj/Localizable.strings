@@ -6,8 +6,6 @@
 
 "App Settings" = "Lietotnes iestatījumi";
 
-"Back identity card photo successfully uploaded" = "Identifikācijas kartes aizmugurējā puse ir veiksmīgi augšupielādēta";
-
 "Back of identity card" = "Identifikācijas kartes aizmugure";
 
 "Back of identity document" = "Identifikācijas dokumenta aizmugure";
@@ -31,10 +29,6 @@
 "Details not visible" = "Detaļas nav redzamas";
 
 "Flip your identity card over to the other side" = "Apgrieziet identifikācijas karti uz otru pusi";
-
-"Front identity card photo successfully uploaded" = "Identifikācijas kartes priekšpuse ir veiksmīgi augšupielādēta";
-
-"Front of identity card" = "Identifikācijas kartes priekšpuse";
 
 "Front of identity document" = "Identifikācijas dokumenta priekšpuse";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Attēlu bibliotēka";
 
-"Please upload images of the front and back of your identity card" = "Lūdzu, augšupielādējiet attēlus no jūsu identifikācijas kartes priekšpuses un aizmugures";
-
 "Position your face in the center of the frame." = "Gādājiet, lai seja būtu kadra centrā.";
-
-"Position your identity card in the center of the frame" = "Gādājiet, lai identifikācijas karte būtu kadra centrā";
 
 "Retake Photos" = "Uzņemt vēlreiz fotogrāfijas";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Atlasiet atrašanās vietu, kurā augšupielādēt jūsu identifikācijas dokumenta aizmuguri no";
 
 "Select a location to upload the front of your identity document from" = "Atlasiet atrašanās vietu, kurā augšupielādēt jūsu identifikācijas dokumenta priekšpusi no";
-
-"Select back identity card photo" = "Atlasīt identifikācijas kartes aizmugurējo fotoattēlu";
-
-"Select front identity card photo" = "Atlasīt identifikācijas kartes priekšpuses fotoattēlu";
 
 "Selfie" = "Pašportrets";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Augšupielādēt fotoattēlu";
 
 "Upload your photo ID" = "Augšupielādējiet savu ID dokumentu ar fotogrāfiju";
-
-"Uploading back identity card photo" = "Augšupielādē identifikācijas kartes aizmugurējo fotoattēlu";
-
-"Uploading front identity card photo" = "Augšupielādē identifikācijas kartes priekšpuses fotoattēlu";
 
 "Verify your identity" = "Verificējiet savu identitāti";
 

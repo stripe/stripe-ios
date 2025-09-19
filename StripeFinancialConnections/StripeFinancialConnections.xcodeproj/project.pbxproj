@@ -201,7 +201,6 @@
 		C747113C75AC92643B283CBD /* close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1C7A2FE53419CB29CBB6C08 /* close@3x.png */; };
 		C7D2763ACCE2CC71E788E18F /* FinancialConnectionsLegalDetailsNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07526E95D85120F6492E78AE /* FinancialConnectionsLegalDetailsNotice.swift */; };
 		C906FC4DE38F16032B787607 /* ResetFlowDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1C78684DD0B2D168C86229 /* ResetFlowDataSource.swift */; };
-		CB4BCC482E6F168B0066FE9E /* FinancialConnectionsLiquidGlassDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4BCC472E6F168B0066FE9E /* FinancialConnectionsLiquidGlassDetector.swift */; };
 		CB734C25A19D38A87876FB2B /* FinancialConnectionsAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AB8A480620B5C3567F453C /* FinancialConnectionsAnalyticsTest.swift */; };
 		CBB6227D2D4846670003AF44 /* FinancialConnectionsRepairSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB6227C2D4846670003AF44 /* FinancialConnectionsRepairSession.swift */; };
 		CBF7BE2271D309F2B1E794CC /* FinancialConnectionsDataAccessNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32ED8A7E94822F14AD94A698 /* FinancialConnectionsDataAccessNotice.swift */; };
@@ -502,7 +501,6 @@
 		C93F7139E9BFB044902962D0 /* FinancialConnectionsImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsImage.swift; sourceTree = "<group>"; };
 		CA2DA47ECE153F888FA675CE /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
 		CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+KeyboardAvoiding.swift"; sourceTree = "<group>"; };
-		CB4BCC472E6F168B0066FE9E /* FinancialConnectionsLiquidGlassDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLiquidGlassDetector.swift; sourceTree = "<group>"; };
 		CBB6227C2D4846670003AF44 /* FinancialConnectionsRepairSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsRepairSession.swift; sourceTree = "<group>"; };
 		CDD861E4EB8BA294545B7651 /* NetworkingLinkVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkVerificationViewController.swift; sourceTree = "<group>"; };
 		CE10909F3FC7D60E13B65226 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1095,7 +1093,6 @@
 				2C0F907D5B0AC58BE7A454BA /* StripeFinancialConnectionsBundleLocator.swift */,
 				BF7E41313B709F87B549D85F /* UIViewController+Extensions.swift */,
 				49B5BF752D43E1D500AB6C3F /* FinancialConnectionsAppearance.swift */,
-				CB4BCC472E6F168B0066FE9E /* FinancialConnectionsLiquidGlassDetector.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1494,7 +1491,6 @@
 				F0FB346A0F86C3561CD3C048 /* UITableView+Extensions.swift in Sources */,
 				A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */,
 				B2970FE2753A4D79E428BA73 /* SuccessDataSource.swift in Sources */,
-				CB4BCC482E6F168B0066FE9E /* FinancialConnectionsLiquidGlassDetector.swift in Sources */,
 				C39214EA5995D85B847406BE /* SuccessFooterView.swift in Sources */,
 				6A1D42FF2B1686FC005A1EB0 /* InstitutionTableView.swift in Sources */,
 				B45B8DC3DAACDD5F04B1B1BE /* SuccessViewController.swift in Sources */,
