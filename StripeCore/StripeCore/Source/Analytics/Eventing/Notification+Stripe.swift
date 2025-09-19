@@ -39,8 +39,8 @@ public struct MobilePaymentElementAnalyticEvent {
         case selectedSavedPaymentMethod(SelectedSavedPaymentMethod)
         /// User removed a saved payment method
         case removedSavedPaymentMethod(RemovedSavedPaymentMethod)
-        /// User tapped a wallet button
-        case tappedWalletButton(TappedWalletButton)
+        /// User tapped an express checkout button
+        case tappedExpressButton(TappedExpressButton)
     }
 
     /// Details of the .selectedPaymentMethodType event
@@ -85,9 +85,9 @@ public struct MobilePaymentElementAnalyticEvent {
         public let paymentMethodType: String
     }
 
-    /// Details of the .tappedWalletButton event
-    public struct TappedWalletButton: Equatable {
-        /// The wallet type (apple_pay, link, shop_pay)
-        public let walletType: String
+    /// Details of the .tappedExpressButton event
+    public struct TappedExpressButton: Equatable {
+        /// The express checkout button type (apple_pay, link, shop_pay)
+        public let expressButtonType: String
     }
 }

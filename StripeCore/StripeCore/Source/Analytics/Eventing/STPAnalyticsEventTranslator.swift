@@ -75,12 +75,12 @@ struct STPAnalyticsEventTranslator {
             }
             return .removedSavedPaymentMethod(.init(paymentMethodType: paymentMethodType))
 
-        // Wallet Button Tap
+        // Express Button Tap
         case .mcWalletButtonTapped:
-            guard let walletType = walletType(payload) else {
+            guard let expressButtonType = walletType(payload) else {
                 return nil
             }
-            return .tappedWalletButton(.init(walletType: walletType))
+            return .tappedExpressButton(.init(expressButtonType: expressButtonType))
 
         default:
             return nil
@@ -93,7 +93,7 @@ struct STPAnalyticsEventTranslator {
         }
         return nil
     }
-    
+
     func walletType(_ originalPayload: [String: Any]) -> String? {
         if let walletType = originalPayload["selected_lpm"] as? String {
             return walletType
