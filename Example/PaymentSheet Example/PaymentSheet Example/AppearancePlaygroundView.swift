@@ -7,7 +7,6 @@
 //
 
 @_spi(AppearanceAPIAdditionsPreview)@_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -507,7 +506,6 @@ struct AppearancePlaygroundView: View {
                     }
                 }
                 Button {
-                    LiquidGlassDetector.allowNewDesign = false
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {

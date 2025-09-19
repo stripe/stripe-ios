@@ -36,6 +36,12 @@ final class RowButtonFloating: RowButton {
         }
         return selectableRectangle.didSetCornerConfiguration ? 16 : 12
     }
+    private var contentTrailingConstant: CGFloat {
+        guard selectableRectangle.didSetCornerConfiguration else {
+            return 12
+        }
+        return 16
+    }
 
     override func updateSelectedState() {
         super.updateSelectedState()
@@ -117,7 +123,7 @@ final class RowButtonFloating: RowButton {
 
             // Content constraints - use configurable insets for the main content area
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: imageViewTrailingConstant),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -contentTrailingConstant),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: contentInsets),
             horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -contentInsets),

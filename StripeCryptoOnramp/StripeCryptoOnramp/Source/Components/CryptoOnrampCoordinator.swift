@@ -505,12 +505,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         authenticationContext: STPAuthenticationContext,
         onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async throws -> CheckoutResult {
-        guard let selectedPaymentSource else {
-            throw Error.invalidSelectedPaymentSource
-        }
         analyticsClient.log(.checkoutStarted(
-            onrampSessionId: onrampSessionId,
-            paymentMethodType: selectedPaymentSource.analyticsValue
+            onrampSessionId: onrampSessionId
         ))
         // First, attempt to check out and get the PaymentIntent
         let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
@@ -523,7 +519,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             if case .completed = result {
                 analyticsClient.log(.checkoutCompleted(
                     onrampSessionId: onrampSessionId,
-                    paymentMethodType: selectedPaymentSource.analyticsValue,
                     requiredAction: false
                 ))
             }
@@ -550,7 +545,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     if case .completed = checkoutResult {
                         analyticsClient.log(.checkoutCompleted(
                             onrampSessionId: onrampSessionId,
-                            paymentMethodType: selectedPaymentSource.analyticsValue,
                             requiredAction: true
                         ))
                     }

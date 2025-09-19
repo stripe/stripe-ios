@@ -27,6 +27,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
             XCTAssertNil(params.setAsDefaultPM)
             XCTAssertNil(params.useStripeSDK)
             XCTAssertNil(params.mandateData)
+            XCTAssertNil(params.confirmationToken)
         }
     }
 
@@ -106,6 +107,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         params.additionalAPIParameters = [
             "other_param": "other_value"
         ]
+        params.confirmationToken = "ctoken_test_123"
 
         let paramsCopy = params.copy() as! STPSetupIntentConfirmParams
         XCTAssertEqual(params.clientSecret, paramsCopy.clientSecret)
@@ -122,7 +124,28 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
             params.additionalAPIParameters as NSDictionary,
             paramsCopy.additionalAPIParameters as NSDictionary
         )
+        XCTAssertEqual(params.confirmationToken, paramsCopy.confirmationToken)
 
+    }
+
+    func testConfirmationTokenProperty() {
+        let params = STPSetupIntentConfirmParams()
+
+        XCTAssertNil(params.confirmationToken)
+
+        params.confirmationToken = "ctoken_test_123"
+        XCTAssertEqual(params.confirmationToken, "ctoken_test_123")
+
+        params.confirmationToken = ""
+        XCTAssertEqual(params.confirmationToken, "")
+
+        params.confirmationToken = nil
+        XCTAssertNil(params.confirmationToken)
+    }
+
+    func testFormFieldMappingIncludesConfirmationToken() {
+        let mapping = STPSetupIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
+        XCTAssertEqual(mapping[NSStringFromSelector(#selector(getter: STPSetupIntentConfirmParams.confirmationToken))], "confirmation_token")
     }
 
     func testClientSecretValidation() {
