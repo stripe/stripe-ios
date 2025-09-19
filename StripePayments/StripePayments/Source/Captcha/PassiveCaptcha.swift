@@ -50,7 +50,7 @@ private enum CaptchaResult {
     }
 
     private let passiveCaptcha: PassiveCaptcha
-    private var validationTask: Task<String?, Never>?
+    private var validationTask: Task<CaptchaResult?, Never>?
     private var isValidationComplete = false
 
     var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
@@ -67,7 +67,7 @@ private enum CaptchaResult {
     private func start() {
         guard validationTask == nil else { return }
 
-        validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, weak self] () -> String? in
+        validationTask = Task<CaptchaResult?, Never> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, weak self] () -> CaptchaResult? in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             do {
                 let hcaptcha = try HCaptcha(apiKey: siteKey,
@@ -93,16 +93,15 @@ private enum CaptchaResult {
                 await self?.setValidationComplete()
                 let duration = Date().timeIntervalSince(startTime)
                 switch result {
-                case .success(let token):
+                case .success:
                     STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
-                    return token
                 case .error(let error):
                     STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
-                    return nil
                 }
+                return result
             } catch {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: 0)
-                return nil
+                return .error(error)
             }
         }
     }
@@ -114,7 +113,7 @@ private enum CaptchaResult {
     public func fetchToken() async -> String? {
         let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
-        return await withTaskGroup(of: String?.self) { group in
+        return await withTaskGroup(of: CaptchaResult?.self) { group in
             let isReady = isValidationComplete
             // Add hcaptcha task
             group.addTask { [weak self] in
@@ -124,20 +123,24 @@ private enum CaptchaResult {
             // Add timeout task
             group.addTask {
                 try? await Task.sleep(nanoseconds: timeoutNs)
-                return nil
+                return .error(Error.timeout)
             }
             defer {
                 group.cancelAll()
                 validationTask?.cancel()
             }
             // Wait for first completion
-            let token: String? = await group.next().flatMap(\.self)
+            let result: CaptchaResult? = await group.next()?.flatMap(\.self)
             let siteKey = passiveCaptcha.siteKey
-            if let token {
+            switch result {
+            case .success(let token):
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
                 return token
-            } else {
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: Error.timeout, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
+            case .error(let error):
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
+                return nil
+            case .none:
+                assertionFailure("No captcha result found!")
                 return nil
             }
         }
