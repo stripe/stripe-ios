@@ -29,9 +29,4 @@ extension Bundle {
         return self.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? self.main
             .object(forInfoDictionaryKey: "CFBundleName") as? String
     }
-
-    // returns whether the UIDesignRequiresCompatibility Info.plist property, which is used to indicate that the app is opting out of Liquid Glass, is set to true
-    @_spi(STP) public class var liquidGlassOptedOut: Bool {
-        return self.main.object(forInfoDictionaryKey: "UIDesignRequiresCompatibility") as? Bool == true
-    }
 }
