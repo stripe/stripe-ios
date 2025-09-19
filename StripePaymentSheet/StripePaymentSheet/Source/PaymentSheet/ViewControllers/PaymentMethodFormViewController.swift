@@ -135,7 +135,7 @@ class PaymentMethodFormViewController: UIViewController {
 
         // Setup AddressSectionElement autocomplete callback after form creation
         setupAddressSectionAutocompleteCallback()
-        
+
         // Setup CardSectionElement reference for scanner control
         setupCardSectionElement()
     }

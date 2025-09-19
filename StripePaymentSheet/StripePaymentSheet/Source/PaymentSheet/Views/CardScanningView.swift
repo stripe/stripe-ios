@@ -33,7 +33,7 @@ protocol STP_Internal_CardScanningViewDelegate: AnyObject {
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
 class CardScanningView: UIView {
-    
+
     private(set) weak var cameraView: STPCameraView?
 
     weak var delegate: STP_Internal_CardScanningViewDelegate?
