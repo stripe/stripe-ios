@@ -106,11 +106,7 @@ final class LinkHintMessageView: UIView {
         backgroundColor = style.backgroundColor
 
         if style == .outlined {
-            // This color isn't semantically correct, but linkBorderDefault is the same
-            // as the background in dark mode and we want to make the border stand out.
-            layer.borderColor = traitCollection.userInterfaceStyle == .dark
-                ? UIColor.linkTextTertiary.cgColor
-                : UIColor.linkBorderDefault.cgColor
+            layer.borderColor = UIColor.linkHintMessageBorder.cgColor
             layer.borderWidth = 1.0
         }
 

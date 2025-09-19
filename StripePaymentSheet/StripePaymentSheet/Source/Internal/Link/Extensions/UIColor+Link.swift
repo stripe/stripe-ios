@@ -51,6 +51,8 @@ extension UIColor {
     static let linkContentOnPrimaryButton: UIColor = UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0)
     /// Separator color on primary button
     static let linkSeparatorOnPrimaryButton: UIColor = brand400
+    /// Border color around the Link hint message view
+    static let linkHintMessageBorder: UIColor = .dynamic(light: neutral300, dark: neutral700)
 
     /**
      * Workaround:
