@@ -144,7 +144,10 @@ private enum CaptchaResult {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
                 return token
             case .error(let error):
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
+                // Only log error if due to timeout. Any other errors have already been logged in start()
+                if case Error.timeout = error {
+                    STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
+                }
                 return nil
             case .none:
                 assertionFailure("No captcha result found!")
