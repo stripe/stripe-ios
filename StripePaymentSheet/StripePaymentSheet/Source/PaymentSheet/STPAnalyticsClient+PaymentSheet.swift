@@ -72,7 +72,8 @@ extension PaymentSheet.Appearance {
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
         payload["navigation_bar_style"] = navigationBarStyle.analyticsValue
         payload["apply_liquid_glass"] = didCallApplyLiquidGlass
-        payload["app_opted_out_liquid_glass"] = LiquidGlassDetector.hasOptedOut
+        payload["ui_design_requires_compatibility"] = LiquidGlassDetector.hasOptedOut
+        payload["has_liquid_glass_compiler_requirements"] = LiquidGlassDetector.meetsCompilerRequirements
 
         // Convenience payload item to make querying high level appearance usage easier
         payload["usage"] = payload.values.contains(where: { value in
