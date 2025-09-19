@@ -59,7 +59,8 @@ class IdNumberElement: ContainerElement {
             self.id = TextFieldElement(
                 configuration: IDNumberTextFieldConfiguration(
                     spec: countryToIDNumberTypes[selectedCountryCode]
-                )
+                ),
+                theme: .default
             )
             section.elements = [self.country, self.id]
         }

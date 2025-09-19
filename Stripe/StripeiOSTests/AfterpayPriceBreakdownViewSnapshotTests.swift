@@ -14,6 +14,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 class AfterpayPriceBreakdownViewSnapshotTests: STPSnapshotTestCase {
     func embedInRenderableView(
@@ -36,7 +37,7 @@ class AfterpayPriceBreakdownViewSnapshotTests: STPSnapshotTestCase {
 
     func testClearpayInMultiRow() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_GB")) { [self] in
-            let priceBreakdownView = AfterpayPriceBreakdownView(currency: "gbp")
+            let priceBreakdownView = AfterpayPriceBreakdownView(currency: "gbp", theme: .default)
             let containingView = embedInRenderableView(priceBreakdownView, width: 320, height: 50)
 
             STPSnapshotVerifyView(containingView)
@@ -44,14 +45,14 @@ class AfterpayPriceBreakdownViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testAfterpayInSingleRow() {
-        let priceBreakdownView = AfterpayPriceBreakdownView(currency: "eur")
+        let priceBreakdownView = AfterpayPriceBreakdownView(currency: "eur", theme: .default)
         let containingView = embedInRenderableView(priceBreakdownView, width: 500, height: 30)
 
         STPSnapshotVerifyView(containingView)
     }
 
     func testCashAppAfterpayInSingleRow() {
-        let priceBreakdownView = AfterpayPriceBreakdownView(currency: "usd")
+        let priceBreakdownView = AfterpayPriceBreakdownView(currency: "usd", theme: .default)
         let containingView = embedInRenderableView(priceBreakdownView, width: 500, height: 30)
 
         STPSnapshotVerifyView(containingView)

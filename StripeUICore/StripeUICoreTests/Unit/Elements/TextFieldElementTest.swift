@@ -17,20 +17,20 @@ class TextFieldElementTest: XCTestCase {
     }
 
     func testNoDefaultValue() {
-        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil), theme: .default)
         XCTAssertTrue(element.textFieldView.text.isEmpty)
         XCTAssertTrue(element.text.isEmpty)
     }
 
     func testDefaultValue() {
-        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"))
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"), theme: .default)
         XCTAssertEqual(element.textFieldView.text, "default value")
         XCTAssertEqual(element.text, "default value")
     }
 
     func testInvalidDefaultValueIsSanitized() {
         let element = TextFieldElement(configuration: Configuration(
-            defaultValue: "\ndefault\n value that is too long and contains disallowed characters")
+            defaultValue: "\ndefault\n value that is too long and contains disallowed characters"), theme: .default
         )
         XCTAssertEqual(element.textFieldView.text, "default value")
         XCTAssertEqual(element.text, "default value")
@@ -45,7 +45,7 @@ class TextFieldElementTest: XCTestCase {
     }
 
     func testMultipleCharacterChangeInEmptyFieldIsAutofill() {
-        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil), theme: .default)
         XCTAssertEqual(element.didReceiveAutofill, false)
         _ = element.textFieldView.textField(element.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "This is autofill")
         element.textFieldView.textDidChange()
@@ -53,7 +53,7 @@ class TextFieldElementTest: XCTestCase {
     }
 
     func testSingleCharacterChangeInEmptyFieldIsNotAutofill() {
-        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil), theme: .default)
         XCTAssertEqual(element.didReceiveAutofill, false)
         _ = element.textFieldView.textField(element.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "T")
         element.textFieldView.textDidChange()
@@ -61,7 +61,7 @@ class TextFieldElementTest: XCTestCase {
     }
 
     func testMultipleCharacterChangeInPopulatedFieldIsNotAutofill() {
-        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"))
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"), theme: .default)
         XCTAssertEqual(element.didReceiveAutofill, false)
         _ = element.textFieldView.textField(element.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "This is autofill")
         element.textFieldView.textDidChange()
@@ -69,7 +69,7 @@ class TextFieldElementTest: XCTestCase {
     }
 
     func testSingleCharacterChangeInPopulatedFieldIsNotAutofill() {
-        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"))
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"), theme: .default)
         XCTAssertEqual(element.didReceiveAutofill, false)
         _ = element.textFieldView.textField(element.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "T")
         element.textFieldView.textDidChange()
