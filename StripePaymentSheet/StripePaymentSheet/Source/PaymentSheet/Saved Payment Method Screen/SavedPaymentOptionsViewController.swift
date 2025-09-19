@@ -263,7 +263,7 @@ class SavedPaymentOptionsViewController: UIViewController {
               index < viewModels.count,
            case let .saved(paymentMethod) = viewModels[index],
               paymentMethod.type == .card else {
-            return FormElement(autoSectioningElements: [])
+            return FormElement(autoSectioningElements: [], theme: appearance.asElementsTheme)
         }
 
         let cvcCollectionElement = CVCRecollectionElement(paymentMethod: paymentMethod, mode: .inputOnly, appearance: appearance)
