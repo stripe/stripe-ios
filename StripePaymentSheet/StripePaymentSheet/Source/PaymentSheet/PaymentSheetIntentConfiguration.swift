@@ -124,7 +124,7 @@ public extension PaymentSheet {
             }
             validate()
         }
-        
+
         /// Creates a `PaymentSheet.IntentConfiguration` with a confirmation token handler
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
@@ -165,11 +165,7 @@ public extension PaymentSheet {
 
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.
-
-        public var CIShouldCatchThis = true
-
         public var confirmHandler: ConfirmHandler?
-
 
         /// Called when the customer confirms payment using confirmation tokens.
         /// See the documentation for `ConfirmationTokenConfirmHandler` for more details.
