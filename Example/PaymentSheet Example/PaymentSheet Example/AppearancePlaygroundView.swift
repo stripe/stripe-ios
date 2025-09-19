@@ -497,6 +497,7 @@ struct AppearancePlaygroundView: View {
                             Text("Apply Liquid Glass🥃")
                         }
                         Button {
+                            resetLinkUI()
                             appearance = PaymentSheet.Appearance()
                             appearance.applyLiquidGlass()
                             doneAction(appearance)
@@ -506,6 +507,7 @@ struct AppearancePlaygroundView: View {
                     }
                 }
                 Button {
+                    resetLinkUI()
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {
