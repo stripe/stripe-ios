@@ -1,5 +1,8 @@
 ## x.x.x yyyy-yy-yy
 
+## Connect
+* [Added] Payments and Payouts embedded components are reayd to use.
+
 ## PaymentSheet
 * [Changed] `appearance.cornerRadius` is now nullable. Below iOS 26, When `nil`, the corner radius is 6.0 (ie unchanged from the current default). On iOS 26+, multiple rounder corner configurations are used to match Liquid Glass design.
 * [Fixed] Improved the cancellation UX when paying with Amazon Pay, Revolut Pay, P24, Twint, Swish, and 3DS2 card.

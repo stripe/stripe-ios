@@ -148,14 +148,14 @@ public final class EmbeddedComponentManager {
               analyticsClientFactory: analyticsClientFactory)
     }
 
-    @_spi(DashboardOnly)
+    @_spi(PrivateBetaConnect)
     public func createPayoutsViewController() -> PayoutsViewController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
               analyticsClientFactory: analyticsClientFactory)
     }
 
-    @_spi(DashboardOnly)
+    @_spi(PrivateBetaConnect)
     @_documentation(visibility: public)
     public func createPaymentsViewController(
         defaultFilters: EmbeddedComponentManager.PaymentsListDefaultFiltersOptions = .init()
