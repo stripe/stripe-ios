@@ -145,7 +145,7 @@ final class CardDetailView: UIView {
         self.appearance = appearance
         self.paymentMethod = paymentMethod
         super.init(frame: .zero)
-        self.backgroundColor = appearance.colors.componentBackground.translucentMaskColor
+        self.backgroundColor = appearance.asElementsTheme.colors.readonlyComponentBackground
         addAndPinSubview(hStackView, insets: appearance.textFieldInsets)
     }
 }

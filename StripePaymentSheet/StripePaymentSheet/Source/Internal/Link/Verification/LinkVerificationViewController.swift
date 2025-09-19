@@ -63,6 +63,11 @@ final class LinkVerificationViewController: UIViewController {
     private lazy var activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+
+        if let appearancePrimaryColor = appearance?.colors?.primary {
+            activityIndicator.tintColor = appearancePrimaryColor
+        }
+
         return activityIndicator
     }()
 

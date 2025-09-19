@@ -161,6 +161,9 @@ public class STPPaymentIntentParams: NSObject {
     /// Contains metadata with identifiers for the session and information about the integration
     @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
+    /// ID of an existing ConfirmationToken to use for this PaymentIntent confirmation.
+    @objc @_spi(STP) public var confirmationToken: String?
+
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
     /// This property has been renamed to `returnURL` and deprecated.
@@ -221,6 +224,8 @@ public class STPPaymentIntentParams: NSObject {
             "radarOptions = @\(String(describing: radarOptions))",
             // ClientAttributionMetadata
             "clientAttributionMetadata = @\(String(describing: clientAttributionMetadata))",
+            // ConfirmationToken
+            "confirmationToken = \(String(describing: confirmationToken))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters)",
         ]
@@ -275,6 +280,7 @@ extension STPPaymentIntentParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: shipping)): "shipping",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
+            NSStringFromSelector(#selector(getter: confirmationToken)): "confirmation_token",
         ]
     }
 }
@@ -303,6 +309,7 @@ extension STPPaymentIntentParams: NSCopying {
         copy.shipping = shipping
         copy.radarOptions = radarOptions
         copy.clientAttributionMetadata = clientAttributionMetadata
+        copy.confirmationToken = confirmationToken
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy

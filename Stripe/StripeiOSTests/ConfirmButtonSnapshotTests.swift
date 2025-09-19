@@ -11,9 +11,9 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import UIKit
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
+@testable import Stripe
+@testable import StripeCore
+@testable import StripePaymentSheet
 
 // @iOS26
 class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
@@ -195,6 +195,12 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` used in Link has the correct height
     func testConfirmButtonInLinkUI() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+
         var appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
         // This should not have any effect when rendered in Link
         appearance.primaryButton.height = 30

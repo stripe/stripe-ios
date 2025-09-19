@@ -105,6 +105,9 @@ class SectionContainerView: UIView {
         } else {
             backgroundColor = .tertiarySystemGroupedBackground
         }
+        // Draw border - need to do it here so that the cgcolor gets updated on `traitCollectionDidChange`
+        layer.borderColor = theme.colors.border.cgColor
+        layer.borderWidth = theme.borderWidth
 
         guard let newViews = newViews, views != newViews else {
             return
