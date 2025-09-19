@@ -318,7 +318,7 @@ class CheckBox: UIView {
         return CGSize(width: 20, height: 20)
     }
 
-    init(theme: ElementsAppearance = .default) {
+    init(theme: ElementsAppearance) {
         self.theme = theme
         super.init(frame: .zero)
 

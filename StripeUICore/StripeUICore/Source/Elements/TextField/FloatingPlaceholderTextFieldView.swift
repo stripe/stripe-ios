@@ -38,7 +38,7 @@ class FloatingPlaceholderTextFieldView: UIView {
 
     // MARK: - Initializers
 
-    public init(textField: UITextField, theme: ElementsAppearance = .default) {
+    public init(textField: UITextField, theme: ElementsAppearance) {
         self.textField = textField
         self.theme = theme
         super.init(frame: .zero)

@@ -354,7 +354,7 @@ class ConfirmButton: UIView {
 
         init(
             showProcessingLabel: Bool = true,
-            appearance: PaymentSheet.Appearance = .default
+            appearance: PaymentSheet.Appearance
         ) {
             self.showProcessingLabel = showProcessingLabel
             self.appearance = appearance

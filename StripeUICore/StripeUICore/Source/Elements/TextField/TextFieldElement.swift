@@ -111,7 +111,7 @@ import UIKit
 
     // MARK: - Initializer
 
-    public required init(configuration: TextFieldElementConfiguration, theme: ElementsAppearance = .default) {
+    public required init(configuration: TextFieldElementConfiguration, theme: ElementsAppearance) {
         self.configuration = configuration
         self.theme = theme
     }

@@ -32,7 +32,7 @@ final class LinkMoreInfoView: UIView {
 
     private let theme: ElementsAppearance
 
-    init(theme: ElementsAppearance = .default) {
+    init(theme: ElementsAppearance) {
         self.theme = theme
         super.init(frame: .zero)
         let stackView = UIStackView(arrangedSubviews: [logoView])

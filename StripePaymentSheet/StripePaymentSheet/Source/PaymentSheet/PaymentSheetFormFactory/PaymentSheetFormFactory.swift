@@ -1087,7 +1087,7 @@ extension PaymentSheetFormFactory {
 
 extension FormElement {
     /// Conveniently nests single TextField, PhoneNumber, and DropdownFields in a Section
-    convenience init(autoSectioningElements: [Element], theme: ElementsAppearance = .default) {
+    convenience init(autoSectioningElements: [Element], theme: ElementsAppearance) {
         let elements: [Element] = autoSectioningElements.map {
             if $0 is PaymentMethodElementWrapper<TextFieldElement>
                 || $0 is PaymentMethodElementWrapper<DropdownFieldElement>

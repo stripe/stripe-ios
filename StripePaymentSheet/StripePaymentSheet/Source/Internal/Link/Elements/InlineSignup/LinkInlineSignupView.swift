@@ -76,7 +76,7 @@ final class LinkInlineSignupView: UIView {
         case .textFieldsOnlyEmailFirst:
             return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, theme: theme)
         case .textFieldsOnlyPhoneFirst:
-            return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, infoView: LinkMoreInfoView(), theme: theme)
+            return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, infoView: LinkMoreInfoView(theme: theme), theme: theme)
         }
     }()
 

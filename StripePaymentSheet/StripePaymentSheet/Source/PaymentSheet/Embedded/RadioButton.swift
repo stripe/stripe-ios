@@ -54,7 +54,7 @@ class RadioButton: UIView {
         return CGSize(width: Constants.diameter, height: Constants.diameter)
     }
 
-    init(appearance: PaymentSheet.Appearance = .default) {
+    init(appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         super.init(frame: .zero)
         layer.addSublayer(outerCircle)

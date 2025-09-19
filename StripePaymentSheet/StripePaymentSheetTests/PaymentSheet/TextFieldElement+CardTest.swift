@@ -307,7 +307,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
     func testExpiryDisplayText() {
         let configuration = TextFieldElement.ExpiryDateConfiguration()
-        let textFieldElement = TextFieldElement(configuration: configuration)
+        let textFieldElement = TextFieldElement(configuration: configuration, theme: .default)
 
         let testcases = [
             "0": "0",
@@ -434,14 +434,14 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 extension TextFieldElementConfiguration {
     // MARK: - Helpers
     func simulateValidationState(_ input: String) -> ElementValidationState {
-        let textFieldElement = TextFieldElement(configuration: self)
+        let textFieldElement = TextFieldElement(configuration: self, theme: .default)
         textFieldElement.textFieldView.textField.text = input
         textFieldElement.textFieldView.textDidChange()
         return textFieldElement.validationState
     }
 }
 
-extension ElementValidationState: Equatable {
+extension ElementValidationState: @retroactive Equatable {
     /// - Note: Assumes errors are equal if their localized descriptions are equal
     public static func == (lhs: ElementValidationState, rhs: ElementValidationState) -> Bool {
         switch (lhs, rhs) {
