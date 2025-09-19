@@ -39,10 +39,7 @@ import Foundation
 
 }
 
-private enum CaptchaResult {
-    case success(String)
-    case error(Error)
-}
+typealias CaptchaResult = Result<String, Error>
 
 @_spi(STP) public actor PassiveCaptchaChallenge {
     enum Error: Swift.Error {
@@ -86,7 +83,7 @@ private enum CaptchaResult {
                                 nillableContinuation?.resume(returning: .success(token))
                                 nillableContinuation = nil
                             } catch {
-                                nillableContinuation?.resume(returning: .error(error))
+                                nillableContinuation?.resume(returning: .failure(error))
                                 nillableContinuation = nil
                             }
                         }
@@ -99,13 +96,13 @@ private enum CaptchaResult {
                 switch result {
                 case .success:
                     STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
-                case .error(let error):
+                case .failure(let error):
                     STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
                 }
                 return result
             } catch {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: 0)
-                return .error(error)
+                return .failure(error)
             }
         }
     }
@@ -127,7 +124,7 @@ private enum CaptchaResult {
             // Add timeout task
             group.addTask {
                 try? await Task.sleep(nanoseconds: timeoutNs)
-                return .error(Error.timeout)
+                return .failure(Error.timeout)
             }
             defer {
                 group.cancelAll()
@@ -140,7 +137,7 @@ private enum CaptchaResult {
             case .success(let token):
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
                 return token
-            case .error(let error):
+            case .failure(let error):
                 // Only log error if due to timeout. Any other errors have already been logged in start()
                 if case Error.timeout = error {
                     STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
