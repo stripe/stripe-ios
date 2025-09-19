@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=l40nTJhQs3THX9kyxxdaZRR_tGU_73KTXp2s9sunpZhcMP4Qq2Rsd2Z9Z942iUAHOIwLrMWXNeNip-6G
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=pnXbtyx_dtbmWhy5X812t_QBL-d060qwh_sjtRtbZLLD89hcl7IC07qbAdfkKVuNdTy7GkshDIZAlzLf
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_3M2fdXdOUaEkHW
+request-id: req_PapTfdjFhztwCy
 Content-Length: 477
 Vary: Origin
-Date: Fri, 19 Sep 2025 17:03:26 GMT
-original-request: req_3M2fdXdOUaEkHW
+Date: Fri, 19 Sep 2025 18:39:23 GMT
+original-request: req_PapTfdjFhztwCy
 stripe-version: 2020-08-27
-idempotency-key: fcd4b317-24e0-41c3-8c09-bbfc5fcdf1d8
+idempotency-key: d21c62a1-7606-4f06-9f69-a73f63ad6487
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[name]=Foo&cl
 
 {
   "object" : "payment_method",
-  "id" : "pm_1S97iUFY0qyl6XeWLUiRWMZi",
+  "id" : "pm_1S99DLFY0qyl6XeWIs9mqq65",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -43,7 +43,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[name]=Foo&cl
     }
   },
   "livemode" : false,
-  "created" : 1758301406,
+  "created" : 1758307163,
   "allow_redisplay" : "unspecified",
   "type" : "bancontact",
   "customer" : null,

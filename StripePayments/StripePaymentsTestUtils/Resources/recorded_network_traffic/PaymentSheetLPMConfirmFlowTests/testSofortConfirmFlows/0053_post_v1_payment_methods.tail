@@ -1,0 +1,53 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_methods$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=CUhV4bR83iZ73v_KwZ_QAvjMoffoHkrt3bp7s3W0wJY3DyD-4jxkA7Qx0KAaZeCTKgqmVgW84BKXIbE9
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_ms2MpR1rGszJUz
+Content-Length: 495
+Vary: Origin
+Date: Fri, 19 Sep 2025 18:48:18 GMT
+original-request: req_ms2MpR1rGszJUz
+stripe-version: 2020-08-27
+idempotency-key: 4d157c79-70e9-4c35-8207-618066d7acb7
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&sofort%5Bcountry%5D=AT&type=sofort
+
+{
+  "object" : "payment_method",
+  "sofort" : {
+    "country" : "AT"
+  },
+  "id" : "pm_1S99LyFY0qyl6XeWA38RdRcg",
+  "billing_details" : {
+    "email" : "f@z.c",
+    "phone" : null,
+    "tax_id" : null,
+    "name" : "Foo",
+    "address" : {
+      "state" : null,
+      "country" : null,
+      "line2" : null,
+      "city" : null,
+      "line1" : null,
+      "postal_code" : null
+    }
+  },
+  "livemode" : false,
+  "created" : 1758307698,
+  "allow_redisplay" : "unspecified",
+  "type" : "sofort",
+  "customer" : null
+}

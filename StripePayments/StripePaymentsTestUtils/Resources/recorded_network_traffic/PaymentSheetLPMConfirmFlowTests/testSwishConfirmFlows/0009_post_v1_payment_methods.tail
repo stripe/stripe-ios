@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KntfvTaCJYv1l8yO1VZEWUCO7ZMOposufP2UZj_uZuS2UUw5zwX5P7AMCfqFjQma6NtOAErBuFjohfd0
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=nze3Jmh9JMVLEpBSSTeM26bswPZCgsuH18rqYfCfWkyaiE9gGefDhKHaOI-z3Wf6nt0l5SsbCGeVj2YB
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_skqD6K3oOEVE0A
+request-id: req_2iPc4qOxLrvVzq
 Content-Length: 466
 Vary: Origin
-Date: Fri, 19 Sep 2025 17:12:17 GMT
-original-request: req_skqD6K3oOEVE0A
+Date: Fri, 19 Sep 2025 18:48:39 GMT
+original-request: req_2iPc4qOxLrvVzq
 stripe-version: 2020-08-27
-idempotency-key: eea0f4e4-cf30-42b1-9bc7-d137aa8cf848
+idempotency-key: 74807d03-24a3-4bb9-9f11-4258c3d7e3a9
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
 
 {
   "object" : "payment_method",
-  "id" : "pm_1S97r3KG6vc7r7YCYduOOXM5",
+  "id" : "pm_1S99MJKG6vc7r7YCR6EbE9qd",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "swish" : {
 
   },
-  "created" : 1758301937,
+  "created" : 1758307719,
   "allow_redisplay" : "unspecified",
   "type" : "swish",
   "customer" : null

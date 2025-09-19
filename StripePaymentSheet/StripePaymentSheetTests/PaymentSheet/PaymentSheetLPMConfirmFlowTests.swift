@@ -444,17 +444,45 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
+        
+        // Create customer session for confirmation token support
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+            customerID: customer,
+            merchantCountry: "us",
+            paymentMethodSave: true
+        )
+        
         let configuration: PaymentSheet.Configuration = {
             var config = PaymentSheet.Configuration()
             config.apiClient = apiClient
             config.allowsDelayedPaymentMethods = true
             config.returnURL = "https://foo.com"
+            config.customer = PaymentSheet.CustomerConfiguration(
+                id: customerAndCustomerSession.customer,
+                customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
+            )
             return config
         }()
 
         // Confirm saved SEPA with every confirm variation
         for intentKind in IntentKind.allCases {
             for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
+                
+                // Create elements session with customer configuration for proper ephemeral keys
+                let elementsSession: STPElementsSession
+                switch intent {
+                case .paymentIntent, .setupIntent:
+                    // For regular intents, use test value
+                    elementsSession = ._testValue(intent: intent)
+                case .deferredIntent(let intentConfig):
+                    // For deferred intents, create real elements session with customer config
+                    elementsSession = try await apiClient.retrieveDeferredElementsSession(
+                        withIntentConfig: intentConfig,
+                        clientDefaultPaymentMethod: nil,
+                        configuration: configuration
+                    )
+                }
+                
                 let e = expectation(description: "")
                 // Confirm the intent with the form details
                 let paymentHandler = STPPaymentHandler(apiClient: apiClient)
@@ -462,7 +490,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                     configuration: configuration,
                     authenticationContext: self,
                     intent: intent,
-                    elementsSession: ._testValue(intent: intent),
+                    elementsSession: elementsSession,
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: paymentHandler,
                     analyticsHelper: ._testValue()

@@ -1,0 +1,104 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3S99FiFY0qyl6XeW1Q9V3a2L\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ev4HAGNaTWrwC5ox0UIoTrz4p3ZagBsexnphAk1U2_kI94HR657jyo9iUzdXb3N_QUR1HUNJnppREtX0
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_KDLrhVmIQ85ber
+Content-Length: 2313
+Vary: Origin
+Date: Fri, 19 Sep 2025 18:41:52 GMT
+original-request: req_KDLrhVmIQ85ber
+stripe-version: 2020-08-27
+idempotency-key: 9687f293-bf06-44ce-88ff-064fd72a16dd
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3S99FiFY0qyl6XeW1Q9V3a2L_secret_0pSBdz78IsBdYXokTfp6oGGX6&expand\[0]=payment_method&payment_method=pm_1S99FiFY0qyl6XeWSMhcgGak&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "cashapp_handle_redirect_or_display_qr_code",
+    "cashapp_handle_redirect_or_display_qr_code" : {
+      "qr_code" : {
+        "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9UNUp0UDFWZmFMcVNaRHVWV2luelF3bzdWNmMzUnVZ0100Ffvs726C.png",
+        "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9UNUp0UDFWZmFMcVNaRHVWV2luelF3bzdWNmMzUnVZ0100Ffvs726C.svg",
+        "expires_at" : 1758307332
+      },
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKPDHtsYGMgbo-s1G-Go6MJWLB6oWZFXNhnnspr2eOAq8URTcqm6C_riLkSPr_0jbtjBEKesP2N74Qv6FeKsN2w",
+      "mobile_auth_url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_T5Jt5QQ8ibx6Y1TILdTz65zEKMKDhaE"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1S99FiFY0qyl6XeWSMhcgGak",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1758307310,
+    "allow_redisplay" : "unspecified",
+    "type" : "cashapp",
+    "customer" : null,
+    "cashapp" : {
+      "cashtag" : null,
+      "buyer_id" : null
+    }
+  },
+  "client_secret" : "pi_3S99FiFY0qyl6XeW1Q9V3a2L_secret_0pSBdz78IsBdYXokTfp6oGGX6",
+  "id" : "pi_3S99FiFY0qyl6XeW1Q9V3a2L",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "cashapp"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1758307310,
+  "description" : null
+}

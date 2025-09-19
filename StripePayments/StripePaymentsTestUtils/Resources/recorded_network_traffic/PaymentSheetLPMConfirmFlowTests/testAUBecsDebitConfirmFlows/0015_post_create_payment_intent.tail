@@ -1,18 +1,18 @@
 POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
-402
+200
 text/html
 Content-Type: text/html;charset=utf-8
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=Djy0X0rzpE%2BkwYuQkdX0ApUMSZ8EtR1IDRs3DpxavSEzama1OXorwqa8DS1UwM5nOmhXr83NR5extOdwgRabiobtRQjDDPfTLlQ1rE7Sr09OcQwvd9DGQkZLHzWB2sCNxCmfbn3HeinS118aQIF9eTw2EOgrPuEHdq0C7iGCtlCMRZAja8VXtC8%2BBhxmEmli0Bjz%2BUaX2FOrp33hh6UNlOHUC%2B9j%2Fty2qyx5rDjoiQo%3D; path=/
+Set-Cookie: rack.session=8VCBe3h9vQGHygOwbz1zj9ahvT43VgbJ0VjbbTNuDmxpLmXvjMA1b%2BxJqFuMLZeYqlK1u9XSASOm4TJ%2B%2F0z8rD%2BkLbGCv%2BM4CJ4o05FH5GG3yZjVnYcte1gGVZafZ%2FzTb%2BAazks%2FxM7Akn%2BJXCYp7CKGIVeu5AaQ4VnxG%2FzMU2xvw6Oe2UnVEFvYadEw1Ct%2FJi5CXA7VttNgKCoBJFVJshX5yeuovRr2w5rklLTBp1Y%3D; path=/
 Server: Google Frontend
-x-cloud-trace-context: 6782bd2f7373df9ee46cb9e437bedeb2
+x-cloud-trace-context: 5f9f95dbeb6ab93df040b552752f8df6
 Via: 1.1 google
 x-xss-protection: 1; mode=block
-Date: Fri, 19 Sep 2025 17:02:54 GMT
+Date: Fri, 19 Sep 2025 18:38:48 GMT
 x-robots-tag: noindex, nofollow
-Content-Length: 220
+Content-Length: 197
 x-content-type-options: nosniff
 x-frame-options: SAMEORIGIN
 
-Error creating PaymentIntent: This PaymentIntent requires a mandate, but no existing mandate was found. Collect mandate acceptance from the customer and try again, providing acceptance data in the mandate_data parameter.
+{"intent":"pi_3S99CmF7QokQdxBy0ILKuMOa","secret":"pi_3S99CmF7QokQdxBy0ILKuMOa_secret_GW1Nf937fDCZDYnP7r8oY5KiN","status":"processing","publishable_key":"pk_test_GNmlCJ6AFgWXm4mJYiyWSOWN00KIIiri7F"}

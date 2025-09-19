@@ -1,0 +1,94 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3S99CJFY0qyl6XeW0G0IRR8q\?client_secret=pi_3S99CJFY0qyl6XeW0G0IRR8q_secret_G1gw9vsq6r7UbteOI2hkvlOOB&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=9WP35uCGWWBQwD_4PJVJHdEOzcADIQLhmycxWzEwtA9uFHowRuNSrzXnhxW16Y1x4IwY_WXCN2w3u-BJ
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Fri, 19 Sep 2025 18:38:24 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1686
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_T73KjEFTq3UbII
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "foo:\/\/bar",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_T5JpbNMVzjNeebfBnSz2Sg8MIbhzzh8"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "amazon_pay" : {
+
+    },
+    "id" : "pm_1S99CIFY0qyl6XeWYOOyPuhR",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1758307098,
+    "allow_redisplay" : "unspecified",
+    "type" : "amazon_pay",
+    "customer" : null
+  },
+  "client_secret" : "pi_3S99CJFY0qyl6XeW0G0IRR8q_secret_G1gw9vsq6r7UbteOI2hkvlOOB",
+  "id" : "pi_3S99CJFY0qyl6XeW0G0IRR8q",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "amazon_pay"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1758307099,
+  "description" : null
+}

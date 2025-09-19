@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=WCs9mrReSWaUULZXQ6eiJ-ZYfUByxdNWDKJ0zCL8meKaI1S8CIua3F3hQcr62bmsogoTYFITRovoCxNf
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=CUhV4bR83iZ73v_KwZ_QAvjMoffoHkrt3bp7s3W0wJY3DyD-4jxkA7Qx0KAaZeCTKgqmVgW84BKXIbE9
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_TbozHmiShEhueu
+request-id: req_1NMW1H7vUnYCSA
 Content-Length: 491
 Vary: Origin
-Date: Fri, 19 Sep 2025 17:11:38 GMT
-original-request: req_TbozHmiShEhueu
+Date: Fri, 19 Sep 2025 18:47:58 GMT
+original-request: req_1NMW1H7vUnYCSA
 stripe-version: 2020-08-27
-idempotency-key: 3e0b52ea-66bf-40fc-8b80-d418f9ecd3f4
+idempotency-key: 0f8684cc-7fa4-4233-b2bf-09e7dd0603be
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "sofort" : {
     "country" : "AT"
   },
-  "id" : "pm_1S97qPFY0qyl6XeWNPLSMUtb",
+  "id" : "pm_1S99LeFY0qyl6XeWvdCunsbC",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1758301897,
+  "created" : 1758307678,
   "allow_redisplay" : "unspecified",
   "type" : "sofort",
   "customer" : null

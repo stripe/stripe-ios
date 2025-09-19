@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=XgYLLTvpodzNOfuMywQCor-Yi-cxNdTE-ICkQqoVuwQvglxmHEYdchphnyKpjKU7mdxMQhO7w0qu1jmA
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=CUhV4bR83iZ73v_KwZ_QAvjMoffoHkrt3bp7s3W0wJY3DyD-4jxkA7Qx0KAaZeCTKgqmVgW84BKXIbE9
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_bgXN0jVlG2qTBl
+request-id: req_Yplyi0CzntiZrc
 Content-Length: 478
 Vary: Origin
-Date: Fri, 19 Sep 2025 17:10:06 GMT
-original-request: req_bgXN0jVlG2qTBl
+Date: Fri, 19 Sep 2025 18:46:26 GMT
+original-request: req_Yplyi0CzntiZrc
 stripe-version: 2020-08-27
-idempotency-key: c43efd8b-295f-477b-b8c0-0e9e5674fab0
+idempotency-key: 206871f2-af30-4b4c-ba90-c31e4bf0e85d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "revolut_pay" : {
 
   },
-  "id" : "pm_1S97owGoesj9fw9QAsPeEBmj",
+  "id" : "pm_1S99KAGoesj9fw9Q2dDcUjEb",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1758301806,
+  "created" : 1758307586,
   "allow_redisplay" : "unspecified",
   "type" : "revolut_pay",
   "customer" : null

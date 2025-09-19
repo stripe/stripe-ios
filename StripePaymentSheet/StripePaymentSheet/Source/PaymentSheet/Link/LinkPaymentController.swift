@@ -487,6 +487,7 @@ import UIKit
                         authenticationContext: authenticationContext,
                         paymentHandler: STPPaymentHandler.shared(),
                         isFlowController: true,
+                        elementsSession: nil,
                         mandateData: STPMandateDataParams.makeWithInferredValues()) { result, _ in
                     switch result {
                     case .canceled:
