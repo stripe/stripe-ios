@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// An object representing parameters to confirm a SetupIntent object.
 /// For example, you would confirm a SetupIntent when a customer hits the “Save” button on a payment method management view in your app.

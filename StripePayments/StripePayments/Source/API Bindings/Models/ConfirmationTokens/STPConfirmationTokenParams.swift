@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// An object representing parameters used to create a ConfirmationToken object.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens

@@ -373,7 +373,7 @@ extension STPAPIClient {
         cvc: String?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -390,7 +390,9 @@ extension STPAPIClient {
         if let cvc = cvc {
             paymentMethodOptionsDict["card"] = ["cvc": cvc]
         }
-        paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, clientAttributionMetadata: clientAttributionMetadata)
+        if let clientAttributionMetadata {
+            paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, clientAttributionMetadata: clientAttributionMetadata)
+        }
         parameters["payment_method_options"] = paymentMethodOptionsDict
 
         if let allowRedisplay {

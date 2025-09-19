@@ -182,7 +182,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
 
     private func stubClientAttributionMetadata(base: String? = nil,
                                                shouldContainClientAttributionMetadata: Bool = true,
-                                               clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(),
+                                               clientAttributionMetadata: STPClientAttributionMetadata,
                                                urlPattern: String? = nil) {
         stub { urlRequest in
             // If urlPattern is specified, only validate requests that match the pattern
@@ -287,7 +287,12 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         var paymentMethodParams: StripeAPI.PaymentMethodParams = StripeAPI.PaymentMethodParams(type: .card)
-        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        paymentMethodParams.clientAttributionMetadata = ClientAttributionMetadata(
+            clientSessionId: clientAttributionMetadata.clientSessionId,
+            elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
+            paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { ClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
+            paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { ClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) }
+        )
         // Stub payment method creation call
         stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata, urlPattern: "/payment_methods")
         let e = expectation(description: "")
@@ -330,8 +335,9 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmPaymentIntentWithoutClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         // We only want to include client_attribution_metadata on tokenization with payment method params
-        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false)
+        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false, clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
@@ -373,8 +379,9 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmSetupIntentWithoutClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         // We only want to include client_attribution_metadata on tokenization with payment method params
-        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false)
+        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false, clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
