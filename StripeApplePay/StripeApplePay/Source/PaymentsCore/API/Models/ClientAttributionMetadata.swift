@@ -5,6 +5,7 @@
 //  Created by Joyce Qin on 9/18/25.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 
 // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
