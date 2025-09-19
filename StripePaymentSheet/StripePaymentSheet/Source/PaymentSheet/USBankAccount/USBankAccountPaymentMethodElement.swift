@@ -94,7 +94,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         isSettingUp: Bool,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
-        appearance: PaymentSheet.Appearance = .default
+        appearance: PaymentSheet.Appearance
     ) {
         let theme = appearance.asElementsTheme
         let collectingName = configuration.billingDetailsCollectionConfiguration.name != .never
