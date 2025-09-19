@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 extension STPAnalyticsClient {
     /// ⚠️ Deprecated - use `PaymentSheetAnalyticsHelper` if you are actually a PaymentSheet analytic so that you can send all the params common to PaymentSheet analytics. 
@@ -71,6 +72,8 @@ extension PaymentSheet.Appearance {
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
         payload["navigation_bar_style"] = navigationBarStyle.analyticsValue
         payload["apply_liquid_glass"] = didCallApplyLiquidGlass
+        payload["ui_design_requires_compatibility"] = LiquidGlassDetector.hasOptedOut
+        payload["has_liquid_glass_compiler_requirements"] = LiquidGlassDetector.meetsCompilerRequirements
 
         // Convenience payload item to make querying high level appearance usage easier
         payload["usage"] = payload.values.contains(where: { value in
