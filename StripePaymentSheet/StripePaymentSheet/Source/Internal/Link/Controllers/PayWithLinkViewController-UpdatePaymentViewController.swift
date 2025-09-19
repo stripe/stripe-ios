@@ -38,7 +38,7 @@ extension PayWithLinkViewController {
                 "This is your default",
                 "Text of a label indicating that a payment method is the default."
             )
-            return LinkHintMessageView(message: message)
+            return LinkHintMessageView(message: message, style: .outlined)
         }()
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(

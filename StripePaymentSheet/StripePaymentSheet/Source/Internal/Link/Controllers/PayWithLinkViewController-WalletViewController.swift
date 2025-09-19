@@ -117,7 +117,7 @@ extension PayWithLinkViewController {
             guard let hintMessage = viewModel.debitCardHintIfSupported(for: linkAccount) else {
                 return nil
             }
-            return LinkHintMessageView(message: hintMessage)
+            return LinkHintMessageView(message: hintMessage, style: .filled)
         }()
 
         private lazy var cardDetailsRecollectionRow = SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)

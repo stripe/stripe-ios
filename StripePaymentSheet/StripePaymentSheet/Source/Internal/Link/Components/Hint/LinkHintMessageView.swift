@@ -18,6 +18,20 @@ final class LinkHintMessageView: UIView {
         static let minimumHeight: CGFloat = LinkUI.minimumButtonHeight
     }
 
+    enum Style {
+        case filled
+        case outlined
+
+        var backgroundColor: UIColor {
+            switch self {
+            case .filled:
+                return .linkSurfaceSecondary
+            case .outlined:
+                return .linkSurfacePrimary
+            }
+        }
+    }
+
     var text: String? {
         get {
             return textLabel.text
@@ -43,14 +57,17 @@ final class LinkHintMessageView: UIView {
 
     private lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .linkTextTertiary
+        label.textColor = style == .filled ? .linkTextTertiary : .linkTextSecondary
         label.font = LinkUI.font(forTextStyle: .detail)
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         return label
     }()
 
-    init(message: String) {
+    private let style: Style
+
+    init(message: String, style: Style) {
+        self.style = style
         super.init(frame: .zero)
         setupUI()
         configureImage()
@@ -77,7 +94,12 @@ final class LinkHintMessageView: UIView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
-        backgroundColor = .linkSurfaceSecondary
+        backgroundColor = style.backgroundColor
+
+        if style == .outlined {
+            layer.borderColor = UIColor.linkBorderDefault.cgColor
+            layer.borderWidth = 1.0
+        }
 
         if let cornerRadius = LinkUI.appearance.cornerRadius {
             layer.cornerRadius = cornerRadius
