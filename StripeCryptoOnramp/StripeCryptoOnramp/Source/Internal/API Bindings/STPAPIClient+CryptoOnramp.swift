@@ -128,39 +128,28 @@ extension STPAPIClient {
     /// Creates a crypto payment token from a given payment method and consumer.
     /// - Parameters:
     ///   - paymentMethodId: The originating payment method ID.
-    ///   - linkAccountInfo: Information associated with the link account including the client secret.
     /// - Returns: The created crypto payment token.
     /// Throws if an API error occurs.
     func createPaymentToken(
-        for paymentMethodId: String,
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+        for paymentMethodId: String
     ) async throws -> CreatePaymentTokenResponse {
-        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
-            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
-        }
-
         let endpoint = "crypto/internal/payment_token"
-        let requestObject = CreatePaymentTokenRequest(
-            paymentMethod: paymentMethodId,
-            consumerSessionClientSecret: consumerSessionClientSecret
-        )
+        let requestObject = CreatePaymentTokenRequest(paymentMethod: paymentMethodId)
         return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameter linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+        cryptoCustomerId: String
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        var parameters: [String: Any] = [:]
-        if let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret {
-            parameters["credentials"] = ["consumer_session_client_secret": consumerSessionClientSecret]
-        }
-
+        let parameters: [String: Any] = [
+            "crypto_customer_id": cryptoCustomerId
+        ]
         return try await get(resource: endpoint, parameters: parameters)
     }
 
