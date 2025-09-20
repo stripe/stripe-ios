@@ -499,7 +499,6 @@ extension PaymentSheet {
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
-                verificationDismissed: verificationDismissed,
                 passiveCaptchaChallenge: passiveCaptchaChallenge,
                 callback: completionCallback
             )
