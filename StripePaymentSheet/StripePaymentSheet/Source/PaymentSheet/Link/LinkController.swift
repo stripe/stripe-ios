@@ -320,7 +320,6 @@ import UIKit
 
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
-            linkAccount: linkAccount,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,

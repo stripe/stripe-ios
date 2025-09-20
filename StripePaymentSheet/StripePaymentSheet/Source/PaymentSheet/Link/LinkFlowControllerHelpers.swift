@@ -21,7 +21,6 @@ extension UIViewController {
 
     func presentNativeLink(
         selectedPaymentDetailsID: String?,
-        linkAccount: PaymentSheetLinkAccount? = LinkAccountContext.shared.account,
         configuration: PaymentElementConfiguration,
         intent: Intent,
         elementsSession: STPElementsSession,

@@ -293,9 +293,10 @@ extension PaymentSheet {
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsViewState: self.walletButtonsViewState)
             self.viewController.flowControllerDelegate = self
-            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
-            self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
-            Task { await self.passiveCaptchaChallenge?.start() }
+            if configuration.enablePassiveCaptcha, let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
+                self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+                self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
+            }
             updatePaymentOption()
         }
 
@@ -468,11 +469,6 @@ extension PaymentSheet {
             selectedPaymentDetailsID: String? = nil,
             returnToPaymentSheet: @escaping () -> Void
         ) {
-            let verificationDismissed: () -> Void = { [weak self] in
-                self?.didDismissLinkVerificationDialog = true
-                returnToPaymentSheet()
-            }
-
             let completionCallback: (PaymentSheet.LinkConfirmOption?, Bool) -> Void = { [weak self] confirmOption, shouldReturnToPaymentSheet in
                 guard let self else { return }
 
@@ -482,6 +478,12 @@ extension PaymentSheet {
                 }
 
                 if shouldReturnToPaymentSheet {
+                    self.viewController.linkConfirmOption = nil
+                    if case .link(let option) = self.internalPaymentOption, case .wallet = option {
+                        // The Link row was selected before we launched the Link flow, but the user decided to drop out
+                        // of the Link flow. We clear the selection to avoid having Link stay selected.
+                        self.viewController.clearSelection()
+                    }
                     self.updatePaymentOption()
                     returnToPaymentSheet()
                     return
@@ -831,6 +833,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     var passiveCaptchaChallenge: PassiveCaptchaChallenge? { get set }
+    func clearSelection()
 }
 
 extension PaymentOption {

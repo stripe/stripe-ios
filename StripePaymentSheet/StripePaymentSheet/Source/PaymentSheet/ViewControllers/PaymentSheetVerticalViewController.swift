@@ -686,6 +686,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
     }
 
+    func clearSelection() {
+        paymentMethodListViewController?.clearSelection()
+        updatePrimaryButton()
+    }
+
     @objc func didTapPrimaryButton() {
         // If the form has overridden the primary buy button, hand control over to the form
         guard paymentMethodFormViewController?.overridePrimaryButtonState == nil else {

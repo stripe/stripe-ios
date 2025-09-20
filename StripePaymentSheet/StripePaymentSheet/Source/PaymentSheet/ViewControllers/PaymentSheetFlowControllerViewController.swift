@@ -457,6 +457,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         }
     }
 
+    func clearSelection() {
+        savedPaymentOptionsViewController.unselectPaymentMethod()
+        updateButton()
+    }
+
     @objc
     private func didTapContinueButton() {
         // The user is continuing with an LPM, so we un-select Link

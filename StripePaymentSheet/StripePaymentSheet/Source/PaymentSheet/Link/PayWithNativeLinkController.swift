@@ -177,15 +177,16 @@ final class PayWithNativeLinkController {
             )
 
             self.completion =  { completionResult in
-                payWithLinkVC.dismiss(animated: true)
-                completion(completionResult)
+                payWithLinkVC.dismiss(animated: true) {
+                    completion(completionResult)
 
-                guard completionResult.shouldShowPaymentSheetAgain else {
-                    return
-                }
-                // Handle representing the previous bottom sheet
-                if let targetBottomSheet, let targetPresentationController, hidingUnderlyingBottomSheet {
-                    targetPresentationController.presentAsBottomSheet(targetBottomSheet, appearance: self.configuration.appearance)
+                    guard completionResult.shouldShowPaymentSheetAgain else {
+                        return
+                    }
+                    // Handle representing the previous bottom sheet
+                    if let targetBottomSheet, let targetPresentationController, hidingUnderlyingBottomSheet {
+                        targetPresentationController.presentAsBottomSheet(targetBottomSheet, appearance: self.configuration.appearance)
+                    }
                 }
             }
         }
@@ -209,8 +210,9 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         _ payWithLinkViewController: PayWithLinkViewController,
         confirmOption: PaymentSheet.LinkConfirmOption
     ) {
-        payWithLinkViewController.dismiss(animated: true)
-        completion?(.paymentMethodSelection(confirmOption: confirmOption))
+        payWithLinkViewController.dismiss(animated: true) {
+            self.completion?(.paymentMethodSelection(confirmOption: confirmOption))
+        }
     }
 
     func payWithLinkViewControllerDidConfirm(
@@ -239,25 +241,26 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
     }
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {
-        payWithLinkViewController.dismiss(animated: true)
+        payWithLinkViewController.dismiss(animated: true) {
+            let completionResult: CompletionResult = {
+                switch self.mode {
+                case .paymentMethodSelection:
+                    return .paymentMethodSelection(confirmOption: nil, shouldReturnToPaymentSheet: shouldReturnToPaymentSheet)
+                case .full:
+                    return .full(result: .canceled, deferredIntentConfirmationType: nil, didFinish: false)
+                }
+            }()
 
-        let completionResult: CompletionResult = {
-            switch mode {
-            case .paymentMethodSelection:
-                return .paymentMethodSelection(confirmOption: nil, shouldReturnToPaymentSheet: shouldReturnToPaymentSheet)
-            case .full:
-                return .full(result: .canceled, deferredIntentConfirmationType: nil, didFinish: false)
-            }
-        }()
-
-        completion?(completionResult)
-        selfRetainer = nil
+            self.completion?(completionResult)
+            self.selfRetainer = nil
+        }
     }
 
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
-        payWithLinkViewController.dismiss(animated: true)
-        completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-        selfRetainer = nil
+        payWithLinkViewController.dismiss(animated: true) {
+            self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
+            self.selfRetainer = nil
+        }
     }
 
     func payWithLinkViewControllerShouldCancel3DS2ChallengeFlow(_ payWithLinkViewController: PayWithLinkViewController) {
