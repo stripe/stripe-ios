@@ -105,20 +105,7 @@ class HeaderIconView: UIView {
         return stackView
     }()
 
-    private lazy var stripeIconView: ShadowedCorneredImageView = {
-        let view = ShadowedCorneredImageView(
-            with: .init(
-                image: StripeUICore.Image.brand_stripe.makeImage(),
-                imageContentMode: .scaleAspectFill,
-                imageTintColor: nil,
-                backgroundColor: nil,
-                cornerRadius: Styling.cornerRadius,
-                shadowConfiguration: Styling.shadowConfig
-            )
-        )
-
-        return view
-    }()
+    private let stripeIconView: ShadowedCorneredImageView = ShadowedCorneredImageView()
 
     // MARK: - Properties
 
@@ -194,6 +181,19 @@ extension HeaderIconView {
 
     fileprivate func updateIconSize(useLargeIcon: Bool) {
         let iconLength = useLargeIcon ? Styling.largeBaseIconLength : Styling.baseIconLength
+        let cornerRadius = useLargeIcon ? Styling.largeCornerRadius : Styling.cornerRadius
+
+        stripeIconView.configure(
+            viewModel: .init(
+                image: StripeUICore.Image.brand_stripe.makeImage(),
+                imageContentMode: .scaleAspectFill,
+                imageTintColor: nil,
+                backgroundColor: nil,
+                cornerRadius: cornerRadius,
+                shadowConfiguration: Styling.shadowConfig
+            )
+        )
+
         NSLayoutConstraint.activate([
             // Set the base icon view's static square height and width
             baseIconView.heightAnchor.constraint(equalToConstant: iconLength),
