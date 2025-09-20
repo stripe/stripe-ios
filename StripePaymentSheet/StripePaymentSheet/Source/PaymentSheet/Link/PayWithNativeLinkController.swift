@@ -58,7 +58,7 @@ final class PayWithNativeLinkController {
 
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
-    private let hcaptchaToken: String?
+    private let passiveCaptchaChallenge: PassiveCaptchaChallenge?
 
     init(
         mode: Mode,
@@ -70,7 +70,7 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        hcaptchaToken: String? = nil
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -82,7 +82,7 @@ final class PayWithNativeLinkController {
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
-        self.hcaptchaToken = hcaptchaToken
+        self.passiveCaptchaChallenge = passiveCaptchaChallenge
     }
 
     func presentAsBottomSheet(
@@ -229,7 +229,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            hcaptchaToken: hcaptchaToken,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
             analyticsHelper: analyticsHelper,
             completion: { result, confirmationType in
                 if self.logPayment {
@@ -286,7 +286,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: .complete,
-            hcaptchaToken: hcaptchaToken,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in
             self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
