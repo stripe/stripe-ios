@@ -39,6 +39,11 @@ struct PaymentView: View {
         }
     }
 
+    private enum SelectedPaymentMethod {
+        case applePay
+        case paymentToken(PaymentTokensResponse.PaymentToken)
+    }
+
     private enum PaymentMethodIcon {
         case systemName(String)
         case image(UIImage)
@@ -53,6 +58,7 @@ struct PaymentView: View {
     @State private var amountText: String = "0"
     @State private var shouldShowPaymentMethodSheet: Bool = false
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
+    @State private var selectedPaymentMethod: SelectedPaymentMethod?
 
     // This example UI is intended for USD ($) only, but we respect the
     // current locale’s decimal separator.
@@ -81,6 +87,33 @@ struct PaymentView: View {
         .zero,
         .delete
     ]
+
+    private var selectPaymentMethodButtonTitle: String {
+        return switch selectedPaymentMethod {
+        case .applePay:
+            "Apple Pay"
+        case let .paymentToken(paymentToken):
+            paymentToken.formattedNameAndLastFourDigits(dotCount: 1)
+        case nil:
+            "Select a payment method"
+        }
+    }
+
+    @ViewBuilder
+    private var selectPaymentMethodButtonIcon: some View {
+        switch selectedPaymentMethod {
+        case .applePay:
+            makePaymentMethodIcon(systemImageName: "applelogo")
+        case let .paymentToken(paymentToken):
+            if paymentToken.card != nil {
+                makePaymentMethodIcon(systemImageName: "creditcard")
+            } else {
+                makePaymentMethodIcon(systemImageName: "building.columns")
+            }
+        case nil:
+            EmptyView()
+        }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -148,18 +181,25 @@ struct PaymentView: View {
                             title: "Apple Pay",
                             subtitle: "Instant",
                             icon: .systemName("applelogo")
-                        )
+                        ) {
+                            selectedPaymentMethod = .applePay
+                            shouldShowPaymentMethodSheet = false
+                        }
                         makePaymentMethodButton(
                             title: "Add Debit / Credit Card",
                             subtitle: "1-5 minutes",
                             icon: .systemName("creditcard")
-                        )
+                        ) {
+                            // TODO: show interface for selection then create payment token.
+                        }
                         makePaymentMethodButton(
                             title: "Add Bank Account",
                             subtitle: "Free",
                             icon: .systemName("building.columns"),
                             highlightSubtitle: true
-                        )
+                        ) {
+                            // TODO: show interface for selection then create payment token.
+                        }
                     }
                 }
                 .padding()
@@ -213,29 +253,19 @@ struct PaymentView: View {
         title: String,
         subtitle: String,
         icon: PaymentMethodIcon,
-        highlightSubtitle: Bool = false
+        highlightSubtitle: Bool = false,
+        action: @escaping () -> Void
     ) -> some View {
-        Button(action: {
-            shouldShowPaymentMethodSheet = false
-        }) {
+        Button(action: action) {
             HStack(spacing: 12) {
-                ZStack {
-                    Circle()
-                        .fill(.background)
-                        .frame(width: 40, height: 40)
-                        .offset(y: 1)
-
-                    switch icon {
-                    case let .systemName(name):
-                        Image(systemName: name)
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(.primary)
-                    case let .image(image):
-                        Image(uiImage: image)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: 24, maxHeight: 24)
-                    }
+                switch icon {
+                case let .systemName(name):
+                    makePaymentMethodIcon(systemImageName: name, useInlineStyle: false)
+                case let .image(image):
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxWidth: 36, maxHeight: 36)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
@@ -265,17 +295,21 @@ struct PaymentView: View {
 
     @ViewBuilder
     private func makePaymentMethodButton(using token: PaymentTokensResponse.PaymentToken) -> some View {
+        let subtitle = token.formattedNameAndLastFourDigits()
+        let action = {
+            selectedPaymentMethod = .paymentToken(token)
+            shouldShowPaymentMethodSheet = false
+        }
+
         if let card = token.card {
             let cardBrand = STPCard.brand(from: card.brand)
             let icon = STPImageLibrary.cardBrandImage(for: cardBrand)
-            let brandName = STPCardBrandUtilities.stringFrom(cardBrand)
-            let fundingType = STPCardFundingType(card.funding)
-            let formattedBrandName = String(format: fundingType.displayNameWithBrand, brandName ?? "")
 
             makePaymentMethodButton(
                 title: "Card",
-                subtitle: "\(formattedBrandName) •••• \(card.last4)",
-                icon: .image(icon)
+                subtitle: subtitle,
+                icon: .image(icon),
+                action: action
             )
         } else if let bankAccount = token.usBankAccount {
             let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.bankName)
@@ -283,8 +317,9 @@ struct PaymentView: View {
 
             makePaymentMethodButton(
                 title: "Bank Account",
-                subtitle: "\(bankAccount.bankName) •••• \(bankAccount.last4)",
-                icon: .image(icon)
+                subtitle: subtitle,
+                icon: .image(icon),
+                action: action
             )
         } else {
             EmptyView()
@@ -317,7 +352,11 @@ struct PaymentView: View {
                 shouldShowPaymentMethodSheet = true
             } label: {
                 HStack(spacing: 6) {
-                    Text("Select a payment method")
+                    if selectedPaymentMethod != nil {
+                        selectPaymentMethodButtonIcon
+                    }
+
+                    Text(selectPaymentMethodButtonTitle)
                         .font(.callout)
                         .bold()
                         .foregroundStyle(.primary)
@@ -332,6 +371,24 @@ struct PaymentView: View {
             Spacer()
         }
         .padding(.bottom, 16)
+    }
+
+    @ViewBuilder
+    private func makePaymentMethodIcon(systemImageName: String, useInlineStyle: Bool = true) -> some View {
+        let backgroundDimension: CGFloat = useInlineStyle ? 22 : 40
+        let fontSize: CGFloat = useInlineStyle ? 10 : 18
+        let backgroundFillColor: UIColor = useInlineStyle ? .secondarySystemBackground : .systemBackground
+
+        ZStack {
+            Circle()
+                .fill(Color(backgroundFillColor))
+                .frame(width: backgroundDimension, height: backgroundDimension)
+                .offset(y: 1)
+
+            Image(systemName: systemImageName)
+                .font(.system(size: fontSize, weight: .semibold))
+                .foregroundStyle(.primary)
+        }
     }
 
     // MARK: - Input Handling
@@ -429,6 +486,24 @@ private extension STPCardFundingType {
         case "credit": .credit
         case "prepaid": .prepaid
         default: .other
+        }
+    }
+}
+
+private extension PaymentTokensResponse.PaymentToken {
+    func formattedNameAndLastFourDigits(dotCount: Int = 4) -> String {
+        let dots = String(repeating: "•", count: dotCount)
+        if let card = card {
+            let cardBrand = STPCard.brand(from: card.brand)
+            let brandName = STPCardBrandUtilities.stringFrom(cardBrand)
+            let fundingType = STPCardFundingType(card.funding)
+            let formattedBrandName = String(format: fundingType.displayNameWithBrand, brandName ?? "")
+
+            return "\(formattedBrandName) \(dots) \(card.last4)"
+        } else if let bankAccount = usBankAccount {
+            return "\(bankAccount.bankName) \(dots) \(bankAccount.last4)"
+        } else {
+            return ""
         }
     }
 }
