@@ -493,18 +493,15 @@ extension PaymentSheet {
                 self.isPresented = false
             }
 
-            Task { @MainActor in
-                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
-                presentingViewController.presentNativeLink(
-                    selectedPaymentDetailsID: selectedPaymentDetailsID,
-                    configuration: configuration,
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    analyticsHelper: analyticsHelper,
-                    hcaptchaToken: hcaptchaToken,
-                    callback: completionCallback
-                )
-            }
+            presentingViewController.presentNativeLink(
+                selectedPaymentDetailsID: selectedPaymentDetailsID,
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper,
+                passiveCaptchaChallenge: passiveCaptchaChallenge,
+                callback: completionCallback
+            )
         }
 
         /// Completes the payment or setup.
@@ -562,31 +559,28 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                Task { @MainActor in
-                    let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
-                    PaymentSheet.confirm(
-                        configuration: configuration,
-                        authenticationContext: authenticationContext,
-                        intent: intent,
-                        elementsSession: elementsSession,
+                PaymentSheet.confirm(
+                    configuration: configuration,
+                    authenticationContext: authenticationContext,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    paymentOption: paymentOption,
+                    paymentHandler: paymentHandler,
+                    integrationShape: .flowController,
+                    passiveCaptchaChallenge: passiveCaptchaChallenge,
+                    analyticsHelper: analyticsHelper
+                ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
+                    analyticsHelper.logPayment(
                         paymentOption: paymentOption,
-                        paymentHandler: paymentHandler,
-                        integrationShape: .flowController,
-                        hcaptchaToken: hcaptchaToken,
-                        analyticsHelper: analyticsHelper
-                    ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
-                        analyticsHelper.logPayment(
-                            paymentOption: paymentOption,
-                            result: result,
-                            deferredIntentConfirmationType: deferredIntentConfirmationType
-                        )
-                        if case .completed = result, case .link = paymentOption {
-                            // Remember Link as default payment method for users who just created an account.
-                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
-                        }
-
-                        completion(result)
+                        result: result,
+                        deferredIntentConfirmationType: deferredIntentConfirmationType
+                    )
+                    if case .completed = result, case .link = paymentOption {
+                        // Remember Link as default payment method for users who just created an account.
+                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
                     }
+
+                    completion(result)
                 }
             }
         }
