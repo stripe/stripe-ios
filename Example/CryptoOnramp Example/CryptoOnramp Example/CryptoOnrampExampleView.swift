@@ -24,12 +24,18 @@ struct CryptoOnrampExampleView: View {
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
     @State private var linkAuthIntentId: String?
     @State private var livemode: Bool = false
+    @State private var cryptoCustomerId: String = "crc_1Rpxb1HMaDsveWq0TOHK4VGg"
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
+    @FocusState private var isCryptoCustomerIdFieldFocused: Bool
 
     private var isNextButtonDisabled: Bool {
         isLoading.wrappedValue || email.isEmpty || coordinator == nil
+    }
+
+    private var isSavedPaymentButtonDisabled: Bool {
+        isLoading.wrappedValue || cryptoCustomerId.isEmpty || coordinator == nil
     }
 
     private var isRunningOnSimulator: Bool {
@@ -57,6 +63,20 @@ struct CryptoOnrampExampleView: View {
                             .onSubmit {
                                 if !isNextButtonDisabled {
                                     lookupConsumerAndContinue()
+                                }
+                            }
+                    }
+
+                    FormField("Crypto Customer ID") {
+                        TextField("Enter crypto customer ID", text: $cryptoCustomerId)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
+                            .focused($isCryptoCustomerIdFieldFocused)
+                            .submitLabel(.go)
+                            .onSubmit {
+                                if !isSavedPaymentButtonDisabled {
+                                    presentSavedPaymentMethods()
                                 }
                             }
                     }
@@ -95,6 +115,14 @@ struct CryptoOnrampExampleView: View {
                     .buttonStyle(PrimaryButtonStyle())
                     .disabled(isNextButtonDisabled)
                     .opacity(isNextButtonDisabled ? 0.5 : 1)
+
+                    Button("Use saved payment method") {
+                        isCryptoCustomerIdFieldFocused = false
+                        presentSavedPaymentMethods()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(isSavedPaymentButtonDisabled)
+                    .opacity(isSavedPaymentButtonDisabled ? 0.5 : 1)
 
                     if let errorMessage {
                         ErrorMessageView(message: errorMessage)
@@ -136,6 +164,13 @@ struct CryptoOnrampExampleView: View {
                             coordinator: coordinator,
                             customerId: customerId,
                             wallet: wallet
+                        )
+                    case let .savedPaymentMethods(cryptoCustomerId):
+                        SavedPaymentMethodsView(
+                            cryptoCustomerId: cryptoCustomerId,
+                            email: email,
+                            oauthScopes: Array(selectedScopes),
+                            livemode: livemode
                         )
                     }
                 }
@@ -270,6 +305,16 @@ struct CryptoOnrampExampleView: View {
         } else {
             errorMessage = "Unable to find view controller to present from."
         }
+    }
+
+    private func presentSavedPaymentMethods() {
+        guard !cryptoCustomerId.isEmpty else {
+            errorMessage = "Crypto customer ID is required."
+            return
+        }
+
+        errorMessage = nil
+        flowCoordinator.startSavedPaymentMethodsFlow(cryptoCustomerId: cryptoCustomerId)
     }
 }
 

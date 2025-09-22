@@ -22,6 +22,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case identity
         case wallets(customerId: String)
         case authenticated(customerId: String, wallet: CustomerWalletsResponse.Wallet)
+        case savedPaymentMethods(cryptoCustomerId: String)
     }
 
     /// Indicates whether the global loading interface should be shown.
@@ -83,6 +84,13 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     func advanceAfterWalletSelection(_ wallet: CustomerWalletsResponse.Wallet) {
         selectedWallet = wallet
         advanceToNextStep()
+    }
+
+    /// Begins the saved payment methods flow for an existing crypto customer.
+    /// - Parameter cryptoCustomerId: The crypto customer ID.
+    func startSavedPaymentMethodsFlow(cryptoCustomerId: String) {
+        resetInternalState()
+        path = [.savedPaymentMethods(cryptoCustomerId: cryptoCustomerId)]
     }
 
     private func refreshCustomerInfoAndPushNext() async {
