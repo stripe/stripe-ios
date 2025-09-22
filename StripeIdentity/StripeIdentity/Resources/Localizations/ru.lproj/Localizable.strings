@@ -6,7 +6,13 @@
 
 "App Settings" = "Настройки приложения";
 
-"Back of identity card" = "Оборот удостоверения личности";
+"Back %@ photo successfully uploaded" = "Фото оборотной стороны документа (%@) успешно загружено";
+
+"Back identity document photo successfully uploaded" = "Фото оборотной стороны документа, удостоверяющего личность, успешно загружено";
+
+"Back of %@" = "Оборотная сторона (%@)";
+
+"Back of driver's license or government-issued photo ID" = "Обратная сторона водительских прав или удостоверения личности государственного образца с фотографией";
 
 "Back of identity document" = "Оборотная сторона документа, удостоверяющего личность";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Детали не видны";
 
+"Flip your %@ over to the other side" = "Переверните документ (%@) на другую сторону";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Переверните водительские права или удостоверение личности государственного образца с фотографией на обратную сторону";
+
 "Flip your identity card over to the other side" = "Переверните удостоверение личности другой стороной";
 
+"Front %@ photo successfully uploaded" = "Фото лицевой стороны документа (%@) успешно загружено";
+
+"Front identity document photo successfully uploaded" = "Фото лицевой стороны документа, удостоверяющего личность, успешно загружено";
+
+"Front of %@" = "Лицевая сторона (%@)";
+
+"Front of driver's license or government-issued photo ID" = "Лицевая сторона водительских прав или удостоверения личности государственного образца с фотографией";
+
+"Front of driver's license or passport" = "Лицевая сторона водительских прав или паспорта";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Лицевая сторона водительских прав, паспорта или удостоверения личности государственного образца с фотографией";
+
 "Front of identity document" = "Лицевая сторона документа, удостоверяющего личность";
+
+"Front of passport or government-issued photo ID" = "Лицевая сторона паспорта или удостоверения личности государственного образца с фотографией";
 
 "Get ready to scan your photo ID" = "Приготовьтесь сканировать удостоверение личности с фотографией";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Библиотека фотографий";
 
+"Please upload images of the front and back of your %@" = "Загрузите изображения лицевой и оборотной стороны вашего документа (%@)";
+
+"Please upload images of the front and back of your identity document" = "Загрузите изображения лицевой и оборотной стороны вашего документа, удостоверяющего личность";
+
+"Position your %@ in the center of the frame" = "Расположите документ (%@) в центре кадра";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Расположите водительские права или удостоверение личности государственного образца с фотографией в центре кадра";
+
+"Position your driver's license or passport in the center of the frame" = "Расположите водительские права или паспорт в центре кадра";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Расположите водительские права, паспорт или удостоверение личности государственного образца с фотографией в центре кадра";
+
 "Position your face in the center of the frame." = "Расположите лицо по центру рамки";
+
+"Position your identity document in the center of the frame" = "Расположите документ, удостоверяющий вашу личность, в центре рамки";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Расположите паспорт или удостоверение личности государственного образца с фотографией в центре кадра";
 
 "Retake Photos" = "Повторные фото";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Выберите папку с изображением оборота вашего документа, удостоверяющего личность, для отправки";
 
 "Select a location to upload the front of your identity document from" = "Выберите папку с изображением лицевой стороны вашего документа, удостоверяющего личность, для отправки";
+
+"Select back %@ photo" = "Выберите фото оборотной стороны документа (%@)";
+
+"Select back identity document photo" = "Выберите фото оборотной стороны документа, удостоверяющего личность";
+
+"Select front %@ photo" = "Выберите фото лицевой стороны документа (%@)";
+
+"Select front identity document photo" = "Выберите фото лицевой стороны документа, удостоверяющего личность";
 
 "Selfie" = "Селфи";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Отправьте фотографию";
 
+"Upload your %@" = "Загрузите свой документ (%@)";
+
 "Upload your photo ID" = "Отправьте удостоверение личности с фото";
+
+"Uploading back %@ photo" = "Загрузка фото оборотной стороны документа (%@)";
+
+"Uploading back identity document photo" = "Загрузка фото оборотной стороны документа, удостоверяющего личность";
+
+"Uploading front %@ photo" = "Загрузка фото лицевой стороны документа (%@)";
+
+"Uploading front identity document photo" = "Загрузка фото лицевой стороны документа, удостоверяющего личность";
 
 "Verify your identity" = "Подтвердите свою личность";
 

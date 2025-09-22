@@ -6,7 +6,13 @@
 
 "App Settings" = "Nastavení aplikace";
 
-"Back of identity card" = "Zadní strana průkazu totožnosti";
+"Back %@ photo successfully uploaded" = "Zadní strana fotografie %@ byla úspěšně nahrána";
+
+"Back identity document photo successfully uploaded" = "Zadní strana fotografie dokladu totožnosti byla úspěšně nahrána";
+
+"Back of %@" = "Zadní strana %@";
+
+"Back of driver's license or government-issued photo ID" = "Zadní strana řidičského průkazu nebo státem vydaného průkazu totožnosti s fotografií";
 
 "Back of identity document" = "Zadní strana průkazu totožnosti";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Detaily nejsou viditelné";
 
+"Flip your %@ over to the other side" = "Překlopte %@ na druhou stranu";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Otočte řidičský průkaz nebo státem vydaný průkaz totožnosti s fotografií na druhou stranu";
+
 "Flip your identity card over to the other side" = "Převraťte průkaz totožnosti na druhou stranu";
 
+"Front %@ photo successfully uploaded" = "Přední strana fotografie %@ byla úspěšně nahrána";
+
+"Front identity document photo successfully uploaded" = "Přední strana fotografie dokladu totožnosti byla úspěšně nahrána";
+
+"Front of %@" = "Přední strana %@";
+
+"Front of driver's license or government-issued photo ID" = "Přední strana řidičského průkazu nebo státem vydaného průkazu totožnosti s fotografií";
+
+"Front of driver's license or passport" = "Přední strana řidičského průkazu nebo pasu";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Přední strana řidičského průkazu, pasu nebo státem vydaného průkazu totožnosti s fotografií";
+
 "Front of identity document" = "Přední strana průkazu totožnosti";
+
+"Front of passport or government-issued photo ID" = "Přední strana pasu nebo státem vydaného průkazu totožnosti s fotografií";
 
 "Get ready to scan your photo ID" = "Připravte se na skenování průkazu totožnosti s fotografií";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Knihovna fotek";
 
+"Please upload images of the front and back of your %@" = "Nahrajte prosím snímky přední a zadní strany vašeho %@";
+
+"Please upload images of the front and back of your identity document" = "Nahrajte prosím fotografie přední a zadní strany vašeho dokladu totožnosti";
+
+"Position your %@ in the center of the frame" = "Umístěte %@ do středu snímku";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Umístěte řidičský průkaz nebo státem vydaný průkaz totožnosti s fotografií do středu rámečku";
+
+"Position your driver's license or passport in the center of the frame" = "Umístěte řidičský průkaz nebo pas do středu rámečku";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Umístěte řidičský průkaz, pas nebo státem vydaný průkaz totožnosti s fotografií do středu rámečku";
+
 "Position your face in the center of the frame." = "Svoji tvář umístěte do středu rámečku.";
+
+"Position your identity document in the center of the frame" = "Umístěte svůj doklad totožnosti do středu rámečku";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Umístěte pas nebo státem vydaný průkaz totožnosti s fotografií do středu rámečku";
 
 "Retake Photos" = "Znovu pořídit fotografie";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Vyberte místo k nahrání zadní strany vašeho průkazu totožnosti z";
 
 "Select a location to upload the front of your identity document from" = "Vyberte místo k nahrání přední strany vašeho průkazu totožnosti z";
+
+"Select back %@ photo" = "Vyberte zadní stranu %@ fotografie";
+
+"Select back identity document photo" = "Vyberte zadní stranu fotografie dokladu totožnosti";
+
+"Select front %@ photo" = "Vyberte přední stranu fotografie %@";
+
+"Select front identity document photo" = "Vyberte přední stranu fotografie dokladu totožnosti";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Nahrát fotografii";
 
+"Upload your %@" = "Nahrajte svůj %@";
+
 "Upload your photo ID" = "Nahrajte svou fotografii";
+
+"Uploading back %@ photo" = "Nahrávání zadní strany fotografie %@";
+
+"Uploading back identity document photo" = "Nahrávání zadní strany fotografie dokladu totožnosti";
+
+"Uploading front %@ photo" = "Nahrávání přední strany fotografie %@";
+
+"Uploading front identity document photo" = "Nahrávání přední strany fotografie dokladu totožnosti";
 
 "Verify your identity" = "Potvrďte svou totožnost";
 
