@@ -88,6 +88,11 @@ struct PaymentView: View {
         .delete
     ]
 
+    private var shouldDisableContinueButton: Bool {
+        let amount = Double(amountText) ?? 0
+        return isLoading.wrappedValue || selectedPaymentMethod == nil || amount <= 0
+    }
+
     private var selectPaymentMethodButtonTitle: String {
         return switch selectedPaymentMethod {
         case .applePay:
@@ -146,8 +151,8 @@ struct PaymentView: View {
                 onContinue()
             }
             .buttonStyle(PrimaryButtonStyle())
-            .disabled(isLoading.wrappedValue)
-            .opacity(isLoading.wrappedValue ? 0.5 : 1)
+            .disabled(shouldDisableContinueButton)
+            .opacity(shouldDisableContinueButton ? 0.5 : 1)
             .padding()
         }
         .sheet(isPresented: $shouldShowPaymentMethodSheet) {
