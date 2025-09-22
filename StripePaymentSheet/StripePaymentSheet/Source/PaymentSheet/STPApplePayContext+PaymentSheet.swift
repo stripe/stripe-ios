@@ -127,7 +127,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         paymentMethod: STPPaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext,
-        intentConfig: PaymentSheet.IntentConfiguration,
         confirmationTokenConfirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler,
         completion: @escaping STPIntentClientSecretCompletionBlock
     ) {
