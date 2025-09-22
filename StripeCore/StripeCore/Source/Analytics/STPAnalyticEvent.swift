@@ -262,11 +262,10 @@ import Foundation
     case bankAccountCollectorFinished = "stripeios.bankaccountcollector.finished"
 
     // MARK: - Unexpected errors
-    // These errors should _never happen_ and indicate a problem with the SDK or the Stripe backend.
+    // ⚠️ Errors with the "unexpected_error" prefix should **never happen** and indicate a problem with the SDK or the Stripe backend and will trigger an assertion + cerberus alert.
     case unexpectedPaymentSheetFormFactoryError = "unexpected_error.paymentsheet.formfactory"
     case unexpectedStripeUICoreAddressSpecProvider = "unexpected_error.stripeuicore.addressspecprovider"
     case unexpectedStripeUICoreBSBNumberProvider = "unexpected_error.stripeuicore.bsbnumberprovider"
-    case unexpectedApplePayError = "unexpected_error.applepay"
     case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
     case unexpectedCustomerSheetError = "unexpected_error.customersheet"
     case unexpectedPaymentSheetConfirmationError = "unexpected_error.paymentsheet.confirmation"
