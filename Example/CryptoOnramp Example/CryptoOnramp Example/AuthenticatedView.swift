@@ -5,7 +5,6 @@
 //  Created by Michael Liberatore on 8/6/25.
 //
 
-import PassKit
 import SwiftUI
 
 @_spi(STP)
@@ -20,27 +19,15 @@ struct AuthenticatedView: View {
     /// The coordinator to use for SDK operations like identity verification and KYC info collection.
     let coordinator: CryptoOnrampCoordinator
 
-    /// The customer id of the authenticated user.
-    let customerId: String
-
-    /// The crypto wallet to fund.
-    let wallet: CustomerWalletsResponse.Wallet
+    let onrampSessionResponse: CreateOnrampSessionResponse
 
     @State private var errorMessage: String?
-    @State private var selectedPaymentMethod: PaymentMethodDisplayData?
-    @State private var cryptoPaymentToken: String?
-    @State private var onrampSessionResponse: CreateOnrampSessionResponse?
 
     @State private var authenticationContext = WindowAuthenticationContext()
 
     @State private var checkoutSucceeded = false
 
     @Environment(\.isLoading) private var isLoading
-
-    // MARK: - Constants
-
-    private let sourceAmount: Decimal = 10 // Hardcoded for demo
-    private let sourceCurrency = "usd" // Hardcoded for demo
 
     private var shouldDisableButtons: Bool {
         isLoading.wrappedValue
@@ -51,25 +38,6 @@ struct AuthenticatedView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Customer Information")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text("Customer ID:")
-                            .font(.footnote)
-                            .bold()
-                            .foregroundColor(.secondary)
-                        Text(customerId)
-                            .font(.footnote.monospaced())
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding()
-                .background(Color.secondary.opacity(0.1))
-                .cornerRadius(8)
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
@@ -80,159 +48,69 @@ struct AuthenticatedView: View {
                         .font(.headline)
                         .foregroundColor(.secondary)
 
-                    if let selectedPaymentMethod {
-                        VStack(spacing: 12) {
-                            HStack {
-                                Spacer()
-                                PaymentMethodCardView(preview: selectedPaymentMethod)
-                                Spacer()
+                    if checkoutSucceeded {
+                        Text("Checkout Succeeded!")
+                            .foregroundColor(.green)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.green.opacity(0.1))
                             }
+                    } else {
+                        let details = onrampSessionResponse.transactionDetails
 
-                            Button("Create crypto payment token") {
-                                createCryptoPaymentToken()
-                            }
-                            .buttonStyle(PrimaryButtonStyle())
-                            .disabled(shouldDisableButtons)
-                            .opacity(shouldDisableButtons ? 0.5 : 1)
-
-                            if let cryptoPaymentToken {
-                                    Button("Create Onramp Session") {
-                                        createOnrampSession(withCryptoPaymentToken: cryptoPaymentToken)
-                                    }
-                                    .buttonStyle(PrimaryButtonStyle())
-                                    .disabled(shouldDisableButtons)
-                                    .opacity(shouldDisableButtons ? 0.5 : 1)
-
-                                if checkoutSucceeded {
-                                    Text("Checkout Succeeded!")
-                                        .foregroundColor(.green)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background {
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .foregroundColor(.green.opacity(0.1))
-                                        }
-                                } else if let onrampSessionResponse {
-                                    let details = onrampSessionResponse.transactionDetails
-
-                                    VStack(spacing: 8) {
-                                        // Fees breakdown
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            HStack {
-                                                Text("Amount:")
-                                                    .font(.footnote)
-                                                    .foregroundColor(.secondary)
-                                                Spacer()
-                                                Text("\(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)")
-                                                    .font(.footnote.monospaced())
-                                                    .foregroundColor(.secondary)
-                                            }
-
-                                            HStack {
-                                                Text("Network Fee:")
-                                                    .font(.footnote)
-                                                    .foregroundColor(.secondary)
-                                                Spacer()
-                                                Text("\(details.fees.networkFeeAmount) \(details.sourceCurrency.localizedUppercase)")
-                                                    .font(.footnote.monospaced())
-                                                    .foregroundColor(.secondary)
-                                            }
-
-                                            HStack {
-                                                Text("Transaction Fee:")
-                                                    .font(.footnote)
-                                                    .foregroundColor(.secondary)
-                                                Spacer()
-                                                Text("\(details.fees.transactionFeeAmount) \(details.sourceCurrency.localizedUppercase)")
-                                                    .font(.footnote.monospaced())
-                                                    .foregroundColor(.secondary)
-                                            }
-
-                                            Divider()
-
-                                            HStack {
-                                                Text("Total:")
-                                                    .font(.footnote)
-                                                    .bold()
-                                                    .foregroundColor(.primary)
-                                                Spacer()
-                                                Text("\(onrampSessionResponse.sourceTotalAmount) \(details.sourceCurrency.localizedUppercase)")
-                                                    .font(.footnote.monospaced())
-                                                    .bold()
-                                                    .foregroundColor(.primary)
-                                            }
-                                        }
-                                        .padding(.vertical, 8)
-
-                                        Button("Check Out | \(onrampSessionResponse.sourceTotalAmount) \(details.sourceCurrency.localizedUppercase)") {
-                                            checkout(
-                                                with: onrampSessionResponse,
-                                                paymentToken: cryptoPaymentToken
-                                            )
-                                        }
-                                        .buttonStyle(PrimaryButtonStyle())
-                                        .disabled(shouldDisableButtons)
-                                        .opacity(shouldDisableButtons ? 0.5 : 1)
-                                    }
-                                }
-
-                                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                                    Text("Crypto payment token:")
+                        VStack(spacing: 8) {
+                            // Fees breakdown
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack {
+                                    Text("Amount:")
                                         .font(.footnote)
-                                        .bold()
                                         .foregroundColor(.secondary)
-                                    Text(cryptoPaymentToken)
+                                    Spacer()
+                                    Text("\(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)")
                                         .font(.footnote.monospaced())
                                         .foregroundColor(.secondary)
                                 }
 
-                                if let onrampSessionResponse {
-                                    HStack(alignment: .firstTextBaseline, spacing: 4) {
-                                        Text("Onramp Session:")
-                                            .font(.footnote)
-                                            .bold()
-                                            .foregroundColor(.secondary)
-                                        Text(onrampSessionResponse.id)
-                                            .font(.footnote.monospaced())
-                                            .foregroundColor(.secondary)
-                                    }
+                                HStack {
+                                    Text("Network Fee:")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                    Text("\(details.fees.networkFeeAmount) \(details.sourceCurrency.localizedUppercase)")
+                                        .font(.footnote.monospaced())
+                                        .foregroundColor(.secondary)
                                 }
-                            } else {
+
+                                HStack {
+                                    Text("Transaction Fee:")
+                                        .font(.footnote)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                    Text("\(details.fees.transactionFeeAmount) \(details.sourceCurrency.localizedUppercase)")
+                                        .font(.footnote.monospaced())
+                                        .foregroundColor(.secondary)
+                                }
+
                                 Divider()
 
-                                Text("Change Payment Method")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        }
-                    }
-
-                    if cryptoPaymentToken == nil {
-                        VStack(spacing: 8) {
-                            // Note: Apple Pay does not require iOS 16, but the native SwiftUI
-                            // `PayWithApplePayButton` does, which we're using in this example.
-                            // For earlier OS versions, use `PKPaymentButton` in UIKit, optionally
-                            // wrapping it in a `UIViewRepresentable` for SwiftUI.
-                            if #available(iOS 16.0, *), StripeAPI.deviceSupportsApplePay() {
-                                PayWithApplePayButton(.plain) {
-                                    presentApplePay()
+                                HStack {
+                                    Text("Total:")
+                                        .font(.footnote)
+                                        .bold()
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    Text("\(onrampSessionResponse.sourceTotalAmount) \(details.sourceCurrency.localizedUppercase)")
+                                        .font(.footnote.monospaced())
+                                        .bold()
+                                        .foregroundColor(.primary)
                                 }
-                                .frame(height: 52)
-                                .cornerRadius(8)
-                                .disabled(shouldDisableButtons)
-                                .opacity(shouldDisableButtons ? 0.5 : 1)
                             }
+                            .padding(.vertical, 8)
 
-                            Button("Debit or Credit Card") {
-                                presentPaymentMethodSelector(for: .card)
-                            }
-                            .buttonStyle(PrimaryButtonStyle())
-                            .disabled(shouldDisableButtons)
-                            .opacity(shouldDisableButtons ? 0.5 : 1)
-
-                            Button("Bank Account") {
-                                presentPaymentMethodSelector(for: .bankAccount)
+                            Button("Check Out | \(onrampSessionResponse.sourceTotalAmount) \(details.sourceCurrency.localizedUppercase)") {
+                                checkout()
                             }
                             .buttonStyle(PrimaryButtonStyle())
                             .disabled(shouldDisableButtons)
@@ -274,116 +152,7 @@ struct AuthenticatedView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    private func presentPaymentMethodSelector(for type: PaymentMethodType) {
-        guard let viewController = UIApplication.shared.findTopNavigationController() else {
-            errorMessage = "Unable to find view controller to present from."
-            return
-        }
-
-        isLoading.wrappedValue = true
-        errorMessage = nil
-
-        Task {
-            do {
-                let preview = try await coordinator.collectPaymentMethod(type: type, from: viewController)
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    selectedPaymentMethod = preview
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Payment method selection failed: \(error.localizedDescription)"
-                }
-            }
-        }
-    }
-
-    private func presentApplePay() {
-        guard let viewController = UIApplication.shared.findTopNavigationController() else {
-            errorMessage = "Unable to find view controller to present from."
-            return
-        }
-
-        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant.com.stripe.umbrella.test", country: "US", currency: "USD")
-        request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "$\(String(format: "%.2f", NSDecimalNumber(decimal: sourceAmount).doubleValue)) \(sourceCurrency.uppercased()) + fees", amount: .zero, type: .pending)
-        ]
-
-        isLoading.wrappedValue = true
-        errorMessage = nil
-
-        Task {
-            do {
-                let result = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController)
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    selectedPaymentMethod = result
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Apple Pay failed: \(error.localizedDescription)"
-                }
-            }
-        }
-    }
-
-    private func createCryptoPaymentToken() {
-        isLoading.wrappedValue = true
-        errorMessage = nil
-
-        Task {
-            do {
-                let token = try await coordinator.createCryptoPaymentToken()
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    cryptoPaymentToken = token
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Create crypto payment token failed: \(error.localizedDescription)"
-                }
-            }
-        }
-    }
-
-    private func createOnrampSession(withCryptoPaymentToken cryptoPaymentToken: String) {
-        isLoading.wrappedValue = true
-        errorMessage = nil
-
-        let request = CreateOnrampSessionRequest(
-            paymentToken: cryptoPaymentToken,
-            sourceAmount: sourceAmount,
-            sourceCurrency: sourceCurrency,
-            destinationCurrency: "usdc", // <--- hardcoded for demo
-            destinationNetwork: wallet.network,
-            walletAddress: wallet.walletAddress,
-            cryptoCustomerId: customerId,
-            customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
-        )
-
-        Task {
-            do {
-                let response = try await APIClient.shared.createOnrampSession(requestObject: request)
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    onrampSessionResponse = response
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Create onramp session failed: \(error.localizedDescription)"
-                }
-            }
-        }
-    }
-
-    private func checkout(
-        with onrampSessionResponse: CreateOnrampSessionResponse,
-        paymentToken: String
-    ) {
+    private func checkout() {
         isLoading.wrappedValue = true
         errorMessage = nil
 
@@ -453,13 +222,45 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     PreviewWrapperView { coordinator in
         AuthenticatedView(
             coordinator: coordinator,
-            customerId: "cus_example123456789",
-            wallet: CustomerWalletsResponse.Wallet(
+            onrampSessionResponse: .init(
                 id: "0",
                 object: "",
+                clientSecret: "abc",
+                created: 0,
+                cryptoCustomerId: "crc_1234",
+                finishUrl: nil,
+                isApplePay: false,
+                kycDetailsProvided: true,
                 livemode: false,
-                network: "Ethereum",
-                walletAddress: "0x424242424242424242424242"
+                metadata: nil,
+                paymentMethod: "Card",
+                preferredPaymentMethod: nil,
+                preferredRegion: nil,
+                redirectUrl: "",
+                skipQuoteScreen: false,
+                sourceTotalAmount: "10.61",
+                status: "",
+                transactionDetails: .init(
+                    destinationCurrency: "usdc",
+                    destinationAmount: "10.00",
+                    destinationNetwork: "solana",
+                    fees: .init(
+                        networkFeeAmount: "0.01",
+                        transactionFeeAmount: "0.60"
+                    ),
+                    lastError: nil,
+                    lockWalletAddress: false,
+                    quoteExpiration: Date(),
+                    sourceCurrency: "usd",
+                    sourceAmount: "10.00",
+                    destinationCurrencies: [],
+                    destinationNetworks: [],
+                    transactionId: nil,
+                    transactionLimit: 74517,
+                    walletAddress: "",
+                    walletAddresses: nil
+                ),
+                uiMode: "headless"
             )
         )
     }

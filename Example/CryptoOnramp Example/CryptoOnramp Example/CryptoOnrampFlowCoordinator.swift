@@ -22,7 +22,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case identity
         case wallets(customerId: String)
         case payment(customerId: String, wallet: CustomerWalletsResponse.Wallet)
-        case authenticated(customerId: String, wallet: CustomerWalletsResponse.Wallet)
+        case authenticated(createOnrampSessionResponse: CreateOnrampSessionResponse)
     }
 
     /// Indicates whether the global loading interface should be shown.
@@ -35,6 +35,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private(set) var selectedWallet: CustomerWalletsResponse.Wallet?
     private var isKycVerified = false
     private var isIdDocumentVerified = false
+    private var createOnrampSessionResponse: CreateOnrampSessionResponse?
 
     /// Creates a new `CryptoOnrampFlowCoordinator`.
     init() {
@@ -87,7 +88,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Advances after the payment configuration step.
-    func advanceAfterPayment() {
+    func advanceAfterPayment(createOnrampSessionResponse: CreateOnrampSessionResponse) {
+        self.createOnrampSessionResponse = createOnrampSessionResponse
         advanceToNextStep()
     }
 
@@ -113,14 +115,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             path.append(.kycInfo)
         } else if !isIdDocumentVerified {
             path.append(.identity)
+        } else if let createOnrampSessionResponse {
+            path.append(.authenticated(createOnrampSessionResponse: createOnrampSessionResponse))
         } else if let selectedWallet, let customerId {
-            // Insert Payment step after wallet selection, before authenticated
-            if case .payment = path.last {
-                // We are already on payment; next is authenticated
-                path.append(.authenticated(customerId: customerId, wallet: selectedWallet))
-            } else {
-                path.append(.payment(customerId: customerId, wallet: selectedWallet))
-            }
+            path.append(.payment(customerId: customerId, wallet: selectedWallet))
         } else if let customerId {
             path.append(.wallets(customerId: customerId))
         }
@@ -138,6 +136,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         isIdDocumentVerified = false
         customerId = nil
         selectedWallet = nil
+        createOnrampSessionResponse = nil
     }
 }
 

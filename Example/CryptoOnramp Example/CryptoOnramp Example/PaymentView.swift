@@ -5,7 +5,11 @@
 //  Created by Michael Liberatore on 9/17/25.
 //
 
+import PassKit
 import SwiftUI
+
+@_spi(STP)
+import StripeCryptoOnramp
 
 @_spi(STP)
 import StripePayments
@@ -41,7 +45,8 @@ struct PaymentView: View {
 
     private enum SelectedPaymentMethod {
         case applePay
-        case paymentToken(PaymentTokensResponse.PaymentToken)
+        case existingPaymentToken(PaymentTokensResponse.PaymentToken)
+        case newPaymentMethod(tokenId: String, type: PaymentMethodType, displayData: PaymentMethodDisplayData)
     }
 
     private enum PaymentMethodIcon {
@@ -49,8 +54,10 @@ struct PaymentView: View {
         case image(UIImage)
     }
 
+    let coordinator: CryptoOnrampCoordinator
     let customerId: String
-    let onContinue: () -> Void
+    let wallet: CustomerWalletsResponse.Wallet
+    let onContinue: (CreateOnrampSessionResponse) -> Void
 
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
@@ -97,8 +104,10 @@ struct PaymentView: View {
         return switch selectedPaymentMethod {
         case .applePay:
             "Apple Pay"
-        case let .paymentToken(paymentToken):
+        case let .existingPaymentToken(paymentToken):
             paymentToken.formattedNameAndLastFourDigits(dotCount: 1)
+        case let .newPaymentMethod(_, _, displayData):
+            displayData.sublabel ?? displayData.label
         case nil:
             "Select a payment method"
         }
@@ -109,11 +118,22 @@ struct PaymentView: View {
         switch selectedPaymentMethod {
         case .applePay:
             makePaymentMethodIcon(systemImageName: "applelogo")
-        case let .paymentToken(paymentToken):
+        case let .existingPaymentToken(paymentToken):
             if paymentToken.card != nil {
                 makePaymentMethodIcon(systemImageName: "creditcard")
             } else {
                 makePaymentMethodIcon(systemImageName: "building.columns")
+            }
+        case let .newPaymentMethod(_, type, _):
+            switch type {
+            case .applePay:
+                makePaymentMethodIcon(systemImageName: "applelogo")
+            case .card:
+                makePaymentMethodIcon(systemImageName: "creditcard")
+            case .bankAccount:
+                makePaymentMethodIcon(systemImageName: "building.columns")
+            default:
+                makePaymentMethodIcon(systemImageName: "creditcard")
             }
         case nil:
             EmptyView()
@@ -147,10 +167,28 @@ struct PaymentView: View {
         .navigationTitle("Payment")
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
-            Button("Continue") {
-                onContinue()
+            ZStack {
+                if case .applePay = selectedPaymentMethod {
+                    PayWithApplePayButton(.plain) {
+                        continueWithApplePay()
+                    }
+                    .frame(height: 52)
+                    .cornerRadius(8)
+                } else {
+                    Button("Continue") {
+                        switch selectedPaymentMethod {
+                        case let .existingPaymentToken(token):
+                            createOnrampSession(withCryptoPaymentTokenId: token.id)
+                        case let .newPaymentMethod(tokenId, _, _):
+                            createOnrampSession(withCryptoPaymentTokenId: tokenId)
+                        case .applePay: break
+                        case nil: break
+                        }
+
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                }
             }
-            .buttonStyle(PrimaryButtonStyle())
             .disabled(shouldDisableContinueButton)
             .opacity(shouldDisableContinueButton ? 0.5 : 1)
             .padding()
@@ -182,28 +220,32 @@ struct PaymentView: View {
                     }
 
                     VStack(spacing: 8) {
-                        makePaymentMethodButton(
-                            title: "Apple Pay",
-                            subtitle: "Instant",
-                            icon: .systemName("applelogo")
-                        ) {
-                            selectedPaymentMethod = .applePay
-                            shouldShowPaymentMethodSheet = false
+                        if StripeAPI.deviceSupportsApplePay() {
+                            makePaymentMethodButton(
+                                title: "Apple Pay",
+                                subtitle: "Instant",
+                                icon: .systemName("applelogo")
+                            ) {
+                                selectedPaymentMethod = .applePay
+                                shouldShowPaymentMethodSheet = false
+                            }
                         }
+
                         makePaymentMethodButton(
                             title: "Add Debit / Credit Card",
                             subtitle: "1-5 minutes",
                             icon: .systemName("creditcard")
                         ) {
-                            // TODO: show interface for selection then create payment token.
+                            presentPaymentMethodSelector(for: .card)
                         }
+
                         makePaymentMethodButton(
                             title: "Add Bank Account",
                             subtitle: "Free",
                             icon: .systemName("building.columns"),
                             highlightSubtitle: true
                         ) {
-                            // TODO: show interface for selection then create payment token.
+                            presentPaymentMethodSelector(for: .bankAccount)
                         }
                     }
                 }
@@ -302,7 +344,7 @@ struct PaymentView: View {
     private func makePaymentMethodButton(using token: PaymentTokensResponse.PaymentToken) -> some View {
         let subtitle = token.formattedNameAndLastFourDigits()
         let action = {
-            selectedPaymentMethod = .paymentToken(token)
+            selectedPaymentMethod = .existingPaymentToken(token)
             shouldShowPaymentMethodSheet = false
         }
 
@@ -472,6 +514,114 @@ struct PaymentView: View {
             }
         }
     }
+
+    private func presentPaymentMethodSelector(for type: PaymentMethodType) {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            //errorMessage = "Unable to find view controller to present from."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        //errorMessage = nil
+
+        Task {
+            do {
+                if let displayData = try await coordinator.collectPaymentMethod(type: type, from: viewController) {
+                    let token = try await coordinator.createCryptoPaymentToken()
+
+                    // Perform a silent refresh of the payment tokens in case the user re-opens the selector, ignoring errors.
+                    let refreshedPaymentTokensResponse = try? await APIClient.shared.fetchPaymentTokens(cryptoCustomerToken: customerId)
+
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                        if let refreshedPaymentTokensResponse {
+                            paymentTokens = refreshedPaymentTokensResponse.data
+                        }
+
+                        selectedPaymentMethod = .newPaymentMethod(tokenId: token, type: type, displayData: displayData)
+                        shouldShowPaymentMethodSheet = false
+                    }
+                } else { // cancelled
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    //errorMessage = "Payment method selection failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func continueWithApplePay() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            //errorMessage = "Unable to find view controller to present from."
+            return
+        }
+
+        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant.com.stripe.umbrella.test", country: "US", currency: "USD")
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "$\(amountText) usd + fees", amount: .zero, type: .pending)
+        ]
+
+        isLoading.wrappedValue = true
+        //errorMessage = nil
+
+        Task {
+            do {
+                if let _ = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController) {
+                    let token = try await coordinator.createCryptoPaymentToken()
+
+                    await MainActor.run {
+                        // intentionally not flipping `isLoading`, since `createOnrampSession` will set it back.
+                        createOnrampSession(withCryptoPaymentTokenId: token)
+                    }
+                } else { // cancelled
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    //errorMessage = "Apple Pay failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func createOnrampSession(withCryptoPaymentTokenId cryptoPaymentTokenId: String) {
+        isLoading.wrappedValue = true
+        //errorMessage = nil
+
+        let request = CreateOnrampSessionRequest(
+            paymentToken: cryptoPaymentTokenId,
+            sourceAmount: Decimal(string: amountText) ?? 0,
+            sourceCurrency: "usd", // <--- hardcoded for demo
+            destinationCurrency: "usdc", // <--- hardcoded for demo
+            destinationNetwork: wallet.network,
+            walletAddress: wallet.walletAddress,
+            cryptoCustomerId: customerId,
+            customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
+        )
+
+        Task {
+            do {
+                let response = try await APIClient.shared.createOnrampSession(requestObject: request)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    onContinue(response)
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    //errorMessage = "Create onramp session failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
 }
 
 private extension STPCardFundingType {
@@ -514,5 +664,18 @@ private extension PaymentTokensResponse.PaymentToken {
 }
 
 #Preview {
-    PaymentView(customerId: "cus_example", onContinue: {})
+    PreviewWrapperView { coordinator in
+        PaymentView(
+            coordinator: coordinator,
+            customerId: "cus_example",
+            wallet: .init(
+                id: "0",
+                object: "",
+                livemode: false,
+                network: "solana",
+                walletAddress: ""
+            ),
+            onContinue: { _ in }
+        )
+    }
 }
