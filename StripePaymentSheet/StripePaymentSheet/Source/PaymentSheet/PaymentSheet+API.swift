@@ -254,7 +254,7 @@ extension PaymentSheet {
                     )
                     // MARK: ↪ Deferred Intent
                 case .deferredIntent(let intentConfig):
-                    handleDeferredIntentConfirmation(
+                    routeDeferredIntentConfirmation(
                         confirmType: .new(
                             params: confirmParams.paymentMethodParams,
                             paymentOptions: confirmParams.confirmPaymentMethodOptions,
@@ -267,6 +267,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                        elementsSession: elementsSession,
                         completion: completion
                     )
                 }
@@ -320,6 +321,7 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
+                    elementsSession: elementsSession,
                     completion: completion
                 )
             }
@@ -371,7 +373,7 @@ extension PaymentSheet {
                             }
                         )
                     case .deferredIntent(let intentConfig):
-                        handleDeferredIntentConfirmation(
+                        routeDeferredIntentConfirmation(
                             confirmType: .new(
                                 params: paymentMethodParams,
                                 paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -382,6 +384,7 @@ extension PaymentSheet {
                             authenticationContext: authenticationContext,
                             paymentHandler: paymentHandler,
                             isFlowController: isFlowController,
+                            elementsSession: elementsSession,
                             completion: { psResult, confirmationType in
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
@@ -443,13 +446,14 @@ extension PaymentSheet {
                             }
                         )
                     case .deferredIntent(let intentConfig):
-                        handleDeferredIntentConfirmation(
+                        routeDeferredIntentConfirmation(
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
                             configuration: configuration,
                             intentConfig: intentConfig,
                             authenticationContext: authenticationContext,
                             paymentHandler: paymentHandler,
                             isFlowController: isFlowController,
+                            elementsSession: elementsSession,
                             radarOptions: radarOptions,
                             completion: { psResult, confirmationType in
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
