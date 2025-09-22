@@ -141,25 +141,6 @@ protocol CryptoOnrampCoordinatorProtocol {
 @_spi(STP)
 public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
 
-    /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
-    public enum Error: Swift.Error {
-
-        /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
-        case invalidPhoneFormat
-
-        /// A Link account already exists for the provided email address.
-        case linkAccountAlreadyExists
-
-        /// `ephemeralKey` is missing from the response after starting identity verification.
-        case missingEphemeralKey
-
-        /// An unexpected error occurred internally. `selectedPaymentSource` was not set to an expected value.
-        case invalidSelectedPaymentSource
-
-        /// A crypto customer ID is missing but required.
-        case missingCryptoCustomerID
-    }
-
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance

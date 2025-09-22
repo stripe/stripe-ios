@@ -13,13 +13,22 @@
 extension STPAPIClient {
 
     /// Errors that can occur that are specific to usage of crypto endpoints.
-    enum CryptoOnrampAPIError: Error {
+    enum CryptoOnrampAPIError: LocalizedError {
 
         /// No consumer session client secret was found to be associated with the active link account session.
         case missingConsumerSessionClientSecret
 
         /// The request requires a session with a verified link account, but the account was found to not be verified.
         case linkAccountNotVerified
+
+        var errorDescription: String? {
+            switch self {
+            case .missingConsumerSessionClientSecret:
+                return "No consumer session client secret was found to be associated with the active link account session."
+            case .linkAccountNotVerified:
+                return "The request requires a session with a verified link account, but the account was found to not be verified."
+            }
+        }
     }
 
     /// Creates a crypto customer on the backend, upon granting the partner-merchant permission to facilitate crypto onramp transactions upon a customer’s behalf.
