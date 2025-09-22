@@ -1057,12 +1057,12 @@ extension PlaygroundController {
         case .deferred_ssc_ct:
             break
         default:
-            assertionFailure()
+            assertionFailure("Unhandled integration type in confirmationTokenConfirmHandler setup")
         }
 
         confirmHandlerInternal(
             paymentMethodId: nil,
-            shouldSavePaymentMethod: false,
+            shouldSavePaymentMethod: nil,
             confirmationTokenId: confirmationToken.stripeId,
             intentCreationCallback: intentCreationCallback
         )
@@ -1071,7 +1071,7 @@ extension PlaygroundController {
     // Internal helper that handles both payment method and confirmation token flows
     private func confirmHandlerInternal(
         paymentMethodId: String?,
-        shouldSavePaymentMethod: Bool,
+        shouldSavePaymentMethod: Bool?,
         confirmationTokenId: String?,
         intentCreationCallback: @escaping (Result<String, Error>) -> Void
     ) {
@@ -1084,9 +1084,9 @@ extension PlaygroundController {
         ] as [String: Any]
 
         // Add either payment method info or confirmation token info
-        if let confirmationTokenId = confirmationTokenId {
+        if let confirmationTokenId {
             body["confirmation_token_id"] = confirmationTokenId
-        } else if let paymentMethodId = paymentMethodId {
+        } else if let paymentMethodId, let shouldSavePaymentMethod {
             body["payment_method_id"] = paymentMethodId
             body["should_save_payment_method"] = shouldSavePaymentMethod
         }
