@@ -137,6 +137,19 @@ protocol CryptoOnrampCoordinatorProtocol {
     func logOut() async throws
 }
 
+/// Actor to manage crypto customer state in a thread-safe manner
+private actor CryptoCustomerState {
+    private var _customerId: String?
+
+    func setCustomerId(_ id: String) {
+        _customerId = id
+    }
+
+    func getCustomerId() -> String? {
+        return _customerId
+    }
+}
+
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
 @_spi(STP)
 public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
@@ -147,7 +160,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
     private var selectedPaymentSource: SelectedPaymentSource?
-    private var cryptoCustomerId: String?
+    private let cryptoCustomerState = CryptoCustomerState()
 
     /// Dedicated API client configured with the platform publishable key
     private var platformApiClient: STPAPIClient?
@@ -174,10 +187,16 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         analyticsClient: CryptoOnrampAnalyticsClient
     ) {
         self.linkController = linkController
-        self.cryptoCustomerId = cryptoCustomerID
         self.apiClient = apiClient
         self.appearance = appearance
         self.analyticsClient = analyticsClient
+        super.init()
+
+        if let cryptoCustomerID {
+            Task {
+                await cryptoCustomerState.setCustomerId(cryptoCustomerID)
+            }
+        }
     }
 
     // MARK: - CryptoOnrampCoordinatorProtocol
@@ -265,7 +284,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
         do {
             let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-            self.cryptoCustomerId = customerId
+            await cryptoCustomerState.setCustomerId(customerId)
             analyticsClient.log(.linkRegistrationCompleted)
             return customerId
         } catch {
@@ -293,7 +312,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             case .completed:
                 do {
                     let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-                    self.cryptoCustomerId = customerId
+                    await cryptoCustomerState.setCustomerId(customerId)
                     analyticsClient.log(.linkUserAuthenticationCompleted)
                     return .completed(customerId: customerId)
                 } catch {
@@ -315,7 +334,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             case .consented:
                 do {
                     let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-                    self.cryptoCustomerId = customerId
+                    await cryptoCustomerState.setCustomerId(customerId)
                     analyticsClient.log(.linkAuthorizationCompleted(consented: true))
                     return .consented(customerId: customerId)
                 } catch {
@@ -488,7 +507,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             }()
 
-            guard let cryptoCustomerId else {
+            guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
                 throw Error.missingCryptoCustomerID
             }
             let token = try await apiClient.createPaymentToken(for: paymentMethodId, cryptoCustomerId: cryptoCustomerId)
@@ -692,7 +711,7 @@ private extension CryptoOnrampCoordinator {
             return platformApiClient
         }
 
-        guard let cryptoCustomerId else {
+        guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
             throw Error.missingCryptoCustomerID
         }
 
