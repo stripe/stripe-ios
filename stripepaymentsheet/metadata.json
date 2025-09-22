@@ -1,1 +1,1 @@
-{"schemaVersion":{"patch":0,"minor":1,"major":0},"bundleDisplayName":"StripePaymentSheet","bundleIdentifier":"com.stripe.stripe-payment-sheet"}
+{"bundleIdentifier":"com.stripe.stripe-payment-sheet","schemaVersion":{"minor":1,"patch":0,"major":0},"bundleDisplayName":"StripePaymentSheet"}
