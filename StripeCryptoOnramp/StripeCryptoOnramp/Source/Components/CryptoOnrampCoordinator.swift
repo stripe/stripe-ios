@@ -141,6 +141,10 @@ protocol CryptoOnrampCoordinatorProtocol {
 private actor CryptoCustomerState {
     private var _customerId: String?
 
+    init(_ initialCustomerId: String?) {
+        _customerId = initialCustomerId
+    }
+
     func setCustomerId(_ id: String) {
         _customerId = id
     }
@@ -160,7 +164,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
     private var selectedPaymentSource: SelectedPaymentSource?
-    private let cryptoCustomerState = CryptoCustomerState()
+    private let cryptoCustomerState: CryptoCustomerState
 
     /// Dedicated API client configured with the platform publishable key
     private var platformApiClient: STPAPIClient?
@@ -190,13 +194,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         self.apiClient = apiClient
         self.appearance = appearance
         self.analyticsClient = analyticsClient
+        self.cryptoCustomerState = CryptoCustomerState(cryptoCustomerID)
         super.init()
-
-        if let cryptoCustomerID {
-            Task {
-                await cryptoCustomerState.setCustomerId(cryptoCustomerID)
-            }
-        }
     }
 
     // MARK: - CryptoOnrampCoordinatorProtocol
