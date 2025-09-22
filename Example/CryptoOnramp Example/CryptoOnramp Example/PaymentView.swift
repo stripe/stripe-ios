@@ -119,7 +119,7 @@ struct PaymentView: View {
         }
         .sheet(isPresented: $shouldShowPaymentMethodSheet) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                LazyVStack(alignment: .leading, spacing: 16) {
                     Text("Pay with")
                         .font(.title2)
                         .bold()
@@ -164,7 +164,7 @@ struct PaymentView: View {
                 }
                 .padding()
             }
-            .presentationDetents([.medium, .large])
+            .presentationDetents([.medium])
         }
         .onAppear {
             fetchPaymentTokens()
@@ -257,6 +257,10 @@ struct PaymentView: View {
             )
         }
         .buttonStyle(.plain)
+        // Fixes an issue in which scrolling the a sheet containing the button can
+        // mistakenly trigger the button action.
+        // https://developer.apple.com/forums/thread/763436?answerId=804853022#804853022
+        .simultaneousGesture(TapGesture())
     }
 
     @ViewBuilder
