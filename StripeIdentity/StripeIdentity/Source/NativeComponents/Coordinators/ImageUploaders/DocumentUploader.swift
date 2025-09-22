@@ -48,6 +48,12 @@ protocol DocumentUploaderProtocol: AnyObject {
 
 final class DocumentUploader: DocumentUploaderProtocol {
 
+    // Debug-only: last known on-disk URLs for processed uploads (if present)
+    public var lastFrontHighURL: URL?
+    public var lastFrontLowURL: URL?
+    public var lastBackHighURL: URL?
+    public var lastBackLowURL: URL?
+
     enum UploadStatus {
         case notStarted
         case inProgress
@@ -188,6 +194,16 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 lowResFileName: "\(fileNamePrefix)_full_frame",
                 highResFileName: fileNamePrefix
             ).chained { (lowResFile, highResFile) in
+                let tmp = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+                let highURL = tmp.appendingPathComponent("\(fileNamePrefix).jpg")
+                let lowURL = tmp.appendingPathComponent("\(fileNamePrefix)_full_frame.jpg")
+                if fileNamePrefix.hasSuffix("_front") {
+                    self.lastFrontHighURL = highURL
+                    self.lastFrontLowURL = lowURL
+                } else if fileNamePrefix.hasSuffix("_back") {
+                    self.lastBackHighURL = highURL
+                    self.lastBackLowURL = lowURL
+                }
                 return Promise(
                     value: StripeAPI.VerificationPageDataDocumentFileData(
                         documentScannerOutput: documentScannerOutput,
@@ -205,6 +221,17 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 cropPaddingComputationMethod: .maxImageWidthOrHeight,
                 fileName: fileNamePrefix
             ).chained { highResFile in
+
+                let tmp = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+                let highURL = tmp.appendingPathComponent("\(fileNamePrefix).jpg")
+                if fileNamePrefix.hasSuffix("_front") {
+                    self.lastFrontHighURL = highURL
+                    self.lastFrontLowURL = nil
+                } else if fileNamePrefix.hasSuffix("_back") {
+                    self.lastBackHighURL = highURL
+                    self.lastBackLowURL = nil
+                }
+
                 return Promise(
                     value: StripeAPI.VerificationPageDataDocumentFileData(
                         documentScannerOutput: documentScannerOutput,
@@ -222,5 +249,9 @@ final class DocumentUploader: DocumentUploaderProtocol {
     func reset() {
         frontUploadFuture = nil
         backUploadFuture = nil
+        lastFrontHighURL = nil
+        lastFrontLowURL = nil
+        lastBackHighURL = nil
+        lastBackLowURL = nil
     }
 }

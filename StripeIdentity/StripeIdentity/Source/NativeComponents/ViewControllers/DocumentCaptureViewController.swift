@@ -165,11 +165,23 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return [.continueButton(state: .loading, didTap: {})]
 
         case .scanned(let documentSide, let image):
-            return [
+            var buttons: [IdentityFlowView.ViewModel.Button] = [
                 .continueButton { [weak self] in
                     self?.saveOrFlipDocument(scannedImage: image, documentSide: documentSide)
-                },
+                }
             ]
+          //  if let concrete = documentUploader as? DocumentUploader {
+                buttons.append(
+                    .init(
+                        text: "Share ID Photos",
+                        isPrimary: false,
+                        didTap: { [weak self] in
+                            self?.presentShareSheetForUploadedFiles()
+                        }
+                    )
+                )
+           // }
+            return buttons
 
         case .noCameraAccess:
             var models = [IdentityFlowView.ViewModel.Button]()
@@ -455,6 +467,25 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 capturedData: backImage
             )
         }
+    }
+
+    // MARK: - Share Sheet (read uploaded files from disk)
+    private func presentShareSheetForUploadedFiles() {
+        guard let concrete = documentUploader as? DocumentUploader,
+              let frontHigh = concrete.lastFrontHighURL,
+              let backHigh = concrete.lastBackHighURL else { return }
+
+        var items: [Any] = [frontHigh, backHigh]
+        if let frontLow = concrete.lastFrontLowURL { items.append(frontLow) }
+        if let backLow = concrete.lastBackLowURL { items.append(backLow) }
+
+        let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        if let popover = activityVC.popoverPresentationController {
+            popover.sourceView = self.view
+            popover.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.maxY - 1, width: 1, height: 1)
+            popover.permittedArrowDirections = []
+        }
+        self.present(activityVC, animated: true)
     }
 }
 
