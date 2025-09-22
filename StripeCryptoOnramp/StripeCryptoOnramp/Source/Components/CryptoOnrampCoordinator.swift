@@ -264,7 +264,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             try handlePhoneFormatError(error, during: .registerLinkUser)
         }
         do {
-            let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+            let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
             self.cryptoCustomerId = customerId
             analyticsClient.log(.linkRegistrationCompleted)
             return customerId
@@ -292,7 +292,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return .canceled
             case .completed:
                 do {
-                    let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+                    let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
                     self.cryptoCustomerId = customerId
                     analyticsClient.log(.linkUserAuthenticationCompleted)
                     return .completed(customerId: customerId)
@@ -314,7 +314,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             switch authorizeResult {
             case .consented:
                 do {
-                    let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+                    let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
                     self.cryptoCustomerId = customerId
                     analyticsClient.log(.linkAuthorizationCompleted(consented: true))
                     return .consented(customerId: customerId)
