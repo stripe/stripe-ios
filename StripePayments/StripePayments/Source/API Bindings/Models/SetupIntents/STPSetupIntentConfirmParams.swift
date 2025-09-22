@@ -108,6 +108,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
 
     /// Initialize this `STPSetupIntentConfirmParams` with a `clientSecret` and `confirmationToken`.
     /// Use this initializer for SetupIntents confirmed using confirmation tokens.
+    /// This will automatically set properties like returnURL from the confirmation token.
     /// - Parameter clientSecret: the client secret for this SetupIntent
     /// - Parameter confirmationToken: the confirmation token to use for this SetupIntent confirmation
     @_spi(STP) public init(
@@ -118,6 +119,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         super.init()
         additionalAPIParameters = [:]
         self.confirmationToken = confirmationToken.stripeId
+        self.returnURL = confirmationToken.returnURL
     }
 
     /// :nodoc:

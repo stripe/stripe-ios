@@ -49,6 +49,7 @@ public class STPPaymentIntentParams: NSObject {
 
     /// Initialize this `STPPaymentIntentParams` with a `clientSecret` and `confirmationToken`.
     /// Use this initializer for PaymentIntents confirmed using confirmation tokens.
+    /// This will automatically set properties like returnURL and setupFutureUsage from the confirmation token.
     /// - Parameter clientSecret: the client secret for this PaymentIntent
     /// - Parameter confirmationToken: the confirmation token to use for this PaymentIntent confirmation
     @_spi(STP) public init(
@@ -58,6 +59,8 @@ public class STPPaymentIntentParams: NSObject {
         self.clientSecret = clientSecret
         super.init()
         self.confirmationToken = confirmationToken.stripeId
+        self.returnURL = confirmationToken.returnURL
+        self.setupFutureUsage = confirmationToken.setupFutureUsage
     }
 
     /// The Stripe id of the PaymentIntent, extracted from the clientSecret.
