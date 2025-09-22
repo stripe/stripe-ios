@@ -315,6 +315,10 @@ import UIKit
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
 
+        if supportedPaymentMethodTypes.contains(.bankAccount) {
+            configuration.billingDetailsCollectionConfiguration.name = .always
+        }
+
         // TODO: We need a way to override Link's default primary button label, since we don't want to show "Pay $xx.xx" even for payment mode.
         print("Presenting Link wallet for \(mode)")
 
