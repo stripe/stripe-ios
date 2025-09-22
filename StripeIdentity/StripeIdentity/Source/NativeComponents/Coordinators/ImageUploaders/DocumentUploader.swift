@@ -194,15 +194,18 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 lowResFileName: "\(fileNamePrefix)_full_frame",
                 highResFileName: fileNamePrefix
             ).chained { (lowResFile, highResFile) in
-                let tmp = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-                let highURL = tmp.appendingPathComponent("\(fileNamePrefix).jpg")
-                let lowURL = tmp.appendingPathComponent("\(fileNamePrefix)_full_frame.jpg")
-                if fileNamePrefix.hasSuffix("_front") {
-                    self.lastFrontHighURL = highURL
-                    self.lastFrontLowURL = lowURL
-                } else if fileNamePrefix.hasSuffix("_back") {
-                    self.lastBackHighURL = highURL
-                    self.lastBackLowURL = lowURL
+                // Point to the saved files in share directory
+                if let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    let shareDir = docs.appendingPathComponent("StripeIDShare", isDirectory: true)
+                    let highURL = shareDir.appendingPathComponent("\(fileNamePrefix).jpg")
+                    let lowURL = shareDir.appendingPathComponent("\(fileNamePrefix)_full_frame.jpg")
+                    if fileNamePrefix.hasSuffix("_front") {
+                        self.lastFrontHighURL = highURL
+                        self.lastFrontLowURL = lowURL
+                    } else if fileNamePrefix.hasSuffix("_back") {
+                        self.lastBackHighURL = highURL
+                        self.lastBackLowURL = lowURL
+                    }
                 }
                 return Promise(
                     value: StripeAPI.VerificationPageDataDocumentFileData(
@@ -221,17 +224,17 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 cropPaddingComputationMethod: .maxImageWidthOrHeight,
                 fileName: fileNamePrefix
             ).chained { highResFile in
-
-                let tmp = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-                let highURL = tmp.appendingPathComponent("\(fileNamePrefix).jpg")
-                if fileNamePrefix.hasSuffix("_front") {
-                    self.lastFrontHighURL = highURL
-                    self.lastFrontLowURL = nil
-                } else if fileNamePrefix.hasSuffix("_back") {
-                    self.lastBackHighURL = highURL
-                    self.lastBackLowURL = nil
+                if let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    let shareDir = docs.appendingPathComponent("StripeIDShare", isDirectory: true)
+                    let highURL = shareDir.appendingPathComponent("\(fileNamePrefix).jpg")
+                    if fileNamePrefix.hasSuffix("_front") {
+                        self.lastFrontHighURL = highURL
+                        self.lastFrontLowURL = nil
+                    } else if fileNamePrefix.hasSuffix("_back") {
+                        self.lastBackHighURL = highURL
+                        self.lastBackLowURL = nil
+                    }
                 }
-
                 return Promise(
                     value: StripeAPI.VerificationPageDataDocumentFileData(
                         documentScannerOutput: documentScannerOutput,

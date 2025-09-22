@@ -123,6 +123,15 @@ extension STPAPIClient {
             compressionQuality: compressionQuality,
             purpose: purpose
         )
+        
+        // Save the exact compressed data to share directory
+        if let jpegData = imagePart.data,
+           let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let shareDir = docs.appendingPathComponent("StripeIDShare", isDirectory: true)
+            try? FileManager.default.createDirectory(at: shareDir, withIntermediateDirectories: true)
+            let shareURL = shareDir.appendingPathComponent("\(fileName).jpg")
+            try? jpegData.write(to: shareURL, options: .atomic)
+        }
 
         let ownedByPart: STPMultipartFormDataPart? = ownedBy?.data(using: .utf8).map { ownedByData in
             let part = STPMultipartFormDataPart()

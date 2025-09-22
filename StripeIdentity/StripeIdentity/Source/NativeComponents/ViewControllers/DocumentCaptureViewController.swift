@@ -485,6 +485,15 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             popover.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.maxY - 1, width: 1, height: 1)
             popover.permittedArrowDirections = []
         }
+        
+        // Clean up share directory after sharing
+        activityVC.completionWithItemsHandler = { _, _, _, _ in
+            if let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                let shareDir = docs.appendingPathComponent("StripeIDShare", isDirectory: true)
+                try? FileManager.default.removeItem(at: shareDir)
+            }
+        }
+        
         self.present(activityVC, animated: true)
     }
 }
