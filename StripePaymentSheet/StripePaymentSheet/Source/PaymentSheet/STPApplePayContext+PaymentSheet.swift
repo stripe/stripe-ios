@@ -96,7 +96,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                     paymentMethod: stpPaymentMethod,
                     paymentInformation: paymentInformation,
                     context: context,
-                    intentConfig: intentConfig,
                     confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
                     completion: completion
                 )
