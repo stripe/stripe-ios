@@ -52,6 +52,7 @@ extension PaymentSheet {
                     }
                     stpAssert(newPaymentMethod == nil)
                     confirmationTokenParams.paymentMethodData = params
+                    confirmationTokenParams.paymentMethodData?.radarOptions = radarOptions
                     // Confirmation tokens only supports card payment method options
                     if let _ = paymentOptions.cardOptions {
                         confirmationTokenParams.paymentMethodOptions = paymentOptions
