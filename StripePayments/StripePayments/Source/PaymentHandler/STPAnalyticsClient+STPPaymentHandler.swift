@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 4/3/24.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 
 extension STPPaymentHandlerActionStatus {
