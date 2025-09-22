@@ -1045,7 +1045,7 @@ extension PlaygroundController {
     }
 
     func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken,
-                                       _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+                                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
         switch settings.integrationType {
         case .deferred_csc_ct:
             if settings.integrationType == .deferred_csc_ct {
