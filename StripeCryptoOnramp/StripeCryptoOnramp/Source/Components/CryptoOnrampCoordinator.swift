@@ -410,10 +410,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return nil
             }
 
+            // Collect the user's name for bank payments.
+            let collectName = type == .bankAccount
             guard let result = await linkController.collectPaymentMethod(
                 from: viewController,
                 with: email,
-                supportedPaymentMethodTypes: [supportedPaymentMethodType]
+                supportedPaymentMethodTypes: [supportedPaymentMethodType],
+                collectName: collectName
             ) else {
                 selectedPaymentSource = nil
                 return nil
