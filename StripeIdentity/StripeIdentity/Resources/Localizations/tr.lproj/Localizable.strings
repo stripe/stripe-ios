@@ -6,7 +6,13 @@
 
 "App Settings" = "Uygulama Ayarları";
 
-"Back of identity card" = "Kimliğin arka yüzü";
+"Back %@ photo successfully uploaded" = "%@’nin arka yüzünün fotoğrafı başarıyla yüklendi";
+
+"Back identity document photo successfully uploaded" = "Kimlik belgesinin arka yüzünün fotoğrafı başarıyla yüklendi";
+
+"Back of %@" = "%@’nin arka yüzü";
+
+"Back of driver's license or government-issued photo ID" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı bir kimliğin arka yüzü";
 
 "Back of identity document" = "Kimlik belgesinin arka yüzü";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Ayrıntılar görünmüyor";
 
+"Flip your %@ over to the other side" = "%@'nizi diğer tarafa çevirin";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Ehliyetinizin veya devlet tarafından verilmiş fotoğraflı kimliğinizin diğer yüzünü çevirin";
+
 "Flip your identity card over to the other side" = "Kimliğinizin diğer yüzünü çevirin";
 
+"Front %@ photo successfully uploaded" = "%@’nin ön yüzünün fotoğrafı başarıyla yüklendi";
+
+"Front identity document photo successfully uploaded" = "Kimlik belgesinin ön yüzünün fotoğrafı başarıyla yüklendi";
+
+"Front of %@" = "%@’nin ön yüzü";
+
+"Front of driver's license or government-issued photo ID" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
+
+"Front of driver's license or passport" = "Ehliyetin veya pasaportun ön yüzü";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Ehliyet, pasaport veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
+
 "Front of identity document" = "Kimlik belgesinin ön yüzü";
+
+"Front of passport or government-issued photo ID" = "Pasaportun veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
 
 "Get ready to scan your photo ID" = "Fotoğraflı kimliğinizi taramak için hazırlanın";
 
@@ -78,7 +102,21 @@
 
 "Photo Library" = "Fotoğraf Kitaplığı";
 
+"Please upload images of the front and back of your %@" = "Lütfen %@’nizin ön ve arka yüzünün resimlerini yükleyin";
+
+"Please upload images of the front and back of your identity document" = "Lütfen kimlik belgenizin ön ve arka yüzünün resimlerini yükleyin";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Ehliyetinizi veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
+
+"Position your driver's license or passport in the center of the frame" = "Ehliyetinizi veya pasaportunuzu çerçevenin ortasına yerleştirin";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Ehliyetinizi, pasaportunuzu veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
+
 "Position your face in the center of the frame." = "Yüzünüzü çerçevenin ortasına yerleştirin.";
+
+"Position your identity document in the center of the frame" = "Kimlik belgenizi çerçevenin ortasına yerleştirin";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Pasaportunuzu veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
 
 "Retake Photos" = "Fotoğrafları Tekrar Çek";
 
@@ -91,6 +129,14 @@
 "Select a location to upload the back of your identity document from" = "Kimlik belgenizin arka yüzünü yükleyeceğiniz konumu seçin";
 
 "Select a location to upload the front of your identity document from" = "Kimlik belgenizin ön yüzünü yükleyeceğiniz konumu seçin";
+
+"Select back %@ photo" = "%@’nin arka yüzünün fotoğrafını seçin";
+
+"Select back identity document photo" = "Kimlik belgesinin arka yüzünün fotoğrafını seçin";
+
+"Select front %@ photo" = "%@’nin ön yüzünün fotoğrafını seçin";
+
+"Select front identity document photo" = "Kimlik belgesinin ön yüzünün fotoğrafını seçin";
 
 "Selfie" = "Özçekim";
 
@@ -116,7 +162,17 @@
 
 "Upload a Photo" = "Fotoğraf Yükle";
 
+"Upload your %@" = "%@’nizi yükleyin";
+
 "Upload your photo ID" = "Fotoğraflı kimliğinizi yükleyin";
+
+"Uploading back %@ photo" = "%@’nin arka yüzünün fotoğrafı yükleniyor";
+
+"Uploading back identity document photo" = "Kimlik belgesinin arka yüzünün fotoğrafı yükleniyor";
+
+"Uploading front %@ photo" = "%@’nin ön yüzünün fotoğrafı yükleniyor";
+
+"Uploading front identity document photo" = "Kimlik belgesinin ön yüzünün fotoğrafı yükleniyor";
 
 "Verify your identity" = "Kimliğinizi doğrulayın";
 

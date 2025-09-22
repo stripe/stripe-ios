@@ -6,7 +6,13 @@
 
 "App Settings" = "Appindstillinger";
 
-"Back of identity card" = "Bagside af identitetskort";
+"Back %@ photo successfully uploaded" = "Billedet på bagsiden %@ er uploadet";
+
+"Back identity document photo successfully uploaded" = "Billedet af identitetsdokumentet på bagsiden er uploadet";
+
+"Back of %@" = "Bagsiden af %@";
+
+"Back of driver's license or government-issued photo ID" = "Bagsiden af kørekortet eller offentligt udstedt billedlegitimation";
 
 "Back of identity document" = "Bagsiden af identitetsdokumentet";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Detaljer ikke synlige";
 
+"Flip your %@ over to the other side" = "Vend din %@ over på den anden side";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Vend dit kørekort eller offentligt udstedt billed-id over på den anden side";
+
 "Flip your identity card over to the other side" = "Vend dit identitetskort om på bagsiden";
 
+"Front %@ photo successfully uploaded" = "Billedet %@ på forsiden er uploadet";
+
+"Front identity document photo successfully uploaded" = "Billedet af identitetsdokumentet på forsiden er uploadet";
+
+"Front of %@" = "Forsiden af %@";
+
+"Front of driver's license or government-issued photo ID" = "Forsiden af kørekort eller offentligt udstedt billed-id";
+
+"Front of driver's license or passport" = "Forsiden af kørekort eller pas";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Forsiden af kørekort, pas eller offentligt udstedt billed-id";
+
 "Front of identity document" = "Forsiden af identitetsdokumentet";
+
+"Front of passport or government-issued photo ID" = "Forsiden af pas eller offentligt udstedt billed-id";
 
 "Get ready to scan your photo ID" = "Gør dig klar til at scanne dit foto-ID";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Fotobibliotek";
 
+"Please upload images of the front and back of your %@" = "Upload billeder af forsiden og bagsiden af din %@";
+
+"Please upload images of the front and back of your identity document" = "Upload billeder af forsiden og bagsiden af dit identitetsdokument";
+
+"Position your %@ in the center of the frame" = "Placer dit %@ i midten af rammen";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Placer dit kørekort eller offentligt udstedt billed-id i midten af rammen";
+
+"Position your driver's license or passport in the center of the frame" = "Placer dit kørekort eller pas i midten af rammen";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Placer dit kørekort, pas eller offentligt udstedt billed-id i midten af rammen";
+
 "Position your face in the center of the frame." = "Placer dit ansigt i midten af rammen.";
+
+"Position your identity document in the center of the frame" = "Placer dit identitetsdokument midt i rammen";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Placer dit pas eller offentligt udstedt billed-id i midten af rammen";
 
 "Retake Photos" = "Tag billeder igen";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Vælg en placering, som bagsiden af dit identitetsdokument skal uploades fra";
 
 "Select a location to upload the front of your identity document from" = "Vælg en placering, som forsiden af dit identitetsdokument skal uploades fra";
+
+"Select back %@ photo" = "Vælg billedet %@ på bagsiden";
+
+"Select back identity document photo" = "Vælg billedet af identitetsdokumentet på bagsiden";
+
+"Select front %@ photo" = "Vælg billedet %@ på forsiden";
+
+"Select front identity document photo" = "Vælg billedet af identitetsdokumentet på forsiden";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Upload et foto";
 
+"Upload your %@" = "Upload dit %@";
+
 "Upload your photo ID" = "Upload dit foto-id";
+
+"Uploading back %@ photo" = "Billedet %@ på bagsiden uploades";
+
+"Uploading back identity document photo" = "Billedet af identitetsdokumentet på bagsiden uploades";
+
+"Uploading front %@ photo" = "Billedet %@ på forsiden uploades";
+
+"Uploading front identity document photo" = "Billedet af identitetsdokumentet på forsiden uploades";
 
 "Verify your identity" = "Bekræft din identitet";
 

@@ -6,7 +6,13 @@
 
 "App Settings" = "การตั้งค่าแอป";
 
-"Back of identity card" = "ด้านหลังของบัตรประจำตัว";
+"Back %@ photo successfully uploaded" = "อัปโหลดรูปภาพ %@ ด้านหลังเรียบร้อย";
+
+"Back identity document photo successfully uploaded" = "อัปโหลดรูปภาพด้านหลังเอกสารประจำตัวเรียบร้อย";
+
+"Back of %@" = "ด้านหลังของ %@";
+
+"Back of driver's license or government-issued photo ID" = "ด้านหลังของใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
 
 "Back of identity document" = "ด้านหลังของเอกสารประจำตัว";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "รายละเอียดไม่ชัดเจน";
 
+"Flip your %@ over to the other side" = "พลิก %@ ของคุณเป็นอีกด้าน";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "พลิกใบอนุญาตขับขี่หรือบัตรประจำตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลไปอีกด้านหนึ่ง";
+
 "Flip your identity card over to the other side" = "พลิกไปยังอีกด้านของบัตรประจำตัว";
 
+"Front %@ photo successfully uploaded" = "อัปโหลดรูปภาพ %@ ด้านหน้าเรียบร้อย";
+
+"Front identity document photo successfully uploaded" = "อัปโหลดรูปภาพด้านหน้าเอกสารประจำตัวเรียบร้อย";
+
+"Front of %@" = "ด้านหน้าของ %@";
+
+"Front of driver's license or government-issued photo ID" = "ด้านหน้าของใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
+
+"Front of driver's license or passport" = "ด้านหน้าของใบอนุญาตขับขี่หรือหนังสือเดินทาง";
+
+"Front of driver's license, passport, or government-issued photo ID" = "ด้านหน้าของใบอนุญาตขับขี่ หนังสือเดินทาง หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
+
 "Front of identity document" = "ด้านหน้าของเอกสารประจำตัว";
+
+"Front of passport or government-issued photo ID" = "ด้านหน้าของหนังสือเดินทางหรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
 
 "Get ready to scan your photo ID" = "เตรียมพร้อมสแกนเอกสารประจำตัวที่มีรูปถ่าย";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "คลังภาพ";
 
+"Please upload images of the front and back of your %@" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของ %@";
+
+"Please upload images of the front and back of your identity document" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของเอกสารประจำตัวของคุณ";
+
+"Position your %@ in the center of the frame" = "จัดตำแหน่ง %@ ให้อยู่กลางเฟรม";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "จัดตำแหน่งใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
+
+"Position your driver's license or passport in the center of the frame" = "จัดตําแหน่งใบอนุญาตขับขี่หรือหนังสือเดินทางให้อยู่กลางเฟรม";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "จัดตําแหน่งใบอนุญาตขับขี่ หนังสือเดินทาง หรือ บัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
+
 "Position your face in the center of the frame." = "จัดตำแหน่งใบหน้าให้อยู่กลางเฟรม";
+
+"Position your identity document in the center of the frame" = "จัดตำแหน่งเอกสารประจำตัวของคุณให้อยู่กลางเฟรม";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "จัดตําแหน่งหนังสือเดินทางหรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
 
 "Retake Photos" = "ถ่ายภาพอีกครั้ง";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "เลือกตำแหน่งที่จะทำการอัปโหลดรูปภาพด้านหลังของเอกสารประจำตัว";
 
 "Select a location to upload the front of your identity document from" = "เลือกตำแหน่งที่จะทำการอัปโหลดรูปภาพด้านหน้าของเอกสารประจำตัว";
+
+"Select back %@ photo" = "เลือกรูปภาพ %@ ด้านหลัง";
+
+"Select back identity document photo" = "เลือกรูปภาพด้านหลังของเอกสารประจำตัว";
+
+"Select front %@ photo" = "เลือกรูปภาพ %@ ด้านหน้า";
+
+"Select front identity document photo" = "เลือกรูปภาพด้านหน้าของเอกสารประจำตัว";
 
 "Selfie" = "เซลฟี";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "อัปโหลดรูปภาพ";
 
+"Upload your %@" = "อัปโหลด %@ ของคุณ";
+
 "Upload your photo ID" = "อัปโหลดบัตรประจำตัวของคุณ";
+
+"Uploading back %@ photo" = "กำลังอัปโหลดรูปภาพ %@ ด้านหลัง";
+
+"Uploading back identity document photo" = "กำลังอัปโหลดรูปภาพเอกสารประจำตัวด้านหลัง";
+
+"Uploading front %@ photo" = "กำลังอัปโหลดรูปภาพด้านหน้า %@";
+
+"Uploading front identity document photo" = "กำลังอัปโหลดรูปภาพเอกสารประจำตัวด้านหน้า";
 
 "Verify your identity" = "ยืนยันตัวตนของคุณ";
 
