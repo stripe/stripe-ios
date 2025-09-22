@@ -11,4 +11,7 @@ import Foundation
 struct CreatePaymentTokenRequest: Encodable {
     /// The crypto wallet address to register.
     let paymentMethod: String
+
+    /// The crypto customer ID.
+    let cryptoCustomerId: String
 }

@@ -137,13 +137,18 @@ extension STPAPIClient {
     /// Creates a crypto payment token from a given payment method and consumer.
     /// - Parameters:
     ///   - paymentMethodId: The originating payment method ID.
+    ///   - cryptoCustomerId: The crypto customer ID.
     /// - Returns: The created crypto payment token.
     /// Throws if an API error occurs.
     func createPaymentToken(
-        for paymentMethodId: String
+        for paymentMethodId: String,
+        cryptoCustomerId: String
     ) async throws -> CreatePaymentTokenResponse {
         let endpoint = "crypto/internal/payment_token"
-        let requestObject = CreatePaymentTokenRequest(paymentMethod: paymentMethodId)
+        let requestObject = CreatePaymentTokenRequest(
+            paymentMethod: paymentMethodId,
+            cryptoCustomerId: cryptoCustomerId
+        )
         return try await post(resource: endpoint, object: requestObject)
     }
 

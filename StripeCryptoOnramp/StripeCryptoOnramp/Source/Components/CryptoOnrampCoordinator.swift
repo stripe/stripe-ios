@@ -488,7 +488,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             }()
 
-            let token = try await apiClient.createPaymentToken(for: paymentMethodId)
+            guard let cryptoCustomerId else {
+                throw Error.missingCryptoCustomerID
+            }
+            let token = try await apiClient.createPaymentToken(for: paymentMethodId, cryptoCustomerId: cryptoCustomerId)
             analyticsClient.log(.cryptoPaymentTokenCreated(paymentMethodType: selectedPaymentSource.analyticsValue))
             return token.id
         } catch {
