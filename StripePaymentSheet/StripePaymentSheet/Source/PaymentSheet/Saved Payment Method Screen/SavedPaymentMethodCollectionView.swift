@@ -91,17 +91,8 @@ extension SavedPaymentMethodCollectionView {
                                                   fillColor: UIColor.dynamic(
             light: .systemGray5, dark: .tertiaryLabel))
         lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.colors.primary)
-        lazy var selectableRectangle: SelectableRectangle = {
-        #if !os(visionOS)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            return LiquidGlassRectangle(appearance: appearance, isCapsule: false)
-        } else {
-            return ShadowedRoundedRectangle(appearance: appearance)
-        }
-        #else
-            return ShadowedRoundedRectangle(appearance: appearance)
-        #endif
+        lazy var selectableRectangle: ShadowedRoundedRectangle = {
+            return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .uniform)
         }()
         lazy var accessoryButton: CircularButton = {
             let button = CircularButton(style: .edit, iconStyle: appearance.iconStyle)

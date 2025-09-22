@@ -410,10 +410,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return nil
             }
 
+            // Collect the user's name for bank payments.
+            let collectName = type == .bankAccount
             guard let result = await linkController.collectPaymentMethod(
                 from: viewController,
                 with: email,
-                supportedPaymentMethodTypes: [supportedPaymentMethodType]
+                supportedPaymentMethodTypes: [supportedPaymentMethodType],
+                collectName: collectName
             ) else {
                 selectedPaymentSource = nil
                 return nil
@@ -505,12 +508,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         authenticationContext: STPAuthenticationContext,
         onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async throws -> CheckoutResult {
-        guard let selectedPaymentSource else {
-            throw Error.invalidSelectedPaymentSource
-        }
         analyticsClient.log(.checkoutStarted(
-            onrampSessionId: onrampSessionId,
-            paymentMethodType: selectedPaymentSource.analyticsValue
+            onrampSessionId: onrampSessionId
         ))
         // First, attempt to check out and get the PaymentIntent
         let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
@@ -523,7 +522,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             if case .completed = result {
                 analyticsClient.log(.checkoutCompleted(
                     onrampSessionId: onrampSessionId,
-                    paymentMethodType: selectedPaymentSource.analyticsValue,
                     requiredAction: false
                 ))
             }
@@ -550,7 +548,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     if case .completed = checkoutResult {
                         analyticsClient.log(.checkoutCompleted(
                             onrampSessionId: onrampSessionId,
-                            paymentMethodType: selectedPaymentSource.analyticsValue,
                             requiredAction: true
                         ))
                     }

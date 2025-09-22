@@ -7,7 +7,7 @@
 
 import UIKit
 
-@_spi(DashboardOnly)
+@_spi(PrivateBetaConnect)
 @available(iOS 15, *)
 public class PaymentsViewController: UIViewController {
 
@@ -49,7 +49,7 @@ public class PaymentsViewController: UIViewController {
 }
 
 /// Delegate of an `PaymentsViewController`
-@_spi(DashboardOnly)
+@_spi(PrivateBetaConnect)
 @available(iOS 15, *)
 public protocol PaymentsViewControllerDelegate: AnyObject {
 

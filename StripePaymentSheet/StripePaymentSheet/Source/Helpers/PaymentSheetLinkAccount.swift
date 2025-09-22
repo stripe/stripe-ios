@@ -122,6 +122,11 @@ struct LinkPMDisplayDetails {
         currentSession?.isVerifiedForSignup ?? false
     }
 
+    // Webview fallback URLs have a lifespan of one attempt.
+    // If a user opens one and dismisses it, it can't be used again,
+    // So we'll fetch a new one in that case.
+    var visitedFallbackURLs: [URL] = []
+
     private(set) var currentSession: ConsumerSession?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
@@ -218,7 +223,6 @@ struct LinkPMDisplayDetails {
 
         session.startVerification(
             with: apiClient,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface
         ) { [weak self] result in
@@ -255,7 +259,6 @@ struct LinkPMDisplayDetails {
         session.confirmSMSVerification(
             with: oneTimePasscode,
             with: apiClient,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface,
             consentGranted: consentGranted
@@ -500,6 +503,28 @@ struct LinkPMDisplayDetails {
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
+        }
+    }
+
+    func refresh(
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        guard let session = currentSession else {
+            stpAssertionFailure()
+            completion(.failure(
+                PaymentSheetError.unknown(debugDescription: "Refreshing session without valid current session")
+            ))
+            return
+        }
+
+        session.refreshSession(
+            with: apiClient,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            if case .success(let refreshedSession) = result {
+                self?.currentSession = refreshedSession
+            }
+            completion(result)
         }
     }
 

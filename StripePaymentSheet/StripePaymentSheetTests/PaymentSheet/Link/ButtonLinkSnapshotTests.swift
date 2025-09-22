@@ -13,7 +13,6 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-// @iOS26
 class ButtonLinkSnapshotTests: STPSnapshotTestCase {
 
     func testPrimary() {

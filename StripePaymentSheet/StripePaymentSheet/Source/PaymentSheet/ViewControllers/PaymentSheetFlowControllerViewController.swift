@@ -292,20 +292,17 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     private func presentLink() {
-        Task { @MainActor in
-            let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-            presentNativeLink(
-                selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper,
-                hcaptchaToken: hcaptchaToken
-            ) { [weak self] confirmOption, _ in
-                guard let self else { return }
-                self.linkConfirmOption = confirmOption
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-            }
+        presentNativeLink(
+            selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            passiveCaptchaChallenge: passiveCaptchaChallenge
+        ) { [weak self] confirmOption, _ in
+            guard let self else { return }
+            self.linkConfirmOption = confirmOption
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
         }
     }
 
@@ -458,6 +455,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
         }
+    }
+
+    func clearSelection() {
+        savedPaymentOptionsViewController.unselectPaymentMethod()
+        updateButton()
     }
 
     @objc

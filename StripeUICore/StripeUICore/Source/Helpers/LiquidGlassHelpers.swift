@@ -9,18 +9,6 @@ import Foundation
 import UIKit
 
 @_spi(STP) public class LiquidGlassDetector {
-    /// A feature flag during development of iOS 26 features, only `true` for testing.
-    @_spi(STP) public static var allowNewDesign: Bool = {
-        if NSClassFromString("XCTestCase") != nil {
-            return true
-        }
-        return false
-    }()
-
-    @_spi(STP) public static var isEnabled: Bool {
-        return isEnabledInMerchantApp && allowNewDesign
-    }
-
     /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
     @_spi(STP) public static var isEnabledInMerchantApp: Bool {
         return meetsCompilerRequirements && !hasOptedOut

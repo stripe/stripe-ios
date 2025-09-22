@@ -21,7 +21,7 @@ private extension String {
 }
 
 @available(iOS 15, *)
-@_spi(DashboardOnly)
+@_spi(PrivateBetaConnect)
 @_documentation(visibility: public)
 extension EmbeddedComponentManager {
     @_documentation(visibility: public)

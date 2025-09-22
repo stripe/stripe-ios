@@ -211,6 +211,10 @@ class PlaygroundController: ObservableObject {
             configuration.allowsDelayedPaymentMethods = true
         }
 
+        if settings.enablePassiveCaptcha == .on {
+            configuration.enablePassiveCaptcha = true
+        }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -325,6 +329,10 @@ class PlaygroundController: ObservableObject {
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
+        }
+
+        if settings.enablePassiveCaptcha == .on {
+            configuration.enablePassiveCaptcha = true
         }
 
         if settings.shippingInfo != .off {
