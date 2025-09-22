@@ -92,7 +92,7 @@ struct PaymentView: View {
         .nine,
         .decimalSeparator,
         .zero,
-        .delete
+        .delete,
     ]
 
     private var shouldDisableContinueButton: Bool {
@@ -517,12 +517,12 @@ struct PaymentView: View {
 
     private func presentPaymentMethodSelector(for type: PaymentMethodType) {
         guard let viewController = UIApplication.shared.findTopNavigationController() else {
-            //errorMessage = "Unable to find view controller to present from."
+            // errorMessage = "Unable to find view controller to present from."
             return
         }
 
         isLoading.wrappedValue = true
-        //errorMessage = nil
+        // errorMessage = nil
 
         Task {
             do {
@@ -549,7 +549,7 @@ struct PaymentView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    //errorMessage = "Payment method selection failed: \(error.localizedDescription)"
+                    // errorMessage = "Payment method selection failed: \(error.localizedDescription)"
                 }
             }
         }
@@ -557,7 +557,7 @@ struct PaymentView: View {
 
     private func continueWithApplePay() {
         guard let viewController = UIApplication.shared.findTopNavigationController() else {
-            //errorMessage = "Unable to find view controller to present from."
+            // errorMessage = "Unable to find view controller to present from."
             return
         }
 
@@ -567,11 +567,11 @@ struct PaymentView: View {
         ]
 
         isLoading.wrappedValue = true
-        //errorMessage = nil
+        // errorMessage = nil
 
         Task {
             do {
-                if let _ = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController) {
+                if try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController) != nil {
                     let token = try await coordinator.createCryptoPaymentToken()
 
                     await MainActor.run {
@@ -586,7 +586,7 @@ struct PaymentView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    //errorMessage = "Apple Pay failed: \(error.localizedDescription)"
+                    // errorMessage = "Apple Pay failed: \(error.localizedDescription)"
                 }
             }
         }
@@ -594,7 +594,7 @@ struct PaymentView: View {
 
     private func createOnrampSession(withCryptoPaymentTokenId cryptoPaymentTokenId: String) {
         isLoading.wrappedValue = true
-        //errorMessage = nil
+        // errorMessage = nil
 
         let request = CreateOnrampSessionRequest(
             paymentToken: cryptoPaymentTokenId,
@@ -617,7 +617,7 @@ struct PaymentView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    //errorMessage = "Create onramp session failed: \(error.localizedDescription)"
+                    // errorMessage = "Create onramp session failed: \(error.localizedDescription)"
                 }
             }
         }
