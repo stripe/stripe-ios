@@ -37,7 +37,7 @@ public extension CryptoOnrampCoordinator {
             case .invalidSelectedPaymentSource:
                 return "An unexpected error occurred internally. Selected payment source was not set to an expected value."
             case .missingCryptoCustomerID:
-                return "A crypto customer ID is missing but required."
+                return "A crypto customer ID is missing but required. A crypto customer ID must either be provided to the Crypto Onramp Coordinator in the `create` API, or generated during the onramp flow by verifying a Link account using the `registerLinkUser`, `authenticateUser`, or `authorize` APIs."
             }
         }
     }
