@@ -21,6 +21,7 @@ final class ConsumerSession: Decodable {
     let phoneNumberCountry: String?
     let verificationSessions: [VerificationSession]
     let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
+    let mobileFallbackWebviewParams: MobileFallbackWebviewParams?
 
     init(
         clientSecret: String,
@@ -29,7 +30,8 @@ final class ConsumerSession: Decodable {
         unredactedPhoneNumber: String?,
         phoneNumberCountry: String?,
         verificationSessions: [VerificationSession],
-        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
+        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>,
+        mobileFallbackWebviewParams: MobileFallbackWebviewParams?
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
@@ -38,6 +40,7 @@ final class ConsumerSession: Decodable {
         self.phoneNumberCountry = phoneNumberCountry
         self.verificationSessions = verificationSessions
         self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
+        self.mobileFallbackWebviewParams = mobileFallbackWebviewParams
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -48,6 +51,7 @@ final class ConsumerSession: Decodable {
         case phoneNumberCountry
         case verificationSessions
         case supportedPaymentDetailsTypes = "supportPaymentDetailsTypes"
+        case mobileFallbackWebviewParams = "mobile_fallback_webview_params"
     }
 
     init(from decoder: Decoder) throws {
@@ -59,8 +63,39 @@ final class ConsumerSession: Decodable {
         self.phoneNumberCountry = try container.decodeIfPresent(String.self, forKey: .phoneNumberCountry)
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
         self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
+        self.mobileFallbackWebviewParams = try container.decodeIfPresent(MobileFallbackWebviewParams.self, forKey: .mobileFallbackWebviewParams)
     }
 
+}
+
+extension ConsumerSession {
+    struct MobileFallbackWebviewParams: Decodable {
+        let webviewOpenUrl: URL?
+        let webviewRequirementType: WebviewRequirementType
+
+        enum WebviewRequirementType: String, SafeEnumDecodable {
+            case required = "required"
+            case notRequired = "notrequired"
+            case unparsable
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let requirementType = try container.decode(WebviewRequirementType.self, forKey: .webviewRequirementType)
+            self.webviewRequirementType = requirementType
+
+            if let urlString = try container.decodeIfPresent(String.self, forKey: .webviewOpenUrl) {
+                self.webviewOpenUrl = URL(string: urlString)
+            } else {
+                self.webviewOpenUrl = nil
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case webviewOpenUrl = "webview_open_url"
+            case webviewRequirementType = "webview_requirement_type"
+        }
+    }
 }
 
 extension ConsumerSession: Equatable {
@@ -224,7 +259,6 @@ extension ConsumerSession {
         type: VerificationSession.SessionType = .sms,
         locale: Locale = .autoupdatingCurrent,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
@@ -233,7 +267,6 @@ extension ConsumerSession {
             for: clientSecret,
             type: type,
             locale: locale,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             completion: completion)
@@ -242,7 +275,6 @@ extension ConsumerSession {
     func confirmSMSVerification(
         with code: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         consentGranted: Bool? = nil,
@@ -251,7 +283,6 @@ extension ConsumerSession {
         apiClient.confirmSMSVerification(
             for: clientSecret,
             with: code,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             consentGranted: consentGranted,
@@ -361,17 +392,27 @@ extension ConsumerSession {
 
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         apiClient.logout(
             consumerSessionClientSecret: clientSecret,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             completion: completion)
+    }
+
+    func refreshSession(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        apiClient.refreshSession(
+            consumerSessionClientSecret: clientSecret,
+            requestSurface: requestSurface,
+            completion: completion
+        )
     }
 
 }

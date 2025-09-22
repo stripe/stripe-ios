@@ -7,7 +7,7 @@
 
 import UIKit
 
-@_spi(DashboardOnly)
+@_spi(PrivateBetaConnect)
 @available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
@@ -37,7 +37,7 @@ public class PayoutsViewController: UIViewController {
 }
 
 /// Delegate of an `PayoutsViewController`
-@_spi(DashboardOnly)
+@_spi(PrivateBetaConnect)
 @available(iOS 15, *)
 public protocol PayoutsViewControllerDelegate: AnyObject {
 

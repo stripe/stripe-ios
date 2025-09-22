@@ -1,6 +1,11 @@
 ## x.x.x yyyy-yy-yy
 
+## Connect
+* [Added] Payments and Payouts embedded components are available to use in public preview.
+
 ## PaymentSheet
+* [Added] Added `Appearance.applyLiquidGlass()`, a convenience method that changes the values of various properties on the `Appearance` object used by PaymentSheet, PaymentSheet.FlowController, EmbeddedPaymentElement, CustomerSheet, and AddressViewController to match Liquid Glass when building with Xcode 26 or later and running on iOS 26. This includes `appearance.cornerRadius`, `appearance.borderWidth`, `appearance.navigationBarStyle`, `colors.background`, `navigationBarStyle`, and others. This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
+* [Added] Appearance.navigationBarStyle. Setting to `.glass` will change the sheet navigation bar to a glassy appearance when building with Xcode 26 or later and running on iOS 26. Calling `Appearance.applyLiquidGlass()` will set this value to `.glass`.
 * [Changed] `appearance.cornerRadius` is now nullable. Below iOS 26, When `nil`, the corner radius is 6.0 (ie unchanged from the current default). On iOS 26+, multiple rounder corner configurations are used to match Liquid Glass design.
 * [Fixed] Improved the cancellation UX when paying with Amazon Pay, Revolut Pay, P24, Twint, Swish, and 3DS2 card.
 

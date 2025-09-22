@@ -83,7 +83,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         unredactedPhoneNumber: "(555) 555-5555",
                         phoneNumberCountry: "US",
                         verificationSessions: [.init(type: .sms, state: .verified)],
-                        supportedPaymentDetailsTypes: [.card]
+                        supportedPaymentDetailsTypes: [.card],
+                        mobileFallbackWebviewParams: nil
                     ),
                     publishableKey: "pk_xxx_for_link_account_xxx",
                     displayablePaymentDetails: nil,
@@ -189,7 +190,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                             unredactedPhoneNumber: "(555) 555-5555",
                             phoneNumberCountry: "US",
                             verificationSessions: [.init(type: .sms, state: .verified)],
-                            supportedPaymentDetailsTypes: [.card]
+                            supportedPaymentDetailsTypes: [.card],
+                            mobileFallbackWebviewParams: nil
                         ),
                         publishableKey: MockParams.publicKey,
                         displayablePaymentDetails: nil,

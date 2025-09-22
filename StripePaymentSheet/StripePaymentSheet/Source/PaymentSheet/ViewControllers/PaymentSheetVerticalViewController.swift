@@ -556,22 +556,19 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private func presentLinkInFlowController() {
-        Task { @MainActor in
-            let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-            presentNativeLink(
-                selectedPaymentDetailsID: nil,
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper,
-                hcaptchaToken: hcaptchaToken,
-                callback: { [weak self] confirmOption, _ in
-                    guard let self else { return }
-                    self.linkConfirmOption = confirmOption
-                    self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-                }
-            )
-        }
+        presentNativeLink(
+            selectedPaymentDetailsID: nil,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            callback: { [weak self] confirmOption, _ in
+                guard let self else { return }
+                self.linkConfirmOption = confirmOption
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        )
     }
 
     var didSendLogShow: Bool = false
@@ -687,6 +684,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 }
             }
         }
+    }
+
+    func clearSelection() {
+        paymentMethodListViewController?.clearSelection()
+        updatePrimaryButton()
     }
 
     @objc func didTapPrimaryButton() {

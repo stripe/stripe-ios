@@ -117,7 +117,8 @@ enum Stubs {
         unredactedPhoneNumber: "+17070707070",
         phoneNumberCountry: "US",
         verificationSessions: [],
-        supportedPaymentDetailsTypes: [.card, .bankAccount]
+        supportedPaymentDetailsTypes: [.card, .bankAccount],
+        mobileFallbackWebviewParams: nil
     )
 
     static func displayablePaymentDetails(

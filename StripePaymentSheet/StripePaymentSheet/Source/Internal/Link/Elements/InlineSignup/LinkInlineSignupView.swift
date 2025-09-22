@@ -26,10 +26,14 @@ final class LinkInlineSignupView: UIView {
         return viewModel.configuration.appearance.asElementsTheme
     }
 
+    private var isUsingLiquidGlass: Bool {
+        theme.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp
+    }
+
     private var combinedEmailNameSectionTheme: ElementsAppearance {
         var themeCopy = theme
         themeCopy.borderWidth = viewModel.combinedEmailNameSectionBorderWidth
-        if LinkUI.useLiquidGlass && viewModel.mode == .checkbox {
+        if isUsingLiquidGlass && viewModel.mode == .checkbox {
             // Use a smaller corner radius than the container
             themeCopy.cornerRadius = LinkUI.nestedInlineSignupSectionCornerRadius
         }
