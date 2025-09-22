@@ -1,0 +1,42 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SAE6YIFbdis1OxTR5oDAdRw\?client_secret=seti_1SAE6YIFbdis1OxTR5oDAdRw_secret_T6QyR8qlmCHvJJFZSFK63h0DRmrV7o9$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=XpceoGb2q-BKyKdIrEn27cX5wLaq4advsGPoaKfADq5TzzZTfAJqaHxY8qbZ2yyWeuUO1QTOah3Oxpli
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Mon, 22 Sep 2025 18:04:51 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 537
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_c5luYak7SzPu56
+
+{
+  "id" : "seti_1SAE6YIFbdis1OxTR5oDAdRw",
+  "description" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : null,
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "satispay"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1758564290,
+  "client_secret" : "seti_1SAE6YIFbdis1OxTR5oDAdRw_secret_T6QyR8qlmCHvJJFZSFK63h0DRmrV7o9",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_payment_method"
+}

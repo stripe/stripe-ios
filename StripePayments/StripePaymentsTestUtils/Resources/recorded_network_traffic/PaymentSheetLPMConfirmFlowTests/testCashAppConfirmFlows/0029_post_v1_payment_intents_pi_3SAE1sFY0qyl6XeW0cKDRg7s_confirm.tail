@@ -1,0 +1,104 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SAE1sFY0qyl6XeW0cKDRg7s\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=opCYnWYFqTFG3HfmP3qN8tmexKW3nn5TExapfpeaX8WEwNUGkgBAhBT_Dqqz7uzATXrZavAE205L5aHq
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_w3dIvrFHtJuk5c
+Content-Length: 2322
+Vary: Origin
+Date: Mon, 22 Sep 2025 18:00:02 GMT
+original-request: req_w3dIvrFHtJuk5c
+stripe-version: 2020-08-27
+idempotency-key: 70811e9f-32e6-43cb-b63c-630d766215d1
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3SAE1sFY0qyl6XeW0cKDRg7s_secret_wAFW2RB2TVcaF8BGwXqu9gxgf&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1SAE1rFY0qyl6XeWFhT2iaLH&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "cashapp_handle_redirect_or_display_qr_code",
+    "cashapp_handle_redirect_or_display_qr_code" : {
+      "qr_code" : {
+        "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9UNlF0UW1sSVc0ZmhkbGQ0Y3haUGF4VG9NU3h0Y2I00100LZ26Ej93.png",
+        "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9UNlF0UW1sSVc0ZmhkbGQ0Y3haUGF4VG9NU3h0Y2I00100LZ26Ej93.svg",
+        "expires_at" : 1758564022
+      },
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKKKdxsYGMgaxix_TWYk6MJWXjIAskT78LX2hyp7JlYZMo18YC8JlKMsxS7gx0PtPn2QzKZSxykM8uDxIBAcKxQ",
+      "mobile_auth_url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_T6QtcCO8FLLLYbaIJSgES6ZjqgLwi6L"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1SAE1rFY0qyl6XeWFhT2iaLH",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1758563999,
+    "allow_redisplay" : "unspecified",
+    "type" : "cashapp",
+    "customer" : null,
+    "cashapp" : {
+      "cashtag" : null,
+      "buyer_id" : null
+    }
+  },
+  "client_secret" : "pi_3SAE1sFY0qyl6XeW0cKDRg7s_secret_wAFW2RB2TVcaF8BGwXqu9gxgf",
+  "id" : "pi_3SAE1sFY0qyl6XeW0cKDRg7s",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "cashapp"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1758564000,
+  "description" : null
+}

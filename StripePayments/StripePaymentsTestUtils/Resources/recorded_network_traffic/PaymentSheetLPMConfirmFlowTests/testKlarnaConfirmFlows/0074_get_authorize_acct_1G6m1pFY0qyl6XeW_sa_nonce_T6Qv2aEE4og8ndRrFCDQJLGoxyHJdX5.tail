@@ -1,0 +1,22 @@
+GET
+https:\/\/pm-redirects\.stripe\.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_T6Qv2aEE4og8ndRrFCDQJLGoxyHJdX5\?useWebAuthSession=true&followRedirectsInSDK=true$
+302
+text/plain
+Content-Type: text/plain;charset=utf-8
+reporting-endpoints: coop="https://q.stripe.com/coop-report", wsp_coop="https://q.stripe.com/coop-report?s=KdaFd52TA21l2anp5QFM6pwpWyDwrCmOUCGkO9Gm4b9NIykRBwDCrEQ9kcA_uhZ_AXX7VLwzFeM=",wsp_coep="https://q.stripe.com/coep-report?s=KdaFd52TA21l2anp5QFM6pwpWyDwrCmOUCGkO9Gm4b9NIykRBwDCrEQ9kcA_uhZ_AXX7VLwzFeM="
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action https:; frame-ancestors 'self'; img-src data:; object-src 'none'; script-src 'nonce-glPAB5SzV1KYMojFb0gESQ==' 'sha256-pYMONNzeWRZFTlVWwh4w+1X4/C55SMBreRfOdrNWkmc=' 'report-sample'; style-src 'nonce-glPAB5SzV1KYMojFb0gESQ=='; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KdaFd52TA21l2anp5QFM6pwpWyDwrCmOUCGkO9Gm4b9NIykRBwDCrEQ9kcA_uhZ_AXX7VLwzFeM%3D
+x-stripe-proxy-response: upstream
+x-wc: ABCDEFGHIJ
+Server: nginx
+cross-origin-opener-policy-report-only: unsafe-none; report-to="wsp_coop"
+report-to: {"group":"wsp_coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=KdaFd52TA21l2anp5QFM6pwpWyDwrCmOUCGkO9Gm4b9NIykRBwDCrEQ9kcA_uhZ_AXX7VLwzFeM="}],"include_subdomains":true},{"group":"wsp_coep","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coep-report?s=KdaFd52TA21l2anp5QFM6pwpWyDwrCmOUCGkO9Gm4b9NIykRBwDCrEQ9kcA_uhZ_AXX7VLwzFeM="}],"include_subdomains":true}
+Location: https://pay.test.klarna.com/na/requests/3bb01645-88ef-60f7-b7fa-d3e718bda861/start
+Date: Mon, 22 Sep 2025 18:02:06 GMT
+Content-Length: 0
+cross-origin-opener-policy: unsafe-none; report-to="wsp_coop"
+x-stripe-routing-context-priority-tier: livemode-critical
+x-stripe-server-rpc-duration-micros: 213609
+x-content-type-options: nosniff
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+

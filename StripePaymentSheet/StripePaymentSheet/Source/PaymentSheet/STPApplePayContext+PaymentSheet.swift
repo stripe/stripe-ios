@@ -91,7 +91,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
             // TODO(porter) Handle deferred confirmation token flow
             // Create a confirmation token with `stpPaymentMethod`
-            
+
             // Regular deferred intent flow
             let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
             intentConfig.confirmHandler?(stpPaymentMethod, shouldSavePaymentMethod) { result in

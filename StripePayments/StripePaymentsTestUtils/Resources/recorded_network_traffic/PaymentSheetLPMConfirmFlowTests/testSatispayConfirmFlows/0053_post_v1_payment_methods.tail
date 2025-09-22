@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KIGO01hNd0OAVzpAyAn8CXZoUgOidQxoliDHkKO41HfI4mRzohBYiJLk5JADrJzn32psyuBxtJ-GwxT-
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=XpceoGb2q-BKyKdIrEn27cX5wLaq4advsGPoaKfADq5TzzZTfAJqaHxY8qbZ2yyWeuUO1QTOah3Oxpli
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_9LrWVB05xkpqvF
+request-id: req_NBJexDgNqbElHT
 Content-Length: 472
 Vary: Origin
-Date: Fri, 19 Sep 2025 18:47:12 GMT
-original-request: req_9LrWVB05xkpqvF
+Date: Mon, 22 Sep 2025 18:04:53 GMT
+original-request: req_NBJexDgNqbElHT
 stripe-version: 2020-08-27
-idempotency-key: a4301a00-ba5b-458d-9500-e26f9f2c534e
+idempotency-key: 84f66256-39ea-4b24-9981-a702601fe15b
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
 
 {
   "object" : "payment_method",
-  "id" : "pm_1S99KuIFbdis1OxT8bpDP15C",
+  "id" : "pm_1SAE6bIFbdis1OxTvmZiKYyH",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "satispay" : {
 
   },
-  "created" : 1758307632,
+  "created" : 1758564293,
   "allow_redisplay" : "unspecified",
   "type" : "satispay",
   "customer" : null
