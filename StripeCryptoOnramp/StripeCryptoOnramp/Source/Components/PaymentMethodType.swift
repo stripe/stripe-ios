@@ -10,7 +10,7 @@ import PassKit
 
 /// Represents possible payment types that can be collected for checkout.
 @_spi(STP)
-public enum PaymentMethodType {
+public enum PaymentMethodType: Equatable {
 
     /// Card-based payment, such as a credit or debit card.
     case card
