@@ -21,6 +21,7 @@ import UIKit
 @available(macCatalyst 14.0, *)
 @objc(STP_Internal_CardSectionWithScannerView)
 final class CardSectionWithScannerView: UIView {
+
     let cardSectionView: UIView
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
@@ -78,23 +79,32 @@ final class CardSectionWithScannerView: UIView {
 
     @objc func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
-        setCardScanVisible(true)
-        cardScanningView.start()
+        showCardScanner()
+        cardScanningView.startScanner()
         becomeFirstResponder()
     }
 
-    private func setCardScanVisible(_ isCardScanVisible: Bool) {
-        if !isCardScanVisible {
-            self.cardScanningView.prepDismissAnimation()
-        }
+    func stopAndCloseScanner() {
+        cardScanningView.stopScanner()
+        hideCardScanner()
+    }
+
+    private func hideCardScanner() {
+        self.cardScanningView.prepDismissAnimation()
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
-            self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
+            self.cardScanButton.alpha = 1
+            self.cardScanningView.setHiddenIfNecessary(true)
             self.layoutIfNeeded()
         } completion: { _ in
-            if !isCardScanVisible {
-                self.cardScanningView.completeDismissAnimation()
-            }
+            self.cardScanningView.completeDismissAnimation()
+        }
+    }
+
+    private func showCardScanner() {
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
+            self.cardScanButton.alpha = 0
+            self.cardScanningView.setHiddenIfNecessary(false)
+            self.layoutIfNeeded()
         }
     }
 
@@ -104,7 +114,8 @@ final class CardSectionWithScannerView: UIView {
 
     override func resignFirstResponder() -> Bool {
         // If we leave the screen or an input field is focused, we close the scanner
-        cardScanningView.stop()
+        cardScanningView.stopScanner()
+        hideCardScanner()
         return super.resignFirstResponder()
     }
 
@@ -114,7 +125,7 @@ final class CardSectionWithScannerView: UIView {
         // The opensCardScannerAutomatically check is redudant since this should only apply in that case,
         //    but it adds a bit of extra safety. This can be removed in the future.
         if newWindow != nil && !cardScanningView.isHidden && opensCardScannerAutomatically {
-            cardScanningView.start()
+            cardScanningView.startScanner()
             becomeFirstResponder()
         }
         super.willMove(toWindow: newWindow)
@@ -123,9 +134,9 @@ final class CardSectionWithScannerView: UIView {
 
 @available(macCatalyst 14.0, *)
 extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
-    func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
-        setCardScanVisible(false)
-        if let cardParams = cardParams {
+    func cardScanningViewShouldClose(_ cardScanningView: CardScanningView, cardParams: StripePayments.STPPaymentMethodCardParams?) {
+        hideCardScanner()
+        if let cardParams {
             self.delegate?.didScanCard(cardParams: cardParams)
         }
     }

@@ -17,15 +17,15 @@ import UIKit
 
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
-@objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
-    func cardScanningView(
-        _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
+protocol STP_Internal_CardScanningViewDelegate: AnyObject {
+    // The card scanning view should close (whether due to cancellation or successful scan or other)
+    // cardParams are attached if they were successfully scanned.
+    func cardScanningViewShouldClose(_ cardScanningView: CardScanningView, cardParams: STPPaymentMethodCardParams?)
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_CardScanningView)
 @available(macCatalyst 14.0, *)
-class CardScanningView: UIView, STPCardScannerDelegate {
+class CardScanningView: UIView {
 
     private(set) weak var cameraView: STPCameraView?
 
@@ -43,25 +43,13 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         }
     }
 
-    func cardScanner(
-        _ scanner: STPCardScanner,
-        didFinishWith cardParams: STPPaymentMethodCardParams?,
-        error: Error?
-    ) {
-        if error != nil {
-            self.isDisplayingError = true
-        } else {
-            self.delegate?.cardScanningView(self, didFinishWith: cardParams)
-        }
-    }
-
     private lazy var cardScanner: STPCardScanner? = nil
 
     private static let cardSizeRatio: CGFloat = 2.125 / 3.370  // ID-1 card size (in inches)
     private static let cardCornerRadius: CGFloat = 0.125 / 3.370  // radius / ID-1 card width
     private static let cornerRadius: CGFloat = 4
     private static let cardInset: CGFloat = 32
-    private static let textInset: CGFloat = 14
+    private static let errorLabelInset: CGFloat = 8
 
     private lazy var cardOutlineView: UIView = {
         let view = UIView()
@@ -140,19 +128,17 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         ])
     }
 
-    func start() {
+    func startScanner() {
         cardScanner?.start()
     }
 
-    func stop() {
-        if isDisplayingError {
-            self.delegate?.cardScanningView(self, didFinishWith: nil)
-        }
+    func stopScanner() {
         cardScanner?.stop()
     }
 
     @objc private func closeTapped() {
-        self.stop()
+        cardScanner?.stop()
+        delegate?.cardScanningViewShouldClose(self, cardParams: nil)
     }
 
     var snapshotView: UIView?
@@ -163,8 +149,10 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         // Taking a snapshot while the view is offscreen can result in layout issues,
         //    and is unnecessary since we won't show an animation in this case
         guard window != nil else { return }
+        // If this is called twice for any reason, we need to prevent two snapshot views from being added
+        guard snapshotView == nil else { return }
 
-        if let snapshot = snapshotView(afterScreenUpdates: false) {
+        if let snapshot = snapshotView(afterScreenUpdates: true) {
             self.addSubview(snapshot)
             self.snapshotView = snapshot
         }
@@ -237,9 +225,9 @@ class CardScanningView: UIView, STPCardScannerDelegate {
                 cardOuterBlurView.rightAnchor.constraint(equalTo: self.rightAnchor),
                 cardOuterBlurView.topAnchor.constraint(equalTo: self.topAnchor),
 
-                errorLabel.leftAnchor.constraint(equalTo: cardOutlineView.leftAnchor, constant: 8),
+                errorLabel.leftAnchor.constraint(equalTo: cardOutlineView.leftAnchor, constant: Self.errorLabelInset),
                 errorLabel.rightAnchor.constraint(
-                    equalTo: cardOutlineView.rightAnchor, constant: -8),
+                    equalTo: cardOutlineView.rightAnchor, constant: -Self.errorLabelInset),
                 errorLabel.centerYAnchor.constraint(equalTo: cardOutlineView.centerYAnchor),
 
                 closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -closeButtonInset),
@@ -282,12 +270,18 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+}
 
-    override func willMove(toWindow newWindow: UIWindow?) {
-        if newWindow == nil {
-            stop()
-        }
-        super.willMove(toWindow: newWindow)
+@available(macCatalyst 14.0, *)
+extension CardScanningView: STPCardScannerDelegate {
+
+    func cardScanner(_ scanner: STPCardScanner, didCompleteWith cardParams: StripePayments.STPPaymentMethodCardParams) {
+        cardScanner?.stop()
+        delegate?.cardScanningViewShouldClose(self, cardParams: cardParams)
+    }
+
+    func cardScannerDidError(_ scanner: STPCardScanner) {
+        isDisplayingError = true
     }
 }
 #endif
