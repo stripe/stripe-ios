@@ -82,12 +82,16 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         advanceToNextStep()
     }
 
+
+    /// Advances to the next step after selecting a wallet.
+    /// - Parameter wallet: The wallet to fund in the next steps.
     func advanceAfterWalletSelection(_ wallet: CustomerWalletsResponse.Wallet) {
         selectedWallet = wallet
         advanceToNextStep()
     }
 
-    /// Advances after the payment configuration step.
+    /// Advances after configuring payment.
+    /// - Parameter createOnrampSessionResponse: The onramp session that was created for checking out.
     func advanceAfterPayment(createOnrampSessionResponse: CreateOnrampSessionResponse) {
         self.createOnrampSessionResponse = createOnrampSessionResponse
         advanceToNextStep()
