@@ -120,12 +120,10 @@ extension PayWithLinkViewController {
             return LinkHintMessageView(message: hintMessage)
         }()
 
+        private lazy var cardDetailsRecollectionRow = SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
+
         private lazy var cardDetailsRecollectionSection: SectionElement = {
-            let sectionElement = SectionElement(
-                elements: [
-                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
-                ], theme: theme
-            )
+            let sectionElement = SectionElement(elements: [cardDetailsRecollectionRow], theme: theme)
             sectionElement.delegate = self
             return sectionElement
         }()
@@ -282,6 +280,7 @@ extension PayWithLinkViewController {
             UIView.performWithoutAnimation {
                 expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
                 cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
+                cardDetailsRecollectionRow.updateDividerVisibility()
                 cardDetailsRecollectionSection.view.layoutIfNeeded()
             }
 
