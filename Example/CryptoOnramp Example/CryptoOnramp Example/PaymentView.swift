@@ -23,6 +23,7 @@ import StripePaymentsUI
 
 // Remaining: docs here and in AuthenticatedView properties, probably the flow coordinator as well,, testing with bank, testing with card, testing with existing payment token, test token refreshing in the list, testing dismissal of payment selection sheet, test complete checkout.
 
+/// A view that allows input of a specified crypto purchase amount and payment method.
 struct PaymentView: View {
     private enum NumberPadKey: String, Identifiable {
         case zero
@@ -62,9 +63,16 @@ struct PaymentView: View {
         let message: String
     }
 
+    /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     let coordinator: CryptoOnrampCoordinator
+
+    /// The unique id of the customer.
     let customerId: String
+
+    /// The wallet being funded.
     let wallet: CustomerWalletsResponse.Wallet
+
+    /// Upon success, this closure is called delivering the created onramp session, ready for checkout.
     let onContinue: (CreateOnrampSessionResponse) -> Void
 
     @Environment(\.isLoading) private var isLoading
@@ -158,6 +166,8 @@ struct PaymentView: View {
             EmptyView()
         }
     }
+
+    // MARK: - View
 
     var body: some View {
         VStack(spacing: 0) {
@@ -286,6 +296,8 @@ struct PaymentView: View {
             }
         )
     }
+
+    // MARK: - PaymentView
 
     @ViewBuilder
     private func labelRepresentation(for key: NumberPadKey) -> some View {
