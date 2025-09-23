@@ -24,7 +24,7 @@ struct CryptoOnrampExampleView: View {
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
     @State private var linkAuthIntentId: String?
     @State private var livemode: Bool = false
-    @State private var cryptoCustomerId: String = "crc_1Rpxb1HMaDsveWq0TOHK4VGg"
+    @State private var cryptoCustomerId: String = "crc_1S0O8RHMaDsveWq0ZDrEBCge"
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool

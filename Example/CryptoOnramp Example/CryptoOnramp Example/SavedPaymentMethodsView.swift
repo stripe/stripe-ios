@@ -45,9 +45,9 @@ struct SavedPaymentMethodsView: View {
     // Demo values for checkout (in a real app, these would be user inputs)
     private let sourceAmount: Decimal = 50.0
     private let sourceCurrency = "usd"
-    private let destinationCurrency = "usdc"
-    private let destinationNetwork = "solana"
-    private let walletAddress = "mSVxbkdnHvM4gC1D1aCn365FGMwnNNVWboXXmJxwX1L" // Demo Solana wallet address
+    private let destinationCurrency = "eth"
+    private let destinationNetwork = "ethereum"
+    private let walletAddress = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e" // Demo Ethereum wallet address
 
     @Environment(\.isLoading) private var isLoading
 
@@ -234,6 +234,7 @@ struct SavedPaymentMethodsView: View {
                     oauthScopes: oauthScopes,
                     livemode: livemode
                 )
+                APIClient.shared.setAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSW50ZW50SWQiOiJsYWlfMVNBSEk1SE1hRHN2ZVdxMGJJdHpkOUhFIiwidXNlcklkIjoiOTNiZmZkMzc3ZTBjYmI2NDFiOGM1MjhhM2E2YTA0OTgzODZiMmY2NjE0NGFjZmFmNjQ3NDhkMzRiZTk5NGRlMiIsImxpdmVtb2RlIjpmYWxzZSwiaWF0IjoxNzU4NTc2NTM3LCJleHAiOjE3NTg1ODAxMzd9.b6N8T0m5higmbIkDisPg7UcmSXFBzUvi0xs_ZfQVwcY")
 
                 let lavenderColor = UIColor(
                     red: 171/255.0,
