@@ -13,18 +13,17 @@ import StripeCryptoOnramp
 @_spi(STP)
 import StripePaymentSheet
 
-/// A view to be displayed after a user has successfully authenticated, with more SDK options to exercise.
+/// A view to be displayed after a user has created an onramp session and is ready to check out.
 struct AuthenticatedView: View {
 
     /// The coordinator to use for SDK operations like identity verification and KYC info collection.
     let coordinator: CryptoOnrampCoordinator
 
+    /// The response from creating an onramp session in a prior step, used to check out.
     let onrampSessionResponse: CreateOnrampSessionResponse
 
     @State private var errorMessage: String?
-
     @State private var authenticationContext = WindowAuthenticationContext()
-
     @State private var checkoutSucceeded = false
 
     @Environment(\.isLoading) private var isLoading
@@ -148,7 +147,7 @@ struct AuthenticatedView: View {
             }
             .padding()
         }
-        .navigationTitle("Authenticated")
+        .navigationTitle("Check Out")
         .navigationBarTitleDisplayMode(.inline)
     }
 
