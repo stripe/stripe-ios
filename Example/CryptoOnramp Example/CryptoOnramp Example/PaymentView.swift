@@ -181,9 +181,9 @@ struct PaymentView: View {
             makeSelectPaymentMethodButton()
 
             HStack(spacing: 12) {
-                makePresetAmountButton(50)
-                makePresetAmountButton(100)
-                makePresetAmountButton(250)
+                makePresetAmountButton(3)
+                makePresetAmountButton(5)
+                makePresetAmountButton(10)
             }
             .padding(.bottom, 8)
 
