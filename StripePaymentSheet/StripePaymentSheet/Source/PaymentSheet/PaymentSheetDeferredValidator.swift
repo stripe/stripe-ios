@@ -12,16 +12,14 @@ enum PaymentSheetDeferredValidator {
     /// Note: We don't validate amount (for any payment method) because there are use cases where the amount can change slightly between PM collection and confirmation.
     static func validate(paymentIntent: STPPaymentIntent,
                          intentConfiguration: PaymentSheet.IntentConfiguration,
-                         paymentMethod: STPPaymentMethod,
                          isFlowController: Bool) throws {
-        guard case let .payment(_, currency, setupFutureUsage, _, paymentMethodOptions) = intentConfiguration.mode else {
+        guard case let .payment(_, currency, _, _, _) = intentConfiguration.mode else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "You returned a PaymentIntent client secret but used a PaymentSheet.IntentConfiguration in setup mode.")
         }
         guard paymentIntent.currency.uppercased() == currency.uppercased() else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent currency (\(paymentIntent.currency.uppercased())) does not match the PaymentSheet.IntentConfiguration currency (\(currency.uppercased())).")
         }
-        try validateSFUAndPMOSFU(setupFutureUsage: setupFutureUsage, paymentMethodOptions: paymentMethodOptions, paymentMethodType: paymentMethod.type, paymentIntent: paymentIntent)
-        try validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
+
         /*
          Manual confirmation is only available using FlowController because merchants own the final step of confirmation.
          Showing a successful payment in the complete flow may be misleading when merchants still need to do a final confirmation which could fail e.g., bad network
@@ -32,12 +30,10 @@ enum PaymentSheetDeferredValidator {
     }
 
     static func validate(setupIntent: STPSetupIntent,
-                         intentConfiguration: PaymentSheet.IntentConfiguration,
-                         paymentMethod: STPPaymentMethod) throws {
+                         intentConfiguration: PaymentSheet.IntentConfiguration) throws {
         guard case .setup = intentConfiguration.mode else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "You returned a SetupIntent client secret but used a PaymentSheet.IntentConfiguration in payment mode.")
         }
-        try validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
     }
 
     static func validatePaymentMethod(intentPaymentMethod: STPPaymentMethod?, paymentMethod: STPPaymentMethod) throws {

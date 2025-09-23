@@ -145,13 +145,17 @@ extension PaymentSheet {
 
                 // 3. Retrieve the PaymentIntent or SetupIntent
                 switch intentConfig.mode {
-                case .payment:
+                case let .payment(_, _, setupFutureUsage, _, paymentMethodOptions):
                     let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
-                        try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, paymentMethod: paymentMethod, isFlowController: isFlowController)
+                        try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, isFlowController: isFlowController)
+                        try PaymentSheetDeferredValidator.validateSFUAndPMOSFU(setupFutureUsage: setupFutureUsage,
+                                                 paymentMethodOptions: paymentMethodOptions,
+                                                 paymentMethodType: paymentMethod.type, paymentIntent: paymentIntent)
+                        try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
                         let paymentIntentParams = makePaymentIntentParams(
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
@@ -184,7 +188,8 @@ extension PaymentSheet {
                     let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
                     if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                         // 4a. Client-side confirmation
-                        try PaymentSheetDeferredValidator.validate(setupIntent: setupIntent, intentConfiguration: intentConfig, paymentMethod: paymentMethod)
+                        try PaymentSheetDeferredValidator.validate(setupIntent: setupIntent, intentConfiguration: intentConfig)
+                        try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
                         let setupIntentParams = makeSetupIntentParams(
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
