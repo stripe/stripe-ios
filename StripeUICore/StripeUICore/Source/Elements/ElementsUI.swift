@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 import UIKit
 
 @_spi(STP) public enum ElementsUI {

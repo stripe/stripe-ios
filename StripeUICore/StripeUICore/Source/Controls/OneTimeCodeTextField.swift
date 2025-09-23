@@ -147,7 +147,7 @@ import UIKit
     // MARK: -
     public init(
         configuration: Configuration = Configuration(),
-        theme: ElementsAppearance,
+        theme: ElementsAppearance
     ) {
         self.configuration = configuration
         self.textStorage = TextStorage(capacity: configuration.numberOfDigits)
