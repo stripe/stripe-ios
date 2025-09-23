@@ -39,8 +39,6 @@ import Foundation
 
 }
 
-typealias CaptchaResult = Result<String, Error>
-
 @_spi(STP) public actor PassiveCaptchaChallenge {
     enum PassiveCaptchaError: Error {
         case unexpected
@@ -152,7 +150,7 @@ typealias CaptchaResult = Result<String, Error>
                 validationTask?.cancel()
             }
             // Wait for first completion
-            let result: Result<String, Error>? = await group.next()
+            let result: Result<String, Error> = await group.first { _ in true } ?? .failure(PassiveCaptchaError.unexpected)
             let siteKey = passiveCaptcha.siteKey
             switch result {
             case .success(let token):
@@ -163,9 +161,6 @@ typealias CaptchaResult = Result<String, Error>
                 if error is PassiveCaptchaError {
                     STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
                 }
-                return nil
-            case .none:
-                assertionFailure("No captcha result found!")
                 return nil
             }
         }
