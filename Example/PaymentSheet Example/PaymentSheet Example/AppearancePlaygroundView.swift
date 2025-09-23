@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview)@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -18,6 +18,8 @@ struct AppearancePlaygroundView: View {
         _appearance = State<PaymentSheet.Appearance>.init(initialValue: appearance)
         self.doneAction = doneAction
     }
+    static let fonts = ["System Default", "AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
+    let systemDefaultFontName = "System Default"
 
     var body: some View {
         let primaryColorBinding = Binding(
@@ -81,8 +83,9 @@ struct AppearancePlaygroundView: View {
         )
 
         let cornerRadiusBinding = Binding(
-            get: { self.appearance.cornerRadius },
-            set: { self.appearance.cornerRadius = $0 }
+            // Note: -1 is a sentinel value for nil
+            get: { self.appearance.cornerRadius ?? -1 },
+            set: { self.appearance.cornerRadius = $0 < 0 ? nil : $0 }
         )
 
         let sheetCornerRadiusBinding = Binding(
@@ -96,8 +99,9 @@ struct AppearancePlaygroundView: View {
         )
 
         let selectedBorderWidthBinding = Binding(
-            get: { appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5 },
-            set: { self.appearance.selectedBorderWidth = $0 }
+            // Note: -0.5 is a sentinel value for nil
+            get: { appearance.selectedBorderWidth ?? -0.5 },
+            set: { self.appearance.selectedBorderWidth = $0 < 0 ? nil : $0 }
         )
 
         let componentShadowColorBinding = Binding(
@@ -171,16 +175,28 @@ struct AppearancePlaygroundView: View {
         )
 
         let regularFontBinding = Binding(
-            get: { self.appearance.font.base.fontDescriptor.postscriptName },
-            set: { self.appearance.font.base = UIFont(name: $0, size: 12.0)! }
+            get: {
+                let name = self.appearance.font.base.fontDescriptor.postscriptName
+                return name == PaymentSheet.Appearance.default.font.base.fontDescriptor.postscriptName ? systemDefaultFontName : name
+            },
+            set: {
+                if $0 == systemDefaultFontName {
+                    self.appearance.font.base = PaymentSheet.Appearance.default.font.base
+                } else {
+                    self.appearance.font.base = UIFont(name: $0, size: 20.0)!
+                }
+            }
         )
 
         // MARK: Custom font bindings
 
         let customHeadlineFontBinding = Binding(
-            get: { self.appearance.font.custom.headline?.fontDescriptor.postscriptName ?? "System Default" },
+            get: {
+                let name = self.appearance.font.base.fontDescriptor.postscriptName
+                return name == PaymentSheet.Appearance.default.font.base.fontDescriptor.postscriptName ? systemDefaultFontName : name
+            },
             set: {
-                if $0 == "System Default" {
+                if $0 == systemDefaultFontName {
                     self.appearance.font.custom.headline = nil
                 } else {
                     self.appearance.font.custom.headline = UIFont(name: $0, size: 20.0)!
@@ -226,7 +242,8 @@ struct AppearancePlaygroundView: View {
         )
 
         let primaryButtonCornerRadiusBinding = Binding(
-            get: { self.appearance.primaryButton.cornerRadius ?? appearance.cornerRadius },
+            // Note: -1 is a sentinel value for nil
+            get: { self.appearance.primaryButton.cornerRadius ?? appearance.cornerRadius ?? -1 },
             set: { self.appearance.primaryButton.cornerRadius = $0 }
         )
 
@@ -236,8 +253,10 @@ struct AppearancePlaygroundView: View {
         )
 
         let primaryButtonFontBinding = Binding(
-            get: { self.appearance.primaryButton.font?.fontDescriptor.postscriptName ?? UIFont.systemFont(ofSize: 16, weight: .medium).fontDescriptor.postscriptName },
-            set: { self.appearance.primaryButton.font = UIFont(name: $0, size: 16.0)! }
+            get: { self.appearance.primaryButton.font?.fontDescriptor.postscriptName ?? systemDefaultFontName },
+            set: {
+                self.appearance.primaryButton.font = $0 == systemDefaultFontName ? nil : UIFont(name: $0, size: 16.0)!
+            }
         )
 
         let primaryButtonShadowColorBinding = Binding(
@@ -285,9 +304,6 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.primaryButton.height = $0 }
         )
 
-        let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
-        let customFontOptions = ["System Default"] + regularFonts
-
         NavigationView {
             List {
                 Section(header: Text("Colors")) {
@@ -310,10 +326,25 @@ struct AppearancePlaygroundView: View {
                 }
 
                 Section(header: Text("Miscellaneous")) {
-                    Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
-                    Stepper(String(format: "sheetCornerRadius: %.1f", appearance.sheetCornerRadius), value: sheetCornerRadiusBinding, in: 0...30)
+                    let cornerRadiusLabel: String = {
+                        if let cornerRadius = appearance.cornerRadius {
+                            String(format: "cornerRadius: %.0f", cornerRadius)
+                        } else {
+                            "cornerRadius: nil"
+                        }
+                    }()
+                    Stepper(cornerRadiusLabel, value: cornerRadiusBinding, in: -1...30)
+                    Stepper(String(format: "sheetCornerRadius: %.0f", appearance.sheetCornerRadius), value: sheetCornerRadiusBinding, in: 0...30)
                     Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
-                    Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: selectedBorderWidthBinding, in: 0.0...2.0, step: 0.5)
+                    let selectedBorderWidthLabel: String = {
+                        if let selectedBorderWidth = appearance.selectedBorderWidth {
+                            String(format: "selectedBorderWidth: %.0f", selectedBorderWidth)
+                        } else {
+                            "selectedBorderWidth: nil"
+                        }
+                    }()
+                    Stepper(selectedBorderWidthLabel, value: selectedBorderWidthBinding, in: -0.5...2.0, step: 0.5)
+                    Stepper(String(format: "sectionSpacing: %.1f", appearance.sectionSpacing), value: $appearance.sectionSpacing, in: 0...50, step: 1.0)
                     Stepper(String(format: "sectionSpacing: %.1f", appearance.sectionSpacing), value: $appearance.sectionSpacing, in: 0...50, step: 1.0)
                     Stepper(String(format: "verticalModeRowPadding: %.1f", appearance.verticalModeRowPadding), value: $appearance.verticalModeRowPadding, in: 0...20, step: 0.5)
                     Picker("Icon Style", selection: $appearance.iconStyle) {
@@ -369,15 +400,19 @@ struct AppearancePlaygroundView: View {
                         Slider(value: sizeScaleFactorBinding, in: 0...2, step: 0.05)
                     }
                     Picker("Regular", selection: regularFontBinding) {
-                        ForEach(regularFonts, id: \.self) {
-                            Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                        ForEach(Self.fonts, id: \.self) {
+                            if $0 == systemDefaultFontName {
+                                Text($0)
+                            } else {
+                                Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                            }
                         }
                     }
 
                     DisclosureGroup {
                         Picker("headline", selection: customHeadlineFontBinding) {
-                            ForEach(customFontOptions, id: \.self) { font in
-                                if font == "System Default" {
+                            ForEach(Self.fonts, id: \.self) { font in
+                                if font == systemDefaultFontName {
                                     Text(font)
                                 } else {
                                     Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
@@ -399,11 +434,21 @@ struct AppearancePlaygroundView: View {
                         ColorPicker("textColor", selection: primaryButtonTextColorBinding)
                         ColorPicker("borderColor", selection: primaryButtonBorderColorBinding)
                         Stepper("borderWidth: \(Int(appearance.primaryButton.borderWidth))", value: primaryButtonCornerBorderWidth, in: 0...30)
-                        Stepper("cornerRadius: \(Int(appearance.primaryButton.cornerRadius ?? appearance.cornerRadius))",
-                                value: primaryButtonCornerRadiusBinding, in: 0...30)
+                        let cornerRadiusLabel: String = {
+                            if let cornerRadius = appearance.primaryButton.cornerRadius {
+                                String(format: "cornerRadius: %.0f", cornerRadius)
+                            } else {
+                                "cornerRadius: nil"
+                            }
+                        }()
+                        Stepper(cornerRadiusLabel, value: primaryButtonCornerRadiusBinding, in: -1...30)
                         Picker("Font", selection: primaryButtonFontBinding) {
-                            ForEach(regularFonts, id: \.self) {
-                                Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                            ForEach(Self.fonts, id: \.self) { font in
+                                if font == systemDefaultFontName {
+                                    Text(font)
+                                } else {
+                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
+                                }
                             }
                         }
                         VStack {
@@ -438,11 +483,35 @@ struct AppearancePlaygroundView: View {
                     AppearancePlaygroundView_EmbeddedPaymentElement(appearance: $appearance)
                 }
 
+                if #available(iOS 26.0, *) {
+                    Section(header: Text("iOS 26 Liquid Glass")) {
+                        Picker("Navigation bar style", selection: $appearance.navigationBarStyle) {
+                            ForEach([PaymentSheet.Appearance.NavigationBarStyle.plain, PaymentSheet.Appearance.NavigationBarStyle.glass], id: \.self) {
+                                Text(String(describing: $0))
+                            }
+                        }
+                        Button {
+                            appearance.applyLiquidGlass()
+                            doneAction(appearance)
+                        } label: {
+                            Text("Apply Liquid Glass🥃")
+                        }
+                        Button {
+                            resetLinkUI()
+                            appearance = PaymentSheet.Appearance()
+                            appearance.applyLiquidGlass()
+                            doneAction(appearance)
+                        } label: {
+                            Text("♼ Reset Appearance, apply Liquid Glass 🥃")
+                        }
+                    }
+                }
                 Button {
+                    resetLinkUI()
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {
-                    Text("Reset Appearance")
+                    Text("♼ Reset Appearance")
                 }
 
             }.navigationTitle("Appearance")

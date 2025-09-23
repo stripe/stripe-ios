@@ -16,8 +16,6 @@
 
 "Add your payment information" = "支払い情報を追加";
 
-"Agree and continue" = "同意して続行";
-
 "Approve payment" = "支払いを承認する";
 
 "Are you sure you want to remove this card?" = "このカードを削除しますか？";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "ご注文を %1$@ および %2$@ に送信することにより、お客様は今後の購入のためにお客様の情報を %3$@ に保存することに同意し、<terms>本規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ に注文を送信することにより、<terms>これらの規約</terms> に従って決済を承認することに同意したものとみなされます。";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -126,7 +126,7 @@
 
 "Enter address manually" = "住所を手動で入力";
 
-"Enter the code sent to %@ to use your saved information." = "保存されている情報を使用するには、%@ に送信されたコードを入力してください。";
+"Enter the code sent to %@." = "%s に送信されたコードを入力してください。";
 
 "FPX Bank" = "FPX 銀行";
 

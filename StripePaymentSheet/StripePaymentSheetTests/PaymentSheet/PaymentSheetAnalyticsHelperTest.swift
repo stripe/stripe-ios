@@ -183,11 +183,12 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                     "email": "sam@stripe.com",
                 ] as [String: Any],
             ] as [AnyHashable: Any]
+            let elementsSession: STPElementsSession = ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON])
             // Load started -> succeeded
             sut.logLoadStarted()
             sut.logLoadSucceeded(
                 intent: ._testValue(),
-                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+                elementsSession: elementsSession,
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
                 orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
             )
@@ -205,6 +206,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "LITE")
+            XCTAssertEqual(loadSucceededPayload["elements_session_config_id"] as? String, elementsSession.sessionID)
         }
     }
 

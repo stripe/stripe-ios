@@ -30,12 +30,17 @@ public extension PaymentSheet {
 
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
-        public var cornerRadius: CGFloat = 6.0
+        /// - Note: When `nil`, the behavior depends:
+        ///     - iOS 26+ and `UIDesignRequiresCompatibility = NO`: Various `UICornerConfiguration` values are used to match Liquid Glass.
+        ///     - Pre-iOS 26: A 6.0 corner radius is applied.
+        ///
+        /// The default value is 6.0
+        public var cornerRadius: CGFloat? = defaultCornerRadius
 
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-        public var borderWidth: CGFloat = LiquidGlassDetector.isEnabled ? 0 : 1.0
+        public var borderWidth: CGFloat = 1.0
 
         /// The border width used for selected buttons and tabs in PaymentSheet
         /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
@@ -52,15 +57,14 @@ public extension PaymentSheet {
         /// The corner radius used for Mobile Payment Element sheets
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
         @_spi(AppearanceAPIAdditionsPreview)
-        public var sheetCornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 34.0 : 12.0
+        public var sheetCornerRadius: CGFloat = 12.0
 
-        /// The insets used for all text fields in PaymentSheet
-        /// - Note: Controls the internal padding within text fields for more manual control over text field spacing
+        /// The insets used for all input fields (e.g. textfields, dropdowns) in PaymentSheet.
         @_spi(AppearanceAPIAdditionsPreview)
         public var textFieldInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 11)
 
         /// Describes the padding used for all forms
-        public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
+        public var formInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 40, trailing: 20)
 
         /// Controls the vertical spacing between distinct sections in the form (e.g., between payment fields and billing address).
         /// - Note: This spacing is applied between different conceptual sections of the form, not between individual input fields within a section.
@@ -75,7 +79,7 @@ public extension PaymentSheet {
         /// - Note: Increasing this value increases the height of each floating payment method row
         /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
         @_spi(AppearanceAPIAdditionsPreview)
-        public var verticalModeRowPadding: CGFloat = LiquidGlassDetector.isEnabled ? 16.0 : 4.0 {
+        public var verticalModeRowPadding: CGFloat = 4.0 {
             didSet {
                 guard verticalModeRowPadding >= 0.0 else {
                     assertionFailure("verticalModeRowPadding must be a non-negative value")
@@ -83,6 +87,22 @@ public extension PaymentSheet {
                     return
                 }
             }
+        }
+
+        /// Describes the style of navigation bar style
+        public var navigationBarStyle: NavigationBarStyle = .plain
+
+        /// Internal variable to determine if applyLiquidGlass() was called. Strictly intended for analytics.
+        internal var didCallApplyLiquidGlass: Bool = false
+
+        // MARK: NavigationBar
+        /// Describes navigation bar styles
+        public enum NavigationBarStyle {
+            case plain
+
+            @available(iOS 26, *)
+            @available(visionOS, unavailable)
+            case glass
         }
 
         // MARK: Fonts
@@ -144,10 +164,7 @@ public extension PaymentSheet {
             #if os(visionOS)
             public var background: UIColor = .clear
             #else
-            public var background: UIColor = LiquidGlassDetector.isEnabled
-                                            ? UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
-                                                              dark: UIColor(hex: 0x1C1C1E))
-                                            : .systemBackground
+            public var background: UIColor = .systemBackground
             #endif
 
             /// The color used for the background of inputs, tabs, and other components
@@ -298,6 +315,34 @@ public extension PaymentSheet {
 }
 
 public extension PaymentSheet.Appearance {
+    /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS 26 Liquid Glass.
+    /// - Note: This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
+    @available(iOS 26.0, *)
+    @available(visionOS, unavailable)
+    mutating func applyLiquidGlass() {
+        guard LiquidGlassDetector.meetsCompilerRequirements else {
+             assertionFailure("applyLiquidGlass() requires Xcode 26.")
+             return
+         }
+         guard !LiquidGlassDetector.hasOptedOut else {
+             assertionFailure("applyLiquidGlass() requires UIDesignRequiresCompatibility = NO")
+             return
+         }
+        borderWidth = 0.0
+        verticalModeRowPadding = 8.0
+        sheetCornerRadius = 34.0
+        textFieldInsets = .insets(top: 8, leading: 15, bottom: 8, trailing: 15)
+        colors.background = UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
+                                            dark: UIColor(hex: 0x1C1C1E))
+        shadow = .disabled
+        formInsets = .insets(leading: 16, bottom: 40, trailing: 16)
+        navigationBarStyle = .glass
+        cornerRadius = nil
+        didCallApplyLiquidGlass = true
+    }
+}
+
+public extension PaymentSheet.Appearance {
     /// Describes the appearance of the Embedded Mobile Payment Element
     struct EmbeddedPaymentElement: Equatable {
 
@@ -421,11 +466,5 @@ public extension PaymentSheet.Appearance {
         case filled
         /// Display icons with an outlined appearance
         case outlined
-    }
-}
-
-extension PaymentSheet.Appearance {
-    var topFormInsets: NSDirectionalEdgeInsets {
-        return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
     }
 }

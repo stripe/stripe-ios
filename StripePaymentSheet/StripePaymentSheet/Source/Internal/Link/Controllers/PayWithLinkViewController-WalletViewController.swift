@@ -53,6 +53,7 @@ extension PayWithLinkViewController {
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
             callToAction: viewModel.confirmButtonCallToAction,
+            showProcessingLabel: context.showProcessingLabel,
             compact: viewModel.shouldUseCompactConfirmButton,
             linkAppearance: viewModel.linkAppearance
         ) { [weak self] in
@@ -119,6 +120,17 @@ extension PayWithLinkViewController {
             return LinkHintMessageView(message: hintMessage)
         }()
 
+        private var cardDetailsRecollectionElements: [Element]? {
+            var elements: [Element] = []
+            if viewModel.shouldRecollectCardExpiryDate {
+                elements.append(expiryDateElement)
+            }
+            if viewModel.shouldRecollectCardCVC {
+                elements.append(cvcElement)
+            }
+            return elements.isEmpty ? nil : elements
+        }
+
         private lazy var cardDetailsRecollectionSection: SectionElement = {
             let sectionElement = SectionElement(
                 elements: [
@@ -167,6 +179,16 @@ extension PayWithLinkViewController {
             return stackView
         }()
 
+        private var bottomInset: CGFloat {
+            if #available(iOS 26.0, *) {
+                0
+            } else {
+                LinkUI.bottomInset
+            }
+        }
+
+        private var containerViewBottomConstraint: NSLayoutConstraint!
+
         #if !os(visionOS)
         private let feedbackGenerator = UINotificationFeedbackGenerator()
         #endif
@@ -192,6 +214,16 @@ extension PayWithLinkViewController {
             viewModel.delegate = self
         }
 
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            registerForKeyboardNotifications()
+        }
+
+        override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            NotificationCenter.default.removeObserver(self)
+        }
+
         func setupUI() {
             if viewModel.shouldShowApplePayButton {
                 containerView.addArrangedSubview(separator)
@@ -202,7 +234,20 @@ extension PayWithLinkViewController {
                 containerView.addArrangedSubview(cancelButton)
             }
 
-            contentView.addAndPinSubview(containerView, insets: .insets(bottom: LinkUI.bottomInset))
+            contentView.addSubview(containerView)
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+
+            containerViewBottomConstraint = containerView.bottomAnchor.constraint(
+                equalTo: contentView.safeAreaLayoutGuide.bottomAnchor,
+                constant: -bottomInset
+            )
+
+            NSLayoutConstraint.activate([
+                containerView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+                containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                containerViewBottomConstraint,
+            ])
 
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.
@@ -245,10 +290,12 @@ extension PayWithLinkViewController {
                 animated: animated
             )
 
-            UIView.performWithoutAnimation {
-                expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
-                cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
-                cardDetailsRecollectionSection.view.layoutIfNeeded()
+            if let cardDetailsRecollectionElements {
+                UIView.performWithoutAnimation {
+                    cardDetailsRecollectionSection.elements = [
+                        SectionElement.MultiElementRow(cardDetailsRecollectionElements, theme: theme)
+                    ]
+                }
             }
 
             confirmButton.update(
@@ -771,6 +818,45 @@ extension PayWithLinkViewController.WalletViewController: LinkMandateViewDelegat
         present(safariVC, animated: true)
     }
 
+}
+
+// MARK: - Keyboard handling
+
+private extension PayWithLinkViewController.WalletViewController {
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(adjustForKeyboard),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(adjustForKeyboard),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
+    }
+
+    @objc func adjustForKeyboard(notification: Notification) {
+        guard let keyboardScreenEndFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+
+        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
+        let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
+
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            containerViewBottomConstraint.constant = -bottomInset
+        } else {
+            containerViewBottomConstraint.constant = -keyboardInViewHeight - LinkUI.contentSpacing
+        }
+
+        view.setNeedsLayout()
+        UIView.animateAlongsideKeyboard(notification) {
+            self.view.layoutIfNeeded()
+        }
+    }
 }
 
 // MARK: - UpdatePaymentViewControllerDelegate

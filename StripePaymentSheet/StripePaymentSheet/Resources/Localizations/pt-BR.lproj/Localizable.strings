@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Adicione seus dados de pagamento";
 
-"Agree and continue" = "Concordar e continuar";
-
 "Approve payment" = "Aprovar pagamento";
 
 "Are you sure you want to remove this card?" = "Tem certeza de que deseja remover este cartão?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao salvar sua conta bancária para %@, você autoriza pagamentos de acordo com <terms>estes termos</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao enviar seu pedido para %1$@ e %2$@, você concorda em salvar suas informações com %3$@ para compras futuras e autoriza pagamentos de acordo com <terms>estes termos</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao enviar seu pedido para %@, você concorda em autorizar pagamentos de acordo com <terms>estes termos</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -126,7 +126,7 @@
 
 "Enter address manually" = "Inserir endereço manualmente";
 
-"Enter the code sent to %@ to use your saved information." = "Insira o código enviado para %@ para usar seus dados salvos.";
+"Enter the code sent to %@." = "Insira o código enviado para %s.";
 
 "FPX Bank" = "Banco do FPX";
 

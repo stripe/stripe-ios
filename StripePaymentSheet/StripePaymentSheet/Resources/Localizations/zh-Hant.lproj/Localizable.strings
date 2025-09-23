@@ -16,8 +16,6 @@
 
 "Add your payment information" = "添加您的支付資訊";
 
-"Agree and continue" = "同意並繼續";
-
 "Approve payment" = "批准付款";
 
 "Are you sure you want to remove this card?" = "您確定要移除此卡嗎？";
@@ -114,7 +112,7 @@
 
 "Enter address manually" = "手動輸入地址";
 
-"Enter the code sent to %@ to use your saved information." = "輸入發送到 %@ 的驗證碼來使用您儲存的資訊。";
+"Enter the code sent to %@." = "請輸入傳送至 %s 的驗證碼。";
 
 "FPX Bank" = "FPX Bank";
 

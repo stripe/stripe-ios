@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Żid l-informazzjoni dwar il-pagament tiegħek";
 
-"Agree and continue" = "Aqbel u kompli";
-
 "Approve payment" = "Approva l-pagament";
 
 "Are you sure you want to remove this card?" = "Żgur li tixtieq tneħħi dil-karta?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tissejvja l-kont tal-bank tiegħek għal %@ tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Billi tissottometti l-ordni tiegħek lil %1$@ u %2$@, inti taqbel li tissejvja l-informazzjoni tiegħek ma’ %3$@ għal xirjiet futuri, u taqbel li tawtorizza pagamenti skont <terms>dawn it-termini</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Billi tissottometti l-ordni tiegħek lil %@ inti taqbel li tawtorizza pagamenti skont <terms>dawn it-termini</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -126,7 +126,7 @@
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
 
-"Enter the code sent to %@ to use your saved information." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża l-informazzjoni merfugħa tiegħek.";
+"Enter the code sent to %@." = "Daħħal il-kodiċi li bgħatna lil %s.";
 
 "FPX Bank" = "FPX Bank";
 

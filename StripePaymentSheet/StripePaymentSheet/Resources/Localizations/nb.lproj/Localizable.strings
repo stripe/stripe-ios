@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Legg til betalingsinformasjon";
 
-"Agree and continue" = "Godta og fortsett";
-
 "Approve payment" = "Godkjenn betaling";
 
 "Are you sure you want to remove this card?" = "Er du sikker på at du vil fjerne dette kortet?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å lagre bankkontoen for %@ godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å sende inn bestillingen til %1$@ og %2$@ godtar du å lagre informasjonen din hos %3$@ for fremtidige kjøp, og godtar å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å sende inn bestillingen til %@ godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -126,7 +126,7 @@
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
-"Enter the code sent to %@ to use your saved information." = "Skriv inn koden som ble sendt til %@ for å bruke den lagrede informasjonen.";
+"Enter the code sent to %@." = "Angi koden som er sendt til %s.";
 
 "FPX Bank" = "FPX Bank";
 

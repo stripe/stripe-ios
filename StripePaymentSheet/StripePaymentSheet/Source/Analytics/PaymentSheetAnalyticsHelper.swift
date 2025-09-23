@@ -228,6 +228,21 @@ final class PaymentSheetAnalyticsHelper {
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
+
+    func logWalletButtonTapped(walletType: PaymentSheet.WalletButtonsVisibility.ExpressType) {
+        let selectedLPM: String = {
+            switch walletType {
+            case .applePay:
+                return "apple_pay"
+            case .link:
+                return "link"
+            case .shopPay:
+                return "shop_pay"
+            }
+        }()
+        log(event: .mcWalletButtonTapped, selectedLPM: selectedLPM)
+    }
+
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
         let event: STPAnalyticEvent = {
             switch integrationShape {
@@ -432,6 +447,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_ui"] = linkUI
         additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
+        additionalParams["elements_session_config_id"] = elementsSession?.sessionID
 
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
@@ -516,6 +532,7 @@ extension PaymentElementConfiguration {
         if let cpms = customPaymentMethodConfiguration?.customPaymentMethods {
             payload["custom_payment_methods"] = cpms.map { $0.id }
         }
+        payload["opens_card_scanner_automatically"] = opensCardScannerAutomatically
         payload["terms_display"] = termsDisplay.analyticValue
 
         return payload

@@ -23,25 +23,24 @@ struct AuthenticatedView: View {
     /// The customer id of the authenticated user.
     let customerId: String
 
+    /// The crypto wallet to fund.
+    let wallet: CustomerWalletsResponse.Wallet
+
     @State private var errorMessage: String?
-    @State private var isIdentityVerificationComplete = false
-    @State private var showKYCView = false
-    @State private var showAttachWalletSheet = false
-    @State private var isWalletAttached = false
     @State private var selectedPaymentMethod: PaymentMethodDisplayData?
     @State private var cryptoPaymentToken: String?
     @State private var onrampSessionResponse: CreateOnrampSessionResponse?
-
-    @State private var wallets: [CustomerWalletsResponse.Wallet] = []
-    @State private var selectedWalletId: String?
-    @State private var lastAttachedAddress: String?
-    @State private var lastAttachedNetwork: CryptoNetwork?
 
     @State private var authenticationContext = WindowAuthenticationContext()
 
     @State private var checkoutSucceeded = false
 
     @Environment(\.isLoading) private var isLoading
+
+    // MARK: - Constants
+
+    private let sourceAmount: Decimal = 10 // Hardcoded for demo
+    private let sourceCurrency = "usd" // Hardcoded for demo
 
     private var shouldDisableButtons: Bool {
         isLoading.wrappedValue
@@ -56,39 +55,7 @@ struct AuthenticatedView: View {
                     Text("Customer Information")
                         .font(.headline)
                         .foregroundColor(.secondary)
-
-                    // Identity and KYC actions within the section
-                    if isIdentityVerificationComplete {
-                        Text("Identity Verification Complete")
-                            .foregroundColor(.green)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .foregroundColor(.green.opacity(0.1))
-                            }
-                    } else {
-                        Button("Verify Identity") {
-                            verifyIdentity()
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
-                        .disabled(shouldDisableButtons)
-                        .opacity(shouldDisableButtons ? 0.5 : 1)
-                    }
-
-                    Button("Submit KYC Information") {
-                        showKYCView = true
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(shouldDisableButtons)
-                    .opacity(shouldDisableButtons ? 0.5 : 1)
-
-                    Button("Attach Wallet Address") {
-                        showAttachWalletSheet = true
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(shouldDisableButtons)
-                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
                         Text("Customer ID:")
@@ -103,26 +70,6 @@ struct AuthenticatedView: View {
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
-
-                if !wallets.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Selected Wallet")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-
-                        Picker("Wallet", selection: $selectedWalletId) {
-                            ForEach(wallets, id: \.id) { wallet in
-                                Text("\(wallet.network.localizedCapitalized): \(wallet.walletAddress.prefix(5))…")
-                                    .tag(wallet.id)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding()
-                    .background(Color.secondary.opacity(0.1))
-                    .cornerRadius(8)
-                }
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
@@ -149,14 +96,12 @@ struct AuthenticatedView: View {
                             .opacity(shouldDisableButtons ? 0.5 : 1)
 
                             if let cryptoPaymentToken {
-                                if let selectedWalletId {
                                     Button("Create Onramp Session") {
-                                        createOnrampSession(withCryptoPaymentToken: cryptoPaymentToken, selectedWalletId: selectedWalletId)
+                                        createOnrampSession(withCryptoPaymentToken: cryptoPaymentToken)
                                     }
                                     .buttonStyle(PrimaryButtonStyle())
                                     .disabled(shouldDisableButtons)
                                     .opacity(shouldDisableButtons ? 0.5 : 1)
-                                }
 
                                 if checkoutSucceeded {
                                     Text("Checkout Succeeded!")
@@ -169,15 +114,66 @@ struct AuthenticatedView: View {
                                         }
                                 } else if let onrampSessionResponse {
                                     let details = onrampSessionResponse.transactionDetails
-                                    Button("Check Out | \(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)") {
-                                        checkout(
-                                            with: onrampSessionResponse,
-                                            paymentToken: cryptoPaymentToken
-                                        )
+
+                                    VStack(spacing: 8) {
+                                        // Fees breakdown
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            HStack {
+                                                Text("Amount:")
+                                                    .font(.footnote)
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text("\(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)")
+                                                    .font(.footnote.monospaced())
+                                                    .foregroundColor(.secondary)
+                                            }
+
+                                            HStack {
+                                                Text("Network Fee:")
+                                                    .font(.footnote)
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text("\(details.fees.networkFeeAmount) \(details.sourceCurrency.localizedUppercase)")
+                                                    .font(.footnote.monospaced())
+                                                    .foregroundColor(.secondary)
+                                            }
+
+                                            HStack {
+                                                Text("Transaction Fee:")
+                                                    .font(.footnote)
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text("\(details.fees.transactionFeeAmount) \(details.sourceCurrency.localizedUppercase)")
+                                                    .font(.footnote.monospaced())
+                                                    .foregroundColor(.secondary)
+                                            }
+
+                                            Divider()
+
+                                            HStack {
+                                                Text("Total:")
+                                                    .font(.footnote)
+                                                    .bold()
+                                                    .foregroundColor(.primary)
+                                                Spacer()
+                                                Text("\(onrampSessionResponse.sourceTotalAmount) \(details.sourceCurrency.localizedUppercase)")
+                                                    .font(.footnote.monospaced())
+                                                    .bold()
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        .padding(.vertical, 8)
+
+                                        Button("Check Out | \(onrampSessionResponse.sourceTotalAmount) \(details.sourceCurrency.localizedUppercase)") {
+                                            checkout(
+                                                with: onrampSessionResponse,
+                                                paymentToken: cryptoPaymentToken
+                                            )
+                                        }
+                                        .buttonStyle(PrimaryButtonStyle())
+                                        .disabled(shouldDisableButtons)
+                                        .opacity(shouldDisableButtons ? 0.5 : 1)
                                     }
-                                    .buttonStyle(PrimaryButtonStyle())
-                                    .disabled(shouldDisableButtons)
-                                    .opacity(shouldDisableButtons ? 0.5 : 1)
                                 }
 
                                 HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -249,62 +245,33 @@ struct AuthenticatedView: View {
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
 
-                HiddenNavigationLink(
-                    destination: KYCInfoView(coordinator: coordinator),
-                    isActive: $showKYCView
-                )
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Account")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+
+                        Spacer()
+
+                        Button("Log out") {
+                            logOut()
+                        }
+                        .font(.body)
+                        .foregroundColor(.red)
+                        .disabled(shouldDisableButtons)
+                        .opacity(shouldDisableButtons ? 0.5 : 1)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.secondary.opacity(0.1))
+                .cornerRadius(8)
+
             }
             .padding()
         }
         .navigationTitle("Authenticated")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showAttachWalletSheet) {
-            AttachWalletAddressView(
-                coordinator: coordinator,
-                isWalletAttached: $isWalletAttached,
-                onWalletAttached: { address, network in
-                    lastAttachedAddress = address
-                    lastAttachedNetwork = network
-                    refreshWalletsAndSelectIfNeeded()
-                }
-            )
-        }
-        .onAppear {
-            refreshWalletsAndSelectIfNeeded()
-        }
-    }
-
-    private func verifyIdentity() {
-        guard let viewController = UIApplication.shared.findTopNavigationController() else {
-            errorMessage = "Unable to find view controller to present from."
-            return
-        }
-
-        isLoading.wrappedValue = true
-        errorMessage = nil
-
-        Task {
-            do {
-                let result = try await coordinator.verifyIdentity(from: viewController)
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    switch result {
-                    case .completed:
-                        isIdentityVerificationComplete = true
-                    case .canceled:
-                        // User canceled verification, no action needed.
-                        break
-                    @unknown default:
-                        break
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Identity verification failed: \(error.localizedDescription)"
-                }
-            }
-        }
     }
 
     private func presentPaymentMethodSelector(for type: PaymentMethodType) {
@@ -340,7 +307,7 @@ struct AuthenticatedView: View {
 
         let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant.com.stripe.umbrella.test", country: "US", currency: "USD")
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "Example", amount: NSDecimalNumber(string: "1.00"))
+            PKPaymentSummaryItem(label: "$\(String(format: "%.2f", NSDecimalNumber(decimal: sourceAmount).doubleValue)) \(sourceCurrency.uppercased()) + fees", amount: .zero, type: .pending)
         ]
 
         isLoading.wrappedValue = true
@@ -357,38 +324,6 @@ struct AuthenticatedView: View {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     errorMessage = "Apple Pay failed: \(error.localizedDescription)"
-                }
-            }
-        }
-    }
-
-    private func refreshWalletsAndSelectIfNeeded() {
-        isLoading.wrappedValue = true
-        errorMessage = nil
-
-        Task {
-            do {
-                let response = try await APIClient.shared.fetchCustomerWallets(cryptoCustomerToken: customerId)
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    wallets = response.data
-
-                    if let lastAddress = lastAttachedAddress, let lastNetwork = lastAttachedNetwork {
-                        if let match = wallets.first(where: {
-                            $0.walletAddress == lastAddress && $0.network == lastNetwork.rawValue
-                        }) {
-                            selectedWalletId = match.id
-                        } else {
-                            selectedWalletId = wallets.first?.id
-                        }
-                    } else if selectedWalletId == nil {
-                        selectedWalletId = wallets.first?.id
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Failed to fetch wallets: \(error.localizedDescription)"
                 }
             }
         }
@@ -414,19 +349,14 @@ struct AuthenticatedView: View {
         }
     }
 
-    private func createOnrampSession(withCryptoPaymentToken cryptoPaymentToken: String, selectedWalletId: String) {
-        guard let wallet = wallets.first(where: { $0.id == selectedWalletId }) else {
-            errorMessage = "Unable to find a match for the selected wallet. Please re-select a wallet and try again."
-            return
-        }
-
+    private func createOnrampSession(withCryptoPaymentToken cryptoPaymentToken: String) {
         isLoading.wrappedValue = true
         errorMessage = nil
 
         let request = CreateOnrampSessionRequest(
             paymentToken: cryptoPaymentToken,
-            sourceAmount: 10, // <--- hardcoded for demo
-            sourceCurrency: "usd", // <--- hardcoded for demo
+            sourceAmount: sourceAmount,
+            sourceCurrency: sourceCurrency,
             destinationCurrency: "usdc", // <--- hardcoded for demo
             destinationNetwork: wallet.network,
             walletAddress: wallet.walletAddress,
@@ -486,6 +416,31 @@ struct AuthenticatedView: View {
             }
         }
     }
+
+    private func logOut() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            errorMessage = "Unable to find view controller to navigate from."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                try await coordinator.logOut()
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    viewController.popToRootViewController(animated: true)
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Log out failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
 }
 
 private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
@@ -498,7 +453,14 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     PreviewWrapperView { coordinator in
         AuthenticatedView(
             coordinator: coordinator,
-            customerId: "cus_example123456789"
+            customerId: "cus_example123456789",
+            wallet: CustomerWalletsResponse.Wallet(
+                id: "0",
+                object: "",
+                livemode: false,
+                network: "Ethereum",
+                walletAddress: "0x424242424242424242424242"
+            )
         )
     }
 }

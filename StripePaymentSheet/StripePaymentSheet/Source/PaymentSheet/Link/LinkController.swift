@@ -46,10 +46,21 @@ import UIKit
     }
 
     /// Errors specific incorrect integrations with LinkController
-    @_spi(STP) public enum IntegrationError: Error {
+    @_spi(STP) public enum IntegrationError: LocalizedError {
         case noPaymentMethodSelected
         case noActiveLinkConsumer
         case missingAppAttestation
+
+        @_spi(STP) public var errorDescription: String? {
+            switch self {
+            case .noPaymentMethodSelected:
+                return "No payment method has been selected."
+            case .noActiveLinkConsumer:
+                return "No active Link consumer is available."
+            case .missingAppAttestation:
+                return "App attestation is missing or device cannot use native Link."
+            }
+        }
     }
 
     @_spi(STP) public enum Mode {
@@ -101,6 +112,10 @@ import UIKit
 
     /// A preview of the currently selected Link payment method.
     @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
+
+    @_spi(STP) public var elementsSessionID: String {
+        elementsSession.sessionID
+    }
 
     /// The merchant logo URL from the elements session, if available.
     @_spi(STP) public var merchantLogoUrl: URL? {
@@ -301,22 +316,27 @@ import UIKit
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
+    /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
     @_spi(STP) public func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        collectName: Bool = false,
         completion: @escaping () -> Void
     ) {
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
+
+        if collectName {
+            configuration.billingDetailsCollectionConfiguration.name = .always
+        }
 
         // TODO: We need a way to override Link's default primary button label, since we don't want to show "Pay $xx.xx" even for payment mode.
         print("Presenting Link wallet for \(mode)")
 
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
-            linkAccount: linkAccount,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -467,6 +487,81 @@ import UIKit
         )
     }
 
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
+    @_spi(STP) public func updatePhoneNumber(
+        to phoneNumber: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let linkAccount = LinkAccountContext.shared.account, let consumerSessionClientSecret = linkAccount.currentSession?.clientSecret else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        apiClient.updatePhoneNumber(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerAccountPublishableKey: linkAccount.publishableKey,
+            phoneNumber: phoneNumber,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            switch result {
+            case .success(let consumerSession):
+                self?.updateLinkAccount(with: consumerSession)
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Logs out the current Link user, if any.
+    @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
+        func clearLinkAccountContextAndComplete() {
+            LinkAccountContext.shared.account = nil
+            completion(.success(()))
+        }
+
+        guard let session = linkAccount?.currentSession, let publishableKey = linkAccount?.publishableKey else {
+            // If no Link account is available, treat this as a success.
+            clearLinkAccountContextAndComplete()
+            return
+        }
+
+        session.logout(
+            consumerAccountPublishableKey: publishableKey,
+            requestSurface: requestSurface,
+            completion: { result in
+                switch result {
+                case .success:
+                    clearLinkAccountContextAndComplete()
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        )
+    }
+
+    // MARK: - Private methods
+
+    private func updateLinkAccount(with consumerSession: ConsumerSession) {
+        guard let linkAccount else {
+            return
+        }
+
+        self.linkAccount = PaymentSheetLinkAccount(
+            email: linkAccount.email,
+            session: consumerSession,
+            publishableKey: linkAccount.publishableKey,
+            displayablePaymentDetails: linkAccount.displayablePaymentDetails,
+            apiClient: linkAccount.apiClient,
+            cookieStore: linkAccount.cookieStore,
+            useMobileEndpoints: linkAccount.useMobileEndpoints,
+            requestSurface: linkAccount.requestSurface
+        )
+    }
+
     private func presentVerificationWithConsent(
         from viewController: UIViewController,
         consentViewModel: LinkConsentViewModel?,
@@ -498,8 +593,6 @@ import UIKit
             }
         }
     }
-
-    // MARK: - Private methods
 
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
@@ -813,11 +906,22 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
+    /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Returns: A `PaymentMethodDisplayData` if the user selected a payment method, or `nil` otherwise.
-    func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?, supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases) async -> LinkController.PaymentMethodPreview? {
+    func collectPaymentMethod(
+        from presentingViewController: UIViewController,
+        with email: String?,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        collectName: Bool = false
+    ) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                self.collectPaymentMethod(from: presentingViewController, with: email, supportedPaymentMethodTypes: supportedPaymentMethodTypes) { [weak self] in
+                self.collectPaymentMethod(
+                    from: presentingViewController,
+                    with: email,
+                    supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                    collectName: collectName
+                ) { [weak self] in
                     guard let self else { return }
                     continuation.resume(returning: self.paymentMethodPreview)
                 }
@@ -834,6 +938,38 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 switch result {
                 case .success(let paymentMethod):
                     continuation.resume(returning: paymentMethod)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
+    func updatePhoneNumber(to phoneNumber: String) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            updatePhoneNumber(to: phoneNumber) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Logs out the current Link user, if any.
+    /// Throws if an API error occurs.
+    func logOut() async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            logOut { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }

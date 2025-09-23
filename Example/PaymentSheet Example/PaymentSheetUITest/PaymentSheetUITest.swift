@@ -669,7 +669,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
             ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown"]
         )
-        XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
+        XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false) }).last?[string: "selected_lpm"], "card")
 
         try? fillCardData(app, container: nil)
 
@@ -679,8 +679,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
         XCTAssertEqual(
-            analyticsLog.suffix(9).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            analyticsLog.suffix(10).map({ $0[string: "event"] }),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "elements.captcha.passive.attach", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         // Make sure they all have the same session id
@@ -2811,7 +2811,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         try fillCardData(app)
 
-        app.switches["Save your info for secure 1-click checkout with Link"].tap()
+        app.switches["Save my info for faster checkout with Link"].tap()
 
         let emailField = app.textFields["Email"]
         emailField.tap()
@@ -3028,7 +3028,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         }
 
         if mode == .checkbox {
-            app.switches["Save your info for secure 1-click checkout with Link"].tap()
+            app.switches["Save my info for faster checkout with Link"].tap()
         }
 
         let emailField = app.textFields["Email"]
@@ -3051,7 +3051,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     private func assertLinkInlineSignupNotShown() {
         // Ensure checkbox is not shown for checkbox mode
-        XCTAssertFalse(app.switches["Save your info for secure 1-click checkout with Link"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.switches["Save my info for faster checkout with Link"].waitForExistence(timeout: 2))
         // Ensure email is not shown for field consent mode
         XCTAssertFalse(app.textFields["Email"].waitForExistence(timeout: 3))
     }

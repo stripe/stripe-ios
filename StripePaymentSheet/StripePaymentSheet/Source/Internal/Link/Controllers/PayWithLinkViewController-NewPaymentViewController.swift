@@ -30,6 +30,7 @@ extension PayWithLinkViewController {
 
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.callToAction,
+            showProcessingLabel: context.showProcessingLabel,
             // Use a compact button if we are also displaying the Apple Pay button.
             compact: shouldShowApplePayButton,
             linkAppearance: context.linkAppearance,
@@ -99,6 +100,9 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
+
+            // AddPaymentMethodViewController uses textSecondary for the mandate, but Link uses linkTextTertiary
+            configuration.appearance.colors.textSecondary = .linkTextTertiary
 
             if let primaryColorOverride = context.linkAppearance?.colors?.primary {
                 configuration.appearance.colors.primary = primaryColorOverride

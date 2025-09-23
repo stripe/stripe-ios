@@ -19,12 +19,15 @@ protocol SheetNavigationBarDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
-    static let height: CGFloat = LiquidGlassDetector.isEnabled ? 64 : 52
+    static func height(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return appearance.navigationBarStyle.isGlass ? 76 : 52
+
+    }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
         stack.spacing = PaymentSheetUI.defaultPadding
-        stack.setCustomSpacing(PaymentSheetUI.navBarPadding, after: dummyView)
+        stack.setCustomSpacing(PaymentSheetUI.navBarPadding(appearance: appearance), after: dummyView)
         stack.alignment = .center
         return stack
     }()
@@ -70,37 +73,6 @@ class SheetNavigationBar: UIView {
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
 
-    // Custom gradient blur view for liquid glass effect
-    private lazy var gradientBlurView: GradientBlurEffectView = {
-        let blurEffect = UIBlurEffect(style: .systemMaterial)
-        let backgroundColor = appearance.colors.background
-
-        // Create gradient mask: white = visible, clear = hidden
-        let gradientColors: [CGColor] = [
-            UIColor.white.withAlphaComponent(0.6).cgColor,
-            UIColor.white.withAlphaComponent(0.55).cgColor,
-            UIColor.white.withAlphaComponent(0.50).cgColor,
-            UIColor.white.withAlphaComponent(0.45).cgColor,
-            UIColor.white.withAlphaComponent(0.40).cgColor,
-            UIColor.white.withAlphaComponent(0.35).cgColor,
-            UIColor.white.withAlphaComponent(0.30).cgColor,
-            UIColor.white.withAlphaComponent(0.25).cgColor,
-            UIColor.white.withAlphaComponent(0.20).cgColor,
-            UIColor.white.withAlphaComponent(0.15).cgColor,
-            UIColor.white.withAlphaComponent(0.05).cgColor,  // 0.05: Basically not visible
-        ]
-
-        let gradientView = GradientBlurEffectView(
-            effect: blurEffect,
-            colors: gradientColors,
-            locations: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-            startPoint: CGPoint(x: 0, y: 0),  // Top
-            endPoint: CGPoint(x: 0, y: 1)     // Bottom
-        )
-        gradientView.alpha = 1.0  // Always visible - gradient itself handles the fade
-        return gradientView
-    }()
-
     override var isUserInteractionEnabled: Bool {
         didSet {
             // Explicitly disable buttons to update their appearance
@@ -116,22 +88,9 @@ class SheetNavigationBar: UIView {
         self.appearance = appearance
         super.init(frame: .zero)
 
-        #if !os(visionOS)
-        // Add gradient blur view as background
-        if LiquidGlassDetector.isEnabled {
-            gradientBlurView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(gradientBlurView)
-            NSLayoutConstraint.activate([
-                // Gradient blur view constraints
-                gradientBlurView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                gradientBlurView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                gradientBlurView.topAnchor.constraint(equalTo: topAnchor),
-                gradientBlurView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            ])
-        } else {
+        if appearance.navigationBarStyle.isPlain {
             backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         }
-        #endif
 
         [leftItemsStackView, closeButtonRight, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -146,11 +105,11 @@ class SheetNavigationBar: UIView {
             leftItemsStackView.heightAnchor.constraint(equalTo: heightAnchor),
 
             additionalButton.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding(appearance: appearance)),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
 
             closeButtonRight.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding(appearance: appearance)),
             closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
@@ -166,7 +125,7 @@ class SheetNavigationBar: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
+        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height(appearance: appearance))
     }
 
     @objc
@@ -215,69 +174,75 @@ class SheetNavigationBar: UIView {
     }
 
     func setShadowHidden(_ isHidden: Bool) {
-        if !LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isPlain {
             layer.shadowPath = CGPath(rect: bounds, transform: nil)
             layer.shadowOpacity = isHidden ? 0 : 0.1
             layer.shadowColor = UIColor.black.cgColor
             layer.shadowOffset = CGSize(width: 0, height: 2)
         }
     }
-
     func createBackButton() -> UIButton {
+        return appearance.navigationBarStyle.isGlass ? createGlassBackButton() : createPlainBackButton()
+    }
+    func createPlainBackButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
+        let image = Image.icon_chevron_left_standalone.makeImage(template: true)
+        button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            button.configuration = .glass()
-        }
-        #endif
+        return button
+    }
+    func createGlassBackButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
+        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
+
+        button.setImage(image, for: .normal)
+        button.tintColor = appearance.colors.icon
+
+        button.accessibilityLabel = String.Localized.back
+        button.accessibilityIdentifier = "UIButton.Back"
+        button.ios26_applyGlassConfiguration()
+
         return button
     }
 
     func createCloseButton() -> UIButton {
+        return appearance.navigationBarStyle.isGlass ? createGlassCloseButton() : createPlainCloseButton()
+    }
+    func createPlainCloseButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        let image = Image.icon_x_standalone.makeImage(template: true)
+        button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
+
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled{
-            button.configuration = .glass()
-        }
-        #endif
+
         return button
     }
-}
+    func createGlassCloseButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
 
-/// Custom view that combines UIBlurEffect with a gradient mask for liquid glass effect
-class GradientBlurEffectView: UIVisualEffectView {
-    private let gradientLayer = CAGradientLayer()
+        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
+        let image = UIImage(systemName: "xmark", withConfiguration: config)
 
-    init(effect: UIBlurEffect, colors: [CGColor], locations: [NSNumber], startPoint: CGPoint, endPoint: CGPoint) {
-        super.init(effect: effect)
+        button.setImage(image, for: .normal)
+        button.tintColor = appearance.colors.icon
 
-        // Configure the gradient layer as a mask
-        gradientLayer.colors = colors
-        gradientLayer.locations = locations
-        gradientLayer.startPoint = startPoint
-        gradientLayer.endPoint = endPoint
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
+        button.ios26_applyGlassConfiguration()
 
-        // Use the gradient as a mask on the entire view instead of adding as sublayer
-        self.layer.mask = gradientLayer
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        gradientLayer.frame = self.bounds
+        return button
     }
 }
 
@@ -289,11 +254,8 @@ extension UIButton {
         titleLabel?.textAlignment = .right
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            configuration = .glass()
+        if appearance.navigationBarStyle.isGlass {
+            ios26_applyGlassConfiguration()
         }
-        #endif
     }
 }

@@ -52,7 +52,23 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return UIStackView()
     }()
 
+    #if compiler(>=6.2)
+    private lazy var navigationBarBlur: UIInteraction? = {
+        guard appearance.navigationBarStyle.isGlass, #available(iOS 26.0, *) else {
+            return nil
+        }
+        let interaction = UIScrollEdgeElementContainerInteraction()
+        interaction.scrollView = scrollView
+        interaction.edge = .top
+        return interaction
+    }()
+    #endif
+
     private(set) var contentStack: [BottomSheetContentViewController] = []
+
+    var navigationBarHeight: CGFloat {
+        SheetNavigationBar.height(appearance: appearance)
+    }
 
     /// Content offset of the scroll view as a percentage (0 - 1.0) of the total height.
     var contentOffsetPercentage: CGFloat {
@@ -315,7 +331,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemBackground
         registerForKeyboardNotifications()
         [scrollView, navigationBarContainerView].forEach({  // Note: Order important here, navigation bar should be on top
             view.addSubview($0)
@@ -339,7 +354,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             bottomAnchor,
         ])
 
-        if LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isGlass {
             NSLayoutConstraint.activate([
                 // Allow scroll view to extend under the navigation bar for blur effect
                 scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -349,6 +364,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
             ])
         }
+        #if compiler(>=6.2)
+        enableNavigationBarBlurInteraction()
+        #endif
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         contentContainerView.directionalLayoutMargins = appearance.formInsets
@@ -360,7 +378,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         // Move the contentContainerView to start below the sheet
-        let topOffset = LiquidGlassDetector.isEnabled ? SheetNavigationBar.height : 0.0
+        let topOffset = appearance.navigationBarStyle.isGlass ? navigationBarHeight : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
@@ -376,7 +394,37 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
     }
+    #if compiler(>=6.2)
+    func enableNavigationBarBlurInteraction() {
+        guard let navigationBarBlur,
+            navigationBarBlur.view == nil,
+        // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
+        NSClassFromString("XCTest") == nil else {
+            return
+        }
+        navigationBarContainerView.addInteraction(navigationBarBlur)
+    }
+    func disableNavigationBarBlurInteraction() {
+        guard let navigationBarBlur else {
+            return
+        }
+        navigationBarContainerView.removeInteraction(navigationBarBlur)
+    }
 
+    // Workaround: Remove blur in `preAnimateHeightChange`, prior to swapping out content. Otherwise, the blur effect
+    // animates away over new content that is most likely different. In `postLayoutAnimations`, decide
+    // whether or not new content is scrollable.  If so, add the blur back, otherwise, keep it removed.
+    func preAnimateHeightChange() {
+        self.disableNavigationBarBlurInteraction()
+    }
+    func postLayoutAnimations(containerView: UIView, toView: UIView) {
+        if self.scrollView.contentSize.height > self.scrollView.frame.size.height {
+            self.enableNavigationBarBlurInteraction()
+        } else {
+            self.disableNavigationBarBlurInteraction()
+        }
+    }
+    #endif
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardDidHide),

@@ -19,6 +19,7 @@ import Foundation
 
     case paymentMethodCreation = "stripeios.payment_method_creation"
     case paymentMethodUpdate = "stripeios.payment_method_update"
+    case confirmationTokenCreation = "stripeios.confirmation_token_creation"
     case paymentMethodIntentCreation = "stripeios.payment_intent_confirmation"
     case setupIntentConfirmationAttempt = "stripeios.setup_intent_confirmation"
 
@@ -130,6 +131,9 @@ import Foundation
     case mcOptionSelectCompleteApplePay = "mc_complete_paymentoption_applepay_select"
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
     case mcOptionSelectEmbeddedSavedPM = "mc_embedded_paymentoption_savedpm_select"
+
+    // MARK: - PaymentSheet Wallet Button Tap
+    case mcWalletButtonTapped = "mc_wallet_button_tapped"
 
     // MARK: - PaymentSheet Saved Payment Method Removed
     case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
@@ -303,7 +307,8 @@ import Foundation
 
     // MARK: - Captcha
     case passiveCaptchaInit = "elements.captcha.passive.init"
+    case passiveCaptchaExecute = "elements.captcha.passive.execute"
     case passiveCaptchaSuccess = "elements.captcha.passive.success"
     case passiveCaptchaError = "elements.captcha.passive.error"
-    case passiveCaptchaTimeout = "elements.captcha.passive.timeout"
+    case passiveCaptchaAttach = "elements.captcha.passive.attach"
 }

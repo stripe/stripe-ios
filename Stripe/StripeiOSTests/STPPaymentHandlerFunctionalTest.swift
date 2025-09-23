@@ -218,6 +218,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "payment_intent_unexpected_state")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -247,6 +248,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "resource_missing")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -277,6 +279,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "parameter_missing")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -307,6 +310,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "resource_missing")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -330,6 +334,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "payment_intent_invalid_parameter")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -359,6 +364,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
                 "NSLocalizedDescription": "There was an unexpected error -- try again in a few seconds",
                 "com.stripe.lib:ErrorMessageKey": "Unknown authentication action type",
             ])
+            XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -382,6 +388,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "resource_missing")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -415,6 +422,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
                 "NSLocalizedDescription": "There was an unexpected error -- try again in a few seconds",
                 "com.stripe.lib:ErrorMessageKey": "Unknown authentication action type",
             ])
+            XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
         waitForExpectations(timeout: 10)

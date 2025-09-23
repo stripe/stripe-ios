@@ -26,13 +26,19 @@ struct RegistrationView: View {
     /// The OAuth scopes selected for authentication.
     let selectedScopes: [OAuthScopes]
 
+    /// Whether the app is running in livemode or testmode.
+    let livemode: Bool
+
+    /// Called when registration and authentication succeed. Provides the crypto customer id.
+    let onCompleted: (_ customerId: String) -> Void
+
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
-    @State private var showAuthenticatedView: Bool = false
-    @State private var registrationCustomerId: String?
     @State private var isRegistrationComplete: Bool = false
+    @State private var showUpdatePhoneNumberSheet: Bool = false
+    @State private var updatePhoneNumberInput: String = ""
 
     @Environment(\.isLoading) private var isLoading
 
@@ -44,7 +50,11 @@ struct RegistrationView: View {
         isLoading.wrappedValue || phoneNumber.isEmpty
     }
 
-    private var shouldDisableButtons: Bool {
+    private var isUpdatePhoneNumberButtonDisabled: Bool {
+        isLoading.wrappedValue || !isRegistrationComplete
+    }
+
+    private var isAuthenticateButtonDisabled: Bool {
         isLoading.wrappedValue
     }
 
@@ -91,16 +101,18 @@ struct RegistrationView: View {
                 }
 
                 if isRegistrationComplete {
-                    Button("Retry Verification") {
+                    Button("Authenticate") {
+                        resetFocusState()
                         Task {
                             try await verify()
                         }
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .disabled(shouldDisableButtons)
-                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                    .disabled(isAuthenticateButtonDisabled)
+                    .opacity(isAuthenticateButtonDisabled ? 0.5 : 1)
                 } else {
                     Button("Register") {
+                        resetFocusState()
                         registerUser()
                     }
                     .buttonStyle(PrimaryButtonStyle())
@@ -108,21 +120,35 @@ struct RegistrationView: View {
                     .opacity(isRegisterButtonDisabled ? 0.5 : 1)
                 }
 
+                Button("Update Phone Number") {
+                    resetFocusState()
+                    updatePhoneNumberInput = phoneNumber
+                    showUpdatePhoneNumberSheet = true
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(isUpdatePhoneNumberButtonDisabled)
+                .opacity(isUpdatePhoneNumberButtonDisabled ? 0.5 : 1)
+
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }
 
-                if let customerId = registrationCustomerId {
-                    HiddenNavigationLink(
-                        destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
-                        isActive: $showAuthenticatedView
-                    )
-                }
             }
             .padding()
         }
         .navigationTitle("Registration")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Update phone number", isPresented: $showUpdatePhoneNumberSheet) {
+            TextField("New phone number", text: $updatePhoneNumberInput)
+                .textContentType(.telephoneNumber)
+                .keyboardType(.phonePad)
+            Button("Submit") {
+                updatePhoneNumber(to: updatePhoneNumberInput)
+            }
+            Button("Cancel", role: .cancel) {
+                updatePhoneNumberInput = ""
+            }
+        }
     }
 
     private func registerUser() {
@@ -138,7 +164,10 @@ struct RegistrationView: View {
                     country: country
                 )
 
-                try await verify()
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    isRegistrationComplete = true
+                }
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
@@ -157,7 +186,8 @@ struct RegistrationView: View {
         // Authenticate with the demo merchant backend as well.
         let response = try await APIClient.shared.authenticateUser(
             with: email,
-            oauthScopes: selectedScopes
+            oauthScopes: selectedScopes,
+            livemode: livemode
         )
         let laiId = response.data.id
 
@@ -169,13 +199,7 @@ struct RegistrationView: View {
         if let customerId = await presentAuthorization(laiId: laiId, using: coordinator) {
             await MainActor.run {
                 isLoading.wrappedValue = false
-                isRegistrationComplete = true
-                self.registrationCustomerId = customerId
-
-                // Delay so the navigation link animation doesn't get canceled.
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    showAuthenticatedView = true
-                }
+                onCompleted(customerId)
             }
         } else {
             await MainActor.run {
@@ -215,6 +239,31 @@ struct RegistrationView: View {
             return nil
         }
     }
+
+    private func updatePhoneNumber(to phoneNumber: String) {
+        isLoading.wrappedValue = true
+        Task {
+            do {
+                try await coordinator.updatePhoneNumber(to: phoneNumber)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    updatePhoneNumberInput = ""
+                    self.phoneNumber = phoneNumber
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Updating phone number failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func resetFocusState() {
+        isFullNameFieldFocused = false
+        isPhoneNumberFieldFocused = false
+        isCountryFieldFocused = false
+    }
 }
 
 #Preview {
@@ -222,7 +271,9 @@ struct RegistrationView: View {
         RegistrationView(
             coordinator: coordinator,
             email: "test@example.com",
-            selectedScopes: OAuthScopes.onrampScope
+            selectedScopes: OAuthScopes.requiredScopes,
+            livemode: false,
+            onCompleted: { _ in }
         )
     }
 }

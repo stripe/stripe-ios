@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Pridajte svoje informácie o platbe";
 
-"Agree and continue" = "Súhlasiť a pokračovať";
-
 "Approve payment" = "Schváliť platbu";
 
 "Are you sure you want to remove this card?" = "Naozaj chcete odstrániť túto kartu?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankového účtu pre spoločnosť %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Odoslaním objednávky do %1$@ a %2$@ súhlasíte s uložením vašich údajov v %3$@ pre budúce nákupy a súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Odoslaním objednávky na %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -126,7 +126,7 @@
 
 "Enter address manually" = "Zadať adresu manuálne";
 
-"Enter the code sent to %@ to use your saved information." = "Zadajte kód zaslaný na telefónne číslo %@ a používajte svoje uložené údaje.";
+"Enter the code sent to %@." = "Zadajte kód zaslaný na %s.";
 
 "FPX Bank" = "FPX Bank";
 

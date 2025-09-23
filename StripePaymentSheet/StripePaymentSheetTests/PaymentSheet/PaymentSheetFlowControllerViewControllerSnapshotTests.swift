@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 
 import XCTest
 
+// @iOS26
 final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTestCase {
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
@@ -57,29 +58,6 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             analyticsHelper: ._testValue()
         )
-        sut.view.autosizeHeight(width: 375)
-        STPSnapshotVerifyView(sut.view)
-    }
-    func testCVCRecollectionScreen() {
-        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
-
-        let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCard(),
-                                                intent: ._testValue(),
-                                                configuration: configuration,
-                                                onCompletion: { _, _ in },
-                                                onCancel: { _ in })
-        sut.view.autosizeHeight(width: 375)
-        STPSnapshotVerifyView(sut.view)
-    }
-
-    func testCVVRecollectionScreen() {
-        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
-
-        let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCardAmex(),
-                                                intent: ._testValue(),
-                                                configuration: configuration,
-                                                onCompletion: { _, _ in },
-                                                onCancel: { _ in })
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
@@ -131,6 +109,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         var configuration: PaymentSheet.Configuration = PaymentSheet.Configuration()
         configuration.returnURL = "https://foo.com"
         configuration.opensCardScannerAutomatically = true
+        configuration.appearance.applyLiquidGlassIfPossible()
 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testValue(),

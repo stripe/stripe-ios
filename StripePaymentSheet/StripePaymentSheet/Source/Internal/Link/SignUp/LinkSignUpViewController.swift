@@ -33,8 +33,12 @@ final class LinkSignUpViewController: UIViewController {
 
     private let viewModel: LinkSignUpViewModel
     private let defaultBillingDetails: PaymentSheet.BillingDetails?
-    private let selectionBehavior = SelectionBehavior.highlightBorder(configuration: LinkUI.highlightBorderConfiguration)
     private let theme = LinkUI.appearance.asElementsTheme
+
+    private lazy var selectionBehavior: SelectionBehavior = {
+        // This is lazily computed so that the iOS 26 style can be applied to LinkUI.
+        SelectionBehavior.highlightBorder(configuration: LinkUI.highlightBorderConfiguration)
+    }()
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -123,6 +127,9 @@ final class LinkSignUpViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
         button.adjustsFontForContentSizeCategory = true
         button.isEnabled = false
+        if LinkUI.useLiquidGlass {
+            button.ios26_applyCapsuleCornerConfiguration()
+        }
         return button
     }()
 

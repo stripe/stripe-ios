@@ -215,7 +215,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                                                                         paymentMethod: STPPaymentMethod._testCard(),
                                                                         isFlowController: false))
         // pi pmo non-nil but not sfu-related
-        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: .init(requireCvcRecollection: true, allResponseFields: ["require_cvc_recollection": true]), allResponseFields: ["card": ["require_cvc_recollection": true]]))
+        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: .init(requireCvcRecollection: true, cvcToken: "1234", allResponseFields: ["require_cvc_recollection": true, "cvc_token": "1234"]), allResponseFields: ["card": ["require_cvc_recollection": true]]))
         intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
         XCTAssertNoThrow(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
                                                                         intentConfiguration: intentConfig,

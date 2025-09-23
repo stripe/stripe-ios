@@ -23,6 +23,10 @@ struct CustomerSheetTestPlayground: View {
         _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController(settings: settings))
     }
 
+    init() {
+        _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController())
+    }
+
     var body: some View {
         VStack {
             ScrollView {
@@ -72,6 +76,7 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
                         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
+                        SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
@@ -108,6 +113,7 @@ struct CustomerSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
+
     var customerKeyTypeBinding: Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
         Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
             return playgroundController.settings.customerKeyType

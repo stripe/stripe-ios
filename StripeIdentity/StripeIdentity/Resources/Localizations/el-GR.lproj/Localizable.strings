@@ -6,9 +6,13 @@
 
 "App Settings" = "Ρυθμίσεις εφαρμογής";
 
-"Back identity card photo successfully uploaded" = "Η φωτογραφία της πίσω πλευράς της ταυτότητας στάλθηκε με επιτυχία";
+"Back %@ photo successfully uploaded" = "Η πίσω %@ φωτογραφία ανέβηκε επιτυχώς";
 
-"Back of identity card" = "Πίσω πλευρά ταυτότητας";
+"Back identity document photo successfully uploaded" = "Η πίσω φωτογραφία του εγγράφου ταυτότητας ανέβηκε επιτυχώς";
+
+"Back of %@" = "Πίσω από το %@";
+
+"Back of driver's license or government-issued photo ID" = "Πίσω πλευρά της άδειας οδήγησης ή της ταυτότητας με φωτογραφία εκδοθείσα από την κυβέρνηση";
 
 "Back of identity document" = "Πίσω πλευρά εγγράφου ταυτότητας";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Οι λεπτομέρειες δεν είναι ορατές";
 
+"Flip your %@ over to the other side" = "Γυρίστε το %@ από την άλλη πλευρά";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Γυρίστε την άδεια οδήγησης ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στην άλλη πλευρά";
+
 "Flip your identity card over to the other side" = "Γυρίστε την ταυτότητά σας από την άλλη πλευρά";
 
-"Front identity card photo successfully uploaded" = "Η φωτογραφία της μπροστινής πλευράς της ταυτότητας στάλθηκε με επιτυχία";
+"Front %@ photo successfully uploaded" = "Η μπροστινή φωτογραφία %@ ανέβηκε επιτυχώς";
 
-"Front of identity card" = "Μπροστινή πλευρά ταυτότητας";
+"Front identity document photo successfully uploaded" = "Η μπροστινή φωτογραφία του εγγράφου ταυτότητας ανέβηκε επιτυχώς";
+
+"Front of %@" = "Μπροστά από το %@";
+
+"Front of driver's license or government-issued photo ID" = "Μπροστινό μέρος άδειας οδήγησης ή ταυτότητας με φωτογραφία εκδοθείσα από την κυβέρνηση";
+
+"Front of driver's license or passport" = "Μπροστινό μέρος άδειας οδήγησης ή διαβατηρίου";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Μπροστινό μέρος άδειας οδήγησης, διαβατηρίου ή ταυτότητας με φωτογραφία εκδοθείσας από την κυβέρνηση";
 
 "Front of identity document" = "Μπροστινή πλευρά εγγράφου ταυτότητας";
+
+"Front of passport or government-issued photo ID" = "Μπροστινό μέρος διαβατηρίου ή ταυτότητας με φωτογραφία εκδοθείσας από την κυβέρνηση";
 
 "Get ready to scan your photo ID" = "Ετοιμαστείτε να σαρώσετε την ταυτότητα με φωτογραφία";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Βιβλιοθήκη φωτογραφιών";
 
-"Please upload images of the front and back of your identity card" = "Αποστείλετε εικόνες της μπροστινής και της πίσω πλευράς της ταυτότητάς σας";
+"Please upload images of the front and back of your %@" = "Ανεβάστε εικόνες από το μπροστινό και το πίσω μέρος του %@";
+
+"Please upload images of the front and back of your identity document" = "Ανεβάστε εικόνες της μπροστινής και πίσω πλευράς του εγγράφου ταυτότητας";
+
+"Position your %@ in the center of the frame" = "Τοποθετήστε το %@ στο κέντρο του πλαισίου";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Τοποθετήστε την άδεια οδήγησης ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στο κέντρο του πλαισίου";
+
+"Position your driver's license or passport in the center of the frame" = "Τοποθετήστε την άδεια οδήγησης ή το διαβατήριο στο κέντρο του πλαισίου";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Τοποθετήστε την άδεια οδήγησης, το διαβατήριο ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στο κέντρο του πλαισίου";
 
 "Position your face in the center of the frame." = "Τοποθετήστε το πρόσωπό σας στο κέντρο του πλαισίου.";
 
-"Position your identity card in the center of the frame" = "Τοποθετήστε την ταυτότητά σας στο κέντρο του πλαισίου";
+"Position your identity document in the center of the frame" = "Τοποθετήστε το έγγραφο ταυτότητας στο κέντρο του πλαισίου";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Τοποθετήστε το διαβατήριό σας ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στο κέντρο του πλαισίου";
 
 "Retake Photos" = "Λήψη φωτογραφιών εκ νέου";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Επιλέξτε την τοποθεσία από την οποία θα αποστείλετε την μπροστινή πλευρά του εγγράφου ταυτότητάς σας";
 
-"Select back identity card photo" = "Επιλογή φωτογραφίας πίσω πλευράς ταυτότητας";
+"Select back %@ photo" = "Επιλέξτε πίσω %@ φωτογραφία";
 
-"Select front identity card photo" = "Επιλογή φωτογραφίας μπροστινής πλευράς ταυτότητας";
+"Select back identity document photo" = "Επιλέξτε πίσω τη φωτογραφία εγγράφου ταυτότητας";
+
+"Select front %@ photo" = "Επιλογή μπροστινής %@ φωτογραφίας";
+
+"Select front identity document photo" = "Επιλέξτε τη μπροστινή φωτογραφία του εγγράφου ταυτότητας";
 
 "Selfie" = "Selfie";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Αποστολή φωτογραφίας";
 
+"Upload your %@" = "Ανεβάστε το %@";
+
 "Upload your photo ID" = "Αποστείλετε την ταυτότητα με φωτογραφία";
 
-"Uploading back identity card photo" = "Αποστολή φωτογραφίας πίσω πλευράς ταυτότητας";
+"Uploading back %@ photo" = "Ανέβασμα πίσω %@ φωτογραφίας";
 
-"Uploading front identity card photo" = "Αποστολή φωτογραφίας μπροστινής πλευράς ταυτότητας";
+"Uploading back identity document photo" = "Ανέβασμα της πίσω φωτογραφίας εγγράφου ταυτότητας";
+
+"Uploading front %@ photo" = "Ανέβασμα μπροστινής %@ φωτογραφίας";
+
+"Uploading front identity document photo" = "Ανέβασμα της μπροστινής φωτογραφίας του εγγράφου ταυτότητας";
 
 "Verify your identity" = "Επαληθεύστε την ταυτότητά σας";
 

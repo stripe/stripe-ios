@@ -14,17 +14,8 @@ final class RowButtonFloating: RowButton {
     // MARK: - Subviews
 
     /// The view that manages corner radius and shadows and selection border
-    private lazy var selectableRectangle: SelectableRectangle = {
-        #if !os(visionOS)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled && !isEmbedded {
-            return LiquidGlassRectangle(appearance: appearance, isCapsule: true)
-        } else {
-            return ShadowedRoundedRectangle(appearance: appearance)
-        }
-        #else
-        return ShadowedRoundedRectangle(appearance: appearance)
-        #endif
+    private lazy var selectableRectangle: ShadowedRoundedRectangle = {
+        return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .capsule)
     }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
     private var contentInsets: CGFloat {
@@ -43,7 +34,13 @@ final class RowButtonFloating: RowButton {
         if isEmbedded {
             return appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
         }
-        return LiquidGlassDetector.isEnabled ? 16 : 12
+        return selectableRectangle.didSetCornerConfiguration ? 16 : 12
+    }
+    private var contentTrailingConstant: CGFloat {
+        guard selectableRectangle.didSetCornerConfiguration else {
+            return 12
+        }
+        return 16
     }
 
     override func updateSelectedState() {
@@ -126,7 +123,7 @@ final class RowButtonFloating: RowButton {
 
             // Content constraints - use configurable insets for the main content area
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: imageViewTrailingConstant),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -contentTrailingConstant),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: contentInsets),
             horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -contentInsets),

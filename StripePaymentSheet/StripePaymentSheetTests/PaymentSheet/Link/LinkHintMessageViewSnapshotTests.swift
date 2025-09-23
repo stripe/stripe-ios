@@ -13,7 +13,16 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+// @iOS26
 class LinkHintMessageViewSnapshotTests: STPSnapshotTestCase {
+
+    override static func setUp() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+    }
 
     func testNormalLengthMessage() {
         let hintView = LinkHintMessageView(message: "Debit is most likely to be accepted.")

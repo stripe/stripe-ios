@@ -25,7 +25,14 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 
     // MARK: - Constants
     internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
-    internal static let cellHeight: CGFloat = LiquidGlassDetector.isEnabled ? 64 : 52
+    static let liquidGlassCornerCellHeight: CGFloat = 64
+    static let defaultCornerCellHeight: CGFloat = 52
+
+    var cellHeight: CGFloat {
+        return sizingInstance.selectableRectangle.didSetCornerConfiguration
+            ? Self.liquidGlassCornerCellHeight
+            : Self.defaultCornerCellHeight
+    }
     internal static let minInteritemSpacing: CGFloat = 12
 
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
@@ -91,7 +98,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: PaymentMethodTypeCollectionView.cellHeight)
+        return CGSize(width: UIView.noIntrinsicMetric, height: cellHeight)
     }
 
     func setIncentive(_ incentive: PaymentMethodIncentive?) {
@@ -105,6 +112,26 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         reloadItems(at: [index])
         selectItem(at: index, animated: false, scrollPosition: [])
     }
+
+    // instance to calculate min width
+    private lazy var sizingInstance: PaymentTypeCell = {
+        let sizingInstance = PaymentTypeCell(frame: .zero)
+        sizingInstance.appearance = appearance
+        return sizingInstance
+    }()
+    // maps payment method type to width to avoid recalculation
+    private var widthCache = [String: CGFloat]()
+
+    func minWidth(for paymentMethodType: PaymentSheet.PaymentMethodType) -> CGFloat {
+        if let cachedWidth = widthCache[paymentMethodType.identifier] {
+            return cachedWidth
+        }
+        sizingInstance.paymentMethodType = paymentMethodType
+        let size = sizingInstance.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        widthCache[paymentMethodType.identifier] = size.width
+        return size.width
+    }
+
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
@@ -160,14 +187,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         }
 
         if useFixedSizeCells {
-            return CGSize(width: 100, height: PaymentMethodTypeCollectionView.cellHeight)
+            return CGSize(width: 100, height: cellHeight)
         } else {
             // When there are 2 PMs, make them span the width of the collection view
             // When there are not 2 PMs, show 3 full cells plus 30% of the next if present
             let numberOfCellsToShow = paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
 
             let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (PaymentMethodTypeCollectionView.minInteritemSpacing * 3.0))) / numberOfCellsToShow
-            return CGSize(width: max(cellWidth, PaymentTypeCell.minWidth(for: paymentMethodTypes[indexPath.item], appearance: appearance)), height: PaymentMethodTypeCollectionView.cellHeight)
+            return CGSize(width: max(cellWidth, minWidth(for: paymentMethodTypes[indexPath.item])), height: cellHeight)
         }
     }
 }
@@ -214,39 +241,14 @@ extension PaymentMethodTypeCollectionView {
         private lazy var promoBadge: PromoBadgeView = {
             PromoBadgeView(appearance: appearance, tinyMode: true)
         }()
-        private lazy var selectableRectangle: SelectableRectangle = {
-            #if !os(visionOS)
-            if #available(iOS 26.0, *),
-               LiquidGlassDetector.isEnabled {
-                return LiquidGlassRectangle(appearance: appearance, isCapsule: false)
-            } else {
-                return ShadowedRoundedRectangle(appearance: appearance)
-            }
-            #else
-                return ShadowedRoundedRectangle(appearance: appearance)
-            #endif
+        private(set) lazy var selectableRectangle: ShadowedRoundedRectangle = {
+            return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .uniform)
         }()
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
         }()
 
         // MARK: - UICollectionViewCell
-        // static instance to calculate min width
-        private static let sizingInstance = PaymentTypeCell(frame: .zero)
-        // maps payment method type to (appearnceInstance, width) to avoid recalculation
-        private static var widthCache = [String: (PaymentSheet.Appearance, CGFloat)]()
-
-        class func minWidth(for paymentMethodType: PaymentSheet.PaymentMethodType, appearance: PaymentSheet.Appearance) -> CGFloat {
-            if let (cachedAppearance, cachedWidth) = widthCache[paymentMethodType.identifier],
-               cachedAppearance == appearance {
-                return cachedWidth
-            }
-            sizingInstance.paymentMethodType = paymentMethodType
-            sizingInstance.appearance = appearance
-            let size = sizingInstance.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-            widthCache[paymentMethodType.identifier] = (appearance, size.width)
-            return size.width
-        }
 
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -259,12 +261,13 @@ extension PaymentMethodTypeCollectionView {
             isAccessibilityElement = true
             contentView.addAndPinSubview(selectableRectangle)
             selectableRectangle.frame = bounds
+            let isUsingLiquidGlass: Bool = frame.height == PaymentMethodTypeCollectionView.liquidGlassCornerCellHeight
 
             NSLayoutConstraint.activate([
                 paymentMethodLogo.topAnchor.constraint(
-                    equalTo: selectableRectangle.topAnchor, constant: LiquidGlassDetector.isEnabled ? 16 : 12),
+                    equalTo: selectableRectangle.topAnchor, constant: isUsingLiquidGlass ? 16 : 12),
                 paymentMethodLogo.leadingAnchor.constraint(
-                    equalTo: selectableRectangle.leadingAnchor, constant: LiquidGlassDetector.isEnabled ? 16 : 12),
+                    equalTo: selectableRectangle.leadingAnchor, constant: isUsingLiquidGlass ? 16 : 12),
                 paymentMethodLogo.heightAnchor.constraint(
                     equalToConstant: PaymentMethodTypeCollectionView.paymentMethodLogoSize.height),
                 paymentMethodLogoWidthConstraint,
@@ -279,18 +282,10 @@ extension PaymentMethodTypeCollectionView {
                 promoBadge.trailingAnchor.constraint(equalTo: selectableRectangle.trailingAnchor, constant: -12),
             ])
 
-            contentView.layer.cornerRadius = appearance.cornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
 
             update()
-        }
-
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            contentView.layer.shadowPath =
-                UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius)
-                .cgPath
         }
 
         required init?(coder: NSCoder) {
@@ -329,7 +324,6 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
         private func update() {
-            contentView.layer.cornerRadius = appearance.cornerRadius
             selectableRectangle.appearance = appearance
             label.text = paymentMethodType.displayName
 

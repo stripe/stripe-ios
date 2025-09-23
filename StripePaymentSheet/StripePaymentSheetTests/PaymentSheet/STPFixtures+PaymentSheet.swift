@@ -23,6 +23,9 @@ public extension PaymentSheet.Configuration {
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
+        if #available(iOS 26.0, *) {
+            configuration.appearance.applyLiquidGlassIfPossible()
+        }
         return configuration
     }
 }
@@ -38,6 +41,25 @@ public extension EmbeddedPaymentElement.Configuration {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
         return configuration
+    }
+}
+
+public extension PaymentSheet.Appearance {
+    mutating func applyLiquidGlassIfPossible() {
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            self.applyLiquidGlass()
+        }
+        #endif
+    }
+    func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
+        var copy = self
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            copy.applyLiquidGlass()
+        }
+        #endif
+        return copy
     }
 }
 
@@ -425,6 +447,7 @@ extension STPPaymentMethod {
 extension PaymentSheet.Appearance {
     static var _testMSPaintTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
+        appearance.applyLiquidGlassIfPossible()
 
         // Customize the font
         var font = PaymentSheet.Appearance.Font()

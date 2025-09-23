@@ -2143,6 +2143,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .automatic
         configuration.billingDetailsCollectionConfiguration.phone = .automatic
         configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2150,7 +2151,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2167,6 +2168,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2174,7 +2176,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2191,6 +2193,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .never
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2198,7 +2201,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2216,6 +2219,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .never
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         configuration.defaultBillingDetails.email = "foo@bar.com"
 
@@ -2225,7 +2229,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2252,6 +2256,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.phone = "+12345678900"
         configuration.defaultBillingDetails.address = defaultAddress
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = false
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2259,7 +2264,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2285,6 +2290,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.defaultBillingDetails.phone = "+12345678900"
         configuration.defaultBillingDetails.address = defaultAddress
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2292,7 +2298,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2322,6 +2328,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         configuration.defaultBillingDetails.name = "Foo Bar"
         configuration.defaultBillingDetails.email = "foo@bar.com"
@@ -2334,7 +2341,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2366,6 +2373,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .automatic
         configuration.billingDetailsCollectionConfiguration.phone = .automatic
         configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2373,7 +2381,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2404,6 +2412,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2411,7 +2420,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
-        guard let instantDebitsSection = factory.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let instantDebitsSection = factory.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2449,6 +2458,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         noDefaultsConfiguration.billingDetailsCollectionConfiguration.phone = .never
         noDefaultsConfiguration.billingDetailsCollectionConfiguration.address = .never
         noDefaultsConfiguration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
+        noDefaultsConfiguration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let noDefaultsFacotry = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2456,7 +2466,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(noDefaultsConfiguration),
             paymentMethod: .stripe(.card)
         )
-        guard let noDefaultsInstantDebitsSection = noDefaultsFacotry.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let noDefaultsInstantDebitsSection = noDefaultsFacotry.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 
@@ -2469,6 +2479,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         defaultEmailConfiguration.billingDetailsCollectionConfiguration.address = .never
         defaultEmailConfiguration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = true
         defaultEmailConfiguration.defaultBillingDetails.email = "foo@bar.com"
+        defaultEmailConfiguration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
         let defaultEmailFacotry = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2476,7 +2487,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: .paymentElement(defaultEmailConfiguration),
             paymentMethod: .stripe(.card)
         )
-        guard let defaultEmailInstantDebitsSection = defaultEmailFacotry.makeInstantDebits(countries: ["US"]) as? InstantDebitsPaymentMethodElement else {
+        guard let defaultEmailInstantDebitsSection = defaultEmailFacotry.makeInstantDebits() as? InstantDebitsPaymentMethodElement else {
             return XCTFail("Expected InstantDebitsPaymentMethodElement from factory")
         }
 

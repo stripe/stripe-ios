@@ -411,6 +411,17 @@ extension STPAPIClient {
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
+        retrievePaymentIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
+    }
+
+    // Internal helper to pass timeout
+    @objc(retrievePaymentIntentWithClientSecret:expand:timeout:completion:)
+    @_spi(STP) public func retrievePaymentIntent(
+        withClientSecret secret: String,
+        expand: [String]?,
+        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        completion: @escaping STPPaymentIntentCompletionBlock
+    ) {
         let endpoint: String = paymentIntentEndpoint(from: secret)
         var parameters: [String: Any] = [:]
 
@@ -422,10 +433,16 @@ extension STPAPIClient {
             parameters["expand"] = expand
         }
 
+        let timeoutInterval: TimeInterval? = {
+            guard let timeout else { return nil }
+            return TimeInterval(timeout.doubleValue)
+        }()
+
         APIRequest<STPPaymentIntent>.getWith(
             self,
             endpoint: endpoint,
-            parameters: parameters
+            parameters: parameters,
+            timeout: timeoutInterval
         ) { paymentIntent, _, error in
             // If using a scoped client secret, inject the client secret here
             let paymentIntent = {
@@ -641,6 +658,18 @@ extension STPAPIClient {
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
 
+        retrieveSetupIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
+    }
+
+    // Internal helper to pass timeout to URL request
+    @objc
+    func retrieveSetupIntent(
+        withClientSecret secret: String,
+        expand: [String]?,
+        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        completion: @escaping STPSetupIntentCompletionBlock
+    ) {
+
         let endpoint = setupIntentEndpoint(from: secret)
         var parameters: [String: Any] = [:]
         if !publishableKeyIsUserKey {
@@ -652,10 +681,16 @@ extension STPAPIClient {
             parameters["expand"] = expand
         }
 
+        let timeoutInterval: TimeInterval? = {
+            guard let timeout else { return nil }
+            return TimeInterval(timeout.doubleValue)
+        }()
+
         APIRequest<STPSetupIntent>.getWith(
             self,
             endpoint: endpoint,
-            parameters: parameters
+            parameters: parameters,
+            timeout: timeoutInterval
         ) { setupIntent, _, error in
             completion(setupIntent, error)
         }
@@ -1493,12 +1528,70 @@ extension STPAPIClient {
     }
 }
 
+// MARK: Confirmation Tokens
+
+/// STPAPIClient extensions for working with ConfirmationToken objects.
+extension STPAPIClient {
+    /// Creates a ConfirmationToken object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create
+    /// - Parameters:
+    ///   - confirmationTokenParams:  The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
+    ///   - ephemeralKeySecret: The ephemeral key secret to use for authentication if working with customer-scoped objects.
+    /// - Returns: The created ConfirmationToken object.
+    @_spi(ConfirmationTokensPublicPreview) public func createConfirmationToken(
+        with confirmationTokenParams: STPConfirmationTokenParams,
+        ephemeralKeySecret: String? = nil
+    ) async throws -> STPConfirmationToken {
+        return try await withCheckedThrowingContinuation { continuation in
+            createConfirmationToken(
+                with: confirmationTokenParams,
+                ephemeralKeySecret: ephemeralKeySecret
+            ) { confirmationToken, error in
+                guard let confirmationToken = confirmationToken else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
+                    return
+                }
+                continuation.resume(returning: confirmationToken)
+            }
+        }
+    }
+
+    func createConfirmationToken(
+        with confirmationTokenParams: STPConfirmationTokenParams,
+        ephemeralKeySecret: String? = nil,
+        completion: @escaping STPConfirmationTokenCompletionBlock
+    ) {
+        STPAnalyticsClient.sharedClient.logConfirmationTokenCreationAttempt(
+            with: _stored_configuration
+        )
+        var parameters = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
+        if var paymentMethodParamsDict = parameters[PaymentMethodDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            parameters[PaymentMethodDataHash] = paymentMethodParamsDict
+        }
+        let additionalHeaders = ephemeralKeySecret != nil
+            ? authorizationHeader(using: ephemeralKeySecret!)
+            : [:]
+
+        APIRequest<STPConfirmationToken>.post(
+            with: self,
+            endpoint: APIEndpointConfirmationTokens,
+            additionalHeaders: additionalHeaders,
+            parameters: parameters
+        ) { confirmationToken, _, error in
+            completion(confirmationToken, error)
+        }
+    }
+}
+
 private let APIEndpointToken = "tokens"
 private let APIEndpointSources = "sources"
 @_spi(STP) public let APIEndpointCustomers = "customers"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 @_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointConfirmationTokens = "confirmation_tokens"
 private let APIEndpointElementsCustomers = "elements/customers"
 private let APIEndpointElementsPaymentMethods = "elements/payment_methods"
 private let APIEndpoint3DS2 = "3ds2"

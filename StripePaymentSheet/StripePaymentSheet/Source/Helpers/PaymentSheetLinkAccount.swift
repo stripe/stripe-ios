@@ -76,6 +76,7 @@ struct LinkPMDisplayDetails {
 
     let useMobileEndpoints: Bool
     let requestSurface: LinkRequestSurface
+    let createdFromAuthIntentID: Bool
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
@@ -121,6 +122,11 @@ struct LinkPMDisplayDetails {
         currentSession?.isVerifiedForSignup ?? false
     }
 
+    // Webview fallback URLs have a lifespan of one attempt.
+    // If a user opens one and dismisses it, it can't be used again,
+    // So we'll fetch a new one in that case.
+    var visitedFallbackURLs: [URL] = []
+
     private(set) var currentSession: ConsumerSession?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
@@ -132,7 +138,8 @@ struct LinkPMDisplayDetails {
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
-        requestSurface: LinkRequestSurface = .default
+        requestSurface: LinkRequestSurface = .default,
+        createdFromAuthIntentID: Bool = false
     ) {
         self.email = email
         self.currentSession = session
@@ -142,6 +149,7 @@ struct LinkPMDisplayDetails {
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.requestSurface = requestSurface
+        self.createdFromAuthIntentID = createdFromAuthIntentID
     }
 
     func signUp(
@@ -215,7 +223,6 @@ struct LinkPMDisplayDetails {
 
         session.startVerification(
             with: apiClient,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface
         ) { [weak self] result in
@@ -252,7 +259,6 @@ struct LinkPMDisplayDetails {
         session.confirmSMSVerification(
             with: oneTimePasscode,
             with: apiClient,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface,
             consentGranted: consentGranted
@@ -500,6 +506,28 @@ struct LinkPMDisplayDetails {
         }
     }
 
+    func refresh(
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        guard let session = currentSession else {
+            stpAssertionFailure()
+            completion(.failure(
+                PaymentSheetError.unknown(debugDescription: "Refreshing session without valid current session")
+            ))
+            return
+        }
+
+        session.refreshSession(
+            with: apiClient,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            if case .success(let refreshedSession) = result {
+                self?.currentSession = refreshedSession
+            }
+            completion(result)
+        }
+    }
+
     func logout() {
         guard let session = currentSession else {
             return
@@ -549,7 +577,7 @@ private extension PaymentSheetLinkAccount {
             case .success:
                 completion(result)
             case .failure(let error as NSError):
-                if error.isLinkAuthError && shouldRetry {
+                if error.isLinkAuthError && shouldRetry && self?.createdFromAuthIntentID != true {
                     self?.refreshSession { refreshSessionResult in
                         switch refreshSessionResult {
                         case .success(let refreshedSession):
