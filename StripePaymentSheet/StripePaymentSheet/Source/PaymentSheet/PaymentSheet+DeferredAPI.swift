@@ -117,7 +117,8 @@ extension PaymentSheet {
 
                 // Compute ephemeral key secret for customer session support
                 let ephemeralKeySecret = configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
-                let confirmationToken = try await configuration.apiClient.createConfirmationToken(with: confirmationTokenParams, ephemeralKeySecret: ephemeralKeySecret)
+                let confirmationToken = try await configuration.apiClient.createConfirmationToken(with: confirmationTokenParams,
+                                                                                                  ephemeralKeySecret: confirmationTokenParams.paymentMethod == nil ? nil : ephemeralKeySecret)
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  confirmationToken: confirmationToken)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {

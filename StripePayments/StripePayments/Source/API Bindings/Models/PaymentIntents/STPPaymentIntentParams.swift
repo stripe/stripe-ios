@@ -60,7 +60,6 @@ public class STPPaymentIntentParams: NSObject {
         super.init()
         self.confirmationToken = confirmationToken.stripeId
         self.returnURL = confirmationToken.returnURL
-        self.setupFutureUsage = confirmationToken.setupFutureUsage
     }
 
     /// The Stripe id of the PaymentIntent, extracted from the clientSecret.
