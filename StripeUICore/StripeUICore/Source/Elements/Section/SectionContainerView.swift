@@ -206,7 +206,10 @@ extension SectionContainerView {
                 super.init(frame: .zero)
                 translatesAutoresizingMaskIntoConstraints = false
                 let widthConstraint = widthAnchor.constraint(equalToConstant: width)
-                widthConstraint.priority = .required - 1 // allows for collapsing while hiding within `UIStackView`.
+
+                // allows for collapsing while hiding within `UIStackView` without breaking constraints.
+                //widthConstraint.priority = .required - 1
+
                 widthConstraint.isActive = true
                 backgroundColor = color
             }
