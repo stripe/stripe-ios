@@ -82,7 +82,6 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         advanceToNextStep()
     }
 
-
     /// Advances to the next step after selecting a wallet.
     /// - Parameter wallet: The wallet to fund in the next steps.
     func advanceAfterWalletSelection(_ wallet: CustomerWalletsResponse.Wallet) {

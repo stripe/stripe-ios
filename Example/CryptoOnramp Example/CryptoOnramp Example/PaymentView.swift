@@ -21,8 +21,6 @@ import StripePaymentSheet
 @_spi(STP)
 import StripePaymentsUI
 
-// Remaining: docs here and in AuthenticatedView properties, probably the flow coordinator as well,, testing with bank, testing with card, testing with existing payment token, test token refreshing in the list, testing dismissal of payment selection sheet, test complete checkout.
-
 /// A view that allows input of a specified crypto purchase amount and payment method.
 struct PaymentView: View {
     private enum NumberPadKey: String, Identifiable {
