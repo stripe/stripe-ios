@@ -137,6 +137,24 @@ internal class HCaptchaWebViewManager: NSObject {
         }
     }
 
+    deinit {
+        Log.debug("WebViewManager.deinit")
+
+        // Remove observer
+        if let observer = observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
+
+        // Clean up webview
+        webView.stopLoading()
+        webView.navigationDelegate = nil
+        webView.removeFromSuperview()
+
+        // Mark result as handled to prevent any pending callbacks
+        resultHandled = true
+        completion = nil
+    }
+
     /**
      - parameter view: The view that should present the webview.
 

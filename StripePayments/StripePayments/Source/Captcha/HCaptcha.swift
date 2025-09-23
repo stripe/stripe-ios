@@ -118,6 +118,12 @@ class HCaptcha: NSObject {
         self.manager = manager
     }
 
+    deinit {
+        Log.debug("HCaptcha.deinit")
+        // Stop the manager to clean up resources
+        manager.stop()
+    }
+
     /**
      - parameter reciever: A callback function
 
