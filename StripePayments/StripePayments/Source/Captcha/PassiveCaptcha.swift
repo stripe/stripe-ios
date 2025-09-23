@@ -173,8 +173,6 @@ typealias CaptchaResult = Result<String, Error>
 
 }
 
-
-
 // All duration analytics are in milliseconds
 extension STPAnalyticsClient {
     func logPassiveCaptchaInit(siteKey: String) {
