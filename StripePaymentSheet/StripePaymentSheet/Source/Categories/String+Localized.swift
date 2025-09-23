@@ -553,4 +553,11 @@ extension String.Localized {
     static var use_billing_address_for_shipping: String {
         STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
     }
+
+    static var this_is_your_default: String {
+        STPLocalizedString(
+            "This is your default",
+            "Text of a label indicating that a payment method is the default."
+        )
+    }
 }

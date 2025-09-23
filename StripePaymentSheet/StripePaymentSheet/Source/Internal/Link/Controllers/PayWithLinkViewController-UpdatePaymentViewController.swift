@@ -33,18 +33,8 @@ extension PayWithLinkViewController {
 
         private let linkAppearance: LinkAppearance?
 
-        private lazy var thisIsYourDefaultLabel: UILabel = {
-            let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.textColor = .linkTextSecondary
-            label.adjustsFontForContentSizeCategory = true
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = STPLocalizedString(
-                "This is your default",
-                "Text of a label indicating that a payment method is the default."
-            )
-            return label
+        private lazy var thisIsYourDefaultLabel: UIView = {
+            LinkHintMessageView(message: String.Localized.this_is_your_default)
         }()
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
