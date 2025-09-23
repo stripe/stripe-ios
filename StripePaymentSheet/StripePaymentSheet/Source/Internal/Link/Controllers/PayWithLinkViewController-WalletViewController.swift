@@ -120,17 +120,6 @@ extension PayWithLinkViewController {
             return LinkHintMessageView(message: hintMessage)
         }()
 
-        private var cardDetailsRecollectionElements: [Element]? {
-            var elements: [Element] = []
-            if viewModel.shouldRecollectCardExpiryDate {
-                elements.append(expiryDateElement)
-            }
-            if viewModel.shouldRecollectCardCVC {
-                elements.append(cvcElement)
-            }
-            return elements.isEmpty ? nil : elements
-        }
-
         private lazy var cardDetailsRecollectionSection: SectionElement = {
             let sectionElement = SectionElement(
                 elements: [
@@ -290,12 +279,10 @@ extension PayWithLinkViewController {
                 animated: animated
             )
 
-            if let cardDetailsRecollectionElements {
-                UIView.performWithoutAnimation {
-                    cardDetailsRecollectionSection.elements = [
-                        SectionElement.MultiElementRow(cardDetailsRecollectionElements, theme: theme)
-                    ]
-                }
+            UIView.performWithoutAnimation {
+                expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
+                cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
+                cardDetailsRecollectionSection.view.layoutIfNeeded()
             }
 
             confirmButton.update(
