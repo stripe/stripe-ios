@@ -46,7 +46,7 @@ import UIKit
             }
         }
 
-        public static func makeBSB(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
+        public static func makeBSB(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
             return TextFieldElement(configuration: BSBConfiguration(defaultValue: defaultValue), theme: theme)
         }
 
@@ -76,7 +76,7 @@ import UIKit
             }
         }
 
-        public static func makeAUBECSAccountNumber(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
+        public static func makeAUBECSAccountNumber(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
             return TextFieldElement(configuration: AUBECSAccountNumberConfiguration(defaultValue: defaultValue), theme: theme)
         }
 
@@ -111,7 +111,7 @@ import UIKit
             }
         }
 
-        public static func makeSortCode(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
+        public static func makeSortCode(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
             return TextFieldElement(configuration: SortCodeConfiguration(defaultValue: defaultValue), theme: theme)
         }
 
@@ -139,7 +139,7 @@ import UIKit
             }
         }
 
-        public static func makeBacsAccountNumber(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
+        public static func makeBacsAccountNumber(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
             return TextFieldElement(configuration: BacsAccountNumberConfiguration(defaultValue: defaultValue), theme: theme)
         }
     }

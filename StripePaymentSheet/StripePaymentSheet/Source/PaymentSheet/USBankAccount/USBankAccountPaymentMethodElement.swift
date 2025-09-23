@@ -94,7 +94,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         isSettingUp: Bool,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
-        appearance: PaymentSheet.Appearance = .default
+        appearance: PaymentSheet.Appearance
     ) {
         let theme = appearance.asElementsTheme
         let collectingName = configuration.billingDetailsCollectionConfiguration.name != .never
@@ -198,7 +198,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         return formattedString
     }
 
-    private static func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsAppearance = .default) {
+    private static func applyStyle(formattedString: NSMutableAttributedString, alignment: NSTextAlignment, theme: ElementsAppearance) {
         let style = NSMutableParagraphStyle()
         style.alignment = alignment
         formattedString.addAttributes([.paragraphStyle: style,

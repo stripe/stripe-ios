@@ -87,7 +87,7 @@ import UIKit
         }
     }
 
-    public convenience init(_ element: Element, theme: ElementsAppearance = .default) {
+    public convenience init(_ element: Element, theme: ElementsAppearance) {
         self.init(title: nil, elements: [element], theme: theme)
     }
 }

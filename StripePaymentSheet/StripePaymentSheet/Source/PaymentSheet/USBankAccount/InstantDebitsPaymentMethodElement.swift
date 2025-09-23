@@ -191,7 +191,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         isPaymentIntent: Bool,
         sellerName: String?,
         isSettingUp: Bool,
-        appearance: PaymentSheet.Appearance = .default
+        appearance: PaymentSheet.Appearance
     ) {
         let theme = appearance.asElementsTheme
 

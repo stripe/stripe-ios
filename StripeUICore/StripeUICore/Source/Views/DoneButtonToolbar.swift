@@ -27,7 +27,7 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(delegate: DoneButtonToolbarDelegate?, showCancelButton: Bool = false, theme: ElementsAppearance = .default) {
+    public init(delegate: DoneButtonToolbarDelegate?, showCancelButton: Bool = false, theme: ElementsAppearance) {
 
         let needsAdditionalHeightBetweenKeyboard = LiquidGlassDetector.isEnabledInMerchantApp
         let height = needsAdditionalHeightBetweenKeyboard ? 52 : 44

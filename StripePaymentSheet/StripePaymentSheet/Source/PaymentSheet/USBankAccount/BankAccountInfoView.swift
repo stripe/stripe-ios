@@ -103,7 +103,7 @@ class BankAccountInfoView: UIView {
 
     init(
         frame: CGRect,
-        appearance: PaymentSheet.Appearance = .default,
+        appearance: PaymentSheet.Appearance,
         incentive: PaymentMethodIncentive? = nil
     ) {
         self.appearance = appearance
