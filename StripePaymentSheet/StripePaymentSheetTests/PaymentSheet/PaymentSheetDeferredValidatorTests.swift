@@ -24,7 +24,7 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         }
         let si = STPFixtures.makeSetupIntent()
         let intentConfig_pi = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1080, currency: "USD"), confirmHandler: confirmHandler)
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(setupIntent: si, intentConfiguration: intentConfig_pi)) { error in
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(intentConfiguration: intentConfig_pi)) { error in
             XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. You returned a SetupIntent client secret but used a PaymentSheet.IntentConfiguration in payment mode.")
         }
     }

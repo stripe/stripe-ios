@@ -29,8 +29,7 @@ enum PaymentSheetDeferredValidator {
         }
     }
 
-    static func validate(setupIntent: STPSetupIntent,
-                         intentConfiguration: PaymentSheet.IntentConfiguration) throws {
+    static func validate(intentConfiguration: PaymentSheet.IntentConfiguration) throws {
         guard case .setup = intentConfiguration.mode else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "You returned a SetupIntent client secret but used a PaymentSheet.IntentConfiguration in payment mode.")
         }
