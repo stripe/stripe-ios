@@ -6,7 +6,13 @@
 
 "App Settings" = "Programos nustatymai";
 
-"Back of identity card" = "Asmens tapatybės kortelės galinė pusė";
+"Back %@ photo successfully uploaded" = "%@ galinės dalies nuotrauka sėkmingai įkelta";
+
+"Back identity document photo successfully uploaded" = "Asmens dokumento galinės dalies nuotrauka sėkmingai įkelta";
+
+"Back of %@" = "%@ galinė dalis";
+
+"Back of driver's license or government-issued photo ID" = "Vairuotojo pažymėjimo arba valstybės išduoto asmens tapatybės dokumento su nuotrauka galinė dalis";
 
 "Back of identity document" = "Tapatybės dokumento galinė pusė";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Nematyti detalių";
 
+"Flip your %@ over to the other side" = "Apverskite %@ į kitą pusę";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Apverskite vairuotojo pažymėjimą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka į kitą pusę.";
+
 "Flip your identity card over to the other side" = "Apverskite asmens tapatybės kortelę kita puse";
 
+"Front %@ photo successfully uploaded" = "%@ priekinės dalies nuotrauka sėkmingai įkelta";
+
+"Front identity document photo successfully uploaded" = "Asmens dokumento priekinės dalies nuotrauka sėkmingai įkelta";
+
+"Front of %@" = "%@ priekinė dalis";
+
+"Front of driver's license or government-issued photo ID" = "Vairuotojo pažymėjimo arba valstybės išduoto asmens tapatybės dokumento su nuotrauka priekinė dalis";
+
+"Front of driver's license or passport" = "Vairuotojo pažymėjimo arba paso priekinė dalis";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Vairuotojo pažymėjimo, paso arba valstybės išduoto asmens tapatybės dokumento su nuotrauka priekinė dalis";
+
 "Front of identity document" = "Tapatybės dokumento priekinė pusė";
+
+"Front of passport or government-issued photo ID" = "Paso arba valstybės išduoto asmens tapatybės dokumento su nuotrauka priekinė dalis";
 
 "Get ready to scan your photo ID" = "Pasiruoškite nuskaityti savo asmens tapatybės dokumento nuotrauką";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Nuotraukų biblioteka";
 
+"Please upload images of the front and back of your %@" = "Įkelkite %@ priekinės ir galinės dalies nuotraukas";
+
+"Please upload images of the front and back of your identity document" = "Įkelkite savo asmens tapatybės dokumento priekinės ir galinės pusės nuotraukas";
+
+"Position your %@ in the center of the frame" = "Padėkite %@ rėmelio centre";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Padėkite vairuotojo pažymėjimą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka rėmelio centre";
+
+"Position your driver's license or passport in the center of the frame" = "Padėkite vairuotojo pažymėjimą arba pasą rėmo centre";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Padėkite vairuotojo pažymėjimą, pasą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka rėmelio centre";
+
 "Position your face in the center of the frame." = "Veidas turi būti rėmelio centre.";
+
+"Position your identity document in the center of the frame" = "Padėkite savo tapatybės dokumentą rėmelio centre";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Padėkite pasą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka rėmelio centre";
 
 "Retake Photos" = "Perfotografuoti";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Pasirinkite vietą, iš kur įkelsite asmens tapatybės dokumento galinės pusės vaizdą";
 
 "Select a location to upload the front of your identity document from" = "Pasirinkite vietą, iš kur įkelsite asmens tapatybės dokumento priekinės pusės vaizdą";
+
+"Select back %@ photo" = "Pasirinkti %@ galinės dalies nuotrauką";
+
+"Select back identity document photo" = "Pasirinkti asmens dokumento galinės dalies nuotrauką";
+
+"Select front %@ photo" = "Pasirinkti %@ priekinės dalies nuotrauką";
+
+"Select front identity document photo" = "Pasirinkti asmens dokumento priekinės dalies nuotrauką";
 
 "Selfie" = "Asmenukė";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Įkelti nuotrauką";
 
+"Upload your %@" = "Įkelti savo %@";
+
 "Upload your photo ID" = "Įkelkite savo asmens dokumento nuotrauką";
+
+"Uploading back %@ photo" = "Įkeliama %@ galinės dalies nuotrauka";
+
+"Uploading back identity document photo" = "Įkeliama galinės asmens tapatybės dokumento dalies nuotrauka";
+
+"Uploading front %@ photo" = "Įkeliama %@ priekinės dalies nuotrauka";
+
+"Uploading front identity document photo" = "Įkeliama priekinės asmens tapatybės dokumento dalies nuotrauka";
 
 "Verify your identity" = "Patvirtinkite tapatybę";
 

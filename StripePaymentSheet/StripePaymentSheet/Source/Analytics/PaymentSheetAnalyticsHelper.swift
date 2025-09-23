@@ -228,6 +228,21 @@ final class PaymentSheetAnalyticsHelper {
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
+
+    func logWalletButtonTapped(walletType: PaymentSheet.WalletButtonsVisibility.ExpressType) {
+        let selectedLPM: String = {
+            switch walletType {
+            case .applePay:
+                return "apple_pay"
+            case .link:
+                return "link"
+            case .shopPay:
+                return "shop_pay"
+            }
+        }()
+        log(event: .mcWalletButtonTapped, selectedLPM: selectedLPM)
+    }
+
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
         let event: STPAnalyticEvent = {
             switch integrationShape {
