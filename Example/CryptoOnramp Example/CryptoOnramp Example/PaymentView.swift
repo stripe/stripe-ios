@@ -21,6 +21,8 @@ import StripePaymentSheet
 @_spi(STP)
 import StripePaymentsUI
 
+// Remaining: docs here and in AuthenticatedView properties, probably the flow coordinator as well,, testing with bank, testing with card, testing with existing payment token, test token refreshing in the list, testing dismissal of payment selection sheet, test complete checkout.
+
 struct PaymentView: View {
     private enum NumberPadKey: String, Identifiable {
         case zero
@@ -54,6 +56,12 @@ struct PaymentView: View {
         case image(UIImage)
     }
 
+    private struct Alert: Identifiable {
+        var id: String { title + message }
+        let title: String
+        let message: String
+    }
+
     let coordinator: CryptoOnrampCoordinator
     let customerId: String
     let wallet: CustomerWalletsResponse.Wallet
@@ -65,7 +73,18 @@ struct PaymentView: View {
     @State private var amountText: String = "0"
     @State private var shouldShowPaymentMethodSheet: Bool = false
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
+    @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
+
+    private var isPresentingAlert: Binding<Bool> {
+        Binding(get: {
+            alert != nil
+        }, set: { newValue in
+            if !newValue {
+                alert = nil
+            }
+        })
+    }
 
     // This example UI is intended for USD ($) only, but we respect the
     // current locale’s decimal separator.
@@ -256,6 +275,16 @@ struct PaymentView: View {
         .onAppear {
             fetchPaymentTokens()
         }
+        .alert(
+            alert?.title ?? "Error",
+            isPresented: isPresentingAlert,
+            presenting: alert,
+            actions: { _ in
+                Button("OK") {}
+            }, message: { alert in
+                Text(alert.message)
+            }
+        )
     }
 
     @ViewBuilder
@@ -516,17 +545,21 @@ struct PaymentView: View {
     }
 
     private func presentPaymentMethodSelector(for type: PaymentMethodType) {
-        guard let viewController = UIApplication.shared.findTopNavigationController() else {
-            // errorMessage = "Unable to find view controller to present from."
+        guard let viewController = UIApplication.shared.findTopViewController() else {
+            alert = Alert(title: "Error", message: "Unable to find view controller to present from.")
             return
         }
 
         isLoading.wrappedValue = true
-        // errorMessage = nil
 
         Task {
             do {
                 if let displayData = try await coordinator.collectPaymentMethod(type: type, from: viewController) {
+
+                    await MainActor.run {
+                        shouldShowPaymentMethodSheet = false
+                    }
+
                     let token = try await coordinator.createCryptoPaymentToken()
 
                     // Perform a silent refresh of the payment tokens in case the user re-opens the selector, ignoring errors.
@@ -539,7 +572,6 @@ struct PaymentView: View {
                         }
 
                         selectedPaymentMethod = .newPaymentMethod(tokenId: token, type: type, displayData: displayData)
-                        shouldShowPaymentMethodSheet = false
                     }
                 } else { // cancelled
                     await MainActor.run {
@@ -549,7 +581,7 @@ struct PaymentView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    // errorMessage = "Payment method selection failed: \(error.localizedDescription)"
+                    alert = Alert(title: "Payment method selection failed", message: error.localizedDescription)
                 }
             }
         }
@@ -557,7 +589,7 @@ struct PaymentView: View {
 
     private func continueWithApplePay() {
         guard let viewController = UIApplication.shared.findTopNavigationController() else {
-            // errorMessage = "Unable to find view controller to present from."
+            alert = Alert(title: "Error", message: "Unable to find view controller to present from.")
             return
         }
 
@@ -567,7 +599,6 @@ struct PaymentView: View {
         ]
 
         isLoading.wrappedValue = true
-        // errorMessage = nil
 
         Task {
             do {
@@ -586,7 +617,7 @@ struct PaymentView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    // errorMessage = "Apple Pay failed: \(error.localizedDescription)"
+                    alert = Alert(title: "Apple Pay failed", message: error.localizedDescription)
                 }
             }
         }
@@ -594,7 +625,6 @@ struct PaymentView: View {
 
     private func createOnrampSession(withCryptoPaymentTokenId cryptoPaymentTokenId: String) {
         isLoading.wrappedValue = true
-        // errorMessage = nil
 
         let request = CreateOnrampSessionRequest(
             paymentToken: cryptoPaymentTokenId,
@@ -617,7 +647,7 @@ struct PaymentView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    // errorMessage = "Create onramp session failed: \(error.localizedDescription)"
+                    alert = Alert(title: "Failed to create onramp session", message: error.localizedDescription)
                 }
             }
         }
