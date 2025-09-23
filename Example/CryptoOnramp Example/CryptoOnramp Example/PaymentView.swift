@@ -574,15 +574,8 @@ struct PaymentView: View {
 
                     let token = try await coordinator.createCryptoPaymentToken()
 
-                    // Perform a silent refresh of the payment tokens in case the user re-opens the selector, ignoring errors.
-                    let refreshedPaymentTokensResponse = try? await APIClient.shared.fetchPaymentTokens(cryptoCustomerToken: customerId)
-
                     await MainActor.run {
                         isLoading.wrappedValue = false
-                        if let refreshedPaymentTokensResponse {
-                            paymentTokens = refreshedPaymentTokensResponse.data
-                        }
-
                         selectedPaymentMethod = .newPaymentMethod(tokenId: token, type: type, displayData: displayData)
                     }
                 } else { // cancelled
