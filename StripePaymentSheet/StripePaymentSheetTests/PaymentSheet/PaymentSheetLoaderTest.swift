@@ -553,4 +553,45 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
+    
+    func testDeferredIntentAllPMOSFUValues() async throws {
+        let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in
+            XCTFail("Confirm handler shouldn't be called.")
+        }
+
+        // Test successful load with valid payment method options
+        let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
+            guard type != .unknown else { return partialResult }
+            return partialResult.merging([type: .offSession]) { a, b in a }
+        }
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(
+                amount: 1000,
+                currency: "USD",
+                setupFutureUsage: .offSession,
+                paymentMethodOptions: .init(setupFutureUsageValues: all_payment_methods_pmo_sfu_values)
+            ),
+            confirmHandler: confirmHandler
+        )
+
+        PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            integrationShape: .complete
+        ) { result in
+            loadExpectation.fulfill()
+            switch result {
+            case .success(let loadResult):
+                // Ensure the v1/elements/sessions endpoint returns successfully and didn't fallback
+                // fallback would mean pm types is only cards
+                XCTAssertTrue(loadResult.paymentMethodTypes.count > 1)
+            case .failure(let error):
+                // If this test fails with "received unknown parameter" we may have added a new PM type (eg "foopay") without updating the v1/elements/sessions endpoint to parse it
+                XCTFail("Expected success but got error: \(error.nonGenericDescription)")
+            }
+        }
+        await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
 }
