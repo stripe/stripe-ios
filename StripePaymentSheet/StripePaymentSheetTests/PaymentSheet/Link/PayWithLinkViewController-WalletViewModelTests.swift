@@ -263,14 +263,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         paymentSheetConfiguration.cardBrandAcceptance = cardBrandAcceptance
 
         return PayWithLinkViewController.WalletViewModel(
-            // TODO(link): Fully mock `PaymentSheetLinkAccount and remove this.
-            linkAccount: .init(
-                email: "user@example.com",
-                session: LinkStubs.consumerSession(supportedPaymentDetailsTypes: supportedPaymentDetailsTypes),
-                publishableKey: nil,
-                displayablePaymentDetails: nil,
-                useMobileEndpoints: false
-            ),
+            linkAccount: LinkStubs.account(session: LinkStubs.consumerSession(supportedPaymentDetailsTypes: supportedPaymentDetailsTypes)),
             context: .init(
                 intent: intent,
                 elementsSession: elementsSession,

@@ -263,6 +263,7 @@
 		630A3B22BC5C176928538511 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B7188D37BDE69B56D8223046 /* Main.storyboard */; };
 		648FDD85FD6ECDA1BBC71D45 /* CustomerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FA9C54257694EC0F205A5C /* CustomerSheet.swift */; };
 		64DE5688E4FBE92E1F49810C /* ExternalPaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA5FA03C7093654EC6926F /* ExternalPaymentMethod.swift */; };
+		65B4437C2E832DA200E2A644 /* PayWithLinkViewController-UpdatePaymentViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4437B2E832DA200E2A644 /* PayWithLinkViewController-UpdatePaymentViewControllerTests.swift */; };
 		68E3CF21A7E1525CA05BA260 /* ConnectionsElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7908AA934EC34644090431D5 /* ConnectionsElement.swift */; };
 		68F13446778AF2CAA631ACDE /* PaymentSheet+DeferredAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8F7F2824DFC78268ED6459 /* PaymentSheet+DeferredAPITest.swift */; };
 		694A3B36AC19FC1F87EF0CB1 /* CustomerSheetPaymentMethodAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42DA5892E8E4C28D434AEA7 /* CustomerSheetPaymentMethodAvailabilityTests.swift */; };
@@ -787,6 +788,7 @@
 		62CE362B80042827F47ABC3F /* AffirmCopyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmCopyLabel.swift; sourceTree = "<group>"; };
 		64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowControllerStateTests.swift; sourceTree = "<group>"; };
 		64D658AC15478BF1E0A76B9D /* TestModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeView.swift; sourceTree = "<group>"; };
+		65B4437B2E832DA200E2A644 /* PayWithLinkViewController-UpdatePaymentViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-UpdatePaymentViewControllerTests.swift"; sourceTree = "<group>"; };
 		668A2F2E20F846FDAFEC1217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		67A8D073B075B32BECCD905A /* form_specs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = form_specs.json; sourceTree = "<group>"; };
 		68C3318ED094D63626740234 /* InstantDebitsOnlyFinancialConnectionsAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsOnlyFinancialConnectionsAuthManager.swift; sourceTree = "<group>"; };
@@ -2143,6 +2145,7 @@
 				3147CEDF2CC1BFA80067B5E4 /* LinkPaymentMethodPickerSnapshotTests.swift */,
 				3147CEE02CC1BFA80067B5E4 /* LinkVerificationViewSnapshotTests.swift */,
 				3147CEFD2CC1D3A60067B5E4 /* PayWithLinkViewController-WalletViewModelTests.swift */,
+				65B4437B2E832DA200E2A644 /* PayWithLinkViewController-UpdatePaymentViewControllerTests.swift */,
 				312AE7082D2C87EA0091E5AF /* PayWithLinkViewControllerTests.swift */,
 				49DBCAFA2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift */,
 				495C04682DCAA1AB006D8F1A /* PayWithLinkTestHelpers.swift */,
@@ -2456,6 +2459,7 @@
 				9787A622B527C1AD96A73827 /* SepaMandateViewControllerSnapshotTest.swift in Sources */,
 				61A799522CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift in Sources */,
 				310B6DC62DFC9745009CA85D /* ECEIntegrationTests.swift in Sources */,
+				65B4437C2E832DA200E2A644 /* PayWithLinkViewController-UpdatePaymentViewControllerTests.swift in Sources */,
 				310B6DC82DFC9745009CA85D /* ECEViewControllerTests.swift in Sources */,
 				310B6DC92DFC9745009CA85D /* ECETestHelpers.swift in Sources */,
 				310B6DCA2DFC9745009CA85D /* ShopPayECEPresenterTests.swift in Sources */,
