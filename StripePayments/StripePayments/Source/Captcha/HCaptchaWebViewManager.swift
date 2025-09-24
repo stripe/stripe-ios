@@ -184,7 +184,7 @@ internal class HCaptchaWebViewManager: NSObject {
         if let webView {
             // Remove script message handlers to break retain cycles
             webView.configuration.userContentController.removeScriptMessageHandler(forName: "hcaptcha")
-            
+
             // Clean up webview
             webView.stopLoading()
             webView.navigationDelegate = nil
