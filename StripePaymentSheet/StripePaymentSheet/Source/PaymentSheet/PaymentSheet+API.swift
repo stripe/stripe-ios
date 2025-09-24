@@ -204,7 +204,7 @@ extension PaymentSheet {
                 isSettingUp: isSettingUp(paymentMethodType)
             )
             confirmParams.paymentMethodParams.radarOptions = radarOptions
-            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+            confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
