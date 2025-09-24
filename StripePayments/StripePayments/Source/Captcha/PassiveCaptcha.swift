@@ -72,13 +72,13 @@ import Foundation
 
         let validationTask = Task<String, Error> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, weak self] () -> String in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
+            let startTime = Date()
             do {
                 let hcaptcha = try HCaptcha(apiKey: siteKey,
                                             passiveApiKey: true,
                                             rqdata: rqdata,
                                             host: "stripecdn.com")
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
-                let startTime = Date()
                 let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
                     // Prevent Swift Task continuation misuse with atomic flag and safer handling - hcaptcha.validate can be called unexpectedly multiple times
                     let lock = NSLock()
@@ -109,7 +109,8 @@ import Foundation
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
                 return result
             } catch {
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: 0)
+                let duration = Date().timeIntervalSince(startTime)
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
                 throw error
             }
         }
@@ -152,7 +153,10 @@ import Foundation
                 return result
             }
         } catch {
-            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
+            // Only log if PassiveCaptchaError. Other errors should already be logged
+            if error is PassiveCaptchaError {
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
+            }
             return nil
         }
     }

@@ -42,7 +42,7 @@ class PassiveCaptchaTests: XCTestCase {
         let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
         // should return nil due to timeout
         XCTAssertNil(hcaptchaToken)
-        let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.error" })
+        let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.error" && $0["error_type"] as? String == "StripePayments.PassiveCaptchaChallenge.PassiveCaptchaError" })
         XCTAssertEqual(errorAnalytic?["site_key"] as? String, siteKey)
         XCTAssertEqual(errorAnalytic?["error_code"] as? String, "timeout")
     }
