@@ -253,19 +253,6 @@ extension PaymentSheet {
         }
     }
 
-    static func fetchIntentClientSecretFromMerchant(
-        intentConfig: IntentConfiguration,
-        confirmationToken: STPConfirmationToken
-    ) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                intentConfig.confirmationTokenConfirmHandler?(confirmationToken) { result in
-                    continuation.resume(with: result)
-                }
-            }
-        }
-    }
-
     static func makeDeferredPaymentUserAgentValue(intentConfiguration: IntentConfiguration) -> [String] {
         var paymentUserAgentValues = ["deferred-intent"]
         if intentConfiguration.paymentMethodTypes?.isEmpty ?? true {
@@ -307,25 +294,6 @@ extension PaymentSheet {
         if let pmoSFUValues = paymentMethodOptions?.setupFutureUsageValues, let pmoSFUValue = pmoSFUValues[paymentMethodType] {
             // e.g. payment_method_options["card"]["setup_future_usage"] = "off_session"
             paymentIntentParams.nonnil_paymentMethodOptions.additionalAPIParameters[paymentMethodType.identifier] = ["setup_future_usage": pmoSFUValue.rawValue]
-        }
-    }
-
-    /// Sets PMO SFU or SFU on the given `confirmationTokenParams` object if the given `intentConfiguration` has SFU set / PMO SFU set for the given `paymentMethodType`.
-    /// See https://docs.google.com/document/d/1AW8j-cJ9ZW5h-LapzXOYrrE2b1XtmVo_SnvbNf-asOU
-    static func setSetupFutureUsage(for paymentMethodType: STPPaymentMethodType, intentConfiguration: IntentConfiguration, on confirmationTokenParams: STPConfirmationTokenParams) {
-        // We only set SFU/PMO SFU for PaymentIntents
-        guard
-            case let .payment(amount: _, currency: _, setupFutureUsage: topLevelSFUValue, captureMethod: _, paymentMethodOptions: _) = intentConfiguration.mode
-        else {
-            return
-        }
-        guard confirmationTokenParams.setupFutureUsage == .none else {
-            // If the confirmation token params has SFU set already, assume it was set to respect the checkbox, don't overwrite.
-            return
-        }
-        // Set top-level SFU
-        if let topLevelSFUValue {
-            confirmationTokenParams.setupFutureUsage = topLevelSFUValue.paymentIntentParamsValue
         }
     }
 
