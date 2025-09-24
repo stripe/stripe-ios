@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=oB-EU1mEu6b2W-euUtGh60TNlo2UxuJ0m9PWRLS8ci_P-6Dy-GzBLDeRJUYsRxb3UnpAAMUoYe1Ff1yh
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ja80Peil24GTsaEwl2iVydLa0L4V1QCQ060SfHC_e3oivEW9qPsgRbcp68R1n8Lvj-U9HcO4XSrpRczB
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_CfahlbsdYVUHi1
+request-id: req_lJTlLBbki7oAcs
 Content-Length: 468
 Vary: Origin
-Date: Mon, 22 Sep 2025 18:02:46 GMT
-original-request: req_CfahlbsdYVUHi1
+Date: Wed, 24 Sep 2025 19:20:41 GMT
+original-request: req_lJTlLBbki7oAcs
 stripe-version: 2020-08-27
-idempotency-key: eb4b8555-eb29-49db-be4e-451131b5c123
+idempotency-key: 4460e295-5d98-4950-88b6-d87ed161361a
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "paynow" : {
 
   },
-  "id" : "pm_1SAE4YAOnZToJom1NFO7wYg8",
+  "id" : "pm_1SAyF3AOnZToJom1PoUwQqoy",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1758564166,
+  "created" : 1758741641,
   "allow_redisplay" : "unspecified",
   "type" : "paynow",
   "customer" : null

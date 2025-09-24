@@ -1,0 +1,22 @@
+GET
+https:\/\/pm-redirects\.stripe\.com\/authorize\/acct_1JtgfQKG6vc7r7YC\/pa_nonce_T7CeHWMtiEC92SOJsZmFaQqkWpcYO7k\?useWebAuthSession=true&followRedirectsInSDK=true$
+302
+text/plain
+Content-Type: text/plain;charset=utf-8
+reporting-endpoints: coop="https://q.stripe.com/coop-report", wsp_coop="https://q.stripe.com/coop-report?s=EHaMmLBv8Ht4taOs8h1iv1BjhQCvIF7mHl9_o5VpPiENFflS6TbZudB8QlTPtyN692964WRzKnk=",wsp_coep="https://q.stripe.com/coep-report?s=EHaMmLBv8Ht4taOs8h1iv1BjhQCvIF7mHl9_o5VpPiENFflS6TbZudB8QlTPtyN692964WRzKnk="
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action https:; frame-ancestors 'self'; img-src data:; object-src 'none'; script-src 'nonce-ENoviESZZNr/NCMPvWK+2w==' 'sha256-pYMONNzeWRZFTlVWwh4w+1X4/C55SMBreRfOdrNWkmc=' 'report-sample'; style-src 'nonce-ENoviESZZNr/NCMPvWK+2w=='; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=EHaMmLBv8Ht4taOs8h1iv1BjhQCvIF7mHl9_o5VpPiENFflS6TbZudB8QlTPtyN692964WRzKnk%3D
+x-stripe-proxy-response: upstream
+x-wc: ABCDEFGHIJ
+Server: nginx
+cross-origin-opener-policy-report-only: unsafe-none; report-to="wsp_coop"
+report-to: {"group":"wsp_coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=EHaMmLBv8Ht4taOs8h1iv1BjhQCvIF7mHl9_o5VpPiENFflS6TbZudB8QlTPtyN692964WRzKnk="}],"include_subdomains":true},{"group":"wsp_coep","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coep-report?s=EHaMmLBv8Ht4taOs8h1iv1BjhQCvIF7mHl9_o5VpPiENFflS6TbZudB8QlTPtyN692964WRzKnk="}],"include_subdomains":true}
+Location: https://payments.stripe.com/payment_methods/test_payment?payment_attempt=payatt_3SAyFDKG6vc7r7YC1w62hHe1
+Date: Wed, 24 Sep 2025 19:20:52 GMT
+Content-Length: 0
+cross-origin-opener-policy: unsafe-none; report-to="wsp_coop"
+x-stripe-routing-context-priority-tier: livemode-critical
+x-stripe-server-rpc-duration-micros: 139613
+x-content-type-options: nosniff
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+

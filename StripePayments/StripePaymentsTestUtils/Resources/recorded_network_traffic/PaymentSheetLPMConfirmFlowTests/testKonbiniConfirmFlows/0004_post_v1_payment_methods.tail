@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ntUBIjtRAp8Atcid48B5KJnmCo-G_naxV--uk2LF-AiJBVSOeoPcvC0k8-pVqIlxLzHCBa8kahTrixwa
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ABGW_XbcW__XyisOX6CLXowv0kuHd7eeJA5LwP9QJWgpGFUZg1JTbDo0BRh-hXd5QxF-TpHNKSV8Gq4M
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_enmNJfWcHFzE9K
+request-id: req_WceKSco28UoeqY
 Content-Length: 485
 Vary: Origin
-Date: Mon, 22 Sep 2025 18:02:10 GMT
-original-request: req_enmNJfWcHFzE9K
+Date: Wed, 24 Sep 2025 19:20:06 GMT
+original-request: req_WceKSco28UoeqY
 stripe-version: 2020-08-27
-idempotency-key: d71199c4-57d4-49b6-935d-4b4974b221e8
+idempotency-key: e6badbe1-3185-44d4-8dd4-b09200631f52
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=foo%4
   "konbini" : {
 
   },
-  "id" : "pm_1SAE3yIq2LmpyICoe7yXTrMG",
+  "id" : "pm_1SAyEUIq2LmpyICoWj4nL4ZK",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=foo%4
     }
   },
   "livemode" : false,
-  "created" : 1758564130,
+  "created" : 1758741606,
   "allow_redisplay" : "unspecified",
   "type" : "konbini",
   "customer" : null

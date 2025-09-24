@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=a5MHlRE6jlbs9cM6goZ4YpnxSjB1RkuWRjhaNT9BNG6fZPi_1devbJFl9-L9pNLpxA0tA-jNmN6_Q-qV
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=X8JK1l_csZ3_myPuqLYBmdBBlWBaTXIG3K-PPmIOUmGiLiKSOwthwxgl4J4Poc3YnPsVCUITRuA9CX1k
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_rPgstPIXntwgMS
+request-id: req_bS6hus0aaG4KKv
 Content-Length: 1063
 Vary: Origin
-Date: Mon, 22 Sep 2025 18:05:57 GMT
-original-request: req_rPgstPIXntwgMS
+Date: Wed, 24 Sep 2025 19:23:41 GMT
+original-request: req_bS6hus0aaG4KKv
 stripe-version: 2020-08-27
-idempotency-key: 354f239e-421a-4db8-8fad-ef6f24ee30f0
+idempotency-key: 05e353dd-bc27-4201-a383-8f0dd3e99bc7
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +26,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[address]\[city]=South%20San%20Francisco&payment_method_data\[billing_details]\[address]\[country]=US&payment_method_data\[billing_details]\[address]\[line1]=354%20Oyster%20Point%20Blvd&payment_method_data\[billing_details]\[address]\[line2]=&payment_method_data\[billing_details]\[address]\[postal_code]=94080&payment_method_data\[billing_details]\[address]\[state]=CA&payment_method_data\[billing_details]\[email]=f%40z\.c&payment_method_data\[billing_details]\[name]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=automatic&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sepa_debit]\[iban]=DE89370400440532013000&payment_method_data\[sid]=.*&payment_method_data\[type]=sepa_debit&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1SAE7dFY0qyl6XeWEijy5xic",
+  "id" : "ctoken_1SAyHxFY0qyl6XeWk4xb2WQr",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1758607557,
+  "expires_at" : 1758785021,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -64,7 +64,7 @@ X-Stripe-Mock-Request: mandate_data\[customer_acceptance]\[online]\[infer_from_c
     },
     "type" : "sepa_debit"
   },
-  "created" : 1758564357,
+  "created" : 1758741821,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

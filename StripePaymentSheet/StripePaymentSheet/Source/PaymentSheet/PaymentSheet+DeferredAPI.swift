@@ -54,9 +54,9 @@ extension PaymentSheet {
                     confirmationTokenParams.paymentMethodData = params
                     confirmationTokenParams.paymentMethodData?.radarOptions = radarOptions
                     // Confirmation tokens only supports card payment method options
-                    if paymentOptions.cardOptions != nil {
+//                    if paymentOptions.cardOptions != nil {
                         confirmationTokenParams.paymentMethodOptions = paymentOptions
-                    }
+//                    }
                     // Not setting clientAttributionMetadata on the CT params as it's already contained on the params
 
                     if allowsSetAsDefaultPM && shouldSetAsDefaultPM == true {
@@ -83,6 +83,7 @@ extension PaymentSheet {
                 case .payment:
                     // For PaymentIntents, only set SFU if customer wants to save OR intent config requires it
                     if shouldSavePaymentMethod {
+                        // TODO use value from intent/PMOSFU?
                         confirmationTokenParams.setupFutureUsage = .offSession
                     }
                 }
@@ -490,7 +491,7 @@ extension PaymentSheet {
     static func setSetupFutureUsage(for paymentMethodType: STPPaymentMethodType, intentConfiguration: IntentConfiguration, on confirmationTokenParams: STPConfirmationTokenParams) {
         // We only set SFU/PMO SFU for PaymentIntents
         guard
-            case let .payment(amount: _, currency: _, setupFutureUsage: topLevelSFUValue, captureMethod: _, paymentMethodOptions: paymentMethodOptions) = intentConfiguration.mode
+            case let .payment(amount: _, currency: _, setupFutureUsage: topLevelSFUValue, captureMethod: _, paymentMethodOptions: _) = intentConfiguration.mode
         else {
             return
         }
@@ -501,15 +502,6 @@ extension PaymentSheet {
         // Set top-level SFU
         if let topLevelSFUValue {
             confirmationTokenParams.setupFutureUsage = topLevelSFUValue.paymentIntentParamsValue
-        }
-        // Set PMO SFU for the PM type
-        if let pmoSFUValues = paymentMethodOptions?.setupFutureUsageValues, let pmoSFUValue = pmoSFUValues[paymentMethodType] {
-            // Create or update payment method options
-            if confirmationTokenParams.paymentMethodOptions == nil {
-                confirmationTokenParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
-            }
-            // e.g. payment_method_options["card"]["setup_future_usage"] = "off_session"
-            confirmationTokenParams.paymentMethodOptions!.additionalAPIParameters[paymentMethodType.identifier] = ["setup_future_usage": pmoSFUValue.rawValue]
         }
     }
 
