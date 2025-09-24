@@ -55,7 +55,7 @@ import Foundation
         self.timeout = timeout
     }
 
-    public init(passiveCaptcha: PassiveCaptcha) {
+    public init (passiveCaptcha: PassiveCaptcha) {
         self.passiveCaptcha = passiveCaptcha
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
@@ -80,7 +80,7 @@ import Foundation
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let startTime = Date()
                 let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
-                    // Prevent Swift Task continuation misuse with atomic flag and safer handling
+                    // Prevent Swift Task continuation misuse with atomic flag and safer handling - hcaptcha.validate can be called unexpectedly multiple times
                     let lock = NSLock()
                     var nillableContinuation: CheckedContinuation<String, Error>? = continuation
 
