@@ -6,7 +6,13 @@
 
 "App Settings" = "Definições da aplicação";
 
-"Back of identity card" = "Verso do cartão de identidade";
+"Back %@ photo successfully uploaded" = "Fotografia do verso %@ carregada com sucesso";
+
+"Back identity document photo successfully uploaded" = "Fotografia do verso do documento de identificação carregada com sucesso";
+
+"Back of %@" = "Verso de %@";
+
+"Back of driver's license or government-issued photo ID" = "Verso da carta de condução ou documento de identificação oficial com fotografia";
 
 "Back of identity document" = "Verso do documento de identificação";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Detalhes não visíveis";
 
+"Flip your %@ over to the other side" = "Vire o seu %@ para o outro lado";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Vire a sua carta de condução ou documento de identificação oficial com fotografia para o outro lado";
+
 "Flip your identity card over to the other side" = "Vire o seu cartão de identidade para o outro lado";
 
+"Front %@ photo successfully uploaded" = "Fotografia da frente %@ carregada com sucesso";
+
+"Front identity document photo successfully uploaded" = "Fotografia da frente do documento de identificação carregada com sucesso";
+
+"Front of %@" = "Frente de %@";
+
+"Front of driver's license or government-issued photo ID" = "Frente da carta de condução ou documento de identificação oficial com fotografia";
+
+"Front of driver's license or passport" = "Frente da carta de condução ou passaporte";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Frente da carta de condução, passaporte ou documento de identificação oficial com fotografia";
+
 "Front of identity document" = "Frente do documento de identificação";
+
+"Front of passport or government-issued photo ID" = "Frente do passaporte ou documento de identificação oficial com fotografia";
 
 "Get ready to scan your photo ID" = "Prepare-se para digitalizar o seu documento de identificação com fotografia";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Biblioteca de fotografias";
 
+"Please upload images of the front and back of your %@" = "Carregue imagens da parte da frente e do verso do seu %@";
+
+"Please upload images of the front and back of your identity document" = "Por favor, carregue imagens da frente e do verso do seu documento de identidade";
+
+"Position your %@ in the center of the frame" = "Posicione o seu %@ no centro da moldura";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Posicione a sua carta de condução ou documento de identificação oficial com fotografia no centro da moldura";
+
+"Position your driver's license or passport in the center of the frame" = "Posicione a sua carta de condução ou passaporte no centro da moldura";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Posicione a sua carta de condução, passaporte ou documento de identificação oficial com fotografia no centro da moldura";
+
 "Position your face in the center of the frame." = "Posicione o seu rosto no centro da moldura.";
+
+"Position your identity document in the center of the frame" = "Posicione o seu documento de identidade no centro da moldura";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Posicione o seu passaporte ou documento de identificação oficial com fotografia o no centro da moldura";
 
 "Retake Photos" = "Voltar a tirar fotografias";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Selecione uma localização a partir da qual pretende carregar o verso do seu documento de identidade";
 
 "Select a location to upload the front of your identity document from" = "Selecione uma localização a partir da qual pretende carregar a frente do seu documento de identidade";
+
+"Select back %@ photo" = "Selecionar foto de verso %@";
+
+"Select back identity document photo" = "Selecionar a fotografia de verso do documento de identificação";
+
+"Select front %@ photo" = "Selecionar a fotografia da frente %@";
+
+"Select front identity document photo" = "Selecionar a fotografia da frente do documento de identificação";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Carregar fotografia";
 
+"Upload your %@" = "Carregue o seu %@";
+
 "Upload your photo ID" = "Carregar o seu documento de identificação com fotografia";
+
+"Uploading back %@ photo" = "A carregar a fotografia de verso %@";
+
+"Uploading back identity document photo" = "A carregar a fotografia de verso do documento de identificação";
+
+"Uploading front %@ photo" = "A carregar a fotografia da frente %@";
+
+"Uploading front identity document photo" = "A carregar a fotografia da frente do documento de identificação";
 
 "Verify your identity" = "Verifique a sua identidade";
 

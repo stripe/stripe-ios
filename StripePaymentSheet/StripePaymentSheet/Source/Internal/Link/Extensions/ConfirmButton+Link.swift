@@ -23,8 +23,9 @@ extension ConfirmButton {
         var appearance = LinkUI.appearance
 
         if let linkAppearance {
-            if let colors = linkAppearance.colors {
-                appearance.primaryButton.backgroundColor = colors.primary
+            if let primaryColor = linkAppearance.colors?.primary {
+                appearance.primaryButton.backgroundColor = primaryColor
+                appearance.primaryButton.successBackgroundColor = primaryColor
             }
 
             if let buttonConfiguration = linkAppearance.primaryButton {

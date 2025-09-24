@@ -6,7 +6,13 @@
 
 "App Settings" = "Setările aplicației";
 
-"Back of identity card" = "Verso-ul cărții de identitate";
+"Back %@ photo successfully uploaded" = "Fotografia cu spatele %@ a fost încărcată cu succes";
+
+"Back identity document photo successfully uploaded" = "Fotografia cu spatele documentului de identitate a fost încărcată cu succes";
+
+"Back of %@" = "Spatele %@";
+
+"Back of driver's license or government-issued photo ID" = "Spatele permisului de conducere sau al documentului de identitate cu fotografie emis de guvern";
 
 "Back of identity document" = "Spatele documentului de identitate";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Datele nu sunt vizibile";
 
+"Flip your %@ over to the other side" = "Întoarceți %@ pe cealaltă parte";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Întoarceți permisul de conducere sau documentul de identitate cu fotografie emis de guvern pe cealaltă parte";
+
 "Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
 
+"Front %@ photo successfully uploaded" = "Fotografia cu fața %@ a fost încărcată cu succes";
+
+"Front identity document photo successfully uploaded" = "Fotografia cu fața documentului de identitate a fost încărcată cu succes";
+
+"Front of %@" = "Fața %@";
+
+"Front of driver's license or government-issued photo ID" = "Partea frontală a permisului de conducere sau a documentului de identitate cu fotografie emis de guvern";
+
+"Front of driver's license or passport" = "Partea frontală a permisului de conducere sau a pașaportului";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Partea frontală a permisului de conducere, a pașaportului sau a documentului de identitate cu fotografie emis de guvern";
+
 "Front of identity document" = "Partea frontală a documentului de identitate";
+
+"Front of passport or government-issued photo ID" = "Partea frontală a pașaportului sau a documentului de identitate cu fotografie emis de guvern";
 
 "Get ready to scan your photo ID" = "Pregătiți-vă să vă scanați documentul de identitate cu fotografie";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Galerie foto";
 
+"Please upload images of the front and back of your %@" = "Vă rugăm să încărcați imagini cu fața și spatele %@";
+
+"Please upload images of the front and back of your identity document" = "Vă rugăm să încărcați imagini cu fața și spatele documentului de identitate";
+
+"Position your %@ in the center of the frame" = "Poziționați %@ în centrul cadrului";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Poziționați permisul de conducere sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
+
+"Position your driver's license or passport in the center of the frame" = "Poziționați permisul de conducere sau pașaportul în centrul cadrului";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Poziționați permisul de conducere, pașaportul sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
+
 "Position your face in the center of the frame." = "Poziționați-vă fața în centrul cadrului.";
+
+"Position your identity document in the center of the frame" = "Poziționați documentul de identitate în centrul cadrului";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Poziționați pașaportul sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
 
 "Retake Photos" = "Faceți din nou fotografii";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Selectați o locație din care să încărcați verso-ului documentului dvs. de identitate";
 
 "Select a location to upload the front of your identity document from" = "Selectați o locație din care să încărcați partea frontală a documentului dvs. de identitate";
+
+"Select back %@ photo" = "Selectați fotografia cu spatele %@";
+
+"Select back identity document photo" = "Selectați fotografia cu spatele documentului de identitate";
+
+"Select front %@ photo" = "Selectați fotografia cu fața %@";
+
+"Select front identity document photo" = "Selectați fotografia cu fața documentului de identitate";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Încărcați o fotografie";
 
+"Upload your %@" = "Încărcați %@";
+
 "Upload your photo ID" = "Încărcați documentul de identitate cu fotografie";
+
+"Uploading back %@ photo" = "Se încarcă fotografia cu spatele %@";
+
+"Uploading back identity document photo" = "Se încarcă fotografia cu spatele documentului de identitate";
+
+"Uploading front %@ photo" = "Se încarcă fotografia cu fața %@";
+
+"Uploading front identity document photo" = "Se încarcă fotografia cu fața documentului de identitate";
 
 "Verify your identity" = "Verificați-vă identitatea";
 

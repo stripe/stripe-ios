@@ -17,14 +17,6 @@ import UIKit
 // @iOS26
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
-    override static func setUp() {
-        if #available(iOS 26, *) {
-            var configuration = PaymentSheet.Configuration()
-            configuration.appearance.applyLiquidGlass()
-            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
-        }
-    }
-
     // MARK: Normal mode
 
     func testDefaultState() {

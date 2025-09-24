@@ -153,6 +153,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.enablePassiveCaptcha = settings.enablePassiveCaptcha == .on
 
         return configuration
     }

@@ -6,7 +6,13 @@
 
 "App Settings" = "Pengaturan Aplikasi";
 
-"Back of identity card" = "Bagian belakang kartu identitas";
+"Back %@ photo successfully uploaded" = "Bagian belakang %@ foto berhasil diunggah";
+
+"Back identity document photo successfully uploaded" = "Foto dokumen identitas belakang berhasil diunggah";
+
+"Back of %@" = "Bagian belakang %@";
+
+"Back of driver's license or government-issued photo ID" = "Bagian belakang SIM atau identitas berfoto yang dikeluarkan pemerintah";
 
 "Back of identity document" = "Bagian belakang dokumen identitas";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Detail tidak terlihat";
 
+"Flip your %@ over to the other side" = "Balikkan %@ Anda ke sisi lain";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Balikkan SIM atau identitas berfoto yang dikeluarkan pemerintah ke sisi lainnya";
+
 "Flip your identity card over to the other side" = "Balikkan kartu identitas Anda ke sisi yang lain";
 
+"Front %@ photo successfully uploaded" = "Bagian depan %@ foto berhasil diunggah";
+
+"Front identity document photo successfully uploaded" = "Bagian depan foto dokumen identitas berhasil diunggah";
+
+"Front of %@" = "Bagian depan %@";
+
+"Front of driver's license or government-issued photo ID" = "Bagian depan SIM atau identitas berfoto yang dikeluarkan pemerintah";
+
+"Front of driver's license or passport" = "Bagian depan SIM atau paspor";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Bagian depan SIM, paspor, atau identitas berfoto yang dikeluarkan pemerintah";
+
 "Front of identity document" = "Bagian depan dokumen identitas";
+
+"Front of passport or government-issued photo ID" = "Bagian depan paspor atau identitas berfoto yang dikeluarkan pemerintah";
 
 "Get ready to scan your photo ID" = "Siapkan pemindaian identitas berfoto Anda";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Pustaka Foto";
 
+"Please upload images of the front and back of your %@" = "Silakan unggah gambar bagian depan dan belakang %@ Anda";
+
+"Please upload images of the front and back of your identity document" = "Silakan unggah gambar bagian depan dan belakang dokumen identitas Anda";
+
+"Position your %@ in the center of the frame" = "Posisikan %@ Anda di tengah bingkai";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Posisikan SIM atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
+
+"Position your driver's license or passport in the center of the frame" = "Posisikan SIM atau paspor Anda di bagian tengah bingkai";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Posisikan SIM, paspor, atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
+
 "Position your face in the center of the frame." = "Posisikan wajah Anda di tengah bingkai.";
+
+"Position your identity document in the center of the frame" = "Posisikan dokumen identitas Anda di bagian tengah bingkai";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Posisikan paspor atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
 
 "Retake Photos" = "Ambil Ulang Foto";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Pilih lokasi untuk mengunggah bagian belakang dokumen identitas Anda";
 
 "Select a location to upload the front of your identity document from" = "Pilih lokasi untuk mengunggah bagian depan dokumen identitas Anda";
+
+"Select back %@ photo" = "Pilih bagian belakang %@ foto";
+
+"Select back identity document photo" = "Pilih bagian belakang foto dokumen identitas";
+
+"Select front %@ photo" = "Pilih bagian depan %@ foto";
+
+"Select front identity document photo" = "Pilih bagian depan foto dokumen identitas";
 
 "Selfie" = "Swafoto";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Unggah Foto";
 
+"Upload your %@" = "Unggah %@ Anda";
+
 "Upload your photo ID" = "Unggah ID berfoto Anda";
+
+"Uploading back %@ photo" = "Mengunggah bagian belakang %@ foto";
+
+"Uploading back identity document photo" = "Mengunggah bagian belakang foto dokumen identitas";
+
+"Uploading front %@ photo" = "Mengunggah bagian depan %@ foto";
+
+"Uploading front identity document photo" = "Mengunggah bagian depan foto dokumen identitas";
 
 "Verify your identity" = "Verifikasikan identitas Anda";
 

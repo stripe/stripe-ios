@@ -529,7 +529,11 @@ extension RowButton {
     static func makeForLink(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, isEmbedded: isEmbedded, didTap: didTap)
+        var subtext = String.Localized.link_subtitle_text
+        if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
+            subtext = linkAccount.email
+        }
+        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: subtext, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link
         return button
     }

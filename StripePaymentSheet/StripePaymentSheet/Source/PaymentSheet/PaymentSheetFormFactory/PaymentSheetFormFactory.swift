@@ -890,7 +890,7 @@ extension PaymentSheetFormFactory {
         return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
     }
 
-    func makeInstantDebits(countries: [String]? = nil) -> PaymentMethodElement {
+    func makeInstantDebits() -> PaymentMethodElement {
         let titleElement: SubtitleElement? = if case .paymentElement = configuration {
             makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
         } else {
@@ -900,8 +900,10 @@ extension PaymentSheetFormFactory {
         let billingConfiguration = configuration.billingDetailsCollectionConfiguration
         let nameElement = billingConfiguration.name == .always ? makeName() : nil
         let phoneElement = billingConfiguration.phone == .always ? makePhone() : nil
+
+        let countries = configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
         let addressElement = billingConfiguration.address == .full
-        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries)
+            ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries)
             : nil
 
         // An email is required, so only hide the email field iff:

@@ -6,7 +6,13 @@
 
 "App Settings" = "应用设置";
 
-"Back of identity card" = "身份证背面";
+"Back %@ photo successfully uploaded" = "%@ 背面照片已成功上传";
+
+"Back identity document photo successfully uploaded" = "身份证件背面照片已成功上传";
+
+"Back of %@" = "%@ 的背面";
+
+"Back of driver's license or government-issued photo ID" = "驾驶证或政府签发的带照片身份证件的背面";
 
 "Back of identity document" = "身份证件背面";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "细节不可见";
 
+"Flip your %@ over to the other side" = "将您的 %@ 翻转到另一面";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "将您的驾驶证或政府签发的带照片身份证件翻转到另一面";
+
 "Flip your identity card over to the other side" = "将身份证翻到另一面";
 
+"Front %@ photo successfully uploaded" = "%@ 正面照片已成功上传";
+
+"Front identity document photo successfully uploaded" = "身份证件正面照片已成功上传";
+
+"Front of %@" = "%@ 的正面";
+
+"Front of driver's license or government-issued photo ID" = "驾驶证或政府签发的带照片身份证件的正面";
+
+"Front of driver's license or passport" = "驾驶证或护照的正面";
+
+"Front of driver's license, passport, or government-issued photo ID" = "驾驶证、护照或政府签发的带照片身份证件的正面";
+
 "Front of identity document" = "身份证件正面";
+
+"Front of passport or government-issued photo ID" = "护照或政府签发的带照片身份证件的正面";
 
 "Get ready to scan your photo ID" = "准备好扫描您带照片的身份证件";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "照片库";
 
+"Please upload images of the front and back of your %@" = "请上传您的 %@ 正面和背面的图片";
+
+"Please upload images of the front and back of your identity document" = "请上传您的身份证件正反面的照片";
+
+"Position your %@ in the center of the frame" = "将您的 %@ 放在画面正中间";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "将您的驾驶证或政府签发的带照片身份证件放在画面正中间";
+
+"Position your driver's license or passport in the center of the frame" = "将您的驾驶证或护照放在画面正中间";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "将您的驾驶证、护照或政府签发的带照片身份证件放在画面正中间";
+
 "Position your face in the center of the frame." = "将脸放在画面正中间。";
+
+"Position your identity document in the center of the frame" = "将身份证件放在画面正中间";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "将您的护照或政府签发的带照片身份证件放在画面正中间";
 
 "Retake Photos" = "重新拍照";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "选择一个位置，从那里您上传您的身份证的背面";
 
 "Select a location to upload the front of your identity document from" = "选择一个位置，从那里您上传您的身份证的正面";
+
+"Select back %@ photo" = "选择 %@ 背面照片";
+
+"Select back identity document photo" = "选择身份证件背面照片";
+
+"Select front %@ photo" = "选择 %@ 正面照片";
+
+"Select front identity document photo" = "选择身份证件正面照片";
 
 "Selfie" = "自拍照";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "上传一张照片";
 
+"Upload your %@" = "上传您的 %@";
+
 "Upload your photo ID" = "上传您的带照片身份证件";
+
+"Uploading back %@ photo" = "正在上传 %@ 背面照片";
+
+"Uploading back identity document photo" = "正在上传身份证件背面照片";
+
+"Uploading front %@ photo" = "正在上传 %@ 正面照片";
+
+"Uploading front identity document photo" = "正在上传身份证件正面照片";
 
 "Verify your identity" = "验证您的身份";
 

@@ -136,6 +136,14 @@ extension LinkUI {
 
 }
 
+@_spi(STP) public func resetLinkUI() {
+    // We should refactor LinkUI to not be a singleton anymore, now that it's dependent
+    // on the dynamic configuration. That being said, we still want to be able to accurately
+    // reset it in the playground. That's what this method is for.
+    let configuration = PaymentSheet.Configuration()
+    LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+}
+
 // MARK: - Typography
 
 extension LinkUI {

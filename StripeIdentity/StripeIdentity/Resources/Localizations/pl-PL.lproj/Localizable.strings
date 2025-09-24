@@ -6,7 +6,13 @@
 
 "App Settings" = "Ustawienia aplikacji";
 
-"Back of identity card" = "Tylna strona dokumentu tożsamości";
+"Back %@ photo successfully uploaded" = "Zdjęcie tylnej strony dokumentu %@ zostało przesłane pomyślnie";
+
+"Back identity document photo successfully uploaded" = "Zdjęcie tylnej strony dokumentu tożsamości zostało przesłane pomyślnie";
+
+"Back of %@" = "Tylna strona dokumentu %@";
+
+"Back of driver's license or government-issued photo ID" = "Tył prawa jazdy lub dokumentu tożsamości ze zdjęciem wydanego przez organ państwowy";
 
 "Back of identity document" = "Tylna strona dokumentu tożsamości";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Szczegóły nie są widoczne";
 
+"Flip your %@ over to the other side" = "Odwróć swój dokument %@ na drugą stronę";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Odwróć swoje prawo jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na drugą stronę";
+
 "Flip your identity card over to the other side" = "Obróć dowód tożsamości na drugą stronę";
 
+"Front %@ photo successfully uploaded" = "Zdjęcie przedniej strony dokumentu %@ zostało przesłane pomyślnie";
+
+"Front identity document photo successfully uploaded" = "Zdjęcie przedniej strony dokumentu tożsamości zostało przesłane pomyślnie";
+
+"Front of %@" = "Przednia strona dokumentu %@";
+
+"Front of driver's license or government-issued photo ID" = "Przód prawa jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy";
+
+"Front of driver's license or passport" = "Przód prawa jazdy lub paszportu";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Przód prawa jazdy, paszportu lub dowodu tożsamości ze zdjęciem wydanego przez organ państwowy";
+
 "Front of identity document" = "Przednia strona dokumentu tożsamości";
+
+"Front of passport or government-issued photo ID" = "Przód paszportu lub dokument tożsamości ze zdjęciem wydanego przez organ państwowy";
 
 "Get ready to scan your photo ID" = "Przygotuj się na skanowanie dokumentu tożsamości ze zdjęciem";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Biblioteka zdjęć";
 
+"Please upload images of the front and back of your %@" = "Prześlij zdjęcia przedniej i tylnej strony swojego dokumentu %@";
+
+"Please upload images of the front and back of your identity document" = "Prześlij zdjęcia przedniej i tylnej strony swojego dokumentu tożsamości";
+
+"Position your %@ in the center of the frame" = "Umieść dokument %@ na środku ramki";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Umieść swoje prawo jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
+
+"Position your driver's license or passport in the center of the frame" = "Umieść swoje prawo jazdy lub paszport na środku ramki";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Umieść swoje prawo jazdy, paszport lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
+
 "Position your face in the center of the frame." = "Umieść twarz w centrum kadru.";
+
+"Position your identity document in the center of the frame" = "Umieść swój dokument tożsamości na środku ramki";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Umieść swój paszport lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
 
 "Retake Photos" = "zrób zdjęcia ponownie";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Wybierz lokalizację, z której chcesz przesłać tylną stronę dokumentu tożsamości";
 
 "Select a location to upload the front of your identity document from" = "Wybierz lokalizację, z której chcesz przesłać przednią stronę dokumentu tożsamości";
+
+"Select back %@ photo" = "Wybierz zdjęcie tylnej strony dokumentu %@";
+
+"Select back identity document photo" = "Wybierz zdjęcie tylnej strony dokumentu tożsamości";
+
+"Select front %@ photo" = "Wybierz zdjęcie przedniej strony dokumentu %@";
+
+"Select front identity document photo" = "Wybierz zdjęcie przedniej strony dokumentu tożsamości";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Prześlij zdjęcie";
 
+"Upload your %@" = "Prześlij swój dokument: %@";
+
 "Upload your photo ID" = "Prześlij dokument tożsamości ze zdjęciem";
+
+"Uploading back %@ photo" = "Przesyłanie tylnej strony dokumentu %@";
+
+"Uploading back identity document photo" = "Przesyłanie tylnej strony dokumentu tożsamości";
+
+"Uploading front %@ photo" = "Przesyłanie przedniej strony dokumentu %@";
+
+"Uploading front identity document photo" = "Przesyłanie przedniej strony dokumentu tożsamości";
 
 "Verify your identity" = "Zweryfikuj tożsamość";
 

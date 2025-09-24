@@ -57,6 +57,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case deferred_mc
         /// Def MP: Deferred multiprocessor flow
         case deferred_mp
+        /// Def CSC CT: Deferred client side confirmation with confirmation tokens
+        case deferred_csc_ct
+        /// Def SSC CT: Deferred server side confirmation with confirmation tokens
+        case deferred_ssc_ct
 
         var displayName: String {
             switch self {
@@ -70,6 +74,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred server side confirmation with manual confirmation"
             case .deferred_mp:
                 return "Deferred multiprocessor flow"
+            case .deferred_csc_ct:
+                return "Deferred client side confirmation with CTs"
+            case .deferred_ssc_ct:
+                return "Deferred server side confirmation with CTs"
             }
         }
     }
@@ -295,6 +303,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
+
+        case on
+        case off
+    }
+
+    enum EnablePassiveCaptcha: String, PickerEnum {
+        static var enumName: String { "Enable passive captcha" }
 
         case on
         case off
@@ -666,6 +681,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
+    var enablePassiveCaptcha: EnablePassiveCaptcha
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
@@ -723,6 +739,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
+            enablePassiveCaptcha: .on,
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,

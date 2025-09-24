@@ -6,7 +6,13 @@
 
 "App Settings" = "Sovelluksen asetukset";
 
-"Back of identity card" = "Henkilökortin takapuoli";
+"Back %@ photo successfully uploaded" = "Kohteen %@ taustapuolen kuvan lataus onnistui";
+
+"Back identity document photo successfully uploaded" = "Henkilöllisyystodistuksen taustapuolen kuvan lataus onnistui";
+
+"Back of %@" = "Kohteen %@ taustapuoli";
+
+"Back of driver's license or government-issued photo ID" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen kääntöpuoli.";
 
 "Back of identity document" = "Henkilötodistuksen takapuoli";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Tiedot eivät ole näkyvillä";
 
+"Flip your %@ over to the other side" = "Käännä %@ ylösalaisin";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Käännä ajokortti tai valtion myöntämä kuvallinen henkilötodistus toisin päin";
+
 "Flip your identity card over to the other side" = "Käännä henkilökortti toisinpäin";
 
+"Front %@ photo successfully uploaded" = "Kohteen %@ etupuolen kuvan lataus onnistui";
+
+"Front identity document photo successfully uploaded" = "Henkilöllisyystodistuksen etupuolen kuvan lataus onnistui";
+
+"Front of %@" = "Kohteen %@ etupuoli";
+
+"Front of driver's license or government-issued photo ID" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
+
+"Front of driver's license or passport" = "Ajokortin tai passin etupuoli";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Ajokortin, passin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
+
 "Front of identity document" = "Henkilötodistuksen etupuoli";
+
+"Front of passport or government-issued photo ID" = "Passin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli";
 
 "Get ready to scan your photo ID" = "Valmistaudu skannaamaan kuvallinen henkilöllisyystodistus";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Kuvakirjasto";
 
+"Please upload images of the front and back of your %@" = "Lataa kohteen %@ etu- ja taustapuolen kuvat";
+
+"Please upload images of the front and back of your identity document" = "Lataa kuvat henkilöllisyystodistuksesi etu- ja takapuolesta";
+
+"Position your %@ in the center of the frame" = "Aseta %@ ruudun keskelle";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Aseta ajokortti tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
+
+"Position your driver's license or passport in the center of the frame" = "Aseta ajokortti tai passi kehyksen keskelle";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Aseta ajokortti, passi tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
+
 "Position your face in the center of the frame." = "Aseta kasvosi kuvan keskelle.";
+
+"Position your identity document in the center of the frame" = "Aseta henkilöllisyystodistus ruudun keskelle";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Aseta passi tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
 
 "Retake Photos" = "Ota kuvat uudelleen";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan takapuolen";
 
 "Select a location to upload the front of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan etupuolen";
+
+"Select back %@ photo" = "Valitse kohteen %@ taustapuolen kuva";
+
+"Select back identity document photo" = "Valitse henkilöllisyystodistuksen taustapuolen kuva";
+
+"Select front %@ photo" = "Valitse kohteen %@ etupuolen kuva";
+
+"Select front identity document photo" = "Valitse henkilöllisyystodistuksen etupuolen kuva";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Lataa kuva";
 
+"Upload your %@" = "Lataa %@";
+
 "Upload your photo ID" = "Lataa kuvallinen henkilöllisyystodistus";
+
+"Uploading back %@ photo" = "Kohteen %@ taustapuolen kuvaa ladataan";
+
+"Uploading back identity document photo" = "Henkilöllisyystodistuksen taustapuolen kuvaa ladataan";
+
+"Uploading front %@ photo" = "Kohteen %@ etupuolen kuvaa ladataan";
+
+"Uploading front identity document photo" = "Henkilöllisyystodistuksen etupuolen kuvaa ladataan";
 
 "Verify your identity" = "Vahvista henkilöllisyytesi";
 

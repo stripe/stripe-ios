@@ -6,7 +6,13 @@
 
 "App Settings" = "アプリの設定";
 
-"Back of identity card" = "身分証明書の裏面";
+"Back %@ photo successfully uploaded" = "%@ 裏面の写真が正常にアップロードされました";
+
+"Back identity document photo successfully uploaded" = "身分証明書裏面の写真が正常にアップロードされました";
+
+"Back of %@" = "%@ 裏面";
+
+"Back of driver's license or government-issued photo ID" = "運転免許証の裏面、または政府発行の写真付き身分証明書の裏面";
 
 "Back of identity document" = "本人確認書類の裏面";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "詳細が見えません";
 
+"Flip your %@ over to the other side" = "%@ を裏返してください";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "運転免許証または政府発行の写真付き身分証明書を裏返してください";
+
 "Flip your identity card over to the other side" = "身分証明書を裏返してください";
 
+"Front %@ photo successfully uploaded" = "%@ 表面の写真が正常にアップロードされました";
+
+"Front identity document photo successfully uploaded" = "身分証明書表面の写真が正常にアップロードされました";
+
+"Front of %@" = "%@ 表面";
+
+"Front of driver's license or government-issued photo ID" = "運転免許証、または政府発行の写真付き身分証明書の表面";
+
+"Front of driver's license or passport" = "運転免許証の表面、またはパスポートの写真ページ";
+
+"Front of driver's license, passport, or government-issued photo ID" = "運転免許証、政府発行の写真付き身分証明書の表面、またはパスポートの写真ページ";
+
 "Front of identity document" = "本人確認書類の表面";
+
+"Front of passport or government-issued photo ID" = "パスポートの写真ページ、または政府発行の写真付き身分証明書の表面";
 
 "Get ready to scan your photo ID" = "写真付き身分証明書の直接撮影を準備する";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "フォトライブラリー";
 
+"Please upload images of the front and back of your %@" = "%@ 表裏両面の画像をアップロードしてください";
+
+"Please upload images of the front and back of your identity document" = "本人確認書類の両面画像をアップロードしてください";
+
+"Position your %@ in the center of the frame" = "フレームの中央に %@ を置いてください";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "運転免許証または政府発行の写真付き身分証明書をフレームの中央に配置してください";
+
+"Position your driver's license or passport in the center of the frame" = "運転免許証またはパスポートの写真ページをフレームの中央に配置してください";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "運転免許証、パスポートの写真ページ、または政府発行の写真付き身分証明書をフレームの中央に配置してください";
+
 "Position your face in the center of the frame." = "フレームの中央に顔を置いてください。";
+
+"Position your identity document in the center of the frame" = "身分証明書をフレームの中央に配置してください";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "パスポートの写真ページ、または政府発行の写真付き身分証明書をフレームの中央に配置してください";
 
 "Retake Photos" = "写真を撮り直す";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "身分証明書の裏面をどこからアップロードするのかを選択してください";
 
 "Select a location to upload the front of your identity document from" = "身分証明書の表面をどこからアップロードするのかを選択してください";
+
+"Select back %@ photo" = "%@ 裏面の写真を選択";
+
+"Select back identity document photo" = "身分証明書裏面の写真を選択";
+
+"Select front %@ photo" = "%@ 表面の写真を選択";
+
+"Select front identity document photo" = "身分証明書表面の写真を選択";
 
 "Selfie" = "顔写真";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "写真をアップロード";
 
+"Upload your %@" = "%@ をアップロードしてください";
+
 "Upload your photo ID" = "写真付き身分証明書をアップロードする";
+
+"Uploading back %@ photo" = "%@ 裏面の写真をアップロードしています";
+
+"Uploading back identity document photo" = "身分証明書裏面の写真をアップロードしています";
+
+"Uploading front %@ photo" = "%@ 表面の写真をアップロードしています";
+
+"Uploading front identity document photo" = "身分証明書表面の写真をアップロードしています";
 
 "Verify your identity" = "本人確認を行う";
 

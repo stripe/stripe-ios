@@ -31,13 +31,45 @@ private struct CodableUIColor: Codable {
         return UIColor(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
+private struct CodableNavigationBarStyle: Codable {
+    let navigationBarStyle: PaymentSheet.Appearance.NavigationBarStyle
+    init(_ navigationBarStyle: PaymentSheet.Appearance.NavigationBarStyle) {
+        self.navigationBarStyle = navigationBarStyle
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case style
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let styleString = try container.decode(String.self, forKey: .style)
+
+        if styleString == "glass", #available(iOS 26, *) {
+            navigationBarStyle = .glass
+        } else {
+            navigationBarStyle = .plain
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        if case .plain = navigationBarStyle {
+            try container.encode("plain", forKey: .style)
+        } else if #available(iOS 26, *), .glass == navigationBarStyle {
+            try container.encode("glass", forKey: .style)
+        }
+    }
+
+}
 
 extension PaymentSheet.Appearance: Codable {
     private enum CodingKeys: String, CodingKey {
         // Top-level properties
         case cornerRadius, borderWidth, selectedBorderWidth, sheetCornerRadius
         case sectionSpacing, verticalModeRowPadding, iconStyle
-        case textFieldInsets, formInsets
+        case textFieldInsets, formInsets, navigationBarStyle
 
         // Font properties
         case fontSizeScaleFactor, fontBaseDescriptor, fontCustomHeadlineDescriptor
@@ -79,6 +111,8 @@ extension PaymentSheet.Appearance: Codable {
         self.textFieldInsets = try container.decode(NSDirectionalEdgeInsets.self, forKey: .textFieldInsets)
         self.formInsets = try container.decode(NSDirectionalEdgeInsets.self, forKey: .formInsets)
         self.sectionSpacing = try container.decode(CGFloat.self, forKey: .sectionSpacing)
+        self.navigationBarStyle = try container.decode(CodableNavigationBarStyle.self, forKey: .navigationBarStyle).navigationBarStyle
+
         self.iconStyle = try {
             switch try container.decode(String.self, forKey: .iconStyle) {
             case "filled": .filled
@@ -221,6 +255,7 @@ extension PaymentSheet.Appearance: Codable {
         try container.encode(sheetCornerRadius, forKey: .sheetCornerRadius)
         try container.encode(sectionSpacing, forKey: .sectionSpacing)
         try container.encode(verticalModeRowPadding, forKey: .verticalModeRowPadding)
+        try container.encode(CodableNavigationBarStyle(navigationBarStyle), forKey: .navigationBarStyle)
 
         let iconStyleString =
         switch iconStyle {
