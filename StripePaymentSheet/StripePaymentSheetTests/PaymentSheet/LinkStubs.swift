@@ -96,7 +96,8 @@ extension LinkStubs {
             unredactedPhoneNumber: "(555) 555-5555",
             phoneNumberCountry: "US",
             verificationSessions: [],
-            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes
+            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
+            mobileFallbackWebviewParams: nil
         )
     }
 

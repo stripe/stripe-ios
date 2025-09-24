@@ -6,7 +6,13 @@
 
 "App Settings" = "Mga Setting ng App";
 
-"Back of identity card" = "Likod ng kard ng pagkakakilanlan";
+"Back %@ photo successfully uploaded" = "Matagumpay na na-upload ang likod ng %@ larawan";
+
+"Back identity document photo successfully uploaded" = "Matagumpay na na-upload ang larawan sa likod ng dokumento ng pagkakakilanlan";
+
+"Back of %@" = "Likod ng %@";
+
+"Back of driver's license or government-issued photo ID" = "Likod ng lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno";
 
 "Back of identity document" = "Likod ng dokumento ng pagkakakilanlan";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Hindi nakikita ang mga detalye";
 
+"Flip your %@ over to the other side" = "I-flip ang %@ sa kabilang side";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "I-flip ang iyong lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno sa kabilang panig";
+
 "Flip your identity card over to the other side" = "Baliktarin ang iyong kard ng pagkakakilanlan";
 
+"Front %@ photo successfully uploaded" = "Matagumpay na na-upload ang harap ng %@ larawan";
+
+"Front identity document photo successfully uploaded" = "Matagumpay na na-upload ang larawan sa harap ng dokumento ng pagkakakilanlan";
+
+"Front of %@" = "Harap ng %@";
+
+"Front of driver's license or government-issued photo ID" = "Harap ng lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno";
+
+"Front of driver's license or passport" = "Harap ng lisensya sa pagmamaneho o pasaporte";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Harap ng lisensya sa pagmamaneho, pasaporte, o photo ID na inisyu ng gobyerno";
+
 "Front of identity document" = "Harap ng dokumento ng pagkakakilanlan";
+
+"Front of passport or government-issued photo ID" = "Harap ng pasaporte o photo ID na inisyu ng gobyerno";
 
 "Get ready to scan your photo ID" = "Maghandang i-scan ang iyong photo ID";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Library ng Larawan";
 
+"Please upload images of the front and back of your %@" = "I-upload ang mga imahe ng harap at likod ng %@ mo";
+
+"Please upload images of the front and back of your identity document" = "Mangyaring mag-upload ng mga larawan ng harap at likod ng iyong dokumento ng pagkakakilanlan";
+
+"Position your %@ in the center of the frame" = "Ilagay ang %@ mo sa gitna ng frame";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Ilagay ang iyong lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno sa gitna ng frame";
+
+"Position your driver's license or passport in the center of the frame" = "Ilagay ang iyong lisensya sa pagmamaneho o pasaporte sa gitna ng frame";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Ilagay ang iyong lisensya sa pagmamaneho, pasaporte, o photo ID na inisyu ng gobyerno sa gitna ng frame";
+
 "Position your face in the center of the frame." = "Iposisyon ang iyong mukha sa gitna ng frame.";
+
+"Position your identity document in the center of the frame" = "Ilagay ang iyong dokumento ng pagkakakilanlan sa gitna ng frame";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Ilagay ang iyong pasaporte o photo ID na inisyu ng gobyerno sa gitna ng frame";
 
 "Retake Photos" = "Kunan Muli Ang Mga Larawan";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Pumili ng lokasyon kung saan i-a-upload ang likod ng iyong dokumento ng pagkakakilanlan";
 
 "Select a location to upload the front of your identity document from" = "Pumili ng lokasyon kung saan i-a-upload ang harap ng iyong dokumento ng pagkakakilanlan";
+
+"Select back %@ photo" = "Piliin ang larawan sa likod ng %@";
+
+"Select back identity document photo" = "Piliin ang larawan sa likod ng dokumento ng pagkakakilanlan";
+
+"Select front %@ photo" = "Piliin ang larawan sa harap ng %@";
+
+"Select front identity document photo" = "Piliin ang larawan sa harap ng dokumento ng pagkakakilanlan";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Mag-upload ng Larawan";
 
+"Upload your %@" = "I-upload ang %@ mo";
+
 "Upload your photo ID" = "I-upload ang iyong photo ID";
+
+"Uploading back %@ photo" = "Ina-upload ang larawan sa likod ng %@";
+
+"Uploading back identity document photo" = "Ina-upload ang larawan sa likod ng dokumento ng pagkakakilanlan";
+
+"Uploading front %@ photo" = "Ina-upload ang larawan sa harap ng %@";
+
+"Uploading front identity document photo" = "Ina-upload ang larawan sa harap ng dokumento ng pagkakakilanlan";
 
 "Verify your identity" = "Patunayan ang iyong pagkakakilanlan";
 

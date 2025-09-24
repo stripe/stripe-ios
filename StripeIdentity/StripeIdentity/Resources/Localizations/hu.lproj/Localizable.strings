@@ -6,7 +6,13 @@
 
 "App Settings" = "Alkalmazásbeállítások";
 
-"Back of identity card" = "Személyazonosító igazolvány hátlapja";
+"Back %@ photo successfully uploaded" = "Vissza %@ fotó sikeresen feltöltve";
+
+"Back identity document photo successfully uploaded" = "Vissza azonosító dokumentum fénykép sikeresen feltöltve";
+
+"Back of %@" = "%@-a vissza";
+
+"Back of driver's license or government-issued photo ID" = "A vezetői engedély vagy más hivatalos fényképes igazolvány hátlapja";
 
 "Back of identity document" = "Személyazonosító okmány hátulja";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "A részletek nem láthatók";
 
+"Flip your %@ over to the other side" = "Fordítsa a %@ -át a másik oldalra";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Fordítsa a vezetői engedélyét vagy más hivatalos fényképes igazolványát a másik oldalára";
+
 "Flip your identity card over to the other side" = "Fordítsa személyazonosító igazolványát a másik oldalára";
 
+"Front %@ photo successfully uploaded" = "Elülső oldal %@ fotó sikeresen feltöltve";
+
+"Front identity document photo successfully uploaded" = "Elülső oldali azonosító dokumentum fénykép sikeresen feltöltve";
+
+"Front of %@" = "%@ elülső oldal";
+
+"Front of driver's license or government-issued photo ID" = "A vezetői engedély vagy más hivatalos fényképes igazolvány előlapja";
+
+"Front of driver's license or passport" = "A vezetői engedély vagy az útlevél előlapja";
+
+"Front of driver's license, passport, or government-issued photo ID" = "A vezetői engedély, útlevél vagy más hivatalos fényképes igazolvány előlapja";
+
 "Front of identity document" = "Személyazonosító okmány eleje";
+
+"Front of passport or government-issued photo ID" = "Az útlevél vagy más hivatalos fényképes igazolvány előlapja";
 
 "Get ready to scan your photo ID" = "Készítse elő fényképes igazolványát a beolvasásra";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Képek";
 
+"Please upload images of the front and back of your %@" = "Kérjük, töltse fel %@-ja elülső és hátsó oldalának képét";
+
+"Please upload images of the front and back of your identity document" = "Kérjük, töltse fel a személyazonosító okmánya elülső és hátsó oldalának képét";
+
+"Position your %@ in the center of the frame" = "Helyezze a %@-át a keret középpontjába";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Igazítsa a vezetői engedélyét vagy más hivatalos fényképes igazolványát a keret közepére";
+
+"Position your driver's license or passport in the center of the frame" = "Igazítsa a vezetői engedélyét vagy útlevelét a keret közepére";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Igazítsa a vezetői engedélyét, útlevelét vagy más hivatalos fényképes igazolványát a keret közepére";
+
 "Position your face in the center of the frame." = "Igazítsa az arcát a kép közepére.";
+
+"Position your identity document in the center of the frame" = "Helyezze a személyazonosító okmányt a keret közepére";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Igazítsa az útlevelét vagy más hivatalos fényképes igazolványát a keret közepére";
 
 "Retake Photos" = "Fényképek megismétlése";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának hátlapját";
 
 "Select a location to upload the front of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának előlapját";
+
+"Select back %@ photo" = "Válassza vissza %@ fénykép";
+
+"Select back identity document photo" = "Válassza vissza azonosító dokumentum fénykép";
+
+"Select front %@ photo" = "Válassza elülső %@ fénykép";
+
+"Select front identity document photo" = "Válassza az azonosító okmány elülső oldalának fényképét";
 
 "Selfie" = "Szelfi";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Fotó feltöltése";
 
+"Upload your %@" = "Töltse fel a %@-át";
+
 "Upload your photo ID" = "Fényképes azonosító igazolvány feltöltése";
+
+"Uploading back %@ photo" = "Hátoldali %@ fénykép feltöltése";
+
+"Uploading back identity document photo" = "Az azonosító dokumentum hátoldali fényképének feltöltése";
+
+"Uploading front %@ photo" = "Elülső oldali %@ fénykép feltöltése";
+
+"Uploading front identity document photo" = "Elülső oldali azonosító dokumentum fényképének feltöltése";
 
 "Verify your identity" = "A személyazonosság igazolása";
 

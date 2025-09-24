@@ -20,9 +20,16 @@ enum ApplePayPaymentStatus {
 extension ApplePayPaymentStatus {
 
     /// Encapsulates a fallback error in the unlikely event that Apple Pay fails without a specified error.
-    enum Error: Swift.Error {
+    enum Error: LocalizedError {
 
         /// A fallback error case in the unlikely event that Apple Pay fails without a specified error.
         case applePayFallbackError
+
+        var errorDescription: String? {
+            switch self {
+            case .applePayFallbackError:
+                return "A fallback error occurred during Apple Pay payment."
+            }
+        }
     }
 }

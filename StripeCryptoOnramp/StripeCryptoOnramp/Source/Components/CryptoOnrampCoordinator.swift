@@ -25,8 +25,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
+    /// - Parameter cryptoCustomerID: The crypto customer's ID, if available.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
-    static func create(apiClient: STPAPIClient, appearance: LinkAppearance) async throws -> Self
+    static func create(
+        apiClient: STPAPIClient,
+        appearance: LinkAppearance,
+        cryptoCustomerID: String?
+    ) async throws -> Self
 
     /// Whether or not the provided email is associated with an existing Link consumer.
     ///
@@ -132,25 +137,26 @@ protocol CryptoOnrampCoordinatorProtocol {
     func logOut() async throws
 }
 
+/// Actor to manage crypto customer state in a thread-safe manner
+private actor CryptoCustomerState {
+    private var _customerId: String?
+
+    init(_ initialCustomerId: String?) {
+        _customerId = initialCustomerId
+    }
+
+    func setCustomerId(_ id: String) {
+        _customerId = id
+    }
+
+    func getCustomerId() -> String? {
+        return _customerId
+    }
+}
+
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
 @_spi(STP)
 public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
-
-    /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
-    public enum Error: Swift.Error {
-
-        /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
-        case invalidPhoneFormat
-
-        /// A Link account already exists for the provided email address.
-        case linkAccountAlreadyExists
-
-        /// `ephemeralKey` is missing from the response after starting identity verification.
-        case missingEphemeralKey
-
-        /// An unexpected error occurred internally. `selectedPaymentSource` was not set to an expected value.
-        case invalidSelectedPaymentSource
-    }
 
     private let linkController: LinkController
     private let apiClient: STPAPIClient
@@ -158,6 +164,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
     private var selectedPaymentSource: SelectedPaymentSource?
+    private let cryptoCustomerState: CryptoCustomerState
 
     /// Dedicated API client configured with the platform publishable key
     private var platformApiClient: STPAPIClient?
@@ -178,6 +185,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     private init(
         linkController: LinkController,
+        cryptoCustomerID: String?,
         apiClient: STPAPIClient = .shared,
         appearance: LinkAppearance,
         analyticsClient: CryptoOnrampAnalyticsClient
@@ -186,11 +194,17 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         self.apiClient = apiClient
         self.appearance = appearance
         self.analyticsClient = analyticsClient
+        self.cryptoCustomerState = CryptoCustomerState(cryptoCustomerID)
+        super.init()
     }
 
     // MARK: - CryptoOnrampCoordinatorProtocol
 
-    public static func create(apiClient: STPAPIClient = .shared, appearance: LinkAppearance) async throws -> CryptoOnrampCoordinator {
+    public static func create(
+        apiClient: STPAPIClient = .shared,
+        appearance: LinkAppearance = .init(),
+        cryptoCustomerID: String? = nil
+    ) async throws -> CryptoOnrampCoordinator {
         let analyticsClient = CryptoOnrampAnalyticsClient()
 
         do {
@@ -204,6 +218,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
             let coordinator = CryptoOnrampCoordinator(
                 linkController: linkController,
+                cryptoCustomerID: cryptoCustomerID,
                 apiClient: apiClient,
                 appearance: appearance,
                 analyticsClient: analyticsClient
@@ -267,7 +282,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             try handlePhoneFormatError(error, during: .registerLinkUser)
         }
         do {
-            let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+            let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
+            await cryptoCustomerState.setCustomerId(customerId)
             analyticsClient.log(.linkRegistrationCompleted)
             return customerId
         } catch {
@@ -294,7 +310,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return .canceled
             case .completed:
                 do {
-                    let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+                    let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
+                    await cryptoCustomerState.setCustomerId(customerId)
                     analyticsClient.log(.linkUserAuthenticationCompleted)
                     return .completed(customerId: customerId)
                 } catch {
@@ -315,7 +332,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             switch authorizeResult {
             case .consented:
                 do {
-                    let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+                    let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
+                    await cryptoCustomerState.setCustomerId(customerId)
                     analyticsClient.log(.linkAuthorizationCompleted(consented: true))
                     return .consented(customerId: customerId)
                 } catch {
@@ -410,10 +428,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return nil
             }
 
+            // Collect the user's name for bank payments.
+            let collectName = type == .bankAccount
             guard let result = await linkController.collectPaymentMethod(
                 from: viewController,
                 with: email,
-                supportedPaymentMethodTypes: [supportedPaymentMethodType]
+                supportedPaymentMethodTypes: [supportedPaymentMethodType],
+                collectName: collectName
             ) else {
                 selectedPaymentSource = nil
                 return nil
@@ -488,10 +509,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             }()
 
-            let token = try await apiClient.createPaymentToken(
-                for: paymentMethodId,
-                linkAccountInfo: linkAccountInfo
-            )
+            guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
+                throw Error.missingCryptoCustomerID
+            }
+            let token = try await apiClient.createPaymentToken(for: paymentMethodId, cryptoCustomerId: cryptoCustomerId)
             analyticsClient.log(.cryptoPaymentTokenCreated(paymentMethodType: selectedPaymentSource.analyticsValue))
             return token.id
         } catch {
@@ -686,8 +707,12 @@ private extension CryptoOnrampCoordinator {
             return platformApiClient
         }
 
+        guard let cryptoCustomerId = await cryptoCustomerState.getCustomerId() else {
+            throw Error.missingCryptoCustomerID
+        }
+
         // Fetch platform settings and create API client
-        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
+        let platformSettings = try await apiClient.getPlatformSettings(cryptoCustomerId: cryptoCustomerId)
         let newPlatformApiClient = STPAPIClient(publishableKey: platformSettings.publishableKey)
         platformApiClient = newPlatformApiClient
         return newPlatformApiClient

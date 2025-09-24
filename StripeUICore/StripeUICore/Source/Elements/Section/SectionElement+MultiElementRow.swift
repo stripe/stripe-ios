@@ -26,5 +26,10 @@ public extension SectionElement {
                 $0.delegate = self
             }
         }
+
+        /// Updates the visibility of dividers based on neighboring view visibility.
+        public func updateDividerVisibility() {
+            (view as? SectionContainerView.MultiElementRowView)?.updateDividerVisibility()
+        }
     }
 }

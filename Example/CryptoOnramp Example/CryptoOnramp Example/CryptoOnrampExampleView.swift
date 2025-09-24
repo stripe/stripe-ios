@@ -131,11 +131,14 @@ struct CryptoOnrampExampleView: View {
                         ) { wallet in
                             flowCoordinator.advanceAfterWalletSelection(wallet)
                         }
-                    case let .authenticated(customerId, wallet):
+                    case let .payment(customerId, wallet):
+                        PaymentView(coordinator: coordinator, customerId: customerId, wallet: wallet) { response in
+                            flowCoordinator.advanceAfterPayment(createOnrampSessionResponse: response)
+                        }
+                    case let .authenticated(createOnrampSessionResponse):
                         AuthenticatedView(
                             coordinator: coordinator,
-                            customerId: customerId,
-                            wallet: wallet
+                            onrampSessionResponse: createOnrampSessionResponse
                         )
                     }
                 }

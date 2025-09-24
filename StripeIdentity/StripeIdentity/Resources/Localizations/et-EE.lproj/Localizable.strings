@@ -6,7 +6,13 @@
 
 "App Settings" = "Rakenduse sätted";
 
-"Back of identity card" = "ID-kaardi tagakülg";
+"Back %@ photo successfully uploaded" = "%@ tagumine foto on edukalt üles laaditud.";
+
+"Back identity document photo successfully uploaded" = "Foto isikut tõendava dokumendi tagaküljest on edukalt üles laaditud";
+
+"Back of %@" = "%@ tagakülg";
+
+"Back of driver's license or government-issued photo ID" = "Juhiloa või valitsuse väljastatud fotoga isikut tõendava dokumendi tagakülg";
 
 "Back of identity document" = "Isikut tõendava dokumendi tagakülg";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Üksikasjad pole nähtaval";
 
+"Flip your %@ over to the other side" = "Pöörake oma %@ teisele poole";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Pöörake oma juhiloa või valitsuse väljastatud fotoga isikut tõendava dokumendi teine pool";
+
 "Flip your identity card over to the other side" = "Pöörake ID-kaart ümber";
 
+"Front %@ photo successfully uploaded" = "%@ foto esiosa on edukalt üles laaditud";
+
+"Front identity document photo successfully uploaded" = "Isikut tõendava dokumendi foto esiküljest on edukalt üles laaditud";
+
+"Front of %@" = "%@ esikülg";
+
+"Front of driver's license or government-issued photo ID" = "Juhiloa või valitsuse väljastatud fotoga isikut tõendava dokumendi esikülg";
+
+"Front of driver's license or passport" = "Juhiloa või passi esikülg";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Juhiloa, passi või valitsuse väljastatud fotoga isikut tõendava dokumendi esikülg";
+
 "Front of identity document" = "Isikut tõendava dokumendi esikülg";
+
+"Front of passport or government-issued photo ID" = "Passi või valitsuse väljastatud fotoga isikut tõendava dokumendi esikülg";
 
 "Get ready to scan your photo ID" = "Valmistuge oma fotoga isikut tõendava dokumendi skannimiseks";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Fototeek";
 
+"Please upload images of the front and back of your %@" = "Palun laadige üles pildid oma %@ esi- ja tagaküljest";
+
+"Please upload images of the front and back of your identity document" = "Palun laadige üles pildid oma isikut tõendava dokumendi esi- ja tagaküljest.";
+
+"Position your %@ in the center of the frame" = "Asetage %@ kaadri keskele";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Asetage oma juhiluba või valitsuse väljastatud fotoga isikut tõendav dokument kaadri keskele";
+
+"Position your driver's license or passport in the center of the frame" = "Asetage oma juhiluba või pass kaadri keskele";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Asetage oma juhiluba, pass või valitsuse väljastatud fotoga isikut tõendav dokument kaadri keskele";
+
 "Position your face in the center of the frame." = "Jälgige, et nägu oleks raami keskel.";
+
+"Position your identity document in the center of the frame" = "Paigutage isikut tõendava dokument raami keskele";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Asetage oma pass või valitsuse väljastatud fotoga isikut tõendav dokument raami keskele";
 
 "Retake Photos" = "Tee fotod uuesti";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Valige asukoht, kust laadida üles oma isikut tõendava dokumendi tagakülg";
 
 "Select a location to upload the front of your identity document from" = "Valige asukoht, kust laadida üles oma isikut tõendava dokumendi esikülg";
+
+"Select back %@ photo" = "Vali %@ tagakülje foto";
+
+"Select back identity document photo" = "Valige isikut tõendava dokumendi tagumine foto";
+
+"Select front %@ photo" = "Vali %@ esikülje foto";
+
+"Select front identity document photo" = "Valige isikut tõendava dokumendi esikülje foto";
 
 "Selfie" = "Selfi";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Laadi foto üles";
 
+"Upload your %@" = "Laadige üles oma %@";
+
 "Upload your photo ID" = "Laadige üles fotoga isikut tõendav dokument";
+
+"Uploading back %@ photo" = "Laaditakse üles %@ tagumist fotot.";
+
+"Uploading back identity document photo" = "Laaditakse üles isikut tõendava dokumendi tagakülje fotot.";
+
+"Uploading front %@ photo" = "%@ esikülje foto üleslaadimine";
+
+"Uploading front identity document photo" = "Isikut tõendava dokumendi esikülje foto üleslaadimine";
 
 "Verify your identity" = "Kinnitage oma isik";
 

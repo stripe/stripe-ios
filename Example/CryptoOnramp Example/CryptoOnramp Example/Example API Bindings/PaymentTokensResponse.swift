@@ -17,12 +17,18 @@ struct PaymentTokensResponse: Decodable {
         let wallet: String?
     }
 
-    struct PaymentToken: Decodable {
+    struct BankAccount: Decodable {
+        let accountType: String
+        let bankName: String
+        let last4: String
+    }
+
+    struct PaymentToken: Decodable, Identifiable {
         let id: String
         let object: String
         let card: Card?
         let type: String
-        let usBankAccount: String?
+        let usBankAccount: BankAccount?
     }
 
     let object: String

@@ -6,7 +6,13 @@
 
 "App Settings" = "Postavke aplikacije";
 
-"Back of identity card" = "Stražnja strana osobne iskaznice";
+"Back %@ photo successfully uploaded" = "Fotografija poleđine %@ uspješno prenesena";
+
+"Back identity document photo successfully uploaded" = "Fotografija poleđine osobnog dokumenta uspješno učitana";
+
+"Back of %@" = "Poleđina %@";
+
+"Back of driver's license or government-issued photo ID" = "Stražnja strana vozačke dozvole ili službenog identifikacijskog dokumenta s fotografijom";
 
 "Back of identity document" = "Stražnja strana identifikacijskog dokumenta";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Pojedinosti nisu vidljive";
 
+"Flip your %@ over to the other side" = "Okrenite %@ na drugu stranu";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Okrenite svoju vozačku dozvolu ili službeni identifikacijski dokument s fotografijom na drugu stranu";
+
 "Flip your identity card over to the other side" = "Okrenite svoju osobnu iskaznicu na drugu stranu";
 
+"Front %@ photo successfully uploaded" = "Fotografija prednje strane %@ uspješno je prenesena";
+
+"Front identity document photo successfully uploaded" = "Fotografija prednje strane osobnog dokumenta uspješno učitana";
+
+"Front of %@" = "Prednja strana %@";
+
+"Front of driver's license or government-issued photo ID" = "Prednja strana vozačke dozvole ili službenog identifikacijskog dokumenta s fotografijom";
+
+"Front of driver's license or passport" = "Prednja strana vozačke dozvole ili putovnice";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Prednja strana vozačke dozvole, putovnice ili službenog identifikacijskog dokumenta s fotografijom";
+
 "Front of identity document" = "Prednja strana identifikacijskog dokumenta";
+
+"Front of passport or government-issued photo ID" = "Prednja strana putovnice ili službenog identifikacijskog dokumenta s fotografijom";
 
 "Get ready to scan your photo ID" = "Pripremite se za skeniranje svog osobnog dokumenta s fotografijom";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Biblioteka fotografija";
 
+"Please upload images of the front and back of your %@" = "Prenesite slike prednje strane i poleđine vaše %@";
+
+"Please upload images of the front and back of your identity document" = "Učitajte slike prednje i stražnje strane vašeg osobnog dokumenta";
+
+"Position your %@ in the center of the frame" = "Postavite %@ u središte kadra";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Postavite vozačku dozvolu ili službeni identifikacijski dokument s fotografijom u sredinu okvira";
+
+"Position your driver's license or passport in the center of the frame" = "Postavite vozačku dozvolu ili putovnicu u sredinu okvira";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Postavite vozačku dozvolu, putovnicu ili službeni identifikacijski dokument s fotografijom u sredinu okvira";
+
 "Position your face in the center of the frame." = "Postavite svoje lice u središte okvira.";
+
+"Position your identity document in the center of the frame" = "Postavite svoj osobni dokument u središte okvira";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Postavite putovnicu ili službeni identifikacijski dokument s fotografijom u sredinu okvira";
 
 "Retake Photos" = "Ponovo snimi fotografije";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Odaberite lokaciju s koje ćete učitati stražnju stranu svog dokumenta";
 
 "Select a location to upload the front of your identity document from" = "Odaberite lokaciju s koje ćete učitati prednju stranu svog dokumenta";
+
+"Select back %@ photo" = "Odaberite fotografiju poleđine %@";
+
+"Select back identity document photo" = "Odaberite fotografiju poleđine osobnog dokumenta";
+
+"Select front %@ photo" = "Odaberite fotografiju prednje strane %@";
+
+"Select front identity document photo" = "Odaberite fotografiju prednje strane osobnog dokumenta";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Učitaj fotografiju";
 
+"Upload your %@" = "Prenesite svoj %@";
+
 "Upload your photo ID" = "Učitajte svoj identifikacijski dokument s fotografijom";
+
+"Uploading back %@ photo" = "Učitavanje fotografije poleđine %@";
+
+"Uploading back identity document photo" = "Učitavanje fotografije poleđine osobnog dokumenta";
+
+"Uploading front %@ photo" = "Učitavanje fotografije prednje strane %@";
+
+"Uploading front identity document photo" = "Učitavanje fotografije prednje strane osobnog dokumenta";
 
 "Verify your identity" = "Potvrdite svoj identitet";
 

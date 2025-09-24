@@ -11,9 +11,9 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import UIKit
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePaymentSheet
+@testable import Stripe
+@testable import StripeCore
+@testable import StripePaymentSheet
 
 // @iOS26
 class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
