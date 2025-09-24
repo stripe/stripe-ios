@@ -136,10 +136,8 @@ final class PaymentSheetAnalyticsHelper {
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
             "integration_shape": integrationShape.analyticsValue,
         ]
-        let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        if linkEnabled {
-            let linkMode = elementsSession.linkSettings?.linkMode?.rawValue
-            params["link_mode"] = linkMode
+        if let linkMode = elementsSession.linkSettings?.linkMode {
+            params["link_mode"] = linkMode.rawValue
         }
         params["link_display"] = configuration.link.display.rawValue
         if elementsSession.customer?.customerSession != nil {
