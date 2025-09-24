@@ -55,7 +55,7 @@ import Foundation
         self.timeout = timeout
     }
 
-    public init?(passiveCaptcha: PassiveCaptcha) {
+    public init(passiveCaptcha: PassiveCaptcha) {
         self.passiveCaptcha = passiveCaptcha
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
