@@ -70,8 +70,8 @@ struct PaymentView: View {
     /// The wallet being funded.
     let wallet: CustomerWalletsResponse.Wallet
 
-    /// Upon success, this closure is called delivering the created onramp session, ready for checkout.
-    let onContinue: (CreateOnrampSessionResponse) -> Void
+    /// Upon success, this closure is called delivering the created onramp session and a description of the selected payment method, ready for checkout.
+    let onContinue: (CreateOnrampSessionResponse, _ selectedPaymentMethodDescription: String) -> Void
 
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
@@ -645,7 +645,7 @@ struct PaymentView: View {
                 let response = try await APIClient.shared.createOnrampSession(requestObject: request)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onContinue(response)
+                    onContinue(response, selectPaymentMethodButtonTitle)
                 }
             } catch {
                 await MainActor.run {
@@ -708,7 +708,7 @@ private extension PaymentTokensResponse.PaymentToken {
                 network: "solana",
                 walletAddress: ""
             ),
-            onContinue: { _ in }
+            onContinue: { _, _ in }
         )
     }
 }
