@@ -436,10 +436,10 @@ extension ECEViewController: WKUIDelegate {
 
         // Use the provided configuration directly (this fixes the configuration error)
         // Create popup with full screen bounds
-        popupWebView = WKWebView(frame: view.bounds, configuration: configuration)
+        popupWebView = WKWebView(frame: .zero, configuration: configuration)
         popupWebView?.navigationDelegate = self
         popupWebView?.uiDelegate = self
-        popupWebView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
         #if DEBUG
         if #available(iOS 16.4, *) {
             popupWebView?.isInspectable = true
@@ -450,10 +450,18 @@ extension ECEViewController: WKUIDelegate {
         popupWebView?.customUserAgent = Self.FakeSafariUserAgent
 
         // Add the popup webview as a fullscreen overlay
-        if let popupWebView = popupWebView {
+        if let popupWebView {
+            popupWebView.translatesAutoresizingMaskIntoConstraints = false
+            popupWebView.scrollView.contentInsetAdjustmentBehavior = .never
             view.addSubview(popupWebView)
-        }
 
+            NSLayoutConstraint.activate([
+                popupWebView.topAnchor.constraint(equalTo: view.topAnchor),
+                popupWebView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                popupWebView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                popupWebView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ])
+        }
         return popupWebView
     }
 
