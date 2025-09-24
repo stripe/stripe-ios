@@ -1,4 +1,4 @@
-## x.x.x yyyy-yy-yy
+## 24.24.0 2025-09-22
 
 ## Connect
 * [Added] Payments and Payouts embedded components are available to use in public preview.

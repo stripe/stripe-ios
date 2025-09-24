@@ -6,7 +6,13 @@
 
 "App Settings" = "Paramètres de l'application";
 
-"Back of identity card" = "Verso de la carte d'identité";
+"Back %@ photo successfully uploaded" = "Photo du verso de %@ téléversée avec succès";
+
+"Back identity document photo successfully uploaded" = "La photo du verso de la pièce d'identité a été téléversée avec succès";
+
+"Back of %@" = "Verso de %@";
+
+"Back of driver's license or government-issued photo ID" = "Verso de votre permis de conduire ou de votre pièce d'identité officielle avec photo";
 
 "Back of identity document" = "Verso de la pièce d'identité";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Détails non visibles";
 
+"Flip your %@ over to the other side" = "Retournez votre %@";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Retournez votre permis de conduire ou votre pièce d'identité officielle avec photo sur l'autre face.";
+
 "Flip your identity card over to the other side" = "Retournez votre carte d'identité";
 
+"Front %@ photo successfully uploaded" = "Photo du recto de %@ téléversée avec succès";
+
+"Front identity document photo successfully uploaded" = "La photo du recto de la pièce d'identité avant a été téléversée avec succès";
+
+"Front of %@" = "Recto de %@";
+
+"Front of driver's license or government-issued photo ID" = "Le recto du permis de conduire ou d'une pièce d'identité officielle avec photo";
+
+"Front of driver's license or passport" = "Recto du permis de conduire ou du passeport";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Le recto du permis de conduire, du passeport ou d'une pièce d'identité d'origine officielle avec photo.";
+
 "Front of identity document" = "Recto de la pièce d'identité";
+
+"Front of passport or government-issued photo ID" = "Recto du passeport ou d'une pièce d'identité officielle avec photo";
 
 "Get ready to scan your photo ID" = "Préparez-vous à scanner votre pièce d'identité";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Bibliothèque de photos";
 
+"Please upload images of the front and back of your %@" = "Veuillez téléverser des images du recto et du verso de votre %@.";
+
+"Please upload images of the front and back of your identity document" = "Veuillez téléverser des images du recto et du verso de votre pièce d’identité";
+
+"Position your %@ in the center of the frame" = "Positionnez votre %@ au centre du cadre";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Placez votre permis de conduire ou votre pièce d'identité officielle au centre du cadre.";
+
+"Position your driver's license or passport in the center of the frame" = "Placez votre permis de conduire ou votre passeport au centre du cadre.";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Placez votre permis de conduire, votre passeport ou votre pièce d'identité officielle avec photo au centre du cadre";
+
 "Position your face in the center of the frame." = "Placez votre visage au centre du cadre.";
+
+"Position your identity document in the center of the frame" = "Positionnez votre pièce d’identité au centre du cadre";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Placez votre passeport ou votre pièce d'identité officielle avec photo au centre du cadre.";
 
 "Retake Photos" = "Reprendre des photos";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Sélectionnez l'emplacement à partir duquel vous souhaitez téléverser le verso de votre pièce d'identité";
 
 "Select a location to upload the front of your identity document from" = "Sélectionnez l'emplacement à partir duquel vous souhaitez téléverser le recto de votre pièce d'identité";
+
+"Select back %@ photo" = "Sélectionner la photo du verso de %@.";
+
+"Select back identity document photo" = "Sélectionnez la photo du verso de la pièce d'identité";
+
+"Select front %@ photo" = "Sélectionnez la photo du recto de %@.";
+
+"Select front identity document photo" = "Sélectionnez la photo du recto de la pièce d'identité";
 
 "Selfie" = "Égoportrait";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Téléverser une photo";
 
+"Upload your %@" = "Téléversez votre %@";
+
 "Upload your photo ID" = "Téléverser votre pièce d'identité avec photo";
+
+"Uploading back %@ photo" = "Téléversement de la photo du verso de %@.";
+
+"Uploading back identity document photo" = "Téléversement de la photo du verso de la pièce d'identité";
+
+"Uploading front %@ photo" = "Téléversement de la photo du recto de %@.";
+
+"Uploading front identity document photo" = "Téléversement de la photo du recto de la pièce d'identité";
 
 "Verify your identity" = "Confirmer votre identité";
 

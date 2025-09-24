@@ -6,7 +6,13 @@
 
 "App Settings" = "Настройки на приложението";
 
-"Back of identity card" = "Задна страна на лична карта";
+"Back %@ photo successfully uploaded" = "Снимка на задната част на %@ е качена успешно";
+
+"Back identity document photo successfully uploaded" = "Успешно качена снимка на задната част на документа за самоличност";
+
+"Back of %@" = "Задна част на %@";
+
+"Back of driver's license or government-issued photo ID" = "Задна част на шофьорска книжка или издаден от съответната държава документ за самоличност със снимка";
 
 "Back of identity document" = "Задна страна на документ за самоличност";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Подробностите не се виждат";
 
+"Flip your %@ over to the other side" = "Обърнете вашия %@ от другата страна";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Обърнете шофьорската си книжка или издадения от съответната държава документ за самоличност със снимка от другата страна.";
+
 "Flip your identity card over to the other side" = "Обърнете личната си карта от другата страна.";
 
+"Front %@ photo successfully uploaded" = "Снимка на предната част на %@ е качена успешно";
+
+"Front identity document photo successfully uploaded" = "Успешно качена снимка на предната част на документа за самоличност";
+
+"Front of %@" = "Предната част на %@";
+
+"Front of driver's license or government-issued photo ID" = "Предна част на шофьорска книжка или издаден от съответната държава документ за самоличност със снимка";
+
+"Front of driver's license or passport" = "Предна част на шофьорска книжка или паспорт";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Предна част на шофьорска книжка, паспорт или издаден от съответната държава документ за самоличност със снимка";
+
 "Front of identity document" = "Предна страна на документ за самоличност";
+
+"Front of passport or government-issued photo ID" = "Предна част на паспорт или издаден от съответната държава документ за самоличност със снимка";
 
 "Get ready to scan your photo ID" = "Подгответе се за сканиране на Вашия документ за самоличност със снимка";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Библиотека със снимки";
 
+"Please upload images of the front and back of your %@" = "Моля, качете изображения на предната и задната част на вашия %@";
+
+"Please upload images of the front and back of your identity document" = "Моля, качете снимки на предната и задната страна на вашия документ за самоличност";
+
+"Position your %@ in the center of the frame" = "Позиционирайте вашия %@ в центъра на рамката";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Поставете шофьорската си книжка или издадения от съответната държава документ за самоличност със снимка в центъра на рамката.";
+
+"Position your driver's license or passport in the center of the frame" = "Поставете шофьорската си книжка или паспорта в центъра на рамката.";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Поставете шофьорската си книжка, паспорта или издадения от съответната държава документ за самоличност със снимка в центъра на рамката.";
+
 "Position your face in the center of the frame." = "Позиционирайте лицето си в центъра на рамката.";
+
+"Position your identity document in the center of the frame" = "Поставете документа си за самоличност в центъра на рамката";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Поставете паспорта си или издадения от съответната държава документ за самоличност със снимка в центъра на рамката.";
 
 "Retake Photos" = "Повторно заснемане на снимки";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Изберете местоположение за качване на изображение на задната страна на Вашия документ за самоличност от";
 
 "Select a location to upload the front of your identity document from" = "Изберете местоположение за качване на изображение на предната страна на Вашия документ за самоличност от";
+
+"Select back %@ photo" = "Изберете снимка на задната част на %@";
+
+"Select back identity document photo" = "Изберете снимка на задната част на документа за самоличност";
+
+"Select front %@ photo" = "Изберете снимка на предната част на %@";
+
+"Select front identity document photo" = "Изберете снимка на предната част на документа за самоличност";
 
 "Selfie" = "Селфи";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Качете снимка";
 
+"Upload your %@" = "Качете вашия %@";
+
 "Upload your photo ID" = "Качете документ за самоличност със снимка";
+
+"Uploading back %@ photo" = "Качване снимка на задната част на %@";
+
+"Uploading back identity document photo" = "Качване на снимка на задната част на документа за самоличност";
+
+"Uploading front %@ photo" = "Качване на снимка на предната част на %@";
+
+"Uploading front identity document photo" = "Качване на снимка на предната част на документа за самоличност";
 
 "Verify your identity" = "Удостоверете Вашата самоличност";
 

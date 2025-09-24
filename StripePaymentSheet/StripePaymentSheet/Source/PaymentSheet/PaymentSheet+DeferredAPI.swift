@@ -10,7 +10,59 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension PaymentSheet {
-    static func handleDeferredIntentConfirmation(
+    /// Routes deferred intent confirmation to either the regular flow or confirmation token flow based on available handlers
+    static func routeDeferredIntentConfirmation(
+        confirmType: ConfirmPaymentMethodType,
+        configuration: PaymentElementConfiguration,
+        intentConfig: PaymentSheet.IntentConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        paymentHandler: STPPaymentHandler,
+        isFlowController: Bool,
+        allowsSetAsDefaultPM: Bool = false,
+        elementsSession: STPElementsSession?,
+        mandateData: STPMandateDataParams? = nil,
+        radarOptions: STPRadarOptions? = nil,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        // Assert that exactly one confirm handler is populated
+        let hasConfirmHandler = intentConfig.confirmHandler != nil
+        let hasConfirmationTokenHandler = intentConfig.confirmationTokenConfirmHandler != nil
+        stpAssert(hasConfirmHandler != hasConfirmationTokenHandler, "Exactly one confirm handler should be set (either confirmHandler or confirmationTokenConfirmHandler, but not both or neither)")
+
+        // Route based on which handler is available in the intent configuration
+        if intentConfig.confirmationTokenConfirmHandler != nil {
+            // Use confirmation token flow
+            handleDeferredIntentConfirmation_confirmationToken(
+                confirmType: confirmType,
+                configuration: configuration,
+                intentConfig: intentConfig,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler,
+                isFlowController: isFlowController,
+                allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                elementsSession: elementsSession,
+                mandateData: mandateData,
+                radarOptions: radarOptions,
+                completion: completion
+            )
+        } else {
+            // Use regular confirmation flow
+            handleDeferredIntentConfirmation(
+                confirmType: confirmType,
+                configuration: configuration,
+                intentConfig: intentConfig,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler,
+                isFlowController: isFlowController,
+                allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                mandateData: mandateData,
+                radarOptions: radarOptions,
+                completion: completion
+            )
+        }
+    }
+
+    private static func handleDeferredIntentConfirmation(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         intentConfig: PaymentSheet.IntentConfiguration,

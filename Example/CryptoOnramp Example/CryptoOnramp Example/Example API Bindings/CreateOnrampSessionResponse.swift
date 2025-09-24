@@ -11,9 +11,9 @@ import Foundation
 typealias CheckoutResponse = CreateOnrampSessionResponse
 typealias QuoteResponse = CreateOnrampSessionResponse
 
-struct CreateOnrampSessionResponse: Decodable {
-    struct TransactionDetails: Decodable {
-        struct Fees: Decodable {
+struct CreateOnrampSessionResponse: Decodable, Hashable {
+    struct TransactionDetails: Decodable, Hashable {
+        struct Fees: Decodable, Hashable {
             let networkFeeAmount: String
             let transactionFeeAmount: String
         }
