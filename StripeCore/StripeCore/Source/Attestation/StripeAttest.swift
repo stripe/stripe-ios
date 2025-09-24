@@ -74,6 +74,24 @@ import UIKit
         if let apiClient {
             STPAnalyticsClient.sharedClient.log(analytic: resetKeyAnalytic, apiClient: apiClient)
         }
+
+        // Check if this is a Link assertion error, which might indicate state issues
+        if StripeAttest.isLinkAssertionError(error: error) {
+            consecutiveStateErrors += 1
+
+            // If we've hit too many consecutive errors, clear all state
+            if consecutiveStateErrors >= Self.maxConsecutiveStateErrors {
+                clearAllAttestationState()
+                let maxErrorsAnalytic = GenericAnalytic(
+                    event: .maxConsecutiveStateErrorsReached,
+                    params: ["error_type": "link_assertion_error"]
+                )
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: maxErrorsAnalytic, apiClient: apiClient)
+                }
+            }
+        }
+
         resetKey()
     }
 
@@ -209,6 +227,11 @@ import UIKit
     /// The API client to use for network requests
     weak var apiClient: STPAPIClient?
 
+    /// Track consecutive state synchronization errors
+    private var consecutiveStateErrors: Int = 0
+    /// Maximum consecutive state errors before forcing full reset
+    private static let maxConsecutiveStateErrors = 3
+
     /// The maximum number of key generation attempts allowed per day.
     /// This is a safeguard against generating keys too often, as each key generation
     /// permanently increases a counter for the device/app pair.
@@ -251,18 +274,35 @@ import UIKit
     func _assert() async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
+        // Verify client/server state alignment before proceeding and get challenge
+        let challenge = try await verifyStateAlignment()
+
         if !successfullyAttested {
             // We haven't attested yet, so do that first.
             try await self.attest()
         }
 
-        let challenge = try await getChallenge()
-
         // If the backend claims that attestation is required, but we already have an attested key,
         // something has gone wrong.
         if challenge.initial_attestation_required {
+            // Track consecutive state errors
+            consecutiveStateErrors += 1
+
             // Reset the key, we'll try again next time:
             resetKey()
+
+            // If we've hit too many consecutive state errors, clear all state
+            if consecutiveStateErrors >= Self.maxConsecutiveStateErrors {
+                clearAllAttestationState()
+                let maxErrorsAnalytic = GenericAnalytic(
+                    event: .maxConsecutiveStateErrorsReached,
+                    params: ["error_type": "shouldAttestButKeyIsAlreadyAttested"]
+                )
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: maxErrorsAnalytic, apiClient: apiClient)
+                }
+            }
+
             throw AttestationError.shouldAttestButKeyIsAlreadyAttested
         }
 
@@ -270,6 +310,10 @@ import UIKit
         let appId = try getAppID()
 
         let assertion = try await generateAssertion(keyId: keyId, challenge: challenge.challenge)
+
+        // Reset consecutive error count on successful assertion
+        consecutiveStateErrors = 0
+
         return Assertion(assertionData: assertion, deviceID: deviceId, appID: appId, keyID: keyId)
     }
 
@@ -301,9 +345,25 @@ import UIKit
         let challenge = try await getChallenge()
         // If the backend claims that attestation isn't required, we should not attempt it.
         guard challenge.initial_attestation_required else {
+            // Track consecutive state errors
+            consecutiveStateErrors += 1
+
             // And reset the key, as something has gone wrong.
             // The server thinks we've attested, but we think we haven't.
             resetKey()
+
+            // If we've hit too many consecutive state errors, clear all state
+            if consecutiveStateErrors >= Self.maxConsecutiveStateErrors {
+                clearAllAttestationState()
+                let maxErrorsAnalytic = GenericAnalytic(
+                    event: .maxConsecutiveStateErrorsReached,
+                    params: ["error_type": "shouldNotAttest"]
+                )
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: maxErrorsAnalytic, apiClient: apiClient)
+                }
+            }
+
             throw AttestationError.shouldNotAttest
         }
         guard let challengeData = challenge.challenge.data(using: .utf8) else {
@@ -326,6 +386,8 @@ import UIKit
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
             // Store the successful attestation
             successfullyAttested = true
+            // Reset consecutive error count on successful attestation
+            consecutiveStateErrors = 0
         } catch {
             // If error is DCErrorInvalidKey (3) and the domain is DCErrorDomain,
             // we need to generate a new key as the key has already been attested or is otherwise corrupt.
@@ -363,6 +425,17 @@ import UIKit
         successfullyAttested = false
     }
 
+    /// Clear all attestation state including error tracking.
+    /// This is a more aggressive reset used when consecutive state errors suggest
+    /// persistent synchronization issues.
+    private func clearAllAttestationState() {
+        storedKeyID = nil
+        successfullyAttested = false
+        consecutiveStateErrors = 0
+        dailyAttemptCount = 0
+        firstAttemptToday = nil
+    }
+
     private func createKey() async throws -> String {
         let keyId = try await appAttestService.generateKey()
         // Save the Key ID, and that the key is not attested.
@@ -389,6 +462,56 @@ import UIKit
     func getChallenge() async throws -> StripeChallengeResponse {
         let keyID = try await self.getOrCreateKeyID()
         return try await appAttestBackend.getChallenge(appId: getAppID(), deviceId: getDeviceID(), keyId: keyID)
+    }
+
+    /// Verify that client and server state are aligned.
+    /// If misaligned, reset local state to match server expectations.
+    /// Returns the challenge response for reuse.
+    private func verifyStateAlignment() async throws -> StripeChallengeResponse {
+        do {
+            let challenge = try await getChallenge()
+            let serverExpectsAttestation = challenge.initial_attestation_required
+            let clientThinksAttested = successfullyAttested
+
+            // Check for state mismatch
+            if serverExpectsAttestation && clientThinksAttested {
+                // Server thinks we need to attest, but client thinks we're already attested
+                let mismatchAnalytic = GenericAnalytic(
+                    event: .stateAlignmentMismatch,
+                    params: ["type": "server_needs_attestation_client_thinks_attested"]
+                )
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: mismatchAnalytic, apiClient: apiClient)
+                }
+                resetKey()
+            } else if !serverExpectsAttestation && !clientThinksAttested {
+                // Server thinks we're attested, but client thinks we need to attest
+                let mismatchAnalytic = GenericAnalytic(
+                    event: .stateAlignmentMismatch,
+                    params: ["type": "server_thinks_attested_client_thinks_not"]
+                )
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: mismatchAnalytic, apiClient: apiClient)
+                }
+                successfullyAttested = true
+            }
+
+            // Reset consecutive error count on successful alignment check
+            consecutiveStateErrors = 0
+            return challenge
+        } catch {
+            // Don't let state verification failures block the main flow
+            // Just log the error for debugging
+            let verificationErrorAnalytic = ErrorAnalytic(
+                event: .stateAlignmentFailed,
+                error: error
+            )
+            if let apiClient {
+                STPAnalyticsClient.sharedClient.log(analytic: verificationErrorAnalytic, apiClient: apiClient)
+            }
+            // Re-throw so caller can handle it
+            throw error
+        }
     }
 
     /// Generate the assertion data from a key and challenge.

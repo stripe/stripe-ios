@@ -296,6 +296,9 @@ import Foundation
     case assertionSucceeded = "stripeios.attest.assertion.succeeded"
     case resetKeyForAssertionError = "stripeios.attest.reset_key_for_assertion_error"
     case resetKeyForAttestationError = "stripeios.attest.reset_key_for_attestation_error"
+    case stateAlignmentMismatch = "stripeios.attest.state_alignment_mismatch"
+    case stateAlignmentFailed = "stripeios.attest.state_alignment_failed"
+    case maxConsecutiveStateErrorsReached = "stripeios.attest.max_consecutive_state_errors_reached"
 
     // MARK: - Custom Payment Methods
     case paymentSheetInvalidCPM = "mc_invalid_cpm"
