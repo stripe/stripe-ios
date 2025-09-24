@@ -248,7 +248,7 @@ import UIKit
     private var assertionInProgress: Bool = false
     private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
 
-    func _assert() async throws -> Assertion {
+    func _assert(isRetry: Bool = false) async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
         if !successfullyAttested {
@@ -263,9 +263,17 @@ import UIKit
             // Server has attestation but client doesn't know - update client
             successfullyAttested = true
         } else if challenge.initial_attestation_required && successfullyAttested {
-            // Server needs attestation but client thinks it's done - reset client and restart
-            resetKey()
-            throw AttestationError.shouldAttestButKeyIsAlreadyAttested
+            // Server needs attestation but client thinks it's done - reset client and retry
+            if isRetry {
+                // We already tried once, something is wrong
+                resetKey()
+                throw AttestationError.shouldAttestButKeyIsAlreadyAttested
+            } else {
+                // Reset and retry
+                resetKey()
+                try await self.attest()
+                return try await _assert(isRetry: true)
+            }
         }
 
         let deviceId = try await getDeviceID()
