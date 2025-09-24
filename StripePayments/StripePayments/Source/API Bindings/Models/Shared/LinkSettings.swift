@@ -41,6 +41,7 @@ import Foundation
     @_spi(STP) public let linkDefaultOptIn: LinkDefaultOptIn?
     @_spi(STP) public let linkEnableDisplayableDefaultValuesInECE: Bool?
     @_spi(STP) public let linkShowPreferDebitCardHint: Bool?
+    @_spi(STP) public let linkMobileCanRetryAssertion: Bool?
     @_spi(STP) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
@@ -63,6 +64,7 @@ import Foundation
         linkDefaultOptIn: LinkDefaultOptIn?,
         linkEnableDisplayableDefaultValuesInECE: Bool?,
         linkShowPreferDebitCardHint: Bool?,
+        linkMobileCanRetryAssertion: Bool?,
         linkSupportedPaymentMethodsOnboardingEnabled: [String],
         allResponseFields: [AnyHashable: Any]
     ) {
@@ -79,6 +81,7 @@ import Foundation
         self.linkDefaultOptIn = linkDefaultOptIn
         self.linkEnableDisplayableDefaultValuesInECE = linkEnableDisplayableDefaultValuesInECE
         self.linkShowPreferDebitCardHint = linkShowPreferDebitCardHint
+        self.linkMobileCanRetryAssertion = linkMobileCanRetryAssertion
         self.linkSupportedPaymentMethodsOnboardingEnabled = linkSupportedPaymentMethodsOnboardingEnabled
         self.allResponseFields = allResponseFields
     }
@@ -106,6 +109,7 @@ import Foundation
         let linkDefaultOptIn = (response["link_default_opt_in"] as? String).flatMap { LinkDefaultOptIn(rawValue: $0) }
         let linkEnableDisplayableDefaultValuesInECE = response["link_enable_displayable_default_values_in_ece"] as? Bool ?? false
         let linkShowPreferDebitCardHint = response["link_show_prefer_debit_card_hint"] as? Bool ?? false
+        let linkMobileCanRetryAssertion = response["link_mobile_can_retry_assertion"] as? Bool
 
         let linkIncentivesEnabled = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
         let linkConsumerIncentive: LinkConsumerIncentive? = if linkIncentivesEnabled {
@@ -139,6 +143,7 @@ import Foundation
             linkDefaultOptIn: linkDefaultOptIn,
             linkEnableDisplayableDefaultValuesInECE: linkEnableDisplayableDefaultValuesInECE,
             linkShowPreferDebitCardHint: linkShowPreferDebitCardHint,
+            linkMobileCanRetryAssertion: linkMobileCanRetryAssertion,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
             allResponseFields: response
         ) as? Self

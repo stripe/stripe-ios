@@ -87,6 +87,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkDefaultOptIn: .full,
             linkEnableDisplayableDefaultValuesInECE: nil,
             linkShowPreferDebitCardHint: nil,
+            linkMobileCanRetryAssertion: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
             allResponseFields: [:]
         )
@@ -157,6 +158,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkDefaultOptIn: .optional,
             linkEnableDisplayableDefaultValuesInECE: nil,
             linkShowPreferDebitCardHint: nil,
+            linkMobileCanRetryAssertion: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
             allResponseFields: [:]
         )

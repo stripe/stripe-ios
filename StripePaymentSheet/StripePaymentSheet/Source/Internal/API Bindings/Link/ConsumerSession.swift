@@ -139,6 +139,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
+        canRetryAssertion: Bool,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -150,6 +151,7 @@ extension ConsumerSession {
             customerID: customerID,
             cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
+            canRetryAssertion: canRetryAssertion,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface,
             completion: completion
@@ -163,6 +165,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
+        canRetryAssertion: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -172,6 +175,7 @@ extension ConsumerSession {
             customerID: customerID,
             cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
+            canRetryAssertion: canRetryAssertion,
             requestSurface: requestSurface,
             completion: completion
         )

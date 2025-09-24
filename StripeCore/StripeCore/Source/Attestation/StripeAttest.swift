@@ -19,7 +19,7 @@ import UIKit
     /// Sign an assertion.
     /// Will create and attest a new device key if needed.
     /// Returns an AssertionHandle, which must be called after the network request completes (with success or failure) in order to unblock future assertions.
-    @_spi(STP) public func assert() async throws -> AssertionHandle {
+    @_spi(STP) public func assert(canRetry: Bool) async throws -> AssertionHandle {
         // Make sure we only process one assertion at a time, until the latest
         if assertionInProgress {
             try await withCheckedThrowingContinuation { continuation in
@@ -29,7 +29,7 @@ import UIKit
         assertionInProgress = true
 
         do {
-            let assertion = try await _assert()
+            let assertion = try await _assert(canRetry: canRetry)
             let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
             if let apiClient {
                 STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
@@ -248,7 +248,7 @@ import UIKit
     private var assertionInProgress: Bool = false
     private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
 
-    func _assert(isRetry: Bool = false) async throws -> Assertion {
+    func _assert(canRetry: Bool, isRetry: Bool = false) async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
         if !successfullyAttested {
@@ -264,15 +264,15 @@ import UIKit
             successfullyAttested = true
         } else if challenge.initial_attestation_required && successfullyAttested {
             // Server needs attestation but client thinks it's done - reset client and retry
-            if isRetry {
-                // We already tried once, something is wrong
+            if isRetry || !canRetry {
+                // We already tried once, or retries are disabled - something is wrong
                 resetKey()
                 throw AttestationError.shouldAttestButKeyIsAlreadyAttested
             } else {
                 // Reset and retry
                 resetKey()
                 try await self.attest()
-                return try await _assert(isRetry: true)
+                return try await _assert(canRetry: canRetry, isRetry: true)
             }
         }
 

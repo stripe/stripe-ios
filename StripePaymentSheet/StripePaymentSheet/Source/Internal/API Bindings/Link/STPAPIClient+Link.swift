@@ -22,6 +22,7 @@ extension STPAPIClient {
         customerID: String?,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
+        canRetryAssertion: Bool,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -51,6 +52,7 @@ extension STPAPIClient {
             await performConsumerLookup(
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
+                canRetryAssertion: canRetryAssertion,
                 completion: completion
             )
         }
@@ -62,6 +64,7 @@ extension STPAPIClient {
         customerID: String?,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
+        canRetryAssertion: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -76,6 +79,7 @@ extension STPAPIClient {
             await performConsumerLookup(
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
+                canRetryAssertion: canRetryAssertion,
                 completion: completion
             )
         }
@@ -84,6 +88,7 @@ extension STPAPIClient {
     private func performConsumerLookup(
         parameters: [String: Any],
         useMobileEndpoints: Bool,
+        canRetryAssertion: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) async {
         let legacyEndpoint = "consumers/sessions/lookup"
@@ -98,7 +103,7 @@ extension STPAPIClient {
         let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
             if useMobileEndpoints {
                 do {
-                    let assertionHandle = try await stripeAttest.assert()
+                    let assertionHandle = try await stripeAttest.assert(canRetry: canRetryAssertion)
                     mutableParameters = mutableParameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
                     return assertionHandle
                 } catch {
