@@ -22,7 +22,7 @@ class PassiveCaptchaTests: XCTestCase {
         await passiveCaptchaChallenge.setTimeout(timeout: 6)
         // wait to make sure that the token will be ready by the time we call fetchToken
         try await Task.sleep(nanoseconds: 6_000_000_000)
-        let hcaptchaToken = await passiveCaptchaChallenge.fetchToken()
+        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
         XCTAssertNotNil(hcaptchaToken)
         let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
         XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success", "elements.captcha.passive.attach"])
@@ -39,7 +39,7 @@ class PassiveCaptchaTests: XCTestCase {
         // really short timeout to make sure it times out
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
         await passiveCaptchaChallenge.setTimeout(timeout: 0)
-        let hcaptchaToken = await passiveCaptchaChallenge.fetchToken()
+        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
         // should return nil due to timeout
         XCTAssertNil(hcaptchaToken)
         let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.error" })

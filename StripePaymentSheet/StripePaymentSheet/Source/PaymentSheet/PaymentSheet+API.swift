@@ -190,7 +190,7 @@ extension PaymentSheet {
         // MARK: - New Payment Method
         case let .new(confirmParams):
             Task { @MainActor in
-                let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+                let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
                 let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
@@ -331,7 +331,7 @@ extension PaymentSheet {
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task { @MainActor in
-                    let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+                    let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                     paymentMethodParams.radarOptions = radarOptions
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
@@ -394,7 +394,7 @@ extension PaymentSheet {
             }
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethod, linkAccount, shouldSave in
                 Task { @MainActor in
-                    let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+                    let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                     let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")

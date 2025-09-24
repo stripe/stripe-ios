@@ -140,19 +140,48 @@ internal class HCaptchaWebViewManager: NSObject {
     deinit {
         Log.debug("WebViewManager.deinit")
 
+        // Stop
+        stopInitWebViewConfiguration = true
+
+        // Capture references for cleanup
+        let webViewToClean = webView
+        let observerToRemove = observer
+
+        // Clean up on the main thread
+        if Thread.isMainThread {
+            Self.cleanup(webView: webViewToClean, observer: observerToRemove)
+        } else {
+            DispatchQueue.main.sync {
+                Self.cleanup(webView: webViewToClean, observer: observerToRemove)
+            }
+        }
+
+        // Clean up all closure references
+        completion = nil
+        onEvent = nil
+        onDidFinishLoading = nil
+        configureWebView = nil
+
+        // Mark result as handled to prevent any pending callbacks
+        resultHandled = true
+
+        // Clear decoder reference
+        decoder = nil
+    }
+
+    private static func cleanup(webView: WKWebView, observer: NSObjectProtocol?) {
         // Remove observer
         if let observer = observer {
             NotificationCenter.default.removeObserver(observer)
         }
 
+        // Remove script message handlers to break retain cycles
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: "hcaptcha")
+
         // Clean up webview
         webView.stopLoading()
         webView.navigationDelegate = nil
         webView.removeFromSuperview()
-
-        // Mark result as handled to prevent any pending callbacks
-        resultHandled = true
-        completion = nil
     }
 
     /**

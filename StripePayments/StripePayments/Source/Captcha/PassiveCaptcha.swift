@@ -48,7 +48,6 @@ import Foundation
     private let passiveCaptcha: PassiveCaptcha
     private var validationTask: Task<String, Error>?
     private var isValidationComplete = false
-    private var hcaptcha: HCaptcha?
 
     var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
 
@@ -56,31 +55,28 @@ import Foundation
         self.timeout = timeout
     }
 
-    public init(passiveCaptcha: PassiveCaptcha) {
+    public init?(passiveCaptcha: PassiveCaptcha) {
         self.passiveCaptcha = passiveCaptcha
-        Task { await start() } // Intentionally not blocking loading/initialization!
+        Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
     deinit {
         // Cancel any pending validation task
         validationTask?.cancel()
-        // Stop the HCaptcha instance to clean up resources
-        hcaptcha?.stop()
     }
 
-    private func start() {
-        guard validationTask == nil else { return }
+    private func fetchToken() async throws -> String {
+        if let validationTask {
+            return try await validationTask.value
+        }
 
-        validationTask = Task<String, Error> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, weak self] () -> String in
+        let validationTask = Task<String, Error> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, weak self] () -> String in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             do {
                 let hcaptcha = try HCaptcha(apiKey: siteKey,
                                             passiveApiKey: true,
                                             rqdata: rqdata,
                                             host: "stripecdn.com")
-                // Store hcaptcha instance for proper cleanup
-                await self?.setHCaptcha(hcaptcha)
-
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let startTime = Date()
                 let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
@@ -88,10 +84,11 @@ import Foundation
                     let lock = NSLock()
                     var nillableContinuation: CheckedContinuation<String, Error>? = continuation
 
-                    hcaptcha.didFinishLoading {
+                    // Weak reference to break retain cycles
+                    hcaptcha.didFinishLoading { [weak hcaptcha] in
                         lock.lock()
                         defer { lock.unlock() }
-                        hcaptcha.validate { result in
+                        hcaptcha?.validate { result in
                             do {
                                 let token = try result.dematerialize()
                                 nillableContinuation?.resume(returning: token)
@@ -104,7 +101,8 @@ import Foundation
                     }
                 }
 
-                guard !Task.isCancelled else { throw CancellationError() }
+                // Check cancellation after continuation
+                try Task.checkCancellation()
                 // Mark as complete
                 await self?.setValidationComplete()
                 let duration = Date().timeIntervalSince(startTime)
@@ -115,54 +113,47 @@ import Foundation
                 throw error
             }
         }
+        self.validationTask = validationTask
+        return try await validationTask.value
     }
 
     private func setValidationComplete() {
         isValidationComplete = true
     }
 
-    private func setHCaptcha(_ hcaptcha: HCaptcha) {
-        self.hcaptcha = hcaptcha
-    }
-
-    public func fetchToken() async -> String? {
+    public func fetchTokenWithTimeout() async -> String? {
         let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
-        return await withTaskGroup(of: Result<String, Error>.self) { group in
-            let isReady = isValidationComplete
-            // Add hcaptcha task
-            group.addTask { [weak self] in
-                guard let self, let validationTask = await validationTask else { return .failure(PassiveCaptchaError.unexpected) }
-                do {
-                    let token = try await validationTask.value
-                    return .success(token)
-                } catch {
-                    return .failure(error)
+        let siteKey = passiveCaptcha.siteKey
+        do {
+            return try await withThrowingTaskGroup(of: String.self) { group in
+                let isReady = isValidationComplete
+                // Add hcaptcha task
+                group.addTask { [weak self] in
+                    guard let self else { throw PassiveCaptchaError.unexpected }
+                    do {
+                        return try await fetchToken()
+                    } catch {
+                        throw error
+                    }
                 }
-            }
-            // Add timeout task
-            group.addTask {
-                try? await Task.sleep(nanoseconds: timeoutNs)
-                return .failure(PassiveCaptchaError.timeout)
-            }
-            defer {
-                group.cancelAll()
-                validationTask?.cancel()
-            }
-            // Wait for first completion
-            let result: Result<String, Error> = await group.first { _ in true } ?? .failure(PassiveCaptchaError.unexpected)
-            let siteKey = passiveCaptcha.siteKey
-            switch result {
-            case .success(let token):
+                // Add timeout task
+                group.addTask {
+                    try? await Task.sleep(nanoseconds: timeoutNs)
+                    throw PassiveCaptchaError.timeout
+                }
+                defer {
+                    group.cancelAll()
+                    validationTask?.cancel()
+                }
+                // Wait for first completion
+                let result = try await group.next()
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
-                return token
-            case .failure(let error):
-                // Only log error if PassiveCaptchaError. Any other errors have already been logged in start()
-                if error is PassiveCaptchaError {
-                    STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
-                }
-                return nil
+                return result
             }
+        } catch {
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
+            return nil
         }
     }
 
