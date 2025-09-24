@@ -27,8 +27,8 @@ end
 def export_builds
   verify_xcode_version
 
-  # Delete Stripe.xcframework.zip if one exists
-  run_command('rm -f build/Stripe.xcframework.zip')
+  # Delete entire build directory if it exists
+  run_command('rm -Rf build/')
 
   run_command('ci_scripts/export_builds.rb')
 
@@ -37,8 +37,8 @@ end
 
 def export_builds_from_xcode_cloud
   return if @is_dry_run
-  # Delete Stripe.xcframework.zip if one exists
-  run_command('rm -f build/Stripe.xcframework.zip')
+  # Delete entire build directory if it exists
+  run_command('rm -Rf build/')
 
   run_command('ci_scripts/export_builds_from_xcode_cloud.rb')
 
