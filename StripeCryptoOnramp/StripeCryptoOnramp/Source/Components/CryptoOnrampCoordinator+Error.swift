@@ -42,7 +42,7 @@ public extension CryptoOnrampCoordinator {
             case .missingCryptoCustomerID:
                 return "A crypto customer ID is missing but required. A crypto customer ID must either be provided to the Crypto Onramp Coordinator in the `create` API, or generated during the onramp flow by verifying a Link account using the `registerLinkUser`, `authenticateUser`, or `authorize` APIs."
             case .linkAccountNotVerified:
-                return "The customer’s Link account is not in a verified state."
+                return "No active Link consumer is available in a verified state."
             }
         }
     }
