@@ -1,0 +1,72 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SBJJlJQVROkWvqTRha081t8\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2BXad_4b-fUs2zstA1ghw3OMOU0Ak-GCjtWoCvQdoXWcVdx3lDb-Hpw6hmvjt48YP5bnJxYpfA1vBOAS
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_jWlcyzGk7f3NQZ
+Content-Length: 1151
+Vary: Origin
+Date: Thu, 25 Sep 2025 17:50:58 GMT
+original-request: req_jWlcyzGk7f3NQZ
+stripe-version: 2020-08-27
+idempotency-key: 462b8297-9570-499b-aa18-8d98440b1f8e
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1SBJJlJQVROkWvqTRha081t8_secret_T7YQ0VWKzC0AP30xH2aMUayMHrNPz3r&confirmation_token=ctoken_1SBJJlJQVROkWvqTrSZw2SYC&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1SBJJlJQVROkWvqTRha081t8",
+  "description" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "boleto" : {
+      "fingerprint" : "48wcl030Axz32v7b",
+      "tax_id" : "00000000000"
+    },
+    "id" : "pm_1SBJJlJQVROkWvqTIkycnMcI",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : "SP",
+        "country" : "BR",
+        "line2" : "",
+        "city" : "São Paulo",
+        "line1" : "Rua das Flores, 123",
+        "postal_code" : "01234567"
+      }
+    },
+    "livemode" : false,
+    "created" : 1758822657,
+    "allow_redisplay" : "unspecified",
+    "type" : "boleto",
+    "customer" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "boleto"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1758822657,
+  "client_secret" : "seti_1SBJJlJQVROkWvqTRha081t8_secret_T7YQ0VWKzC0AP30xH2aMUayMHrNPz3r",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}

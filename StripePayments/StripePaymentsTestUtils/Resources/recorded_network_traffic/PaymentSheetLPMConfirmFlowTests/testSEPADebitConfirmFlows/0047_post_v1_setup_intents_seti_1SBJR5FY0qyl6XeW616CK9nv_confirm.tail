@@ -1,0 +1,79 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SBJR5FY0qyl6XeW616CK9nv\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=JF08qaPk7yQyO_U3qmcHyWQ4jU6m0Au6jf-szNV5rrpvSN2Sf80-ive-PslgYkqXeXGw_cyYc-9gwHfn
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_Ia30iVpWiLUMfu
+Content-Length: 1320
+Vary: Origin
+Date: Thu, 25 Sep 2025 17:58:31 GMT
+original-request: req_Ia30iVpWiLUMfu
+stripe-version: 2020-08-27
+idempotency-key: aed2c3f1-1ba5-480c-ba4f-ddf737d96534
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1SBJR5FY0qyl6XeW616CK9nv_secret_T7YYc7tiFmDcwf7d1Db7TvtdOd2CS7N&confirmation_token=ctoken_1SBJR4FY0qyl6XeWVCZYG5Oa&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1SBJR5FY0qyl6XeW616CK9nv",
+  "description" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "sepa_debit" : {
+      "fingerprint" : "vifs0Ho7vwRn1Miu",
+      "country" : "DE",
+      "last4" : "3000",
+      "bank_code" : "37040044",
+      "generated_from" : {
+        "setup_attempt" : null,
+        "charge" : null
+      },
+      "branch_code" : ""
+    },
+    "id" : "pm_1SBJR4FY0qyl6XeWRw1lUmaR",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : "CA",
+        "country" : "US",
+        "line2" : "",
+        "city" : "South San Francisco",
+        "line1" : "354 Oyster Point Blvd",
+        "postal_code" : "94080"
+      }
+    },
+    "livemode" : false,
+    "created" : 1758823110,
+    "allow_redisplay" : "unspecified",
+    "type" : "sepa_debit",
+    "customer" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "sepa_debit"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1758823111,
+  "client_secret" : "seti_1SBJR5FY0qyl6XeW616CK9nv_secret_T7YYc7tiFmDcwf7d1Db7TvtdOd2CS7N",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}

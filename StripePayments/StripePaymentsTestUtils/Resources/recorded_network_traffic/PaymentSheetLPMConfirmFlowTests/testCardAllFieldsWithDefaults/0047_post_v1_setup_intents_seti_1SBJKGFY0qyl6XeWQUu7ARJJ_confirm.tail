@@ -1,0 +1,94 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SBJKGFY0qyl6XeWQUu7ARJJ\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=s1u2Rr1rwr4GAxdM26gN1J4v5D7XwoklSBf9arhXFo1kQBlKHI2fFMC42i2t-IMniu5O0dwvX3zBitk5
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_XMStQZMjBgof4J
+Content-Length: 1658
+Vary: Origin
+Date: Thu, 25 Sep 2025 17:51:29 GMT
+original-request: req_XMStQZMjBgof4J
+stripe-version: 2020-08-27
+idempotency-key: bc95570b-e788-4884-9fb3-f0aaffd7837e
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1SBJKGFY0qyl6XeWQUu7ARJJ_secret_T7YRBWKMn4ZaMzVs3zZNexfW4SxTd3D&confirmation_token=ctoken_1SBJKFFY0qyl6XeWVoR8MdpI&expand\[0]=payment_method&use_stripe_sdk=true
+
+{
+  "id" : "seti_1SBJKGFY0qyl6XeWQUu7ARJJ",
+  "description" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1SBJKFFY0qyl6XeWxlEoPTSW",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : "+13105551234",
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : "CA",
+        "country" : "US",
+        "line2" : "line 2",
+        "city" : "San Francisco",
+        "line1" : "123 Main Street",
+        "postal_code" : "12345"
+      }
+    },
+    "card" : {
+      "regulated_status" : "unregulated",
+      "last4" : "4242",
+      "funding" : "credit",
+      "generated_from" : null,
+      "networks" : {
+        "available" : [
+          "visa"
+        ],
+        "preferred" : null
+      },
+      "brand" : "visa",
+      "checks" : {
+        "address_postal_code_check" : null,
+        "cvc_check" : null,
+        "address_line1_check" : null
+      },
+      "three_d_secure_usage" : {
+        "supported" : true
+      },
+      "wallet" : null,
+      "display_brand" : "visa",
+      "exp_month" : 12,
+      "exp_year" : 2028,
+      "country" : "US"
+    },
+    "livemode" : false,
+    "created" : 1758822687,
+    "allow_redisplay" : "unspecified",
+    "type" : "card",
+    "customer" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "card"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1758822688,
+  "client_secret" : "seti_1SBJKGFY0qyl6XeWQUu7ARJJ_secret_T7YRBWKMn4ZaMzVs3zZNexfW4SxTd3D",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}

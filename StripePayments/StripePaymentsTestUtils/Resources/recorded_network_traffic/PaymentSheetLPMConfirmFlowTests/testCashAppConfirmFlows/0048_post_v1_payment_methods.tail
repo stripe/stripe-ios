@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=YpIao6iIEzVU6WmMiRaUWzHx4gd5mu0cswbQeb9TRGIJC0gADGbdTJ-kpkB8-nH6hBzgiikEpbVlQdeY
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yYNDo_jN48vuOenDynYxFNDv0Ywb5Y5prBnp9kYysZmSZeZSN4SoO-O9leNI3Cs2uwzwoaWaNvPihMYP
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_ue7N3kqhDAtNQr
+request-id: req_RMgM7VHBh9oQcI
 Content-Length: 515
 Vary: Origin
-Date: Wed, 24 Sep 2025 19:18:00 GMT
-original-request: req_ue7N3kqhDAtNQr
+Date: Thu, 25 Sep 2025 17:52:53 GMT
+original-request: req_RMgM7VHBh9oQcI
 stripe-version: 2020-08-27
-idempotency-key: 155942f0-152e-419d-9bb5-55a5bd00a2e8
+idempotency-key: bdfd49f3-cb3a-4f31-9022-4c09e64d893c
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
 
 {
   "object" : "payment_method",
-  "id" : "pm_1SAyCSFY0qyl6XeWcfJjeVoj",
+  "id" : "pm_1SBJLcFY0qyl6XeWCmMJbVp0",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -43,7 +43,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1758741480,
+  "created" : 1758822772,
   "allow_redisplay" : "unspecified",
   "type" : "cashapp",
   "customer" : null,

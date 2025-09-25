@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=02nIG6JZyEe-Pmr5okZvwjnYdGmdH-zEZ7bb3hjNp2dCtGFcu10UkXLRMjC-oB3ArzEYnfHaEVPd1iyn
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QFUPIhR-mkgd29j7haF4Gbn9b00i7i4N3cM3oexdtSL7WnyaBj9GG3T3RaKqti1jcN9Gkw0dNpNBxqXc
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_XV9vNmHh3KzsYp
+request-id: req_ISukCc5ZbZdzez
 Content-Length: 991
 Vary: Origin
-Date: Wed, 24 Sep 2025 19:16:54 GMT
-original-request: req_XV9vNmHh3KzsYp
+Date: Thu, 25 Sep 2025 17:51:46 GMT
+original-request: req_ISukCc5ZbZdzez
 stripe-version: 2020-08-27
-idempotency-key: c6722cea-0351-49e1-971f-1608872dc34d
+idempotency-key: 896b386a-e395-4de6-814a-81585b828eae
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_mont
 
 {
   "object" : "payment_method",
-  "id" : "pm_1SAyBNFY0qyl6XeW6F3Ojfpa",
+  "id" : "pm_1SBJKYFY0qyl6XeWZ7Qt4sDY",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -69,7 +69,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_mont
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1758741413,
+  "created" : 1758822706,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null

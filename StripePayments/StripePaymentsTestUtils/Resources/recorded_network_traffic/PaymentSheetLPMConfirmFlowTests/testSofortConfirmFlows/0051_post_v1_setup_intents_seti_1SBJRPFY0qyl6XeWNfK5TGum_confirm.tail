@@ -1,0 +1,77 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SBJRPFY0qyl6XeWNfK5TGum\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=iixdlma3V7Cc2d1g6jcPP1g3ENvOViqbVUeXEtRMCDFPA1A3c7OcReI9cp7EVwCKW4lqUZyogZF5HCAY
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_mv0HzrBrngwY1f
+Content-Length: 1290
+Vary: Origin
+Date: Thu, 25 Sep 2025 17:58:52 GMT
+original-request: req_mv0HzrBrngwY1f
+stripe-version: 2020-08-27
+idempotency-key: 7ad4b9e0-4457-4b8d-975c-3b773b4496a8
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1SBJRPFY0qyl6XeWNfK5TGum_secret_T7YYw2jkg3AT874iRvDbpp97f4q8vW0&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1SBJRPFY0qyl6XeWKFPCjZSC&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1SBJRPFY0qyl6XeWNfK5TGum",
+  "description" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_T7YYIQ9nFXr8jjIyLxHQHcFlnirWMvF"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "sofort" : {
+      "country" : "AT"
+    },
+    "id" : "pm_1SBJRPFY0qyl6XeWKFPCjZSC",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1758823131,
+    "allow_redisplay" : "unspecified",
+    "type" : "sofort",
+    "customer" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "sofort"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1758823131,
+  "client_secret" : "seti_1SBJRPFY0qyl6XeWNfK5TGum_secret_T7YYw2jkg3AT874iRvDbpp97f4q8vW0",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

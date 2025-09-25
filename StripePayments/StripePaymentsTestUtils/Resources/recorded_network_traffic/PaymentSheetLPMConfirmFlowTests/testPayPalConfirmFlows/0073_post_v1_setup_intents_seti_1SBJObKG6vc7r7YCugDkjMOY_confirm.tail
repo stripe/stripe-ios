@@ -1,0 +1,79 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SBJObKG6vc7r7YCugDkjMOY\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=JF08qaPk7yQyO_U3qmcHyWQ4jU6m0Au6jf-szNV5rrpvSN2Sf80-ive-PslgYkqXeXGw_cyYc-9gwHfn
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_bbK4RJOUN443dY
+Content-Length: 1386
+Vary: Origin
+Date: Thu, 25 Sep 2025 17:55:57 GMT
+original-request: req_bbK4RJOUN443dY
+stripe-version: 2020-08-27
+idempotency-key: cab995fc-bd9e-4222-9566-c0a41c1145d3
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1SBJObKG6vc7r7YCugDkjMOY_secret_T7YVFzE6fsJI4WI6mMM7hg94VdvLBJP&confirmation_token=ctoken_1SBJOaKG6vc7r7YC3vzXCGwQ&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1SBJObKG6vc7r7YCugDkjMOY",
+  "description" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1JtgfQKG6vc7r7YC\/sa_nonce_T7YVrgTcxmtzSTKeHQh1yhM9CLsYyBt?useWebAuthSession=true&followRedirectsInSDK=true"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "paypal" : {
+      "country" : null,
+      "payer_id" : null,
+      "payer_email" : null
+    },
+    "id" : "pm_1SBJOaKG6vc7r7YCLh26frHK",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1758822956,
+    "allow_redisplay" : "unspecified",
+    "type" : "paypal",
+    "customer" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "paypal"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1758822957,
+  "client_secret" : "seti_1SBJObKG6vc7r7YCugDkjMOY_secret_T7YVFzE6fsJI4WI6mMM7hg94VdvLBJP",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}
