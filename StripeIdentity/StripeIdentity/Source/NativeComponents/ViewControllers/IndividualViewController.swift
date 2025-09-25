@@ -98,4 +98,8 @@ extension IndividualViewController: ElementDelegate {
     func continueToNextField(element: Element) {
         // no-op
     }
+
+    func didBeginEditing(element: any Element) {
+        // no-op
+    }
 }

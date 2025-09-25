@@ -107,22 +107,19 @@ final class CardSectionWithScannerView: UIView {
         return true
     }
 
-    override func resignFirstResponder() -> Bool {
-        // If we leave the screen or an input field is focused, we close the scanner
-        cardScanningView.stopScanner()
-        hideCardScanner()
-        return super.resignFirstResponder()
-    }
-
     override func willMove(toWindow newWindow: UIWindow?) {
         // We wait until we are added to the screen to start the scanner instead of at initialization
         // If cardScanningView.start() is called when it is already started, nothing will happen
-        // The opensCardScannerAutomatically check is redudant since this should only apply in that case,
-        //    but it adds a bit of extra safety. This can be removed in the future.
-        if newWindow != nil && !cardScanningView.isHidden && opensCardScannerAutomatically {
+        if newWindow != nil && !cardScanningView.isHidden {
             cardScanningView.startScanner()
             becomeFirstResponder()
         }
+
+        // If we are leaving the screen, we should stop (but not close) the scanner
+        if newWindow == nil {
+            cardScanningView.stopScanner()
+        }
+
         super.willMove(toWindow: newWindow)
     }
 }

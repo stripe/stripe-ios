@@ -116,6 +116,10 @@ extension PaymentMethodElementWrapper: ElementDelegate {
     public func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: self)
     }
+
+    public func didBeginEditing(element: any Element) {
+        delegate?.didBeginEditing(element: self)
+    }
 }
 
 extension Element {

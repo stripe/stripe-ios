@@ -305,6 +305,9 @@ extension LinkPaymentMethodFormElement: ElementDelegate {
         delegate?.continueToNextField(element: self)
     }
 
+    func didBeginEditing(element: any Element) {
+        delegate?.didBeginEditing(element: self)
+    }
 }
 
 private extension ConsumerPaymentDetails.Details.Card {

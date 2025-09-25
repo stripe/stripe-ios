@@ -292,7 +292,12 @@ extension DropdownFieldElement: Element {
     }
 
     public func beginEditing() -> Bool {
-        return pickerFieldView.becomeFirstResponder()
+        if pickerFieldView.becomeFirstResponder() {
+            delegate?.didBeginEditing(element: self)
+            return true
+        } else {
+            return false
+        }
     }
 }
 
@@ -353,6 +358,7 @@ extension DropdownFieldElement {
 
 extension DropdownFieldElement: PickerFieldViewDelegate {
     func didBeginEditing(_ pickerFieldView: PickerFieldView) {
+        delegate?.didBeginEditing(element: self)
         isEditing = true
     }
 

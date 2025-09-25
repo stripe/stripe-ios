@@ -229,4 +229,7 @@ extension PayWithLinkViewController.UpdatePaymentViewController: ElementDelegate
         updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
     }
 
+    func didBeginEditing(element: Element) {
+        // no-op
+    }
 }

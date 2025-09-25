@@ -343,6 +343,9 @@ extension LinkSignUpViewController: ElementDelegate {
         // No-op
     }
 
+    func didBeginEditing(element: Element) {
+        // no-op
+    }
 }
 
 extension LinkSignUpViewController: UITextViewDelegate {

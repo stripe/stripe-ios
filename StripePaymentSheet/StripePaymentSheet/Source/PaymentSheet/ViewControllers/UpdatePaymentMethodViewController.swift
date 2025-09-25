@@ -405,6 +405,10 @@ extension UpdatePaymentMethodViewController: ElementDelegate {
             break
         }
     }
+
+    func didBeginEditing(element: Element) {
+        // no-op
+    }
 }
 
 extension STPPaymentMethodCard {

@@ -137,7 +137,12 @@ extension DateFieldElement: Element {
     }
 
     public func beginEditing() -> Bool {
-        return pickerFieldView.becomeFirstResponder()
+        if pickerFieldView.becomeFirstResponder() {
+            delegate?.didBeginEditing(element: self)
+            return true
+        } else {
+            return false
+        }
     }
 }
 

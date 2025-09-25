@@ -843,6 +843,10 @@ extension SavedPaymentOptionsViewController: ElementDelegate {
         delegate?.didUpdate(self)
         animateHeightChange()
     }
+
+    func didBeginEditing(element: any Element) {
+        // no-op
+    }
 }
 
 extension STPPaymentMethod {

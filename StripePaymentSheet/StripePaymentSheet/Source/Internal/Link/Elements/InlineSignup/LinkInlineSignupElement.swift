@@ -70,4 +70,7 @@ extension LinkInlineSignupElement: LinkInlineSignupViewDelegate {
         delegate?.didUpdate(element: self)
     }
 
+    func inlineSignupViewDidBeginEditing(_ view: LinkInlineSignupView) {
+        delegate?.didBeginEditing(element: self)
+    }
 }
