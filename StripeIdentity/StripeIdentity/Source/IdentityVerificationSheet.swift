@@ -31,7 +31,7 @@ final public class IdentityVerificationSheet {
         /// displayed in both light and dark modes, if the app supports it. Use a
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
-        
+
         /// Whether or not to show the stripe logo on the biometric consent screen in the document flow
         public var showsStripeLogo: Bool
 
