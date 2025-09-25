@@ -151,12 +151,10 @@ public class STPPaymentIntentParams: NSObject {
             if let _mandateData = _mandateData {
                 return _mandateData
             }
-            switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
-                return .makeWithInferredValues()
-            default: break
+            guard let paymentMethodType = paymentMethodType else {
+                return nil
             }
-            return nil
+            return Self.mandateDataIfRequired(for: paymentMethodType)
         }
         set {
             _mandateData = newValue
@@ -328,6 +326,18 @@ extension STPPaymentIntentParams: NSCopying {
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy
+    }
+
+    /// Returns mandate data for the specified payment method type, if required.
+    /// - Parameter paymentMethodType: The payment method type to check
+    /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
+    @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
+        switch paymentMethodType {
+        case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
+            return .makeWithInferredValues()
+        default:
+            return nil
+        }
     }
 
 }
