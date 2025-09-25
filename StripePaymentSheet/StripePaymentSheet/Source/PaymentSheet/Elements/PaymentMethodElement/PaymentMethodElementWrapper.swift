@@ -140,6 +140,15 @@ extension Element {
             }
         }
     }
+
+    /// Resets validation error display state on all TextFieldElements in this element's hierarchy
+    public func resetValidationErrors() {
+        for element in getAllUnwrappedSubElements() {
+            if let textFieldElement = element as? TextFieldElement {
+                textFieldElement.resetValidationErrors()
+            }
+        }
+    }
 }
 
 /// Helper protocol easily switch over `PaymentMethodElementWrapper`

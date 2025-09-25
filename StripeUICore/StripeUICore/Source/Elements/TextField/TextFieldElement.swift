@@ -156,6 +156,13 @@ extension TextFieldElement: Element {
         delegate?.didUpdate(element: self)
     }
 
+    /// Resets validation error display state, clearing any forced validation errors
+    public func resetValidationErrors() {
+        displayEmptyFields = false
+        textFieldView.updateUI(with: viewModel)
+        delegate?.didUpdate(element: self)
+    }
+
     @discardableResult
     public func endEditing(_ force: Bool = false, continueToNextField: Bool = true) -> Bool {
         let didResign = textFieldView.endEditing(force)
@@ -177,7 +184,10 @@ extension TextFieldElement: TextFieldViewDelegate {
     func textFieldViewDidUpdate(view: TextFieldView) {
         // Update our state
         let newText = sanitize(text: view.text)
-        if text != newText {
+        let textChanged = text != newText
+        let editingStateChanged = isEditing != view.isEditing
+
+        if textChanged {
             text = newText
             // Advance to the next field if text is maximum length and valid
             if text.count == configuration.maxLength(for: text), case .valid = validationState {
@@ -187,6 +197,13 @@ extension TextFieldElement: TextFieldViewDelegate {
         }
         isEditing = view.isEditing
         didReceiveAutofill = view.didReceiveAutofill
+
+        // Reset validation errors when user starts interacting (begins editing or changes text)
+        if (editingStateChanged && isEditing) || textChanged {
+            if displayEmptyFields {
+                displayEmptyFields = false
+            }
+        }
 
         // Glue: Update the view and our delegate
         view.updateUI(with: viewModel)
