@@ -83,6 +83,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
+    let showsStripeLogo: Bool
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
@@ -93,9 +94,11 @@ final class VerificationSheetFlowController: NSObject {
     private(set) var documentUploader: DocumentUploaderProtocol?
 
     init(
-        brandLogo: UIImage
+        brandLogo: UIImage,
+        showsStripeLogo: Bool
     ) {
         self.brandLogo = brandLogo
+        self.showsStripeLogo = showsStripeLogo
     }
 
     private(set) lazy var navigationController: UINavigationController = {
@@ -590,6 +593,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         do {
             return try BiometricConsentViewController(
                 brandLogo: brandLogo,
+                showsStripeLogo: showsStripeLogo,
                 consentContent: staticContent.biometricConsent,
                 sheetController: sheetController
             )

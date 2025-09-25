@@ -31,6 +31,8 @@ final public class IdentityVerificationSheet {
         /// displayed in both light and dark modes, if the app supports it. Use a
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
+        
+        public var showsStripeLogo: Bool
 
         /// Initializes a Configuration.
         /// - Parameters:
@@ -38,9 +40,11 @@ final public class IdentityVerificationSheet {
         ///     The recommended image size is 32 x 32 points. The image will be
         ///     displayed in both light and dark modes, if the app supports it.
         public init(
-            brandLogo: UIImage
+            brandLogo: UIImage,
+            showsStripeLogo: Bool = true
         ) {
             self.brandLogo = brandLogo
+            self.showsStripeLogo = showsStripeLogo
         }
     }
 
@@ -92,7 +96,8 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo
+                    brandLogo: configuration.brandLogo,
+                    showsStripeLogo: configuration.showsStripeLogo
                 ),
                 mlModelLoader: IdentityMLModelLoader(),
                 analyticsClient: IdentityAnalyticsClient(
