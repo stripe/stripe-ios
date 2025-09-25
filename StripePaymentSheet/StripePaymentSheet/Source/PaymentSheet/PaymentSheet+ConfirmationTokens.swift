@@ -35,7 +35,7 @@ extension PaymentSheet {
                 let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
                                                                             configuration: configuration,
                                                                             intentConfig: intentConfig,
-                                                                            elementsSession: elementsSession)
+                                                                            elementsSession: elementsSession, radarOptions: radarOptions)
                 
                 // Compute ephemeral key secret for customer session support
                 let ephemeralKeySecret: String? = {
@@ -194,7 +194,7 @@ extension PaymentSheet {
         case .saved(let paymentMethod, let paymentOptions, let clientAttributionMetadata):
             // Use existing saved payment method
             params.paymentMethod = paymentMethod.stripeId
-            params.paymentMethodOptions = paymentOptions // TODO(porter) Verify CVC recollection
+            params.paymentMethodOptions = paymentOptions
             params.clientAttributionMetadata = clientAttributionMetadata
 
         case .new(let paymentMethodParams, let paymentOptions, let unexpectedPaymentMethod, _, let shouldSetAsDefaultPM):
@@ -204,26 +204,12 @@ extension PaymentSheet {
             params.paymentMethodData = paymentMethodParams
             params.paymentMethodData?.radarOptions = radarOptions
             params.paymentMethodOptions = paymentOptions
-            // Note: Not setting clientAttributionMetadata on CT params as it's already on the payment method params
 
             // Set as default payment method if requested and allowed
             if allowsSetAsDefaultPM && shouldSetAsDefaultPM == true {
                 params.setAsDefaultPM = NSNumber(value: true)
             }
         }
-    }
-
-    /// Logs analytics for unexpected payment method scenarios
-    private static func handleUnexpectedPaymentMethod(_ unexpectedPaymentMethod: STPPaymentMethod?) {
-        guard let unexpectedPaymentMethod = unexpectedPaymentMethod else { return }
-
-        let errorAnalytic = ErrorAnalytic(
-            event: .unexpectedPaymentSheetConfirmationError,
-            error: PaymentSheetError.unexpectedNewPaymentMethod,
-            additionalNonPIIParams: ["payment_method_type": unexpectedPaymentMethod.type]
-        )
-        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-        stpAssert(false, "Unexpected payment method provided for new confirmation type")
     }
 
     /// Configures setup future usage based on intent configuration and user preferences
@@ -240,13 +226,12 @@ extension PaymentSheet {
         case .payment(_, _, let intentSetupFutureUsage, _, _):
             // Payment intents: Priority order is user choice > intent configuration
             if confirmType.shouldSave {
-                // User chose to save payment method
+                // User chose to save payment method, hardcode to offSession
                 params.setupFutureUsage = .offSession
             } else if let intentSetupFutureUsage = intentSetupFutureUsage {
                 // Use intent configuration default
                 params.setupFutureUsage = intentSetupFutureUsage.paymentIntentParamsValue
             }
-            // Note: If neither condition is met, setupFutureUsage remains nil (no saving)
         }
     }
 
@@ -303,8 +288,8 @@ extension PaymentSheet {
                 }
             }
             
-            // Last chance
-            return STPPaymentIntentParams(clientSecret: "", paymentMethodType: paymentMethodType).mandateData
+            // If still no mandate data, match STPPaymentIntentParams auto add functionality
+            return STPPaymentIntentParams.mandateDataIfRequired(for: paymentMethodType)
         case .setup:
             // Setup intents always require mandate data for certain payment methods
             let mandateRequiredForSetup: Set<STPPaymentMethodType> = [
@@ -314,8 +299,8 @@ extension PaymentSheet {
                 return .makeWithInferredValues()
             }
             
-            // Last chance
-            return STPSetupIntentConfirmParams(clientSecret: "", paymentMethodType: paymentMethodType).mandateData
+            // If still no mandate data, match STPSetupIntentConfirmParams auto add functionality
+            return STPSetupIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
         }
     }
 
@@ -339,5 +324,19 @@ extension PaymentSheet {
         case .new(_, _, _, _, _):
             return false
         }
+    }
+    
+    
+    /// Logs analytics for unexpected payment method scenarios
+    private static func handleUnexpectedPaymentMethod(_ unexpectedPaymentMethod: STPPaymentMethod?) {
+        guard let unexpectedPaymentMethod = unexpectedPaymentMethod else { return }
+
+        let errorAnalytic = ErrorAnalytic(
+            event: .unexpectedPaymentSheetConfirmationError,
+            error: PaymentSheetError.unexpectedNewPaymentMethod,
+            additionalNonPIIParams: ["payment_method_type": unexpectedPaymentMethod.type]
+        )
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        stpAssert(false, "Unexpected payment method provided for new confirmation type")
     }
 }
