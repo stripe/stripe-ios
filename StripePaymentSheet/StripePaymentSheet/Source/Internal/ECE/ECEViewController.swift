@@ -20,7 +20,6 @@ protocol ExpressCheckoutWebviewDelegate: AnyObject {
 
 protocol ECEViewControllerDelegate: AnyObject {
     func didCancel()
-    func didCompleteInitialization()
     func didReceiveECEReady()
 }
 
@@ -262,22 +261,63 @@ class ECEViewController: UIViewController {
     private func showTimeoutError() {
         clearLoadingUI()
 
+        let iconImageView = UIImageView()
+        iconImageView.image = UIImage(systemName: "wifi.slash")
+        iconImageView.tintColor = .systemGray
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            iconImageView.widthAnchor.constraint(equalToConstant: 48),
+            iconImageView.heightAnchor.constraint(equalToConstant: 48)
+        ])
+
         let errorLabel = UILabel()
         errorLabel.text = "There was a problem loading Shop Pay. Please try again later."
-        errorLabel.textColor = .systemRed
         errorLabel.textAlignment = .center
         errorLabel.numberOfLines = 0
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create attributed string with better line spacing
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 4
+        paragraphStyle.alignment = .center
+        let attributedText = NSAttributedString(
+            string: errorLabel.text!,
+            attributes: [.paragraphStyle: paragraphStyle]
+        )
+        errorLabel.attributedText = attributedText
 
-        view.addSubview(errorLabel)
+        let closeButton = UIButton(type: .system)
+        closeButton.setTitle(String.Localized.close, for: .normal)
+        closeButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+
+        // Create content stack for icon and error message
+        let contentStackView = UIStackView(arrangedSubviews: [iconImageView, errorLabel])
+        contentStackView.axis = .vertical
+        contentStackView.spacing = 20
+        contentStackView.alignment = .center
+        contentStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(contentStackView)
+        view.addSubview(closeButton)
+        
         NSLayoutConstraint.activate([
-            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            errorLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            errorLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 20),
-            errorLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
+            contentStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            contentStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            contentStackView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 20),
+            contentStackView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
+            
+            closeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            closeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32),
         ])
 
         self.errorLabel = errorLabel
+    }
+
+    @objc private func closeButtonTapped() {
+        delegate?.didCancel()
     }
 
     private func clearLoadingUI() {
@@ -495,10 +535,6 @@ extension ECEViewController: WKNavigationDelegate {
                     // Bail with error
                 } else {
                     log("Successfully called initializeApp()")
-                    // Notify delegate that initialization is complete
-                    DispatchQueue.main.async {
-                        self.delegate?.didCompleteInitialization()
-                    }
                 }
             }
         }

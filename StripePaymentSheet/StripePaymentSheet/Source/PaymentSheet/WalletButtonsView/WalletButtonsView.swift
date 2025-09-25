@@ -84,7 +84,6 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                         configuration: shopPayConfig,
                         analyticsHelper: flowController.analyticsHelper
                     )
-                    presenter.prewarm()
                     shopPayPresenter = presenter
                 }
             }
@@ -178,11 +177,14 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 return
             }
 
-            // Use prewarmed presenter if available, otherwise create new one
+            // Must use prewarmed presenter - create new one if not available
             let presenter: ShopPayECEPresenter
             if let prewarmedPresenter = shopPayPresenter {
                 presenter = prewarmedPresenter
+                // Clear the reference since this presenter will be destroyed after use
+                shopPayPresenter = nil
             } else {
+                // If a presenter hasn't been created yet, create and prewarm one:
                 presenter = ShopPayECEPresenter(
                     flowController: flowController,
                     configuration: shopPayConfig,
@@ -190,8 +192,11 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 )
             }
 
-            presenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),
-                              confirmHandler: confirmHandler)
+            presenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController()) { result in
+                // After completion, the presenter is destroyed and no longer usable.
+                shopPayPresenter = nil
+                confirmHandler(result)
+            }
         }
     }
 

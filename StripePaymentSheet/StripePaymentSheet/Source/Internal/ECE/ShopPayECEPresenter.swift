@@ -21,6 +21,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var currentShippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate]
     private var isPrewarmed: Bool = false
+    private var isDestroyed: Bool = false
     private var eceReady: Bool = false
     private var pendingPresentCompletion: (() -> Void)?
 
@@ -34,9 +35,11 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         self.analyticsHelper = analyticsHelper
         self.currentShippingRates = configuration.shippingRates
         super.init()
+        
+        prewarm()
     }
 
-    func prewarm() {
+    private func prewarm() {
         guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
             stpAssertionFailure("Integration Error: CustomerSessions is required")
             return
@@ -63,24 +66,17 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
     func present(from viewController: UIViewController,
                  confirmHandler: @escaping (PaymentSheetResult) -> Void) {
-        guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
-            stpAssertionFailure("Integration Error: CustomerSessions is required")
+        guard !isDestroyed else {
+            stpAssertionFailure("Integration Error: ShopPayECEPresenter presented after being destroyed")
             return
         }
+        guard isPrewarmed, let eceVC = self.eceViewController else {
+            stpAssertionFailure("Integration Error: ShopPayECEPresenter must be prewarmed before presenting")
+            return
+        }
+        
         self.presentingViewController = viewController
         analyticsHelper.logShopPayWebviewLoadAttempt()
-
-        let eceVC: ECEViewController
-        if isPrewarmed, let prewarmedVC = self.eceViewController {
-            eceVC = prewarmedVC
-        } else {
-            eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
-                                      shopId: shopPayConfiguration.shopId,
-                                      customerSessionClientSecret: customerSessionClientSecret,
-                                      delegate: self)
-            eceVC.expressCheckoutWebviewDelegate = self
-            self.eceViewController = eceVC
-        }
 
         let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
         eceVC.transitioningDelegate = transitionDelegate
@@ -112,17 +108,25 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     // If the sheet is pulled down
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         analyticsHelper.logShopPayWebviewCancelled(didReceiveECEClick: didReceiveECEClick)
-        self.eceViewController?.unloadWebview()
-        self.eceViewController = nil
+        destroy()
         self.confirmHandler?(.canceled)
     }
 
     private func dismissECE(completion: (() -> Void)? = nil) {
         presentingViewController?.dismiss(animated: true) {
-            self.eceViewController?.unloadWebview()
-            self.eceViewController = nil
+            self.destroy()
             completion?()
         }
+    }
+    
+    private func destroy() {
+        eceViewController?.unloadWebview()
+        eceViewController = nil
+        isPrewarmed = false
+        eceReady = false
+        didReceiveECEClick = false
+        pendingPresentCompletion = nil
+        isDestroyed = true
     }
 
     private func triggerShopPayClick() {
@@ -143,12 +147,9 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 extension ShopPayECEPresenter: ECEViewControllerDelegate {
     func didCancel() {
         analyticsHelper.logShopPayWebviewCancelled(didReceiveECEClick: didReceiveECEClick)
-        self.confirmHandler?(.canceled)
-        dismissECE()
-    }
-
-    func didCompleteInitialization() {
-        // Keep this for backwards compatibility if needed
+        dismissECE { [weak self] in
+            self?.confirmHandler?(.canceled)
+        }
     }
 
     func didReceiveECEReady() {
