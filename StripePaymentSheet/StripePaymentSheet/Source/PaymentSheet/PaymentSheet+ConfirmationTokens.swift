@@ -278,17 +278,7 @@ extension PaymentSheet {
     ) -> STPMandateDataParams? {
         let paymentMethodType = Self.paymentMethodType(from: confirmType)
 
-        // SCENARIO 1: Bank-based payment methods always require mandate data
-        // This matches the automatic behavior in STPPaymentIntentParams.mandateData getter
-        let bankBasedPaymentMethods: Set<STPPaymentMethodType> = [
-            .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit,
-            .EPS, .sofort, .link, .USBankAccount
-        ]
-        if bankBasedPaymentMethods.contains(paymentMethodType) {
-            return .makeWithInferredValues()
-        }
-
-        // SCENARIO 2 & 3: Handle payment methods that require mandate data based on intent mode
+        // SCENARIO 1 & 2: Handle payment methods that require mandate data based on intent mode
         switch intentConfig.mode {
         case .payment(_, _, let topLevelSFU, _, let paymentMethodOptions):
             // Only check for new payment methods (saved PMs already have mandate data if needed)
@@ -309,6 +299,9 @@ extension PaymentSheet {
                     return .makeWithInferredValues()
                 }
             }
+            
+            // Last chance
+            return STPPaymentIntentParams(clientSecret: "", paymentMethodType: paymentMethodType).mandateData
 
         case .setup:
             // Setup intents always require mandate data for certain payment methods
@@ -318,9 +311,10 @@ extension PaymentSheet {
             if mandateRequiredForSetup.contains(paymentMethodType) {
                 return .makeWithInferredValues()
             }
+            
+            // Last chance
+            return STPSetupIntentConfirmParams(clientSecret: "", paymentMethodType: paymentMethodType).mandateData
         }
-
-        return nil
     }
 
     private static func fetchIntentClientSecretFromMerchant(
