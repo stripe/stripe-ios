@@ -62,7 +62,7 @@ struct PaymentView: View {
     }
 
     /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
-    let coordinator: CryptoOnrampCoordinator
+    @State var coordinator: CryptoOnrampCoordinator?
 
     /// The unique id of the customer.
     let customerId: String
@@ -282,6 +282,32 @@ struct PaymentView: View {
         }
         .onAppear {
             fetchPaymentTokens()
+
+
+            let lavenderColor = UIColor(
+                red: 171/255.0,
+                green: 159/255.0,
+                blue: 242/255.0,
+                alpha: 1.0
+            )
+            let appearance = LinkAppearance(
+                colors: .init(primary: lavenderColor, selectedBorder: .label),
+                primaryButton: .init(cornerRadius: 16, height: 56),
+                style: .automatic,
+                reduceLinkBranding: true
+            )
+            Task {
+                do {
+                    let coordinator = try await CryptoOnrampCoordinator.create(appearance: appearance)
+                    await MainActor.run {
+                        self.coordinator = coordinator
+                    }
+
+                } catch {
+                    print("MAL:\(error)")
+                }
+
+            }
         }
         .alert(
             alert?.title ?? "Error",
@@ -564,17 +590,19 @@ struct PaymentView: View {
 
         Task {
             do {
-                if let displayData = try await coordinator.collectPaymentMethod(type: type, from: viewController) {
+                if let displayData = try await coordinator?.collectPaymentMethod(type: type, from: viewController) {
 
                     await MainActor.run {
                         shouldShowPaymentMethodSheet = false
                     }
 
-                    let token = try await coordinator.createCryptoPaymentToken()
+                    let token = try await coordinator?.createCryptoPaymentToken()
 
                     await MainActor.run {
                         isLoading.wrappedValue = false
-                        selectedPaymentMethod = .newPaymentMethod(tokenId: token, type: type, displayData: displayData)
+                        if let token {
+                            selectedPaymentMethod = .newPaymentMethod(tokenId: token, type: type, displayData: displayData)
+                        }
                     }
                 } else { // cancelled
                     await MainActor.run {
@@ -605,12 +633,14 @@ struct PaymentView: View {
 
         Task {
             do {
-                if try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController) != nil {
-                    let token = try await coordinator.createCryptoPaymentToken()
+                if try await coordinator?.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController) != nil {
+                    let token = try await coordinator?.createCryptoPaymentToken()
 
                     await MainActor.run {
                         // intentionally not flipping `isLoading`, since `createOnrampSession` will set it back.
-                        createOnrampSession(withCryptoPaymentTokenId: token)
+                        if let token {
+                            createOnrampSession(withCryptoPaymentTokenId: token)
+                        }
                     }
                 } else { // cancelled
                     await MainActor.run {
