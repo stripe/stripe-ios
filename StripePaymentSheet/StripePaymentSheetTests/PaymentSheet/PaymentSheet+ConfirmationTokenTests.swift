@@ -63,8 +63,8 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
                 "brand": "visa",
                 "last4": "4242",
                 "exp_month": 12,
-                "exp_year": 2025
-            ]
+                "exp_year": 2025,
+            ],
         ])!
         return paymentMethod
     }
@@ -385,7 +385,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let payPalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_test_paypal",
             "type": "paypal",
-            "paypal": [:]
+            "paypal": [:],
         ])!
 
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
@@ -411,7 +411,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let payPalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_test_paypal",
             "type": "paypal",
-            "paypal": [:]
+            "paypal": [:],
         ])!
 
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
@@ -441,8 +441,8 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
                 "account_type": "checking",
                 "account_holder_type": "individual",
                 "last4": "6789",
-                "routing_number": "110000000"
-            ]
+                "routing_number": "110000000",
+            ],
         ])!
 
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
@@ -482,7 +482,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let payPalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_test_paypal",
             "type": "paypal",
-            "paypal": [:]
+            "paypal": [:],
         ])!
 
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(

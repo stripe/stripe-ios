@@ -53,14 +53,17 @@ extension PaymentSheet {
                 return configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
             }()
 
+            // 2. Create the ConfirmationToken
             let confirmationToken = try await configuration.apiClient.createConfirmationToken(with: confirmationTokenParams,
                                                                                               ephemeralKeySecret: ephemeralKeySecret,
                                                                                               additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
+
+            // 3. Vend the ConfirmationToken and fetch the client secret from the merchant
             _ = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
-                                                                  confirmationToken: confirmationToken)
+                                                              confirmationToken: confirmationToken)
 
             // TODO(porter) Finish rest of CT confirmation
-            stpAssert(true, "Confirmation Tokens not yet implemented.")
+            stpAssertionFailure("Confirmation Tokens not yet implemented.")
         }
     }
 
