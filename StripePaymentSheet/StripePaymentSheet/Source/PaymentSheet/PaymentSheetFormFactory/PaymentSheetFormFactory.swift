@@ -758,8 +758,11 @@ extension PaymentSheetFormFactory {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
-            params.confirmPaymentMethodOptions.konbiniOptions = .init()
-            params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = textField.text
+            let confirmationNumber = textField.text
+            if !confirmationNumber.isEmpty {
+                params.confirmPaymentMethodOptions.konbiniOptions = .init()
+                params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = confirmationNumber
+            }
             return params
         }
         let elements = [contactInfoSection, konbiniPhoneNumber, billingDetails].compactMap { $0 }

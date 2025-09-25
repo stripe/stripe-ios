@@ -1,0 +1,110 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SB6jHIq2LmpyICo1Avps8Yy\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=_i48d4qAMDxmn8rKsWFLocoLdOtQqLnmUVFDjz60jj78T0nJ0HolQsKIXdKcXPtSMpUOiUfjKx8Dl1w-
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_VZYXFDHgjekcFo
+Content-Length: 2119
+Vary: Origin
+Date: Thu, 25 Sep 2025 04:24:28 GMT
+original-request: req_VZYXFDHgjekcFo
+stripe-version: 2020-08-27
+idempotency-key: cc37fc50-a030-4d69-9fd5-a996d0165e2f
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3SB6jHIq2LmpyICo1Avps8Yy_secret_p3UtCGWTeFFVoV7vDH2xvqzi4&expand\[0]=payment_method&payment_method=pm_1SB6jGIq2LmpyICo5O3QmDP2&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "jpy",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "konbini_display_details",
+    "konbini_display_details" : {
+      "stores" : {
+        "ministop" : {
+          "confirmation_number" : "40213430677",
+          "payment_code" : "123456"
+        },
+        "seicomart" : {
+          "confirmation_number" : "40213430677",
+          "payment_code" : "123456"
+        },
+        "familymart" : {
+          "confirmation_number" : "40213430677",
+          "payment_code" : "123456"
+        },
+        "lawson" : {
+          "confirmation_number" : "40213430677",
+          "payment_code" : "123456"
+        }
+      },
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/konbini\/voucher\/test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLF9UN0xRYVEyZnA0NkJRSUVJMzhCMlZkVGFpYXpKaGNu0100catkfiUU",
+      "expires_at" : 1759071599
+    }
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "konbini" : {
+
+    },
+    "id" : "pm_1SB6jGIq2LmpyICo5O3QmDP2",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1758774266,
+    "allow_redisplay" : "unspecified",
+    "type" : "konbini",
+    "customer" : null
+  },
+  "client_secret" : "pi_3SB6jHIq2LmpyICo1Avps8Yy_secret_p3UtCGWTeFFVoV7vDH2xvqzi4",
+  "id" : "pi_3SB6jHIq2LmpyICo1Avps8Yy",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "konbini"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1758774267,
+  "description" : null
+}
