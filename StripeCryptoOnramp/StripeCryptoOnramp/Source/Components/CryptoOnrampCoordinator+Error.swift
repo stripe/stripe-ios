@@ -26,6 +26,9 @@ public extension CryptoOnrampCoordinator {
         /// A crypto customer ID is missing but required.
         case missingCryptoCustomerID
 
+        /// The link account is not in a verified state.
+        case linkAccountNotVerified
+
         public var errorDescription: String? {
             switch self {
             case .invalidPhoneFormat:
@@ -38,6 +41,8 @@ public extension CryptoOnrampCoordinator {
                 return "An unexpected error occurred internally. Selected payment source was not set to an expected value."
             case .missingCryptoCustomerID:
                 return "A crypto customer ID is missing but required. A crypto customer ID must either be provided to the Crypto Onramp Coordinator in the `create` API, or generated during the onramp flow by verifying a Link account using the `registerLinkUser`, `authenticateUser`, or `authorize` APIs."
+            case .linkAccountNotVerified:
+                return "The customer’s link account is not in a verified state."
             }
         }
     }
