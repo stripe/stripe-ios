@@ -56,7 +56,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let sessionID: String
     let customerID: String?
     let useMobileEndpoints: Bool
-    let canRetryAssertion: Bool
+    let canSyncAttestationState: Bool
     let merchantLogoUrl: URL?
 
     /// The default cookie store used by new instances of the service.
@@ -73,7 +73,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             apiClient: apiClient,
             cookieStore: cookieStore,
             useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-            canRetryAssertion: elementsSession.linkSettings?.linkMobileCanRetryAssertion ?? false,
+            canSyncAttestationState: elementsSession.linkSettings?.attestationStateSyncEnabled ?? false,
             sessionID: elementsSession.sessionID,
             customerID: elementsSession.customer?.customerSession.customer,
             shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup,
@@ -85,7 +85,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = defaultCookieStore,
         useMobileEndpoints: Bool,
-        canRetryAssertion: Bool,
+        canSyncAttestationState: Bool,
         sessionID: String,
         customerID: String?,
         shouldPassCustomerIdToLookup: Bool,
@@ -94,7 +94,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
-        self.canRetryAssertion = canRetryAssertion
+        self.canSyncAttestationState = canSyncAttestationState
         self.sessionID = sessionID
         self.customerID = shouldPassCustomerIdToLookup ? customerID : nil
         self.merchantLogoUrl = merchantLogoUrl
@@ -119,7 +119,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             customerID: customerID,
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
-            canRetryAssertion: canRetryAssertion,
+            canSyncAttestationState: canSyncAttestationState,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface
         ) { [apiClient] result in
@@ -136,6 +136,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             displayablePaymentDetails: session.displayablePaymentDetails,
                             apiClient: apiClient,
                             useMobileEndpoints: self.useMobileEndpoints,
+                            canSyncAttestationState: self.canSyncAttestationState,
                             requestSurface: requestSurface
                         )
                     ))
@@ -149,6 +150,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 displayablePaymentDetails: nil,
                                 apiClient: self.apiClient,
                                 useMobileEndpoints: self.useMobileEndpoints,
+                                canSyncAttestationState: self.canSyncAttestationState,
                                 requestSurface: requestSurface
                             )
                         ))
@@ -195,7 +197,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             with: apiClient,
             cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
-            canRetryAssertion: canRetryAssertion,
+            canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface
         ) { [weak self, apiClient] result in
             guard let self else { return }
@@ -211,6 +213,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                         displayablePaymentDetails: session.displayablePaymentDetails,
                         apiClient: apiClient,
                         useMobileEndpoints: self.useMobileEndpoints,
+                        canSyncAttestationState: self.canSyncAttestationState,
                         requestSurface: requestSurface,
                         createdFromAuthIntentID: true
                     )

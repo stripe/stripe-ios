@@ -22,7 +22,7 @@ extension STPAPIClient {
         customerID: String?,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
-        canRetryAssertion: Bool,
+        canSyncAttestationState: Bool,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -52,7 +52,7 @@ extension STPAPIClient {
             await performConsumerLookup(
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
-                canRetryAssertion: canRetryAssertion,
+                canSyncAttestationState: canSyncAttestationState,
                 completion: completion
             )
         }
@@ -64,7 +64,7 @@ extension STPAPIClient {
         customerID: String?,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
-        canRetryAssertion: Bool,
+        canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -79,7 +79,7 @@ extension STPAPIClient {
             await performConsumerLookup(
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
-                canRetryAssertion: canRetryAssertion,
+                canSyncAttestationState: canSyncAttestationState,
                 completion: completion
             )
         }
@@ -88,7 +88,7 @@ extension STPAPIClient {
     private func performConsumerLookup(
         parameters: [String: Any],
         useMobileEndpoints: Bool,
-        canRetryAssertion: Bool,
+        canSyncAttestationState: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) async {
         let legacyEndpoint = "consumers/sessions/lookup"
@@ -103,7 +103,7 @@ extension STPAPIClient {
         let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
             if useMobileEndpoints {
                 do {
-                    let assertionHandle = try await stripeAttest.assert(canRetry: canRetryAssertion)
+                    let assertionHandle = try await stripeAttest.assert(canSyncState: canSyncAttestationState)
                     mutableParameters = mutableParameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
                     return assertionHandle
                 } catch {
@@ -140,6 +140,7 @@ extension STPAPIClient {
         countryCode: String?,
         consentAction: String?,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
@@ -175,7 +176,7 @@ extension STPAPIClient {
             let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
                 if useMobileEndpoints {
                     do {
-                        let assertionHandle = try await stripeAttest.assert()
+                        let assertionHandle = try await stripeAttest.assert(canSyncState: canSyncAttestationState)
                         parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
                         return assertionHandle
                     } catch {

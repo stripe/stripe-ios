@@ -75,6 +75,7 @@ struct LinkPMDisplayDetails {
     let cookieStore: LinkCookieStore
 
     let useMobileEndpoints: Bool
+    let canSyncAttestationState: Bool
     let requestSurface: LinkRequestSurface
     let createdFromAuthIntentID: Bool
 
@@ -138,6 +139,7 @@ struct LinkPMDisplayDetails {
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
         createdFromAuthIntentID: Bool = false
     ) {
@@ -148,6 +150,7 @@ struct LinkPMDisplayDetails {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
+        self.canSyncAttestationState = canSyncAttestationState
         self.requestSurface = requestSurface
         self.createdFromAuthIntentID = createdFromAuthIntentID
     }
@@ -194,6 +197,7 @@ struct LinkPMDisplayDetails {
             countryCode: countryCode,
             consentAction: consentAction.rawValue,
             useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
             with: apiClient,
             requestSurface: requestSurface
         ) { [weak self] result in

@@ -97,7 +97,7 @@ final class FinancialConnectionsAsyncAPIClient {
     ) async -> [String: Any] {
         do {
             let attest = backingAPIClient.stripeAttest
-            let handle = try await attest.assert(canRetry: false)
+            let handle = try await attest.assert(canSyncState: false)
             logger.log(.attestationRequestTokenSucceeded(api), pane: pane)
             let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
             return newParameters
