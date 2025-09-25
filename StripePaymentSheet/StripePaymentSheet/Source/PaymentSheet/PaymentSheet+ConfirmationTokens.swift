@@ -154,27 +154,16 @@ extension PaymentSheet {
             }
         }
 
-        // Calculate unified shouldSavePaymentMethod value (matches logic from handleDeferredIntentConfirmation)
-        let paymentMethodType = Self.paymentMethodType(from: confirmType)
-        let shouldSavePaymentMethod: Bool = {
-            // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
-            if confirmType.shouldSave {
-                return true
-            }
-            // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
-            return getShouldSavePaymentMethodValue(for: paymentMethodType, intentConfiguration: intentConfig)
-        }()
-
-        // Set Setup Future Usage based on intent mode (matches handleDeferredIntentConfirmation logic)
+        // Set Setup Future Usage based on intent mode
         switch intentConfig.mode {
         case .setup(_, let setupFutureUsage):
             // Respect the SetupIntent's configured SFU value
             confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
-        case .payment:
-            // For PaymentIntents, only set SFU if customer wants to save OR intent config requires it
-            if shouldSavePaymentMethod {
-                // TODO use value from intent/PMOSFU? Use the top level or PMO SFU value
+        case .payment(_, _, let setupFutureUsage, _, _):
+            if confirmType.shouldSave {
                 confirmationTokenParams.setupFutureUsage = .offSession
+            } else if let setupFutureUsage {
+                confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
             }
         }
 
