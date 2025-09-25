@@ -22,7 +22,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         [.biometricConsent], [.idDocumentFront, .idDocumentBack],
     ]
 
-    let flowController = VerificationSheetFlowController(brandLogo: UIImage())
+    let flowController = VerificationSheetFlowController(brandLogo: UIImage(), showsStripeLogo: true)
     var mockMLModelLoader: IdentityMLModelLoaderMock!
     var mockSheetController: VerificationSheetControllerMock!
 
