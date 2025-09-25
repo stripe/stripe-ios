@@ -24,11 +24,6 @@ extension PaymentSheet {
         radarOptions: STPRadarOptions? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        // Assert that exactly one confirm handler is populated
-        let hasConfirmHandler = intentConfig.confirmHandler != nil
-        let hasConfirmationTokenHandler = intentConfig.confirmationTokenConfirmHandler != nil
-        stpAssert(hasConfirmHandler != hasConfirmationTokenHandler, "Exactly one confirm handler should be set (either confirmHandler or confirmationTokenConfirmHandler, but not both or neither)")
-
         // Route based on which handler is available in the intent configuration
         if intentConfig.confirmationTokenConfirmHandler != nil {
             // Use confirmation token flow
@@ -272,7 +267,7 @@ extension PaymentSheet {
             return params.type
         }
     }
-
+    
     /// Sets PMO SFU or SFU on the given `paymentIntentParams` object if the given `intentConfiguration` has SFU set / PMO SFU set for the given `paymentMethodType`.
     /// See https://docs.google.com/document/d/1AW8j-cJ9ZW5h-LapzXOYrrE2b1XtmVo_SnvbNf-asOU
     static func setSetupFutureUsage(for paymentMethodType: STPPaymentMethodType, intentConfiguration: IntentConfiguration, on paymentIntentParams: STPPaymentIntentParams) {

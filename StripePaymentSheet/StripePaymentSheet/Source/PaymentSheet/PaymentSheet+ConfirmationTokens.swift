@@ -38,9 +38,17 @@ extension PaymentSheet {
                                                                             elementsSession: elementsSession)
                 
                 // Compute ephemeral key secret for customer session support
-                let ephemeralKeySecret = configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
+                let ephemeralKeySecret: String? = {
+                    // ConfirmationToken creation requests fail if an eph key is provided when not required
+                    guard confirmationTokenParams.paymentMethod != nil else { return nil }
+                    // ConfirmationToken creation requests fail if an eph key is provided for Link saved PMs
+                    guard !isSavedFromLink(from: confirmType) else { return nil }
+                    
+                    return configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
+                }()
+                
                 let confirmationToken = try await configuration.apiClient.createConfirmationToken(with: confirmationTokenParams,
-                                                                                                  ephemeralKeySecret: confirmationTokenParams.paymentMethod == nil ? nil : ephemeralKeySecret)
+                                                                                                  ephemeralKeySecret: ephemeralKeySecret)
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  confirmationToken: confirmationToken)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
@@ -281,11 +289,6 @@ extension PaymentSheet {
         // SCENARIO 1 & 2: Handle payment methods that require mandate data based on intent mode
         switch intentConfig.mode {
         case .payment(_, _, let topLevelSFU, _, let paymentMethodOptions):
-            // Only check for new payment methods (saved PMs already have mandate data if needed)
-            guard case .new = confirmType else {
-                return nil
-            }
-
             // Payment methods that require mandate data when setup_future_usage is "off_session"
             let mandateRequiredWithSFU: Set<STPPaymentMethodType> = [
                 .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay
@@ -302,7 +305,6 @@ extension PaymentSheet {
             
             // Last chance
             return STPPaymentIntentParams(clientSecret: "", paymentMethodType: paymentMethodType).mandateData
-
         case .setup:
             // Setup intents always require mandate data for certain payment methods
             let mandateRequiredForSetup: Set<STPPaymentMethodType> = [
@@ -327,6 +329,15 @@ extension PaymentSheet {
                     continuation.resume(with: result)
                 }
             }
+        }
+    }
+    
+    private static func isSavedFromLink(from confirmType: ConfirmPaymentMethodType) -> Bool {
+        switch confirmType {
+        case .saved(let paymentMethod,_, _):
+            return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.usBankAccount?.linkedAccount != nil
+        case .new(_, _, _, _, _):
+            return false
         }
     }
 }
