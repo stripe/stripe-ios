@@ -75,7 +75,8 @@ extension PaymentSheet {
                         // 4a. Client-side confirmation with confirmation token
                         // TODO(porter) Add confirmation token flow validation
                         let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, confirmationToken: confirmationToken)
-
+                        paymentIntentParams.radarOptions = radarOptions
+                        
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext
@@ -100,7 +101,8 @@ extension PaymentSheet {
                         // 4a. Client-side confirmation with confirmation token
                         // TODO(porter) Add confirmation token flow validation
                         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret, confirmationToken: confirmationToken)
-
+                        setupIntentParams.radarOptions = radarOptions
+                        
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
                             with: authenticationContext
