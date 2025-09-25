@@ -50,6 +50,7 @@ final class PaymentSheetLoader {
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
+        isUpdate: Bool = false,
         completion: @escaping (Result<LoadResult, Error>) -> Void
     ) {
         analyticsHelper.logLoadStarted()
@@ -93,7 +94,11 @@ final class PaymentSheetLoader {
                 async let savedPaymentMethods = fetchSavedPaymentMethods(elementsSession: elementsSession, configuration: configuration)
 
                 // Load link account session. Continue without Link if it errors.
-                let linkAccount = try? await lookupLinkAccount(elementsSession: elementsSession, configuration: configuration)
+                let linkAccount = try? await lookupLinkAccount(
+                    elementsSession: elementsSession,
+                    configuration: configuration,
+                    isUpdate: isUpdate
+                )
                 LinkAccountContext.shared.account = linkAccount
 
                 // Log experiment exposures
@@ -232,7 +237,17 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> PaymentSheetLinkAccount? {
+    static func lookupLinkAccount(
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration,
+        isUpdate: Bool
+    ) async throws -> PaymentSheetLinkAccount? {
+        // If we already have a verified Link account and the merchant is just calling `update` on FlowController,
+        // keep the account logged-in. Otherwise, the user has to verify via OTP again.
+        if isUpdate, let currentLinkAccount = LinkAccountContext.shared.account, currentLinkAccount.sessionState == .verified {
+            return currentLinkAccount
+        }
+
         // Lookup Link account if Link is enabled or the holdback killswitch is not enabled.
         // Note: When the holdback experiment is over, we can ignore the killswitch and only lookup when Link is enabled.
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
