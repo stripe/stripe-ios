@@ -262,6 +262,10 @@ import UIKit
         if canSyncState && !challenge.initial_attestation_required && !successfullyAttested {
             // Server has attestation but client doesn't know - update client
             successfullyAttested = true
+            let event = GenericAnalytic(event: .stateMismatchNotAttestedLocally, params: [:])
+            if let apiClient {
+                STPAnalyticsClient.sharedClient.log(analytic: event, apiClient: apiClient)
+            }
         } else if challenge.initial_attestation_required && successfullyAttested {
             // Server needs attestation but client thinks it's done - reset client and retry
             if isRetry || !canSyncState {
@@ -271,7 +275,10 @@ import UIKit
             } else {
                 // Reset and retry
                 resetKey()
-                try await self.attest()
+                let event = GenericAnalytic(event: .stateMismatchNotAttestedRemotely, params: [:])
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: event, apiClient: apiClient)
+                }
                 return try await _assert(canSyncState: canSyncState, isRetry: true)
             }
         }

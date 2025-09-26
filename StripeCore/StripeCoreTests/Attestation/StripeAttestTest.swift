@@ -182,7 +182,7 @@ class StripeAttestTest: XCTestCase {
         // Case 1: Server has attestation but client doesn't know
         // Setup: Client thinks it's not attested, but server says no attestation required
         await stripeAttest.resetKey()
-        
+
         // First get a key ID by attempting an assertion (this will create the key)
         var keyId: String = ""
         do {
@@ -192,71 +192,71 @@ class StripeAttestTest: XCTestCase {
         } catch {
             // Expected to fail since we haven't configured the backend yet
         }
-        
+
         // Reset client state so it thinks it's not attested
         await stripeAttest.resetKey()
-        
+
         // But mark the key as attested on the server side
         // This simulates the case where server has attestation but client doesn't know
         if !keyId.isEmpty {
             mockAttestBackend.keyHasBeenAttested[keyId] = true
         }
-        
+
         // Client should sync state and succeed without throwing
         let assertionHandle = try! await stripeAttest.assert(canSyncState: true)
-        
+
         // Verify the assertion was created successfully
         XCTAssertFalse(assertionHandle.assertion.assertionData.isEmpty)
         XCTAssertFalse(assertionHandle.assertion.keyID.isEmpty)
-        
+
         assertionHandle.complete()
     }
-    
+
     func testStateAlignmentServerNeedsAttestationClientThinksItsDone() async {
         // Case 2: Server needs attestation but client thinks it's done
         // Setup: Client thinks it's attested, but server says attestation is required
-        
+
         // First, attest successfully to set client state
         try! await stripeAttest.attest()
-        
+
         // Get the key ID from a successful assertion
         let firstHandle = try! await stripeAttest.assert(canSyncState: false)
         let keyId = firstHandle.assertion.keyID
         firstHandle.complete()
-        
+
         // Now simulate server losing the attestation (key mismatch scenario)
         // Remove the key from the mock backend's attested keys
         mockAttestBackend.keyHasBeenAttested[keyId] = false
-        
+
         // Client should detect mismatch, reset, re-attest, and succeed
         let assertionHandle = try! await stripeAttest.assert(canSyncState: true)
-        
+
         // Verify the assertion was created successfully after retry
         XCTAssertFalse(assertionHandle.assertion.assertionData.isEmpty)
         XCTAssertFalse(assertionHandle.assertion.keyID.isEmpty)
-        
+
         // The key ID might have changed after reset, so we don't assert equality
         // But we can verify that the backend now has the new key as attested
         XCTAssertTrue(mockAttestBackend.keyHasBeenAttested[assertionHandle.assertion.keyID] ?? false)
-        
+
         assertionHandle.complete()
     }
-    
+
     func testStateAlignmentWithoutCanSyncStateThrowsError() async {
         // Case 2 without state sync should throw an error
         // Setup: Client thinks it's attested, but server says attestation is required
-        
+
         // First, attest successfully to set client state
         try! await stripeAttest.attest()
-        
+
         // Get the key ID from a successful assertion
         let firstHandle = try! await stripeAttest.assert(canSyncState: false)
         let keyId = firstHandle.assertion.keyID
         firstHandle.complete()
-        
+
         // Now simulate server losing the attestation (same as previous test)
         mockAttestBackend.keyHasBeenAttested[keyId] = false
-        
+
         // With canSyncState = false, should throw shouldAttestButKeyIsAlreadyAttested
         do {
             _ = try await stripeAttest.assert(canSyncState: false)
