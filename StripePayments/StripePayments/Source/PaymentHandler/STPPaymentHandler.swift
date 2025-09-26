@@ -113,10 +113,6 @@ public class STPPaymentHandler: NSObject {
     private var safariViewController: SFSafariViewController?
     private var asWebAuthenticationSession: ASWebAuthenticationSession?
 
-    /// Set this to true if you want a specific test to run the _canPresent code
-    /// it will automatically toggle back to false after running the code once
-    internal var checkCanPresentInTest: Bool = false
-
     /// The globally shared instance of `STPPaymentHandler`.
     @objc public static let sharedHandler: STPPaymentHandler = STPPaymentHandler()
 
@@ -1931,15 +1927,6 @@ public class STPPaymentHandler: NSObject {
     )
         -> Bool
     {
-        // Always allow in tests:
-        if NSClassFromString("XCTest") != nil {
-            if checkCanPresentInTest {
-                checkCanPresentInTest.toggle()
-            } else {
-                return true
-            }
-        }
-
         let presentingViewController =
             authenticationContext.authenticationPresentingViewController()
         var canPresent = true
