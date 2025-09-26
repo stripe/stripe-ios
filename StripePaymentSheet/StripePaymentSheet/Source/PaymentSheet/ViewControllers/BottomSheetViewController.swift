@@ -404,26 +404,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         navigationBarContainerView.addInteraction(navigationBarBlur)
     }
-    func disableNavigationBarBlurInteraction() {
-        guard let navigationBarBlur else {
-            return
-        }
-        navigationBarContainerView.removeInteraction(navigationBarBlur)
-    }
-
-    // Workaround: Remove blur in `preAnimateHeightChange`, prior to swapping out content. Otherwise, the blur effect
-    // animates away over new content that is most likely different. In `postLayoutAnimations`, decide
-    // whether or not new content is scrollable.  If so, add the blur back, otherwise, keep it removed.
-    func preAnimateHeightChange() {
-        self.disableNavigationBarBlurInteraction()
-    }
-    func postLayoutAnimations(containerView: UIView, toView: UIView) {
-        if self.scrollView.contentSize.height > self.scrollView.frame.size.height {
-            self.enableNavigationBarBlurInteraction()
-        } else {
-            self.disableNavigationBarBlurInteraction()
-        }
-    }
     #endif
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(

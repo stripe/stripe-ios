@@ -103,9 +103,6 @@ extension UIViewController {
             fromVC.willMove(toParent: nil)
             fromVC.removeFromParent()
 
-            #if compiler(>=6.2)
-            self.bottomSheetController?.preAnimateHeightChange()
-            #endif
             animateHeightChange(
                 {
                     containerView.updateHeight()
@@ -117,9 +114,6 @@ extension UIViewController {
                     if let contentOffsetPercentage {
                         self.bottomSheetController?.contentOffsetPercentage = contentOffsetPercentage
                     }
-                    #if compiler(>=6.2)
-                    self.bottomSheetController?.postLayoutAnimations(containerView: containerView, toView: toVC.view)
-                    #endif
                 },
                 completion: { _ in
                     toVC.endAppearanceTransition()
