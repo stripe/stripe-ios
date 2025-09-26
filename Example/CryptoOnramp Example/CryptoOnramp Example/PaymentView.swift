@@ -61,6 +61,9 @@ struct PaymentView: View {
         let message: String
     }
 
+    private struct EditCurrencyAlert: Identifiable {
+        let id = UUID()
+    }
     /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     let coordinator: CryptoOnrampCoordinator
 
@@ -81,6 +84,9 @@ struct PaymentView: View {
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
     @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
+    @State private var destinationCurrency: String = "usdc"
+    @State private var editCurrencyAlert: EditCurrencyAlert?
+    @State private var editingCurrencyText: String = ""
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -92,6 +98,15 @@ struct PaymentView: View {
         })
     }
 
+    private var isPresentingEditCurrencyAlert: Binding<Bool> {
+        Binding(get: {
+            editCurrencyAlert != nil
+        }, set: { newValue in
+            if !newValue {
+                editCurrencyAlert = nil
+            }
+        })
+    }
     // This example UI is intended for USD ($) only, but we respect the
     // current locale’s decimal separator.
     //
@@ -171,10 +186,28 @@ struct PaymentView: View {
         VStack(spacing: 0) {
             Spacer()
 
-            Text("$" + (amountText.isEmpty ? "0" : amountText))
-                .font(.system(size: 56, weight: .bold))
-                .monospacedDigit()
-                .frame(maxWidth: .infinity, alignment: .center)
+            VStack(spacing: 8) {
+                Text("$" + (amountText.isEmpty ? "0" : amountText))
+                    .font(.system(size: 56, weight: .bold))
+                    .monospacedDigit()
+                    .frame(maxWidth: .infinity, alignment: .center)
+
+                Button {
+                    editingCurrencyText = destinationCurrency
+                    editCurrencyAlert = EditCurrencyAlert()
+                } label: {
+                    HStack(spacing: 4) {
+                        Text("to \(destinationCurrency)")
+                            .font(.callout)
+                            .foregroundColor(.secondary)
+
+                        Image(systemName: "pencil")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .buttonStyle(.plain)
+            }
 
             Spacer()
 
@@ -291,6 +324,30 @@ struct PaymentView: View {
                 Button("OK") {}
             }, message: { alert in
                 Text(alert.message)
+            }
+        )
+        .alert(
+            "Edit Destination Currency",
+            isPresented: isPresentingEditCurrencyAlert,
+            actions: {
+                TextField("Currency (e.g. usdc)", text: $editingCurrencyText)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+
+                Button("Save") {
+                    let trimmed = editingCurrencyText.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !trimmed.isEmpty {
+                        destinationCurrency = trimmed
+                    }
+                    editCurrencyAlert = nil
+                }
+
+                Button("Cancel", role: .cancel) {
+                    editCurrencyAlert = nil
+                }
+            },
+            message: {
+                Text("Enter the destination currency code (e.g. usdc, btc, eth)")
             }
         )
     }
@@ -633,8 +690,10 @@ struct PaymentView: View {
             paymentToken: cryptoPaymentTokenId,
             sourceAmount: Decimal(string: amountText) ?? 0,
             sourceCurrency: "usd", // <--- hardcoded for demo
-            destinationCurrency: "usdc", // <--- hardcoded for demo
+            destinationCurrency: destinationCurrency,
             destinationNetwork: wallet.network,
+            destinationCurrencies: [destinationCurrency],
+            destinationNetworks: [wallet.network],
             walletAddress: wallet.walletAddress,
             cryptoCustomerId: customerId,
             customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
