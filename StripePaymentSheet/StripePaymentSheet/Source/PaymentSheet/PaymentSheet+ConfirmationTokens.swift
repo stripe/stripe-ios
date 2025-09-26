@@ -178,13 +178,17 @@ extension PaymentSheet {
             // Setup intents: Always use the configured setup future usage value
             params.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
 
-        case .payment(_, _, let intentSetupFutureUsage, _, _):
-            // Payment intents: Priority order is user choice > intent configuration
+        case .payment(_, _, let intentSetupFutureUsage, _, let paymentMethodOptions):
+            let paymentMethodType = paymentMethodType(from: confirmType)
+            // Priority order: user checkbox > PMO SFU > top-level SFU
             if confirmType.shouldSave {
-                // User chose to save payment method, hardcode to offSession
+                // 1. User chose to save payment method via checkbox takes highest priority
                 params.setupFutureUsage = .offSession
+            } else if let pmoSFU = paymentMethodOptions?.setupFutureUsageValues?[paymentMethodType] {
+                // 2. PMO SFU takes second priority
+                params.setupFutureUsage = pmoSFU.paymentIntentParamsValue
             } else if let intentSetupFutureUsage = intentSetupFutureUsage {
-                // Use intent configuration default
+                // 3. Use top-level intent configuration as fallback
                 params.setupFutureUsage = intentSetupFutureUsage.paymentIntentParamsValue
             }
         }
