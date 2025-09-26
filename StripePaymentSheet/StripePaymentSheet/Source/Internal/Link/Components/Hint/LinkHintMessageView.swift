@@ -36,7 +36,7 @@ final class LinkHintMessageView: UIView {
             case .filled:
                 return .linkTextTertiary
             case .outlined:
-                return .linkTextSecondary
+                return .linkOutlinedHintMessageForeground
             }
         }
     }
@@ -105,10 +105,7 @@ final class LinkHintMessageView: UIView {
         ])
         backgroundColor = style.backgroundColor
 
-        if style == .outlined {
-            layer.borderColor = UIColor.linkHintMessageBorder.cgColor
-            layer.borderWidth = 1.0
-        }
+        applyOutlineIfNecessary()
 
         if let cornerRadius = LinkUI.appearance.cornerRadius {
             layer.cornerRadius = cornerRadius
@@ -119,7 +116,21 @@ final class LinkHintMessageView: UIView {
         heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minimumHeight).isActive = true
     }
 
+    private func applyOutlineIfNecessary() {
+        if style == .outlined {
+            layer.borderColor = UIColor.linkOutlinedHintMessageBorder.cgColor
+            layer.borderWidth = 1.0
+        }
+    }
+
     private func configureImage() {
         iconView.image = Image.icon_info.makeImage(template: true)
     }
+
+    #if !os(visionOS)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        applyOutlineIfNecessary()
+    }
+    #endif
 }
