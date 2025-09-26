@@ -1439,7 +1439,8 @@ extension PaymentSheetLinkAccount {
             session: session,
             publishableKey: "pk_123",
             displayablePaymentDetails: displayablePaymentDetails,
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }

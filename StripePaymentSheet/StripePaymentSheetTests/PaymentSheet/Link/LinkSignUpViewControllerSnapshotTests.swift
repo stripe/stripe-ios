@@ -63,7 +63,8 @@ extension LinkSignUpViewControllerSnapshotTests {
                 session: session,
                 publishableKey: nil,
                 displayablePaymentDetails: nil,
-                useMobileEndpoints: false
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
             ),
             defaultBillingDetails: nil
         )

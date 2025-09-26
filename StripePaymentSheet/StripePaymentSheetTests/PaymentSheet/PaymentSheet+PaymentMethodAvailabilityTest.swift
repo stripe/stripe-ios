@@ -182,6 +182,7 @@ extension LinkSettings {
             linkDefaultOptIn: nil,
             linkEnableDisplayableDefaultValuesInECE: nil,
             linkShowPreferDebitCardHint: nil,
+            attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
             allResponseFields: [:]
         )

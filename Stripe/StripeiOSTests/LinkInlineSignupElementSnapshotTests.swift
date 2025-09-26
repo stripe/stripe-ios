@@ -158,6 +158,7 @@ extension LinkInlineSignupElementSnapshotTests {
                         publishableKey: nil,
                         displayablePaymentDetails: nil,
                         useMobileEndpoints: false,
+                        canSyncAttestationState: false,
                         requestSurface: requestSurface
                     )
                 )
@@ -175,6 +176,7 @@ extension LinkInlineSignupElementSnapshotTests {
                 publishableKey: nil,
                 displayablePaymentDetails: nil,
                 useMobileEndpoints: false,
+                canSyncAttestationState: false,
                 requestSurface: requestSurface
             )
             let response = StripePaymentSheet.LookupLinkAuthIntentResponse(
@@ -215,7 +217,8 @@ extension LinkInlineSignupElementSnapshotTests {
                 session: nil,
                 publishableKey: nil,
                 displayablePaymentDetails: nil,
-                useMobileEndpoints: false
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
             )
         }
 

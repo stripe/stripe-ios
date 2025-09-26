@@ -56,7 +56,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             publishableKey: nil,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
     }
 

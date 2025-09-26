@@ -269,7 +269,8 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 session: LinkStubs.consumerSession(supportedPaymentDetailsTypes: supportedPaymentDetailsTypes),
                 publishableKey: nil,
                 displayablePaymentDetails: nil,
-                useMobileEndpoints: false
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
             ),
             context: .init(
                 intent: intent,

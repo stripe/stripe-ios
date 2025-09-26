@@ -87,6 +87,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkDefaultOptIn: .full,
             linkEnableDisplayableDefaultValuesInECE: nil,
             linkShowPreferDebitCardHint: nil,
+            attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
             allResponseFields: [:]
         )
@@ -110,7 +111,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             session: nil,
             publishableKey: nil,
             displayablePaymentDetails: nil,
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
 
         let experiment = LinkGlobalHoldback(
@@ -157,6 +159,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkDefaultOptIn: .optional,
             linkEnableDisplayableDefaultValuesInECE: nil,
             linkShowPreferDebitCardHint: nil,
+            attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
             allResponseFields: [:]
         )
@@ -179,7 +182,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
             displayablePaymentDetails: nil,
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
 
         let experiment = LinkABTest(

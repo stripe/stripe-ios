@@ -139,6 +139,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -150,6 +151,7 @@ extension ConsumerSession {
             customerID: customerID,
             cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface,
             completion: completion
@@ -163,6 +165,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -172,6 +175,7 @@ extension ConsumerSession {
             customerID: customerID,
             cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -185,6 +189,7 @@ extension ConsumerSession {
         countryCode: String?,
         consentAction: String?,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
@@ -197,6 +202,7 @@ extension ConsumerSession {
             countryCode: countryCode,
             consentAction: consentAction,
             useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface,
             completion: completion
         )
