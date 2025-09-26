@@ -157,16 +157,10 @@ internal class HCaptchaWebViewManager: NSObject {
         if Thread.isMainThread {
             Self.cleanup(webView: webViewToClean, observer: observerToRemove)
         } else {
-            DispatchQueue.main.sync {
+            DispatchQueue.main.async {
                 Self.cleanup(webView: webViewToClean, observer: observerToRemove)
             }
         }
-
-        // Clean up all closure references
-        completion = nil
-        onEvent = nil
-        onDidFinishLoading = nil
-        configureWebView = nil
 
         // Mark result as handled to prevent any pending callbacks
         resultHandled = true
