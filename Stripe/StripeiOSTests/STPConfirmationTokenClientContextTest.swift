@@ -11,7 +11,6 @@ import XCTest
 
 class STPConfirmationTokenClientContextTest: XCTestCase {
 
-
     // MARK: - STPFormEncodable Tests
 
     func testRootObjectName() {
@@ -48,7 +47,6 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
         XCTAssertEqual(mapping["paymentMethodOptions"], "payment_method_options")
     }
 
-
     // MARK: - Form Encoding Tests
 
     func testFormEncodingWithAllProperties() {
@@ -64,7 +62,7 @@ class STPConfirmationTokenClientContextTest: XCTestCase {
 
         let paymentMethodOptions = [
             "card": ["setup_future_usage": "off_session"],
-            "us_bank_account": ["setup_future_usage": "on_session"]
+            "us_bank_account": ["setup_future_usage": "on_session"],
         ]
         clientContext.paymentMethodOptions = paymentMethodOptions
 

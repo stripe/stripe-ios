@@ -5,22 +5,22 @@
 //  Created by Nick Porter on 9/26/25.
 //
 
-@testable@_spi(STP)@_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePayments
+@testable@_spi(STP)@_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 import XCTest
 
 class IntentConfigurationClientContextTest: XCTestCase {
-    
+
     // MARK: - Payment Mode Tests
-    
+
     func testCreateClientContextFromPaymentModeMinimal() {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
             confirmHandler: { _, _, _ in }
         )
-        
+
         let clientContext = intentConfig.createClientContext(customerId: nil)
-        
+
         XCTAssertEqual(clientContext.mode, "payment")
         XCTAssertEqual(clientContext.currency, "usd")
         XCTAssertNil(clientContext.setupFutureUsage)
@@ -30,12 +30,12 @@ class IntentConfigurationClientContextTest: XCTestCase {
         XCTAssertNil(clientContext.onBehalfOf)
         XCTAssertNil(clientContext.paymentMethodConfiguration)
     }
-    
+
     func testCreateClientContextFromPaymentModeComplete() {
         let paymentMethodOptions = PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(
             setupFutureUsageValues: [.card: .offSession]
         )
-        
+
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(
                 amount: 2000,
@@ -49,9 +49,9 @@ class IntentConfigurationClientContextTest: XCTestCase {
             paymentMethodConfigurationId: "pmc_123456",
             confirmHandler: { _, _, _ in }
         )
-        
+
         let clientContext = intentConfig.createClientContext(customerId: nil)
-        
+
         XCTAssertEqual(clientContext.mode, "payment")
         XCTAssertEqual(clientContext.currency, "eur")
         XCTAssertEqual(clientContext.setupFutureUsage, "on_session")
@@ -61,7 +61,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
         XCTAssertEqual(clientContext.onBehalfOf, "acct_123456")
         XCTAssertEqual(clientContext.paymentMethodConfiguration, "pmc_123456")
     }
-    
+
     func testCreateClientContextFromPaymentModeWithAutomaticAsync() {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(
@@ -72,25 +72,25 @@ class IntentConfigurationClientContextTest: XCTestCase {
             ),
             confirmHandler: { _, _, _ in }
         )
-        
+
         let clientContext = intentConfig.createClientContext(customerId: nil)
-        
+
         XCTAssertEqual(clientContext.mode, "payment")
         XCTAssertEqual(clientContext.currency, "gbp")
         XCTAssertEqual(clientContext.setupFutureUsage, "off_session")
         XCTAssertEqual(clientContext.captureMethod, "automatic_async")
     }
-    
+
     // MARK: - Setup Mode Tests
-    
+
     func testCreateClientContextFromSetupModeMinimal() {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .setup(),
             confirmHandler: { _, _, _ in }
         )
-        
+
         let clientContext = intentConfig.createClientContext(customerId: nil)
-        
+
         XCTAssertEqual(clientContext.mode, "setup")
         XCTAssertNil(clientContext.currency) // default is nil for setup
         XCTAssertEqual(clientContext.setupFutureUsage, "off_session") // default for setup
@@ -100,7 +100,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
         XCTAssertNil(clientContext.onBehalfOf)
         XCTAssertNil(clientContext.paymentMethodConfiguration)
     }
-    
+
     func testCreateClientContextFromSetupModeWithCurrency() {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .setup(currency: "cad", setupFutureUsage: .onSession),
@@ -109,9 +109,9 @@ class IntentConfigurationClientContextTest: XCTestCase {
             paymentMethodConfigurationId: "pmc_789",
             confirmHandler: { _, _, _ in }
         )
-        
+
         let clientContext = intentConfig.createClientContext(customerId: nil)
-        
+
         XCTAssertEqual(clientContext.mode, "setup")
         XCTAssertEqual(clientContext.currency, "cad")
         XCTAssertEqual(clientContext.setupFutureUsage, "on_session")
@@ -121,18 +121,17 @@ class IntentConfigurationClientContextTest: XCTestCase {
         XCTAssertEqual(clientContext.onBehalfOf, "acct_789")
         XCTAssertEqual(clientContext.paymentMethodConfiguration, "pmc_789")
     }
-    
-    
+
     // MARK: - PaymentMethodOptions Conversion Tests
-    
+
     func testPaymentMethodOptionsConversionWithSetupFutureUsage() {
         let paymentMethodOptions = PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(
             setupFutureUsageValues: [
                 .card: .offSession,
-                .USBankAccount: .onSession
+                .USBankAccount: .onSession,
             ]
         )
-        
+
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(
                 amount: 1000,
@@ -141,9 +140,9 @@ class IntentConfigurationClientContextTest: XCTestCase {
             ),
             confirmHandler: { _, _, _ in }
         )
-        
+
         let clientContext = intentConfig.createClientContext(customerId: nil)
-        
+
         XCTAssertNotNil(clientContext.paymentMethodOptions)
         // The actual conversion logic may be expanded in the future
         // This test ensures the conversion method is called

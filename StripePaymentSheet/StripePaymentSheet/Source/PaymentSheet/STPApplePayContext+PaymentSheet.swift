@@ -137,6 +137,14 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         confirmationTokenParams.returnURL = context.returnUrl
         confirmationTokenParams.clientAttributionMetadata = context.clientAttributionMetadata
         confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: paymentMethod.customerId)
+        switch intentConfig.mode {
+        case .payment(_, _, let setupFutureUsage, _, _):
+            if let sfu = setupFutureUsage?.paymentIntentParamsValue {
+                confirmationTokenParams.setupFutureUsage = sfu
+            }
+        case .setup(_, let setupFutureUsage):
+            confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
+        }
 
         // Set shipping details if available
         if let shippingContact = paymentInformation.shippingContact,
