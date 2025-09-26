@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// Client context for a ConfirmationToken, containing information about the payment flow context.
 /// Only includes properties that can be populated from PaymentSheet.IntentConfiguration.
