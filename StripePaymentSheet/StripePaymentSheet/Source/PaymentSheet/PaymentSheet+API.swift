@@ -254,7 +254,7 @@ extension PaymentSheet {
                     )
                     // MARK: ↪ Deferred Intent
                 case .deferredIntent(let intentConfig):
-                    handleDeferredIntentConfirmation(
+                    routeDeferredIntentConfirmation(
                         confirmType: .new(
                             params: confirmParams.paymentMethodParams,
                             paymentOptions: confirmParams.confirmPaymentMethodOptions,
@@ -267,6 +267,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                        elementsSession: elementsSession,
                         completion: completion
                     )
                 }
@@ -313,13 +314,14 @@ extension PaymentSheet {
                     ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
-                handleDeferredIntentConfirmation(
+                routeDeferredIntentConfirmation(
                     confirmType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata),
                     configuration: configuration,
                     intentConfig: intentConfig,
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
+                    elementsSession: elementsSession,
                     completion: completion
                 )
             }
@@ -371,7 +373,7 @@ extension PaymentSheet {
                             }
                         )
                     case .deferredIntent(let intentConfig):
-                        handleDeferredIntentConfirmation(
+                        routeDeferredIntentConfirmation(
                             confirmType: .new(
                                 params: paymentMethodParams,
                                 paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -382,6 +384,7 @@ extension PaymentSheet {
                             authenticationContext: authenticationContext,
                             paymentHandler: paymentHandler,
                             isFlowController: isFlowController,
+                            elementsSession: elementsSession,
                             completion: { psResult, confirmationType in
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
@@ -443,13 +446,14 @@ extension PaymentSheet {
                             }
                         )
                     case .deferredIntent(let intentConfig):
-                        handleDeferredIntentConfirmation(
+                        routeDeferredIntentConfirmation(
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
                             configuration: configuration,
                             intentConfig: intentConfig,
                             authenticationContext: authenticationContext,
                             paymentHandler: paymentHandler,
                             isFlowController: isFlowController,
+                            elementsSession: elementsSession,
                             radarOptions: radarOptions,
                             completion: { psResult, confirmationType in
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
@@ -737,9 +741,8 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay]
             let isSetupFutureUsageOffSession = paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session"
-            if requiresMandateData.contains(paymentMethodType) && isSetupFutureUsageOffSession
+            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) && isSetupFutureUsageOffSession
             {
                 params.mandateData = .makeWithInferredValues()
             }
@@ -793,8 +796,8 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            // Paypal & revolut & satispay requires mandate_data if setting up
-            if params.paymentMethodType == .payPal || params.paymentMethodType == .revolutPay || params.paymentMethodType == .satispay {
+            // These payment methods require mandate_data if setting up
+            if let paymentMethodType = params.paymentMethodType, STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
                 params.mandateData = .makeWithInferredValues()
             }
         }

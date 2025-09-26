@@ -242,6 +242,7 @@
 		6198AA6E2BED1C5A00F39D3E /* SavedPaymentMethodRowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6198AA6D2BED1C5A00F39D3E /* SavedPaymentMethodRowButton.swift */; };
 		619AF0852BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619AF0842BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift */; };
 		619AF08A2BF56FC000D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */; };
+		61A3F0162E81A07D00667D88 /* PaymentSheet+ConfirmationTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A3F0152E81A07D00667D88 /* PaymentSheet+ConfirmationTokens.swift */; };
 		61A799522CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A799512CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift */; };
 		61B2530F2D4D5FC5008CFC96 /* EmbeddedViewRepresentableSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B2530E2D4D5FC5008CFC96 /* EmbeddedViewRepresentableSnapshotTest.swift */; };
 		61C0D3B8C63EB4558AB74A7E /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1C7CFA5C9C1A8A73CFA1C0 /* StripePayments.framework */; };
@@ -767,6 +768,7 @@
 		6198AA6D2BED1C5A00F39D3E /* SavedPaymentMethodRowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPaymentMethodRowButton.swift; sourceTree = "<group>"; };
 		619AF0842BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodRowButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalSavedPaymentMethodsViewControllerTests.swift; sourceTree = "<group>"; };
+		61A3F0152E81A07D00667D88 /* PaymentSheet+ConfirmationTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheet+ConfirmationTokens.swift"; sourceTree = "<group>"; };
 		61A799512CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedFormViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		61B2530E2D4D5FC5008CFC96 /* EmbeddedViewRepresentableSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedViewRepresentableSnapshotTest.swift; sourceTree = "<group>"; };
 		61C87E1A2CB818ED001B7DA9 /* CardBrandFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBrandFilter.swift; sourceTree = "<group>"; };
@@ -1289,6 +1291,7 @@
 				6B680A2FF197F612D065F16C /* PaymentSheet.swift */,
 				5CD1A451B238C1D1ADAA72EC /* PaymentSheet+API.swift */,
 				0D447E18D1066195679B7956 /* PaymentSheet+DeferredAPI.swift */,
+				61A3F0152E81A07D00667D88 /* PaymentSheet+ConfirmationTokens.swift */,
 				315673E62CD3024F00BA08BC /* PaymentSheet+Link.swift */,
 				BBB6BEFBCE1116B85B564574 /* PaymentSheet+PaymentMethodAvailability.swift */,
 				B9A9FDAE66ADA08D85D74E19 /* PaymentSheet+SwiftUI.swift */,
@@ -2667,6 +2670,7 @@
 				49909A1E2D8AFAB70031EC33 /* FCLiteManifest.swift in Sources */,
 				49A11F532E5BB16B002ECED5 /* LinkFullConsent-EmailView.swift in Sources */,
 				49E3D7612E70B9F8006CE394 /* LinkGlobalHoldbackAA.swift in Sources */,
+				61A3F0162E81A07D00667D88 /* PaymentSheet+ConfirmationTokens.swift in Sources */,
 				6107F5462D4C389800905BD8 /* EmbeddedViewRepresentable.swift in Sources */,
 				820C3EDE61ADBFE4DA1E9A98 /* PaymentSheet+API.swift in Sources */,
 				294AE0A8838786ACABE6BCF2 /* PaymentSheet+DeferredAPI.swift in Sources */,

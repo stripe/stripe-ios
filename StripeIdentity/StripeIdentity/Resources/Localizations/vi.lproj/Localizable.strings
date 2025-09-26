@@ -6,7 +6,13 @@
 
 "App Settings" = "Cài đặt Ứng dụng";
 
-"Back of identity card" = "Mặt sau thẻ căn cước";
+"Back %@ photo successfully uploaded" = "Tải lên ảnh mặt sau %@ thành công";
+
+"Back identity document photo successfully uploaded" = "Tải lên ảnh mặt sau giấy tờ tùy thân thành công";
+
+"Back of %@" = "Mặt sau của %@";
+
+"Back of driver's license or government-issued photo ID" = "Mặt sau của bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
 "Back of identity document" = "Mặt sau giấy tờ nhận dạng";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Không thấy rõ thông tin chi tiết";
 
+"Flip your %@ over to the other side" = "Lật %@ của bạn lại";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Lật ngược bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+
 "Flip your identity card over to the other side" = "Lật thẻ căn cước của bạn sang mặt khác";
 
+"Front %@ photo successfully uploaded" = "Tải lên ảnh mặt trước %@ thành công";
+
+"Front identity document photo successfully uploaded" = "Tải lên ảnh mặt trước giấy tờ tùy thân thành công";
+
+"Front of %@" = "Mặt trước của %@";
+
+"Front of driver's license or government-issued photo ID" = "Mặt trước của bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+
+"Front of driver's license or passport" = "Mặt trước của bằng lái xe hoặc hộ chiếu";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Mặt trước của bằng lái xe, hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+
 "Front of identity document" = "Mặt trước giấy tờ nhận dạng";
+
+"Front of passport or government-issued photo ID" = "Mặt trước hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
 "Get ready to scan your photo ID" = "Chuẩn bị quét ID có ảnh";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Thư viện ảnh";
 
+"Please upload images of the front and back of your %@" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau %@ của bạn";
+
+"Please upload images of the front and back of your identity document" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau giấy tờ tùy thân của bạn";
+
+"Position your %@ in the center of the frame" = "Đặt %@ của bạn ở giữa khung hình";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Đặt giấy phép lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
+
+"Position your driver's license or passport in the center of the frame" = "Đặt bằng lái xe hoặc hộ chiếu của bạn ở giữa khung hình";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Đặt bằng lái xe, hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
+
 "Position your face in the center of the frame." = "Đặt khuôn mặt của bạn ở giữa khung hình.";
+
+"Position your identity document in the center of the frame" = "Đặt giấy tờ tùy thân của bạn ở giữa khung hình";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Đặt hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
 
 "Retake Photos" = "Chụp lại ảnh";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Chọn một vị trí để tải lên mặt sau giấy tờ tùy thân của bạn";
 
 "Select a location to upload the front of your identity document from" = "Chọn một vị trí để tải lên mặt trước giấy tờ tùy thân của bạn";
+
+"Select back %@ photo" = "Chọn ảnh mặt sau %@";
+
+"Select back identity document photo" = "Chọn ảnh mặt sau giấy tờ tùy thân";
+
+"Select front %@ photo" = "Chọn ảnh mặt trước %@";
+
+"Select front identity document photo" = "Chọn ảnh mặt trước giấy tờ tùy thân";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Tải lên ảnh";
 
+"Upload your %@" = "Tải lên %@ của bạn";
+
 "Upload your photo ID" = "Tải lên ID có ảnh của bạn";
+
+"Uploading back %@ photo" = "Tải lên ảnh mặt sau %@";
+
+"Uploading back identity document photo" = "Tải lên ảnh mặt sau giấy tờ tùy thân";
+
+"Uploading front %@ photo" = "Tải lên ảnh mặt trước %@";
+
+"Uploading front identity document photo" = "Tải lên ảnh mặt trước giấy tờ tùy thân";
 
 "Verify your identity" = "Xác minh danh tính của bạn";
 

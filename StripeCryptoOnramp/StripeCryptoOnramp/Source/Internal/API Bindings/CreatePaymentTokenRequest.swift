@@ -12,11 +12,6 @@ struct CreatePaymentTokenRequest: Encodable {
     /// The crypto wallet address to register.
     let paymentMethod: String
 
-    /// Contains credentials required to make the request.
-    let credentials: Credentials
-
-    init(paymentMethod: String, consumerSessionClientSecret: String) {
-        self.paymentMethod = paymentMethod
-        self.credentials = Credentials(consumerSessionClientSecret: consumerSessionClientSecret)
-    }
+    /// The crypto customer ID.
+    let cryptoCustomerId: String
 }

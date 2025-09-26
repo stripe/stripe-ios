@@ -46,10 +46,21 @@ import UIKit
     }
 
     /// Errors specific incorrect integrations with LinkController
-    @_spi(STP) public enum IntegrationError: Error {
+    @_spi(STP) public enum IntegrationError: LocalizedError {
         case noPaymentMethodSelected
         case noActiveLinkConsumer
         case missingAppAttestation
+
+        @_spi(STP) public var errorDescription: String? {
+            switch self {
+            case .noPaymentMethodSelected:
+                return "No payment method has been selected."
+            case .noActiveLinkConsumer:
+                return "No active Link consumer is available."
+            case .missingAppAttestation:
+                return "App attestation is missing or device cannot use native Link."
+            }
+        }
     }
 
     @_spi(STP) public enum Mode {

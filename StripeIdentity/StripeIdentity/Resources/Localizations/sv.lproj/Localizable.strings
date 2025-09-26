@@ -6,7 +6,13 @@
 
 "App Settings" = "Appinställningar";
 
-"Back of identity card" = "Baksida av id-kort";
+"Back %@ photo successfully uploaded" = "Bilden på baksidan av %@ har laddats upp";
+
+"Back identity document photo successfully uploaded" = "Bilden på identitetshandlingens baksida har laddats upp";
+
+"Back of %@" = "Baksidan av %@";
+
+"Back of driver's license or government-issued photo ID" = "Baksidan av körkort eller en myndighetsutfärdad id-handling med foto";
 
 "Back of identity document" = "Id-handlingens baksida";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Detaljer syns inte";
 
+"Flip your %@ over to the other side" = "Vänd på %@ till andra sidan";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Vänd på ditt körkort eller myndighetsutfärdad id-handling med foto över till andra sidan";
+
 "Flip your identity card over to the other side" = "Vänd på id-handlingen";
 
+"Front %@ photo successfully uploaded" = "Bilden på framsidan av %@ har laddats upp";
+
+"Front identity document photo successfully uploaded" = "Bilden på identitetshandlingens framsida har laddats upp";
+
+"Front of %@" = "Framsidan av %@";
+
+"Front of driver's license or government-issued photo ID" = "Framsidan av körkort eller en myndighetsutfärdad id-handling med foto";
+
+"Front of driver's license or passport" = "Framsidan av körkort eller pass";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Framsidan av körkort, pass eller myndighetsutfärdad id-handling med foto";
+
 "Front of identity document" = "Id-handlingens framsida";
+
+"Front of passport or government-issued photo ID" = "Framsidan av pass eller myndighetsutfärdad id-handling med foto";
 
 "Get ready to scan your photo ID" = "Gör dig redo att skanna ditt foto-id";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Fotobibliotek";
 
+"Please upload images of the front and back of your %@" = "Ladda upp bilderna på fram- och baksidan av ditt %@";
+
+"Please upload images of the front and back of your identity document" = "Ladda upp bilder av fram- och baksidan av din identitetshandling";
+
+"Position your %@ in the center of the frame" = "Placera %@ i mitten av ramen";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Placera ditt körkort eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
+
+"Position your driver's license or passport in the center of the frame" = "Placera ditt körkort eller pass i mitten av ramen";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Placera ditt körkort, pass eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
+
 "Position your face in the center of the frame." = "Placera ansiktet i mitten av ramen.";
+
+"Position your identity document in the center of the frame" = "Placera din identitetshandling i mitten av ramen";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Placera ditt pass eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
 
 "Retake Photos" = "Ta bilden på nytt";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Välj från vilken plats du vill ladda upp baksidan på din id-handling";
 
 "Select a location to upload the front of your identity document from" = "Välj från vilken plats du vill ladda upp framsidan på din id-handling";
+
+"Select back %@ photo" = "Välj bilden på baksidan av %@";
+
+"Select back identity document photo" = "Välj bilden på baksidan av identitetshandlingen";
+
+"Select front %@ photo" = "Välj bilden på framsidan av %@";
+
+"Select front identity document photo" = "Välj bilden på framsidan av identitetshandlingen";
 
 "Selfie" = "Selfie";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Ladda upp en bild";
 
+"Upload your %@" = "Ladda upp ditt %@";
+
 "Upload your photo ID" = "Ladda upp ditt foto-id";
+
+"Uploading back %@ photo" = "Laddar upp bilden på baksidan av %@";
+
+"Uploading back identity document photo" = "Laddar upp bilden på baksidan av identitetshandlingen";
+
+"Uploading front %@ photo" = "Laddar upp bilden på framsidan av %@";
+
+"Uploading front identity document photo" = "Laddar upp bilden på framsidan av identitetshandlingen";
 
 "Verify your identity" = "Verifiera din identitet";
 

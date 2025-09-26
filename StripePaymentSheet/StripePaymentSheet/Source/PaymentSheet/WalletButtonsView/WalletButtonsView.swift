@@ -124,6 +124,9 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     }
 
     func checkoutTapped(_ expressType: ExpressType) {
+        // Log wallet button tap analytics
+        flowController.analyticsHelper.logWalletButtonTapped(walletType: expressType)
+
         switch expressType {
         case .applePay:
             // Launch directly into Apple Pay and confirm the payment
@@ -153,7 +156,6 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 canSkipWalletAfterVerification: flowController.elementsSession.canSkipLinkWallet,
                 completion: { confirmOptions, _ in
                     guard let confirmOptions else {
-//                        self.orderedWallets = WalletButtonsView.determineAvailableWallets(for: flowController)
                         return
                     }
                     flowController.viewController.linkConfirmOption = confirmOptions

@@ -6,7 +6,13 @@
 
 "App Settings" = "Lietotnes iestatījumi";
 
-"Back of identity card" = "Identifikācijas kartes aizmugure";
+"Back %@ photo successfully uploaded" = "Aizmugurējais %@ fotoattēls veiksmīgi augšupielādēts";
+
+"Back identity document photo successfully uploaded" = "Personu apliecinoša dokumenta aizmugures fotoattēls veiksmīgi augšupielādēts";
+
+"Back of %@" = "%@ aizmugure";
+
+"Back of driver's license or government-issued photo ID" = "Autovadītāja apliecības vai valsts izsniegta personu apliecinoša dokumenta ar fotogrāfiju aizmugurējā daļa";
 
 "Back of identity document" = "Identifikācijas dokumenta aizmugure";
 
@@ -28,9 +34,27 @@
 
 "Details not visible" = "Detaļas nav redzamas";
 
+"Flip your %@ over to the other side" = "apgrieziet uz otru pusi %@";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Apgrieziet autovadītāja apliecību vai valdības izsniegtu personu apliecinošu dokumentu ar fotogrāfiju otrādi";
+
 "Flip your identity card over to the other side" = "Apgrieziet identifikācijas karti uz otru pusi";
 
+"Front %@ photo successfully uploaded" = "Priekšējais %@ fotoattēls veiksmīgi augšupielādēts";
+
+"Front identity document photo successfully uploaded" = "Priekšējā personu apliecinoša dokumenta fotogrāfija veiksmīgi augšupielādēta";
+
+"Front of %@" = "%@ priekšpuse";
+
+"Front of driver's license or government-issued photo ID" = "Autovadītāja apliecības vai valsts izsniegta personu apliecinoša dokumenta priekšpuse";
+
+"Front of driver's license or passport" = "Autovadītāja apliecības vai pases priekšpuse";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Autovadītāja apliecības, pases vai valsts izsniegta personu apliecinoša dokumenta priekšpuse";
+
 "Front of identity document" = "Identifikācijas dokumenta priekšpuse";
+
+"Front of passport or government-issued photo ID" = "Pases vai valsts izsniegta personu apliecinoša dokumenta priekšpuse";
 
 "Get ready to scan your photo ID" = "Sagatavojieties skenēt savu identifikācijas dokumentu ar fotogrāfiju";
 
@@ -78,7 +102,23 @@
 
 "Photo Library" = "Attēlu bibliotēka";
 
+"Please upload images of the front and back of your %@" = "Lūdzu, augšupielādējiet attēlus no %@ priekšpuses un aizmugures";
+
+"Please upload images of the front and back of your identity document" = "Lūdzu, augšupielādējiet personu apliecinoša dokumenta priekšpuses un aizmugures attēlus";
+
+"Position your %@ in the center of the frame" = "%@ novietošana kadra centrā";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Novietojiet autovadītāja apliecību vai valsts izsniegtu personu apliecinošu dokumentu ar fotogrāfiju rāmja centrā";
+
+"Position your driver's license or passport in the center of the frame" = "Novietojiet autovadītāja apliecību vai pasi rāmja centrā";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Novietojiet autovadītāja apliecību, pasi vai valsts izsniegtu personu apliecinošu dokumentu ar fotogrāfiju rāmja centrā";
+
 "Position your face in the center of the frame." = "Gādājiet, lai seja būtu kadra centrā.";
+
+"Position your identity document in the center of the frame" = "Novietojiet personu apliecinoša dokumentu rāmja centrā";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Novietojiet pasi vai valsts izsniegtu personu apliecinošu dokumentu ar fotogrāfiju rāmja centrā";
 
 "Retake Photos" = "Uzņemt vēlreiz fotogrāfijas";
 
@@ -91,6 +131,14 @@
 "Select a location to upload the back of your identity document from" = "Atlasiet atrašanās vietu, kurā augšupielādēt jūsu identifikācijas dokumenta aizmuguri no";
 
 "Select a location to upload the front of your identity document from" = "Atlasiet atrašanās vietu, kurā augšupielādēt jūsu identifikācijas dokumenta priekšpusi no";
+
+"Select back %@ photo" = "Atlasietļ %@ aizmugures fotoattēlu";
+
+"Select back identity document photo" = "Izvēlieties personu apliecinoša dokumenta aizmugures fotoattēlu";
+
+"Select front %@ photo" = "Atlasīt priekšējo %@ fotoattēlu";
+
+"Select front identity document photo" = "Izvēlieties priekšējo personu apliecinoša dokumenta fotoattēlu";
 
 "Selfie" = "Pašportrets";
 
@@ -116,7 +164,17 @@
 
 "Upload a Photo" = "Augšupielādēt fotoattēlu";
 
+"Upload your %@" = "Augšupielādējiet savus %@";
+
 "Upload your photo ID" = "Augšupielādējiet savu ID dokumentu ar fotogrāfiju";
+
+"Uploading back %@ photo" = "Augšupielādē %@ aizmugures fotoattēlu";
+
+"Uploading back identity document photo" = "Personu apliecinoša dokumenta aizmugures fotoattēla augšupielāde";
+
+"Uploading front %@ photo" = "%@ priekšējā fotoattēla augšupielāde";
+
+"Uploading front identity document photo" = "Priekšējā personu apliecinoša dokumenta fotoattēla augšupielāde";
 
 "Verify your identity" = "Verificējiet savu identitāti";
 

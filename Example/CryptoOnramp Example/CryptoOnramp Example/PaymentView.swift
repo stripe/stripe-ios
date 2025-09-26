@@ -64,7 +64,6 @@ struct PaymentView: View {
     private struct EditCurrencyAlert: Identifiable {
         let id = UUID()
     }
-
     /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     let coordinator: CryptoOnrampCoordinator
 
@@ -108,7 +107,6 @@ struct PaymentView: View {
             }
         })
     }
-
     // This example UI is intended for USD ($) only, but we respect the
     // current locale’s decimal separator.
     //

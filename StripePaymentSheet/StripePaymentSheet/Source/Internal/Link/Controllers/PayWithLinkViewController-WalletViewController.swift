@@ -117,26 +117,13 @@ extension PayWithLinkViewController {
             guard let hintMessage = viewModel.debitCardHintIfSupported(for: linkAccount) else {
                 return nil
             }
-            return LinkHintMessageView(message: hintMessage)
+            return LinkHintMessageView(message: hintMessage, style: .filled)
         }()
 
-        private var cardDetailsRecollectionElements: [Element]? {
-            var elements: [Element] = []
-            if viewModel.shouldRecollectCardExpiryDate {
-                elements.append(expiryDateElement)
-            }
-            if viewModel.shouldRecollectCardCVC {
-                elements.append(cvcElement)
-            }
-            return elements.isEmpty ? nil : elements
-        }
+        private lazy var cardDetailsRecollectionRow = SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
 
         private lazy var cardDetailsRecollectionSection: SectionElement = {
-            let sectionElement = SectionElement(
-                elements: [
-                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
-                ], theme: theme
-            )
+            let sectionElement = SectionElement(elements: [cardDetailsRecollectionRow], theme: theme)
             sectionElement.delegate = self
             return sectionElement
         }()
@@ -290,12 +277,11 @@ extension PayWithLinkViewController {
                 animated: animated
             )
 
-            if let cardDetailsRecollectionElements {
-                UIView.performWithoutAnimation {
-                    cardDetailsRecollectionSection.elements = [
-                        SectionElement.MultiElementRow(cardDetailsRecollectionElements, theme: theme)
-                    ]
-                }
+            UIView.performWithoutAnimation {
+                expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
+                cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
+                cardDetailsRecollectionRow.updateDividerVisibility()
+                cardDetailsRecollectionSection.view.layoutIfNeeded()
             }
 
             confirmButton.update(

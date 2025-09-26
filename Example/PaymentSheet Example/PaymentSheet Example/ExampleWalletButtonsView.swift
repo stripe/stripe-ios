@@ -209,6 +209,11 @@ struct ExampleWalletButtonsView: View {
                     })
                 }
 
+                Button("Simulate update") {
+                    self.model.update()
+                }
+                .disabled(model.paymentSheetFlowController == nil || model.isProcessing)
+
                 // Debug logs section
                 if !model.debugLogs.isEmpty {
                     DebugLogView(logs: model.debugLogs, onClearLogs: model.clearDebugLogs)
@@ -299,6 +304,8 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
 
+    private var latestIntentConfig: PaymentSheet.IntentConfiguration?
+
     init(
         email: String,
         shopId: String,
@@ -340,6 +347,18 @@ class ExampleWalletButtonsModel: ObservableObject {
         self.addDebugLog("Preparing payment sheet...")
         self.addDebugLog("Using SPT test backend")
         preparePaymentSheetWithSPTTestBackend()
+    }
+
+    func update() {
+        guard let paymentSheetFlowController, let latestIntentConfig else {
+            return
+        }
+
+        addDebugLog("Updating FlowController…")
+
+        paymentSheetFlowController.update(intentConfiguration: latestIntentConfig) { [weak self] _ in
+            self?.addDebugLog("Updating FlowController complete")
+        }
     }
 
     private func preparePaymentSheetWithSPTTestBackend() {
@@ -402,15 +421,17 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.walletButtonsVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
                 configuration.walletButtonsVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
 
+                self.latestIntentConfig = .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    self?.isProcessing = true
+                    self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
+                    self?.addDebugLog("Address: \(address)")
+                    // Create the payment intent on the rough-lying-carriage backend
+                    self?.createPaymentIntentWithSPTTestBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
+                })
+
                 self.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
-                        self?.isProcessing = true
-                        self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
-                        self?.addDebugLog("Address: \(address)")
-                        // Create the payment intent on the rough-lying-carriage backend
-                        self?.createPaymentIntentWithSPTTestBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
-                    }),
+                    intentConfiguration: latestIntentConfig!,
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {
