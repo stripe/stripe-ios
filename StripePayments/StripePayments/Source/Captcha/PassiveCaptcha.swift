@@ -86,9 +86,9 @@ import Foundation
 
                     // Weak reference to break retain cycles
                     hcaptcha.didFinishLoading { [weak hcaptcha] in
-                        lock.lock()
-                        defer { lock.unlock() }
                         hcaptcha?.validate { result in
+                            lock.lock()
+                            defer { lock.unlock() }
                             do {
                                 let token = try result.dematerialize()
                                 nillableContinuation?.resume(returning: token)
