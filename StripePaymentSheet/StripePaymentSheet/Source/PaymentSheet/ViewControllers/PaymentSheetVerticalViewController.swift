@@ -446,7 +446,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
         var initialSelection = selection ?? calculateInitialSelection()
         // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option.
-        if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) &&
+        if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
                 (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always) ||
                 initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {

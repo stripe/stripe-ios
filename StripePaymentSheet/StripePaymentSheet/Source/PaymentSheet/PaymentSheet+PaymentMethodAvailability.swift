@@ -258,3 +258,18 @@ extension PaymentSheet {
         }
     }
 }
+
+// MARK: - STPPaymentMethodType Mandate Data Helpers
+
+@_spi(STP) extension STPPaymentMethodType {
+
+    /// Payment method types that require mandate data for PaymentIntents when setup_future_usage is off_session
+    static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
+        [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay]
+    }
+
+    /// Payment method types that require mandate data for SetupIntents
+    static var requiresMandateDataForSetupIntent: Set<STPPaymentMethodType> {
+        [.payPal, .revolutPay, .satispay]
+    }
+}

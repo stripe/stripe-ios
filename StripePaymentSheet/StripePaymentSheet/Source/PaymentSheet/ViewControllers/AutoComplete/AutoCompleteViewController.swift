@@ -123,7 +123,7 @@ class AutoCompleteViewController: UIViewController {
         self.addressSpecProvider = addressSpecProvider
         self.verticalOffset = verticalOffset
         super.init(nibName: nil, bundle: nil)
-        if let initialLine1Text = initialLine1Text {
+        if let initialLine1Text = initialLine1Text, !initialLine1Text.isEmpty {
             self.addressSearchCompleter.queryFragment = initialLine1Text
         }
     }
@@ -237,7 +237,9 @@ class AutoCompleteViewController: UIViewController {
 // MARK: ElementDelegate
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
-        addressSearchCompleter.queryFragment = autoCompleteLine.text
+        if !autoCompleteLine.text.isEmpty {
+            addressSearchCompleter.queryFragment = autoCompleteLine.text
+        }
     }
 
     func continueToNextField(element: Element) {
