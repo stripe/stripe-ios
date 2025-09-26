@@ -1,0 +1,31 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_OtOGvD0ZVacBoj&limit=100&type=us_bank_account$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BUnH7e4-7KyYhsV1H63GhluIr1JM0rtbWatgo-ODDI33GD67LdXycC-_agep2sXyy_P-W0RsjGcbzKsg
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Fri, 19 Sep 2025 17:24:32 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 89
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_buoKDGJk1FqDXa
+
+{
+  "has_more" : false,
+  "object" : "list",
+  "data" : [
+
+  ],
+  "url" : "\/v1\/payment_methods"
+}

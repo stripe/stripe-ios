@@ -1,0 +1,128 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3S97tOFY0qyl6XeW0IAbKjHN\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=4WxU0EzkjhDcPdVt3-j0_lei0NXz4KoZq4TFtnKQxzmd3lbztVhLNIesOGrbnv51SNn4l3rMOdOmD5cq
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_HdnFBvoeb9GNZf
+Content-Length: 2283
+Vary: Origin
+Date: Fri, 19 Sep 2025 17:14:44 GMT
+original-request: req_HdnFBvoeb9GNZf
+stripe-version: 2020-08-27
+idempotency-key: 9b0d2b95-4c5e-45de-9821-5b91b359b748
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3S97tOFY0qyl6XeW0IAbKjHN_secret_4SdiD1FrkedRwblv2DqKxlFhF&expand\[0]=payment_method&payment_method=pm_1S97tOFY0qyl6XeWDLBEy2Ml&payment_method_options\[card]\[setup_future_usage]=&shipping\[address]\[country]=US&shipping\[address]\[line1]=Line%201&shipping\[name]=Jane%20Doe&shipping\[phone]=5551234567&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 1050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : {
+    "tracking_number" : null,
+    "phone" : "5551234567",
+    "carrier" : null,
+    "name" : "Jane Doe",
+    "address" : {
+      "state" : null,
+      "country" : "US",
+      "line2" : null,
+      "city" : null,
+      "line1" : "Line 1",
+      "postal_code" : null
+    }
+  },
+  "status" : "succeeded",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 1050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1S97tOFY0qyl6XeWDLBEy2Ml",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "card" : {
+      "regulated_status" : "unregulated",
+      "last4" : "4242",
+      "funding" : "credit",
+      "generated_from" : null,
+      "networks" : {
+        "available" : [
+          "visa"
+        ],
+        "preferred" : null
+      },
+      "brand" : "visa",
+      "checks" : {
+        "address_postal_code_check" : null,
+        "cvc_check" : null,
+        "address_line1_check" : null
+      },
+      "three_d_secure_usage" : {
+        "supported" : true
+      },
+      "wallet" : null,
+      "display_brand" : "visa",
+      "exp_month" : 1,
+      "exp_year" : 2040,
+      "country" : "US"
+    },
+    "livemode" : false,
+    "created" : 1758302082,
+    "allow_redisplay" : "unspecified",
+    "type" : "card",
+    "customer" : null
+  },
+  "client_secret" : "pi_3S97tOFY0qyl6XeW0IAbKjHN_secret_4SdiD1FrkedRwblv2DqKxlFhF",
+  "id" : "pi_3S97tOFY0qyl6XeW0IAbKjHN",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1758302082,
+  "description" : null
+}
