@@ -1537,15 +1537,18 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - confirmationTokenParams:  The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
     ///   - ephemeralKeySecret: The ephemeral key secret to use for authentication if working with customer-scoped objects.
+    ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: The created ConfirmationToken object.
     @_spi(ConfirmationTokensPublicPreview) public func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
-        ephemeralKeySecret: String? = nil
+        ephemeralKeySecret: String? = nil,
+        additionalPaymentUserAgentValues: [String] = []
     ) async throws -> STPConfirmationToken {
         return try await withCheckedThrowingContinuation { continuation in
             createConfirmationToken(
                 with: confirmationTokenParams,
-                ephemeralKeySecret: ephemeralKeySecret
+                ephemeralKeySecret: ephemeralKeySecret,
+                additionalPaymentUserAgentValues: additionalPaymentUserAgentValues
             ) { confirmationToken, error in
                 guard let confirmationToken = confirmationToken else {
                     continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
@@ -1559,6 +1562,7 @@ extension STPAPIClient {
     func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
         ephemeralKeySecret: String? = nil,
+        additionalPaymentUserAgentValues: [String] = [],
         completion: @escaping STPConfirmationTokenCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logConfirmationTokenCreationAttempt(
@@ -1567,7 +1571,7 @@ extension STPAPIClient {
         var parameters = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
         if var paymentMethodParamsDict = parameters[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
-            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict, additionalValues: additionalPaymentUserAgentValues)
             parameters[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         let additionalHeaders = ephemeralKeySecret != nil
