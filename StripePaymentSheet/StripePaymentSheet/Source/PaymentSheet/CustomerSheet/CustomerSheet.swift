@@ -290,7 +290,7 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
             return
         }
         Task {
-            let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+            let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
             self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, hcaptchaToken: hcaptchaToken) { result in
                 completion(result)
             }
