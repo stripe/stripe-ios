@@ -150,6 +150,7 @@ extension PaymentSheet {
             params.paymentMethodData = paymentMethodParams
             params.paymentMethodData?.radarOptions = radarOptions
             params.paymentMethodOptions = paymentOptions
+            params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
 
             // Set as default payment method if requested and allowed
             if allowsSetAsDefaultPM && shouldSetAsDefaultPM == true {
