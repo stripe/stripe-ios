@@ -13,16 +13,22 @@ import Foundation
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
 
-    func makeElementsSessionsParams(mode: PaymentSheet.InitializationMode,
-                                    epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
-                                    cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
-                                    clientDefaultPaymentMethod: String?,
-                                    customerAccessProvider: PaymentSheet.CustomerAccessProvider?) -> [String: Any] {
+    func makeElementsSessionsParams(
+        mode: PaymentSheet.InitializationMode,
+        epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
+        cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
+        clientDefaultPaymentMethod: String?,
+        customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
+        userOverrideCountry: String? = nil
+    ) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
             "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
         ]
+        if let userOverrideCountry {
+            parameters["country_override"] = userOverrideCountry
+        }
         if let sessionId = AnalyticsHelper.shared.sessionID {
             parameters["mobile_session_id"] = sessionId
         }
@@ -88,11 +94,14 @@ extension STPAPIClient {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
-            parameters: makeElementsSessionsParams(mode: .paymentIntentClientSecret(paymentIntentClientSecret),
-                                                   epmConfiguration: configuration.externalPaymentMethodConfiguration,
-                                                   cpmConfiguration: configuration.customPaymentMethodConfiguration,
-                                                   clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                   customerAccessProvider: configuration.customer?.customerAccessProvider)
+            parameters: makeElementsSessionsParams(
+                mode: .paymentIntentClientSecret(paymentIntentClientSecret),
+                epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                cpmConfiguration: configuration.customPaymentMethodConfiguration,
+                clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                customerAccessProvider: configuration.customer?.customerAccessProvider,
+                userOverrideCountry: configuration.userOverrideCountry
+            )
         )
         // The v1/elements/sessions response contains a PaymentIntent hash that we parse out into a PaymentIntent
         guard
@@ -113,11 +122,14 @@ extension STPAPIClient {
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
-            parameters: makeElementsSessionsParams(mode: .setupIntentClientSecret(setupIntentClientSecret),
-                                                   epmConfiguration: configuration.externalPaymentMethodConfiguration,
-                                                   cpmConfiguration: configuration.customPaymentMethodConfiguration,
-                                                   clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                   customerAccessProvider: configuration.customer?.customerAccessProvider)
+            parameters: makeElementsSessionsParams(
+                mode: .setupIntentClientSecret(setupIntentClientSecret),
+                epmConfiguration: configuration.externalPaymentMethodConfiguration,
+                cpmConfiguration: configuration.customPaymentMethodConfiguration,
+                clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+                customerAccessProvider: configuration.customer?.customerAccessProvider,
+                userOverrideCountry: configuration.userOverrideCountry
+            )
         )
         // The v1/elements/sessions response contains a SetupIntent hash that we parse out into a SetupIntent
         guard
@@ -135,11 +147,14 @@ extension STPAPIClient {
         clientDefaultPaymentMethod: String?,
         configuration: PaymentElementConfiguration
     ) async throws -> STPElementsSession {
-        let parameters = makeElementsSessionsParams(mode: .deferredIntent(intentConfig),
-                                                    epmConfiguration: configuration.externalPaymentMethodConfiguration,
-                                                    cpmConfiguration: configuration.customPaymentMethodConfiguration,
-                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                    customerAccessProvider: configuration.customer?.customerAccessProvider)
+        let parameters = makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: configuration.externalPaymentMethodConfiguration,
+            cpmConfiguration: configuration.customPaymentMethodConfiguration,
+            clientDefaultPaymentMethod: clientDefaultPaymentMethod,
+            customerAccessProvider: configuration.customer?.customerAccessProvider,
+            userOverrideCountry: configuration.userOverrideCountry
+        )
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,

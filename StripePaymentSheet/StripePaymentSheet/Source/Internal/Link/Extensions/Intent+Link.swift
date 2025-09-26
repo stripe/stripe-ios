@@ -50,15 +50,6 @@ extension STPElementsSession {
         self.linkSettings?.suppress2FAModal != true
     }
 
-    func countryCode(overrideCountry: String?) -> String? {
-#if DEBUG
-        if let overrideCountry {
-            return overrideCountry
-        }
-#endif
-        return countryCode
-    }
-
     var linkFlags: [String: Bool] {
         linkSettings?.linkFlags ?? [:]
     }

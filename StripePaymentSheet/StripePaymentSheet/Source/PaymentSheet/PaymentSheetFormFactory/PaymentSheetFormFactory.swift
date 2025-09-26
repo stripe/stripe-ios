@@ -136,7 +136,7 @@ class PaymentSheetFormFactory {
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
-                  countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
+                  countryCode: elementsSession.countryCode,
                   currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
