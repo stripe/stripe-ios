@@ -332,6 +332,7 @@ struct PaymentView: View {
             actions: {
                 TextField("Currency (e.g. usdc)", text: $editingCurrencyText)
                     .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
 
                 Button("Save") {
                     let trimmed = editingCurrencyText.trimmingCharacters(in: .whitespacesAndNewlines)
