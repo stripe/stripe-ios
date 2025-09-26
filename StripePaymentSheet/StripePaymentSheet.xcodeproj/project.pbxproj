@@ -107,13 +107,11 @@
 		31AD3BE72B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */; };
 		31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */; };
 		31CC9B7D2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */; };
-		31CC9B7E2CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B722CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift */; };
 		31CC9B7F2CB5F69600E84A38 /* LinkPopupURLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B742CB5F69600E84A38 /* LinkPopupURLParserTests.swift */; };
 		31CC9B802CB5F69600E84A38 /* LinkToastSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B752CB5F69600E84A38 /* LinkToastSnapshotTests.swift */; };
 		31CC9B822CB5F69600E84A38 /* LinkURLGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B762CB5F69600E84A38 /* LinkURLGeneratorTests.swift */; };
 		31CC9B852CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */; };
 		31CC9B972CB5F74A00E84A38 /* LinkSheetNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B882CB5F74A00E84A38 /* LinkSheetNavigationBar.swift */; };
-		31CC9B982CB5F74A00E84A38 /* LinkNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B8A2CB5F74A00E84A38 /* LinkNoticeView.swift */; };
 		31CC9B9A2CB5F74A00E84A38 /* LinkToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B932CB5F74A00E84A38 /* LinkToast.swift */; };
 		31CC9B9C2CB5F74A00E84A38 /* LinkBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B862CB5F74A00E84A38 /* LinkBadgeView.swift */; };
 		31CC9BA12CB5F93100E84A38 /* Button+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA02CB5F93100E84A38 /* Button+Link.swift */; };
@@ -627,13 +625,11 @@
 		31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLinkSnapshotTests.swift; sourceTree = "<group>"; };
 		31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeViewSnapshotTest.swift; sourceTree = "<group>"; };
 		31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNavigationBarSnapshotTests.swift; sourceTree = "<group>"; };
-		31CC9B722CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNoticeViewSnapshotTests.swift; sourceTree = "<group>"; };
 		31CC9B742CB5F69600E84A38 /* LinkPopupURLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPopupURLParserTests.swift; sourceTree = "<group>"; };
 		31CC9B752CB5F69600E84A38 /* LinkToastSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToastSnapshotTests.swift; sourceTree = "<group>"; };
 		31CC9B762CB5F69600E84A38 /* LinkURLGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkURLGeneratorTests.swift; sourceTree = "<group>"; };
 		31CC9B862CB5F74A00E84A38 /* LinkBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeView.swift; sourceTree = "<group>"; };
 		31CC9B882CB5F74A00E84A38 /* LinkSheetNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSheetNavigationBar.swift; sourceTree = "<group>"; };
-		31CC9B8A2CB5F74A00E84A38 /* LinkNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNoticeView.swift; sourceTree = "<group>"; };
 		31CC9B932CB5F74A00E84A38 /* LinkToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToast.swift; sourceTree = "<group>"; };
 		31CC9BA02CB5F93100E84A38 /* Button+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Link.swift"; sourceTree = "<group>"; };
 		31CC9BA22CB5F9D400E84A38 /* LinkMandateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMandateView.swift; sourceTree = "<group>"; };
@@ -1212,14 +1208,6 @@
 			path = NavigationBar;
 			sourceTree = "<group>";
 		};
-		31CC9B8B2CB5F74A00E84A38 /* Notice */ = {
-			isa = PBXGroup;
-			children = (
-				31CC9B8A2CB5F74A00E84A38 /* LinkNoticeView.swift */,
-			);
-			path = Notice;
-			sourceTree = "<group>";
-		};
 		31CC9B942CB5F74A00E84A38 /* Toast */ = {
 			isa = PBXGroup;
 			children = (
@@ -1234,7 +1222,6 @@
 				49F532F72E4E63C4002CD0CA /* Hint */,
 				31CC9B872CB5F74A00E84A38 /* Badge */,
 				31CC9B892CB5F74A00E84A38 /* NavigationBar */,
-				31CC9B8B2CB5F74A00E84A38 /* Notice */,
 				3147CEC92CC1BF550067B5E4 /* PaymentMethodPicker */,
 				31CC9B942CB5F74A00E84A38 /* Toast */,
 				497FDA442E5BEDD700CA82A5 /* Consent */,
@@ -2133,7 +2120,6 @@
 				31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */,
 				49F532FC2E4E7610002CD0CA /* LinkHintMessageViewSnapshotTests.swift */,
 				31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */,
-				31CC9B722CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift */,
 				31CC9B742CB5F69600E84A38 /* LinkPopupURLParserTests.swift */,
 				31CC9B752CB5F69600E84A38 /* LinkToastSnapshotTests.swift */,
 				31CC9B762CB5F69600E84A38 /* LinkURLGeneratorTests.swift */,
@@ -2368,7 +2354,6 @@
 				8180BC3615767F896E2F9355 /* AddressViewControllerSnapshotTests.swift in Sources */,
 				31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */,
 				31CC9B7D2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift in Sources */,
-				31CC9B7E2CB5F69600E84A38 /* LinkNoticeViewSnapshotTests.swift in Sources */,
 				B6BCD6582E6B99F400BEE06E /* CVCReconfirmationViewControllerSnapshotTest.swift in Sources */,
 				3147CEE12CC1BFA80067B5E4 /* LinkPaymentMethodFormElementSnapshotTests.swift in Sources */,
 				3147CEE22CC1BFA80067B5E4 /* LinkPaymentMethodPickerSnapshotTests.swift in Sources */,
@@ -2490,7 +2475,6 @@
 				49909A162D8AF9760031EC33 /* FinancialConnectionsLite.swift in Sources */,
 				B63B2CF52BFBEEAD003810F3 /* PaymentMethodFormViewController.swift in Sources */,
 				31CC9B972CB5F74A00E84A38 /* LinkSheetNavigationBar.swift in Sources */,
-				31CC9B982CB5F74A00E84A38 /* LinkNoticeView.swift in Sources */,
 				315673E72CD3024F00BA08BC /* PaymentSheet+Link.swift in Sources */,
 				49A11F552E5BB193002ECED5 /* LinkFullConsent-HeaderView.swift in Sources */,
 				31CC9B9A2CB5F74A00E84A38 /* LinkToast.swift in Sources */,
