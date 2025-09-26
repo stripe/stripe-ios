@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -25,6 +25,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
         config.applePay = .init(merchantId: "foo", merchantCountryCode: "US")
+        config.returnURL = "whatever://"
         return config
     }()
 
@@ -474,5 +475,123 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             }
             waitForExpectations(timeout: 5)
         }
+    }
+
+    // MARK: - PMO SFU
+    func testDeferredIntentWithPaymentMethodOptions() async throws {
+        let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in
+            XCTFail("Confirm handler shouldn't be called.")
+        }
+
+        // Test successful load with valid payment method options
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(
+                amount: 1000,
+                currency: "USD",
+                setupFutureUsage: .offSession,
+                paymentMethodOptions: .init(setupFutureUsageValues: [
+                    .crypto: .none
+                ])
+            ),
+            confirmHandler: confirmHandler
+        )
+
+        PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            integrationShape: .complete
+        ) { result in
+            loadExpectation.fulfill()
+            switch result {
+            case .success(let loadResult):
+                // Should succeed with valid payment method options
+                XCTAssertTrue(loadResult.paymentMethodTypes.contains(.stripe(.crypto)))
+            case .failure(let error):
+                XCTFail("Expected success but got error: \(error.nonGenericDescription)")
+            }
+        }
+        await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testDeferredIntentWithInvalidPaymentMethodOptions() async throws {
+        let loadExpectation = XCTestExpectation(description: "Load deferred intent with invalid PMO SFU")
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in
+            XCTFail("Confirm handler shouldn't be called.")
+        }
+
+        // Test failure with invalid payment method options (cardPresent with off_session)
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(
+                amount: 1000,
+                currency: "USD",
+                paymentMethodOptions: .init(setupFutureUsageValues: [
+                    .cardPresent: .offSession,
+                    .OXXO: .offSession,
+                ]
+                )
+            ),
+            paymentMethodTypes: ["card_present", "oxxo"],
+            confirmHandler: confirmHandler
+        )
+
+        PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            integrationShape: .complete
+        ) { result in
+            loadExpectation.fulfill()
+            switch result {
+            case .success:
+                XCTFail("Expected failure with invalid payment method options")
+            case .failure:
+                // Should fail with invalid payment method options
+                break
+            }
+        }
+        await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testDeferredIntentAllPMOSFUValues() async throws {
+        let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in
+            XCTFail("Confirm handler shouldn't be called.")
+        }
+
+        // Test successful load with valid payment method options
+        let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
+            guard type != .unknown else { return partialResult }
+            return partialResult.merging([type: .offSession]) { a, _ in a }
+        }
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(
+                amount: 1000,
+                currency: "USD",
+                setupFutureUsage: .offSession,
+                paymentMethodOptions: .init(setupFutureUsageValues: all_payment_methods_pmo_sfu_values)
+            ),
+            confirmHandler: confirmHandler
+        )
+
+        PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfig),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            integrationShape: .complete
+        ) { result in
+            loadExpectation.fulfill()
+            switch result {
+            case .success(let loadResult):
+                // Ensure the v1/elements/sessions endpoint returns successfully and didn't fallback
+                // fallback would mean pm types is only cards
+                XCTAssertTrue(loadResult.paymentMethodTypes.count > 1)
+            case .failure(let error):
+                // If this test fails with "received unknown parameter" we may have added a new PM type (eg "foopay") without updating the v1/elements/sessions endpoint to parse it
+                XCTFail("Expected success but got error: \(error.nonGenericDescription)")
+            }
+        }
+        await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 }

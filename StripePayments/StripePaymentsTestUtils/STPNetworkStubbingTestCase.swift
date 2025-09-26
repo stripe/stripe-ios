@@ -161,14 +161,14 @@ import XCTest
                     for: config
                 )) != nil
             else {
-                assert(false, "Error recording requests")
+                assert(false, "❌ Error recording requests")
                 return
             }
 
             // Make sure to fail, to remind ourselves to turn this off
             addTeardownBlock {
                 XCTFail(
-                    "Network traffic has been recorded - re-run with self.recordingMode = NO for this test to succeed"
+                    "❌ Network traffic has been recorded - re-run with self.recordingMode = NO for this test to succeed"
                 )
             }
         } else {
@@ -178,7 +178,7 @@ import XCTest
                     return true
                 },
                 withStubResponse: { request in
-                    XCTFail("Attempted to hit the live network at \(request.url?.path ?? "")")
+                    XCTFail("❌ Attempted to hit the live network at \(request.url?.path ?? "")")
                     return HTTPStubsResponse()
                 }
             )
@@ -195,7 +195,7 @@ import XCTest
                     removeAfterUse: true
                 )
                 if let stubError = stubError {
-                    XCTFail("Error stubbing requests: \(stubError)")
+                    XCTFail("❌ Error stubbing requests: \(stubError)")
                 }
             } else {
                 print("No stubs found - all network access will raise an exception.")
