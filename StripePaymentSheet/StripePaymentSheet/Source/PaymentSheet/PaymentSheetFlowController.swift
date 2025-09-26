@@ -602,7 +602,8 @@ extension PaymentSheet {
                 mode: .deferredIntent(intentConfiguration),
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
-                integrationShape: .flowController
+                integrationShape: .flowController,
+                isUpdate: true
             ) { [weak self] result in
                 assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
