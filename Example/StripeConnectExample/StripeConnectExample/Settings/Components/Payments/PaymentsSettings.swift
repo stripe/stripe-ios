@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(PrivateBetaConnect) import StripeConnect
+@_spi(PreviewConnect) import StripeConnect
 
 struct PaymentsSettings: Equatable {
 
