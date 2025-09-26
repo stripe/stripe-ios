@@ -464,7 +464,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(payPalParams.setupFutureUsage, .offSession)
     }
 
-
     func testCreateConfirmationTokenParams_mandateDataRespectsNewPriorityOrder() {
         // Mandate data generation should use effective SFU from new priority order
         // Test PayPal which requires mandate when SFU is .offSession
