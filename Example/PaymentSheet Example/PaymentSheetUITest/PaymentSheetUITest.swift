@@ -1236,6 +1236,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ApplePay_ConfirmationToken_ServerSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
+        settings.mode = .paymentWithSetup
         settings.integrationType = .deferred_ssc_ct
         settings.apmsEnabled = .off
         loadPlayground(app, settings)

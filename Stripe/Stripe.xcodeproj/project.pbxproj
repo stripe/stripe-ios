@@ -125,6 +125,7 @@
 		609C2C8F10AFAA2711639CD0 /* NSArray+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17799DC7FA54E758EED31A6 /* NSArray+StripeTest.swift */; };
 		610DF5DC2B33597500DA6AAA /* HostedSurfaceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610DF5DB2B33597500DA6AAA /* HostedSurfaceTest.swift */; };
 		61152B4F2B866827003B69A0 /* STPPaymentMethodAmazonPayParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61152B4E2B866827003B69A0 /* STPPaymentMethodAmazonPayParamsTests.swift */; };
+		611FFF962E86EE2D00383826 /* STPConfirmationTokenClientContextTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611FFF952E86EE2D00383826 /* STPConfirmationTokenClientContextTest.swift */; };
 		612677772E1C8266008A36D2 /* STPBankAccountCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612677762E1C8266008A36D2 /* STPBankAccountCollectorTests.swift */; };
 		615242392E694314002459F6 /* STPAPIClientConfirmationTokensTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615242382E694314002459F6 /* STPAPIClientConfirmationTokensTest.swift */; };
 		616402452E786AFE003B551C /* STPConfirmationTokenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616402442E786AFE003B551C /* STPConfirmationTokenTest.swift */; };
@@ -501,6 +502,7 @@
 		5FDD4956E0A04D33F0856F31 /* STPThreeDSLabelCustomizationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPThreeDSLabelCustomizationTest.swift; sourceTree = "<group>"; };
 		610DF5DB2B33597500DA6AAA /* HostedSurfaceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostedSurfaceTest.swift; sourceTree = "<group>"; };
 		61152B4E2B866827003B69A0 /* STPPaymentMethodAmazonPayParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAmazonPayParamsTests.swift; sourceTree = "<group>"; };
+		611FFF952E86EE2D00383826 /* STPConfirmationTokenClientContextTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPConfirmationTokenClientContextTest.swift; sourceTree = "<group>"; };
 		612677762E1C8266008A36D2 /* STPBankAccountCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPBankAccountCollectorTests.swift; sourceTree = "<group>"; };
 		615242382E694314002459F6 /* STPAPIClientConfirmationTokensTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAPIClientConfirmationTokensTest.swift; sourceTree = "<group>"; };
 		616402442E786AFE003B551C /* STPConfirmationTokenTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPConfirmationTokenTest.swift; sourceTree = "<group>"; };
@@ -1069,6 +1071,7 @@
 				80BBCC4D386EE44E809A591C /* STPPaymentMethodOXXOTests.swift */,
 				4002981AC12687681616D21E /* STPPaymentMethodParamsTest.swift */,
 				61F2FA362E67FB29007AF688 /* STPConfirmationTokenParamsTest.swift */,
+				611FFF952E86EE2D00383826 /* STPConfirmationTokenClientContextTest.swift */,
 				615242382E694314002459F6 /* STPAPIClientConfirmationTokensTest.swift */,
 				DE2A766FB355DD9C461939C1 /* STPPaymentMethodPayPalParamsTests.swift */,
 				2A63AC868755CB4745E7458E /* STPPaymentMethodPayPalTests.swift */,
@@ -1466,6 +1469,7 @@
 				609C2C8F10AFAA2711639CD0 /* NSArray+StripeTest.swift in Sources */,
 				B98D71ED9ACC2E1B47372F53 /* NSDecimalNumber+StripeTest.swift in Sources */,
 				6E7AD3CCC966A7F34922B172 /* NSDictionary+StripeTest.swift in Sources */,
+				611FFF962E86EE2D00383826 /* STPConfirmationTokenClientContextTest.swift in Sources */,
 				325694E4284BEAE787A5ECB6 /* NSLocale+STPSwizzling.swift in Sources */,
 				C4C1295E7DA618DFB944A534 /* NSString+StripeTest.swift in Sources */,
 				68318DB86DFCD19505FC47BA /* NSURLComponents_StripeTest.swift in Sources */,

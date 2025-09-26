@@ -41,6 +41,9 @@ import Foundation
     /// Contains metadata with identifiers for the session and information about the integration
     @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
+    /// Client context for the ConfirmationToken, containing information about the payment flow context
+    @objc @_spi(STP) public var clientContext: STPConfirmationTokenClientContext?
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -56,6 +59,7 @@ import Foundation
             "mandateData = \(String(describing: mandateData))",
             "setAsDefaultPM = \(String(describing: setAsDefaultPM))",
             "clientAttributionMetadata = \(String(describing: clientAttributionMetadata))",
+            "clientContext = \(String(describing: clientContext))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
@@ -78,6 +82,7 @@ import Foundation
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
+            NSStringFromSelector(#selector(getter: clientContext)): "client_context",
         ]
     }
 
