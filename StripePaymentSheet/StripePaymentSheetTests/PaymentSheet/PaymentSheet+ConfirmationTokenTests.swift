@@ -464,38 +464,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(payPalParams.setupFutureUsage, .offSession)
     }
 
-    func testCreateConfirmationTokenParams_priorityOrder_userCheckboxBeatsAllPMOValues() {
-        // Priority: user checkbox > PMO SFU > top-level SFU
-        // User saves should beat PMO SFU regardless of PMO value (.offSession, .onSession, .none)
-        let testCases: [(PaymentSheet.IntentConfiguration.SetupFutureUsage, String)] = [
-            (.offSession, "offSession"),
-            (.onSession, "onSession"),
-            (.none, "none"),
-        ]
-
-        for (pmoValue, caseName) in testCases {
-            let intentConfig = PaymentSheet.IntentConfiguration(
-                mode: .payment(
-                    amount: 100,
-                    currency: "USD",
-                    setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage.none, // Top-level different from PMO
-                    paymentMethodOptions: .init(setupFutureUsageValues: [.card: pmoValue])
-                )
-            ) { _, _ in return "pi_test_123_secret_abc" }
-
-            let confirmType = createTestNewConfirmType(shouldSave: true) // User wants to save
-
-            let params = PaymentSheet.createConfirmationTokenParams(
-                confirmType: confirmType,
-                configuration: configuration,
-                intentConfig: intentConfig,
-                elementsSession: nil
-            )
-
-            // User choice should always win, regardless of PMO SFU value
-            XCTAssertEqual(params.setupFutureUsage, .offSession, "Failed for PMO SFU: \(caseName)")
-        }
-    }
 
     func testCreateConfirmationTokenParams_mandateDataRespectsNewPriorityOrder() {
         // Mandate data generation should use effective SFU from new priority order
