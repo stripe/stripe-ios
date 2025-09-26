@@ -32,15 +32,21 @@ final public class IdentityVerificationSheet {
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
 
+        /// Whether or not to show the stripe logo on the biometric consent screen in the document flow
+        public var showsStripeLogo: Bool
+
         /// Initializes a Configuration.
         /// - Parameters:
         ///   - brandLogo: An image of your customer-facing business logo.
         ///     The recommended image size is 32 x 32 points. The image will be
         ///     displayed in both light and dark modes, if the app supports it.
+        ///   - showsStripeLogo: Whether or not to show the stripe logo on the biometric consent screen in the document flow
         public init(
-            brandLogo: UIImage
+            brandLogo: UIImage,
+            showsStripeLogo: Bool = true
         ) {
             self.brandLogo = brandLogo
+            self.showsStripeLogo = showsStripeLogo
         }
     }
 
@@ -92,7 +98,8 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    brandLogo: configuration.brandLogo
+                    brandLogo: configuration.brandLogo,
+                    showsStripeLogo: configuration.showsStripeLogo
                 ),
                 mlModelLoader: IdentityMLModelLoader(),
                 analyticsClient: IdentityAnalyticsClient(
