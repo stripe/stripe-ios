@@ -199,7 +199,6 @@ request-id: req_MYzQoKNyR61qcC
     "elements_easel_disable_payment_fill" : false,
     "elements_easel_disable_address_fill" : false,
     "elements_disable_paypal_express" : false,
-    "elements_enable_blik" : true,
     "elements_enable_fraud_signal_data_transfer_to_hcaptcha" : false,
     "elements_enable_write_allow_redisplay" : false,
     "elements_easel_disable_magic_fill" : false,

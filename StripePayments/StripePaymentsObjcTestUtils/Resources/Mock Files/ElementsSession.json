@@ -25,7 +25,6 @@
   },
   "flags": {
     "elements_disable_paypal_express": true,
-    "elements_enable_blik": true,
     "elements_enable_br_card_installments": false,
     "elements_enable_deferred_intent": false,
     "elements_enable_demo_pay": false,
