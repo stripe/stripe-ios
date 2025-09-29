@@ -55,12 +55,6 @@ struct PaymentView: View {
         case image(UIImage)
     }
 
-    private struct Alert: Identifiable {
-        var id: String { title + message }
-        let title: String
-        let message: String
-    }
-
     /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     let coordinator: CryptoOnrampCoordinator
 
