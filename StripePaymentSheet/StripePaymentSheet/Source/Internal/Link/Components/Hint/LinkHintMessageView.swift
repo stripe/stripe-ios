@@ -54,7 +54,7 @@ final class LinkHintMessageView: UIView {
                 UIColor.linkTextCritical
             }
         }
-        
+
         var icon: Image {
             switch self {
             case .filled, .outlined:
@@ -63,7 +63,16 @@ final class LinkHintMessageView: UIView {
                 Image.icon_link_warning_circle
             }
         }
-        
+
+        var isBordered: Bool {
+            switch self {
+            case .filled:
+                false
+            case .outlined, .error:
+                true
+            }
+        }
+
     }
 
     var text: String? {
@@ -142,7 +151,7 @@ final class LinkHintMessageView: UIView {
     }
 
     private func applyOutlineIfNecessary() {
-        if style == .outlined {
+        if style.isBordered {
             layer.borderColor = UIColor.linkOutlinedHintMessageBorder.cgColor
             layer.borderWidth = 1.0
         }
