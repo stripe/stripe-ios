@@ -31,6 +31,17 @@ struct PaymentSummaryView: View {
     @Environment(\.isLoading) private var isLoading
 
     @State private var authenticationContext = WindowAuthenticationContext()
+    @State private var alert: Alert?
+
+    private var isPresentingAlert: Binding<Bool> {
+        Binding(get: {
+            alert != nil
+        }, set: { newValue in
+            if !newValue {
+                alert = nil
+            }
+        })
+    }
 
     @ViewBuilder
     private var header: some View {
@@ -121,6 +132,16 @@ struct PaymentSummaryView: View {
             .opacity(isLoading.wrappedValue ? 0.5 : 1)
             .padding()
         }
+        .alert(
+            alert?.title ?? "Error",
+            isPresented: isPresentingAlert,
+            presenting: alert,
+            actions: { _ in
+                Button("OK") {}
+            }, message: { alert in
+                Text(alert.message)
+            }
+        )
     }
 
     // MARK: - PaymentSummaryView
@@ -152,6 +173,7 @@ struct PaymentSummaryView: View {
                 }
 
                 await MainActor.run {
+                    isLoading.wrappedValue = false
                     switch checkoutResult {
                     case .completed:
                         let amount = onrampSessionResponse.amountToReceiveText
@@ -162,13 +184,11 @@ struct PaymentSummaryView: View {
                     @unknown default:
                         break
                     }
-                    isLoading.wrappedValue = false
                 }
             } catch {
                 await MainActor.run {
-                    // TODO: display alert
-                    // errorMessage = "Checkout failed: \(error.localizedDescription)"
                     isLoading.wrappedValue = false
+                    alert = Alert(title: "Checkout failed", message: error.localizedDescription)
                 }
             }
         }
