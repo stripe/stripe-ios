@@ -101,7 +101,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         self.selectedPaymentMethodDescription = selectedPaymentMethodDescription
         advanceToNextStep()
     }
-    
+
     /// Advances after the payment summary step, which indicates a successful checkout.
     /// - Parameter successfulCheckoutMessage: The message to display on the final step.
     func advanceAfterPaymentSummary(successfulCheckoutMessage: String) {
