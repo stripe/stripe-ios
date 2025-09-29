@@ -129,10 +129,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             path.append(.kycInfo)
         } else if !isIdDocumentVerified {
             path.append(.identity)
-        } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription {
-            path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription))
         } else if let successfulCheckoutMessage {
             path.append(.checkoutSuccess(message: successfulCheckoutMessage))
+        } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription {
+            path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription))
         } else if let selectedWallet, let customerId {
             path.append(.payment(customerId: customerId, wallet: selectedWallet))
         } else if let customerId {
@@ -154,6 +154,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         selectedWallet = nil
         createOnrampSessionResponse = nil
         selectedPaymentMethodDescription = nil
+        successfulCheckoutMessage = nil
     }
 }
 
