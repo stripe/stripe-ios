@@ -13,7 +13,6 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
     let flowViewModel: IdentityFlowView.ViewModel
     init(
         brandLogo: UIImage,
-        showsStripeLogo: Bool,
         welcomeContent: StripeAPI.VerificationPageStaticContentIndividualWelcomePage,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
@@ -27,7 +26,7 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
                 backgroundColor: .systemBackground,
                 headerType: .banner(
                     iconViewModel: .init(
-                        iconType: showsStripeLogo ? .brand : .plain,
+                        iconType: .brand,
                         iconImage: brandLogo,
                         iconImageContentMode: .scaleToFill,
                         useLargeIcon: true

@@ -525,7 +525,6 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         do {
             return try IndividualWelcomeViewController(
                 brandLogo: brandLogo,
-                showsStripeLogo: !staticContent.isStripe,
                 welcomeContent: staticContent.individualWelcome,
                 sheetController: sheetController
             )
