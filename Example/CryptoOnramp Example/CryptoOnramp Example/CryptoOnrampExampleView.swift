@@ -120,10 +120,12 @@ struct CryptoOnrampExampleView: View {
                         KYCInfoView(coordinator: coordinator) {
                             flowCoordinator.advanceAfterKyc()
                         }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case .identity:
                         IdentityVerificationView(coordinator: coordinator) {
                             flowCoordinator.advanceAfterIdentity()
                         }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case let .wallets(customerId):
                         WalletSelectionView(
                             coordinator: coordinator,
@@ -131,6 +133,7 @@ struct CryptoOnrampExampleView: View {
                         ) { wallet in
                             flowCoordinator.advanceAfterWalletSelection(wallet)
                         }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case let .payment(customerId, wallet):
                         PaymentView(
                             coordinator: coordinator,
@@ -142,6 +145,7 @@ struct CryptoOnrampExampleView: View {
                                 selectedPaymentMethodDescription: selectedPaymentMethodDescription
                             )
                         }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case let .paymentSummary(createOnrampSessionResponse, selectedPaymentMethodDescription):
                         PaymentSummaryView(
                             coordinator: coordinator,
@@ -150,8 +154,10 @@ struct CryptoOnrampExampleView: View {
                         ) { message in
                             flowCoordinator.advanceAfterPaymentSummary(successfulCheckoutMessage: message)
                         }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case let .checkoutSuccess(message):
                         CheckoutSuccessView(message: message)
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     }
                 }
             }
