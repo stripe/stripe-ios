@@ -157,7 +157,7 @@ struct CryptoOnrampExampleView: View {
                         .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case let .checkoutSuccess(message):
                         CheckoutSuccessView(message: message)
-                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
+                            .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     }
                 }
             }
