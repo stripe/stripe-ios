@@ -47,4 +47,21 @@ class LinkHintMessageViewSnapshotTests: STPSnapshotTestCase {
 
         STPSnapshotVerifyView(hintView)
     }
+
+    func testNormalLengthMessageErrorStyle() {
+        let hintView = LinkHintMessageView(message: "Debit is most likely to be accepted.", style: .error)
+        hintView.frame = CGRect(x: 0, y: 0, width: 320, height: 44)
+        hintView.layoutIfNeeded()
+
+        STPSnapshotVerifyView(hintView)
+    }
+
+    func testLongMessageWithWrappingErrorStyle() {
+        let hintView = LinkHintMessageView(message: "This is a much longer message that should definitely wrap to multiple lines", style: .error)
+        hintView.frame = CGRect(x: 0, y: 0, width: 320, height: 44)
+        hintView.layoutIfNeeded()
+
+        STPSnapshotVerifyView(hintView)
+    }
+
 }
