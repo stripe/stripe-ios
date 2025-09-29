@@ -429,6 +429,27 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(types, [.stripe(.card)])
     }
 
+    func testPaymentMethodTypesLinkCardBrand_fundingSourceCreationDisallowed() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let elementsSession = STPElementsSession._testValue(
+            intent: intent,
+            linkMode: .linkCardBrand,
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "BANK_ACCOUNT"]
+        )
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(disallowFundingSourceCreation: ["usInstantBankPayment"])
+
+        let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        XCTAssertEqual(availability, .notSupported)
+    }
+
     // MARK: SupportsInstantBankPayments
 
     func testSupportsInstantBankPayments() {
@@ -450,7 +471,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testSupportsInstantBankPayments_onboardingDisabled() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
         let configuration = PaymentSheet.Configuration()
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
@@ -459,7 +480,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
-        let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession
@@ -472,6 +493,27 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         XCTAssertEqual(requirements.count, 1)
         XCTAssertEqual(requirements.first, .instantDebitsDisabledForOnboarding)
+    }
+
+    func testSupportsInstantBankPayments_fundingSourceCreationDisallowed() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let elementsSession = STPElementsSession._testValue(
+            intent: intent,
+            linkMode: .linkCardBrand,
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "BANK_ACCOUNT"]
+        )
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(disallowFundingSourceCreation: ["usInstantBankPayment"])
+
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        XCTAssertEqual(availability, .notSupported)
     }
 
     func testSupportsInstantBankPayments_missingLink() {
