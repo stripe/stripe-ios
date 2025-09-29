@@ -19,7 +19,7 @@ final class BiometricConsentViewControllerSnapshotTest: STPSnapshotTestCase {
     func testViewIsConfiguredFromAPI() throws {
         let vc = try BiometricConsentViewController(
             brandLogo: SnapshotTestMockData.uiImage(image: .headerIcon),
-            showsStripeLogo: true,
+            showsStripeLogo: !BiometricConsentViewControllerSnapshotTest.mockVerificationPage.isStripe,
             consentContent: BiometricConsentViewControllerSnapshotTest.mockVerificationPage
                 .biometricConsent,
             sheetController: VerificationSheetControllerMock()
@@ -31,7 +31,7 @@ final class BiometricConsentViewControllerSnapshotTest: STPSnapshotTestCase {
     func testViewIsConfiguredFromAPINoConsentHeader() throws {
         let vc = try BiometricConsentViewController(
             brandLogo: SnapshotTestMockData.uiImage(image: .headerIcon),
-            showsStripeLogo: true,
+            showsStripeLogo: !BiometricConsentViewControllerSnapshotTest.mockVerificationPageNoConsentHeader.isStripe,
             consentContent: BiometricConsentViewControllerSnapshotTest.mockVerificationPageNoConsentHeader
                 .biometricConsent,
             sheetController: VerificationSheetControllerMock()
