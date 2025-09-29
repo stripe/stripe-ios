@@ -22,7 +22,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case identity
         case wallets(customerId: String)
         case payment(customerId: String, wallet: CustomerWalletsResponse.Wallet)
-        case authenticated(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String)
+        case paymentSummary(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String)
+        case checkoutSuccess(message: String)
     }
 
     /// Indicates whether the global loading interface should be shown.
@@ -37,6 +38,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var isIdDocumentVerified = false
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
     private var selectedPaymentMethodDescription: String?
+    private var successfulCheckoutMessage: String?
 
     /// Creates a new `CryptoOnrampFlowCoordinator`.
     init() {
@@ -100,6 +102,11 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         advanceToNextStep()
     }
 
+    func advanceAfterPaymentSummary(successfulCheckoutMessage: String) {
+        self.successfulCheckoutMessage = successfulCheckoutMessage
+        advanceToNextStep()
+    }
+
     private func refreshCustomerInfoAndPushNext() async {
         guard let customerId else { return }
         isLoading?.wrappedValue = true
@@ -123,7 +130,9 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         } else if !isIdDocumentVerified {
             path.append(.identity)
         } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription {
-            path.append(.authenticated(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription))
+            path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription))
+        } else if let successfulCheckoutMessage {
+            path.append(.checkoutSuccess(message: successfulCheckoutMessage))
         } else if let selectedWallet, let customerId {
             path.append(.payment(customerId: customerId, wallet: selectedWallet))
         } else if let customerId {

@@ -142,14 +142,17 @@ struct CryptoOnrampExampleView: View {
                                 selectedPaymentMethodDescription: selectedPaymentMethodDescription
                             )
                         }
-                    case let .authenticated(createOnrampSessionResponse, selectedPaymentMethodDescription):
+                    case let .paymentSummary(createOnrampSessionResponse, selectedPaymentMethodDescription):
                         PaymentSummaryView(
                             coordinator: coordinator,
                             onrampSessionResponse: createOnrampSessionResponse,
                             selectedPaymentMethodDescription: selectedPaymentMethodDescription
-                        ) {
-                            // TODO: implement
+                        ) { message in
+                            flowCoordinator.advanceAfterPaymentSummary(successfulCheckoutMessage: message)
                         }
+                    case let .checkoutSuccess(message):
+                        // TODO: implement
+                        EmptyView()
                     }
                 }
             }

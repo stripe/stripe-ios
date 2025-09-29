@@ -26,19 +26,118 @@ struct PaymentSummaryView: View {
     let selectedPaymentMethodDescription: String
 
     /// Called upon completing checkout successfully.
-    let onCheckoutSuccess: () -> Void
+    let onCheckoutSuccess: (_ successMessage: String) -> Void
 
     @Environment(\.isLoading) private var isLoading
 
     @State private var authenticationContext = WindowAuthenticationContext()
 
+    @ViewBuilder
+    private var header: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(.tint)
+                    .frame(width: 44, height: 44)
+
+                Image(systemName: "wallet.bifold.fill")
+                    .font(.system(size: 20, weight: .semibold))
+                    .offset(x: 1, y: -1)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Adding")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Text(onrampSessionResponse.totalText)
+                    .font(.title3)
+                    .bold()
+                    .monospacedDigit()
+            }
+
+            Spacer()
+        }
+        .padding()
+    }
+
     // MARK: - View
 
     var body: some View {
-        EmptyView()
+        VStack(spacing: 0) {
+            header
+
+            List {
+                Section {
+                    makeSummaryRow(
+                        title: "You Receive",
+                        value: onrampSessionResponse.amountToReceiveText
+                    )
+                    makeSummaryRow(
+                        title: "Fees",
+                        value: onrampSessionResponse.totalFeesText
+                    )
+                    makeSummaryRow(
+                        title: "Pay With",
+                        value: selectedPaymentMethodDescription
+                    )
+                    makeSummaryRow(
+                        title: "Processing Time",
+                        value: onrampSessionResponse.processingTimeText
+                    )
+                    makeSummaryRow(
+                        title: "Deposit To",
+                        value: onrampSessionResponse.depositToText
+                    )
+                    makeSummaryRow(
+                        title: "Provider",
+                        value: "Stripe"
+                    )
+                } header: {
+                    // Collapses the excessive top padding of the list.
+                    Spacer(minLength: 8)
+                        .listRowInsets(EdgeInsets())
+                }
+                footer: {
+                    Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. By confirming, you agree to the Terms and Conditions and acknowledge the Privacy Policy.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, 8)
+                        .listRowInsets(EdgeInsets())
+                }
+            }
+            .listStyle(.insetGrouped)
+            // Also needed to collapse the excessive top padding of the list.
+            .environment(\.defaultMinListHeaderHeight, 0)
+        }
+        .navigationTitle("Review")
+        .navigationBarTitleDisplayMode(.inline)
+        .safeAreaInset(edge: .bottom) {
+            Button("Confirm") {
+                checkout()
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(isLoading.wrappedValue)
+            .opacity(isLoading.wrappedValue ? 0.5 : 1)
+            .padding()
+        }
     }
 
     // MARK: - PaymentSummaryView
+
+    @ViewBuilder
+    private func makeSummaryRow(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Text(value)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 2)
+    }
 
     private func checkout() {
         isLoading.wrappedValue = true
@@ -56,7 +155,9 @@ struct PaymentSummaryView: View {
                 await MainActor.run {
                     switch checkoutResult {
                     case .completed:
-                        onCheckoutSuccess()
+                        let amount = onrampSessionResponse.amountToReceiveText
+                        let network = onrampSessionResponse.transactionDetails.destinationNetwork.localizedCapitalized
+                        onCheckoutSuccess("You’ve added \(amount) to your \(network) wallet.")
                     case .canceled:
                         break
                     @unknown default:
@@ -78,6 +179,50 @@ struct PaymentSummaryView: View {
 private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         UIApplication.shared.findTopNavigationController() ?? UIViewController()
+    }
+}
+
+private extension CreateOnrampSessionResponse {
+    static let currencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        // Use local formatting for the number, but assume USD for the currency.
+        formatter.locale = Locale.current
+        formatter.currencySymbol = "$"
+        formatter.currencyCode = "USD"
+        return formatter
+    }()
+
+    var totalText: String {
+        let amount = Double(sourceTotalAmount) ?? 0
+        return Self.currencyFormatter.string(from: NSNumber(value: amount)) ?? "$0"
+    }
+
+    var amountToReceiveText: String {
+        "\(transactionDetails.destinationAmount) \(transactionDetails.destinationCurrency)"
+    }
+
+    var totalFeesText: String {
+        let networkFee = Double(transactionDetails.fees.networkFeeAmount) ?? 0
+        let transactionFee = Double(transactionDetails.fees.transactionFeeAmount) ?? 0
+        let total = networkFee + transactionFee
+        return Self.currencyFormatter.string(from: NSNumber(value: total)) ?? "$0"
+    }
+
+    var processingTimeText: String {
+        if paymentMethod.lowercased().contains("card") {
+            "Instant"
+        } else {
+            "1–3 days"
+        }
+    }
+
+    var depositToText: String {
+        let network = transactionDetails.destinationNetwork.localizedCapitalized
+        let address = transactionDetails.walletAddress
+        let prefix = String(address.prefix(2))
+        let suffix = String(address.suffix(4))
+        return "\(network) • \(prefix)••••\(suffix)"
     }
 }
 
@@ -120,13 +265,13 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
                     destinationNetworks: [],
                     transactionId: nil,
                     transactionLimit: 74517,
-                    walletAddress: "",
+                    walletAddress: "0123451234512345123545",
                     walletAddresses: nil
                 ),
                 uiMode: "headless"
             ),
             selectedPaymentMethodDescription: "Apple Pay",
-            onCheckoutSuccess: {}
+            onCheckoutSuccess: { _ in }
         )
     }
 }
