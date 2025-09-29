@@ -190,6 +190,7 @@ final class LinkHintMessageView: UIView {
     ])
 
     stackView.axis = .vertical
+    stackView.spacing = 5
     stackView.distribution = .fillEqually
 
     return stackView
