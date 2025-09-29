@@ -1,3 +1,5 @@
+## 24.24.1 2025-09-29
+
 ### Connect
 * [Fixed] Renamed `PrivateBetaConnect` to `PreviewConnect`.
 
