@@ -7,9 +7,6 @@
 
 @_spi(STP) import StripeUICore
 import UIKit
-#if canImport(SwiftUI)
-import SwiftUI
-#endif
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkHintMessageView)
