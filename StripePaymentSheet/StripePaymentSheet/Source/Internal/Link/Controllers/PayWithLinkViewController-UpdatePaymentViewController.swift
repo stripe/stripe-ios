@@ -60,8 +60,8 @@ extension PayWithLinkViewController {
             paymentMethodEditElement.showAllValidationErrors()
         }
 
-        private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
+        private lazy var errorView: LinkHintMessageView = {
+            LinkHintMessageView(message: nil, style: .error)
         }()
 
         private lazy var paymentMethodEditElement = LinkPaymentMethodFormElement(
@@ -109,11 +109,11 @@ extension PayWithLinkViewController {
             self.paymentMethodEditElement.delegate = self
             view.backgroundColor = .linkSurfacePrimary
             view.directionalLayoutMargins = LinkUI.contentMargins
-            errorLabel.isHidden = true
+            errorView.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
                 paymentMethodEditElement.view,
-                errorLabel,
+                errorView,
                 thisIsYourDefaultView,
                 updateButton,
             ])
@@ -198,8 +198,8 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorLabel.text = error?.nonGenericDescription
-            errorLabel.setHiddenIfNecessary(error == nil)
+            errorView.text = error?.nonGenericDescription
+            errorView.setHiddenIfNecessary(error == nil)
         }
 
         private func createUpdateDetails(for params: LinkPaymentMethodFormElement.Params) -> UpdatePaymentDetailsParams.DetailsType? {
