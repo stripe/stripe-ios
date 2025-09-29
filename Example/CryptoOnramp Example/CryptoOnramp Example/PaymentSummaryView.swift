@@ -15,7 +15,7 @@ import StripePayments
 
 /// A view used to display a payment summary, from which the user can complete checkout.
 struct PaymentSummaryView: View {
-    
+
     /// The coordinator to use for completing checkout.
     let coordinator: CryptoOnrampCoordinator
 
