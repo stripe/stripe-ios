@@ -168,3 +168,29 @@ final class LinkHintMessageView: UIView {
     }
     #endif
 }
+
+@available(iOS 17.0, *)
+#Preview {
+
+    let stackView = UIStackView(arrangedSubviews: [
+
+        LinkHintMessageView(message: "Some short text.", style: .filled),
+        LinkHintMessageView(message: "Medium text that stretches a little farther.", style: .filled),
+        LinkHintMessageView(message: "Here's a really long message that we can use for testing. It even spans multiple lines.", style: .filled),
+
+        LinkHintMessageView(message: "Some short text.", style: .outlined),
+        LinkHintMessageView(message: "edium text that stretches a little farther.", style: .outlined),
+        LinkHintMessageView(message: "Here's a really long message that we can use for testing. It even spans multiple lines.", style: .outlined),
+
+        LinkHintMessageView(message: "Something went wrong", style: .error),
+        LinkHintMessageView(message: "There was an error connecting to Stripe.", style: .error),
+        LinkHintMessageView(message: "Here's a really long message that we can use for testing. It even spans multiple lines.", style: .error),
+
+    ])
+
+    stackView.axis = .vertical
+    stackView.distribution = .fillEqually
+
+    return stackView
+
+}
