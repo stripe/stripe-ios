@@ -7,6 +7,9 @@
 
 @_spi(STP) import StripeUICore
 import UIKit
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkHintMessageView)
@@ -21,12 +24,13 @@ final class LinkHintMessageView: UIView {
     enum Style {
         case filled
         case outlined
+        case error
 
         var backgroundColor: UIColor {
             switch self {
             case .filled:
                 return .linkSurfaceSecondary
-            case .outlined:
+            case .outlined, .error:
                 return .linkSurfacePrimary
             }
         }
@@ -37,8 +41,29 @@ final class LinkHintMessageView: UIView {
                 return .linkTextTertiary
             case .outlined:
                 return .linkOutlinedHintMessageForeground
+            case .error:
+                return .linkTextCritical
             }
         }
+
+        var iconColor: UIColor {
+            switch self {
+            case .filled, .outlined:
+                UIColor.linkIconTertiary
+            case .error:
+                UIColor.linkTextCritical
+            }
+        }
+        
+        var icon: Image {
+            switch self {
+            case .filled, .outlined:
+                Image.icon_info
+            case .error:
+                Image.icon_link_warning_circle
+            }
+        }
+        
     }
 
     var text: String? {
@@ -52,7 +77,7 @@ final class LinkHintMessageView: UIView {
 
     private lazy var iconView: UIImageView = {
         let imageView = UIImageView()
-        imageView.tintColor = .linkIconTertiary
+        imageView.tintColor = style.iconColor
         imageView.contentMode = .scaleAspectFit
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -124,7 +149,7 @@ final class LinkHintMessageView: UIView {
     }
 
     private func configureImage() {
-        iconView.image = Image.icon_info.makeImage(template: true)
+        iconView.image = style.icon.makeImage(template: true)
     }
 
     #if !os(visionOS)
