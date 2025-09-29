@@ -49,7 +49,8 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         // Given
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],
-            linkMode: .passthrough
+            linkMode: .passthrough,
+            linkFundingSources: [.card, .bankAccount]
         )
         let configuration = PaymentSheet.Configuration()
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
@@ -60,7 +61,8 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
     func testIsLinkEnabled_linkDisplayAutomatic_linkPresent() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],
-            linkMode: .passthrough
+            linkMode: .passthrough,
+            linkFundingSources: [.card, .bankAccount]
         )
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(display: .automatic)

@@ -93,7 +93,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
             let loadResult = PaymentSheetLoader.LoadResult(
                 intent: intent,
-                elementsSession: ._testValue(paymentMethodTypes: ["card"], linkMode: .passthrough),
+                elementsSession: ._testValue(paymentMethodTypes: ["card"], linkMode: .passthrough, linkFundingSources: [.card]),
                 savedPaymentMethods: hasSavedPM ? [._testCard()] : [],
                 paymentMethodTypes: [.stripe(.card)]
             )

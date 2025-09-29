@@ -122,7 +122,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         // 9. No saved payment methods and we have one PM and Link and Apple Pay in FlowController, so they're in the list
         let loadResult9 = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"], linkMode: .passthrough),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], linkMode: .passthrough, linkFundingSources: [.card]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)]
         )
@@ -143,7 +143,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         // Makes VC w/ no saved PMs and card
         func makeSUT(linkMode: LinkMode?, isApplePayEnabled: Bool, isFlowController: Bool) -> PaymentSheetVerticalViewController {
             var config = PaymentSheet.Configuration._testValue_MostPermissive()
-            let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"], linkMode: linkMode, disableLinkSignup: true)
+            let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"], linkMode: linkMode, linkFundingSources: [.card], disableLinkSignup: true)
             if !isApplePayEnabled {
                 config.applePay = nil
             }

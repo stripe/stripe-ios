@@ -10,7 +10,10 @@
 
 extension STPElementsSession {
     var supportsLink: Bool {
-        linkSettings?.linkMode != nil
+        guard let linkSettings, linkSettings.fundingSourcesSupportedByClient else {
+            return false
+        }
+        return linkSettings.linkMode != nil
     }
 
     var linkPassthroughModeEnabled: Bool {
@@ -82,5 +85,13 @@ extension Intent {
                 return .setup
             }
         }
+    }
+}
+
+extension LinkSettings {
+    /// Returns true if at least one of the `link_funding_sources` is supported by the client.
+    var fundingSourcesSupportedByClient: Bool {
+        let clientSupportedFundingSources = ConsumerPaymentDetails.DetailsType.allCases.compactMap(\.fundingSource)
+        return !fundingSources.isDisjoint(with: clientSupportedFundingSources)
     }
 }
