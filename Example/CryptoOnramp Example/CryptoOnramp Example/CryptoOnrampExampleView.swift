@@ -151,8 +151,7 @@ struct CryptoOnrampExampleView: View {
                             flowCoordinator.advanceAfterPaymentSummary(successfulCheckoutMessage: message)
                         }
                     case let .checkoutSuccess(message):
-                        // TODO: implement
-                        EmptyView()
+                        CheckoutSuccessView(message: message)
                     }
                 }
             }
