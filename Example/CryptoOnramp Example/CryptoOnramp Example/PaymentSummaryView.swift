@@ -53,7 +53,6 @@ struct PaymentSummaryView: View {
                 Text(onrampSessionResponse.totalText)
                     .font(.title3)
                     .bold()
-                    .monospacedDigit()
             }
 
             Spacer()
@@ -193,13 +192,23 @@ private extension CreateOnrampSessionResponse {
         return formatter
     }()
 
+    static let currencyFormatterWithoutSymbol: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = Locale.current
+        formatter.currencySymbol = ""
+        return formatter
+    }()
+
     var totalText: String {
         let amount = Double(sourceTotalAmount) ?? 0
         return Self.currencyFormatter.string(from: NSNumber(value: amount)) ?? "$0"
     }
 
     var amountToReceiveText: String {
-        "\(transactionDetails.destinationAmount) \(transactionDetails.destinationCurrency)"
+        let amount = Double(transactionDetails.destinationAmount) ?? 0
+        let formattedAmount = Self.currencyFormatterWithoutSymbol.string(from: NSNumber(value: amount)) ?? "$0"
+        return "\(formattedAmount) \(transactionDetails.destinationCurrency)"
     }
 
     var totalFeesText: String {
@@ -250,7 +259,7 @@ private extension CreateOnrampSessionResponse {
                 status: "",
                 transactionDetails: .init(
                     destinationCurrency: "usdc",
-                    destinationAmount: "10.00",
+                    destinationAmount: "10.000000",
                     destinationNetwork: "solana",
                     fees: .init(
                         networkFeeAmount: "0.01",

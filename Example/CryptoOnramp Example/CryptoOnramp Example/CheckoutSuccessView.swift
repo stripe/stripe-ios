@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 /// A final view in the flow, notifying the user that checkout succeeded.
 struct CheckoutSuccessView: View {
 
