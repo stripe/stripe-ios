@@ -46,9 +46,9 @@ extension StripeAPI {
         /// session ID to identify experiement exposure
         let userSessionId: String
         let experiments: [VerificationPageStaticContentExperiment]
-        /// Whether this verification is for Stripe (internal flows)
+        /// Whether this verification was triggered by Stripe
         let isStripe: Bool
-        /// If true, the client should skip rendering a success page at the end of the flow
+        /// If true, the SDK will skip rendering a success page at the end of the flow
         let skipSuccessPage: Bool
 
     }
