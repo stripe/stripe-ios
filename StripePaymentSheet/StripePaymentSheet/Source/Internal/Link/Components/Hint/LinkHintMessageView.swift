@@ -109,7 +109,7 @@ final class LinkHintMessageView: UIView {
 
     private let style: Style
 
-    init(message: String, style: Style) {
+    init(message: String?, style: Style) {
         self.style = style
         super.init(frame: .zero)
         setupUI()
