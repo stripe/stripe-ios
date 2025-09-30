@@ -11,7 +11,7 @@ import Foundation
 /// Only includes properties that can be populated from PaymentSheet.IntentConfiguration.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
 @_spi(STP) public class STPConfirmationTokenClientContext: NSObject, STPFormEncodable {
-    private var _additionalAPIParameters: [AnyHashable: Any] = [:]
+    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The mode of this intent, either "payment" or "setup"
     @objc public var mode: String?
@@ -81,12 +81,4 @@ import Foundation
         ]
     }
 
-    @objc public var additionalAPIParameters: [AnyHashable: Any] {
-        get {
-            return _additionalAPIParameters
-        }
-        set {
-            _additionalAPIParameters = newValue
-        }
-    }
 }

@@ -19,7 +19,7 @@ extension PaymentSheet.IntentConfiguration {
 
         // Map mode and mode-specific properties
         switch mode {
-        case .payment(_, let currency, let setupFutureUsage, let captureMethod, let paymentMethodOptions):
+        case let .payment(_, currency, setupFutureUsage, captureMethod, paymentMethodOptions):
             clientContext.mode = "payment"
             clientContext.currency = currency
             clientContext.setupFutureUsage = setupFutureUsage?.rawValue
