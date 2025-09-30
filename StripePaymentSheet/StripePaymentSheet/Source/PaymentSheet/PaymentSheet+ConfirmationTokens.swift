@@ -146,7 +146,6 @@ extension PaymentSheet {
             params.paymentMethod = paymentMethod.stripeId
             params.paymentMethodOptions = paymentOptions
             params.clientAttributionMetadata = clientAttributionMetadata
-
         case .new(let paymentMethodParams, let paymentOptions, _, _, let shouldSetAsDefaultPM):
             params.paymentMethodData = paymentMethodParams
             params.paymentMethodData?.radarOptions = radarOptions
@@ -179,7 +178,6 @@ extension PaymentSheet {
         case .setup(_, let setupFutureUsage):
             // Setup intents: Always use the configured setup future usage value
             params.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
-
         case .payment(_, _, let intentSetupFutureUsage, _, let paymentMethodOptions):
             let paymentMethodType = paymentMethodType(from: confirmType)
             // Priority order: user checkbox > PMO SFU > top-level SFU
@@ -219,12 +217,13 @@ extension PaymentSheet {
             // Auto-generate mandate data based on payment method and intent requirements
             params.mandateData = generateMandateData(
                 confirmType: confirmType,
-                intentConfig: intentConfig
+                intentConfig: intentConfig,
+                setupFutureUsage: params.setupFutureUsage
             )
         }
     }
 
-    /// Auto-generates mandate data when required 
+    /// Auto-generates mandate data when required
     ///
     /// Creates mandate data for payment methods that require explicit user consent,
     /// such as bank debits and wallet payments with future usage. Follows Stripe's
@@ -233,22 +232,20 @@ extension PaymentSheet {
     /// - Parameters:
     ///   - confirmType: The payment method type being confirmed
     ///   - intentConfig: Intent configuration with setup future usage and payment method options
+    ///   - setupFutureUsage: The already-computed setup future usage value from params
     /// - Returns: Mandate data if required by the payment method, nil otherwise
     private static func generateMandateData(
         confirmType: ConfirmPaymentMethodType,
-        intentConfig: PaymentSheet.IntentConfiguration
+        intentConfig: PaymentSheet.IntentConfiguration,
+        setupFutureUsage: STPPaymentIntentSetupFutureUsage?
     ) -> STPMandateDataParams? {
         let paymentMethodType = Self.paymentMethodType(from: confirmType)
 
         switch intentConfig.mode {
-        case .payment(_, _, let topLevelSFU, _, let paymentMethodOptions):
+        case .payment:
             // Payment methods that require mandate data when setup_future_usage is "off_session"
             if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) {
-                // Check effective setup future usage (PMO SFU takes priority over top-level SFU)
-                let pmoSFU = paymentMethodOptions?.setupFutureUsageValues?[paymentMethodType]
-                let effectiveSFU = pmoSFU ?? topLevelSFU
-
-                if effectiveSFU == .offSession {
+                if setupFutureUsage == .offSession {
                     return .makeWithInferredValues()
                 }
             }
