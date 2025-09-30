@@ -124,6 +124,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
 
         XCTAssertNotNil(params)
         XCTAssertEqual(params.returnURL, configuration.returnURL)
+        XCTAssertNotNil(params.clientContext)
     }
 
     func testCreateConfirmationTokenParams_withShippingDetails() {
@@ -137,6 +138,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             elementsSession: nil
         )
 
+        XCTAssertNotNil(params.clientContext)
         XCTAssertNotNil(params.shipping)
         XCTAssertEqual(params.shipping?.name, "Jane Doe")
         XCTAssertEqual(params.shipping?.phone, "5551234567")
@@ -155,6 +157,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             elementsSession: nil
         )
 
+        XCTAssertNotNil(params.clientContext)
         XCTAssertNil(params.shipping)
     }
 
