@@ -109,7 +109,7 @@ struct PaymentSummaryView: View {
                         .listRowInsets(EdgeInsets())
                 }
                 footer: {
-                    Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. By confirming, you agree to the Terms and Conditions and acknowledge the Privacy Policy.")
+                    Text("By confirming, you agree to the Terms and Conditions and acknowledge the Privacy Policy.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
