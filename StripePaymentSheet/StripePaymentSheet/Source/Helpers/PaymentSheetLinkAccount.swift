@@ -223,7 +223,6 @@ struct LinkPMDisplayDetails {
 
         session.startVerification(
             with: apiClient,
-            consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface
         ) { [weak self] result in
             switch result {
@@ -259,7 +258,6 @@ struct LinkPMDisplayDetails {
         session.confirmSMSVerification(
             with: oneTimePasscode,
             with: apiClient,
-            consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface,
             consentGranted: consentGranted
         ) { [weak self] result in
@@ -290,7 +288,6 @@ struct LinkPMDisplayDetails {
             }
 
             session.createLinkAccountSession(
-                consumerAccountPublishableKey: self.publishableKey,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -314,7 +311,6 @@ struct LinkPMDisplayDetails {
             session.createPaymentDetails(
                 paymentMethodParams: paymentMethodParams,
                 with: self.apiClient,
-                consumerAccountPublishableKey: self.publishableKey,
                 isDefault: isDefault,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
@@ -336,7 +332,6 @@ struct LinkPMDisplayDetails {
 
             session.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
-                consumerAccountPublishableKey: self.publishableKey,
                 isDefault: isDefault,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
@@ -381,7 +376,6 @@ struct LinkPMDisplayDetails {
             session.listPaymentDetails(
                 with: self.apiClient,
                 supportedPaymentDetailsTypes: supportedTypes,
-                consumerAccountPublishableKey: self.publishableKey,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -417,7 +411,7 @@ struct LinkPMDisplayDetails {
                 return
             }
 
-            session.listShippingAddress(with: self.apiClient, consumerAccountPublishableKey: self.publishableKey, requestSurface: self.requestSurface, completion: completionRetryingOnAuthErrors)
+            session.listShippingAddress(with: self.apiClient, requestSurface: self.requestSurface, completion: completionRetryingOnAuthErrors)
         }
     }
 
@@ -437,7 +431,6 @@ struct LinkPMDisplayDetails {
             session.deletePaymentDetails(
                 with: self.apiClient,
                 id: id,
-                consumerAccountPublishableKey: self.publishableKey,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -449,7 +442,7 @@ struct LinkPMDisplayDetails {
         updateParams: UpdatePaymentDetailsParams,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
+        retryingOnAuthError(completion: completion) { [apiClient] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 return completion(
@@ -465,7 +458,6 @@ struct LinkPMDisplayDetails {
                 with: apiClient,
                 id: id,
                 updateParams: updateParams,
-                consumerAccountPublishableKey: publishableKey,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -481,7 +473,7 @@ struct LinkPMDisplayDetails {
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>
     ) -> Void) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
+        retryingOnAuthError(completion: completion) { [apiClient] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 return completion(
@@ -498,7 +490,6 @@ struct LinkPMDisplayDetails {
                 allowRedisplay: allowRedisplay,
                 expectedPaymentMethodType: expectedPaymentMethodType,
                 billingPhoneNumber: billingPhoneNumber,
-                consumerAccountPublishableKey: publishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
@@ -532,7 +523,7 @@ struct LinkPMDisplayDetails {
         guard let session = currentSession else {
             return
         }
-        session.logout(with: apiClient, consumerAccountPublishableKey: publishableKey, requestSurface: requestSurface) { _ in
+        session.logout(with: apiClient, requestSurface: requestSurface) { _ in
             // We don't need to do anything if this fails, the key will expire automatically.
         }
     }
