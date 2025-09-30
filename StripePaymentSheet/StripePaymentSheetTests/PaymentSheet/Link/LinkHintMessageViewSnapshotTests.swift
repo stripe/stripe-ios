@@ -33,8 +33,9 @@ class LinkHintMessageViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testLongMessageWithWrapping() {
+        recordMode = true
         let hintView = LinkHintMessageView(message: "This is a much longer message that should definitely wrap to multiple lines", style: .filled)
-        hintView.frame = CGRect(x: 0, y: 0, width: 320, height: 44)
+        hintView.frame = CGRect(x: 0, y: 0, width: 320, height: 120)
         hintView.layoutIfNeeded()
 
         STPSnapshotVerifyView(hintView)
@@ -57,8 +58,9 @@ class LinkHintMessageViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testLongMessageWithWrappingErrorStyle() {
+        recordMode = true
         let hintView = LinkHintMessageView(message: "This is a much longer message that should definitely wrap to multiple lines", style: .error)
-        hintView.frame = CGRect(x: 0, y: 0, width: 320, height: 44)
+        hintView.frame = CGRect(x: 0, y: 0, width: 320, height: 120)
         hintView.layoutIfNeeded()
 
         STPSnapshotVerifyView(hintView)
