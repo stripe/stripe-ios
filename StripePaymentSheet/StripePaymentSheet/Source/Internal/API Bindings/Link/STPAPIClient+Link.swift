@@ -22,6 +22,7 @@ extension STPAPIClient {
         customerID: String?,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -51,6 +52,7 @@ extension STPAPIClient {
             await performConsumerLookup(
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
+                canSyncAttestationState: canSyncAttestationState,
                 completion: completion
             )
         }
@@ -62,6 +64,7 @@ extension STPAPIClient {
         customerID: String?,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -76,6 +79,7 @@ extension STPAPIClient {
             await performConsumerLookup(
                 parameters: parameters,
                 useMobileEndpoints: useMobileEndpoints,
+                canSyncAttestationState: canSyncAttestationState,
                 completion: completion
             )
         }
@@ -84,6 +88,7 @@ extension STPAPIClient {
     private func performConsumerLookup(
         parameters: [String: Any],
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) async {
         let legacyEndpoint = "consumers/sessions/lookup"
@@ -98,7 +103,7 @@ extension STPAPIClient {
         let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
             if useMobileEndpoints {
                 do {
-                    let assertionHandle = try await stripeAttest.assert()
+                    let assertionHandle = try await stripeAttest.assert(canSyncState: canSyncAttestationState)
                     mutableParameters = mutableParameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
                     return assertionHandle
                 } catch {
@@ -135,6 +140,7 @@ extension STPAPIClient {
         countryCode: String?,
         consentAction: String?,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
@@ -170,7 +176,7 @@ extension STPAPIClient {
             let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
                 if useMobileEndpoints {
                     do {
-                        let assertionHandle = try await stripeAttest.assert()
+                        let assertionHandle = try await stripeAttest.assert(canSyncState: canSyncAttestationState)
                         parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
                         return assertionHandle
                     } catch {
@@ -202,13 +208,11 @@ extension STPAPIClient {
     private func makePaymentDetailsRequest(
         endpoint: String,
         parameters: [String: Any],
-        consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         post(
             resource: endpoint,
-            parameters: parameters,
-            consumerPublishableKey: consumerAccountPublishableKey
+            parameters: parameters
         ) { (result: Result<DetailsResponse, Error>) in
             completion(result.map { $0.redactedPaymentDetails })
         }
@@ -220,7 +224,6 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -230,7 +233,6 @@ extension STPAPIClient {
             billingEmailAddress: billingEmailAddress,
             billingDetails: billingDetails,
             isDefault: isDefault,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -242,7 +244,6 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -264,7 +265,6 @@ extension STPAPIClient {
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
@@ -272,7 +272,6 @@ extension STPAPIClient {
     func createPaymentDetails(
         for consumerSessionClientSecret: String,
         linkedAccountId: String,
-        consumerAccountPublishableKey: String?,
         isDefault: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
@@ -292,7 +291,6 @@ extension STPAPIClient {
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
@@ -300,13 +298,11 @@ extension STPAPIClient {
     private func makeConsumerSessionRequest(
         endpoint: String,
         parameters: [String: Any],
-        consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         post(
             resource: endpoint,
-            parameters: parameters,
-            consumerPublishableKey: consumerAccountPublishableKey
+            parameters: parameters
         ) { (result: Result<SessionResponse, Error>) in
             completion(result.map { $0.consumerSession })
         }
@@ -341,7 +337,6 @@ extension STPAPIClient {
 
     func createLinkAccountSession(
         for consumerSessionClientSecret: String,
-        consumerAccountPublishableKey: String?,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
         requestSurface: LinkRequestSurface = .default,
@@ -361,7 +356,7 @@ extension STPAPIClient {
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
+            additionalHeaders: authorizationHeader(),
             parameters: parameters,
             completion: completion
         )
@@ -370,7 +365,6 @@ extension STPAPIClient {
     func sharePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,
-        consumerAccountPublishableKey: String?,
         overridePublishableKey: String? = nil,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         cvc: String?,
@@ -430,7 +424,6 @@ extension STPAPIClient {
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
         supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
@@ -444,8 +437,7 @@ extension STPAPIClient {
 
         post(
             resource: endpoint,
-            parameters: parameters,
-            consumerPublishableKey: consumerAccountPublishableKey
+            parameters: parameters
         ) { (result: Result<DetailsListResponse, Error>) in
             completion(result.map { $0.redactedPaymentDetails })
         }
@@ -453,7 +445,6 @@ extension STPAPIClient {
 
     func listShippingAddress(
         for consumerSessionClientSecret: String,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
     ) {
@@ -464,8 +455,7 @@ extension STPAPIClient {
         ]
         post(
             resource: endPoint,
-            parameters: parameters,
-            consumerPublishableKey: consumerAccountPublishableKey
+            parameters: parameters
         ) { (result: Result<ShippingAddressesResponse, Error>) in
             completion(result)
         }
@@ -474,7 +464,6 @@ extension STPAPIClient {
     func deletePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
@@ -488,7 +477,7 @@ extension STPAPIClient {
         APIRequest<STPEmptyStripeResponse>.delete(
             with: self,
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
+            additionalHeaders: authorizationHeader(),
             parameters: parameters
         ) { result in
             completion(result.map { _ in () } )
@@ -499,7 +488,6 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         updateParams: UpdatePaymentDetailsParams,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -546,14 +534,12 @@ extension STPAPIClient {
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
 
     func updatePhoneNumber(
         consumerSessionClientSecret: String,
-        consumerAccountPublishableKey: String?,
         phoneNumber: String,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
@@ -570,8 +556,7 @@ extension STPAPIClient {
 
         post(
             resource: endpoint,
-            parameters: parameters,
-            consumerPublishableKey: consumerAccountPublishableKey
+            parameters: parameters
         ) { (result: Result<UpdatePhoneNumberResponse, Error>) in
             completion(result.map { $0.consumerSession })
         }
@@ -579,7 +564,6 @@ extension STPAPIClient {
 
     func logout(
         consumerSessionClientSecret: String,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -595,7 +579,6 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
@@ -618,7 +601,6 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: nil,
             completion: completion
         )
     }
@@ -627,7 +609,6 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         type: ConsumerSession.VerificationSession.SessionType,
         locale: Locale,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -653,7 +634,6 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
@@ -661,7 +641,6 @@ extension STPAPIClient {
     func confirmSMSVerification(
         for consumerSessionClientSecret: String,
         with code: String,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         consentGranted: Bool? = nil,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
@@ -682,7 +661,6 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }

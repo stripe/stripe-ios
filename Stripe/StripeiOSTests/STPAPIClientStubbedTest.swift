@@ -218,14 +218,12 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 }
                 return item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
             }), shouldContainClientAttributionMetadata)
-            if let elementsSessionConfigId = clientAttributionMetadata.elementsSessionConfigId {
-                XCTAssertEqual(queryItems.contains(where: { item in
-                    if let base {
-                        return item.name == "\(base)[client_attribution_metadata][elements_session_config_id]" && item.value == elementsSessionConfigId
-                    }
-                    return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == elementsSessionConfigId
-                }), shouldContainClientAttributionMetadata)
-            }
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][elements_session_config_id]" && item.value == clientAttributionMetadata.elementsSessionConfigId
+                }
+                return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == clientAttributionMetadata.elementsSessionConfigId
+            }), shouldContainClientAttributionMetadata)
             if let intentCreationFlow = clientAttributionMetadata.paymentIntentCreationFlow {
                 XCTAssertEqual(queryItems.contains(where: { item in
                     if let base {
@@ -396,7 +394,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         stubClientAttributionMetadata(base: "payment_method_options", clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
-        sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", consumerAccountPublishableKey: nil, allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil, clientAttributionMetadata: clientAttributionMetadata) { _ in
+        sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil, clientAttributionMetadata: clientAttributionMetadata) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)

@@ -10,7 +10,7 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
 
 typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 
@@ -89,19 +89,115 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 return
             }
 
-            // Regular deferred intent flow
-            let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
-            intentConfig.confirmHandler?(stpPaymentMethod, shouldSavePaymentMethod) { result in
-                switch result {
-                case .success(let clientSecret):
-                    guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
-                        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
-                        return
+            // Route to confirmation token flow or regular flow based on available handlers
+            if let confirmationTokenConfirmHandler = intentConfig.confirmationTokenConfirmHandler {
+                // Confirmation token flow
+                handleConfirmationTokenFlow(
+                    intentConfig: intentConfig,
+                    paymentMethod: stpPaymentMethod,
+                    paymentInformation: paymentInformation,
+                    context: context,
+                    confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
+                    completion: completion
+                )
+            } else if let confirmHandler = intentConfig.confirmHandler {
+                // Regular deferred intent flow
+                let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
+                confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
+                    switch result {
+                    case .success(let clientSecret):
+                        guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                            completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+                            return
+                        }
+                        completion(clientSecret, nil)
+                    case .failure(let error):
+                        completion(nil, error)
                     }
-                    completion(clientSecret, nil)
-                case .failure(let error):
-                    completion(nil, error)
                 }
+            } else {
+                // Neither handler is available
+                let error = PaymentSheetError.unknown(debugDescription: "No confirm handler available in IntentConfiguration")
+                completion(nil, error)
+            }
+        }
+    }
+
+    private func handleConfirmationTokenFlow(
+        intentConfig: PaymentSheet.IntentConfiguration,
+        paymentMethod: STPPaymentMethod,
+        paymentInformation: PKPayment,
+        context: STPApplePayContext,
+        confirmationTokenConfirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler,
+        completion: @escaping STPIntentClientSecretCompletionBlock
+    ) {
+        // Create confirmation token params
+        let confirmationTokenParams = STPConfirmationTokenParams()
+        confirmationTokenParams.paymentMethod = paymentMethod.stripeId
+        confirmationTokenParams.returnURL = context.returnUrl
+        if let clientAttributionMetadata = context.clientAttributionMetadata {
+            confirmationTokenParams.clientAttributionMetadata = STPClientAttributionMetadata(
+                clientSessionId: clientAttributionMetadata.clientSessionId,
+                elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
+                paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { STPClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
+                paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { STPClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) },
+            )
+        }
+        confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: paymentMethod.customerId)
+        switch intentConfig.mode {
+        case .payment(_, _, let setupFutureUsage, _, _):
+            if let sfu = setupFutureUsage?.paymentIntentParamsValue {
+                confirmationTokenParams.setupFutureUsage = sfu
+            }
+        case .setup(_, let setupFutureUsage):
+            confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
+        }
+
+        // Set shipping details if available
+        if let shippingContact = paymentInformation.shippingContact,
+           let nameComponents = shippingContact.name {
+            let name = PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
+            let shippingAddress = STPAddress(pkContact: shippingContact)
+
+            // Only set shipping details if we have a valid address line1
+            if let line1 = shippingAddress.line1 {
+                // Create address params manually
+                let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
+                addressParams.line2 = shippingAddress.line2
+                addressParams.city = shippingAddress.city
+                addressParams.state = shippingAddress.state
+                addressParams.postalCode = shippingAddress.postalCode
+                addressParams.country = shippingAddress.country
+
+                let shippingDetailsParams = STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
+                shippingDetailsParams.phone = shippingAddress.phone
+                confirmationTokenParams.shipping = shippingDetailsParams
+            }
+        }
+
+        Task {
+            do {
+                // Create the confirmation token
+                let confirmationToken = try await context.apiClient.createConfirmationToken(with: confirmationTokenParams, ephemeralKeySecret: nil)
+
+                // Call the confirmation token handler
+                await MainActor.run {
+                    confirmationTokenConfirmHandler(confirmationToken) { result in
+                        switch result {
+                        case .success(let clientSecret):
+                            // Handle manual confirmation
+                            guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                                completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+                                return
+                            }
+                            completion(clientSecret, nil)
+                        case .failure(let error):
+                            completion(nil, error)
+                        }
+                    }
+                }
+            } catch {
+                completion(nil, error)
             }
         }
     }
