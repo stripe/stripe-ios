@@ -97,7 +97,7 @@ extension PaymentSheet {
         confirmationTokenParams.returnURL = configuration.returnURL
         confirmationTokenParams.shipping = configuration.shippingDetails()?.paymentIntentShippingDetailsParams
         confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customer?.id)
-        
+
         // 2. Configure payment method details based on confirm type
         configurePaymentMethodDetails(
             confirmationTokenParams,
