@@ -69,6 +69,7 @@ struct PaymentSummaryView: View {
             Spacer()
         }
         .padding()
+        .background(Color(.systemGroupedBackground))
     }
 
     // MARK: - View
