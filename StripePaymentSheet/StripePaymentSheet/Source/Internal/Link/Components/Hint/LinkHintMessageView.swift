@@ -177,7 +177,7 @@ final class LinkHintMessageView: UIView {
         LinkHintMessageView(message: "Here's a really long message that we can use for testing. It even spans multiple lines.", style: .filled),
 
         LinkHintMessageView(message: "Some short text.", style: .outlined),
-        LinkHintMessageView(message: "edium text that stretches a little farther.", style: .outlined),
+        LinkHintMessageView(message: "Medium text that stretches a little farther.", style: .outlined),
         LinkHintMessageView(message: "Here's a really long message that we can use for testing. It even spans multiple lines.", style: .outlined),
 
         LinkHintMessageView(message: "Something went wrong", style: .error),
