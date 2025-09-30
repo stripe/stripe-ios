@@ -191,6 +191,8 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     func testCreateConfirmationTokenParams_newPaymentMethod() {
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
         let paymentMethodParams = createTestPaymentMethodParams()
+        let clientAttributionMetadata = STPClientAttributionMetadata()
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         let paymentOptions = STPConfirmPaymentMethodOptions()
         let radarOptions = createTestRadarOptions()
 
@@ -213,6 +215,8 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(params.paymentMethodData, paymentMethodParams)
         XCTAssertEqual(params.paymentMethodOptions, paymentOptions)
         XCTAssertEqual(params.paymentMethodData?.radarOptions, radarOptions)
+        XCTAssertNotNil(params.clientAttributionMetadata)
+        XCTAssertEqual(params.clientAttributionMetadata, clientAttributionMetadata)
         XCTAssertNil(params.paymentMethod)
         XCTAssertNil(params.setAsDefaultPM)
     }
