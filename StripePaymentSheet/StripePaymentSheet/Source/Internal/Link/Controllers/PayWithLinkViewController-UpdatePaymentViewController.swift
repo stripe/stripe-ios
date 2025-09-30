@@ -143,19 +143,19 @@ extension PayWithLinkViewController {
         /// and sets it's custom spacing to the large spacing and resets every other view before it to the normal spacing.
         /// This is necessary since the error, default card, or payment details form can be this view depending on the current state of the form submission.
         private func setUpdateButtonSpacing() {
-            
+
             let viewsBeforeUpdateButton = innerStackView.arrangedSubviews.dropLast()
-            
+
             guard let lastVisibleView = viewsBeforeUpdateButton.last(where: { !$0.isHidden }) else {
                 return
             }
-            
+
             viewsBeforeUpdateButton.forEach { view in
                 innerStackView.setCustomSpacing(LinkUI.contentSpacing, after: view)
             }
-            
+
             innerStackView.setCustomSpacing(LinkUI.largeContentSpacing, after: lastVisibleView)
-            
+
         }
 
         func updatePaymentMethod() {
