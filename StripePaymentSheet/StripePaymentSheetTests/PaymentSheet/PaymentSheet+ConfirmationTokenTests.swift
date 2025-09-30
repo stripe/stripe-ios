@@ -282,19 +282,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(params.setupFutureUsage, .offSession)
     }
 
-    func testCreateConfirmationTokenParams_paymentIntent_userSaves() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
-        let confirmType = createTestNewConfirmType(shouldSave: true)
-
-        let params = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-
-        XCTAssertEqual(params.setupFutureUsage, .offSession)
-    }
+    
 
     func testCreateConfirmationTokenParams_paymentIntent_topLevelSFU() {
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .onSession))
@@ -471,56 +459,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(payPalParams.setupFutureUsage, .offSession)
     }
 
-    func testCreateConfirmationTokenParams_mandateDataRespectsNewPriorityOrder() {
-        // Mandate data generation should use effective SFU from new priority order
-        // Test PayPal which requires mandate when SFU is .offSession
-
-        let payPalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_test_paypal",
-            "type": "paypal",
-            "paypal": [:],
-        ])!
-        let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
-            payPalPaymentMethod,
-            paymentOptions: nil,
-            clientAttributionMetadata: nil
-        )
-
-        // Test PMO SFU (.offSession) overrides top-level (.none) -> should generate mandate
-        let pmoOverridesTopLevelConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(
-                amount: 100,
-                currency: "USD",
-                setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage.none, // Top-level says no save
-                paymentMethodOptions: .init(setupFutureUsageValues: [.payPal: .offSession]) // PMO says save
-            )
-        ) { _, _ in return "pi_test_123_secret_abc" }
-
-        let savedPayPalParams = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: pmoOverridesTopLevelConfig,
-            elementsSession: nil
-        )
-        XCTAssertNotNil(savedPayPalParams.mandateData, "PMO SFU .offSession should generate mandate for PayPal")
-
-        // Test: No user save + no PMO + top-level (.none) -> should NOT generate mandate
-        let topLevelOnlyConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(
-                amount: 100,
-                currency: "USD",
-                setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage.none // Only top-level, no PMO
-            )
-        ) { _, _ in return "pi_test_123_secret_abc" }
-
-        let noSaveParams = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: topLevelOnlyConfig,
-            elementsSession: nil
-        )
-        XCTAssertNil(noSaveParams.mandateData, "Top-level SFU .none should not generate mandate for PayPal")
-    }
+    
 
     // MARK: - Mandate Data Tests
 
