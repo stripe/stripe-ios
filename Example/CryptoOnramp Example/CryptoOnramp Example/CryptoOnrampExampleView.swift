@@ -120,10 +120,12 @@ struct CryptoOnrampExampleView: View {
                         KYCInfoView(coordinator: coordinator) {
                             flowCoordinator.advanceAfterKyc()
                         }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case .identity:
                         IdentityVerificationView(coordinator: coordinator) {
                             flowCoordinator.advanceAfterIdentity()
                         }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case let .wallets(customerId):
                         WalletSelectionView(
                             coordinator: coordinator,
@@ -131,15 +133,31 @@ struct CryptoOnrampExampleView: View {
                         ) { wallet in
                             flowCoordinator.advanceAfterWalletSelection(wallet)
                         }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     case let .payment(customerId, wallet):
-                        PaymentView(coordinator: coordinator, customerId: customerId, wallet: wallet) { response in
-                            flowCoordinator.advanceAfterPayment(createOnrampSessionResponse: response)
-                        }
-                    case let .authenticated(createOnrampSessionResponse):
-                        AuthenticatedView(
+                        PaymentView(
                             coordinator: coordinator,
-                            onrampSessionResponse: createOnrampSessionResponse
-                        )
+                            customerId: customerId,
+                            wallet: wallet
+                        ) { response, selectedPaymentMethodDescription in
+                            flowCoordinator.advanceAfterPayment(
+                                createOnrampSessionResponse: response,
+                                selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                            )
+                        }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
+                    case let .paymentSummary(createOnrampSessionResponse, selectedPaymentMethodDescription):
+                        PaymentSummaryView(
+                            coordinator: coordinator,
+                            onrampSessionResponse: createOnrampSessionResponse,
+                            selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                        ) { message in
+                            flowCoordinator.advanceAfterPaymentSummary(successfulCheckoutMessage: message)
+                        }
+                        .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
+                    case let .checkoutSuccess(message):
+                        CheckoutSuccessView(message: message)
+                            .authenticatedUserToolbar(coordinator: coordinator, flowCoordinator: flowCoordinator)
                     }
                 }
             }
