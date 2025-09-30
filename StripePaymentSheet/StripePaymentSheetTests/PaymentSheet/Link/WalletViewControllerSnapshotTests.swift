@@ -103,7 +103,8 @@ extension WalletViewControllerSnapshotTests {
             session: session,
             publishableKey: "pk_123",
             displayablePaymentDetails: nil,
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
 
         return PayWithLinkViewController.WalletViewController(

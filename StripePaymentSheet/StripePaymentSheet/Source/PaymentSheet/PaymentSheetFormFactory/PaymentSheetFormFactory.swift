@@ -101,19 +101,8 @@ class PaymentSheetFormFactory {
                 return false
             }
 
-            // If attestation is enabled for this app but the specific device doesn't support attestation, don't show inline signup: It's unlikely to provide a good experience. We'll only allow the web popup flow.
-            let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
-            if useAttestationEndpoints && !deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
-                return false
-            }
-
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
-
-            // In live mode, we only show signup if the customer hasn't used Link in the merchant app before.
-            // In test mode, we continue to show it to make testing easier.
-            let canShowSignup = !UserDefaults.standard.customerHasUsedLink || configuration.apiClient.isTestmode
-
-            return isAccountNotRegisteredOrMissing && canShowSignup
+            return isAccountNotRegisteredOrMissing
         }()
         let paymentMethodType: STPPaymentMethodType = {
             if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {

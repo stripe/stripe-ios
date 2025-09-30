@@ -36,6 +36,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             doNotLogConsumerFunnelEvent: false
         ) {
             result in
@@ -70,6 +71,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             doNotLogConsumerFunnelEvent: false
         ) { result in
             switch result {
@@ -103,6 +105,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             doNotLogConsumerFunnelEvent: false
         ) { result in
             switch result {
@@ -140,6 +143,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             countryCode: "US",
             consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             with: apiClient
         ) { result in
             switch result {
@@ -244,6 +248,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             countryCode: "US",
             consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             with: apiClient
         ) { result in
             switch result {

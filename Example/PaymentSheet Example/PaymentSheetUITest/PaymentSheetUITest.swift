@@ -436,41 +436,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertNotNil(successText.label.range(of: "Success!"))
     }
 
-    func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.applePayEnabled = .off
-        settings.currency = .eur
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-        let payButton = app.buttons["Pay €50.99"]
-
-        guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
-            XCTFail()
-            return
-        }
-        iDEAL.tap()
-
-        XCTAssertFalse(payButton.isEnabled)
-        let name = app.textFields["Full name"]
-        name.tap()
-        name.typeText("John Doe")
-        name.typeText(XCUIKeyboardKey.return.rawValue)
-
-        let bank = app.textFields["iDEAL Bank"]
-        bank.tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")
-        app.toolbars.buttons["Done"].tap()
-
-        payButton.tap()
-
-        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
-        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
-        webviewCloseButton.tap()
-    }
-
     func testUPIPaymentMethodPolling() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -1236,6 +1201,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ApplePay_ConfirmationToken_ServerSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
+        settings.mode = .paymentWithSetup
         settings.integrationType = .deferred_ssc_ct
         settings.apmsEnabled = .off
         loadPlayground(app, settings)

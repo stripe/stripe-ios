@@ -93,6 +93,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             if let confirmationTokenConfirmHandler = intentConfig.confirmationTokenConfirmHandler {
                 // Confirmation token flow
                 handleConfirmationTokenFlow(
+                    intentConfig: intentConfig,
                     paymentMethod: stpPaymentMethod,
                     paymentInformation: paymentInformation,
                     context: context,
@@ -123,6 +124,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     }
 
     private func handleConfirmationTokenFlow(
+        intentConfig: PaymentSheet.IntentConfiguration,
         paymentMethod: STPPaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext,
@@ -134,6 +136,15 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         confirmationTokenParams.paymentMethod = paymentMethod.stripeId
         confirmationTokenParams.returnURL = context.returnUrl
         confirmationTokenParams.clientAttributionMetadata = context.clientAttributionMetadata
+        confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: paymentMethod.customerId)
+        switch intentConfig.mode {
+        case .payment(_, _, let setupFutureUsage, _, _):
+            if let sfu = setupFutureUsage?.paymentIntentParamsValue {
+                confirmationTokenParams.setupFutureUsage = sfu
+            }
+        case .setup(_, let setupFutureUsage):
+            confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
+        }
 
         // Set shipping details if available
         if let shippingContact = paymentInformation.shippingContact,
