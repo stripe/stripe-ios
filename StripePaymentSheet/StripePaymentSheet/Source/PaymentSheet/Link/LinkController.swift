@@ -558,6 +558,7 @@ import UIKit
             apiClient: linkAccount.apiClient,
             cookieStore: linkAccount.cookieStore,
             useMobileEndpoints: linkAccount.useMobileEndpoints,
+            canSyncAttestationState: linkAccount.canSyncAttestationState,
             requestSurface: linkAccount.requestSurface
         )
     }
