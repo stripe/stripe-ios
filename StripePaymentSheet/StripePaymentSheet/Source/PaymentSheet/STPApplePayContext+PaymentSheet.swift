@@ -140,7 +140,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 clientSessionId: clientAttributionMetadata.clientSessionId,
                 elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
                 paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { STPClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
-                paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { STPClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) },
+                paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { STPClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) }
             )
         }
         confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: paymentMethod.customerId)
