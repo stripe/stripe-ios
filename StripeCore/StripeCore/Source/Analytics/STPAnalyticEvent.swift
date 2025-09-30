@@ -311,4 +311,7 @@ import Foundation
     case passiveCaptchaSuccess = "elements.captcha.passive.success"
     case passiveCaptchaError = "elements.captcha.passive.error"
     case passiveCaptchaAttach = "elements.captcha.passive.attach"
+
+    // MARK: - ClientAttributionMetadata
+    case clientAttributionMetadataInitFailed = "clientAttributionMetadataCreationFailed.init.failed"
 }

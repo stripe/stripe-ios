@@ -26,7 +26,7 @@ import Foundation
     /// The identifier string for the session
     @objc public let clientSessionId: String?
     /// The identifier string for the elements session
-    @objc public let elementsSessionConfigId: String?
+    @objc public let elementsSessionConfigId: String
     /// The source for the merchant integration
     @objc public let merchantIntegrationSource: String
     /// The subtype for the merchant integration
@@ -39,11 +39,12 @@ import Foundation
     @objc public let paymentMethodSelectionFlow: String?
 
     public init(clientSessionId: String? = AnalyticsHelper.shared.sessionID,
-                elementsSessionConfigId: String? = nil,
+                elementsSessionConfigId: String,
                 paymentIntentCreationFlow: IntentCreationFlow? = nil,
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
-        assert(!(clientSessionId?.isEmpty ?? true), "Client session id must not be empty.")
-        assert(!(elementsSessionConfigId?.isEmpty ?? true), "Elements session config id must not be empty.")
+        if clientSessionId == nil {
+            STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .clientAttributionMetadataInitFailed, params: ["client_session_id": "nil"]))
+        }
         self.clientSessionId = clientSessionId
         self.elementsSessionConfigId = elementsSessionConfigId
         self.merchantIntegrationSource = "elements"
