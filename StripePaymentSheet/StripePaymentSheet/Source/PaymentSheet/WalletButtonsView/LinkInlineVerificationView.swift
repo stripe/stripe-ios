@@ -173,7 +173,8 @@ enum Stubs {
             session: isRegistered ? Self.consumerSession : nil,
             publishableKey: "pk_test_123",
             displayablePaymentDetails: paymentMethodType.map { Self.displayablePaymentDetails(paymentMethodType: $0) },
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }
