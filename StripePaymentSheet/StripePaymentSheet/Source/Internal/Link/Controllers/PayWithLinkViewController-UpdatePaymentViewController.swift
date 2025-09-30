@@ -138,28 +138,24 @@ extension PayWithLinkViewController {
 
         }
 
-        /// The spacing before the update card button should always be `largeContentSpacing` to give visual balance. This method finds the view that is visible before the update card (only `view.isHidden = false` can have custom spacing) and sets it's custom spacing to the large spacing and resets every other view before it to the normal spacing. This is necessary since the error, default card, or payment details form can be this view depending on the current state of the form submission.
+        /// The spacing before the update card button should always be `largeContentSpacing` to give visual balance.
+        /// This method finds the view that is visible before the update card (only `view.isHidden = false` can have custom spacing)
+        /// and sets it's custom spacing to the large spacing and resets every other view before it to the normal spacing.
+        /// This is necessary since the error, default card, or payment details form can be this view depending on the current state of the form submission.
         private func setUpdateButtonSpacing() {
-
-            // all of the arranged subviews except the update card view
-            let allButUpdateView = innerStackView.arrangedSubviews[innerStackView.arrangedSubviews.startIndex ..< innerStackView.arrangedSubviews.endIndex.advanced(by: -1)]
-
-            // find the view closest to the update card view that isn't hidden
-            let viewBeforeUpdateIndex = allButUpdateView.lastIndex { subview in
-                subview.isHidden == false
-            }
-
-            guard let viewBeforeUpdateIndex else {
+            
+            let viewsBeforeUpdateButton = innerStackView.arrangedSubviews.dropLast()
+            
+            guard let lastVisibleView = viewsBeforeUpdateButton.last(where: { !$0.isHidden }) else {
                 return
             }
-
-            // reset all the previous view's spacing since they could have previously been the view with large spacing
-            for subview in innerStackView.arrangedSubviews[innerStackView.arrangedSubviews.startIndex ..< viewBeforeUpdateIndex] {
-                innerStackView.setCustomSpacing(LinkUI.contentSpacing, after: subview)
+            
+            viewsBeforeUpdateButton.forEach { view in
+                innerStackView.setCustomSpacing(LinkUI.contentSpacing, after: view)
             }
-
-            innerStackView.setCustomSpacing(LinkUI.largeContentSpacing, after: innerStackView.arrangedSubviews[viewBeforeUpdateIndex])
-
+            
+            innerStackView.setCustomSpacing(LinkUI.largeContentSpacing, after: lastVisibleView)
+            
         }
 
         func updatePaymentMethod() {
