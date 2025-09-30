@@ -43,6 +43,15 @@ final class LinkHintMessageView: UIView {
             }
         }
 
+        var textStyle: LinkUI.TextStyle {
+            switch self {
+            case .filled, .outlined:
+                    .detail
+            case .error:
+                    .caption
+            }
+        }
+
         var iconColor: UIColor {
             switch self {
             case .filled, .outlined:
@@ -98,7 +107,7 @@ final class LinkHintMessageView: UIView {
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.textColor = style.textColor
-        label.font = LinkUI.font(forTextStyle: .detail)
+        label.font = LinkUI.font(forTextStyle: style.textStyle)
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         return label
