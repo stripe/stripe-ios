@@ -395,7 +395,7 @@ extension PaymentSheet {
                     }
                 }
             }
-            let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethod, linkAccount, shouldSave in
+            let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool, STPClientAttributionMetadata?) -> Void = { paymentMethod, linkAccount, shouldSave, clientAttributionMetadata in
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
@@ -419,6 +419,7 @@ extension PaymentSheet {
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.radarOptions = radarOptions
                         paymentIntentParams.mandateData = mandateData
+                        paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
@@ -435,6 +436,7 @@ extension PaymentSheet {
                         setupIntentParams.returnURL = configuration.returnURL
                         setupIntentParams.mandateData = mandateData
                         setupIntentParams.radarOptions = radarOptions
+                        setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
                             with: authenticationContext,
@@ -447,7 +449,7 @@ extension PaymentSheet {
                         )
                     case .deferredIntent(let intentConfig):
                         routeDeferredIntentConfirmation(
-                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata),
                             configuration: configuration,
                             intentConfig: intentConfig,
                             authenticationContext: authenticationContext,
@@ -525,7 +527,7 @@ extension PaymentSheet {
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
-                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
+                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave, nil)
                                     case .failure(let error):
                                         STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
@@ -595,7 +597,7 @@ extension PaymentSheet {
                     }
                 }
             case .withPaymentMethod(let paymentMethod):
-                confirmWithPaymentMethod(paymentMethod, nil, false)
+                confirmWithPaymentMethod(paymentMethod, nil, false, clientAttributionMetadata)
             case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
                 let allowRedisplay = paymentDetails.computeAllowRedisplay(
@@ -614,7 +616,7 @@ extension PaymentSheet {
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
-                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave)
+                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave, nil)
                         case .failure(let error):
                             STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                             paymentHandlerCompletion(.failed, error as NSError)
