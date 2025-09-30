@@ -10,6 +10,9 @@ import Foundation
 
 // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
 @_spi(STP) public class ClientAttributionMetadata: NSObject, Encodable {
+    public enum Error: Swift.Error {
+        case missingSessionId
+    }
 
     public enum IntentCreationFlow: String {
         case standard
@@ -43,7 +46,7 @@ import Foundation
                 paymentIntentCreationFlow: IntentCreationFlow? = nil,
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
         if clientSessionId == nil {
-            STPAnalyticsClient.sharedClient.log(analytic: GenericAnalytic(event: .clientAttributionMetadataInitFailed, params: ["client_session_id": "nil"]))
+            STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .clientAttributionMetadataInitFailed, error: Error.missingSessionId))
         }
         self.clientSessionId = clientSessionId
         self.elementsSessionConfigId = elementsSessionConfigId
