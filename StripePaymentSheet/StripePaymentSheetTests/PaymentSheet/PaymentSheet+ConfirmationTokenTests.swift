@@ -282,8 +282,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(params.setupFutureUsage, .offSession)
     }
 
-    
-
     func testCreateConfirmationTokenParams_paymentIntent_topLevelSFU() {
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .onSession))
         let confirmType = createTestNewConfirmType(shouldSave: false)
@@ -458,8 +456,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         )
         XCTAssertEqual(payPalParams.setupFutureUsage, .offSession)
     }
-
-    
 
     // MARK: - Mandate Data Tests
 
