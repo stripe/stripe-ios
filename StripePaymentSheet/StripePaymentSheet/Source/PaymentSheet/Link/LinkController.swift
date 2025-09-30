@@ -502,7 +502,6 @@ import UIKit
 
         apiClient.updatePhoneNumber(
             consumerSessionClientSecret: consumerSessionClientSecret,
-            consumerAccountPublishableKey: linkAccount.publishableKey,
             phoneNumber: phoneNumber,
             requestSurface: requestSurface
         ) { [weak self] result in
@@ -523,14 +522,13 @@ import UIKit
             completion(.success(()))
         }
 
-        guard let session = linkAccount?.currentSession, let publishableKey = linkAccount?.publishableKey else {
+        guard let session = linkAccount?.currentSession else {
             // If no Link account is available, treat this as a success.
             clearLinkAccountContextAndComplete()
             return
         }
 
         session.logout(
-            consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface,
             completion: { result in
                 switch result {
@@ -606,7 +604,6 @@ import UIKit
         apiClient.sharePaymentDetails(
             for: consumerSessionClientSecret,
             id: paymentDetails.stripeID,
-            consumerAccountPublishableKey: nil,
             overridePublishableKey: overridePublishableKey,
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
