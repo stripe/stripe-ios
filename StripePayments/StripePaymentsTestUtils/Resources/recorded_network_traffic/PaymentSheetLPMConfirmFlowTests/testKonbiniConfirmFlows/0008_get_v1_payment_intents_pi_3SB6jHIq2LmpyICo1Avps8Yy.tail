@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RtWSgIq2LmpyICo2GjbJ6IU\?client_secret=pi_3RtWSgIq2LmpyICo2GjbJ6IU_secret_Upg2WcRHq5OkntmRHxzaROe8M&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SB6jHIq2LmpyICo1Avps8Yy\?client_secret=pi_3SB6jHIq2LmpyICo1Avps8Yy_secret_p3UtCGWTeFFVoV7vDH2xvqzi4&expand%5B0%5D=payment_method$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=DbtWFNIk90mSvynJZp1_C0AG3eibBJ2MSLl4_wMFU_93D3qW6lfIaLcN9RaLoPf-u3AfEOz-B3RP6fSw
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=afx9J8uCaK4wojJPqwv5aaO_U8UWbdo2t-g9eMT1y36OGpBuks3fOgDpZO4GO3ANncEjR50o3eqayQgR
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 07 Aug 2025 16:14:40 GMT
+Date: Thu, 25 Sep 2025 04:24:28 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 2078
+Content-Length: 2119
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_9vCac12tCz9lc1
+request-id: req_EznzGQozU4kjQ2
 
 {
   "payment_method_configuration_details" : null,
@@ -40,24 +40,24 @@ request-id: req_9vCac12tCz9lc1
     "konbini_display_details" : {
       "stores" : {
         "ministop" : {
-          "confirmation_number" : "39945794274",
+          "confirmation_number" : "40213430677",
           "payment_code" : "123456"
         },
         "seicomart" : {
-          "confirmation_number" : "39945794274",
+          "confirmation_number" : "40213430677",
           "payment_code" : "123456"
         },
         "familymart" : {
-          "confirmation_number" : "39945794274",
+          "confirmation_number" : "40213430677",
           "payment_code" : "123456"
         },
         "lawson" : {
-          "confirmation_number" : "39945794274",
+          "confirmation_number" : "40213430677",
           "payment_code" : "123456"
         }
       },
-      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/konbini\/voucher\/test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLF9TcEFvSzh5SWtqNGo4S2pSemJUUjB4UGNrM2NKdzNp0100YXvtqlho",
-      "expires_at" : 1754924399
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/konbini\/voucher\/test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLF9UN0xRYVEyZnA0NkJRSUVJMzhCMlZkVGFpYXpKaGNu0100catkfiUU",
+      "expires_at" : 1759071599
     }
   },
   "payment_method" : {
@@ -65,7 +65,7 @@ request-id: req_9vCac12tCz9lc1
     "konbini" : {
 
     },
-    "id" : "pm_1RtWShIq2LmpyICo9YGGjiPF",
+    "id" : "pm_1SB6jGIq2LmpyICo5O3QmDP2",
     "billing_details" : {
       "email" : "foo@bar.com",
       "phone" : null,
@@ -81,25 +81,26 @@ request-id: req_9vCac12tCz9lc1
       }
     },
     "livemode" : false,
-    "created" : 1754583279,
+    "created" : 1758774266,
     "allow_redisplay" : "unspecified",
     "type" : "konbini",
     "customer" : null
   },
-  "client_secret" : "pi_3RtWSgIq2LmpyICo2GjbJ6IU_secret_Upg2WcRHq5OkntmRHxzaROe8M",
-  "id" : "pi_3RtWSgIq2LmpyICo2GjbJ6IU",
+  "client_secret" : "pi_3SB6jHIq2LmpyICo1Avps8Yy_secret_p3UtCGWTeFFVoV7vDH2xvqzi4",
+  "id" : "pi_3SB6jHIq2LmpyICo1Avps8Yy",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
 
     }
   },
+  "excluded_payment_method_types" : null,
   "processing" : null,
   "receipt_email" : null,
   "payment_method_types" : [
     "konbini"
   ],
   "setup_future_usage" : null,
-  "created" : 1754583278,
+  "created" : 1758774267,
   "description" : null
 }

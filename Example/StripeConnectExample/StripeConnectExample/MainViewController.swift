@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-@_spi(PrivateBetaConnect) import StripeConnect
+@_spi(PreviewConnect) import StripeConnect
 import SwiftUI
 import UIKit
 
