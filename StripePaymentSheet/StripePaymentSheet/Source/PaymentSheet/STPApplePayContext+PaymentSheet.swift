@@ -135,14 +135,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         let confirmationTokenParams = STPConfirmationTokenParams()
         confirmationTokenParams.paymentMethod = paymentMethod.stripeId
         confirmationTokenParams.returnURL = context.returnUrl
-        if let clientAttributionMetadata = context.clientAttributionMetadata {
-            confirmationTokenParams.clientAttributionMetadata = STPClientAttributionMetadata(
-                clientSessionId: clientAttributionMetadata.clientSessionId,
-                elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
-                paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { STPClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
-                paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { STPClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) }
-            )
-        }
+        confirmationTokenParams.clientAttributionMetadata = makeClientAttributionMetadata(from: context.clientAttributionMetadata)
         confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: paymentMethod.customerId)
         switch intentConfig.mode {
         case .payment(_, _, let setupFutureUsage, _, _):
@@ -411,12 +404,23 @@ private func makeRequiredShippingDetails(from configuration: PaymentElementConfi
     return requiredPKContactFields
 }
 
-private func makeClientAttributionMetadata(from clientAttributionMetadata: STPClientAttributionMetadata) -> ClientAttributionMetadata {
+private func makeClientAttributionMetadata(from clientAttributionMetadata: STPClientAttributionMetadata?) -> ClientAttributionMetadata? {
+    guard let clientAttributionMetadata else { return nil }
     return ClientAttributionMetadata(
         clientSessionId: clientAttributionMetadata.clientSessionId,
         elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
         paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { ClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
         paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { ClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) }
+    )
+}
+
+private func makeClientAttributionMetadata(from clientAttributionMetadata: ClientAttributionMetadata?) -> STPClientAttributionMetadata? {
+    guard let clientAttributionMetadata else { return nil }
+    return STPClientAttributionMetadata(
+        clientSessionId: clientAttributionMetadata.clientSessionId,
+        elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
+        paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { STPClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
+        paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { STPClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) }
     )
 }
 
