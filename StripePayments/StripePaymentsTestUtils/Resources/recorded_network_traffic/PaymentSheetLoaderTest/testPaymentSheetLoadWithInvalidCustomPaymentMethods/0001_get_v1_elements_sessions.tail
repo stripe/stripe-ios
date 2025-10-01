@@ -100,7 +100,6 @@ Content-Type: application/json
     "elements_disable_express_checkout_button_amazon_pay" : false,
     "elements_enable_external_payment_method_dbarai" : false,
     "elements_enable_external_payment_method_payit" : false,
-    "elements_enable_blik" : true,
     "elements_disable_link_email_otp" : false,
     "elements_enable_external_payment_method_gopay" : false,
     "elements_enable_external_payment_method_vipps" : false,
