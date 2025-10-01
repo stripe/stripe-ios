@@ -372,6 +372,12 @@ extension STPElementsSession {
     var linkSignupOptInInitialValue: Bool {
         linkFlags["link_sign_up_opt_in_initial_value"] == true
     }
+
+    var shouldLookupForLinkHoldbackExperiment: Bool {
+        let isLookupForHoldbackEnabled = flags["elements_disable_link_global_holdback_lookup"] != true
+        let canSkipLookupForHoldback = experimentsData?.experimentAssignments["link_global_holdback"] == nil
+        return isLookupForHoldbackEnabled && !canSkipLookupForHoldback
+    }
 }
 
 extension STPElementsSession {
