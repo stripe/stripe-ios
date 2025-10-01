@@ -101,4 +101,18 @@ extension LinkStubs {
         )
     }
 
+    static func account(
+        email: String = "user@example.com",
+        session: ConsumerSession? = Self.consumerSession()
+    ) -> PaymentSheetLinkAccount {
+        .init(
+            email: email,
+            session: session,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+    }
+
 }
