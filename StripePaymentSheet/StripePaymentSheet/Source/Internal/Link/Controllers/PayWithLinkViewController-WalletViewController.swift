@@ -94,10 +94,20 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var cvcElement: TextFieldElement = {
-            let configuration = TextFieldElement.CVCConfiguration(cardBrandProvider: {
-                [weak self] in
+            let defaultValue = {
+                if let paymentMethod = viewModel.selectedPaymentMethod {
+                    return linkAccount.collectedCVCs[paymentMethod.stripeID]
+                } else {
+                    return nil
+                }
+            }()
+
+            let configuration = TextFieldElement.CVCConfiguration(
+                defaultValue: defaultValue,
+                cardBrandProvider: { [weak self] in
                     return self?.viewModel.cardBrand ?? .unknown
-            })
+                }
+            )
 
             return TextFieldElement(configuration: configuration, theme: theme)
         }()
@@ -322,6 +332,7 @@ extension PayWithLinkViewController {
                 if viewModel.shouldRecollectCardCVC {
                     if case let .card(card) = paymentDetails.details {
                         card.cvc = viewModel.cvc
+                        linkAccount.collectedCVCs[paymentDetails.stripeID] = card.cvc
                     }
                 }
 
