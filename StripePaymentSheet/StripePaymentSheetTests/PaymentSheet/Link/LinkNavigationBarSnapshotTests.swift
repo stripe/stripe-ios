@@ -17,12 +17,16 @@ import UIKit
 // @iOS26
 class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
 
-    override static func setUp() {
+    override func setUp() {
+        
+        super.setUp()
+        
         if #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
             configuration.appearance.applyLiquidGlass()
             LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
         }
+                
     }
 
     func testDefault() {
@@ -90,7 +94,7 @@ extension LinkNavigationBarSnapshotTests {
     }
 
     fileprivate func makeSUT(title: String? = nil) -> LinkSheetNavigationBar {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: .init())
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
         sut.title = title
         return sut
     }
