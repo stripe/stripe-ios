@@ -179,7 +179,9 @@ class LinkSheetNavigationBar: SheetNavigationBar {
               let trailingConstraint = titleTrailingConstraint,
               let leadingConstraint = titleLeadingConstraint else { return }
 
-        // When this method is called initially the width of the view is 0. Activitating the constraint system at this time causes layout conflict since nothing can layout in width 0, causing unsatisfiable constraint errors. Hold off on laying anything out until the self has width.
+        // When this method is called initially the width of the view is 0.
+        // Activitating the constraint system at this time causes a layout conflict since nothing can layout in width 0,
+        // Hold off on laying anything out until self has width.
         guard bounds.width > 0 else { return }
 
         // Update leading constraint to latest leftmostElement
