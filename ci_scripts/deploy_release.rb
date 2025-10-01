@@ -2,6 +2,7 @@
 
 require_relative 'release_common'
 require_relative 'vm_tools'
+require_relative 'get_bundle_version'
 
 # This should generally be the minimum Xcode version supported by the App Store, as the
 # compiled XCFrameworks won't be usable on older versions.
@@ -89,6 +90,9 @@ end
 
 def upload_framework
   return if @is_dry_run
+  # Validate the downloaded xcframework bundle version before uploading
+  bundle_version = get_bundle_version('build/Stripe.xcframework.zip')
+  raise "build/Stripe.xcframework bundle version (#{bundle_version}) doesn't match the VERSION file (#{@version})!" unless bundle_version == @version
 
   # Use the reference to the release object from `create_release` if it exists,
   # otherwise fetch it.
