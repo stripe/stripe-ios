@@ -14,6 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+// @iOS26
 class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
 
     func testDefault() {
