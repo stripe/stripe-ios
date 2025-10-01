@@ -13,9 +13,9 @@ import XCTest
 
 class PayWithLinkViewController_NewPaymentViewControllerSnapshotTests: STPSnapshotTestCase {
 
-    override func setUpWithError() throws {
+    override func setUp() {
 
-        try super.setUpWithError()
+        super.setUp()
 
         if #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
@@ -62,17 +62,15 @@ extension PayWithLinkViewController_NewPaymentViewControllerSnapshotTests {
         let (intent, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
 
         var paymentSheetConfiguration = PaymentSheet.Configuration()
-        paymentSheetConfiguration.cardBrandAcceptance = .all
 
         return PayWithLinkViewController.NewPaymentViewController(
             linkAccount: LinkStubs.account(),
             context: .init(
                 intent: intent,
                 elementsSession: elementsSession,
-                configuration: paymentSheetConfiguration,
+                configuration: PaymentSheet.Configuration(),
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
-                shouldShowSecondaryCta: true,
                 canSkipWalletAfterVerification: false,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
@@ -82,4 +80,5 @@ extension PayWithLinkViewController_NewPaymentViewControllerSnapshotTests {
         )
 
     }
+    
 }
