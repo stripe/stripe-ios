@@ -1,0 +1,72 @@
+//
+//  AuthenticatedUserToolbarItemModifier.swift
+//  CryptoOnramp Example
+//
+//  Created by Michael Liberatore on 9/29/25.
+//
+
+import SwiftUI
+
+@_spi(STP)
+import StripeCryptoOnramp
+
+extension View {
+
+    /// Convenience modifier to show a trailing toolbar item for accessing user-related actions, such as "log out".
+    /// - Parameters:
+    ///   - coordinator: The coordinator used to perform user-related actions.
+    ///   - flowCoordinator: The flow coordinator used to manipulate the navigation stack.
+    /// - Returns: The modified view.
+    func authenticatedUserToolbar(coordinator: CryptoOnrampCoordinator, flowCoordinator: CryptoOnrampFlowCoordinator?) -> some View {
+        self.modifier(AuthenticatedUserToolbarItemModifier(coordinator: coordinator, flowCoordinator: flowCoordinator))
+    }
+}
+
+private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
+    let coordinator: CryptoOnrampCoordinator
+    let flowCoordinator: CryptoOnrampFlowCoordinator?
+
+    @Environment(\.isLoading) private var isLoading
+
+    func body(content: Content) -> some View {
+        content
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button(role: .destructive) {
+                        logOut()
+                    } label: {
+                        Label("Log out", systemImage: "rectangle.portrait.and.arrow.right")
+                            .tint(.red)
+                    }
+                } label: {
+                    Image(systemName: "person.fill")
+                }
+                .disabled(isLoading.wrappedValue)
+                .opacity(isLoading.wrappedValue ? 0.5 : 1)
+                .tint(.accentColor)
+            }
+        }
+     }
+
+    private func logOut() {
+        isLoading.wrappedValue = true
+
+        Task {
+            do {
+                try await coordinator.logOut()
+
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    flowCoordinator?.path = []
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    flowCoordinator?.path = []
+                    print("Log out failed. Still returning to root view. Error: \(error)")
+                }
+            }
+        }
+    }
+}

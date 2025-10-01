@@ -1,3 +1,11 @@
+## 24.24.1 2025-09-29
+
+### Connect
+* [Fixed] Renamed `PrivateBetaConnect` to `PreviewConnect`.
+
+### PaymentSheet
+* [Fixed] Fixed a navigation bar shadow bug when `appearance.navigationBarStyle` is `glass` (iOS 26.1 fixed the underlying API). 
+
 ## 24.24.0 2025-09-22
 
 ### Connect
