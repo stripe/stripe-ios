@@ -38,6 +38,7 @@ extension STPIssuingCardPin: STPAPIResponseDecodable {
             return nil
         }
 
+        // ☠️ This is wrong - api errors should be represented as errors, and `STPPinManagementService` doesn't return this object in the event of errors anyways! We'll keep it around to avoid breaking users, it's not worth correcting b/c this is deprecated.
         if let error = dict["error"] as? [AnyHashable: Any] {
             // Return object to be able to read errors
             let pinObject = STPIssuingCardPin(pin: nil, error: error, allResponseFields: dict)
