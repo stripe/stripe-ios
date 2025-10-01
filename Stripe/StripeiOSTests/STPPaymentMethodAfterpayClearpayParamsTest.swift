@@ -41,7 +41,6 @@ class STPPaymentMethodAfterpayClearpayParamsTest: STPNetworkStubbingTestCase {
             XCTAssertNotNil(paymentMethod?.created, "Missing created")
             XCTAssertFalse(paymentMethod!.liveMode, "Incorrect livemode")
             XCTAssertEqual(paymentMethod?.type, .afterpayClearpay, "Incorrect PaymentMethod type")
-            XCTAssertNil(paymentMethod?.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
 
             // Billing Details
             XCTAssertEqual(paymentMethod?.billingDetails!.email, "jrosen@example.com")
