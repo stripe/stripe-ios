@@ -55,7 +55,7 @@ import Foundation
         self.timeout = timeout
     }
 
-    public init (passiveCaptcha: PassiveCaptcha) {
+    public init(passiveCaptcha: PassiveCaptcha) {
         self.passiveCaptcha = passiveCaptcha
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
@@ -80,22 +80,21 @@ import Foundation
                                             host: "stripecdn.com")
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
-                    // Prevent Swift Task continuation misuse with atomic flag and safer handling - hcaptcha.validate can be called unexpectedly multiple times
-                    let lock = NSLock()
+                    // Prevent Swift Task continuation misuse - the validate completion block can get called from multiple places
                     var nillableContinuation: CheckedContinuation<String, Error>? = continuation
 
                     // Weak reference to break retain cycles
                     hcaptcha.didFinishLoading { [weak hcaptcha] in
                         hcaptcha?.validate { result in
-                            lock.lock()
-                            defer { lock.unlock() }
-                            do {
-                                let token = try result.dematerialize()
-                                nillableContinuation?.resume(returning: token)
-                                nillableContinuation = nil
-                            } catch {
-                                nillableContinuation?.resume(throwing: error)
-                                nillableContinuation = nil
+                            Task { @MainActor in
+                                do {
+                                    let token = try result.dematerialize()
+                                    nillableContinuation?.resume(returning: token)
+                                    nillableContinuation = nil
+                                } catch {
+                                    nillableContinuation?.resume(throwing: error)
+                                    nillableContinuation = nil
+                                }
                             }
                         }
                     }

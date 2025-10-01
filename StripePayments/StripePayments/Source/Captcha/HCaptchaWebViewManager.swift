@@ -78,34 +78,28 @@ internal class HCaptchaWebViewManager: NSObject {
     /// Keep error If it happens before validate call
     fileprivate var lastError: HCaptchaError?
 
-    private var _webView: WKWebView?
-
     /// The webview that executes JS code
     lazy var webView: WKWebView = {
-         let webview = {
-             let debug = Log.minLevel == .debug
-             let webview = WKWebView(
-                 frame: CGRect(origin: CGPoint.zero, size: webViewInitSize),
-                 configuration: self.buildConfiguration()
-             )
-             webview.accessibilityIdentifier = "webview"
-             webview.accessibilityTraits = UIAccessibilityTraits.link
-             webview.isHidden = true
-             if debug {
-                 if #available(iOS 16.4, *) {
-                     webview.perform(Selector(("setInspectable:")), with: true)
-                 }
-                 webview.evaluateJavaScript("navigator.userAgent") { (result, _) in
-                     Log.debug("WebViewManager WKWebView UserAgent: \(result ?? "nil")")
-                 }
-             }
-             Log.debug("WebViewManager WKWebView instance created")
+        let debug = Log.minLevel == .debug
+        let webview = WKWebView(
+            frame: CGRect(origin: CGPoint.zero, size: webViewInitSize),
+            configuration: self.buildConfiguration()
+        )
+        webview.accessibilityIdentifier = "webview"
+        webview.accessibilityTraits = UIAccessibilityTraits.link
+        webview.isHidden = true
+        if debug {
+            if #available(iOS 16.4, *) {
+                webview.perform(Selector(("setInspectable:")), with: true)
+            }
+            webview.evaluateJavaScript("navigator.userAgent") { (result, _) in
+                Log.debug("WebViewManager WKWebView UserAgent: \(result ?? "nil")")
+            }
+        }
+        Log.debug("WebViewManager WKWebView instance created")
 
-             return webview
-         }()
-         _webView = webview  // Store reference
-         return webview
-     }()
+        return webview
+    }()
 
     /// Responsible for external link handling
     internal let urlOpener: HCaptchaURLOpener
@@ -140,49 +134,6 @@ internal class HCaptchaWebViewManager: NSObject {
 
                 self.setupWebview(html: self.formattedHTML, url: self.baseURL)
             }
-        }
-    }
-
-    deinit {
-        Log.debug("WebViewManager.deinit")
-
-        // Stop
-        stopInitWebViewConfiguration = true
-
-        // Capture references for cleanup
-        let webViewToClean = _webView
-        let observerToRemove = observer
-
-        // Clean up on the main thread
-        if Thread.isMainThread {
-            Self.cleanup(webView: webViewToClean, observer: observerToRemove)
-        } else {
-            DispatchQueue.main.async {
-                Self.cleanup(webView: webViewToClean, observer: observerToRemove)
-            }
-        }
-
-        // Mark result as handled to prevent any pending callbacks
-        resultHandled = true
-
-        // Clear decoder reference
-        decoder = nil
-    }
-
-    private static func cleanup(webView: WKWebView?, observer: NSObjectProtocol?) {
-        // Remove observer
-        if let observer {
-            NotificationCenter.default.removeObserver(observer)
-        }
-
-        if let webView {
-            // Remove script message handlers
-            webView.configuration.userContentController.removeScriptMessageHandler(forName: "hcaptcha")
-
-            // Clean up webview
-            webView.stopLoading()
-            webView.navigationDelegate = nil
-            webView.removeFromSuperview()
         }
     }
 
