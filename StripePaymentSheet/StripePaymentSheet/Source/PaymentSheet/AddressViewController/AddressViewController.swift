@@ -179,8 +179,8 @@ public class AddressViewController: UIViewController {
 
         guard isCompatible else { return nil }
 
-        // Default to checked if shipping address (defaultValues) is empty or not provided
-        let isSelectedByDefault = configuration.defaultValues.address.isEmpty
+        // Default to checked if shipping address (defaultValues) is empty and billing address has at least line1
+        let isSelectedByDefault = configuration.defaultValues.address.isEmpty && billingAddress.address.line1?.nonEmpty != nil
 
         return CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
