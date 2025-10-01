@@ -6,7 +6,6 @@
 //
 
 import StripeCoreTestUtils
-import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
@@ -80,5 +79,5 @@ extension PayWithLinkViewController_NewPaymentViewControllerSnapshotTests {
         )
 
     }
-    
+
 }
