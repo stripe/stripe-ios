@@ -16,7 +16,7 @@ import UIKit
 
 // @iOS26
 class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
-    
+
     override static func setUp() {
         if #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
@@ -24,7 +24,7 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
             LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
         }
     }
-    
+
     func testDefault() {
         let sut = makeSUT()
         verify(sut)
