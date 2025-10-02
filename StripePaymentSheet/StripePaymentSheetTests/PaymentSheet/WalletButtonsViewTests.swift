@@ -271,4 +271,200 @@ class WalletButtonsViewTests: XCTestCase {
         // Verify Link is not shown when disabled, other wallets maintain order
         XCTAssertEqual(view.orderedWallets, [.applePay, .shopPay])
     }
+
+    func testClickHandlerInvokedWithCorrectExpressType() async {
+        // Create mock elements session with Link and Apple Pay
+        let elementsSession = STPElementsSession(
+            allResponseFields: [:],
+            sessionID: "test_session",
+            orderedPaymentMethodTypes: [.card, .link],
+            orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
+            unactivatedPaymentMethodTypes: [],
+            countryCode: nil,
+            merchantCountryCode: nil,
+            merchantLogoUrl: nil,
+            linkSettings: nil,
+            experimentsData: nil,
+            flags: [:],
+            paymentMethodSpecs: nil,
+            cardBrandChoice: nil,
+            isApplePayEnabled: true,
+            externalPaymentMethods: [],
+            customPaymentMethods: [],
+            passiveCaptcha: nil,
+            customer: nil
+        )
+
+        // Create mock flow controller
+        var psConfig = PaymentSheet.Configuration()
+        psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
+        let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
+
+        var capturedExpressType: ExpressType?
+        let clickHandler: WalletButtonsView.WalletButtonClickHandler = { expressType in
+            capturedExpressType = expressType
+            return true
+        }
+
+        // Initialize wallet buttons view with click handler
+        let view = WalletButtonsView(flowController: flowController, confirmHandler: { _ in }, clickHandler: clickHandler)
+
+        // Simulate button tap
+        await view.checkoutTapped(.applePay)
+
+        // Verify handler was called with correct express type
+        XCTAssertEqual(capturedExpressType, .applePay)
+    }
+
+    func testClickHandlerReturningTrueAllowsCheckout() async {
+        // Create mock elements session with Link and Apple Pay
+        let elementsSession = STPElementsSession(
+            allResponseFields: [:],
+            sessionID: "test_session",
+            orderedPaymentMethodTypes: [.card, .link],
+            orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
+            unactivatedPaymentMethodTypes: [],
+            countryCode: nil,
+            merchantCountryCode: nil,
+            merchantLogoUrl: nil,
+            linkSettings: nil,
+            experimentsData: nil,
+            flags: [:],
+            paymentMethodSpecs: nil,
+            cardBrandChoice: nil,
+            isApplePayEnabled: true,
+            externalPaymentMethods: [],
+            customPaymentMethods: [],
+            passiveCaptcha: nil,
+            customer: nil
+        )
+
+        // Create mock flow controller
+        var psConfig = PaymentSheet.Configuration()
+        psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
+        let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
+
+        var handlerWasCalled = false
+        var confirmHandlerWasCalled = false
+
+        let clickHandler: WalletButtonsView.WalletButtonClickHandler = { _ in
+            handlerWasCalled = true
+            return true
+        }
+
+        // Initialize wallet buttons view with click handler
+        let view = WalletButtonsView(flowController: flowController, confirmHandler: { _ in
+            confirmHandlerWasCalled = true
+        }, clickHandler: clickHandler)
+
+        // Simulate button tap
+        await view.checkoutTapped(.applePay)
+
+        // Verify handler was called
+        XCTAssertTrue(handlerWasCalled)
+        // Note: We can't reliably test if confirm was called since Apple Pay requires actual device capabilities
+    }
+
+    func testClickHandlerReturningFalseCancelsCheckout() async {
+        // Create mock elements session with Link and Apple Pay
+        let elementsSession = STPElementsSession(
+            allResponseFields: [:],
+            sessionID: "test_session",
+            orderedPaymentMethodTypes: [.card, .link],
+            orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
+            unactivatedPaymentMethodTypes: [],
+            countryCode: nil,
+            merchantCountryCode: nil,
+            merchantLogoUrl: nil,
+            linkSettings: nil,
+            experimentsData: nil,
+            flags: [:],
+            paymentMethodSpecs: nil,
+            cardBrandChoice: nil,
+            isApplePayEnabled: true,
+            externalPaymentMethods: [],
+            customPaymentMethods: [],
+            passiveCaptcha: nil,
+            customer: nil
+        )
+
+        // Create mock flow controller
+        var psConfig = PaymentSheet.Configuration()
+        psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
+        let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
+
+        var handlerWasCalled = false
+        var confirmHandlerWasCalled = false
+
+        let clickHandler: WalletButtonsView.WalletButtonClickHandler = { _ in
+            handlerWasCalled = true
+            return false // Cancel checkout
+        }
+
+        // Initialize wallet buttons view with click handler
+        let view = WalletButtonsView(flowController: flowController, confirmHandler: { _ in
+            confirmHandlerWasCalled = true
+        }, clickHandler: clickHandler)
+
+        // Simulate button tap
+        await view.checkoutTapped(.applePay)
+
+        // Verify handler was called
+        XCTAssertTrue(handlerWasCalled)
+        // Verify confirm handler was NOT called (checkout was cancelled)
+        XCTAssertFalse(confirmHandlerWasCalled)
+    }
+
+    func testNoClickHandlerAllowsNormalCheckout() async {
+        // Create mock elements session with Link and Apple Pay
+        let elementsSession = STPElementsSession(
+            allResponseFields: [:],
+            sessionID: "test_session",
+            orderedPaymentMethodTypes: [.card, .link],
+            orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
+            unactivatedPaymentMethodTypes: [],
+            countryCode: nil,
+            merchantCountryCode: nil,
+            merchantLogoUrl: nil,
+            linkSettings: nil,
+            experimentsData: nil,
+            flags: [:],
+            paymentMethodSpecs: nil,
+            cardBrandChoice: nil,
+            isApplePayEnabled: true,
+            externalPaymentMethods: [],
+            customPaymentMethods: [],
+            passiveCaptcha: nil,
+            customer: nil
+        )
+
+        // Create mock flow controller
+        var psConfig = PaymentSheet.Configuration()
+        psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
+        let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
+
+        // Initialize wallet buttons view WITHOUT click handler
+        let view = WalletButtonsView(flowController: flowController, confirmHandler: { _ in })
+
+        // Simulate button tap - should proceed normally without error
+        await view.checkoutTapped(.applePay)
+
+        // Test passes if no error is thrown
+    }
 }

@@ -11,15 +11,20 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
+    /// Handler called when a wallet button is tapped. Return `true` to proceed with checkout, `false` to cancel.
+    @_spi(STP) public typealias WalletButtonClickHandler = (PaymentSheet.WalletButtonsVisibility.ExpressType) async -> Bool
 
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
+    let clickHandler: WalletButtonClickHandler?
     @State var orderedWallets: [ExpressType]
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
-                           confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+                           confirmHandler: @escaping (PaymentSheetResult) -> Void,
+                           clickHandler: WalletButtonClickHandler? = nil) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
+        self.clickHandler = clickHandler
 
         let wallets = WalletButtonsView.determineAvailableWallets(for: flowController)
         self._orderedWallets = State(initialValue: wallets)
@@ -28,9 +33,11 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     // TODO: Deprecate?
     init(flowController: PaymentSheet.FlowController,
          confirmHandler: @escaping (PaymentSheetResult) -> Void,
-         orderedWallets: [ExpressType]) {
+         orderedWallets: [ExpressType],
+         clickHandler: WalletButtonClickHandler? = nil) {
         self.flowController = flowController
         self.confirmHandler = confirmHandler
+        self.clickHandler = clickHandler
         self._orderedWallets = State(initialValue: orderedWallets)
     }
 
@@ -40,7 +47,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 ForEach(orderedWallets, id: \.self) { wallet in
                     let completion: () -> Void = {
                         Task {
-                            checkoutTapped(wallet)
+                            await checkoutTapped(wallet)
                         }
                     }
 
@@ -67,7 +74,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                             cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
                         ) {
                             Task {
-                                checkoutTapped(.shopPay)
+                                await checkoutTapped(.shopPay)
                             }
                         }
                     }
@@ -123,9 +130,17 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
         return wallets
     }
 
-    func checkoutTapped(_ expressType: ExpressType) {
+    func checkoutTapped(_ expressType: ExpressType) async {
         // Log wallet button tap analytics
         flowController.analyticsHelper.logWalletButtonTapped(walletType: expressType)
+
+        // Invoke click handler if set, and only proceed if it returns true
+        if let clickHandler = clickHandler {
+            let shouldProceed = await clickHandler(expressType)
+            guard shouldProceed else {
+                return
+            }
+        }
 
         switch expressType {
         case .applePay:
