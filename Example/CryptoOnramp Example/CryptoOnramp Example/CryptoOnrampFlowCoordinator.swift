@@ -169,3 +169,26 @@ private extension CustomerInformationResponse {
         verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
     }
 }
+
+extension CryptoOnrampFlowCoordinator.Route {
+
+    /// Whether the user should be able to advance backwards from this step.
+    var allowsBackNavigation: Bool {
+        switch self {
+        case .registration, .payment, .paymentSummary:
+            true
+        case .wallets, .kycInfo, .identity, .checkoutSuccess:
+            false
+        }
+    }
+
+    /// Whether to display the toolbar item for authenticated user actions, such as logging out.
+    var showsAuthenticatedUserToolbarItem: Bool {
+        switch self {
+        case .wallets, .kycInfo, .identity, .payment, .paymentSummary, .checkoutSuccess:
+            true
+        case .registration:
+            false
+        }
+    }
+}

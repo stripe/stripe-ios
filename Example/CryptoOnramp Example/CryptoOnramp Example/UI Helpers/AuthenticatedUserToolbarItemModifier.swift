@@ -14,15 +14,17 @@ extension View {
 
     /// Convenience modifier to show a trailing toolbar item for accessing user-related actions, such as "log out".
     /// - Parameters:
+    ///   - isShown: Whether the toolbar item is shown.
     ///   - coordinator: The coordinator used to perform user-related actions.
     ///   - flowCoordinator: The flow coordinator used to manipulate the navigation stack.
     /// - Returns: The modified view.
-    func authenticatedUserToolbar(coordinator: CryptoOnrampCoordinator, flowCoordinator: CryptoOnrampFlowCoordinator?) -> some View {
-        self.modifier(AuthenticatedUserToolbarItemModifier(coordinator: coordinator, flowCoordinator: flowCoordinator))
+    func authenticatedUserToolbar(isShown: Bool, coordinator: CryptoOnrampCoordinator, flowCoordinator: CryptoOnrampFlowCoordinator?) -> some View {
+        self.modifier(AuthenticatedUserToolbarItemModifier(isShown: isShown, coordinator: coordinator, flowCoordinator: flowCoordinator))
     }
 }
 
 private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
+    let isShown: Bool
     let coordinator: CryptoOnrampCoordinator
     let flowCoordinator: CryptoOnrampFlowCoordinator?
 
@@ -31,20 +33,22 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button(role: .destructive) {
-                        logOut()
+            if isShown {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button(role: .destructive) {
+                            logOut()
+                        } label: {
+                            Label("Log out", systemImage: "rectangle.portrait.and.arrow.right")
+                                .tint(.red)
+                        }
                     } label: {
-                        Label("Log out", systemImage: "rectangle.portrait.and.arrow.right")
-                            .tint(.red)
+                        Image(systemName: "person.fill")
                     }
-                } label: {
-                    Image(systemName: "person.fill")
+                    .disabled(isLoading.wrappedValue)
+                    .opacity(isLoading.wrappedValue ? 0.5 : 1)
+                    .tint(.accentColor)
                 }
-                .disabled(isLoading.wrappedValue)
-                .opacity(isLoading.wrappedValue ? 0.5 : 1)
-                .tint(.accentColor)
             }
         }
      }
