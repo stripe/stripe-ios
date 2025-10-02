@@ -60,11 +60,6 @@ import Foundation
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
-    deinit {
-        // Cancel any pending validation task
-        validationTask?.cancel()
-    }
-
     private func fetchToken() async throws -> String {
         if let validationTask {
             return try await validationTask.value
