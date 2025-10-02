@@ -43,13 +43,6 @@ import Foundation
 
 // MARK: -
 // The code below is adapted from https://github.com/Alamofire/Alamofire
-struct Key {
-    enum Part {
-        case normal(String)
-        case dontEscape(String)
-    }
-    let parts: [Part]
-}
 
 /// Creates a percent-escaped, URL encoded query string components from the given key-value pair recursively.
 ///
