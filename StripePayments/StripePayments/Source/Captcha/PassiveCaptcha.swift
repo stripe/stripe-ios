@@ -99,7 +99,6 @@ import Foundation
                         }
                     }
                 }
-
                 // Check cancellation after continuation
                 try Task.checkCancellation()
                 // Mark as complete
@@ -131,11 +130,7 @@ import Foundation
                 // Add hcaptcha task
                 group.addTask { [weak self] in
                     guard let self else { throw PassiveCaptchaError.unexpected }
-                    do {
-                        return try await fetchToken()
-                    } catch {
-                        throw error
-                    }
+                    return try await fetchToken()
                 }
                 // Add timeout task
                 group.addTask {
