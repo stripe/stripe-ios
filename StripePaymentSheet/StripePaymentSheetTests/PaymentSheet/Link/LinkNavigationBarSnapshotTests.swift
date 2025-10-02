@@ -56,6 +56,24 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testLongTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title that is pretty long")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testTruncatingTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title that is pretty long and should wrap")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
     func verify(
         _ sut: UIView,
         identifier: String? = nil,
