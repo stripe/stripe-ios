@@ -143,7 +143,7 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
-/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
+/* Text of a notification shown to the user when a login code is successfully sent. */
 "Code sent" = "Code sent";
 
 /* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
@@ -386,6 +386,9 @@ to be saved and used in future checkout sessions. */
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
+
+/* Label for a button that sends the code to the user's email when tapped */
+"Send code to email instead" = "Send code to email instead";
 
 /* Text on a screen that indicates SEPA debit details cannot be changed. */
 "SEPA debit details cannot be changed." = "SEPA debit details cannot be changed.";

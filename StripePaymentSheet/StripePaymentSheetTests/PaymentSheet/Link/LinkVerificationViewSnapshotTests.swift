@@ -49,6 +49,16 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testInlineLoginWithEmailFactor() {
+        let sut = makeSUT(mode: .inlineLogin, factor: .email)
+        verify(sut)
+    }
+
+    func testModalWithEmailFactor() {
+        let sut = makeSUT(mode: .modal, factor: .email)
+        verify(sut)
+    }
+
     func testCustomColors() {
         let appearance = LinkAppearance(
             colors: .init(
@@ -83,9 +93,10 @@ extension LinkVerificationViewSnapshotTests {
         let consumerSessionClientSecret: String?
     }
 
-    func makeSUT(mode: LinkVerificationView.Mode, appearance: LinkAppearance? = nil, allowLogoutInDialog: Bool = false) -> LinkVerificationView {
+    func makeSUT(mode: LinkVerificationView.Mode, factor: LinkVerificationView.VerificationFactor = .sms, appearance: LinkAppearance? = nil, allowLogoutInDialog: Bool = false) -> LinkVerificationView {
         let sut = LinkVerificationView(
             mode: mode,
+            verificationFactor: factor,
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
                 redactedPhoneNumber: "(•••) ••• ••55",

@@ -36,6 +36,11 @@ final class LinkVerificationViewController: UIViewController {
 
     let mode: LinkVerificationView.Mode
     let linkAccount: PaymentSheetLinkAccount
+    var verificationFactor: LinkVerificationView.VerificationFactor {
+        didSet {
+            verificationView.verificationFactor = verificationFactor
+        }
+    }
 
     private let appearance: LinkAppearance?
     private let allowLogoutInDialog: Bool
@@ -48,6 +53,7 @@ final class LinkVerificationViewController: UIViewController {
 
         let verificationView = LinkVerificationView(
             mode: mode,
+            verificationFactor: verificationFactor,
             linkAccount: linkAccount,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog,
@@ -79,6 +85,7 @@ final class LinkVerificationViewController: UIViewController {
         consentViewModel: LinkConsentViewModel? = nil
     ) {
         self.mode = mode
+        self.verificationFactor = .sms
         self.linkAccount = linkAccount
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
@@ -137,7 +144,7 @@ final class LinkVerificationViewController: UIViewController {
 
         verificationView.isHidden = true
 
-        linkAccount.startVerification { [weak self] result in
+        linkAccount.startVerification(factor: verificationFactor) { [weak self] result in
             switch result {
             case .success(let collectOTP):
                 if collectOTP {
@@ -164,7 +171,6 @@ final class LinkVerificationViewController: UIViewController {
 
 /// :nodoc:
 extension LinkVerificationViewController: LinkVerificationViewDelegate {
-
     func verificationViewDidCancel(_ view: LinkVerificationView) {
         // Mark email as logged out to prevent automatically showing
         // the 2FA modal in future checkout sessions.
@@ -174,21 +180,34 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
         finish(withResult: .canceled)
     }
 
+    func verificationViewShouldSendCodeToEmail(_ view: LinkVerificationView) {
+        view.sendingCode = true
+        view.errorMessage = nil
+        verificationFactor = .email
+
+        startVerification(from: view) {
+            view.sendingCode = false
+        }
+    }
+
     func verificationViewResendCode(_ view: LinkVerificationView) {
         view.sendingCode = true
         view.errorMessage = nil
 
-        // To resend the code we just start a new verification session.
-        linkAccount.startVerification { [weak self] (result) in
+        startVerification(from: view) {
             view.sendingCode = false
+        }
+    }
 
+    private func startVerification(from view: LinkVerificationView, completion: @escaping () -> Void) {
+        linkAccount.startVerification(factor: verificationFactor) { [weak self] result in
             switch result {
             case .success:
                 let toast = LinkToast(
                     type: .success,
                     text: STPLocalizedString(
                         "Code sent",
-                        "Text of a notification shown to the user when a login code is successfully sent via SMS."
+                        "Text of a notification shown to the user when a login code is successfully sent."
                     )
                 )
                 toast.show(from: view)
@@ -206,6 +225,8 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
                 self?.present(alertController, animated: true)
             }
+
+            completion()
         }
     }
 
@@ -225,7 +246,11 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
             consentGranted = nil
         }
 
-        linkAccount.verify(with: code, consentGranted: consentGranted) { [weak self] result in
+        linkAccount.verify(
+            with: code,
+            factor: verificationFactor,
+            consentGranted: consentGranted
+        ) { [weak self] result in
             switch result {
             case .success:
                 self?.finish(withResult: .completed)
