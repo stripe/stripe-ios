@@ -163,7 +163,6 @@ extension PayWithLinkViewController {
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.alignment = .center
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
             contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.appearance.formInsets.bottom))
@@ -190,6 +189,7 @@ extension PayWithLinkViewController {
             didUpdate(addPaymentMethodVC)
             stackView.setNeedsLayout()
             stackView.layoutIfNeeded()
+
         }
 
         private func didTapWhenDisabled() {
