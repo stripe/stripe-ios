@@ -33,16 +33,6 @@ extension PayWithLinkViewController {
 
         private let linkAppearance: LinkAppearance?
 
-        private lazy var innerStackView: UIStackView = {
-            let stackView = UIStackView(arrangedSubviews: [])
-            stackView.axis = .vertical
-            stackView.isLayoutMarginsRelativeArrangement = true
-            stackView.spacing = LinkUI.contentSpacing
-            stackView.directionalLayoutMargins = LinkUI.contentMargins
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            return stackView
-        }()
-
         private lazy var thisIsYourDefaultView: LinkHintMessageView = {
             let message = STPLocalizedString(
                 "This is your default",
@@ -121,40 +111,29 @@ extension PayWithLinkViewController {
             view.directionalLayoutMargins = LinkUI.contentMargins
             errorView.isHidden = true
 
-            innerStackView.addArrangedSubview(paymentMethodEditElement.view)
-            innerStackView.addArrangedSubview(thisIsYourDefaultView)
-            innerStackView.addArrangedSubview(errorView)
-            innerStackView.addArrangedSubview(updateButton)
+            let stackView = UIStackView(arrangedSubviews: [
+                paymentMethodEditElement.view,
+                thisIsYourDefaultView,
+                errorView,
+                updateButton,
+            ])
 
-            contentView.addAndPinSubview(innerStackView, insets: .insets(bottom: LinkUI.bottomInset))
+            stackView.axis = .vertical
+            stackView.spacing = LinkUI.contentSpacing
+            stackView.isLayoutMarginsRelativeArrangement = true
+            stackView.directionalLayoutMargins = LinkUI.contentMargins
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.bottomInset))
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
                 thisIsYourDefaultView.isHidden = true
             }
 
-            setUpdateButtonSpacing()
-
             updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
 
-        }
-
-        /// The spacing before the update card button should always be `largeContentSpacing` to give visual balance.
-        /// This method finds the view that is visible before the update card (only `view.isHidden = false` can have custom spacing)
-        /// and sets it's custom spacing to the large spacing and resets every other view before it to the normal spacing.
-        /// This is necessary since the error, default card, or payment details form can be this view depending on the current state of the form submission.
-        private func setUpdateButtonSpacing() {
-
-            let viewsBeforeUpdateButton = innerStackView.arrangedSubviews.dropLast()
-
-            guard let lastVisibleView = viewsBeforeUpdateButton.last(where: { !$0.isHidden }) else {
-                return
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.updateErrorLabel(for: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
             }
-
-            viewsBeforeUpdateButton.forEach { view in
-                innerStackView.setCustomSpacing(LinkUI.contentSpacing, after: view)
-            }
-
-            innerStackView.setCustomSpacing(LinkUI.largeContentSpacing, after: lastVisibleView)
 
         }
 
@@ -223,7 +202,6 @@ extension PayWithLinkViewController {
         func updateErrorLabel(for error: Error?) {
             errorView.text = error?.nonGenericDescription
             errorView.setHiddenIfNecessary(error == nil)
-            setUpdateButtonSpacing()
         }
 
         private func createUpdateDetails(for params: LinkPaymentMethodFormElement.Params) -> UpdatePaymentDetailsParams.DetailsType? {
