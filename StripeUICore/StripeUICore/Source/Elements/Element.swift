@@ -71,7 +71,6 @@ public extension Element {
     /**
      This method is called whenever the user begins editing the caller.
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
-     Note for callers: This is used to close the card scanner, which can take multiple frames on the main thread, so be sure to call it as late as possible in case of delay in subsequent code.
      */
     func didBeginEditing(element: Element)
 }

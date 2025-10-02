@@ -48,6 +48,9 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
+    /// Reference to the CardSectionElement in the form, if present
+    private var cardSectionElement: CardSectionElement?
+    
     var overrideActionButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let paymentOption = paymentOption,
@@ -260,6 +263,9 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
         // Setup AddressSectionElement autocomplete callback after form creation
         setupAddressSectionAutocompleteCallback(for: formElement)
+        
+        // Setup CardSectionElement reference for card scan control
+        setupCardSectionElementReference(for: formElement)
 
         return formElement
     }
@@ -277,6 +283,16 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             addressSection.didTapAutocompleteButton = { [weak self] in
                 self?.presentAutocomplete()
             }
+        }
+    }
+    
+    /// Sets up the CardSectionElement reference to be used for controlling the card scanner visibility
+    private func setupCardSectionElementReference(for formElement: PaymentMethodElement) {
+        let unwrappedFormElement = (formElement as? PaymentMethodElementWrapper<FormElement>)?.element ?? formElement
+        if let cardSection = unwrappedFormElement.getAllUnwrappedSubElements()
+            .compactMap({ $0 as? CardSectionElement }).first {
+            // Store reference to the card section element
+            self.cardSectionElement = cardSection
         }
     }
 
@@ -399,7 +415,8 @@ extension CustomerAddPaymentMethodViewController: ElementDelegate {
     }
 
     func didBeginEditing(element: Element) {
-        // no-op
+        // If any form element has begun editing and the card scanner is available, we should close it
+        cardSectionElement?.stopAndCloseScanner()
     }
 }
 
