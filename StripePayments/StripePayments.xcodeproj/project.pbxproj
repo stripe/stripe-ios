@@ -224,7 +224,6 @@
 		BBC2EEFCD179683318E96CF0 /* NSString+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A038F1551529DED40E01B5 /* NSString+Stripe.swift */; };
 		BDE125EECCFD1E99CA93B887 /* ConnectionsSDKAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608FCBD2D31DAC997AD6933 /* ConnectionsSDKAvailability.swift */; };
 		C0B54A6D4B079A65F7DA6772 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F568A9F42118EF13A5537D3 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift */; };
-		C1CC9D5BB7236FE08EAB168C /* STPiDEALBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01EC9E9A14F44151D977435E /* STPiDEALBank.swift */; };
 		C204A7736E6DE2D953B7931D /* STPFixtures.h in Headers */ = {isa = PBXBuildFile; fileRef = 99950EB2B1753E531D97CE3C /* STPFixtures.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C20F8A272C0D8869FDF376BB /* STPPaymentMethodUPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBD496FE1C28C32185C60BF /* STPPaymentMethodUPI.swift */; };
 		C215996F527D6893BA13AE70 /* STPTestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 89A4036FDAE33311ED2D499E /* STPTestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -390,7 +389,6 @@
 /* Begin PBXFileReference section */
 		0105DFAE5504CD3A1AAE89B5 /* STPPaymentMethodUPIParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUPIParams.swift; sourceTree = "<group>"; };
 		01AD8DAB423F22BE6FC2FFCB /* STPBlocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPBlocks.swift; sourceTree = "<group>"; };
-		01EC9E9A14F44151D977435E /* STPiDEALBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPiDEALBank.swift; sourceTree = "<group>"; };
 		01FC96365AFC2C12A12CF9B1 /* STPInternalAPIResponseDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPInternalAPIResponseDecodable.swift; sourceTree = "<group>"; };
 		0247B0B5618BE3316BCF061E /* STPFormEncodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPFormEncodable.swift; sourceTree = "<group>"; };
 		030B54DF945D8ED922A55CDF /* STPConfirmWeChatPayOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPConfirmWeChatPayOptions.swift; sourceTree = "<group>"; };
@@ -817,7 +815,6 @@
 				940BC4B4F3696616E6765861 /* STPFile.swift */,
 				0247B0B5618BE3316BCF061E /* STPFormEncodable.swift */,
 				678608CCEF22AE4B86C3E6EA /* STPFPXBankBrand.swift */,
-				01EC9E9A14F44151D977435E /* STPiDEALBank.swift */,
 				C704E5A29A16D70811B3A32D /* STPIssuingCardPin.swift */,
 				674DAF7E5982F1BCEA40B010 /* STPRadarSession.swift */,
 				5A3ADD020EED12373174477B /* STPToken.swift */,
@@ -1844,7 +1841,6 @@
 				59F5403292D00A4B9C335485 /* STPIssuingCardPin.swift in Sources */,
 				F86AF35CBA2995BFC5544D32 /* STPRadarSession.swift in Sources */,
 				1AAFC737B6AA7CD6D1A83374 /* STPToken.swift in Sources */,
-				C1CC9D5BB7236FE08EAB168C /* STPiDEALBank.swift in Sources */,
 				31B7F55A2BD1D4E500BF1015 /* HCaptchaWebViewManager+WKNavigationDelegate.swift in Sources */,
 				ABDEED56ECE545675F5C3534 /* STPSetupIntent.swift in Sources */,
 				FDB1D6CBBF6A9BD4D53F3A82 /* STPSetupIntentConfirmParams.swift in Sources */,
