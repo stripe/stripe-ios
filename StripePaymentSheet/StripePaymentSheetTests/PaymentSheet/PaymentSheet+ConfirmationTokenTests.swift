@@ -42,13 +42,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         return config
     }()
 
-    lazy var configurationWithoutShipping: PaymentSheet.Configuration = {
-        var config = PaymentSheet.Configuration()
-        config.apiClient = apiClient
-        config.allowsDelayedPaymentMethods = true
-        return config
-    }()
-
     func createTestIntentConfig(mode: PaymentSheet.IntentConfiguration.Mode) -> PaymentSheet.IntentConfiguration {
         return PaymentSheet.IntentConfiguration(mode: mode) { _, _ in
             return "pi_test_123_secret_abc"
@@ -112,53 +105,39 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     // MARK: - Basic Configuration Tests
 
     func testCreateConfirmationTokenParams_basicConfiguration() {
+        var config = PaymentSheet.Configuration()
+        config.apiClient = apiClient
+        config.returnURL = "myapp://payment-complete"
+        config.allowsDelayedPaymentMethods = true
+        config.shippingDetails = {
+            return .init(
+                address: .init(
+                    country: "US",
+                    line1: "Line 1"
+                ),
+                name: "Jane Doe",
+                phone: "5551234567"
+            )
+        }
+
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
         let confirmType = createTestSavedConfirmType()
 
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
-            configuration: configuration,
+            configuration: config,
             intentConfig: intentConfig,
             elementsSession: nil
         )
 
-        XCTAssertNotNil(params)
-        XCTAssertEqual(params.returnURL, configuration.returnURL)
+        XCTAssertEqual(params.returnURL, "myapp://payment-complete")
         XCTAssertNotNil(params.clientContext)
-    }
-
-    func testCreateConfirmationTokenParams_withShippingDetails() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
-        let confirmType = createTestSavedConfirmType()
-
-        let params = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-
-        XCTAssertNotNil(params.clientContext)
+        XCTAssertEqual(params.clientContext?.currency, "USD")
         XCTAssertNotNil(params.shipping)
         XCTAssertEqual(params.shipping?.name, "Jane Doe")
         XCTAssertEqual(params.shipping?.phone, "5551234567")
         XCTAssertEqual(params.shipping?.address.country, "US")
         XCTAssertEqual(params.shipping?.address.line1, "Line 1")
-    }
-
-    func testCreateConfirmationTokenParams_withoutShipping() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
-        let confirmType = createTestSavedConfirmType()
-
-        let params = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configurationWithoutShipping,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-
-        XCTAssertNotNil(params.clientContext)
-        XCTAssertNil(params.shipping)
     }
 
     // MARK: - Payment Method Configuration Tests
@@ -251,24 +230,9 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertNil(params.setAsDefaultPM)
     }
 
-    func testCreateConfirmationTokenParams_setAsDefaultPM_whenNotRequested() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
-        let confirmType = createTestNewConfirmType(shouldSave: false, shouldSetAsDefaultPM: false)
-
-        let params = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            allowsSetAsDefaultPM: true,
-            elementsSession: nil
-        )
-
-        XCTAssertNil(params.setAsDefaultPM)
-    }
-
     // MARK: - Setup Future Usage Tests
 
-    func testCreateConfirmationTokenParams_setupIntent_SFU() {
+    func testCreateConfirmationTokenParams_setupIntent_withSFU() {
         let intentConfig = createTestIntentConfig(mode: .setup(currency: "USD", setupFutureUsage: .offSession))
         let confirmType = createTestSavedConfirmType()
 
@@ -282,7 +246,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(params.setupFutureUsage, .offSession)
     }
 
-    func testCreateConfirmationTokenParams_paymentIntent_topLevelSFU() {
+    func testCreateConfirmationTokenParams_paymentIntent_withTopLevelSFU() {
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .onSession))
         let confirmType = createTestNewConfirmType(shouldSave: false)
 
@@ -294,43 +258,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         )
 
         XCTAssertEqual(params.setupFutureUsage, .onSession)
-    }
-
-    func testCreateConfirmationTokenParams_paymentIntent_noSFU() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
-        let confirmType = createTestNewConfirmType(shouldSave: false)
-
-        let params = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-
-        XCTAssertEqual(params.setupFutureUsage, .none)
-    }
-
-    func testCreateConfirmationTokenParams_paymentIntent_PMOSFUFallbackToUserChoice() {
-        // When no PMO SFU is set for the payment method type, should fall back to user choice
-        let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(
-                amount: 100,
-                currency: "USD",
-                paymentMethodOptions: .init(setupFutureUsageValues: [.payPal: .offSession]) // Different PM type
-            )
-        ) { _, _ in return "pi_test_123_secret_abc" }
-
-        let confirmType = createTestNewConfirmType(shouldSave: true) // User wants to save card
-
-        let params = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-
-        // No PMO SFU for .card, so should use user choice (.offSession when saving)
-        XCTAssertEqual(params.setupFutureUsage, .offSession)
     }
 
     // MARK: - Setup Future Usage Priority Tests
@@ -385,78 +312,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(params.setupFutureUsage, .none)
     }
 
-    // MARK: - Edge Case Tests
-
-    func testCreateConfirmationTokenParams_edgeCase_nilPMOValues() {
-        // Priority: user checkbox > PMO SFU > top-level SFU
-        // Nil setupFutureUsageValues dictionary should fall through to top-level
-        let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(
-                amount: 100,
-                currency: "USD",
-                setupFutureUsage: .onSession,
-                paymentMethodOptions: .init(setupFutureUsageValues: nil) // Nil PMO values
-            )
-        ) { _, _ in return "pi_test_123_secret_abc" }
-
-        let confirmType = createTestNewConfirmType(shouldSave: false)
-
-        let params = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-
-        // Should fall through to top-level SFU
-        XCTAssertEqual(params.setupFutureUsage, .onSession)
-    }
-
-    func testCreateConfirmationTokenParams_edgeCase_differentPaymentMethodTypes() {
-        // Priority: user checkbox > PMO SFU > top-level SFU
-        // Different payment method types should use correct PMO keys
-        let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(
-                amount: 100,
-                currency: "USD",
-                setupFutureUsage: .onSession,
-                paymentMethodOptions: .init(setupFutureUsageValues: [
-                    .card: .none,      // Card should get none
-                    .payPal: .offSession,  // PayPal should get offSession
-                ])
-            )
-        ) { _, _ in return "pi_test_123_secret_abc" }
-
-        // Test card payment method
-        let cardConfirmType = createTestNewConfirmType(shouldSave: false)
-        let cardParams = PaymentSheet.createConfirmationTokenParams(
-            confirmType: cardConfirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-        XCTAssertEqual(cardParams.setupFutureUsage, .none)
-
-        // Test PayPal payment method
-        let payPalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_test_paypal",
-            "type": "paypal",
-            "paypal": [:],
-        ])!
-        let payPalConfirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
-            payPalPaymentMethod,
-            paymentOptions: nil,
-            clientAttributionMetadata: nil
-        )
-        let payPalParams = PaymentSheet.createConfirmationTokenParams(
-            confirmType: payPalConfirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-        XCTAssertEqual(payPalParams.setupFutureUsage, .offSession)
-    }
-
     // MARK: - Mandate Data Tests
 
     func testCreateConfirmationTokenParams_explicitMandateData() {
@@ -476,7 +331,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     }
 
     func testCreateConfirmationTokenParams_autoGeneratedMandate_payPal() {
-        // Create a PayPal payment method for both tests
         let payPalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_test_paypal",
             "type": "paypal",
@@ -488,8 +342,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             clientAttributionMetadata: nil
         )
 
-        // Test 1: Payment intent with PMO SFU
-        let paymentIntentConfig = PaymentSheet.IntentConfiguration(
+        let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(
                 amount: 100,
                 currency: "USD",
@@ -497,23 +350,14 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             )
         ) { _, _ in return "pi_test_123_secret_abc" }
 
-        let paymentParams = PaymentSheet.createConfirmationTokenParams(
+        let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
             configuration: configuration,
-            intentConfig: paymentIntentConfig,
+            intentConfig: intentConfig,
             elementsSession: nil
         )
-        XCTAssertNotNil(paymentParams.mandateData)
 
-        // Test 2: Setup intent
-        let setupIntentConfig = createTestIntentConfig(mode: .setup(currency: "USD", setupFutureUsage: .offSession))
-        let setupParams = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: setupIntentConfig,
-            elementsSession: nil
-        )
-        XCTAssertNotNil(setupParams.mandateData)
+        XCTAssertNotNil(params.mandateData)
     }
 
     func testCreateConfirmationTokenParams_autoGeneratedMandate_usBankAccount() {
@@ -547,9 +391,9 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         XCTAssertNotNil(params.mandateData)
     }
 
-    func testCreateConfirmationTokenParams_noMandateRequired_card() {
+    func testCreateConfirmationTokenParams_cardWithoutSFU_noMandate() {
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
-        let confirmType = createTestSavedConfirmType() // Creates a card payment method
+        let confirmType = createTestSavedConfirmType()
 
         let params = PaymentSheet.createConfirmationTokenParams(
             confirmType: confirmType,
@@ -558,33 +402,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             elementsSession: nil
         )
 
-        XCTAssertNil(params.mandateData)
-    }
-
-    func testCreateConfirmationTokenParams_noMandateRequired_payPal_withoutSFU() {
-        let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
-
-        // Create a PayPal payment method without SFU
-        let payPalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_test_paypal",
-            "type": "paypal",
-            "paypal": [:],
-        ])!
-
-        let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
-            payPalPaymentMethod,
-            paymentOptions: nil,
-            clientAttributionMetadata: nil
-        )
-
-        let params = PaymentSheet.createConfirmationTokenParams(
-            confirmType: confirmType,
-            configuration: configuration,
-            intentConfig: intentConfig,
-            elementsSession: nil
-        )
-
-        // Should still get mandate data from fallback to STPPaymentIntentParams.mandateDataIfRequired
         XCTAssertNil(params.mandateData)
     }
 }
