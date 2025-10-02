@@ -272,7 +272,7 @@ class WalletButtonsViewTests: XCTestCase {
         XCTAssertEqual(view.orderedWallets, [.applePay, .shopPay])
     }
 
-    func testClickHandlerInvokedWithCorrectExpressType() async {
+    func testClickHandlerInvokedWithCorrectExpressType() {
         // Create mock elements session with Link and Apple Pay
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
@@ -304,9 +304,9 @@ class WalletButtonsViewTests: XCTestCase {
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
         let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
 
-        var capturedExpressType: ExpressType?
-        let clickHandler: WalletButtonsView.WalletButtonClickHandler = { expressType in
-            capturedExpressType = expressType
+        var capturedWalletType: String?
+        let clickHandler: WalletButtonsView.WalletButtonClickHandler = { walletType in
+            capturedWalletType = walletType
             return true
         }
 
@@ -314,13 +314,13 @@ class WalletButtonsViewTests: XCTestCase {
         let view = WalletButtonsView(flowController: flowController, confirmHandler: { _ in }, clickHandler: clickHandler)
 
         // Simulate button tap
-        await view.checkoutTapped(.applePay)
+        view.checkoutTapped(.applePay)
 
-        // Verify handler was called with correct express type
-        XCTAssertEqual(capturedExpressType, .applePay)
+        // Verify handler was called with correct wallet type string
+        XCTAssertEqual(capturedWalletType, "apple_pay")
     }
 
-    func testClickHandlerReturningTrueAllowsCheckout() async {
+    func testClickHandlerReturningTrueAllowsCheckout() {
         // Create mock elements session with Link and Apple Pay
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
@@ -366,14 +366,14 @@ class WalletButtonsViewTests: XCTestCase {
         }, clickHandler: clickHandler)
 
         // Simulate button tap
-        await view.checkoutTapped(.applePay)
+        view.checkoutTapped(.applePay)
 
         // Verify handler was called
         XCTAssertTrue(handlerWasCalled)
         // Note: We can't reliably test if confirm was called since Apple Pay requires actual device capabilities
     }
 
-    func testClickHandlerReturningFalseCancelsCheckout() async {
+    func testClickHandlerReturningFalseCancelsCheckout() {
         // Create mock elements session with Link and Apple Pay
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
@@ -419,7 +419,7 @@ class WalletButtonsViewTests: XCTestCase {
         }, clickHandler: clickHandler)
 
         // Simulate button tap
-        await view.checkoutTapped(.applePay)
+        view.checkoutTapped(.applePay)
 
         // Verify handler was called
         XCTAssertTrue(handlerWasCalled)
@@ -427,7 +427,7 @@ class WalletButtonsViewTests: XCTestCase {
         XCTAssertFalse(confirmHandlerWasCalled)
     }
 
-    func testNoClickHandlerAllowsNormalCheckout() async {
+    func testNoClickHandlerAllowsNormalCheckout() {
         // Create mock elements session with Link and Apple Pay
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
@@ -463,7 +463,7 @@ class WalletButtonsViewTests: XCTestCase {
         let view = WalletButtonsView(flowController: flowController, confirmHandler: { _ in })
 
         // Simulate button tap - should proceed normally without error
-        await view.checkoutTapped(.applePay)
+        view.checkoutTapped(.applePay)
 
         // Test passes if no error is thrown
     }

@@ -286,15 +286,16 @@ struct WalletButtonsFlowControllerView: View {
             WalletButtonsView(
                 flowController: flowController,
                 confirmHandler: { _ in },
-                clickHandler: enableClickHandler ? { expressType in
-                    let shouldReject = switch expressType {
-                    case .applePay: rejectApplePay
-                    case .link: rejectLink
-                    case .shopPay: rejectShopPay
+                clickHandler: enableClickHandler ? { walletType in
+                    let shouldReject = switch walletType {
+                    case "apple_pay": rejectApplePay
+                    case "link": rejectLink
+                    case "shop_pay": rejectShopPay
+                    default: false
                     }
 
                     if shouldReject {
-                        errorMessage = "Click rejected for \(expressType.rawValue)"
+                        errorMessage = "Click rejected for \(walletType)"
                         showingError = true
                         return false
                     }
