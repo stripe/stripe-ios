@@ -1841,7 +1841,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     session: nil,
                     publishableKey: nil,
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
@@ -1887,7 +1888,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     session: nil,
                     publishableKey: nil,
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
@@ -1931,7 +1933,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     session: nil,
                     publishableKey: nil,
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
@@ -1975,7 +1978,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     session: nil,
                     publishableKey: nil,
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
