@@ -909,20 +909,7 @@ extension STPApplePayContext {
     }
 }
 
-/// :nodoc:
-class ModernApplePayContext: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier: String {
-        return "ModernApplePayContext"
-    }
-}
-
 private var kSTPApplePayContextAssociatedObjectKey = 0
-enum STPPaymentState: Int {
-    case notStarted
-    case pending
-    case error
-    case success
-}
 
 private class _stpinternal_STPApplePayContextLegacyHelper: NSObject {
     @objc class func performDidCreatePaymentMethod(
