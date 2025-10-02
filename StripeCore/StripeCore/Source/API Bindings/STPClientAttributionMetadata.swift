@@ -6,10 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
-@_spi(STP) public class STPClientAttributionMetadata: NSObject, Encodable, STPFormEncodable {
+@_spi(STP) open class STPClientAttributionMetadata: NSObject, Encodable {
     public enum Error: Swift.Error {
         case missingSessionId
     }
@@ -58,6 +57,17 @@ import Foundation
         super.init()
     }
 
+    public init(copying clientAttributionMetadata: STPClientAttributionMetadata) {
+        self.clientSessionId = clientAttributionMetadata.clientSessionId
+        self.elementsSessionConfigId = clientAttributionMetadata.elementsSessionConfigId
+        self.merchantIntegrationSource = clientAttributionMetadata.merchantIntegrationSource
+        self.merchantIntegrationSubtype = clientAttributionMetadata.merchantIntegrationSubtype
+        self.merchantIntegrationVersion = clientAttributionMetadata.merchantIntegrationVersion
+        self.paymentIntentCreationFlow = clientAttributionMetadata.paymentIntentCreationFlow
+        self.paymentMethodSelectionFlow = clientAttributionMetadata.paymentMethodSelectionFlow
+        super.init()
+    }
+
     // MARK: - Encodable
     enum CodingKeys: String, CodingKey {
         case clientSessionId = "client_session_id"
@@ -78,22 +88,5 @@ import Foundation
         try container.encode(merchantIntegrationVersion, forKey: .merchantIntegrationVersion)
         try container.encodeIfPresent(paymentIntentCreationFlow, forKey: .paymentIntentCreationFlow)
         try container.encodeIfPresent(paymentMethodSelectionFlow, forKey: .paymentMethodSelectionFlow)
-    }
-
-    // MARK: - STPFormEncodable
-    public static func rootObjectName() -> String? {
-        return "client_attribution_metadata"
-    }
-
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [
-            NSStringFromSelector(#selector(getter: clientSessionId)): "client_session_id",
-            NSStringFromSelector(#selector(getter: elementsSessionConfigId)): "elements_session_config_id",
-            NSStringFromSelector(#selector(getter: merchantIntegrationSource)): "merchant_integration_source",
-            NSStringFromSelector(#selector(getter: merchantIntegrationSubtype)): "merchant_integration_subtype",
-            NSStringFromSelector(#selector(getter: merchantIntegrationVersion)): "merchant_integration_version",
-            NSStringFromSelector(#selector(getter: paymentIntentCreationFlow)): "payment_intent_creation_flow",
-            NSStringFromSelector(#selector(getter: paymentMethodSelectionFlow)): "payment_method_selection_flow",
-        ]
     }
 }

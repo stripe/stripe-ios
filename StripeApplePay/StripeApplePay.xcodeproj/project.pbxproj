@@ -33,7 +33,6 @@
 		848843F1145350ABF540D69F /* ShippingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08710B3CD45DE9DCE2055A3 /* ShippingDetails.swift */; };
 		90286A48FA6C350BDEC227D0 /* TelemetryInjectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446F888DB3EC0FC1FE9B9377 /* TelemetryInjectionTest.swift */; };
 		9F50D23599CD0B1270F8C295 /* STPApplePayContext+LegacySupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7023208C7E3B3044F553DFDD /* STPApplePayContext+LegacySupport.swift */; };
-		A3BC41212E7C912E005263AF /* ClientAttributionMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BC41202E7C912E005263AF /* ClientAttributionMetadata.swift */; };
 		A69598FE8095AFA9898297A9 /* Token+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81AB96E6201D534220ABB9D /* Token+API.swift */; };
 		A79510332C88568637C9E867 /* STPAnalyticsClient+ApplePayTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E9055B54A5634B636570E3 /* STPAnalyticsClient+ApplePayTest.swift */; };
 		AB48B0CBFFEFC46E01C76B6C /* STPAPIClient+PaymentsCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B7D67F2364A12DD133CF4 /* STPAPIClient+PaymentsCore.swift */; };
@@ -120,7 +119,6 @@
 		905182496A07DE4F056A3EAA /* STPPaymentMethodFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodFunctionalTest.swift; sourceTree = "<group>"; };
 		906F7217DBF694BF42F23458 /* PKPayment+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PKPayment+Stripe.swift"; sourceTree = "<group>"; };
 		93EAD8979A20E239E16257E4 /* PaymentIntent+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentIntent+API.swift"; sourceTree = "<group>"; };
-		A3BC41202E7C912E005263AF /* ClientAttributionMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAttributionMetadata.swift; sourceTree = "<group>"; };
 		BDAEEEB96953ECBB9C68CF1C /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		C08710B3CD45DE9DCE2055A3 /* ShippingDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingDetails.swift; sourceTree = "<group>"; };
 		C563CA8E1D005A453C762703 /* BillingDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingDetails.swift; sourceTree = "<group>"; };
@@ -218,7 +216,6 @@
 				FF86CF1EFE4AC1A46F055202 /* Address.swift */,
 				C563CA8E1D005A453C762703 /* BillingDetails.swift */,
 				8DBC2BC8C0A60983D0948A11 /* CardBrand.swift */,
-				A3BC41202E7C912E005263AF /* ClientAttributionMetadata.swift */,
 				D2398CA91B601B5FC7C8FB48 /* PaymentIntent.swift */,
 				478361D29DF10F2B43F7A1D2 /* PaymentIntentParams.swift */,
 				6D1E8A9F849655BAC63DB2FD /* PaymentMethod.swift */,
@@ -458,7 +455,6 @@
 				463680AADB8CED6E962CD45A /* PaymentIntentParams.swift in Sources */,
 				E1E7B153B169D0A6363ADD4B /* PaymentMethod.swift in Sources */,
 				FADFD3B7E3832928E254FAF1 /* PaymentMethodParams.swift in Sources */,
-				A3BC41212E7C912E005263AF /* ClientAttributionMetadata.swift in Sources */,
 				43682CEAB00A93868FA3188A /* SetupIntent.swift in Sources */,
 				234FA38DC46927B23871A75D /* SetupIntentParams.swift in Sources */,
 				848843F1145350ABF540D69F /* ShippingDetails.swift in Sources */,

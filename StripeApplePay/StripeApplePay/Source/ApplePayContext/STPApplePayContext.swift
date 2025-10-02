@@ -275,7 +275,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
     /// Contains metadata with identifiers for the session and information about the integration
-    @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata?
+    @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     // Internal state
     private var paymentState: PaymentState = .notStarted

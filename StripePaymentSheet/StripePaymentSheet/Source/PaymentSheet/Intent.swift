@@ -161,7 +161,7 @@ enum Intent {
         }
     }
 
-    func clientAttributionMetadata(elementsSessionConfigId: String) -> STPClientAttributionMetadata {
+    func clientAttributionMetadata(elementsSessionConfigId: String) -> STPFormEncodableClientAttributionMetadata {
         switch self {
         case .paymentIntent(let paymentIntent):
             return .init(elementsSessionConfigId: elementsSessionConfigId,

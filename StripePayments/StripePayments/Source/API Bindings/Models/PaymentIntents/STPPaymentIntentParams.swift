@@ -156,7 +156,7 @@ public class STPPaymentIntentParams: NSObject {
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @objc @_spi(STP) public var clientAttributionMetadata: STPFormEncodableClientAttributionMetadata?
 
     /// ID of an existing ConfirmationToken to use for this PaymentIntent confirmation.
     @objc @_spi(STP) public var confirmationToken: String?

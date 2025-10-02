@@ -37,7 +37,7 @@ extension StripeAPI.PaymentMethod {
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         payment: PKPayment,
-        clientAttributionMetadata: ClientAttributionMetadata?,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
         StripeAPI.Token.create(apiClient: apiClient, payment: payment) { (result) in

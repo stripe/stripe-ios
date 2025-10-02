@@ -202,6 +202,12 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             }), shouldContainClientAttributionMetadata)
             XCTAssertEqual(queryItems.contains(where: { item in
                 if let base {
+                    return item.name == "\(base)[client_attribution_metadata][elements_session_config_id]" && item.value == clientAttributionMetadata.elementsSessionConfigId
+                }
+                return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == clientAttributionMetadata.elementsSessionConfigId
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
                     return item.name == "\(base)[client_attribution_metadata][merchant_integration_source]" && item.value == "elements"
                 }
                 return item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
@@ -217,12 +223,6 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                     return item.name == "\(base)[client_attribution_metadata][merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
                 }
                 return item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
-            }), shouldContainClientAttributionMetadata)
-            XCTAssertEqual(queryItems.contains(where: { item in
-                if let base {
-                    return item.name == "\(base)[client_attribution_metadata][elements_session_config_id]" && item.value == clientAttributionMetadata.elementsSessionConfigId
-                }
-                return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == clientAttributionMetadata.elementsSessionConfigId
             }), shouldContainClientAttributionMetadata)
             if let intentCreationFlow = clientAttributionMetadata.paymentIntentCreationFlow {
                 XCTAssertEqual(queryItems.contains(where: { item in
@@ -249,7 +249,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testCreatePaymentMethodWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        let clientAttributionMetadata: STPFormEncodableClientAttributionMetadata = STPFormEncodableClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
@@ -285,12 +285,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         var paymentMethodParams: StripeAPI.PaymentMethodParams = StripeAPI.PaymentMethodParams(type: .card)
-        paymentMethodParams.clientAttributionMetadata = ClientAttributionMetadata(
-            clientSessionId: clientAttributionMetadata.clientSessionId,
-            elementsSessionConfigId: clientAttributionMetadata.elementsSessionConfigId,
-            paymentIntentCreationFlow: clientAttributionMetadata.paymentIntentCreationFlow.flatMap { ClientAttributionMetadata.IntentCreationFlow(rawValue: $0) },
-            paymentMethodSelectionFlow: clientAttributionMetadata.paymentMethodSelectionFlow.flatMap { ClientAttributionMetadata.PaymentMethodSelectionFlow(rawValue: $0) }
-        )
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         // Stub payment method creation call
         stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata, urlPattern: "/payment_methods")
         let e = expectation(description: "")
@@ -303,7 +298,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmPaymentIntentWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        let clientAttributionMetadata: STPFormEncodableClientAttributionMetadata = STPFormEncodableClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         stubClientAttributionMetadata(base: "payment_method_data", clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
         let paymentMethodParams = STPPaymentMethodParams()
@@ -319,7 +314,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmPaymentIntentWithTopLevelClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        let clientAttributionMetadata: STPFormEncodableClientAttributionMetadata = STPFormEncodableClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
@@ -333,9 +328,8 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmPaymentIntentWithoutClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         // We only want to include client_attribution_metadata on tokenization with payment method params
-        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false, clientAttributionMetadata: clientAttributionMetadata)
+        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false, clientAttributionMetadata: STPClientAttributionMetadata(clientSessionId: "client_session_id", elementsSessionConfigId: "elements_session_config_id"))
         let e = expectation(description: "")
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
@@ -347,7 +341,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmSetupIntentWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        let clientAttributionMetadata: STPFormEncodableClientAttributionMetadata = STPFormEncodableClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: true, clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
         let paymentMethodParams = STPPaymentMethodParams()
@@ -363,7 +357,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmSetupIntentWithTopLevelClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        let clientAttributionMetadata: STPFormEncodableClientAttributionMetadata = STPFormEncodableClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
@@ -377,9 +371,8 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmSetupIntentWithoutClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         // We only want to include client_attribution_metadata on tokenization with payment method params
-        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false, clientAttributionMetadata: clientAttributionMetadata)
+        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false, clientAttributionMetadata: STPClientAttributionMetadata(clientSessionId: "client_session_id", elementsSessionConfigId: "elements_session_config_id"))
         let e = expectation(description: "")
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in

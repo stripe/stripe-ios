@@ -92,7 +92,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @objc @_spi(STP) public var clientAttributionMetadata: STPFormEncodableClientAttributionMetadata?
 
     /// ID of an existing ConfirmationToken to use for this SetupIntent confirmation.
     @objc @_spi(STP) public var confirmationToken: String?
