@@ -117,31 +117,6 @@ extension PayWithLinkViewController {
             }
         }
 
-        var noticeText: String? {
-            if shouldRecollectCardExpiryDate {
-                return STPLocalizedString(
-                    "This card has expired. Update your card info or choose a different payment method.",
-                    "A text notice shown when the user selects an expired card."
-                )
-            }
-
-            if shouldRecollectCardCVC {
-                return STPLocalizedString(
-                    "For security, please re-enter your card’s security code.",
-                    """
-                    A text notice shown when the user selects a card that requires
-                    re-entering the security code (CVV/CVC).
-                    """
-                )
-            }
-
-            return nil
-        }
-
-        var shouldShowNotice: Bool {
-            return noticeText != nil
-        }
-
         var shouldShowRecollectionSection: Bool {
             return (
                 shouldRecollectCardCVC ||
