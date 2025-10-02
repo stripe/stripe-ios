@@ -133,7 +133,6 @@ import Foundation
                     throw PassiveCaptchaError.timeout
                 }
                 defer {
-                    group.cancelAll()
                     validationTask?.cancel()
                 }
                 // Wait for first completion
