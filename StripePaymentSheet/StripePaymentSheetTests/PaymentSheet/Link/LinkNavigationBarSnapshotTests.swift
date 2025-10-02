@@ -74,6 +74,14 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testStyleThenTruncatingTitle() {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        sut.title = "Test title that is pretty long and should wrap"
+        verify(sut)
+    }
+
+    // TODO: Maybe another test for changing the text
+
     func verify(
         _ sut: UIView,
         identifier: String? = nil,
