@@ -1,0 +1,161 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1S97qDFY0qyl6XeWTUJqy6Dd\/confirm$
+402
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BiiY_FHQZ2pK_3nd0D8hO1JnlpW9MiiEbNs-M4B7KmjJVLD92AwpwUrArGaixWg3m-i1UdCIXdlxyOP0
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+request-id: req_3tDPF8gZ8reXzh
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 3810
+Vary: Origin
+Date: Fri, 19 Sep 2025 17:11:26 GMT
+original-request: req_3tDPF8gZ8reXzh
+stripe-version: 2020-08-27
+idempotency-key: 9d5bb813-b62e-4030-bbe2-a022ea0531ed
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+Content-Language: en-us
+X-Stripe-Mock-Request: client_secret=seti_1S97qDFY0qyl6XeWTUJqy6Dd_secret_T5IRZUSOBXvM8ptniZRG7ew5HTlD32m&expand\[0]=payment_method&payment_method=pm_1S97qDFY0qyl6XeWjZ9ptvWB&use_stripe_sdk=true
+
+{
+  "error" : {
+    "decline_code" : "insufficient_funds",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_3tDPF8gZ8reXzh?t=1758301885",
+    "code" : "card_declined",
+    "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/card-declined",
+    "message" : "Your card has insufficient funds.",
+    "type" : "card_error",
+    "payment_method" : {
+      "object" : "payment_method",
+      "id" : "pm_1S97qDFY0qyl6XeWjZ9ptvWB",
+      "billing_details" : {
+        "email" : null,
+        "phone" : null,
+        "tax_id" : null,
+        "name" : null,
+        "address" : {
+          "state" : null,
+          "country" : null,
+          "line2" : null,
+          "city" : null,
+          "line1" : null,
+          "postal_code" : null
+        }
+      },
+      "card" : {
+        "regulated_status" : "unregulated",
+        "last4" : "9995",
+        "funding" : "credit",
+        "generated_from" : null,
+        "networks" : {
+          "available" : [
+            "visa"
+          ],
+          "preferred" : null
+        },
+        "brand" : "visa",
+        "checks" : {
+          "address_postal_code_check" : null,
+          "cvc_check" : null,
+          "address_line1_check" : null
+        },
+        "three_d_secure_usage" : {
+          "supported" : true
+        },
+        "wallet" : null,
+        "display_brand" : "visa",
+        "exp_month" : 1,
+        "exp_year" : 2040,
+        "country" : "US"
+      },
+      "livemode" : false,
+      "created" : 1758301885,
+      "allow_redisplay" : "unspecified",
+      "type" : "card",
+      "customer" : null
+    },
+    "setup_intent" : {
+      "id" : "seti_1S97qDFY0qyl6XeWTUJqy6Dd",
+      "description" : null,
+      "next_action" : null,
+      "livemode" : false,
+      "payment_method" : null,
+      "payment_method_configuration_details" : null,
+      "usage" : "off_session",
+      "payment_method_types" : [
+        "card"
+      ],
+      "object" : "setup_intent",
+      "last_setup_error" : {
+        "code" : "card_declined",
+        "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/card-declined",
+        "message" : "Your card has insufficient funds.",
+        "payment_method" : {
+          "object" : "payment_method",
+          "id" : "pm_1S97qDFY0qyl6XeWjZ9ptvWB",
+          "billing_details" : {
+            "email" : null,
+            "phone" : null,
+            "tax_id" : null,
+            "name" : null,
+            "address" : {
+              "state" : null,
+              "country" : null,
+              "line2" : null,
+              "city" : null,
+              "line1" : null,
+              "postal_code" : null
+            }
+          },
+          "card" : {
+            "regulated_status" : "unregulated",
+            "last4" : "9995",
+            "funding" : "credit",
+            "generated_from" : null,
+            "networks" : {
+              "available" : [
+                "visa"
+              ],
+              "preferred" : null
+            },
+            "brand" : "visa",
+            "checks" : {
+              "address_postal_code_check" : null,
+              "cvc_check" : null,
+              "address_line1_check" : null
+            },
+            "three_d_secure_usage" : {
+              "supported" : true
+            },
+            "wallet" : null,
+            "display_brand" : "visa",
+            "exp_month" : 1,
+            "exp_year" : 2040,
+            "country" : "US"
+          },
+          "livemode" : false,
+          "created" : 1758301885,
+          "allow_redisplay" : "unspecified",
+          "type" : "card",
+          "customer" : null
+        },
+        "type" : "card_error",
+        "decline_code" : "insufficient_funds"
+      },
+      "created" : 1758301885,
+      "client_secret" : "seti_1S97qDFY0qyl6XeWTUJqy6Dd_secret_T5IRZUSOBXvM8ptniZRG7ew5HTlD32m",
+      "automatic_payment_methods" : null,
+      "cancellation_reason" : null,
+      "status" : "requires_payment_method"
+    }
+  }
+}

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 import UIKit
 
 /// An object representing parameters used to create a PaymentMethod object.
@@ -121,7 +120,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var metadata: [String: String]?
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @objc @_spi(STP) public var clientAttributionMetadata: STPFormEncodableClientAttributionMetadata?
 
     /// Creates params for a card PaymentMethod.
     /// - Parameters:
