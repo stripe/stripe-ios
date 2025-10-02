@@ -131,10 +131,6 @@ extension PayWithLinkViewController {
 
             updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                self.updateErrorLabel(for: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
-            }
-
         }
 
         func updatePaymentMethod() {
