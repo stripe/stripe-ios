@@ -24,6 +24,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     private let privacyPolicyView = HTMLTextView()
 
     let brandLogo: UIImage
+    let showsStripeLogo: Bool
     let consentContent: StripeAPI.VerificationPageStaticContentConsentPage
 
     struct Style {
@@ -108,7 +109,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                         // Otherwise this is the first screen, show icons
                         return .banner(
                             iconViewModel: .init(
-                                iconType: .brand,
+                                iconType: showsStripeLogo ? .brand : .plain,
                                 iconImage: brandLogo,
                                 iconImageContentMode: .scaleToFill,
                                 useLargeIcon: true
@@ -130,10 +131,12 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
     init(
         brandLogo: UIImage,
+        showsStripeLogo: Bool,
         consentContent: StripeAPI.VerificationPageStaticContentConsentPage,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
         self.brandLogo = brandLogo
+        self.showsStripeLogo = showsStripeLogo
         self.consentContent = consentContent
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
 

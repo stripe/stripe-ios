@@ -186,6 +186,8 @@
       "title": "Andrew's Audio works with Stripe to verify your identity"
     },
     "id": "VS_123",
+    "is_stripe": false,
+    "skip_success_page": false,
     "livemode": true,
     "object": "identity.verification_page",
     "requirements": {

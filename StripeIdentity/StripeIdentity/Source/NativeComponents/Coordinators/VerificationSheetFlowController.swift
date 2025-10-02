@@ -434,6 +434,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
         // Show success screen if submitted and closed
         if updateDataResponse?.submittedAndClosed() == true {
+            if staticContent.skipSuccessPage {
+                navigationController.dismiss(animated: true)
+                return
+            }
             return completion(
                 SuccessViewController(
                     successContent: staticContent.success,
@@ -498,6 +502,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             )
         case .confirmationDestination:
+            if staticContent.skipSuccessPage {
+                navigationController.dismiss(animated: true)
+                return
+            }
             return completion(
                 SuccessViewController(
                     successContent: staticContent.success,
@@ -590,6 +598,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         do {
             return try BiometricConsentViewController(
                 brandLogo: brandLogo,
+                showsStripeLogo: !staticContent.isStripe,
                 consentContent: staticContent.biometricConsent,
                 sheetController: sheetController
             )
