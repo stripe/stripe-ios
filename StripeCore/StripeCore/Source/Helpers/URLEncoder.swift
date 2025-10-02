@@ -9,11 +9,11 @@
 import Foundation
 
 @_spi(STP) public final class URLEncoder {
-    public class func string(byURLEncoding string: String) -> String {
+    public static func string(byURLEncoding string: String) -> String {
         return escape(string)
     }
 
-    public class func convertToCamelCase(snakeCase input: String) -> String {
+    public static func convertToCamelCase(snakeCase input: String) -> String {
         let parts: [String] = input.components(separatedBy: "_")
         var camelCaseParam = ""
         for (idx, part) in parts.enumerated() {
@@ -23,7 +23,7 @@ import Foundation
         return camelCaseParam
     }
 
-    public class func convertToSnakeCase(camelCase input: String) -> String {
+    public static func convertToSnakeCase(camelCase input: String) -> String {
         var newString = input
 
         while let range = newString.rangeOfCharacter(from: .uppercaseLetters) {
@@ -36,7 +36,7 @@ import Foundation
     }
 
     @objc(queryStringFromParameters:)
-    public class func queryString(from parameters: [String: Any]) -> String {
+    public static func queryString(from parameters: [String: Any]) -> String {
         return query(parameters)
     }
 }
