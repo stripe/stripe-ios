@@ -125,6 +125,11 @@ struct LinkPMDisplayDetails {
         currentSession?.isVerifiedForSignup ?? false
     }
 
+    var requiredPhoneNumberVerificationForEmailOtp: Bool {
+        guard let lookupSettings else { return false }
+        return lookupSettings.emailOtpRequiresAdditionalInfo || lookupSettings.emailOtpVerifyPhoneDespiteSmsOtp
+    }
+
     // Webview fallback URLs have a lifespan of one attempt.
     // If a user opens one and dismisses it, it can't be used again,
     // So we'll fetch a new one in that case.
@@ -132,12 +137,14 @@ struct LinkPMDisplayDetails {
 
     private(set) var currentSession: ConsumerSession?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
+    let lookupSettings: ConsumerSession.LookupSettings?
 
     init(
         email: String,
         session: ConsumerSession?,
         publishableKey: String?,
         displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?,
+        lookupSettings: ConsumerSession.LookupSettings? = nil,
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
@@ -148,6 +155,7 @@ struct LinkPMDisplayDetails {
         self.email = email
         self.currentSession = session
         self.publishableKey = publishableKey
+        self.lookupSettings = lookupSettings
         self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
         self.cookieStore = cookieStore
@@ -221,7 +229,6 @@ struct LinkPMDisplayDetails {
             }
             return
         }
-
 
         guard let session = currentSession else {
             stpAssertionFailure()
