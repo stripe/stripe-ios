@@ -29,6 +29,8 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
 
     }
 
+    // MARK: Back Style
+
     func testDefault() {
         let sut = makeSUT()
         verify(sut)
@@ -56,6 +58,15 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testBackStyleThenTruncatingTitle() {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        sut.setStyle(.back(showAdditionalButton: false))
+        sut.title = "Test title that is pretty long and should wrap"
+        verify(sut)
+    }
+
+    // MARK: Close Style
+
     func testTitleCloseStyle() {
         let sut = makeSUT(title: "Test title")
         sut.setStyle(.close(showAdditionalButton: false))
@@ -74,13 +85,14 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    func testStyleThenTruncatingTitle() {
+    func testCloseStyleThenTruncatingTitle() {
         let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        sut.setStyle(.close(showAdditionalButton: false))
         sut.title = "Test title that is pretty long and should wrap"
         verify(sut)
     }
 
-    // TODO: Maybe another test for changing the text
+    // MARK: Utilities
 
     func verify(
         _ sut: UIView,
