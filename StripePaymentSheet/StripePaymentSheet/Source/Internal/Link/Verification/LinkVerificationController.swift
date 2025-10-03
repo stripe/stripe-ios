@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 /// Standalone verification controller.
@@ -151,7 +152,7 @@ extension LinkVerificationController: LinkVerificationViewControllerDelegate {
             case .success:
                 let toast = LinkToast(
                     type: .success,
-                    text: LinkUtils.codeSentSuccessMessage
+                    text: String.Localized.codeSentSuccessMessage
                 )
                 toast.show(from: controller.verificationView)
             case .failure(let error):

@@ -209,7 +209,7 @@ extension PayWithLinkViewController.VerifyAccountViewController: LinkVerificatio
                 case .success:
                     let toast = LinkToast(
                         type: .success,
-                        text: LinkUtils.codeSentSuccessMessage
+                        text: String.Localized.codeSentSuccessMessage
                     )
                     toast.show(from: controller.verificationView)
                 case .failure(let error):

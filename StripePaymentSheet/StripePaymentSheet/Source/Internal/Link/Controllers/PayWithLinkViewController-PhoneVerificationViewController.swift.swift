@@ -63,7 +63,7 @@ extension PayWithLinkViewController {
         private lazy var errorLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .detail)
-            label.textColor = .systemRed
+            label.textColor = .linkTextCritical
             label.numberOfLines = 0
             label.textAlignment = .center
             label.isHidden = true

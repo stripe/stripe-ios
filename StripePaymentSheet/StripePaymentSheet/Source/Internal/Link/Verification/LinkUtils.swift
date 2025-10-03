@@ -53,12 +53,4 @@ final class LinkUtils {
 
         return errorCode.localizedDescription
     }
-
-    static var codeSentSuccessMessage: String {
-        return STPLocalizedString(
-            "Code sent",
-            "Text of a notification shown to the user when a login code is successfully sent."
-        )
-    }
-
 }

@@ -209,7 +209,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
             case .success:
                 let toast = LinkToast(
                     type: .success,
-                    text: LinkUtils.codeSentSuccessMessage
+                    text: String.Localized.codeSentSuccessMessage
                 )
                 toast.show(from: view)
             case .failure(let error):

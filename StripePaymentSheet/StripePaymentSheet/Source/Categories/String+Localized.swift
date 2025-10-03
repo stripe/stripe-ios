@@ -553,4 +553,11 @@ extension String.Localized {
     static var use_billing_address_for_shipping: String {
         STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
     }
+
+    static var codeSentSuccessMessage: String {
+        return STPLocalizedString(
+            "Code sent",
+            "Text of a notification shown to the user when a login code is successfully sent."
+        )
+    }
 }
