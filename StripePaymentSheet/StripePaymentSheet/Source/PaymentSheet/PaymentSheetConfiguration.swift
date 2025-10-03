@@ -529,14 +529,6 @@ extension PaymentSheet {
             self.display = display
             self.collectMissingBillingDetailsForExistingPaymentMethods = collectMissingBillingDetailsForExistingPaymentMethods
         }
-
-        @_spi(STP) public init(
-            display: Display = .automatic,
-            disallowFundingSourceCreation: [String] = []
-        ) {
-            self.display = display
-            self.disallowFundingSourceCreation = disallowFundingSourceCreation
-        }
     }
 
     /// Configuration related to ShopPay, which only applies when using WalletButtonsView
