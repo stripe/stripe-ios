@@ -16,6 +16,10 @@ end
 
 puts "Proposing version: #{@version}".red
 
+# Ensure there are no unstaged changes before starting
+unstaged_changes = `git diff --name-only`.strip
+abort('You have unstaged changes. Please commit or stash them before creating a release.') unless unstaged_changes.empty?
+
 # Create a new branch for the release, e.g. bg/release-9.0.0
 @branchname = "releases/#{@version}"
 
