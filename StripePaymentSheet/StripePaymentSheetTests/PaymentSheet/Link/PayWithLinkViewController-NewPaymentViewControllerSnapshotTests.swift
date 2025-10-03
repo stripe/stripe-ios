@@ -58,16 +58,17 @@ extension PayWithLinkViewController_NewPaymentViewControllerSnapshotTests {
 
     func makeSUT(isAddingFirstPaymentMethod: Bool) throws -> PayWithLinkViewController.NewPaymentViewController {
 
-        let (intent, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
 
-        var paymentSheetConfiguration = PaymentSheet.Configuration()
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.linkPaymentMethodsOnly = true
 
         return PayWithLinkViewController.NewPaymentViewController(
             linkAccount: LinkStubs.account(),
             context: .init(
                 intent: intent,
-                elementsSession: elementsSession,
-                configuration: PaymentSheet.Configuration(),
+                elementsSession: ._testValue(intent: intent),
+                configuration: config,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 canSkipWalletAfterVerification: false,
