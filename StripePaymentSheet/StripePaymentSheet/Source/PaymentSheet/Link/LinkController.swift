@@ -424,7 +424,7 @@ import UIKit
                     self?.linkAccount = response.linkAccount
 
                     // If verification is required, present verification flow
-                    if !response.linkAccount.hasCompletedSMSVerification {
+                    if !response.linkAccount.hasCompletedVerification {
                         if case .inline = response.consentViewModel {
                             self?.presentVerificationWithConsent(
                                 from: viewController,
