@@ -11,4 +11,5 @@ import Foundation
 // String values should map to those in zoolander/../common.proto/VerificationType
 enum SupportedVerificationType: String, CaseIterable {
     case sms = "SMS"
+    case email = "EMAIL"
 }

@@ -16,6 +16,10 @@ protocol LinkVerificationViewControllerDelegate: AnyObject {
         _ controller: LinkVerificationViewController,
         didFinishWithResult result: LinkVerificationViewController.VerificationResult
     )
+    func verificationController(
+        _ controller: LinkVerificationViewController,
+        shouldSendCodeToEmail: Bool
+    )
 }
 
 /// For internal SDK use only
@@ -38,15 +42,18 @@ final class LinkVerificationViewController: UIViewController {
     let linkAccount: PaymentSheetLinkAccount
     var verificationFactor: LinkVerificationView.VerificationFactor {
         didSet {
-            verificationView.verificationFactor = verificationFactor
+            if isViewLoaded {
+                verificationView.verificationFactor = verificationFactor
+            }
         }
     }
 
     private let appearance: LinkAppearance?
     private let allowLogoutInDialog: Bool
     private let consentViewModel: LinkConsentViewModel?
+    private let skipStartVerification: Bool
 
-    private lazy var verificationView: LinkVerificationView = {
+    private(set) lazy var verificationView: LinkVerificationView = {
         guard linkAccount.redactedPhoneNumber != nil else {
             preconditionFailure("Verification(2FA) presented without a phone number on file")
         }
@@ -69,11 +76,6 @@ final class LinkVerificationViewController: UIViewController {
     private lazy var activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-
-        if let appearancePrimaryColor = appearance?.colors?.primary {
-            activityIndicator.tintColor = appearancePrimaryColor
-        }
-
         return activityIndicator
     }()
 
@@ -82,14 +84,16 @@ final class LinkVerificationViewController: UIViewController {
         linkAccount: PaymentSheetLinkAccount,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false,
-        consentViewModel: LinkConsentViewModel? = nil
+        consentViewModel: LinkConsentViewModel? = nil,
+        skipStartVerification: Bool = false
     ) {
         self.mode = mode
-        self.verificationFactor = .sms
         self.linkAccount = linkAccount
+        self.verificationFactor = .sms
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
         self.consentViewModel = consentViewModel
+        self.skipStartVerification = skipStartVerification
         super.init(nibName: nil, bundle: nil)
 
         if mode.requiresModalPresentation {
@@ -142,23 +146,31 @@ final class LinkVerificationViewController: UIViewController {
 
         activityIndicator.startAnimating()
 
-        verificationView.isHidden = true
+        if skipStartVerification {
+            activityIndicator.stopAnimating()
+            verificationView.isHidden = false
+            verificationView.codeField.becomeFirstResponder()
+        } else if linkAccount.sessionState == .requiresVerification {
+            verificationView.isHidden = true
 
-        linkAccount.startVerification(factor: verificationFactor) { [weak self] result in
-            switch result {
-            case .success(let collectOTP):
-                if collectOTP {
-                    self?.activityIndicator.stopAnimating()
-                    self?.verificationView.isHidden = false
-                    self?.verificationView.codeField.becomeFirstResponder()
-                } else {
-                    // No OTP collection is required.
-                    self?.finish(withResult: .completed)
+            linkAccount.startVerification(factor: verificationFactor) { [weak self] result in
+                switch result {
+                case .success(let collectOTP):
+                    if collectOTP {
+                        self?.activityIndicator.stopAnimating()
+                        self?.verificationView.isHidden = false
+                        self?.verificationView.codeField.becomeFirstResponder()
+                    } else {
+                        // No OTP collection is required.
+                        self?.finish(withResult: .completed)
+                    }
+                case .failure(let error):
+                    STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
+                    self?.finish(withResult: .failed(error))
                 }
-            case .failure(let error):
-                STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
-                self?.finish(withResult: .failed(error))
             }
+        } else {
+            verificationView.codeField.becomeFirstResponder()
         }
     }
 
@@ -171,6 +183,7 @@ final class LinkVerificationViewController: UIViewController {
 
 /// :nodoc:
 extension LinkVerificationViewController: LinkVerificationViewDelegate {
+
     func verificationViewDidCancel(_ view: LinkVerificationView) {
         // Mark email as logged out to prevent automatically showing
         // the 2FA modal in future checkout sessions.
@@ -181,34 +194,22 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
     }
 
     func verificationViewShouldSendCodeToEmail(_ view: LinkVerificationView) {
-        view.sendingCode = true
-        view.errorMessage = nil
-        verificationFactor = .email
-
-        startVerification(from: view) {
-            view.sendingCode = false
-        }
+        delegate?.verificationController(self, shouldSendCodeToEmail: true)
     }
 
     func verificationViewResendCode(_ view: LinkVerificationView) {
         view.sendingCode = true
         view.errorMessage = nil
 
-        startVerification(from: view) {
+        // To resend the code we just start a new verification session.
+        linkAccount.startVerification(factor: verificationFactor) { [weak self] (result) in
             view.sendingCode = false
-        }
-    }
 
-    private func startVerification(from view: LinkVerificationView, completion: @escaping () -> Void) {
-        linkAccount.startVerification(factor: verificationFactor) { [weak self] result in
             switch result {
             case .success:
                 let toast = LinkToast(
                     type: .success,
-                    text: STPLocalizedString(
-                        "Code sent",
-                        "Text of a notification shown to the user when a login code is successfully sent."
-                    )
+                    text: LinkUtils.codeSentSuccessMessage
                 )
                 toast.show(from: view)
             case .failure(let error):
@@ -225,8 +226,6 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
                 self?.present(alertController, animated: true)
             }
-
-            completion()
         }
     }
 

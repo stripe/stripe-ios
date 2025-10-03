@@ -607,6 +607,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         type: ConsumerSession.VerificationSession.SessionType,
         locale: Locale,
+        accountPhoneNumber: String? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -621,12 +622,16 @@ extension STPAPIClient {
         }()
         let endpoint: String = "consumers/sessions/start_verification"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
             "locale": locale.toLanguageTag(),
             "request_surface": requestSurface.rawValue,
         ]
+
+        if let accountPhoneNumber {
+            parameters["account_phone_number"] = accountPhoneNumber
+        }
 
         makeConsumerSessionRequest(
             endpoint: endpoint,

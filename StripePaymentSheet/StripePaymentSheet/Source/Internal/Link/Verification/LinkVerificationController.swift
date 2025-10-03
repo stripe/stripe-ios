@@ -136,4 +136,28 @@ extension LinkVerificationController: LinkVerificationViewControllerDelegate {
         }
     }
 
+    func verificationController(
+        _ controller: LinkVerificationViewController,
+        shouldSendCodeToEmail: Bool
+    ) {
+        controller.verificationView.sendingCode = true
+        controller.verificationView.errorMessage = nil
+        controller.verificationFactor = .email
+
+        linkAccount.startVerification(factor: .email) { result in
+            controller.verificationView.sendingCode = false
+
+            switch result {
+            case .success:
+                let toast = LinkToast(
+                    type: .success,
+                    text: LinkUtils.codeSentSuccessMessage
+                )
+                toast.show(from: controller.verificationView)
+            case .failure(let error):
+                controller.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
+            }
+        }
+    }
+
 }

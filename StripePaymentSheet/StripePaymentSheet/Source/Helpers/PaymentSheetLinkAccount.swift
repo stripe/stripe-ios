@@ -222,7 +222,11 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func startVerification(factor: LinkVerificationView.VerificationFactor, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func startVerification(
+        factor: LinkVerificationView.VerificationFactor,
+        accountPhoneNumber: String? = nil,
+        completion: @escaping (Result<Bool, Error>) -> Void
+    ) {
         guard case .requiresVerification = sessionState else {
             DispatchQueue.main.async {
                 completion(.success(false))
@@ -249,6 +253,7 @@ struct LinkPMDisplayDetails {
         }
         session.startVerification(
             type: verificationType,
+            accountPhoneNumber: accountPhoneNumber,
             with: apiClient,
             requestSurface: requestSurface
         ) { [weak self] result in
