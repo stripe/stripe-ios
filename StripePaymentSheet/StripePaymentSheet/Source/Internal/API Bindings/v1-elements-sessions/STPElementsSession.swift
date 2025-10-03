@@ -59,7 +59,7 @@ import Foundation
     let customPaymentMethods: [CustomPaymentMethod]
 
     /// An object that contains information for the passive captcha
-    let passiveCaptcha: PassiveCaptcha?
+    let passiveCaptcha: PassiveCaptchaData?
 
     let customer: ElementsCustomer?
 
@@ -85,7 +85,7 @@ import Foundation
         isApplePayEnabled: Bool,
         externalPaymentMethods: [ExternalPaymentMethod],
         customPaymentMethods: [CustomPaymentMethod],
-        passiveCaptcha: PassiveCaptcha?,
+        passiveCaptcha: PassiveCaptchaData?,
         customer: ElementsCustomer?,
         isBackupInstance: Bool = false
     ) {
@@ -207,12 +207,12 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return epms
         }()
 
-        let passiveCaptcha: PassiveCaptcha? = {
+        let passiveCaptcha: PassiveCaptchaData? = {
             let enablePassiveCaptcha = flags["elements_enable_passive_captcha"] ?? false
             let passiveCaptchaKey = "passive_captcha"
             guard enablePassiveCaptcha,
                   let passiveCaptchaJSON = response[passiveCaptchaKey] as? [AnyHashable: Any],
-                  let passiveCaptcha = PassiveCaptcha.decoded(fromAPIResponse: passiveCaptchaJSON)
+                  let passiveCaptcha = PassiveCaptchaData.decoded(fromAPIResponse: passiveCaptchaJSON)
             else {
                 return nil
             }

@@ -10,7 +10,7 @@ import Foundation
 
 /// PassiveCaptcha, delivered in the `v1/elements/sessions` response.
 /// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/elements/api/resources/elements_passive_captcha_resource.rb
-@_spi(STP) public struct PassiveCaptcha: Equatable, Hashable {
+@_spi(STP) public struct PassiveCaptchaData: Equatable, Hashable {
 
     let siteKey: String
     let rqdata: String?
@@ -19,7 +19,7 @@ import Foundation
     /// - Parameter response: The value of the `passive_captcha` key in the `v1/elements/sessions` response.
     public static func decoded(
         fromAPIResponse response: [AnyHashable: Any]?
-    ) -> PassiveCaptcha? {
+    ) -> PassiveCaptchaData? {
         guard let response else {
             return nil
         }
@@ -31,7 +31,7 @@ import Foundation
 
         // Optional
         let rqdata = response["rqdata"] as? String
-        return PassiveCaptcha(
+        return PassiveCaptchaData(
             siteKey: siteKey,
             rqdata: rqdata
         )
@@ -41,13 +41,12 @@ import Foundation
 
 @_spi(STP) public actor PassiveCaptchaChallenge {
     enum PassiveCaptchaError: Error {
-        case unexpected
         case timeout
     }
 
-    private let passiveCaptcha: PassiveCaptcha
-    private var validationTask: Task<String, Error>?
-    private var isValidationComplete = false
+    private let passiveCaptcha: PassiveCaptchaData
+    private var tokenTask: Task<String, Error>?
+    private var hasFetchedToken = false
 
     var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
 
@@ -55,17 +54,17 @@ import Foundation
         self.timeout = timeout
     }
 
-    public init(passiveCaptcha: PassiveCaptcha) {
+    public init(passiveCaptcha: PassiveCaptchaData) {
         self.passiveCaptcha = passiveCaptcha
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
     private func fetchToken() async throws -> String {
-        if let validationTask {
-            return try await validationTask.value
+        if let tokenTask {
+            return try await tokenTask.value
         }
 
-        let validationTask = Task<String, Error> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, weak self] () -> String in
+        let tokenTask = Task<String, Error> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, weak self] () -> String in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             let startTime = Date()
             do {
@@ -78,18 +77,15 @@ import Foundation
                     // Prevent Swift Task continuation misuse - the validate completion block can get called from multiple places
                     var nillableContinuation: CheckedContinuation<String, Error>? = continuation
 
-                    // Weak reference to break retain cycles
-                    hcaptcha.didFinishLoading { [weak hcaptcha] in
-                        hcaptcha?.validate { result in
-                            Task { @MainActor in
-                                do {
-                                    let token = try result.dematerialize()
-                                    nillableContinuation?.resume(returning: token)
-                                    nillableContinuation = nil
-                                } catch {
-                                    nillableContinuation?.resume(throwing: error)
-                                    nillableContinuation = nil
-                                }
+                    hcaptcha.validate { result in
+                        Task { @MainActor in
+                            do {
+                                let token = try result.dematerialize()
+                                nillableContinuation?.resume(returning: token)
+                                nillableContinuation = nil
+                            } catch {
+                                nillableContinuation?.resume(throwing: error)
+                                nillableContinuation = nil
                             }
                         }
                     }
@@ -107,12 +103,12 @@ import Foundation
                 throw error
             }
         }
-        self.validationTask = validationTask
-        return try await validationTask.value
+        self.tokenTask = tokenTask
+        return try await tokenTask.value
     }
 
     private func setValidationComplete() {
-        isValidationComplete = true
+        hasFetchedToken = true
     }
 
     public func fetchTokenWithTimeout() async -> String? {
@@ -121,11 +117,10 @@ import Foundation
         let siteKey = passiveCaptcha.siteKey
         do {
             return try await withThrowingTaskGroup(of: String.self) { group in
-                let isReady = isValidationComplete
+                let isReady = hasFetchedToken
                 // Add hcaptcha task
-                group.addTask { [weak self] in
-                    guard let self else { throw PassiveCaptchaError.unexpected }
-                    return try await fetchToken()
+                group.addTask {
+                    return try await self.fetchToken()
                 }
                 // Add timeout task
                 group.addTask {
@@ -133,7 +128,7 @@ import Foundation
                     throw PassiveCaptchaError.timeout
                 }
                 defer {
-                    validationTask?.cancel()
+                    tokenTask?.cancel()
                 }
                 // Wait for first completion
                 let result = try await group.next()

@@ -17,7 +17,7 @@ class PassiveCaptchaTests: XCTestCase {
     func testPassiveCaptcha() async throws {
         // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
-        let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
+        let passiveCaptcha = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
         await passiveCaptchaChallenge.setTimeout(timeout: 6)
         // wait to make sure that the token will be ready by the time we call fetchToken
@@ -35,7 +35,7 @@ class PassiveCaptchaTests: XCTestCase {
 
     func testPassiveCaptchaTimeout() async {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
-        let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
+        let passiveCaptcha = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         // really short timeout to make sure it times out
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
         await passiveCaptchaChallenge.setTimeout(timeout: 0)
