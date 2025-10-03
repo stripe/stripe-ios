@@ -438,8 +438,11 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "BANK_ACCOUNT"]
         )
 
+        var linkConfiguration = PaymentSheet.LinkConfiguration()
+        linkConfiguration.disallowFundingSourceCreation = ["usInstantBankPayment"]
+
         var configuration = PaymentSheet.Configuration()
-        configuration.link = .init(disallowFundingSourceCreation: ["usInstantBankPayment"])
+        configuration.link = linkConfiguration
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
             configuration: configuration,
@@ -504,8 +507,11 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "BANK_ACCOUNT"]
         )
 
+        var linkConfiguration = PaymentSheet.LinkConfiguration()
+        linkConfiguration.disallowFundingSourceCreation = ["usInstantBankPayment"]
+
         var configuration = PaymentSheet.Configuration()
-        configuration.link = .init(disallowFundingSourceCreation: ["usInstantBankPayment"])
+        configuration.link = linkConfiguration
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
             configuration: configuration,
