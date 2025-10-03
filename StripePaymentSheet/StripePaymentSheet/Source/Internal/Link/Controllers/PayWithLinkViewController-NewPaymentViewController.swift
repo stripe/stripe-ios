@@ -161,6 +161,8 @@ extension PayWithLinkViewController {
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
             stackView.alignment = .center
+            stackView.isLayoutMarginsRelativeArrangement = true
+            stackView.directionalLayoutMargins = .insets(top: LinkUI.contentMargins.top, bottom: LinkUI.contentMargins.bottom)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
             contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.appearance.formInsets.bottom))
