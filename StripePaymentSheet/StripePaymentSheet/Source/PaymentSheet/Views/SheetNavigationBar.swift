@@ -158,8 +158,8 @@ class SheetNavigationBar: UIView {
             backButton.isHidden = false
             bringSubviewToFront(backButton)
         case .close(let showAdditionalButton):
-            closeButtonLeft.isHidden = !showAdditionalButton
-            closeButtonRight.isHidden = showAdditionalButton
+            closeButtonLeft.isHidden = false
+            closeButtonRight.isHidden = true
             additionalButton.isHidden = !showAdditionalButton
             if showAdditionalButton {
                 bringSubviewToFront(additionalButton)

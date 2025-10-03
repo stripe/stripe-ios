@@ -29,7 +29,7 @@ extension UIButton {
             scanButton.setImage(UIImage(systemName: "camera", withConfiguration: iconConfig), for: .normal)
         }
         scanButton.setContentSpacing(4, withEdgeInsets: .zero)
-        scanButton.tintColor = linkAppearance?.colors?.primary ?? theme.colors.primary
+        scanButton.tintColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0)
         scanButton.titleLabel?.font = theme.fonts.sectionHeader
         scanButton.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
         return scanButton
