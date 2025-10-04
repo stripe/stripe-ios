@@ -36,7 +36,14 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         // Create a session ID
         AnalyticsHelper.shared.generateSessionID()
 
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration, cpmConfiguration: config.customPaymentMethodConfiguration, clientDefaultPaymentMethod: "pm_12345", customerAccessProvider: .customerSession("cs_12345"))
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: config.externalPaymentMethodConfiguration,
+            cpmConfiguration: config.customPaymentMethodConfiguration,
+            clientDefaultPaymentMethod: "pm_12345",
+            customerAccessProvider: .customerSession("cs_12345"),
+            linkDisallowFundingSourceCreation: []
+        )
         XCTAssertNotNil(parameters["mobile_session_id"])
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
@@ -65,7 +72,14 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         // Create a session ID
         AnalyticsHelper.shared.generateSessionID()
 
-        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil, cpmConfiguration: nil, clientDefaultPaymentMethod: nil, customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"))
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"),
+            linkDisallowFundingSourceCreation: []
+        )
         XCTAssertNotNil(parameters["mobile_session_id"])
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
@@ -147,7 +161,8 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: .legacyCustomerEphemeralKey("ek_123")
+            customerAccessProvider: .legacyCustomerEphemeralKey("ek_123"),
+            linkDisallowFundingSourceCreation: []
         )
         XCTAssertEqual(parameters["legacy_customer_ephemeral_key"] as? String, "ek_123")
         XCTAssertNil(parameters["customer_session_client_secret"])
@@ -159,13 +174,27 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: []
         )
         XCTAssertNil(parameters["legacy_customer_ephemeral_key"])
         XCTAssertNil(parameters["customer_session_client_secret"])
     }
 
-        func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
+    func testElementsSessionParameters_sendsLinkDisallowFundingSourceCreation() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .paymentIntentClientSecret("pi_123_secret_456"),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: ["usInstantBankPayment"]
+        )
+        let linkParams = try XCTUnwrap(parameters["link"] as? [String: Any])
+        XCTAssertEqual(linkParams["disallow_funding_source_creation"] as? [String], ["usInstantBankPayment"])
+    }
+
+    func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
         let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(networkId: "network_123", externalId: "external_456", businessName: "Till's Pills")
         let intentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
@@ -179,7 +208,8 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: []
         )
 
         let sellerDetailsParams = try XCTUnwrap(parameters["seller_details"] as? [String: Any])
@@ -188,7 +218,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sellerDetailsParams["external_id"] as? String, "external_456")
     }
 
-        func testElementsSessionParameters_DeferredPayment_WithoutSellerDetails() throws {
+    func testElementsSessionParameters_DeferredPayment_WithoutSellerDetails() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 2000, currency: "USD"),
             paymentMethodTypes: ["card"],
@@ -200,7 +230,8 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             epmConfiguration: nil,
             cpmConfiguration: nil,
             clientDefaultPaymentMethod: nil,
-            customerAccessProvider: nil
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: []
         )
 
         XCTAssertNil(parameters["seller_details"])

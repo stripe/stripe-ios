@@ -491,7 +491,7 @@ extension PaymentSheet {
         public var display: Display = .automatic
 
         /// The Link funding sources that should be disabled. Defaults to an empty list.
-        @_spi(STP) public var disallowFundingSourceCreation: [String] = []
+        @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
 
         /// Whether missing billing details should be collected for existing Link payment methods.
         @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
@@ -509,10 +509,6 @@ extension PaymentSheet {
             case .automatic: true
             case .never: false
             }
-        }
-
-        var canDisplayBankTab: Bool {
-            return shouldDisplay && !disallowFundingSourceCreation.contains("usInstantBankPayment")
         }
 
         /// Initializes a LinkConfiguration
