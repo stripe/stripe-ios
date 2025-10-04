@@ -17,11 +17,15 @@ extension STPAPIClient {
                                     epmConfiguration: PaymentSheet.ExternalPaymentMethodConfiguration?,
                                     cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
                                     clientDefaultPaymentMethod: String?,
-                                    customerAccessProvider: PaymentSheet.CustomerAccessProvider?) -> [String: Any] {
+                                    customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
+                                    linkDisallowFundingSourceCreation: Set<String>) -> [String: Any] {
         var parameters: [String: Any] = [
             "locale": Locale.current.toLanguageTag(),
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
             "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
+            "link": [
+                "disallow_funding_source_creation": Array(linkDisallowFundingSourceCreation),
+            ],
         ]
         if let sessionId = AnalyticsHelper.shared.sessionID {
             parameters["mobile_session_id"] = sessionId
@@ -92,7 +96,8 @@ extension STPAPIClient {
                                                    epmConfiguration: configuration.externalPaymentMethodConfiguration,
                                                    cpmConfiguration: configuration.customPaymentMethodConfiguration,
                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                   customerAccessProvider: configuration.customer?.customerAccessProvider)
+                                                   customerAccessProvider: configuration.customer?.customerAccessProvider,
+                                                   linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation)
         )
         // The v1/elements/sessions response contains a PaymentIntent hash that we parse out into a PaymentIntent
         guard
@@ -117,7 +122,8 @@ extension STPAPIClient {
                                                    epmConfiguration: configuration.externalPaymentMethodConfiguration,
                                                    cpmConfiguration: configuration.customPaymentMethodConfiguration,
                                                    clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                   customerAccessProvider: configuration.customer?.customerAccessProvider)
+                                                   customerAccessProvider: configuration.customer?.customerAccessProvider,
+                                                   linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation)
         )
         // The v1/elements/sessions response contains a SetupIntent hash that we parse out into a SetupIntent
         guard
@@ -139,7 +145,8 @@ extension STPAPIClient {
                                                     epmConfiguration: configuration.externalPaymentMethodConfiguration,
                                                     cpmConfiguration: configuration.customPaymentMethodConfiguration,
                                                     clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                    customerAccessProvider: configuration.customer?.customerAccessProvider)
+                                                    customerAccessProvider: configuration.customer?.customerAccessProvider,
+                                                    linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation)
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
