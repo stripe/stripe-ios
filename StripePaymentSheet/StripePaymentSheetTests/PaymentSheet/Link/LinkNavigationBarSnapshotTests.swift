@@ -14,7 +14,22 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+// @iOS26
 class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
+
+    override func setUp() {
+
+        super.setUp()
+
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+
+    }
+
+    // MARK: Back Style
 
     func testDefault() {
         let sut = makeSUT()
@@ -42,6 +57,42 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         sut.setStyle(.back(showAdditionalButton: false))
         verify(sut)
     }
+
+    func testBackStyleThenTruncatingTitle() {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        sut.setStyle(.back(showAdditionalButton: false))
+        sut.title = "Test title that is pretty long and should wrap"
+        verify(sut)
+    }
+
+    // MARK: Close Style
+
+    func testTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testLongTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title that is pretty long")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testTruncatingTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title that is pretty long and should wrap")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testCloseStyleThenTruncatingTitle() {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        sut.setStyle(.close(showAdditionalButton: false))
+        sut.title = "Test title that is pretty long and should wrap"
+        verify(sut)
+    }
+
+    // MARK: Utilities
 
     func verify(
         _ sut: UIView,
@@ -81,7 +132,7 @@ extension LinkNavigationBarSnapshotTests {
     }
 
     fileprivate func makeSUT(title: String? = nil) -> LinkSheetNavigationBar {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: .init())
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
         sut.title = title
         return sut
     }
