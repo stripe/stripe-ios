@@ -84,11 +84,6 @@ final class CardSectionWithScannerView: UIView {
         becomeFirstResponder()
     }
 
-    func stopAndCloseScanner() {
-        cardScanningView.stopScanner()
-        hideCardScanner()
-    }
-
     private func hideCardScanner() {
         self.cardScanningView.prepDismissAnimation()
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
