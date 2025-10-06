@@ -159,7 +159,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         self.delegate = delegate
 
         super.init()
-        authorizationController?.delegate = self
+        authorizationController.delegate = self
     }
 
     private var presentationWindow: UIWindow?
@@ -193,7 +193,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @objc(presentApplePayFromWindow:completion:)
     public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil) {
         presentationWindow = window
-        guard !didPresentApplePay, let applePayController = self.authorizationController else {
+        guard !didPresentApplePay else {
             assert(
                 false,
                 "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
@@ -205,13 +205,13 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         // This instance (and the associated Objective-C bridge object, if any) must live so
         // that the apple pay sheet is dismissed; until then, the app is effectively frozen.
         objc_setAssociatedObject(
-            applePayController,
+            authorizationController,
             UnsafeRawPointer(&kApplePayContextAssociatedObjectKey),
             self,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
 
-        applePayController.present { (_) in
+        authorizationController.present { (_) in
             DispatchQueue.main.async {
                 completion?()
             }
@@ -248,7 +248,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         guard didPresentApplePay else {
             return
         }
-        authorizationController?.dismiss {
+        authorizationController.dismiss {
             stpDispatchToMainThreadIfNecessary {
                 completion?()
                 self._end()
@@ -263,7 +263,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// :nodoc:
     @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
     private weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
-    @objc var authorizationController: PKPaymentAuthorizationController?
+    @objc var authorizationController: PKPaymentAuthorizationController
     @_spi(STP) public var returnUrl: String?
 
     @_spi(STP) @frozen public enum ConfirmType {
@@ -359,15 +359,12 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     func _end() {
-        if let authorizationController = authorizationController {
-            objc_setAssociatedObject(
-                authorizationController,
-                UnsafeRawPointer(&kApplePayContextAssociatedObjectKey),
-                nil,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
-        }
-        authorizationController = nil
+        objc_setAssociatedObject(
+            authorizationController,
+            UnsafeRawPointer(&kApplePayContextAssociatedObjectKey),
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         delegate = nil
     }
 
