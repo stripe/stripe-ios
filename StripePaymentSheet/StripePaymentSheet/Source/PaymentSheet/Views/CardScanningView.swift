@@ -152,7 +152,10 @@ class CardScanningView: UIView {
         // If this is called twice for any reason, we need to prevent two snapshot views from being added
         guard snapshotView == nil else { return }
 
-        if let snapshot = snapshotView(afterScreenUpdates: true) {
+        // Using afterScreenUpdates: false reduces the time to take the snapshot, which must be done on the
+        //    main thread, from ~20ms to ~2ms. This is crucial to ensure smooth animations, especially when
+        //    closing the card scanner in response to the user interacting with other form elements.
+        if let snapshot = snapshotView(afterScreenUpdates: false) {
             self.addSubview(snapshot)
             self.snapshotView = snapshot
         }
