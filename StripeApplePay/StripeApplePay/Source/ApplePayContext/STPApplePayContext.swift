@@ -293,6 +293,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) calls our didComplete delegate method
     private var didCancelOrTimeoutWhilePending = false
     private var didPresentApplePay = false
+    /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
+    private var didFinish = false
 
     /// :nodoc:
     @objc public override func responds(to aSelector: Selector!) -> Bool {
@@ -376,6 +378,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
         delegate = nil
+        didFinish = true
     }
 
     func _shippingDetails(from payment: PKPayment) -> StripeAPI.ShippingDetails? {
@@ -576,12 +579,18 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
         // 1. Create PaymentMethod
         StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment, clientAttributionMetadata: clientAttributionMetadata) { result in
+            guard !self.didFinish else {
+               return // The user canceled mid-payment - just abort
+            }
             guard case .success(let paymentMethod) = result else {
                 handleFailure(error: result.error)
                 return
             }
 
             let paymentMethodCompletion: STPIntentClientSecretCompletionBlock = { clientSecret, intentCreationError in
+                guard !self.didFinish else {
+                   return // The user canceled mid-payment - just abort
+                }
                 guard let clientSecret, intentCreationError == nil else {
                     handleFailure(error: intentCreationError)
                     return
@@ -596,6 +605,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 if StripeAPI.SetupIntentConfirmParams.isClientSecretValid(clientSecret) {
                     // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
                     StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret) { result in
+                        guard !self.didFinish else {
+                           return // The user canceled mid-payment - just abort
+                        }
                         guard case .success(let setupIntent) = result else {
                             handleFailure(error: result.error)
                             return
@@ -643,6 +655,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                         apiClient: self.apiClient,
                         clientSecret: paymentIntentClientSecret
                     ) { result in
+                        guard !self.didFinish else {
+                           return // The user canceled mid-payment - just abort
+                        }
                         guard case .success(let paymentIntent) = result else {
                             handleFailure(error: result.error)
                             return
