@@ -106,41 +106,61 @@ struct CryptoOnrampExampleView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
                 if let coordinator {
-                    switch route {
-                    case let .registration(email, scopes):
-                        RegistrationView(
-                            coordinator: coordinator,
-                            email: email,
-                            selectedScopes: scopes,
-                            livemode: livemode
-                        ) { customerId in
-                            flowCoordinator.advanceAfterRegistration(customerId: customerId)
+                    ZStack {
+                        switch route {
+                        case let .registration(email, scopes):
+                            RegistrationView(
+                                coordinator: coordinator,
+                                email: email,
+                                selectedScopes: scopes,
+                                livemode: livemode
+                            ) { customerId in
+                                flowCoordinator.advanceAfterRegistration(customerId: customerId)
+                            }
+                        case .kycInfo:
+                            KYCInfoView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterKyc()
+                            }
+                        case .identity:
+                            IdentityVerificationView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterIdentity()
+                            }
+                        case let .wallets(customerId):
+                            WalletSelectionView(
+                                coordinator: coordinator,
+                                customerId: customerId
+                            ) { wallet in
+                                flowCoordinator.advanceAfterWalletSelection(wallet)
+                            }
+                        case let .payment(customerId, wallet):
+                            PaymentView(
+                                coordinator: coordinator,
+                                customerId: customerId,
+                                wallet: wallet
+                            ) { response, selectedPaymentMethodDescription in
+                                flowCoordinator.advanceAfterPayment(
+                                    createOnrampSessionResponse: response,
+                                    selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                                )
+                            }
+                        case let .paymentSummary(createOnrampSessionResponse, selectedPaymentMethodDescription):
+                            PaymentSummaryView(
+                                coordinator: coordinator,
+                                onrampSessionResponse: createOnrampSessionResponse,
+                                selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                            ) { message in
+                                flowCoordinator.advanceAfterPaymentSummary(successfulCheckoutMessage: message)
+                            }
+                        case let .checkoutSuccess(message):
+                            CheckoutSuccessView(message: message)
                         }
-                    case .kycInfo:
-                        KYCInfoView(coordinator: coordinator) {
-                            flowCoordinator.advanceAfterKyc()
-                        }
-                    case .identity:
-                        IdentityVerificationView(coordinator: coordinator) {
-                            flowCoordinator.advanceAfterIdentity()
-                        }
-                    case let .wallets(customerId):
-                        WalletSelectionView(
-                            coordinator: coordinator,
-                            customerId: customerId
-                        ) { wallet in
-                            flowCoordinator.advanceAfterWalletSelection(wallet)
-                        }
-                    case let .payment(customerId, wallet):
-                        PaymentView(coordinator: coordinator, customerId: customerId, wallet: wallet) { response in
-                            flowCoordinator.advanceAfterPayment(createOnrampSessionResponse: response)
-                        }
-                    case let .authenticated(createOnrampSessionResponse):
-                        AuthenticatedView(
-                            coordinator: coordinator,
-                            onrampSessionResponse: createOnrampSessionResponse
-                        )
                     }
+                    .navigationBarBackButtonHidden(!route.allowsBackNavigation)
+                    .authenticatedUserToolbar(
+                        isShown: route.showsAuthenticatedUserToolbarItem,
+                        coordinator: coordinator,
+                        flowCoordinator: flowCoordinator
+                    )
                 }
             }
         }

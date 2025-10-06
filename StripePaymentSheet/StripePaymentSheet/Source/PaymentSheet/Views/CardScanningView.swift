@@ -15,15 +15,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-private class CardScanningEasilyTappableButton: UIButton {
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let newArea = bounds.insetBy(
-            dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
-            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
-        return newArea.contains(point)
-    }
-}
-
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
 @objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {

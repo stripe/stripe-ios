@@ -113,10 +113,6 @@ public class STPPaymentHandler: NSObject {
     private var safariViewController: SFSafariViewController?
     private var asWebAuthenticationSession: ASWebAuthenticationSession?
 
-    /// Set this to true if you want a specific test to run the _canPresent code
-    /// it will automatically toggle back to false after running the code once
-    internal var checkCanPresentInTest: Bool = false
-
     /// The globally shared instance of `STPPaymentHandler`.
     @objc public static let sharedHandler: STPPaymentHandler = STPPaymentHandler()
 
@@ -1529,12 +1525,11 @@ public class STPPaymentHandler: NSObject {
                         timeout: pollingBudget?.networkTimeout
                     ) { [self] paymentIntent, error in
                         guard let paymentIntent, error == nil else {
-                            // If we got an error retrieving the intent, retry if budget allows.
-                            // Note: This will only retry if we have a pollingBudget, which means it's a polling call.
-                            // We won't retry if it's the first call (no pollingBudget). Ideally we should retry
-                            // on the first call too, but this is a limitation to address in a future rewrite.
-                            if let pollingBudget, pollingBudget.canPoll {
-                                pollingBudget.pollAfter {
+                            // Retry if polling budget allows. For the first call (no polling budget), create a minimal
+                            // budget to allow one retry. This handles transient network errors.
+                            let effectivePollingBudget = pollingBudget ?? PollingBudget(startDate: Date(), duration: 1)
+                            if effectivePollingBudget.canPoll {
+                                effectivePollingBudget.pollAfter {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         pollingBudget: pollingBudget
                                     )
@@ -1623,12 +1618,11 @@ public class STPPaymentHandler: NSObject {
                 timeout: pollingBudget?.networkTimeout
             ) { setupIntent, error in
                 guard let setupIntent, error == nil else {
-                    // If we got an error retrieving the intent, retry if budget allows.
-                    // Note: This will only retry if we have a pollingBudget, which means it's a polling call.
-                    // We won't retry if it's the first call (no pollingBudget). Ideally we should retry
-                    // on the first call too, but this is a limitation to address in a future rewrite.
-                    if let pollingBudget, pollingBudget.canPoll {
-                        pollingBudget.pollAfter {
+                    // Retry if polling budget allows. For the first call (no polling budget), create a minimal
+                    // budget to allow one retry. This handles transient network errors.
+                    let effectivePollingBudget = pollingBudget ?? PollingBudget(startDate: Date(), duration: 1)
+                    if effectivePollingBudget.canPoll {
+                        effectivePollingBudget.pollAfter {
                             self._retrieveAndCheckIntentForCurrentAction(
                                 pollingBudget: pollingBudget
                             )
@@ -1933,13 +1927,8 @@ public class STPPaymentHandler: NSObject {
     {
         // Always allow in tests:
         if NSClassFromString("XCTest") != nil {
-            if checkCanPresentInTest {
-                checkCanPresentInTest.toggle()
-            } else {
-                return true
-            }
+            return true
         }
-
         let presentingViewController =
             authenticationContext.authenticationPresentingViewController()
         var canPresent = true
