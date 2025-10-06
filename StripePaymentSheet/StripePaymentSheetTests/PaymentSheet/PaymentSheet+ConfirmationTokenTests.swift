@@ -403,5 +403,6 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         )
 
         XCTAssertNil(params.mandateData)
+        XCTAssertEqual(params.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
     }
 }
