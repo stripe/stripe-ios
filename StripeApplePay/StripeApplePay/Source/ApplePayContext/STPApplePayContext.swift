@@ -98,7 +98,7 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// - seealso: ApplePayExampleViewController for an example
 @objc(STPApplePayContext)
 public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
-    enum Error: Swift.Error {
+    enum Error: Swift.Error, CustomDebugStringConvertible {
         case confirmationFailure
         case invalidIntentState(status: String)
         var debugDescription: String {
