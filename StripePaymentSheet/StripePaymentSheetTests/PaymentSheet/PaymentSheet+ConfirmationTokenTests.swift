@@ -127,7 +127,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: config,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertEqual(params.returnURL, "myapp://payment-complete")
@@ -158,7 +158,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertEqual(params.paymentMethod, paymentMethod.stripeId)
@@ -187,7 +187,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil,
+            elementsSession: .emptyElementsSession,
             radarOptions: radarOptions
         )
 
@@ -209,7 +209,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             configuration: configuration,
             intentConfig: intentConfig,
             allowsSetAsDefaultPM: true,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertEqual(params.setAsDefaultPM, NSNumber(value: true))
@@ -224,7 +224,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             configuration: configuration,
             intentConfig: intentConfig,
             allowsSetAsDefaultPM: false,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertNil(params.setAsDefaultPM)
@@ -240,7 +240,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertEqual(params.setupFutureUsage, .offSession)
@@ -254,7 +254,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertEqual(params.setupFutureUsage, .onSession)
@@ -280,7 +280,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         // User choice should win over PMO SFU
@@ -305,7 +305,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         // PMO SFU should beat top-level SFU
@@ -323,7 +323,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil,
+            elementsSession: .emptyElementsSession,
             mandateData: mandateData
         )
 
@@ -354,7 +354,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertNotNil(params.mandateData)
@@ -385,7 +385,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertNotNil(params.mandateData)
@@ -399,7 +399,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: nil
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertNil(params.mandateData)
