@@ -134,8 +134,6 @@
 
 "Fast, secure checkout" = "迅速で安全な決済";
 
-"For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
-
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "ご利用の銀行での初回支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "ご利用の銀行での支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "入力された確認コードは期限が切れています。";
 
 "The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
-
-"This card has expired. Update your card info or choose a different payment method." = "このカードは有効期限が切れています。カード情報を更新するか、別の決済手段を選択してください。";
 
 "This is your default" = "これはデフォルトです";
 
