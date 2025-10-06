@@ -181,6 +181,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         super.init(nibName: nil, bundle: nil)
 
         regenerateUI()
+
+        if case let .link(linkConfirmOption) = previousPaymentOption {
+            self.linkConfirmOption = linkConfirmOption
+        }
+
         // Only use the previous customer input for the first form shown
         self.previousPaymentOption = nil
     }
@@ -434,7 +439,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
         var initialSelection = selection ?? calculateInitialSelection()
         // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option.
-        if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) &&
+        if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
                 (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always) ||
                 initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {
@@ -544,22 +549,19 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private func presentLinkInFlowController() {
-        Task { @MainActor in
-            let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-            presentNativeLink(
-                selectedPaymentDetailsID: nil,
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper,
-                hcaptchaToken: hcaptchaToken,
-                callback: { [weak self] confirmOption, _ in
-                    guard let self else { return }
-                    self.linkConfirmOption = confirmOption
-                    self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-                }
-            )
-        }
+        presentNativeLink(
+            selectedPaymentDetailsID: nil,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            callback: { [weak self] confirmOption, _ in
+                guard let self else { return }
+                self.linkConfirmOption = confirmOption
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        )
     }
 
     var didSendLogShow: Bool = false
@@ -675,6 +677,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 }
             }
         }
+    }
+
+    func clearSelection() {
+        paymentMethodListViewController?.clearSelection()
+        updatePrimaryButton()
     }
 
     @objc func didTapPrimaryButton() {

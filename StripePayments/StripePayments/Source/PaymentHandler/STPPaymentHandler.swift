@@ -106,16 +106,12 @@ public class STPPaymentHandler: NSObject {
         case invalidState
     }
 
-    private var currentAction: STPPaymentHandlerActionParams?
+    internal var currentAction: STPPaymentHandlerActionParams?
     /// YES from when a public method is first called until its associated completion handler is called.
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
     private static var inProgress = false
     private var safariViewController: SFSafariViewController?
     private var asWebAuthenticationSession: ASWebAuthenticationSession?
-
-    /// Set this to true if you want a specific test to run the _canPresent code
-    /// it will automatically toggle back to false after running the code once
-    internal var checkCanPresentInTest: Bool = false
 
     /// The globally shared instance of `STPPaymentHandler`.
     @objc public static let sharedHandler: STPPaymentHandler = STPPaymentHandler()
@@ -168,6 +164,8 @@ public class STPPaymentHandler: NSObject {
         return STPPaymentHandler.inProgress
     }
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
+    /// Date at which `confirm` or `handleNextAction` is called. Used to report how long the call took.
+    internal var startTime: Date?
 
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
@@ -1481,7 +1479,12 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, retryCount: Int = maxChallengeRetries) {
+    /// Retrieves and checks the payment intent status for the current action.
+    /// If pollingBudget is nil, this is the first attempt and a new budget is created.
+    /// - Parameters:
+    ///   - currentAction: Action parameters to process, defaults to self.currentAction
+    ///   - pollingBudget: Existing polling budget, or nil for first attempt
+    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, pollingBudget: PollingBudget? = nil) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
             currentAction,
@@ -1516,15 +1519,29 @@ public class STPPaymentHandler: NSObject {
             pingMarlinIfNecessary(
                 currentAction,
                 {
+                    let startDate = Date()
                     self.retrieveOrRefreshPaymentIntent(
-                        currentAction: currentAction
+                        currentAction: currentAction,
+                        timeout: pollingBudget?.networkTimeout
                     ) { [self] paymentIntent, error in
                         guard let paymentIntent, error == nil else {
-                            let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
-                            currentAction.complete(
-                                with: STPPaymentHandlerActionStatus.failed,
-                                error: error as NSError
-                            )
+                            // Retry if polling budget allows. For the first call (no polling budget), create a minimal
+                            // budget to allow one retry. This handles transient network errors.
+                            let effectivePollingBudget = pollingBudget ?? PollingBudget(startDate: Date(), duration: 1)
+                            if effectivePollingBudget.canPoll {
+                                effectivePollingBudget.pollAfter {
+                                    self._retrieveAndCheckIntentForCurrentAction(
+                                        pollingBudget: pollingBudget
+                                    )
+                                }
+                            } else {
+                                let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
+                                currentAction.complete(
+                                    with: STPPaymentHandlerActionStatus.failed,
+                                    error: error as NSError
+                                )
+                            }
+
                             return
                         }
                         currentAction.paymentIntent = paymentIntent
@@ -1533,11 +1550,13 @@ public class STPPaymentHandler: NSObject {
                         if
                             let paymentMethod = paymentIntent.paymentMethod,
                             !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type),
-                            paymentIntent.status == .processing && retryCount > 0
+                            paymentIntent.status == .processing,
+                            pollingBudget?.canPoll ?? true
                         {
-                            self._retryAfterDelay(retryCount: retryCount) {
+                            let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 30)
+                            processingPollingBudget.pollAfter {
                                 self._retrieveAndCheckIntentForCurrentAction(
-                                    retryCount: retryCount - 1
+                                    pollingBudget: processingPollingBudget
                                 )
                             }
                         } else {
@@ -1570,12 +1589,12 @@ public class STPPaymentHandler: NSObject {
                                     currentAction.complete(with: .succeeded, error: nil)
                                 } else {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
-                                    // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
+                                    // Also retry a few times for certain LPMs that experience latency updating the intent status after returning to the merchant's app
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    if retryCount > 0, paymentMethodType != .card || shouldRetryForCard, let pollingRequirement = paymentMethodType.pollingRequirement {
-                                        self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.timeBetweenPollingAttempts) {
+                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.canPoll {
+                                        pollingBudget.pollAfter {
                                             self._retrieveAndCheckIntentForCurrentAction(
-                                                retryCount: retryCount - 1
+                                                pollingBudget: pollingBudget
                                             )
                                         }
                                     } else if paymentMethodType != .paynow && paymentMethodType != .promptPay {
@@ -1593,24 +1612,39 @@ public class STPPaymentHandler: NSObject {
                 }
             )
         } else if let currentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
+            let startDate = Date()
             retrieveOrRefreshSetupIntent(
-                currentAction: currentAction
+                currentAction: currentAction,
+                timeout: pollingBudget?.networkTimeout
             ) { setupIntent, error in
                 guard let setupIntent, error == nil else {
-                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
-                    currentAction.complete(
-                        with: STPPaymentHandlerActionStatus.failed,
-                        error: error as NSError
-                    )
+                    // Retry if polling budget allows. For the first call (no polling budget), create a minimal
+                    // budget to allow one retry. This handles transient network errors.
+                    let effectivePollingBudget = pollingBudget ?? PollingBudget(startDate: Date(), duration: 1)
+                    if effectivePollingBudget.canPoll {
+                        effectivePollingBudget.pollAfter {
+                            self._retrieveAndCheckIntentForCurrentAction(
+                                pollingBudget: pollingBudget
+                            )
+                        }
+                    } else {
+                        let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
+                        currentAction.complete(
+                            with: STPPaymentHandlerActionStatus.failed,
+                            error: error as NSError
+                        )
+                    }
                     return
                 }
                 currentAction.setupIntent = setupIntent
                 if let type = setupIntent.paymentMethod?.type,
                    !STPPaymentHandler._isProcessingIntentSuccess(for: type),
-                   setupIntent.status == .processing && retryCount > 0
+                   setupIntent.status == .processing,
+                   pollingBudget?.canPoll ?? true
                 {
-                    self._retryAfterDelay(retryCount: retryCount) {
-                        self._retrieveAndCheckIntentForCurrentAction(retryCount: retryCount - 1)
+                    let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 30)
+                    processingPollingBudget.pollAfter {
+                        self._retrieveAndCheckIntentForCurrentAction(pollingBudget: processingPollingBudget)
                     }
                 } else {
                     let requiresAction: Bool = self._handleSetupIntentStatus(
@@ -1633,12 +1667,12 @@ public class STPPaymentHandler: NSObject {
                             currentAction.complete(with: .succeeded, error: nil)
                         } else {
                             // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
-                            // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
+                            // Also retry a few times for certain LPMs that experience latency updating the intent status after returning to the merchant's app
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
-                            if retryCount > 0, paymentMethod.type != .card || shouldRetryForCard, let pollingRequirement = paymentMethod.type.pollingRequirement {
-                                self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.timeBetweenPollingAttempts) {
+                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.canPoll {
+                                pollingBudget.pollAfter {
                                     self._retrieveAndCheckIntentForCurrentAction(
-                                        retryCount: retryCount - 1
+                                        pollingBudget: pollingBudget
                                     )
                                 }
                             } else {
@@ -1893,13 +1927,8 @@ public class STPPaymentHandler: NSObject {
     {
         // Always allow in tests:
         if NSClassFromString("XCTest") != nil {
-            if checkCanPresentInTest {
-                checkCanPresentInTest.toggle()
-            } else {
-                return true
-            }
+            return true
         }
-
         let presentingViewController =
             authenticationContext.authenticationPresentingViewController()
         var canPresent = true
@@ -2131,6 +2160,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     func retrieveOrRefreshPaymentIntent(currentAction: STPPaymentHandlerPaymentIntentActionParams,
+                                        timeout: NSNumber?,
                                         completion: @escaping STPPaymentIntentCompletionBlock) {
         let paymentMethodType = currentAction.paymentIntent.paymentMethod?.type ?? .unknown
 
@@ -2140,11 +2170,13 @@ public class STPPaymentHandler: NSObject {
         } else {
             currentAction.apiClient.retrievePaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
                                                           expand: ["payment_method"],
+                                                          timeout: timeout,
                                                           completion: completion)
         }
     }
 
     func retrieveOrRefreshSetupIntent(currentAction: STPPaymentHandlerSetupIntentActionParams,
+                                      timeout: NSNumber?,
                                       completion: @escaping STPSetupIntentCompletionBlock) {
         let paymentMethodType = currentAction.setupIntent.paymentMethod?.type ?? .unknown
 
@@ -2154,6 +2186,7 @@ public class STPPaymentHandler: NSObject {
         } else {
             currentAction.apiClient.retrieveSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
                                                         expand: ["payment_method"],
+                                                        timeout: timeout,
                                                         completion: completion)
         }
     }

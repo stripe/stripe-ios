@@ -41,6 +41,13 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         confirmationTokenParams.paymentMethodData = paymentMethodParams
         confirmationTokenParams.returnURL = "https://example.com/return"
 
+        // Add basic client context
+        let clientContext = STPConfirmationTokenClientContext()
+        clientContext.mode = "payment"
+        clientContext.currency = "usd"
+        clientContext.paymentMethodTypes = ["card"]
+        confirmationTokenParams.clientContext = clientContext
+
         // Test async method
         let confirmationToken = try await apiClient.createConfirmationToken(
             with: confirmationTokenParams
@@ -49,7 +56,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -81,7 +88,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -123,6 +130,16 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         confirmationTokenParams.mandateData = mandateData
         confirmationTokenParams.setupFutureUsage = .offSession
 
+        // Add comprehensive client context
+        let clientContext = STPConfirmationTokenClientContext()
+        clientContext.mode = "payment"
+        clientContext.currency = "eur"
+        clientContext.setupFutureUsage = "off_session"
+        clientContext.captureMethod = "automatic"
+        clientContext.paymentMethodTypes = ["sepa_debit"]
+        clientContext.customer = "cus_test_customer"
+        confirmationTokenParams.clientContext = clientContext
+
         let confirmationToken = try await apiClient.createConfirmationToken(
             with: confirmationTokenParams
         )
@@ -130,7 +147,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -205,7 +222,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
 
         // Clean up: detach the payment method from the customer
@@ -245,12 +262,52 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
 
         // Verify the setAsDefaultPM parameter was encoded correctly
         let encoded = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
         XCTAssertEqual(encoded["set_as_default_payment_method"] as? NSNumber, NSNumber(value: true))
+    }
+
+    func testCreateConfirmationTokenWithPaymentMethodOptions() async throws {
+        // Create payment method params
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.expMonth = 12
+        cardParams.expYear = 2030
+        cardParams.cvc = "123"
+
+        let paymentMethodParams = STPPaymentMethodParams(
+            card: cardParams,
+            billingDetails: nil,
+            metadata: nil
+        )
+
+        // Create payment method options with card options
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        let cardOptions = STPConfirmCardOptions()
+        paymentMethodOptions.cardOptions = cardOptions
+
+        // Create confirmation token params
+        let confirmationTokenParams = STPConfirmationTokenParams()
+        confirmationTokenParams.paymentMethodData = paymentMethodParams
+        confirmationTokenParams.returnURL = "https://example.com/return"
+        confirmationTokenParams.paymentMethodOptions = paymentMethodOptions
+
+        let confirmationToken = try await apiClient.createConfirmationToken(
+            with: confirmationTokenParams
+        )
+
+        // Verify the response
+        XCTAssertNotNil(confirmationToken)
+        XCTAssertFalse(confirmationToken.stripeId.isEmpty)
+        XCTAssertNotNil(confirmationToken.created)
+        XCTAssertNotNil(confirmationToken.allResponseFields)
+
+        // Verify the payment method options were encoded correctly
+        let encoded = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
+        XCTAssertNotNil(encoded["payment_method_options"])
     }
 
     // MARK: - Error Handling Tests
@@ -305,11 +362,29 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         confirmationTokenParams.returnURL = "https://example.com/return"
         confirmationTokenParams.setupFutureUsage = .onSession
 
+        // Add client context for encoding verification
+        let clientContext = STPConfirmationTokenClientContext()
+        clientContext.mode = "payment"
+        clientContext.currency = "usd"
+        clientContext.setupFutureUsage = "on_session"
+        clientContext.captureMethod = "automatic"
+        clientContext.onBehalfOf = "acct_123"
+        confirmationTokenParams.clientContext = clientContext
+
         let encoded = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
 
         // Verify key parameters are encoded correctly
         XCTAssertNotNil(encoded["payment_method_data"])
         XCTAssertEqual(encoded["return_url"] as? String, "https://example.com/return")
         XCTAssertEqual(encoded["setup_future_usage"] as? String, "on_session")
+
+        // Verify client context is encoded correctly
+        XCTAssertNotNil(encoded["client_context"])
+        let clientContextDict = encoded["client_context"] as? [String: Any]
+        XCTAssertEqual(clientContextDict?["mode"] as? String, "payment")
+        XCTAssertEqual(clientContextDict?["currency"] as? String, "usd")
+        XCTAssertEqual(clientContextDict?["setup_future_usage"] as? String, "on_session")
+        XCTAssertEqual(clientContextDict?["capture_method"] as? String, "automatic")
+        XCTAssertEqual(clientContextDict?["on_behalf_of"] as? String, "acct_123")
     }
 }

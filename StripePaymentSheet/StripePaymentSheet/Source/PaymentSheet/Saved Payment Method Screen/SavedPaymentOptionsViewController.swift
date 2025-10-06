@@ -451,7 +451,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
     }
 
-    private func unselectPaymentMethod() {
+    func unselectPaymentMethod() {
         guard let selectedIndexPath = selectedIndexPath else {
             return
         }

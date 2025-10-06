@@ -12,7 +12,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
 
-// ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
+// ☠️ WARNING: These snapshots have selected borders that don't follow the correct curvature on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
 // @iOS26
 final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase {
 
@@ -32,7 +32,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_all_saved_pms_and_apple_pay_and_link(darkMode: false, showDefaultPMBadge: true)
     }
 
-    func _test_all_saved_pms_and_apple_pay_and_link(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, showDefaultPMBadge: Bool = false) {
+    func _test_all_saved_pms_and_apple_pay_and_link(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(), showDefaultPMBadge: Bool = false) {
         let paymentMethods = [
             STPPaymentMethod._testCard(),
             STPPaymentMethod._testUSBankAccount(),
@@ -144,11 +144,11 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             configuration: config,
             paymentSheetConfiguration: PaymentSheet.Configuration(),
             intent: intent,
-            appearance: .default,
+            appearance: .default.applyingLiquidGlassIfPossible(),
             elementsSession: .emptyElementsSession,
             analyticsHelper: ._testValue()
         )
-        sut.view.backgroundColor = PaymentSheet.Configuration().appearance.colors.background
+        sut.view.backgroundColor = PaymentSheet.Configuration().appearance.applyingLiquidGlassIfPossible().colors.background
         let testWindow = UIWindow()
         testWindow.isHidden = false
         if darkMode {

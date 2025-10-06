@@ -49,15 +49,20 @@
 		0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF41E8A2E3AB84800CA4171 /* IdType.swift */; };
 		490D4AAE2E552D6F00FAF4FF /* PlatformSettingsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */; };
 		490D4AC72E5541A600FAF4FF /* CreatePaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */; };
+		4926A97F2E73450500E81597 /* CryptoOnrampAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4926A97E2E73450500E81597 /* CryptoOnrampAnalyticsEvent.swift */; };
+		4936DE8B2E8198C7008B6D62 /* CryptoOnrampCoordinator+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4936DE8A2E8198C7008B6D62 /* CryptoOnrampCoordinator+Error.swift */; };
+		49A11F432E5A295B002ECED5 /* AuthorizeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */; };
 		49B34BBB2E5D0ACC0067E44F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B34BBA2E5D0ACC0067E44F /* Image.swift */; };
 		49B7F6882E57988D0053C83B /* OnrampSessionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B7F6872E57988D0053C83B /* OnrampSessionResponse.swift */; };
-		49A11F432E5A295B002ECED5 /* AuthorizeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */; };
+		49D189A82E79EDEE007433ED /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D189A72E79EDEE007433ED /* STPLocalizedString.swift */; };
 		49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A72E439EB900F51263 /* CryptoNetwork.swift */; };
 		49D233AA2E439FAA00F51263 /* RegisterWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */; };
 		49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */; };
 		49D73DF32E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */; };
-		49D73DF52E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */; };
 		49D73DF92E4E49EC00E35F1F /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D73DF82E4E49EC00E35F1F /* String+Localized.swift */; };
+		49E3D7312E708490006CE394 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 0B6DF3512E298A6B008B1800 /* OHHTTPStubs */; };
+		49E3D7322E708490006CE394 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0B6DF3522E298A6B008B1800 /* OHHTTPStubsSwift */; };
+		49E3D7632E71EF5F006CE394 /* CryptoOnrampAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E3D7622E71EF5F006CE394 /* CryptoOnrampAnalyticsClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,15 +132,18 @@
 		0BF41E8A2E3AB84800CA4171 /* IdType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdType.swift; sourceTree = "<group>"; };
 		4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformSettingsResponse.swift; sourceTree = "<group>"; };
 		490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePaymentTokenRequest.swift; sourceTree = "<group>"; };
+		4926A97E2E73450500E81597 /* CryptoOnrampAnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoOnrampAnalyticsEvent.swift; sourceTree = "<group>"; };
+		4936DE8A2E8198C7008B6D62 /* CryptoOnrampCoordinator+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CryptoOnrampCoordinator+Error.swift"; sourceTree = "<group>"; };
+		49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeResult.swift; sourceTree = "<group>"; };
 		49B34BBA2E5D0ACC0067E44F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		49B7F6872E57988D0053C83B /* OnrampSessionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnrampSessionResponse.swift; sourceTree = "<group>"; };
-		49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeResult.swift; sourceTree = "<group>"; };
+		49D189A72E79EDEE007433ED /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
 		49D233A72E439EB900F51263 /* CryptoNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoNetwork.swift; sourceTree = "<group>"; };
 		49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletRequest.swift; sourceTree = "<group>"; };
 		49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletResponse.swift; sourceTree = "<group>"; };
 		49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCryptoOnrampBundleLocator.swift; sourceTree = "<group>"; };
-		49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPLocalizedString+StripeCryptoOnramp.swift"; sourceTree = "<group>"; };
 		49D73DF82E4E49EC00E35F1F /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
+		49E3D7622E71EF5F006CE394 /* CryptoOnrampAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoOnrampAnalyticsClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -164,6 +172,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49E3D7322E708490006CE394 /* OHHTTPStubsSwift in Frameworks */,
+				49E3D7312E708490006CE394 /* OHHTTPStubs in Frameworks */,
 				0B6DF3512E298AB6008B1800 /* StripeCoreTestUtils.framework in Frameworks */,
 				0B4292912E1EC57700012FB8 /* StripeCryptoOnramp.framework in Frameworks */,
 				0B83D99A2E1EF8B7004F0115 /* XCTest.framework in Frameworks */,
@@ -199,9 +209,11 @@
 				0B089E6E2E53935B007D160E /* CheckoutError.swift */,
 				0B6DF3472E296E2F008B1800 /* API Bindings */,
 				49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */,
-				49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */,
+				49D189A72E79EDEE007433ED /* STPLocalizedString.swift */,
 				49D73DF82E4E49EC00E35F1F /* String+Localized.swift */,
 				49B34BBA2E5D0ACC0067E44F /* Image.swift */,
+				49E3D7622E71EF5F006CE394 /* CryptoOnrampAnalyticsClient.swift */,
+				4926A97E2E73450500E81597 /* CryptoOnrampAnalyticsEvent.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -316,6 +328,7 @@
 				0B49B6B42E4A9213003E6393 /* PaymentMethodDisplayData.swift */,
 				0B089E682E5378F7007D160E /* PaymentMethodType.swift */,
 				0B089E6C2E5392F1007D160E /* CheckoutResult.swift */,
+				4936DE8A2E8198C7008B6D62 /* CryptoOnrampCoordinator+Error.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -440,6 +453,9 @@
 				th,
 				fil,
 				vi,
+				it,
+				"fr-CA",
+				"pt-BR",
 			);
 			mainGroup = 0B42927B2E1EC57600012FB8;
 			minimizedProjectReferenceProxies = 1;
@@ -494,10 +510,12 @@
 				49B34BBB2E5D0ACC0067E44F /* Image.swift in Sources */,
 				49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */,
 				0B6DF34B2E297E0A008B1800 /* CustomerRequest.swift in Sources */,
+				49D189A82E79EDEE007433ED /* STPLocalizedString.swift in Sources */,
 				0B089E692E5378F7007D160E /* PaymentMethodType.swift in Sources */,
+				4926A97F2E73450500E81597 /* CryptoOnrampAnalyticsEvent.swift in Sources */,
 				0B089E6B2E5386C9007D160E /* SelectedPaymentSource.swift in Sources */,
 				490D4AC72E5541A600FAF4FF /* CreatePaymentTokenRequest.swift in Sources */,
-				49D73DF52E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift in Sources */,
+				49E3D7632E71EF5F006CE394 /* CryptoOnrampAnalyticsClient.swift in Sources */,
 				0B6DF34D2E297E27008B1800 /* CustomerResponse.swift in Sources */,
 				0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */,
 				0BA7050C2E413DA40044B483 /* Credentials.swift in Sources */,
@@ -513,6 +531,7 @@
 				0B649EE02E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift in Sources */,
 				49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */,
 				0B49B6B52E4A9213003E6393 /* PaymentMethodDisplayData.swift in Sources */,
+				4936DE8B2E8198C7008B6D62 /* CryptoOnrampCoordinator+Error.swift in Sources */,
 				0B089E6F2E53935B007D160E /* CheckoutError.swift in Sources */,
 				0B20053F2E318235008FCF8D /* AuthenticationResult.swift in Sources */,
 			);

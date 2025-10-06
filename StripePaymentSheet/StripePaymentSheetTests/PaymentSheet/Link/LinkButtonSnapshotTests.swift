@@ -117,7 +117,8 @@ enum Stubs {
         unredactedPhoneNumber: "+17070707070",
         phoneNumberCountry: "US",
         verificationSessions: [],
-        supportedPaymentDetailsTypes: [.card, .bankAccount]
+        supportedPaymentDetailsTypes: [.card, .bankAccount],
+        mobileFallbackWebviewParams: nil
     )
 
     static func displayablePaymentDetails(
@@ -140,7 +141,8 @@ enum Stubs {
             session: isRegistered ? Self.consumerSession : nil,
             publishableKey: "pk_test_123",
             displayablePaymentDetails: paymentMethodType.map { Self.displayablePaymentDetails(paymentMethodType: $0) },
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }

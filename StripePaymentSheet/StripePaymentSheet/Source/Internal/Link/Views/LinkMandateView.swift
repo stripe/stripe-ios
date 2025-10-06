@@ -24,10 +24,6 @@ protocol LinkMandateViewDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_LinkMandateViewDelegate)
 final class LinkMandateView: UIView {
-    struct Constants {
-        static let lineHeight: CGFloat = 1.5
-    }
-
     weak var delegate: LinkMandateViewDelegate?
     private let linkTextColor: UIColor
 
@@ -58,14 +54,11 @@ final class LinkMandateView: UIView {
         let mutableString = NSMutableAttributedString(attributedString: formattedString)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
-        paragraphStyle.lineSpacing = LinkUI.lineSpacing(
-            fromRelativeHeight: Constants.lineHeight,
-            textStyle: .caption
-        )
+        paragraphStyle.lineSpacing = LinkUI.mandateLineSpacing
 
         mutableString.addAttributes([.paragraphStyle: paragraphStyle], range: mutableString.extent)
 
-        return formattedString
+        return mutableString
     }
 }
 
@@ -94,7 +87,7 @@ private extension UITextView {
         isScrollEnabled = false
         isEditable = false
         backgroundColor = .clear
-        textColor = .linkTextSecondary
+        textColor = .linkTextTertiary
         textAlignment = .center
         textContainerInset = .zero
         textContainer.lineFragmentPadding = 0

@@ -8,12 +8,22 @@
 import Foundation
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
+@_spi(STP) import StripeUICore
 import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
 // @iOS26
 final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
+
+    override static func setUp() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+    }
+
     func testEmptyView() throws {
         let sut = try makeSUT(email: nil)
         sut.updateUI()
@@ -53,7 +63,8 @@ extension LinkSignUpViewControllerSnapshotTests {
                 session: session,
                 publishableKey: nil,
                 displayablePaymentDetails: nil,
-                useMobileEndpoints: false
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
             ),
             defaultBillingDetails: nil
         )

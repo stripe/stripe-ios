@@ -11,15 +11,21 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
+    /// Handler called when a wallet button is tapped. Return `true` to proceed with checkout, `false` to cancel.
+    /// The parameter is the wallet type as a string: "apple_pay", "link", or "shop_pay"
+    @_spi(STP) public typealias WalletButtonClickHandler = (String) -> Bool
 
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
+    let clickHandler: WalletButtonClickHandler?
     @State var orderedWallets: [ExpressType]
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
-                           confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+                           confirmHandler: @escaping (PaymentSheetResult) -> Void,
+                           clickHandler: WalletButtonClickHandler? = nil) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
+        self.clickHandler = clickHandler
 
         let wallets = WalletButtonsView.determineAvailableWallets(for: flowController)
         self._orderedWallets = State(initialValue: wallets)
@@ -28,9 +34,11 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     // TODO: Deprecate?
     init(flowController: PaymentSheet.FlowController,
          confirmHandler: @escaping (PaymentSheetResult) -> Void,
-         orderedWallets: [ExpressType]) {
+         orderedWallets: [ExpressType],
+         clickHandler: WalletButtonClickHandler? = nil) {
         self.flowController = flowController
         self.confirmHandler = confirmHandler
+        self.clickHandler = clickHandler
         self._orderedWallets = State(initialValue: orderedWallets)
     }
 
@@ -39,33 +47,32 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             VStack(spacing: 8) {
                 ForEach(orderedWallets, id: \.self) { wallet in
                     let completion: () -> Void = {
-                        Task {
-                            checkoutTapped(wallet)
-                        }
+                        checkoutTapped(wallet)
                     }
 
                     switch wallet {
                     case .applePay:
                         ApplePayButton(
                             height: flowController.configuration.appearance.primaryButton.height,
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
+                            // TODO (iOS 26): Respect cornerRadius = nil
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
                             action: completion
                         )
                     case .link:
                         LinkButton(
                             height: flowController.configuration.appearance.primaryButton.height,
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
+                            // TODO (iOS 26): Respect cornerRadius = nil
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
                             borderColor: flowController.configuration.appearance.colors.componentBorder,
                             action: completion
                         )
                     case .shopPay:
                         ShopPayButton(
                             height: flowController.configuration.appearance.primaryButton.height,
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius
+                            // TODO (iOS 26): Respect cornerRadius = nil
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
                         ) {
-                            Task {
-                                checkoutTapped(.shopPay)
-                            }
+                            checkoutTapped(.shopPay)
                         }
                     }
                 }
@@ -121,6 +128,17 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     }
 
     func checkoutTapped(_ expressType: ExpressType) {
+        // Log wallet button tap analytics
+        flowController.analyticsHelper.logWalletButtonTapped(walletType: expressType)
+
+        // Invoke click handler if set, and only proceed if it returns true
+        if let clickHandler = clickHandler {
+            let shouldProceed = clickHandler(expressType.rawValue)
+            guard shouldProceed else {
+                return
+            }
+        }
+
         switch expressType {
         case .applePay:
             // Launch directly into Apple Pay and confirm the payment
@@ -150,7 +168,6 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 canSkipWalletAfterVerification: flowController.elementsSession.canSkipLinkWallet,
                 completion: { confirmOptions, _ in
                     guard let confirmOptions else {
-//                        self.orderedWallets = WalletButtonsView.determineAvailableWallets(for: flowController)
                         return
                     }
                     flowController.viewController.linkConfirmOption = confirmOptions

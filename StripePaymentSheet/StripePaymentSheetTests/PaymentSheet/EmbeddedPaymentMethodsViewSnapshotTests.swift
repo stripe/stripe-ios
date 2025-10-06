@@ -1430,7 +1430,8 @@ extension PaymentSheetLinkAccount {
                 verificationSessions: [
                     .init(type: .sms, state: .verified)
                 ],
-                supportedPaymentDetailsTypes: [.card]
+                supportedPaymentDetailsTypes: [.card],
+                mobileFallbackWebviewParams: nil
             )
         }
         return .init(
@@ -1438,7 +1439,8 @@ extension PaymentSheetLinkAccount {
             session: session,
             publishableKey: "pk_123",
             displayablePaymentDetails: displayablePaymentDetails,
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }

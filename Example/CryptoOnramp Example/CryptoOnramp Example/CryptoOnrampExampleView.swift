@@ -16,13 +16,12 @@ import StripePaymentSheet
 
 /// The main content view of the example CryptoOnramp app.
 struct CryptoOnrampExampleView: View {
+    @StateObject private var flowCoordinator = CryptoOnrampFlowCoordinator()
+
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
-    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
-    @State private var showRegistration: Bool = false
-    @State private var showAuthenticatedView: Bool = false
-    @State private var authenticationCustomerId: String?
+    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
     @State private var linkAuthIntentId: String?
     @State private var livemode: Bool = false
 
@@ -44,7 +43,7 @@ struct CryptoOnrampExampleView: View {
     // MARK: - View
 
     var body: some View {
-        NavigationView {
+        NavigationStack(path: flowCoordinator.pathBinding) {
             ScrollView {
                 VStack(spacing: 20) {
                     FormField("Email") {
@@ -82,7 +81,7 @@ struct CryptoOnrampExampleView: View {
                     OAuthScopeSelector(
                         selectedScopes: $selectedScopes,
                         onOnrampScopesSelected: {
-                            selectedScopes = Set(OAuthScopes.onrampScope)
+                            selectedScopes = Set(OAuthScopes.requiredScopes)
                         },
                         onAllScopesSelected: {
                             selectedScopes = Set(OAuthScopes.allScopes)
@@ -100,36 +99,74 @@ struct CryptoOnrampExampleView: View {
                     if let errorMessage {
                         ErrorMessageView(message: errorMessage)
                     }
-
-                    if let coordinator {
-                        HiddenNavigationLink(
-                            destination: RegistrationView(
-                                coordinator: coordinator,
-                                email: email,
-                                selectedScopes: Array(selectedScopes),
-                                livemode: livemode
-                            ),
-                            isActive: $showRegistration
-                        )
-
-                        if let customerId = authenticationCustomerId {
-                            HiddenNavigationLink(
-                                destination: AuthenticatedView(
-                                    coordinator: coordinator,
-                                    customerId: customerId
-                                ),
-                                isActive: $showAuthenticatedView
-                            )
-                        }
-                    }
                 }
                 .padding()
             }
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
+                if let coordinator {
+                    ZStack {
+                        switch route {
+                        case let .registration(email, scopes):
+                            RegistrationView(
+                                coordinator: coordinator,
+                                email: email,
+                                selectedScopes: scopes,
+                                livemode: livemode
+                            ) { customerId in
+                                flowCoordinator.advanceAfterRegistration(customerId: customerId)
+                            }
+                        case .kycInfo:
+                            KYCInfoView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterKyc()
+                            }
+                        case .identity:
+                            IdentityVerificationView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterIdentity()
+                            }
+                        case let .wallets(customerId):
+                            WalletSelectionView(
+                                coordinator: coordinator,
+                                customerId: customerId
+                            ) { wallet in
+                                flowCoordinator.advanceAfterWalletSelection(wallet)
+                            }
+                        case let .payment(customerId, wallet):
+                            PaymentView(
+                                coordinator: coordinator,
+                                customerId: customerId,
+                                wallet: wallet
+                            ) { response, selectedPaymentMethodDescription in
+                                flowCoordinator.advanceAfterPayment(
+                                    createOnrampSessionResponse: response,
+                                    selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                                )
+                            }
+                        case let .paymentSummary(createOnrampSessionResponse, selectedPaymentMethodDescription):
+                            PaymentSummaryView(
+                                coordinator: coordinator,
+                                onrampSessionResponse: createOnrampSessionResponse,
+                                selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                            ) { message in
+                                flowCoordinator.advanceAfterPaymentSummary(successfulCheckoutMessage: message)
+                            }
+                        case let .checkoutSuccess(message):
+                            CheckoutSuccessView(message: message)
+                        }
+                    }
+                    .navigationBarBackButtonHidden(!route.allowsBackNavigation)
+                    .authenticatedUserToolbar(
+                        isShown: route.showsAuthenticatedUserToolbarItem,
+                        coordinator: coordinator,
+                        flowCoordinator: flowCoordinator
+                    )
+                }
+            }
         }
-        .navigationViewStyle(.stack)
         .onAppear {
+            flowCoordinator.isLoading = isLoading
+
             // Force livemode to false on simulator
             if isRunningOnSimulator {
                 livemode = false
@@ -142,7 +179,6 @@ struct CryptoOnrampExampleView: View {
         }
         .onChange(of: livemode) { _ in
             coordinator = nil
-            authenticationCustomerId = nil
             linkAuthIntentId = nil
             errorMessage = nil
             initializeCoordinator()
@@ -210,7 +246,7 @@ struct CryptoOnrampExampleView: View {
                     if lookupResult {
                         presentVerification(using: coordinator)
                     } else {
-                        showRegistration = true
+                        flowCoordinator.startForNewUser(email: email, selectedScopes: Array(selectedScopes))
                     }
                 }
             } catch {
@@ -235,12 +271,7 @@ struct CryptoOnrampExampleView: View {
                     switch result {
                     case .consented(let customerId):
                         await MainActor.run {
-                            authenticationCustomerId = customerId
-
-                            // Delay so the navigation link animation doesn't get canceled.
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showAuthenticatedView = true
-                            }
+                            flowCoordinator.startForExistingUser(customerId: customerId)
                         }
                     case .denied:
                         await MainActor.run {
@@ -280,7 +311,7 @@ struct OAuthScopeSelector: View {
                 Spacer()
 
                 HStack(spacing: 8) {
-                    Button("Onramp") {
+                    Button("Required") {
                         onOnrampScopesSelected()
                     }
                     .buttonStyle(.bordered)
@@ -330,6 +361,12 @@ struct OAuthScopeSelector: View {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.gray.opacity(0.05))
         )
+    }
+}
+
+private extension CryptoOnrampFlowCoordinator {
+    var pathBinding: Binding<[Route]> {
+        Binding(get: { self.path }, set: { self.path = $0 })
     }
 }
 

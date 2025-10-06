@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Dodajte podatke o plačilu";
 
-"Agree and continue" = "Strinjam se in nadaljuj";
-
 "Approve payment" = "Odobrite plačilo";
 
 "Are you sure you want to remove this card?" = "Ali res želite odstraniti to kartico?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila %1$@ in %2$@ se strinjate, da bodo vaši podatki shranjeni pri %3$@ za prihodnje nakupe, in se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila podjetju %@ se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -133,8 +133,6 @@
 "Failed to connect" = "Povezave ni bilo mogoče vzpostaviti";
 
 "Fast, secure checkout" = "Hitra in varna izvedba plačil";
-
-"For security, please re-enter your card’s security code." = "Iz varnostnih razlogov morate znova vnesti varnostno kodo svoje kartice.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Pridobite %@ povračila za prvo plačilo prek svojega bančnega računa. <terms>Oglejte si pogoje</terms>";
 
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "Navedena potrditvena koda je potekla.";
 
 "The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Ta kartica je potekla. Posodobite podatke o kartici ali izberite drug način plačila.";
 
 "This is your default" = "To je vaš privzeti način plačila";
 

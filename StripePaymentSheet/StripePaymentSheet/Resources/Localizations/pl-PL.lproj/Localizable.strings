@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Dodaj informacje o płatności";
 
-"Agree and continue" = "Zaakceptuj i kontynuuj";
-
 "Approve payment" = "Zatwierdź płatność";
 
 "Are you sure you want to remove this card?" = "Czy na pewno chcesz usunąć tę kartę?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Zapisując swoje konto bankowe dla %@, zgadzasz się na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Przesyłając zamówienie do %1$@ i %2$@, zgadzasz się na zachowanie informacji przez %3$@ do wykorzystania przy przyszłych zakupach oraz na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Przesyłając zamówienie do %@, wyrażasz zgodę na autoryzację płatności zgodnie z <terms>niniejszymi warunkami</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -133,8 +133,6 @@
 "Failed to connect" = "Nie udało się połączyć";
 
 "Fast, secure checkout" = "Szybka i bezpieczna finalizacja transakcji";
-
-"For security, please re-enter your card’s security code." = "Ze względów bezpieczeństwa wprowadź ponownie kod bezpieczeństwa Twojej karty.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Uzyskaj zwrot %@, gdy płacisz po raz pierwszy poprzez bank. <terms>Zobacz warunki</terms>";
 
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "Podany kod weryfikacyjny jest nieaktualny.";
 
 "The provided verification code is incorrect." = "Podany kod weryfikacyjny jest nieprawidłowy.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Termin ważności tej karty minął. Zaktualizuj informacje o karcie lub wybierz inną metodę płatności.";
 
 "This is your default" = "To Twoje ustawienie domyślne";
 

@@ -179,7 +179,10 @@ public class AddressViewController: UIViewController {
 
         guard isCompatible else { return nil }
 
-        // Default to checked if shipping address (defaultValues) is empty or not provided
+        // Only show checkbox if billing address has at least line1
+        guard billingAddress.address.line1?.nonEmpty != nil else { return nil }
+
+        // Default to checked if shipping address (defaultValues) is empty
         let isSelectedByDefault = configuration.defaultValues.address.isEmpty
 
         return CheckboxElement(
@@ -362,10 +365,18 @@ extension AddressViewController {
         // Populate name and phone if available
         addressSection.name?.setText(addressDetails.name ?? "")
         if let phone = addressDetails.phone {
-            addressSection.phone?.setPhoneNumber(phone)
-        }
-        if let phoneCountry = addressDetails.address.country {
-            addressSection.phone?.setSelectedCountryCode(phoneCountry, shouldUpdateDefaultNumber: false)
+            // Check if phone number is in E.164 format and parse it properly
+            if let parsedPhone = PhoneNumber.fromE164(phone) {
+                // Use parsed country code and local number for E.164 format
+                addressSection.phone?.setSelectedCountryCode(parsedPhone.countryCode, shouldUpdateDefaultNumber: false)
+                addressSection.phone?.setPhoneNumber(parsedPhone.number)
+            } else {
+                // Fall back to original logic for non-E.164 numbers
+                addressSection.phone?.setPhoneNumber(phone)
+                if let phoneCountry = addressDetails.address.country {
+                    addressSection.phone?.setSelectedCountryCode(phoneCountry, shouldUpdateDefaultNumber: false)
+                }
+            }
         }
     }
 

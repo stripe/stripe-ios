@@ -23,13 +23,22 @@ enum LinkUI {
 
     static let accountLookupDebounceTime: DispatchTimeInterval = .milliseconds(900)
 
+    static var useLiquidGlass: Bool = false
+    static var useLiquidGlassNavigationBar: Bool = false
+
     // MARK: - Corner radii
 
-    static let largeCornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 34 : 24
+    static var largeCornerRadius: CGFloat {
+        useLiquidGlass ? 34 : 24
+    }
 
-    static let cornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 26 : 12
+    static var cornerRadius: CGFloat {
+        useLiquidGlass ? 26 : 12
+    }
 
-    static let smallCornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 8 : 4
+    static var smallCornerRadius: CGFloat {
+        useLiquidGlass ? 8 : 4
+    }
 
     static let oneTimeCodeTextFieldCornerRadius: CGFloat = 12
     static let nestedInlineSignupSectionCornerRadius: CGFloat = 16
@@ -88,11 +97,17 @@ enum LinkUI {
 
     // MARK: - Navigation bar
 
-    static let navigationBarHeight: CGFloat = LiquidGlassDetector.isEnabled ? 76 : 70
+    static var navigationBarHeight: CGFloat {
+        useLiquidGlassNavigationBar ? 76 : 70
+    }
 
-    static let navigationBarButtonSize: CGFloat = LiquidGlassDetector.isEnabled ? 48 : 32
+    static var navigationBarButtonSize: CGFloat {
+        useLiquidGlassNavigationBar ? 48 : 32
+    }
 
-    static let navigationBarButtonContentSize: CGFloat = LiquidGlassDetector.isEnabled ? 20 : 12
+    static var navigationBarButtonContentSize: CGFloat {
+        useLiquidGlassNavigationBar ? 20 : 12
+    }
 
     // MARK: - Animations
 
@@ -119,6 +134,14 @@ extension LinkUI {
         UserDefaults.standard.bool(forKey: "STPLinkFeaturePreview")
     }
 
+}
+
+@_spi(STP) public func resetLinkUI() {
+    // We should refactor LinkUI to not be a singleton anymore, now that it's dependent
+    // on the dynamic configuration. That being said, we still want to be able to accurately
+    // reset it in the playground. That's what this method is for.
+    let configuration = PaymentSheet.Configuration()
+    LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
 }
 
 // MARK: - Typography
@@ -196,15 +219,36 @@ extension LinkUI {
         return (font.pointSize * lineHeight) - font.pointSize
     }
 
+    static let mandateLineSpacing: CGFloat = lineSpacing(fromRelativeHeight: 1.2, textStyle: .caption)
 }
 
 // MARK: - Appearance
 
 extension LinkUI {
 
-    static let appearance: PaymentSheet.Appearance = {
+    static func applyLiquidGlassIfPossible(configuration: PaymentElementConfiguration) {
+        Self.useLiquidGlass = configuration.appearance.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp
+        Self.useLiquidGlassNavigationBar = configuration.appearance.navigationBarStyle.isGlass
+        Self.appearance = createLinkAppearance()
+    }
+
+    static var appearance: PaymentSheet.Appearance = {
+        return createLinkAppearance()
+    }()
+
+    private static func createLinkAppearance() -> PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance.default
-        appearance.cornerRadius = LinkUI.cornerRadius
+
+        #if !os(visionOS)
+        if useLiquidGlass, #available(iOS 26.0, *) {
+            appearance.applyLiquidGlass()
+        }
+        if useLiquidGlassNavigationBar, #available(iOS 26.0, *) {
+            appearance.navigationBarStyle = .glass
+        }
+        #endif
+
+        appearance.cornerRadius = useLiquidGlass ? nil : LinkUI.cornerRadius
         appearance.colors.primary = .linkBorderSelected
         appearance.colors.background = .linkSurfacePrimary
 
@@ -239,11 +283,10 @@ extension LinkUI {
         appearance.primaryButton.font = LinkUI.font(forTextStyle: .bodyEmphasized)
 
         return appearance
-    }()
-
+    }
 }
 
-// MARK: - Appearance
+// MARK: - Inline logo
 
 extension LinkUI {
 

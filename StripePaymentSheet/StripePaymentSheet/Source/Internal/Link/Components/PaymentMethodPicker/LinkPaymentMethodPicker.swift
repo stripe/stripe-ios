@@ -149,7 +149,6 @@ final class LinkPaymentMethodPicker: UIView {
         ])
 
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
         stackView.clipsToBounds = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -177,7 +176,12 @@ final class LinkPaymentMethodPicker: UIView {
         clipsToBounds = true
         accessibilityIdentifier = "Stripe.Link.PaymentMethodPicker"
 
-        layer.cornerRadius = LinkUI.cornerRadius
+        if let cornerRadius = LinkUI.appearance.cornerRadius {
+            layer.cornerRadius = cornerRadius
+        } else {
+            ios26_applyDefaultCornerConfiguration()
+        }
+
         layer.borderColor = UIColor.linkBorderDefault.cgColor
         updateTintColors()
         backgroundColor = .linkSurfaceSecondary

@@ -16,8 +16,6 @@
 
 "Add your payment information" = "添加您的支付信息";
 
-"Agree and continue" = "同意并继续";
-
 "Approve payment" = "批准付款";
 
 "Are you sure you want to remove this card?" = "您确定要移除此卡吗？";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 银行账户即表示您同意按照<terms>这些条款</terms>授权付款。";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "通过向 %1$@ 和 %2$@ 提交订单，您同意将您的信息保存在 %3$@ 用于将来购买使用，并同意根据<terms>这些条款</terms>授权支付。";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "向 %@ 提交您的订单即表示您同意按照<terms>这些条款</terms>授权付款。";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -133,8 +133,6 @@
 "Failed to connect" = "连接失败";
 
 "Fast, secure checkout" = "快速、安全的结账";
-
-"For security, please re-enter your card’s security code." = "出于安全原因，请重新输入您的银行卡的安全码。";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "通过您的银行首次支付时获得 %@ 的返现。<terms>查看条款</terms>";
 
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "提供的验证码已过期。";
 
 "The provided verification code is incorrect." = "提供的验证码不正确。";
-
-"This card has expired. Update your card info or choose a different payment method." = "该卡已过期。更新您的银行卡信息或选择另一支付方式。";
 
 "This is your default" = "这是您的默认地址";
 

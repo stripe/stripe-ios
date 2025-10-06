@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Aggiungi dati di pagamento";
 
-"Agree and continue" = "Accetta e continua";
-
 "Approve payment" = "Approva pagamento";
 
 "Are you sure you want to remove this card?" = "Rimuovere questa carta?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvando il tuo conto bancario per %@, accetti di autorizzare i pagamenti conformemente a <terms>questi termini</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Inviando l'ordine a %1$@ e %2$@, accetti di salvare le informazioni con %3$@ per acquisti futuri e accetti di autorizzare i pagamenti ai sensi dei <terms>presenti Termini</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Inviando l'ordine a %@, accetti di autorizzare i pagamenti in conformità con i presenti termini.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -133,8 +133,6 @@
 "Failed to connect" = "Connessione non riuscita";
 
 "Fast, secure checkout" = "Checkout veloce e sicuro";
-
-"For security, please re-enter your card’s security code." = "Per motivi di sicurezza inserisci di nuovo il codice di sicurezza della tua carta.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Ti restituiamo %@ quando effettui il primo pagamento con la tua banca. <terms>Consulta i termini</terms>";
 
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "Il codice di verifica specificato è scaduto.";
 
 "The provided verification code is incorrect." = "Il codice di verifica specificato non è corretto.";
-
-"This card has expired. Update your card info or choose a different payment method." = "La carta è scaduta. Aggiorna i dati della carta o scegli un altro metodo di pagamento.";
 
 "This is your default" = "È la tua impostazione predefinita";
 

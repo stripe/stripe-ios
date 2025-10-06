@@ -107,10 +107,7 @@ final class LinkSignUpViewModel: NSObject {
 
     var signUpButtonTitle: String {
         shouldShowPhoneNumberField
-            ? STPLocalizedString(
-                "Agree and continue",
-                "Title for a button that when tapped creates a Link account for the user."
-            )
+            ? String.Localized.continue
             : STPLocalizedString(
                 "Log in or sign up",
                 "Title for a button that indicates a user can log in or sign up."

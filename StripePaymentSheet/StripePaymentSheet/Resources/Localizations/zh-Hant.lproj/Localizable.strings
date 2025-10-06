@@ -16,8 +16,6 @@
 
 "Add your payment information" = "添加您的支付資訊";
 
-"Agree and continue" = "同意並繼續";
-
 "Approve payment" = "批准付款";
 
 "Are you sure you want to remove this card?" = "您確定要移除此卡嗎？";
@@ -119,8 +117,6 @@
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "連接失敗";
-
-"For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您的金融卡的安全碼。";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "透過您的銀行首次支付時獲得 %@ 的返現。<terms>查看條款</terms>";
 
@@ -263,8 +259,6 @@
 "The provided verification code has expired." = "提供的驗證碼已過期。";
 
 "The provided verification code is incorrect." = "提供的驗證碼不正確。";
-
-"This card has expired. Update your card info or choose a different payment method." = "該卡已過期。更新您的金融卡資訊或選擇另一支付方式。";
 
 "This is your default" = "這是您的預設支付方式";
 

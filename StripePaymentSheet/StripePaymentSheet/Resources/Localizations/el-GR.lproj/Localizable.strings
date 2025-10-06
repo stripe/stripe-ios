@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Προσθέστε τα στοιχεία πληρωμής σας";
 
-"Agree and continue" = "Αποδοχή και συνέχεια";
-
 "Approve payment" = "Έγκριση πληρωμής";
 
 "Are you sure you want to remove this card?" = "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτήν την κάρτα;";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Υποβάλλοντας την παραγγελία σας σε %1$@ και σε %2$@, συμφωνείτε στην αποθήκευση των στοιχείων σας στο %3$@ για μελλοντικές αγορές και συμφωνείτε στην εξουσιοδότηση πληρωμών σύμφωνα με <terms>αυτούς τους όρους</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Υποβάλλοντας την παραγγελία σας σε %@, συμφωνείτε στην εξουσιοδότηση πληρωμών σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -133,8 +133,6 @@
 "Failed to connect" = "Δεν ήταν δυνατή η σύνδεση";
 
 "Fast, secure checkout" = "Γρήγορο, ασφαλές ταμείο";
-
-"For security, please re-enter your card’s security code." = "Για λόγους ασφάλειας, εισαγάγετε πάλι τον κωδικό ασφαλείας της κάρτας σας.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Λάβετε επιστροφή %@ όταν πληρώσετε για πρώτη φορά με την τράπεζά σας. <terms>Δείτε τους όρους</terms>";
 
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "Ο κωδικός επαλήθευσης που παρασχέθηκε έχει λήξει.";
 
 "The provided verification code is incorrect." = "Ο κωδικός επαλήθευσης που παρασχέθηκε είναι λανθασμένος.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Αυτή η κάρτα έχει λήξει. Ενημερώστε τα στοιχεία της κάρτας σας ή επιλέξτε διαφορετική μέθοδο πληρωμής.";
 
 "This is your default" = "Αυτή είναι η προεπιλογή σας";
 

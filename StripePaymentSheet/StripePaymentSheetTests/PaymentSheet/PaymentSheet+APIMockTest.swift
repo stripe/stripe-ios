@@ -83,11 +83,13 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         unredactedPhoneNumber: "(555) 555-5555",
                         phoneNumberCountry: "US",
                         verificationSessions: [.init(type: .sms, state: .verified)],
-                        supportedPaymentDetailsTypes: [.card]
+                        supportedPaymentDetailsTypes: [.card],
+                        mobileFallbackWebviewParams: nil
                     ),
                     publishableKey: "pk_xxx_for_link_account_xxx",
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 paymentDetails: .init(
                     stripeID: "pd1",
@@ -189,11 +191,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                             unredactedPhoneNumber: "(555) 555-5555",
                             phoneNumberCountry: "US",
                             verificationSessions: [.init(type: .sms, state: .verified)],
-                            supportedPaymentDetailsTypes: [.card]
+                            supportedPaymentDetailsTypes: [.card],
+                            mobileFallbackWebviewParams: nil
                         ),
                         publishableKey: MockParams.publicKey,
                         displayablePaymentDetails: nil,
-                        useMobileEndpoints: false),
+                        useMobileEndpoints: false,
+                        canSyncAttestationState: false
+                    ),
                     paymentDetails: .init(
                         stripeID: "pd1",
                         details: .card(card: .init(
@@ -261,7 +266,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     session: nil,
                     publishableKey: "pk_123",
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 phoneNumber: PhoneNumber(number: "5555555555", countryCode: "US")!,
                 consentAction: .implied_v0_0,

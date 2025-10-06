@@ -220,6 +220,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil
     ) {
+        LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+
         self.init(
             context: Context(
                 intent: intent,
@@ -600,7 +602,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             switch sessionResult {
             case .success(let session):
                 session.createLinkAccountSession(
-                    consumerAccountPublishableKey: linkAccount.publishableKey,
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
                     intentToken: self?.context.intent.stripeId
                 ) { [session, weak self] linkAccountSessionResult in

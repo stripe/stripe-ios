@@ -46,10 +46,21 @@ import UIKit
     }
 
     /// Errors specific incorrect integrations with LinkController
-    @_spi(STP) public enum IntegrationError: Error {
+    @_spi(STP) public enum IntegrationError: LocalizedError {
         case noPaymentMethodSelected
         case noActiveLinkConsumer
         case missingAppAttestation
+
+        @_spi(STP) public var errorDescription: String? {
+            switch self {
+            case .noPaymentMethodSelected:
+                return "No payment method has been selected."
+            case .noActiveLinkConsumer:
+                return "No active Link consumer is available."
+            case .missingAppAttestation:
+                return "App attestation is missing or device cannot use native Link."
+            }
+        }
     }
 
     @_spi(STP) public enum Mode {
@@ -101,6 +112,10 @@ import UIKit
 
     /// A preview of the currently selected Link payment method.
     @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
+
+    @_spi(STP) public var elementsSessionID: String {
+        elementsSession.sessionID
+    }
 
     /// The merchant logo URL from the elements session, if available.
     @_spi(STP) public var merchantLogoUrl: URL? {
@@ -301,22 +316,27 @@ import UIKit
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
+    /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
     @_spi(STP) public func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        collectName: Bool = false,
         completion: @escaping () -> Void
     ) {
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
+
+        if collectName {
+            configuration.billingDetailsCollectionConfiguration.name = .always
+        }
 
         // TODO: We need a way to override Link's default primary button label, since we don't want to show "Pay $xx.xx" even for payment mode.
         print("Presenting Link wallet for \(mode)")
 
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
-            linkAccount: linkAccount,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -482,7 +502,6 @@ import UIKit
 
         apiClient.updatePhoneNumber(
             consumerSessionClientSecret: consumerSessionClientSecret,
-            consumerAccountPublishableKey: linkAccount.publishableKey,
             phoneNumber: phoneNumber,
             requestSurface: requestSurface
         ) { [weak self] result in
@@ -503,14 +522,13 @@ import UIKit
             completion(.success(()))
         }
 
-        guard let session = linkAccount?.currentSession, let publishableKey = linkAccount?.publishableKey else {
+        guard let session = linkAccount?.currentSession else {
             // If no Link account is available, treat this as a success.
             clearLinkAccountContextAndComplete()
             return
         }
 
         session.logout(
-            consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface,
             completion: { result in
                 switch result {
@@ -538,6 +556,7 @@ import UIKit
             apiClient: linkAccount.apiClient,
             cookieStore: linkAccount.cookieStore,
             useMobileEndpoints: linkAccount.useMobileEndpoints,
+            canSyncAttestationState: linkAccount.canSyncAttestationState,
             requestSurface: linkAccount.requestSurface
         )
     }
@@ -585,7 +604,6 @@ import UIKit
         apiClient.sharePaymentDetails(
             for: consumerSessionClientSecret,
             id: paymentDetails.stripeID,
-            consumerAccountPublishableKey: nil,
             overridePublishableKey: overridePublishableKey,
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
@@ -886,11 +904,22 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
+    /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Returns: A `PaymentMethodDisplayData` if the user selected a payment method, or `nil` otherwise.
-    func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?, supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases) async -> LinkController.PaymentMethodPreview? {
+    func collectPaymentMethod(
+        from presentingViewController: UIViewController,
+        with email: String?,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        collectName: Bool = false
+    ) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                self.collectPaymentMethod(from: presentingViewController, with: email, supportedPaymentMethodTypes: supportedPaymentMethodTypes) { [weak self] in
+                self.collectPaymentMethod(
+                    from: presentingViewController,
+                    with: email,
+                    supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                    collectName: collectName
+                ) { [weak self] in
                     guard let self else { return }
                     continuation.resume(returning: self.paymentMethodPreview)
                 }

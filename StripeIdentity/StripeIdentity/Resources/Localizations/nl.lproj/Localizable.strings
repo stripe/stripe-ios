@@ -6,9 +6,13 @@
 
 "App Settings" = "App-instellingen";
 
-"Back identity card photo successfully uploaded" = "Foto van achterkant van identiteitskaart is geüpload";
+"Back %@ photo successfully uploaded" = "Terug %@ foto succesvol geüpload";
 
-"Back of identity card" = "Achterkant van identiteitskaart";
+"Back identity document photo successfully uploaded" = "Foto van identiteitsbewijs succesvol geüpload";
+
+"Back of %@" = "Achterkant van %@";
+
+"Back of driver's license or government-issued photo ID" = "Achterkant van rijbewijs of officieel identiteitsbewijs met foto";
 
 "Back of identity document" = "Achterkant van identiteitsbewijs";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Details niet zichtbaar";
 
+"Flip your %@ over to the other side" = "Draai je %@ naar de andere kant om";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Draai het rijbewijs of officieel identiteitsbewijs met foto om zodat de andere kant zichtbaar is";
+
 "Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
 
-"Front identity card photo successfully uploaded" = "Foto van voorkant van identiteitskaart is geüpload";
+"Front %@ photo successfully uploaded" = "Voorkant %@ foto succesvol geüpload";
 
-"Front of identity card" = "Voorkant van identiteitskaart";
+"Front identity document photo successfully uploaded" = "Foto voor identiteitsbewijs succesvol geüpload";
+
+"Front of %@" = "Voorkant van %@";
+
+"Front of driver's license or government-issued photo ID" = "Voorkant van rijbewijs of officieel identiteitsbewijs met foto";
+
+"Front of driver's license or passport" = "Voorkant van rijbewijs of paspoort";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Voorkant van rijbewijs, paspoort of officieel identiteitsbewijs met foto";
 
 "Front of identity document" = "Voorkant van identiteitsbewijs";
+
+"Front of passport or government-issued photo ID" = "Voorkant van paspoort of officieel identiteitsbewijs met foto";
 
 "Get ready to scan your photo ID" = "Bereid je voor om je foto-ID te scannen";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Fotobibliotheek";
 
-"Please upload images of the front and back of your identity card" = "Upload afbeeldingen van de voor- en achterkant van je identiteitskaart";
+"Please upload images of the front and back of your %@" = "Upload afbeeldingen van de voor- en achterkant van je %@.";
+
+"Please upload images of the front and back of your identity document" = "Upload foto's van de voor- en achterkant van uw identiteitsbewijs";
+
+"Position your %@ in the center of the frame" = "Plaats je %@ in het midden van het frame";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Plaats het rijbewijs of officieel identiteitsbewijs met foto in het midden van het frame";
+
+"Position your driver's license or passport in the center of the frame" = "Plaats het rijbewijs of paspoort midden in het frame";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Plaats het rijbewijs, paspoort of officieel identiteitsbewijs met foto in het midden van het frame";
 
 "Position your face in the center of the frame." = "Houd je gezicht in het midden van het frame.";
 
-"Position your identity card in the center of the frame" = "Plaats je identiteitskaart midden in het frame";
+"Position your identity document in the center of the frame" = "Plaats uw identiteitsbewijs in het midden van het frame";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Plaats het paspoort of officieel identiteitsbewijs met foto in het midden van het frame";
 
 "Retake Photos" = "Nieuwe foto's maken";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Selecteer een locatie vanwaar je de voorkant van je identiteitsbewijs wilt uploaden";
 
-"Select back identity card photo" = "Foto van achterkant van identiteitskaart selecteren";
+"Select back %@ photo" = "Selecteer achterkant %@ foto";
 
-"Select front identity card photo" = "Foto van voorkant van identiteitskaart selecteren";
+"Select back identity document photo" = "Selecteer een foto van het identiteitsbewijs aan de achterkant";
+
+"Select front %@ photo" = "Selecteer voorkant %@ foto";
+
+"Select front identity document photo" = "Selecteer de foto van het identiteitsbewijs aan de voorkant";
 
 "Selfie" = "Selfie";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Een foto uploaden";
 
+"Upload your %@" = "Upload je %@";
+
 "Upload your photo ID" = "Je identiteitsbewijs uploaden";
 
-"Uploading back identity card photo" = "Foto van achterkant van identiteitskaart uploaden";
+"Uploading back %@ photo" = "Foto %@ achterkant uploaden";
 
-"Uploading front identity card photo" = "Foto van voorkant van identiteitskaart uploaden";
+"Uploading back identity document photo" = "Foto van achterkant identiteitsbewijs uploaden";
+
+"Uploading front %@ photo" = "Uploaden voorkant %@ foto";
+
+"Uploading front identity document photo" = "Foto voor voorkant identiteitsbewijs uploaden";
 
 "Verify your identity" = "Je identiteit verifiëren";
 
