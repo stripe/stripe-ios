@@ -11,6 +11,11 @@ import XCTest
 
 @available(iOS 16.0, *)
 class WalletButtonsViewTests: XCTestCase {
+    override class func setUp() {
+        // Generate session ID (would normally happen on FlowController.create, but doesn't happen in these tests)
+        AnalyticsHelper.shared.generateSessionID()
+    }
+
     func testWalletButtonsWithLinkAndApplePay() {
         // Create mock elements session with Link and Apple Pay
         let elementsSession = STPElementsSession(
