@@ -591,9 +591,18 @@ class PlaygroundController: ObservableObject {
     private var subscribers: Set<AnyCancellable> = []
 
     convenience init() {
-        let settings = Self.settingsFromDefaults() ?? .defaultValues()
-        let appearance = Self.appearanceFromDefaults() ?? .default
-        self.init(settings: settings, appearance: appearance)
+        self.init(settings: .defaultValues(), appearance: .default)
+
+        Task.detached {
+            let settings = Self.settingsFromDefaults() ?? .defaultValues()
+            let appearance = Self.appearanceFromDefaults() ?? .default
+
+            await MainActor.run {
+                self.settings = settings
+                self.appearance = appearance
+                self.loadLastSavedCustomer()
+            }
+        }
     }
 
     init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
@@ -611,7 +620,7 @@ class PlaygroundController: ObservableObject {
         self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
 
-        $settings.removeDuplicates().sink { [weak self] newValue in
+        $settings.dropFirst().sink { [weak self] newValue in
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
