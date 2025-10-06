@@ -47,7 +47,8 @@ extension STPElementsSession {
         linkAccount.sessionState == .requiresVerification &&
         !linkAccount.hasStartedSMSVerification &&
         linkAccount.useMobileEndpoints &&
-        self.linkSettings?.suppress2FAModal != true
+        self.linkSettings?.suppress2FAModal != true &&
+        linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required
     }
 
     var linkFlags: [String: Bool] {
