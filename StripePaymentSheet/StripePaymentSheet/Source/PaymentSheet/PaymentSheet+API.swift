@@ -822,6 +822,10 @@ extension PaymentSheet {
         // Only log out non-verified merchants.
         return elementsSession.linkSettings?.useAttestationEndpoints != true
     }
+
+    static func deadcode() {
+       print("hello")
+    }
 }
 
 /// A helper method to compare shipping details
