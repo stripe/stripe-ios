@@ -50,7 +50,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     private var addressSectionElement: AddressSectionElement?
     /// Reference to the CardSectionElement in the form, if present
     private var cardSectionElement: CardSectionElement?
-    
+
     var overrideActionButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let paymentOption = paymentOption,
@@ -263,7 +263,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
         // Setup AddressSectionElement autocomplete callback after form creation
         setupAddressSectionAutocompleteCallback(for: formElement)
-        
+
         // Setup CardSectionElement reference for card scan control
         setupCardSectionElementReference(for: formElement)
 
@@ -285,7 +285,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             }
         }
     }
-    
+
     /// Sets up the CardSectionElement reference to be used for controlling the card scanner visibility
     private func setupCardSectionElementReference(for formElement: PaymentMethodElement) {
         let unwrappedFormElement = (formElement as? PaymentMethodElementWrapper<FormElement>)?.element ?? formElement
