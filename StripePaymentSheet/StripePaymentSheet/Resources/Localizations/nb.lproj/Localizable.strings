@@ -134,8 +134,6 @@
 
 "Fast, secure checkout" = "Rask og sikker utsjekking";
 
-"For security, please re-enter your card’s security code." = "For sikkerhets skyld må du skrive inn sikkerhetskoden for kortet ditt på nytt.";
-
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler for første gang med banken din.<terms>Se vilkår</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler med banken din. <terms>Se vilkår</terms>";
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "Den oppgitte verifiseringskoden er utløpt.";
 
 "The provided verification code is incorrect." = "Den oppgitte verifiseringskoden er ikke korrekt.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Dette kortet er utløpt. Oppdater kortinformasjonen eller velg en annen betalingsmetode.";
 
 "This is your default" = "Dette er standarden din";
 

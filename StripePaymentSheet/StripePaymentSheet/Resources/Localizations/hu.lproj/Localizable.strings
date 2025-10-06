@@ -132,8 +132,6 @@
 
 "Fast, secure checkout" = "Gyors és biztonságos fizetés";
 
-"For security, please re-enter your card’s security code." = "Biztonsági okból adja meg újra kártyája biztonsági kódját.";
-
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Kapjon vissza %@ összeget, amikor először fizet bankjával. <terms>Olvassa el a feltételeket</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Kapjon vissza %@ összeget, amikor bankjával fizet. <terms>Olvassa el a feltételeket</terms>";
@@ -281,8 +279,6 @@
 "The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
 
 "The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Ez a kártya lejárt. Frissítse a kártyájat, vagy használjon másik fizetési módot.";
 
 "This is your default" = "Ez az alapértelmezett";
 

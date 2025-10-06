@@ -134,8 +134,6 @@
 
 "Fast, secure checkout" = "Thanh toán nhanh chóng, an toàn";
 
-"For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
-
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán lần đầu tiên với ngân hàng. <terms>Xem điều khoản</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán bằng ngân hàng.<terms>Xem điều khoản</terms>";
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
 
 "The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Thẻ này đã hết hạn. Hãy cập nhật thông tin thẻ của bạn hoặc chọn một phương thức thanh toán khác.";
 
 "This is your default" = "Đây là thông tin mặc định của bạn";
 

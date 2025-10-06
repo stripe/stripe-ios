@@ -1,3 +1,11 @@
+## 24.24.2 2025-10-06
+
+### PaymentSheet
+* [Improved] Improved CVC recollection UI in Link
+
+### General
+* [Improved] Added automatic retry on network errors when fetching payment intents for improved resilience
+
 ## 24.24.1 2025-09-29
 
 ### Connect
