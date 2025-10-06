@@ -68,7 +68,6 @@ public class PaymentSheet {
 
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
-    public var foo: String = ""
 
     /// The most recent error encountered by the customer, if any.
     public internal(set) var mostRecentError: Error?
@@ -77,7 +76,7 @@ public class PaymentSheet {
     /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
+    public convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
         self.init(
             mode: .paymentIntentClientSecret(paymentIntentClientSecret),
             configuration: configuration
