@@ -13,7 +13,8 @@
 extension STPAPIClient {
 
     /// Errors that can occur that are specific to usage of crypto endpoints.
-    enum CryptoOnrampAPIError: LocalizedError {
+    @_spi(STP)
+    public enum CryptoOnrampAPIError: LocalizedError {
 
         /// No consumer session client secret was found to be associated with the active link account session.
         case missingConsumerSessionClientSecret
@@ -21,7 +22,8 @@ extension STPAPIClient {
         /// The request requires a session with a verified link account, but the account was found to not be verified.
         case linkAccountNotVerified
 
-        var errorDescription: String? {
+        @_spi(STP)
+        public var errorDescription: String? {
             switch self {
             case .missingConsumerSessionClientSecret:
                 return "No consumer session client secret was found to be associated with the active link account session."
@@ -40,10 +42,6 @@ extension STPAPIClient {
         }
 
         try validateSessionState(using: linkAccountInfo)
-
-        guard case .verified = linkAccountInfo.sessionState else {
-            throw CryptoOnrampAPIError.linkAccountNotVerified
-        }
 
         let endpoint = "crypto/internal/customers"
         let requestObject = CustomerRequest(consumerSessionClientSecret: consumerSessionClientSecret)
