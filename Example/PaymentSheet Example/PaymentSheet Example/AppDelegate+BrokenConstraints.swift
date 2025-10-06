@@ -41,6 +41,7 @@ extension AppDelegate {
             "UISV-spacing' H:[_UIInterfaceActionCustomViewRepresentationView:", // Same as ^
             "_UIModernBarButton:", // iOS 26+ keyboard toolbar issue
             "_UIRemoteKeyboardPlaceholderView:", // iOS 26+ keyboard toolbar issue
+            "TUIKeyplane", // iOS 26+ keyboard issue
         ]
         guard !ignoredBrokenConstraints.contains(where: { constraint.debugDescription.contains($0) }) else {
             return
