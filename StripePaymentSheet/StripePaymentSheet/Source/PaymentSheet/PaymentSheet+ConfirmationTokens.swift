@@ -45,7 +45,7 @@ extension PaymentSheet {
                                                                         radarOptions: radarOptions)
 
             let ephemeralKeySecret: String? = {
-                // Only needed when using existing saved payment methods, API will error if provided for now payment methods
+                // Only needed when using existing saved payment methods, API will error if provided for new payment methods
                 guard confirmationTokenParams.paymentMethod != nil else { return nil }
                 // Link saved payment methods don't require ephemeral keys, API will error if provided
                 guard !isSavedFromLink(from: confirmType) else { return nil }
