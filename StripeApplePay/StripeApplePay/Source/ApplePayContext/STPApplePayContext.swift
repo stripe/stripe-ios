@@ -197,11 +197,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     ///   - completion:               Called after the Apple Pay sheet is presented
     @objc(presentApplePayFromWindow:completion:)
     public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil) {
-        self.startTime = Date()
-        let startedAnalytic = Analytic(event: .applePayContextStarted)
-        analyticsClient.log(analytic: startedAnalytic, apiClient: apiClient)
         presentationWindow = window
-        guard !didPresentApplePay else {
+        guard !didPresentApplePay, !didFinish else {
             assert(
                 false,
                 "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
@@ -209,6 +206,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             return
         }
         didPresentApplePay = true
+        self.startTime = Date()
+        let startedAnalytic = Analytic(event: .applePayContextStarted)
+        analyticsClient.log(analytic: startedAnalytic, apiClient: apiClient)
 
         // This instance (and the associated Objective-C bridge object, if any) must live so
         // that the apple pay sheet is dismissed; until then, the app is effectively frozen.
@@ -253,12 +253,22 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// - Note: You must create a new instance of ApplePayContext after using this method.
     @objc(dismissWithCompletion:)
     public func dismiss(completion: STPVoidBlock? = nil) {
-        guard didPresentApplePay else {
+        guard didPresentApplePay, !didFinish else {
             return
         }
         authorizationController.dismiss {
-            stpDispatchToMainThreadIfNecessary {
+            stpDispatchToMainThreadIfNecessary { [self] in
                 completion?()
+                let finishedAnalytic = Analytic(
+                    event: .applePayContextFinished,
+                    intentID: intentID,
+                    status: .userCancellation,
+                    duration: startTime.map {
+                        Date().timeIntervalSince($0)
+                    },
+                    error: error
+                )
+                self.analyticsClient.log(analytic: finishedAnalytic, apiClient: apiClient)
                 self._end()
             }
         }
@@ -270,7 +280,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// ApplePayContext passes this to the /confirm endpoint for PaymentIntents if it did not collect shipping details itself.
     /// :nodoc:
     @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
-    private weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
+    weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
     @objc var authorizationController: PKPaymentAuthorizationController
     @_spi(STP) public var returnUrl: String?
 
@@ -294,7 +304,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     private var didCancelOrTimeoutWhilePending = false
     private var didPresentApplePay = false
     /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
-    private var didFinish = false
+    var didFinish = false
 
     /// :nodoc:
     @objc public override func responds(to aSelector: Selector!) -> Bool {
@@ -378,6 +388,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
         delegate = nil
+        authorizationController.delegate = nil
         didFinish = true
     }
 

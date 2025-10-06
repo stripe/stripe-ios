@@ -96,8 +96,8 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "success")
     }
 
     func testCompletesAutomaticConfirmationPaymentIntent() {
@@ -131,8 +131,8 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "success")
     }
 
     func testCompletesAutomaticConfirmationPaymentIntentManualCapture() {
@@ -164,8 +164,8 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "success")
     }
 
     func testCompletesSetupIntent() {
@@ -197,21 +197,23 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "success")
     }
 
     func testDismiss() {
         // Dismissing before presenting...
         context.dismiss()
         // ...does nothing
-        XCTAssertNotNil(context.authorizationController)
+        XCTAssertFalse(context.didFinish)
+        XCTAssertNotNil(context.delegate)
 
         // Dismissing after presentation...
         context.presentApplePay()
         context.dismiss()
         // ...cleans up state
-        XCTAssertNil(context.authorizationController)
+        XCTAssertTrue(context.didFinish)
+        XCTAssertNil(context.delegate)
         // ...and does not call the didComplete delegate method
         let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
         didCallCompletion.isInverted = true
@@ -219,7 +221,10 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
             didCallCompletion.fulfill()
         }
         waitForExpectations(timeout: 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 0)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 2)
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.started")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "user_cancellation")
     }
 
     // MARK: - Error tests
@@ -249,11 +254,10 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as? String, "stripeios.applepaycontext.confirm.finished")
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["status"] as? String, "error")
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["error_type"] as? String, "invalid_request_error")
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["error_code"] as? String, "resource_missing")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "error")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["error_type"] as? String, "invalid_request_error")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["error_code"] as? String, "resource_missing")
     }
 
     func testBadSetupIntentClientSecretErrors() {
@@ -281,11 +285,10 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as? String, "stripeios.applepaycontext.confirm.finished")
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["status"] as? String, "error")
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["error_type"] as? String, "invalid_request_error")
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["error_code"] as? String, "resource_missing")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "error")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["error_type"] as? String, "invalid_request_error")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["error_code"] as? String, "resource_missing")
     }
 
     // MARK: - Cancel tests
@@ -311,9 +314,8 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as? String, "stripeios.applepaycontext.confirm.finished")
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["status"] as? String, "user_cancellation")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "user_cancellation")
     }
 
     func testCancelAfterPaymentIntentConfirmsStillSucceeds() {
@@ -346,8 +348,8 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: 20.0, handler: nil) // give this a longer timeout, it tends to take a while
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as! String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "success")
     }
 
     func testCancelAfterSetupIntentConfirmsStillSucceeds() {
@@ -380,8 +382,8 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
 
         waitForExpectations(timeout: 20.0, handler: nil) // give this a longer timeout, it tends to take a while
-        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
-        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "success")
     }
 
     // MARK: - Helper
