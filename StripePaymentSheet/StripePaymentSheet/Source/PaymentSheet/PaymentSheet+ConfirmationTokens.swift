@@ -103,168 +103,75 @@ extension PaymentSheet {
         confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customer?.id)
 
         // 2. Configure payment method details based on confirm type
-        configurePaymentMethodDetails(
-            confirmationTokenParams,
-            confirmType: confirmType,
-            allowsSetAsDefaultPM: allowsSetAsDefaultPM,
-            radarOptions: radarOptions
-        )
-
-        // 3. Set setup future usage based on intent configuration and user choice
-        configureSetupFutureUsage(
-            confirmationTokenParams,
-            confirmType: confirmType,
-            intentConfig: intentConfig
-        )
-
-        // 4. Set mandate data (explicit or auto-generated)
-        configureMandateData(
-            confirmationTokenParams,
-            confirmType: confirmType,
-            intentConfig: intentConfig,
-            explicitMandateData: mandateData
-        )
-
-        return confirmationTokenParams
-    }
-
-    /// Configures payment method details for the confirmation token
-    ///
-    /// Sets up either a saved payment method ID or new payment method data,
-    /// along with payment options and attribution metadata.
-    ///
-    /// - Parameters:
-    ///   - params: The confirmation token parameters to configure
-    ///   - confirmType: The payment method type (saved or new)
-    ///   - allowsSetAsDefaultPM: Whether setting as default is allowed
-    ///   - radarOptions: Fraud detection options for new payment methods
-    private static func configurePaymentMethodDetails(
-        _ params: STPConfirmationTokenParams,
-        confirmType: ConfirmPaymentMethodType,
-        allowsSetAsDefaultPM: Bool,
-        radarOptions: STPRadarOptions?
-    ) {
         switch confirmType {
         case .saved(let paymentMethod, let paymentOptions, let clientAttributionMetadata):
             // Use existing saved payment method
-            params.paymentMethod = paymentMethod.stripeId
-            params.paymentMethodOptions = paymentOptions
-            params.clientAttributionMetadata = clientAttributionMetadata
+            confirmationTokenParams.paymentMethod = paymentMethod.stripeId
+            confirmationTokenParams.paymentMethodOptions = paymentOptions
+            confirmationTokenParams.clientAttributionMetadata = clientAttributionMetadata
         case .new(let paymentMethodParams, let paymentOptions, _, _, let shouldSetAsDefaultPM):
-            params.paymentMethodData = paymentMethodParams
-            params.paymentMethodData?.radarOptions = radarOptions
-            params.paymentMethodOptions = paymentOptions
-            params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
+            confirmationTokenParams.paymentMethodData = paymentMethodParams
+            confirmationTokenParams.paymentMethodData?.radarOptions = radarOptions
+            confirmationTokenParams.paymentMethodOptions = paymentOptions
+            confirmationTokenParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
 
             // Set as default payment method if requested and allowed
             if allowsSetAsDefaultPM && shouldSetAsDefaultPM == true {
-                params.setAsDefaultPM = NSNumber(value: true)
+                confirmationTokenParams.setAsDefaultPM = NSNumber(value: true)
             }
         }
-    }
 
-    /// Configures setup future usage for saving payment methods
-    ///
-    /// Determines when to save payment methods based on intent mode and user choice.
-    /// For setup intents, always uses the configured value. For payment intents,
-    /// prioritizes user selection over intent configuration.
-    ///
-    /// - Parameters:
-    ///   - params: The confirmation token parameters to configure
-    ///   - confirmType: The payment method type with user save preference
-    ///   - intentConfig: Intent configuration with setup future usage settings
-    private static func configureSetupFutureUsage(
-        _ params: STPConfirmationTokenParams,
-        confirmType: ConfirmPaymentMethodType,
-        intentConfig: PaymentSheet.IntentConfiguration
-    ) {
+        // 3. Set setup future usage based on intent configuration and user choice
         switch intentConfig.mode {
         case .setup(_, let setupFutureUsage):
             // Setup intents: Always use the configured setup future usage value
-            params.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
+            confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
         case .payment(_, _, let intentSetupFutureUsage, _, let paymentMethodOptions):
             let paymentMethodType = paymentMethodType(from: confirmType)
             // Priority order: user checkbox > PMO SFU > top-level SFU
             if confirmType.shouldSave {
                 // 1. User chose to save payment method via checkbox takes highest priority
-                params.setupFutureUsage = .offSession
+                confirmationTokenParams.setupFutureUsage = .offSession
             } else if let pmoSFU = paymentMethodOptions?.setupFutureUsageValues?[paymentMethodType] {
                 // 2. PMO SFU takes second priority
-                params.setupFutureUsage = pmoSFU.paymentIntentParamsValue
+                confirmationTokenParams.setupFutureUsage = pmoSFU.paymentIntentParamsValue
             } else if let intentSetupFutureUsage = intentSetupFutureUsage {
                 // 3. Use top-level intent configuration as fallback
-                params.setupFutureUsage = intentSetupFutureUsage.paymentIntentParamsValue
+                confirmationTokenParams.setupFutureUsage = intentSetupFutureUsage.paymentIntentParamsValue
             }
         }
-    }
 
-    /// Configures mandate data for the confirmation token
-    ///
-    /// Uses explicit mandate data if provided, otherwise auto-generates based on
-    /// payment method requirements and setup future usage settings.
-    ///
-    /// - Parameters:
-    ///   - params: The confirmation token parameters to configure
-    ///   - confirmType: The payment method type being confirmed
-    ///   - intentConfig: Intent configuration with setup future usage settings
-    ///   - explicitMandateData: Optional explicit mandate data to use
-    private static func configureMandateData(
-        _ params: STPConfirmationTokenParams,
-        confirmType: ConfirmPaymentMethodType,
-        intentConfig: PaymentSheet.IntentConfiguration,
-        explicitMandateData: STPMandateDataParams?
-    ) {
-        if let explicitMandateData = explicitMandateData {
+        // 4. Set mandate data (explicit or auto-generated)
+        if let explicitMandateData = mandateData {
             // Use explicitly provided mandate data
-            params.mandateData = explicitMandateData
+            confirmationTokenParams.mandateData = explicitMandateData
         } else {
             // Auto-generate mandate data based on payment method and intent requirements
-            params.mandateData = generateMandateData(
-                confirmType: confirmType,
-                intentConfig: intentConfig,
-                setupFutureUsage: params.setupFutureUsage
-            )
-        }
-    }
+            let paymentMethodType = Self.paymentMethodType(from: confirmType)
 
-    /// Auto-generates mandate data when required
-    ///
-    /// Creates mandate data for payment methods that require explicit user consent,
-    /// such as bank debits and wallet payments with future usage. Follows Stripe's
-    /// requirements based on payment method type and setup future usage settings.
-    ///
-    /// - Parameters:
-    ///   - confirmType: The payment method type being confirmed
-    ///   - intentConfig: Intent configuration with setup future usage and payment method options
-    ///   - setupFutureUsage: The already-computed setup future usage value from params
-    /// - Returns: Mandate data if required by the payment method, nil otherwise
-    private static func generateMandateData(
-        confirmType: ConfirmPaymentMethodType,
-        intentConfig: PaymentSheet.IntentConfiguration,
-        setupFutureUsage: STPPaymentIntentSetupFutureUsage?
-    ) -> STPMandateDataParams? {
-        let paymentMethodType = Self.paymentMethodType(from: confirmType)
-
-        switch intentConfig.mode {
-        case .payment:
-            // Payment methods that require mandate data when setup_future_usage is "off_session"
-            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) {
-                if setupFutureUsage == .offSession {
-                    return .makeWithInferredValues()
+            switch intentConfig.mode {
+            case .payment:
+                // Payment methods that require mandate data when setup_future_usage is "off_session"
+                if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) {
+                    if confirmationTokenParams.setupFutureUsage == .offSession {
+                        confirmationTokenParams.mandateData = .makeWithInferredValues()
+                    }
                 }
-            }
 
-            // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
-            return STPPaymentIntentParams.mandateDataIfRequired(for: paymentMethodType)
-        case .setup:
-            // Setup intents always require mandate data for certain payment methods
-            if STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
-                return .makeWithInferredValues()
-            }
+                // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
+                confirmationTokenParams.mandateData = STPPaymentIntentParams.mandateDataIfRequired(for: paymentMethodType)
+            case .setup:
+                // Setup intents always require mandate data for certain payment methods
+                if STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
+                    confirmationTokenParams.mandateData = .makeWithInferredValues()
+                }
 
-            // If no mandate data, fallback to STPSetupIntentConfirmParams auto add functionality
-            return STPSetupIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
+                // If no mandate data, fallback to STPSetupIntentConfirmParams auto add functionality
+                confirmationTokenParams.mandateData = STPSetupIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
+            }
         }
+
+        return confirmationTokenParams
     }
 
     /// Extracts the  payment method type from confirmation details
