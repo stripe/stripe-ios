@@ -372,6 +372,11 @@ extension STPElementsSession {
     var linkSignupOptInInitialValue: Bool {
         linkFlags["link_sign_up_opt_in_initial_value"] == true
     }
+
+    var attestOnIntentConfirmation: Bool {
+        true
+//        flags["ocs_mobile_attest_on_intent_confirmation"] == true
+    }
 }
 
 extension STPElementsSession {

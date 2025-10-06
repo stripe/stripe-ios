@@ -191,7 +191,18 @@ extension PaymentSheet {
         case let .new(confirmParams):
             Task { @MainActor in
                 let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-                let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
+                let assertionHandle: StripeAttest.AssertionHandle? = await {
+                    if elementsSession.attestOnIntentConfirmation {
+                        do {
+                            let assertionHandle = try await configuration.apiClient.stripeAttest.assert()
+                            return assertionHandle
+                        } catch {
+                            // If we can't get an assertion, we'll try the request anyway. It may fail.
+                        }
+                    }
+                    return nil
+                }()
+                let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, iosVerificationObject: assertionHandle?.assertion.requestFields)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
                     case .stripe(let paymentMethodType):
@@ -271,6 +282,7 @@ extension PaymentSheet {
                         completion: completion
                     )
                 }
+                assertionHandle?.complete()
             }
 
         // MARK: - Saved Payment Method
