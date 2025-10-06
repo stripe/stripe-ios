@@ -31,7 +31,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
-        elementsSession: STPElementsSession?,
+        elementsSession: STPElementsSession,
         mandateData: STPMandateDataParams? = nil,
         radarOptions: STPRadarOptions? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -91,7 +91,7 @@ extension PaymentSheet {
         configuration: PaymentElementConfiguration,
         intentConfig: PaymentSheet.IntentConfiguration,
         allowsSetAsDefaultPM: Bool = false,
-        elementsSession: STPElementsSession?,
+        elementsSession: STPElementsSession,
         mandateData: STPMandateDataParams? = nil,
         radarOptions: STPRadarOptions? = nil
     ) -> STPConfirmationTokenParams {
