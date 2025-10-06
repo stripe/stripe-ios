@@ -167,6 +167,7 @@ internal class HCaptchaWebViewManager: NSObject {
         stopInitWebViewConfiguration = true
         webView.stopLoading()
         resultHandled = true
+        completion?(HCaptchaResult(self, error: .challengeStopped))
     }
 
     /**

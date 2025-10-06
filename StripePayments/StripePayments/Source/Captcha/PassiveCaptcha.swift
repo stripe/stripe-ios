@@ -73,22 +73,26 @@ import Foundation
                                             rqdata: rqdata,
                                             host: "stripecdn.com")
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
-                let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
-                    // Prevent Swift Task continuation misuse - the validate completion block can get called from multiple places
-                    var nillableContinuation: CheckedContinuation<String, Error>? = continuation
+                let result = try await withTaskCancellationHandler {
+                    try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
+                        // Prevent Swift Task continuation misuse - the validate completion block can get called from multiple places
+                        var nillableContinuation: CheckedContinuation<String, Error>? = continuation
 
-                    hcaptcha.validate { result in
-                        Task { @MainActor in
-                            do {
-                                let token = try result.dematerialize()
-                                nillableContinuation?.resume(returning: token)
-                                nillableContinuation = nil
-                            } catch {
-                                nillableContinuation?.resume(throwing: error)
-                                nillableContinuation = nil
+                        hcaptcha.validate { result in
+                            Task { @MainActor in
+                                do {
+                                    let token = try result.dematerialize()
+                                    nillableContinuation?.resume(returning: token)
+                                    nillableContinuation = nil
+                                } catch {
+                                    nillableContinuation?.resume(throwing: error)
+                                    nillableContinuation = nil
+                                }
                             }
                         }
                     }
+                } onCancel: {
+                    hcaptcha.stop()
                 }
                 // Check cancellation after continuation
                 try Task.checkCancellation()

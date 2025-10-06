@@ -44,6 +44,9 @@ enum HCaptchaError: Error, CustomStringConvertible {
     /// Invalid custom theme passed
     case invalidCustomTheme
 
+    /// HCaptcha.stop() was called
+    case challengeStopped
+
     static func == (lhs: HCaptchaError, rhs: HCaptchaError) -> Bool {
         return lhs.description == rhs.description
     }
@@ -86,6 +89,9 @@ enum HCaptchaError: Error, CustomStringConvertible {
 
         case .invalidCustomTheme:
             return "Invalid JSON or JSObject as customTheme"
+
+        case .challengeStopped:
+            return "HCaptcha was stopped"
         }
     }
 }
