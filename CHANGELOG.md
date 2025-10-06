@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.24.2 2025-10-06
 
 ### PaymentSheet
 * [Improved] Improved CVC recollection UI in Link
