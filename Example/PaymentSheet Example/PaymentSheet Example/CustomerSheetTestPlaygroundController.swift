@@ -40,7 +40,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         self.settings = settings
         self.currentlyRenderedSettings = .defaultValues()
         $settings
-            .dropFirst()
             .sink { [weak self] newValue in
                 if let isLoading = self?.isLoading,
                    !isLoading,

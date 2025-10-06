@@ -620,7 +620,7 @@ class PlaygroundController: ObservableObject {
         self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
 
-        $settings.dropFirst().sink { [weak self] newValue in
+        $settings.removeDuplicates().sink { [weak self] newValue in
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
