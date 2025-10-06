@@ -60,7 +60,7 @@ class LinkURLGenerator {
         }
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? elementsSession.countryCode(overrideCountry: configuration.userOverrideCountry) ?? "US"
+        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? elementsSession.countryCode ?? "US"
 
         let merchantCountryCode = elementsSession.merchantCountryCode ?? customerCountryCode
 
