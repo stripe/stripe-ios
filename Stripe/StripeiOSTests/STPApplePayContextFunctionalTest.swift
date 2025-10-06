@@ -222,9 +222,9 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         }
         waitForExpectations(timeout: 1)
         XCTAssertEqual(analyticsClient._testLogHistory.count, 2)
-        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.started")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "stripeios.applepaycontext.confirm.finished")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["status"] as? String, "user_cancellation")
+        XCTAssertEqual(analyticsClient._testLogHistory.first?["event"] as? String, "stripeios.applepaycontext.confirm.started")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["event"] as? String, "stripeios.applepaycontext.confirm.finished")
+        XCTAssertEqual(analyticsClient._testLogHistory.last?["status"] as? String, "user_cancellation")
     }
 
     // MARK: - Error tests
