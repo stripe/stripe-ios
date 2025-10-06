@@ -50,7 +50,11 @@ extension PaymentSheet {
                 // Link saved payment methods don't require ephemeral keys, API will error if provided
                 guard !isSavedFromLink(from: confirmType) else { return nil }
 
-                return configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
+                guard let customer = configuration.customer else {
+                    stpAssertionFailure("Customer should exist when using saved payment method")
+                    return nil
+                }
+                return customer.ephemeralKeySecret(basedOn: elementsSession)
             }()
 
             // 2. Create the ConfirmationToken
