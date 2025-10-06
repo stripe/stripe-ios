@@ -9,20 +9,6 @@ import Foundation
 @_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
 
 extension PaymentSheet {
-    /// Handles deferred intent confirmation using the Confirmation Tokens API
-    ///
-    /// - Parameters:
-    ///   - confirmType: The confirm type
-    ///   - configuration: A PaymentElementConfiguration
-    ///   - intentConfig: The current intent configuration
-    ///   - authenticationContext: Context for 3D Secure authentication
-    ///   - paymentHandler: The payment handler for finishing confirmations
-    ///   - isFlowController: Whether this is called from PaymentSheet.FlowController
-    ///   - allowsSetAsDefaultPM: Whether the payment method can be set as default
-    ///   - elementsSession: The current elements session
-    ///   - mandateData: Optional mandate data (auto-generated if not provided)
-    ///   - radarOptions: Optional radar settings
-    ///   - completion: Called when confirmation completes or fails
     static func handleDeferredIntentConfirmation_confirmationToken(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
@@ -71,21 +57,6 @@ extension PaymentSheet {
         }
     }
 
-    /// Creates confirmation token parameters for Stripe's Confirmation Tokens API
-    ///
-    /// Builds a complete `STPConfirmationTokenParams` object with payment method details,
-    /// setup future usage settings, and mandate data. Handles both saved and new payment methods
-    /// with proper precedence for payment method options and user preferences.
-    ///
-    /// - Parameters:
-    ///   - confirmType: The payment method to confirm (saved or newly entered)
-    ///   - configuration: PaymentSheet configuration with URLs and shipping details
-    ///   - intentConfig: Intent configuration with payment/setup mode and options
-    ///   - allowsSetAsDefaultPM: Whether the payment method can be set as default
-    ///   - elementsSession: Elements session for confirmation token creation
-    ///   - mandateData: Optional mandate data (auto-generated for required payment methods)
-    ///   - radarOptions: Optional fraud detection settings
-    /// - Returns: Configured confirmation token parameters ready for Stripe's API
     static func createConfirmationTokenParams(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
