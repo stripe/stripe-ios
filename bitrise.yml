@@ -51,6 +51,7 @@ stages:
     - ui-tests-5: {}
     - integration-all: {}
     - lokalise-upload: {}
+    - legacy-tests-15: {}
   stage-releases-run-all:
     workflows:
     - framework-tests-no-mocks: {}
