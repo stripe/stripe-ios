@@ -130,7 +130,9 @@ extension PaymentSheet {
                 }
 
                 // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
-                confirmationTokenParams.mandateData = STPPaymentIntentParams.mandateDataIfRequired(for: paymentMethodType)
+                if confirmationTokenParams.mandateData == nil {
+                    confirmationTokenParams.mandateData = STPPaymentIntentParams.mandateDataIfRequired(for: paymentMethodType)
+                }
             case .setup:
                 // Setup intents always require mandate data for certain payment methods
                 if STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
@@ -138,7 +140,9 @@ extension PaymentSheet {
                 }
 
                 // If no mandate data, fallback to STPSetupIntentConfirmParams auto add functionality
-                confirmationTokenParams.mandateData = STPSetupIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
+                if confirmationTokenParams.mandateData == nil {
+                    confirmationTokenParams.mandateData = STPSetupIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
+                }
             }
         }
 
