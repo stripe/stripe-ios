@@ -92,7 +92,9 @@ import Foundation
                         }
                     }
                 } onCancel: {
-                    hcaptcha.stop()
+                    Task { @MainActor in
+                        hcaptcha.stop()
+                    }
                 }
                 // Check cancellation after continuation
                 try Task.checkCancellation()
