@@ -304,7 +304,7 @@ final class PaymentSheetLoader {
         if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email, emailSource: .customerEmail)
         } else if let customerID = configuration.customer?.id,
-                  let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
+                  let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
         {
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
             // If there's an error in this call we can just ignore it
