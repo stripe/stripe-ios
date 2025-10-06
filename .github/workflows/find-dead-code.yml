@@ -63,10 +63,9 @@ jobs:
 
       - uses: peter-evans/find-comment@v3
         id: find_comment
-        if: env.diff != ''
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body-includes: '🚨 New dead code detected'
+          body-includes: '[find-dead-code]'
 
       - uses: peter-evans/create-or-update-comment@v3
         id: create_update_comment
@@ -74,7 +73,7 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            🚨 New dead code detected in this PR:
+            [find-dead-code] 🚨 New dead code detected in this PR:
 
             ```diff
             ${{ env.diff }}
@@ -88,6 +87,17 @@ jobs:
 
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: peter-evans/create-or-update-comment@v3
+        id: resolve_comment
+        if: env.diff == '' && steps.find_comment.outputs.comment-id != ''
+        with:
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          body: |
+            [find-dead-code] ✅ Dead code has been resolved in this PR.
+
+          edit-mode: replace
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail if not acknowledged
