@@ -69,11 +69,11 @@ jobs:
 
       - uses: peter-evans/create-or-update-comment@v3
         id: create_update_comment
-        if: env.diff != ''
+        if: env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'skip dead code check')
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            [find-dead-code] 🚨 New dead code detected in this PR:
+            🚨 New dead code detected in this PR:
 
             ```diff
             ${{ env.diff }}
@@ -85,6 +85,30 @@ jobs:
 
             ℹ️ If this comment appears to be left in error, double check that the flagged code is actually used and/or make sure your branch is up-to-date with `master`.
 
+            [find-dead-code]
+
+          edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: peter-evans/create-or-update-comment@v3
+        id: create_update_comment_ignored
+        if: env.diff != '' && contains(github.event.pull_request.labels.*.name, 'skip dead code check')
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ⚠️  New dead code detected in this PR but ignored:
+
+            ```diff
+            ${{ env.diff }}
+            ```
+
+            This dead code check has been bypassed with the `skip dead code check` label.
+
+            ℹ️ If this comment appears to be left in error, double check that the flagged code is actually used and/or make sure your branch is up-to-date with `master`.
+
+            [find-dead-code]
+
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -95,7 +119,9 @@ jobs:
         with:
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           body: |
-            [find-dead-code] ✅ Dead code has been resolved in this PR.
+            ✅ Dead code has been resolved in this PR.
+
+            [find-dead-code]
 
           edit-mode: replace
           token: ${{ secrets.GITHUB_TOKEN }}
