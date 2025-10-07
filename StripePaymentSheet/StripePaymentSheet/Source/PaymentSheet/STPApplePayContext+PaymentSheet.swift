@@ -173,7 +173,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         Task {
             do {
                 // Create the confirmation token
-                let confirmationToken = try await context.apiClient.createConfirmationToken(with: confirmationTokenParams, ephemeralKeySecret: nil)
+                let confirmationToken = try await context.apiClient.createConfirmationToken(with: confirmationTokenParams,
+                                                                                            ephemeralKeySecret: nil,
+                                                                                            additionalPaymentUserAgentValues: PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
 
                 // Call the confirmation token handler
                 await MainActor.run {
