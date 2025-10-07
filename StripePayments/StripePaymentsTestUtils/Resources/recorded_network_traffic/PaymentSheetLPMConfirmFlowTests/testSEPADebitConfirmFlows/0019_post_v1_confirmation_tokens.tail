@@ -1,0 +1,71 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QNIx2c0NOOvVmjxR4YVGokexNbeHJEErBAd3lsf1raqU6LSMMOPOma20XLmUlJQjA0PF9kXHdB2TbfD9
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_fEhUqYTM5OcANk
+Content-Length: 1063
+Vary: Origin
+Date: Tue, 07 Oct 2025 19:13:28 GMT
+original-request: req_fEhUqYTM5OcANk
+stripe-version: 2020-08-27
+idempotency-key: 65dc444c-7372-4073-bd22-672ba770789c
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=EUR&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=sepa_debit&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[address]\[city]=South%20San%20Francisco&payment_method_data\[billing_details]\[address]\[country]=US&payment_method_data\[billing_details]\[address]\[line1]=354%20Oyster%20Point%20Blvd&payment_method_data\[billing_details]\[address]\[line2]=&payment_method_data\[billing_details]\[address]\[postal_code]=94080&payment_method_data\[billing_details]\[address]\[state]=CA&payment_method_data\[billing_details]\[email]=f%40z\.c&payment_method_data\[billing_details]\[name]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sepa_debit]\[iban]=DE89370400440532013000&payment_method_data\[sid]=.*&payment_method_data\[type]=sepa_debit&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
+
+{
+  "id" : "ctoken_1SFgKCFY0qyl6XeW7L258qJL",
+  "setup_intent" : null,
+  "livemode" : false,
+  "shipping" : null,
+  "expires_at" : 1759907608,
+  "return_url" : "https:\/\/foo.com",
+  "setup_future_usage" : "off_session",
+  "object" : "confirmation_token",
+  "payment_method_preview" : {
+    "allow_redisplay" : "unspecified",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : "CA",
+        "country" : "US",
+        "line2" : "",
+        "city" : "South San Francisco",
+        "line1" : "354 Oyster Point Blvd",
+        "postal_code" : "94080"
+      }
+    },
+    "customer" : null,
+    "sepa_debit" : {
+      "fingerprint" : "vifs0Ho7vwRn1Miu",
+      "country" : "DE",
+      "last4" : "3000",
+      "bank_code" : "37040044",
+      "generated_from" : {
+        "setup_attempt" : null,
+        "charge" : null
+      },
+      "branch_code" : ""
+    },
+    "type" : "sepa_debit"
+  },
+  "created" : 1759864408,
+  "payment_intent" : null,
+  "use_stripe_sdk" : true,
+  "payment_method_options" : null
+}

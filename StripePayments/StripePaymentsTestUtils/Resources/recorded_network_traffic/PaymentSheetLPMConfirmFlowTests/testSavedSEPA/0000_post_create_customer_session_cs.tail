@@ -4,15 +4,15 @@ https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_customer_ses
 text/html
 Content-Type: text/html;charset=utf-8
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=3QPHeh8hqF4vs6whSX1iN4uZrnJkv5hecrnyNAlArtC8Dfal4Avt%2Fx6q07kQ5cKBg%2FC48YiTZ0vG7po6kuQiGhwUT9hJRBWjEeNP%2B%2FeQtIBt7KcxZ5cZszTtbtJ2WJvBiEn%2FvMscxHPDU33G08BlQpnN5lFUidOxP8JvraBsvolZDMZXM%2FwIJanNGD8zlI9NXr5x4nQrM0rLNrCpb8D7a%2FJLomGTiguXmW3DxKL58KM%3D; path=/
+Set-Cookie: rack.session=gQdRlu4f6aHp97GwNMWZb6OhhQ6BLsFDM8E5xQUXJ%2FsSNNlz5EGP5rVUk11l%2FBRRgIwNwTvQvGg4dM1RNfQAcU0nBuuiBklnr87TRd21xF7toXjc%2BMyGyUE6yRmAsbYzA710516NNShWu%2FHsxHnMVzICtl4ccyHwvEj166xjeU6n6G9Yim3T5uLv3hdvo5YCzk7bgSdO%2BhZoV9QzmcMvg1ds4QdQGqA5GKVT3DzkrPk%3D; path=/
 Server: Google Frontend
-x-cloud-trace-context: ca387b8d44622bab2bba9dc885c39fca
+x-cloud-trace-context: 69967d95cff3c4bf4e7f3d45711f99c6
 Via: 1.1 google
 x-xss-protection: 1; mode=block
-Date: Tue, 07 Oct 2025 18:20:52 GMT
+Date: Tue, 07 Oct 2025 19:12:48 GMT
 x-robots-tag: noindex, nofollow
 Content-Length: 128
 x-content-type-options: nosniff
 x-frame-options: SAMEORIGIN
 
-{"customer_session_client_secret":"cuss_secret_TC3cKXoPxtue78SyurCNzAnQVyczQHwGYi0a1HROlG9k9YK","customer":"cus_OaMPphpKbeixCz"}
+{"customer_session_client_secret":"cuss_secret_TC4SuJQIan1BbCnLpMQsQNyhE2bsEFZ7LSiPXU45GLVSPkl","customer":"cus_OaMPphpKbeixCz"}
