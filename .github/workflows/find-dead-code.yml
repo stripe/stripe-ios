@@ -7,7 +7,6 @@ on:
 
 jobs:
   dead-code-check:
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip dead code check') }}
     runs-on: macos-15
     permissions:
       pull-requests: write
