@@ -40,15 +40,14 @@ import Foundation
     /// The payment method selection for the merchant integration. Can be `automatic` or `merchant_specified`
     @objc public let paymentMethodSelectionFlow: String?
 
-    public init(clientSessionId: String? = AnalyticsHelper.shared.sessionID,
-                elementsSessionConfigId: String,
+    public init(elementsSessionConfigId: String,
                 paymentIntentCreationFlow: IntentCreationFlow? = nil,
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
-        if clientSessionId == nil {
+        if AnalyticsHelper.shared.sessionID == nil {
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .clientAttributionMetadataInitFailed, error: Error.missingSessionId))
             stpAssertionFailure("client_session_id must not be nil!")
         }
-        self.clientSessionId = clientSessionId
+        self.clientSessionId = AnalyticsHelper.shared.sessionID
         self.elementsSessionConfigId = elementsSessionConfigId
         self.merchantIntegrationSource = "elements"
         self.merchantIntegrationSubtype = "mobile"
