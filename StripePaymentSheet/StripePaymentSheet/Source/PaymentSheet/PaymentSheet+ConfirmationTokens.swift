@@ -75,7 +75,9 @@ extension PaymentSheet {
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 5a. Client-side confirmation with confirmation token
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, confirmationToken: confirmationToken)
+                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        paymentIntentParams.confirmationToken = confirmationToken.stripeId
+                        paymentIntentParams.returnURL = configuration.returnURL
                         paymentIntentParams.radarOptions = radarOptions
 
                         paymentHandler.confirmPayment(
@@ -100,7 +102,9 @@ extension PaymentSheet {
 
                     if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                         // 6a. Client-side confirmation with confirmation token
-                        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret, confirmationToken: confirmationToken)
+                        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                        setupIntentParams.confirmationToken = confirmationToken.stripeId
+                        setupIntentParams.returnURL = configuration.returnURL
                         setupIntentParams.radarOptions = radarOptions
 
                         paymentHandler.confirmSetupIntent(

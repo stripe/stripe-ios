@@ -43,22 +43,6 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         additionalAPIParameters = [:]
     }
 
-    /// Initialize this `STPSetupIntentConfirmParams` with a `clientSecret` and `confirmationToken`.
-    /// Use this initializer for SetupIntents confirmed using confirmation tokens.
-    /// This will automatically set properties like returnURL from the confirmation token.
-    /// - Parameter clientSecret: the client secret for this SetupIntent
-    /// - Parameter confirmationToken: the confirmation token to use for this SetupIntent confirmation
-    @_spi(STP) public init(
-        clientSecret: String,
-        confirmationToken: STPConfirmationToken
-    ) {
-        self.clientSecret = clientSecret
-        super.init()
-        additionalAPIParameters = [:]
-        self.confirmationToken = confirmationToken.stripeId
-        self.returnURL = confirmationToken.returnURL
-    }
-
     /// The client secret of the SetupIntent. Required.
     @objc public var clientSecret: String
     /// Provide a supported `STPPaymentMethodParams` object, and Stripe will create a

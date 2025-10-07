@@ -43,21 +43,6 @@ public class STPPaymentIntentParams: NSObject {
         super.init()
     }
 
-    /// Initialize this `STPPaymentIntentParams` with a `clientSecret` and `confirmationToken`.
-    /// Use this initializer for PaymentIntents confirmed using confirmation tokens.
-    /// This will automatically set properties like returnURL and setupFutureUsage from the confirmation token.
-    /// - Parameter clientSecret: the client secret for this PaymentIntent
-    /// - Parameter confirmationToken: the confirmation token to use for this PaymentIntent confirmation
-    @_spi(STP) public init(
-        clientSecret: String,
-        confirmationToken: STPConfirmationToken
-    ) {
-        self.clientSecret = clientSecret
-        super.init()
-        self.confirmationToken = confirmationToken.stripeId
-        self.returnURL = confirmationToken.returnURL
-    }
-
     @objc convenience override init() {
         self.init(clientSecret: "")
     }
