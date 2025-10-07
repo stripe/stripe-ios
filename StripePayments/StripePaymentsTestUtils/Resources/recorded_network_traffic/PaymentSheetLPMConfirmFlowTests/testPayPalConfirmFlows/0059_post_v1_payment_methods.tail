@@ -1,0 +1,55 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_methods$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=7rpFmyNCqjzzvYarTpaOvQ7n5yHeXt6Vbqypx8OP4kkpNzF8WldRRwB9gwn8PnsBPoerT_rchFFy-miP
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_058T8ppeIgUeQD
+Content-Length: 538
+Vary: Origin
+Date: Tue, 07 Oct 2025 18:19:06 GMT
+original-request: req_058T8ppeIgUeQD
+stripe-version: 2020-08-27
+idempotency-key: 754d9258-11ab-42c7-a5a5-9e31cd39c43b
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=paypal
+
+{
+  "object" : "payment_method",
+  "paypal" : {
+    "country" : null,
+    "payer_id" : null,
+    "payer_email" : null
+  },
+  "id" : "pm_1SFfTaKG6vc7r7YCrZWfn1xM",
+  "billing_details" : {
+    "email" : null,
+    "phone" : null,
+    "tax_id" : null,
+    "name" : null,
+    "address" : {
+      "state" : null,
+      "country" : null,
+      "line2" : null,
+      "city" : null,
+      "line1" : null,
+      "postal_code" : null
+    }
+  },
+  "livemode" : false,
+  "created" : 1759861146,
+  "allow_redisplay" : "unspecified",
+  "type" : "paypal",
+  "customer" : null
+}

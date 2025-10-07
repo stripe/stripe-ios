@@ -1,0 +1,63 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yorLNmq35iUi9y1E7uSncYjdHnfmTAEu2z4v4vSscKObwSkST27kVSTE2ZTawB3eSHZXqb6D_BGqchhI
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_TuZJIhLnW8zdmf
+Content-Length: 809
+Vary: Origin
+Date: Tue, 07 Oct 2025 18:22:07 GMT
+original-request: req_TuZJIhLnW8zdmf
+stripe-version: 2020-08-27
+idempotency-key: df7a4f5e-aa04-4b19-934e-955186c1fede
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[mode]=setup&client_context\[payment_method_types]\[0]=sofort&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[email]=f%40z\.c&payment_method_data\[billing_details]\[name]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[sofort%5Bcountry%5D]=AT&payment_method_data\[type]=sofort&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
+
+{
+  "id" : "ctoken_1SFfWVFY0qyl6XeWgIn7Wh0N",
+  "setup_intent" : null,
+  "livemode" : false,
+  "shipping" : null,
+  "expires_at" : 1759904527,
+  "return_url" : "https:\/\/foo.com",
+  "setup_future_usage" : "off_session",
+  "object" : "confirmation_token",
+  "payment_method_preview" : {
+    "allow_redisplay" : "unspecified",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "customer" : null,
+    "sofort" : {
+      "country" : "AT"
+    },
+    "type" : "sofort"
+  },
+  "created" : 1759861327,
+  "payment_intent" : null,
+  "use_stripe_sdk" : true,
+  "payment_method_options" : null
+}
