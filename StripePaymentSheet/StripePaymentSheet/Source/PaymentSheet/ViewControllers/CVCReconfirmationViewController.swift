@@ -136,7 +136,7 @@ class CVCReconfirmationViewController: UIViewController {
         }()
 
         confirmButton.update(
-            state: state,
+            status: state,
             animated: true
         )
     }

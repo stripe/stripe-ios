@@ -18,8 +18,8 @@ import UIKit
 // @iOS26
 class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
     func testConfirmButton() {
-        var appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
-        let confirmButton = ConfirmButton(style: .stripe, callToAction: .setup, appearance: appearance, didTap: {})
+        let appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
+        let confirmButton = ConfirmButton(callToAction: .setup, appearance: appearance, didTap: {})
 
         verify(confirmButton)
     }
@@ -32,7 +32,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         appearance.primaryButton = button
 
         let confirmButton = ConfirmButton(
-            style: .stripe,
             callToAction: .setup,
             appearance: appearance,
             didTap: {}
@@ -45,7 +44,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         var appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
         appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         let confirmButton = ConfirmButton(
-            style: .stripe,
             callToAction: .custom(title: "Custom Title"),
             appearance: appearance,
             didTap: {}
@@ -60,7 +58,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         appearance.font.sizeScaleFactor = 0.85
 
         let confirmButton = ConfirmButton(
-            style: .stripe,
             callToAction: .custom(title: "Custom Title"),
             appearance: appearance,
             didTap: {}
@@ -72,8 +69,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
     // Tests that `primaryButton` disabled color is correct for the default theme
     func testConfirmButtonDefaultDisabledColor() {
         let confirmButton = ConfirmButton(
-            state: .disabled,
-            style: .stripe,
+            status: .disabled,
             callToAction: .setup,
             appearance: .default.applyingLiquidGlassIfPossible(),
             didTap: {}
@@ -91,8 +87,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         appearance.colors.primary = .yellow
 
         let confirmButton = ConfirmButton(
-            state: .disabled,
-            style: .stripe,
+            status: .disabled,
             callToAction: .setup,
             appearance: appearance,
             didTap: {}
@@ -110,8 +105,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         appearance.primaryButton = button
 
         let confirmButton = ConfirmButton(
-            state: .disabled,
-            style: .stripe,
+            status: .disabled,
             callToAction: .setup,
             appearance: appearance,
             didTap: {}
@@ -131,8 +125,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         appearance.colors.primary = .yellow
 
         let confirmButton = ConfirmButton(
-            state: .disabled,
-            style: .stripe,
+            status: .disabled,
             callToAction: .setup,
             appearance: appearance,
             didTap: {}
@@ -150,8 +143,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         appearance.primaryButton = button
 
         let confirmButton = ConfirmButton(
-            state: .disabled,
-            style: .stripe,
+            status: .disabled,
             callToAction: .setup,
             appearance: appearance,
             didTap: {}
@@ -162,10 +154,9 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` success color is correct for the default theme
     func testConfirmButtonDefaultSuccessColor() {
-        var appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
+        let appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
         let confirmButton = ConfirmButton(
-            state: .succeeded,
-            style: .stripe,
+            status: .succeeded,
             callToAction: .setup,
             appearance: appearance,
             didTap: {}
@@ -183,8 +174,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         appearance.primaryButton = button
 
         let confirmButton = ConfirmButton(
-            state: .succeeded,
-            style: .stripe,
+            status: .succeeded,
             callToAction: .setup,
             appearance: appearance,
             didTap: {}

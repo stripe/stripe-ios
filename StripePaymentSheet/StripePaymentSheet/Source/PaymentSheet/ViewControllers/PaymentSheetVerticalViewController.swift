@@ -306,10 +306,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
             return selectedPaymentOption == nil ? .disabled : .enabled
         }()
-        let style: ConfirmButton.Style = .stripe
         primaryButton.update(
-            state: state,
-            style: style,
+            status: state,
             callToAction: callToAction,
             animated: true
         )
@@ -670,7 +668,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 #if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
-                        self.primaryButton.update(state: .succeeded, animated: true) {
+                        self.primaryButton.update(status: .succeeded, animated: true) {
                             self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
                     }

@@ -332,7 +332,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
 
         // Buy button
-        let buyButtonStyle: ConfirmButton.Style
         var buyButtonStatus: ConfirmButton.Status
         var showBuyButton: Bool = true
 
@@ -342,11 +341,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
         switch mode {
         case .selectingSaved:
-            buyButtonStyle = .stripe
             buyButtonStatus = buyButtonEnabledForSavedPayments()
             showBuyButton = savedPaymentOptionsViewController.selectedPaymentOption != nil
         case .addingNew:
-            buyButtonStyle = .stripe
             if let overridePrimaryButtonState = addPaymentMethodViewController.overridePrimaryButtonState {
                 callToAction = overridePrimaryButtonState.ctaType
                 buyButtonStatus = overridePrimaryButtonState.enabled ? .enabled : .disabled
@@ -362,8 +359,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             buyButtonStatus = .processing
         }
         self.buyButton.update(
-            state: buyButtonStatus,
-            style: buyButtonStyle,
+            status: buyButtonStatus,
             callToAction: callToAction,
             animated: animated,
             completion: nil
@@ -476,7 +472,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 #if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
-                        self.buyButton.update(state: .succeeded, animated: true) {
+                        self.buyButton.update(status: .succeeded, animated: true) {
                             // Wait a bit before closing the sheet
                             self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
@@ -594,9 +590,9 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
-            buyButton.update(state: .disabled)
+            buyButton.update(status: .disabled)
         } else {
-            buyButton.update(state: buyButtonEnabledForSavedPayments())
+            buyButton.update(status: buyButtonEnabledForSavedPayments())
         }
         navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
         navigationBar.additionalButton.addTarget(
