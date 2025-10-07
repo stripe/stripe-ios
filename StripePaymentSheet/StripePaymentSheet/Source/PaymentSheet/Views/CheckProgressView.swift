@@ -8,10 +8,10 @@
 import UIKit
 
 class CheckProgressView: UIView {
-    
+
     private static let checkmarkStrokeDuration = 0.2
     private static let spinnerMoveToCenterAnimationDuration = 0.35
-    
+
     let circleLayer = CAShapeLayer()
     let checkmarkLayer = CAShapeLayer()
     let baseLineWidth: CGFloat
@@ -20,7 +20,7 @@ class CheckProgressView: UIView {
             colorDidChange()
         }
     }
-    
+
     init(frame: CGRect, baseLineWidth: CGFloat = 1.0) {
         self.baseLineWidth = baseLineWidth
         // Circle
@@ -39,7 +39,7 @@ class CheckProgressView: UIView {
         circleLayer.lineCap = .round
         circleLayer.lineWidth = baseLineWidth
         circleLayer.strokeEnd = 0.0
-        
+
         // Checkmark
         let checkmarkPath = UIBezierPath()
         let checkOrigin = CGPoint(x: frame.size.width * 0.33, y: frame.size.height * 0.5)
@@ -48,7 +48,7 @@ class CheckProgressView: UIView {
         checkmarkPath.move(to: checkOrigin)
         checkmarkPath.addLine(to: checkPoint1)
         checkmarkPath.addLine(to: checkPoint2)
-        
+
         checkmarkLayer.bounds = CGRect(
             x: 0, y: 0, width: frame.size.width, height: frame.size.width)
         checkmarkLayer.path = checkmarkPath.cgPath
@@ -56,23 +56,23 @@ class CheckProgressView: UIView {
         checkmarkLayer.fillColor = UIColor.clear.cgColor
         checkmarkLayer.lineWidth = baseLineWidth + 0.5
         checkmarkLayer.strokeEnd = 0.0
-        
+
         checkmarkLayer.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
         circleLayer.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
-        
+
         super.init(frame: frame)
-        
+
         self.backgroundColor = UIColor.clear
         layer.addSublayer(circleLayer)
         layer.addSublayer(checkmarkLayer)
-        
+
         colorDidChange()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+
     func beginProgress() {
         checkmarkLayer.strokeEnd = 0.0  // Make sure checkmark is not drawn yet
         let animation = CABasicAnimation(keyPath: "strokeEnd")
@@ -89,7 +89,7 @@ class CheckProgressView: UIView {
         rotationAnimation.repeatCount = .infinity
         circleLayer.add(rotationAnimation, forKey: "animateRotate")
     }
-    
+
     func completeProgress(completion: (() -> Void)? = nil) {
         CATransaction.begin()
         // Note: Make sure the completion block is set before adding any animations
@@ -99,7 +99,7 @@ class CheckProgressView: UIView {
             }
         }
         circleLayer.removeAnimation(forKey: "animateCircle")
-        
+
         // Close the circle
         let circleAnimation = CABasicAnimation(keyPath: "strokeEnd")
         circleAnimation.duration = Self.spinnerMoveToCenterAnimationDuration
@@ -109,7 +109,7 @@ class CheckProgressView: UIView {
             name: CAMediaTimingFunctionName.easeIn)
         circleLayer.strokeEnd = 1.0
         circleLayer.add(circleAnimation, forKey: "animateDone")
-        
+
         // Check the mark
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.beginTime = CACurrentMediaTime() + circleAnimation.duration + 0.15  // Start after the circle closes
@@ -122,7 +122,7 @@ class CheckProgressView: UIView {
         checkmarkLayer.add(animation, forKey: "animateFinishCircle")
         CATransaction.commit()
     }
-    
+
     private func colorDidChange() {
         circleLayer.strokeColor = color.cgColor
         checkmarkLayer.strokeColor = color.cgColor
