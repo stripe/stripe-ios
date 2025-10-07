@@ -45,7 +45,7 @@ import Foundation
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
         if AnalyticsHelper.shared.sessionID == nil {
             STPAnalyticsClient.sharedClient.log(analytic: ErrorAnalytic(event: .clientAttributionMetadataInitFailed, error: Error.missingSessionId))
-            stpAssertionFailure("client_session_id must not be nil!")
+            stpAssertionFailure("Session ID must not be nil!")
         }
         self.clientSessionId = AnalyticsHelper.shared.sessionID
         self.elementsSessionConfigId = elementsSessionConfigId
