@@ -152,7 +152,7 @@ class CardScanningView: UIView {
         // If this is called twice for any reason, we need to prevent two snapshot views from being added
         guard snapshotView == nil else { return }
 
-        if let snapshot = snapshotView(afterScreenUpdates: true) {
+        if let snapshot = snapshotView(afterScreenUpdates: false) {
             self.addSubview(snapshot)
             self.snapshotView = snapshot
         }

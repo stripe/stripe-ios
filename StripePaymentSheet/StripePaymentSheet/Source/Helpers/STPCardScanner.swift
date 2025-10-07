@@ -173,7 +173,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     // MARK: - Camera Setup
     private func setupCamera() {
         textRequest = VNRecognizeTextRequest { [weak self] request, error in
-            guard let self = self, self.isScanning else { return }
+            guard let self, self.isScanning else { return }
 
             if error != nil {
                 self.finishWithError()
@@ -391,6 +391,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // Check if card scanning has completed and finish if so
     private func completeScanIfReady() {
+        guard isScanning else { return }
+
         let detectedNumbers = self.detectedNumbers
         let detectedExpirations = self.detectedExpirations
 
