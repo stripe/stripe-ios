@@ -14,7 +14,6 @@ class CheckProgressView: UIView {
 
     let circleLayer = CAShapeLayer()
     let checkmarkLayer = CAShapeLayer()
-    let baseLineWidth: CGFloat
     var color: UIColor = .white {
         didSet {
             colorDidChange()
@@ -22,7 +21,6 @@ class CheckProgressView: UIView {
     }
 
     init(frame: CGRect, baseLineWidth: CGFloat = 1.0) {
-        self.baseLineWidth = baseLineWidth
         // Circle
         let circlePath = UIBezierPath(
             arcCenter: CGPoint(
