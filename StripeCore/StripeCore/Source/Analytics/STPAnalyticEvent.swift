@@ -315,5 +315,5 @@ import Foundation
     case passiveCaptchaAttach = "elements.captcha.passive.attach"
 
     // MARK: - ClientAttributionMetadata
-    case clientAttributionMetadataInitFailed = "clientAttributionMetadataCreationFailed.init.failed"
+    case clientAttributionMetadataInitFailed = "clientAttributionMetadata.init.failed"
 }

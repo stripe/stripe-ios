@@ -604,7 +604,7 @@ import UIKit
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
             billingPhoneNumber: nil,
-            clientAttributionMetadata: nil
+            clientAttributionMetadata: nil // LinkController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id so we don't want to send CAM here
         ) { shareResult in
             switch shareResult {
             case .success(let success):
