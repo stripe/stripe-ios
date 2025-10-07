@@ -33,6 +33,9 @@ import UIKit
     public private(set) var isEditing: Bool = false {
         didSet {
             delegate?.didUpdate(element: self)
+            if isEditing {
+                delegate?.didBeginEditing(element: self)
+            }
         }
     }
     private(set) var didReceiveAutofill: Bool = false

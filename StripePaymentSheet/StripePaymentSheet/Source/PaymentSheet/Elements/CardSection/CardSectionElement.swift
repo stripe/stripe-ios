@@ -23,8 +23,13 @@ final class CardSectionElement: ContainerElement {
     }
 
     weak var delegate: ElementDelegate?
+
     lazy var view: UIView = {
-        #if !os(visionOS)
+        cardSectionWithScannerView ?? cardSection.view
+    }()
+
+    private lazy var cardSectionWithScannerView: CardSectionWithScannerView? = {
+#if !os(visionOS)
         if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
             return CardSectionWithScannerView(
                 cardSectionView: cardSection.view,
@@ -35,11 +40,11 @@ final class CardSectionElement: ContainerElement {
                 linkAppearance: linkAppearance
             )
         } else {
-            return cardSection.view
+            return nil
         }
-        #else
-            return cardSection.view
-        #endif
+#else
+        return nil
+#endif
     }()
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
@@ -90,17 +95,17 @@ final class CardSectionElement: ContainerElement {
         self.cardBrandFilter = cardBrandFilter
         self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
-            ? PaymentMethodElementWrapper(
-                TextFieldElement.NameConfiguration(
-                    type: .full,
-                    defaultValue: defaultValues.name,
-                    label: STPLocalizedString("Name on card", "Label for name on card field")),
-                theme: theme
-            ) { field, params in
-                params.paymentMethodParams.nonnil_billingDetails.name = field.text
-                return params
-            }
-            : nil
+        ? PaymentMethodElementWrapper(
+            TextFieldElement.NameConfiguration(
+                type: .full,
+                defaultValue: defaultValues.name,
+                label: STPLocalizedString("Name on card", "Label for name on card field")),
+            theme: theme
+        ) { field, params in
+            params.paymentMethodParams.nonnil_billingDetails.name = field.text
+            return params
+        }
+        : nil
         var cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>?
         if cardBrandChoiceEligible {
             cardBrandDropDown = PaymentMethodElementWrapper(DropdownFieldElement.makeCardBrandDropdown(theme: theme)) { field, params in
@@ -166,7 +171,6 @@ final class CardSectionElement: ContainerElement {
         cardSection.delegate = self
     }
 
-    // MARK: - ElementDelegate
     private var cardBrand: STPCardBrand = .unknown
     private var selectedBrand: STPCardBrand? {
         guard let cardBrandDropDown = cardBrandDropDown,
@@ -181,53 +185,6 @@ final class CardSectionElement: ContainerElement {
     var lastPanElementValidationState: ElementValidationState
     var lastDisallowedCardBrandLogged: STPCardBrand?
     var hasLoggedExpectedExtraDigitsButUserEntered16: Bool = false
-    func didUpdate(element: Element) {
-        // Update the CVC field if the card brand changes
-        let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
-        if self.cardBrand != cardBrand {
-            self.cardBrand = cardBrand
-            cvcElement.setText(cvcElement.text) // A hack to get the CVC to update
-        }
-
-        fetchAndUpdateCardBrands()
-
-        /// Send an analytic whenever the card number field is completed
-        if lastPanElementValidationState.isValid != panElement.validationState.isValid {
-            lastPanElementValidationState = panElement.validationState
-            if case .valid = panElement.validationState {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
-            }
-        }
-
-        // If the user entered 16 digits and exited the field, but our PAN length data
-        // indicates that we need more (maybe 19 digits?), then our data might be wrong.
-        // Send an alert so we can measure how often this happens.
-        if case .invalid(let error, _) = panElement.validationState,
-               let specificError = error as? TextFieldElement.PANConfiguration.Error,
-           case .incomplete = specificError,
-           !panElement.isEditing,
-           !hasLoggedExpectedExtraDigitsButUserEntered16 {
-            if panElement.text.count == 16 {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields)
-                hasLoggedExpectedExtraDigitsButUserEntered16 = true
-            }
-        }
-
-        // Send an analytic if we are disallowing a card brand
-        if case .invalid(let error, _) = panElement.validationState,
-           let specificError = error as? TextFieldElement.PANConfiguration.Error,
-           case .disallowedBrand(let brand) = specificError,
-           lastDisallowedCardBrandLogged != brand {
-
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
-                event: .paymentSheetDisallowedCardBrand,
-                params: ["brand": STPCardBrandUtilities.apiValue(from: brand)]
-            )
-            lastDisallowedCardBrandLogged = brand
-        }
-
-        delegate?.didUpdate(element: self)
-    }
 
     // MARK: Card brand choice
     private var cardBrands = Set<STPCardBrand>()
@@ -306,6 +263,61 @@ final class CardSectionElement: ContainerElement {
         }
 
         return indexToSelect
+    }
+
+    // Stops and closes the card scanner, if present
+    func stopAndCloseScanner() {
+        cardSectionWithScannerView?.stopAndCloseScanner()
+    }
+}
+
+extension CardSectionElement: ElementDelegate {
+    func didUpdate(element: Element) {
+        // Update the CVC field if the card brand changes
+        let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
+        if self.cardBrand != cardBrand {
+            self.cardBrand = cardBrand
+            cvcElement.setText(cvcElement.text) // A hack to get the CVC to update
+        }
+
+        fetchAndUpdateCardBrands()
+
+        /// Send an analytic whenever the card number field is completed
+        if lastPanElementValidationState.isValid != panElement.validationState.isValid {
+            lastPanElementValidationState = panElement.validationState
+            if case .valid = panElement.validationState {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCardNumberCompleted)
+            }
+        }
+
+        // If the user entered 16 digits and exited the field, but our PAN length data
+        // indicates that we need more (maybe 19 digits?), then our data might be wrong.
+        // Send an alert so we can measure how often this happens.
+        if case .invalid(let error, _) = panElement.validationState,
+           let specificError = error as? TextFieldElement.PANConfiguration.Error,
+           case .incomplete = specificError,
+           !panElement.isEditing,
+           !hasLoggedExpectedExtraDigitsButUserEntered16 {
+            if panElement.text.count == 16 {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields)
+                hasLoggedExpectedExtraDigitsButUserEntered16 = true
+            }
+        }
+
+        // Send an analytic if we are disallowing a card brand
+        if case .invalid(let error, _) = panElement.validationState,
+           let specificError = error as? TextFieldElement.PANConfiguration.Error,
+           case .disallowedBrand(let brand) = specificError,
+           lastDisallowedCardBrandLogged != brand {
+
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                event: .paymentSheetDisallowedCardBrand,
+                params: ["brand": STPCardBrandUtilities.apiValue(from: brand)]
+            )
+            lastDisallowedCardBrandLogged = brand
+        }
+
+        delegate?.didUpdate(element: self)
     }
 }
 

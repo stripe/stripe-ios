@@ -1154,4 +1154,8 @@ extension PaymentSheetVerticalViewController: ElementDelegate {
         self.error = nil
         updateUI()
     }
+
+    func didBeginEditing(element: Element) {
+        // no-op
+    }
 }

@@ -26,6 +26,8 @@ class PaymentMethodFormViewController: UIViewController {
 
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
+    /// Reference to the CardSectionElement in the form, if present
+    private var cardSectionElement: CardSectionElement?
 
     var paymentOption: PaymentOption? {
         let params = IntentConfirmParams(type: paymentMethodType)
@@ -133,6 +135,9 @@ class PaymentMethodFormViewController: UIViewController {
 
         // Setup AddressSectionElement autocomplete callback after form creation
         setupAddressSectionAutocompleteCallback()
+
+        // Setup CardSectionElement reference for card scan control
+        setupCardSectionElementReference()
     }
 
     override func viewDidLoad() {
@@ -186,6 +191,16 @@ class PaymentMethodFormViewController: UIViewController {
             addressSection.didTapAutocompleteButton = { [weak self] in
                 self?.presentAutocomplete()
             }
+        }
+    }
+
+    /// Sets up the CardSectionElement reference to be used for controlling the card scanner visibility
+    private func setupCardSectionElementReference() {
+        let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
+        if let cardSection = formElement.getAllUnwrappedSubElements()
+            .compactMap({ $0 as? CardSectionElement }).first {
+            // Store reference to the card section element
+            self.cardSectionElement = cardSection
         }
     }
 
@@ -244,6 +259,11 @@ extension PaymentMethodFormViewController: ElementDelegate {
             )
             mandateElement.mandateTextView.attributedText = text
         }
+    }
+
+    func didBeginEditing(element: Element) {
+        // If any form element has begun editing and the card scanner is available, we should close it
+        cardSectionElement?.stopAndCloseScanner()
     }
 }
 

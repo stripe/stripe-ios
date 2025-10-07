@@ -171,6 +171,7 @@ extension LinkInlineSignupView {
 
         @objc func didToggleCheckbox() {
             delegate?.didUpdate(element: self)
+            delegate?.didBeginEditing(element: self)
         }
     }
 

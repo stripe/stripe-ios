@@ -36,6 +36,7 @@ import UIKit
     @objc func didToggleCheckbox() {
         didToggle(checkboxButton.isSelected)
         delegate?.didUpdate(element: self)
+        delegate?.didBeginEditing(element: self)
     }
 
     public init(
