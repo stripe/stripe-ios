@@ -26,6 +26,10 @@ extension PaymentSheet {
     ) {
         // Route based on which handler is available in the intent configuration
         if intentConfig.confirmationTokenConfirmHandler != nil {
+            guard let elementsSession else {
+                stpAssertionFailure("Unexpected nil elementsSession when handling deferred intent confirmation with confirmation token flow")
+                return
+            }
             // Use confirmation token flow
             handleDeferredIntentConfirmation_confirmationToken(
                 confirmType: confirmType,
