@@ -195,7 +195,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
-            requestSurface: requestSurface
+            requestSurface: requestSurface,
+            linkAuthTokenClientSecret: linkAuthTokenClientSecret
         ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):
