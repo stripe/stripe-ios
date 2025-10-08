@@ -332,7 +332,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
 
         // Buy button
-        let buyButtonStyle: ConfirmButton.Style
         var buyButtonStatus: ConfirmButton.Status
         var showBuyButton: Bool = true
 
@@ -342,15 +341,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
         switch mode {
         case .selectingSaved:
-            if case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
-                buyButtonStyle = .applePay
-            } else {
-                buyButtonStyle = .stripe
-            }
             buyButtonStatus = buyButtonEnabledForSavedPayments()
             showBuyButton = savedPaymentOptionsViewController.selectedPaymentOption != nil
         case .addingNew:
-            buyButtonStyle = .stripe
             if let overridePrimaryButtonState = addPaymentMethodViewController.overridePrimaryButtonState {
                 callToAction = overridePrimaryButtonState.ctaType
                 buyButtonStatus = overridePrimaryButtonState.enabled ? .enabled : .disabled
@@ -364,6 +357,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
         if isPaymentInFlight {
             buyButtonStatus = .processing
+        }
+        if case .selectingSaved = mode, case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
+            stpAssertionFailure("Apple Pay should be handled directly by the Apple Pay button in the wallet header")
         }
         self.buyButton.update(
             state: buyButtonStatus,

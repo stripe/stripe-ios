@@ -306,6 +306,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
             return selectedPaymentOption == nil ? .disabled : .enabled
         }()
+        if case .applePay = selectedPaymentOption {
+            stpAssertionFailure("Apple Pay should be handled by the wallet button, not the primary button")
+        }
         primaryButton.update(
             state: state,
             callToAction: callToAction,
