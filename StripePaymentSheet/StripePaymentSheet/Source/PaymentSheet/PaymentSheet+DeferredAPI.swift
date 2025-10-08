@@ -24,13 +24,12 @@ extension PaymentSheet {
         radarOptions: STPRadarOptions? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        // Assert that exactly one confirm handler is populated
-        let hasConfirmHandler = intentConfig.confirmHandler != nil
-        let hasConfirmationTokenHandler = intentConfig.confirmationTokenConfirmHandler != nil
-        stpAssert(hasConfirmHandler != hasConfirmationTokenHandler, "Exactly one confirm handler should be set (either confirmHandler or confirmationTokenConfirmHandler, but not both or neither)")
-
         // Route based on which handler is available in the intent configuration
         if intentConfig.confirmationTokenConfirmHandler != nil {
+            guard let elementsSession else {
+                stpAssertionFailure("Unexpected nil elementsSession when handling deferred intent confirmation with confirmation token flow")
+                return
+            }
             // Use confirmation token flow
             handleDeferredIntentConfirmation_confirmationToken(
                 confirmType: confirmType,
