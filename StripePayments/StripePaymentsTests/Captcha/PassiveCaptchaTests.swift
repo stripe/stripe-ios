@@ -48,13 +48,14 @@ class PassiveCaptchaTests: XCTestCase {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: TestDelayHCaptchaFactory())
-        await passiveCaptchaChallenge.setTimeout(timeout: 6)
+        await passiveCaptchaChallenge.setTimeout(timeout: 1)
         let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
         // should return nil due to timeout
         XCTAssertNil(hcaptchaToken)
         let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.error" })
         XCTAssertEqual(errorAnalytic?["site_key"] as? String, siteKey)
         XCTAssertEqual(errorAnalytic?["error_code"] as? String, "timeout")
+        XCTAssertLessThan(errorAnalytic?["duration"] as! Double, 2000.0)
     }
 
 }
