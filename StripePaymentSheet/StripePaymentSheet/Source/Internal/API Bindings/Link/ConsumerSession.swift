@@ -142,6 +142,7 @@ extension ConsumerSession {
         canSyncAttestationState: Bool,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
+        linkAuthTokenClientSecret: String? = nil,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         apiClient.lookupConsumerSession(
@@ -154,6 +155,7 @@ extension ConsumerSession {
             canSyncAttestationState: canSyncAttestationState,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface,
+            linkAuthTokenClientSecret: linkAuthTokenClientSecret,
             completion: completion
         )
     }

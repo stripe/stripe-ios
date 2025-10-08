@@ -25,6 +25,7 @@ extension STPAPIClient {
         canSyncAttestationState: Bool,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
+        linkAuthTokenClientSecret: String? = nil,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         Task {
@@ -39,8 +40,10 @@ extension STPAPIClient {
             if let email, !email.isEmpty, let emailSource {
                 parameters["email_address"] = email.lowercased()
                 parameters["email_source"] = emailSource.rawValue
+            } else if let linkAuthTokenClientSecret {
+                parameters["link_auth_token_client_secret"] = linkAuthTokenClientSecret
             } else {
-                // no request to make if we don't have an email
+                // no request to make if we don't have an email or auth token
                 DispatchQueue.main.async {
                     completion(.success(
                         ConsumerSession.LookupResponse(.noAvailableLookupParams)
