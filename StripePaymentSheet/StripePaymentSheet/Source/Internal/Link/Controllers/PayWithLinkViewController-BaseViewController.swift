@@ -63,7 +63,7 @@ extension PayWithLinkViewController {
 
         lazy var navigationBar: SheetNavigationBar = {
             let navBar = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
-            navBar.title = "Test title that is pretty long and should wrap"
+            navBar.title = navigationTitle
             return navBar
         }()
 
