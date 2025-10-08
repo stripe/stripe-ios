@@ -59,6 +59,7 @@ final class PayWithNativeLinkController {
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    private let launchedFromMPE: Bool
 
     init(
         mode: Mode,
@@ -70,7 +71,8 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
+        launchedFromMPE: Bool
     ) {
         self.mode = mode
         self.intent = intent
@@ -83,6 +85,7 @@ final class PayWithNativeLinkController {
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
         self.passiveCaptchaChallenge = passiveCaptchaChallenge
+        self.launchedFromMPE = launchedFromMPE
     }
 
     func presentAsBottomSheet(
@@ -97,7 +100,7 @@ final class PayWithNativeLinkController {
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
             shouldFinishOnClose: shouldFinishOnClose,
-            canSkipWalletAfterVerification: false // Only available for payment method selection
+            canSkipWalletAfterVerification: false // Only available for payment method selection,
         ) { completionResult in
             guard case .full(let result, let deferredIntentConfirmationType, let didFinish) = completionResult else {
                 return
@@ -160,6 +163,7 @@ final class PayWithNativeLinkController {
                 shouldFinishOnClose: shouldFinishOnClose,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
                 launchedFromFlowController: launchedFromFlowController,
+                launchedFromMPE: self.launchedFromMPE,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 callToAction: callToAction,

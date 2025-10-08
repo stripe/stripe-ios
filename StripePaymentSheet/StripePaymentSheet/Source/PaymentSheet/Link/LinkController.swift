@@ -344,7 +344,8 @@ import UIKit
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             linkAppearance: appearance,
             linkConfiguration: linkConfiguration,
-            shouldShowSecondaryCta: false
+            shouldShowSecondaryCta: false,
+            launchedFromMPE: false
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
@@ -378,14 +379,11 @@ import UIKit
             return
         }
 
-        let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
-
         if elementsSession.linkPassthroughModeEnabled {
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 overridePublishableKey: overridePublishableKey,
-                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
         } else {
@@ -393,7 +391,6 @@ import UIKit
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
                 overridePublishableKey: overridePublishableKey,
-                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
         }
@@ -597,7 +594,6 @@ import UIKit
         paymentDetails: ConsumerPaymentDetails,
         consumerSessionClientSecret: String,
         overridePublishableKey: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         // TODO: These parameters aren't final
@@ -609,7 +605,7 @@ import UIKit
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
             billingPhoneNumber: nil,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: nil // LinkController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id so we don't want to send CAM here
         ) { shareResult in
             switch shareResult {
             case .success(let success):
@@ -624,7 +620,6 @@ import UIKit
         paymentDetails: ConsumerPaymentDetails,
         linkAccount: PaymentSheetLinkAccount,
         overridePublishableKey: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         Task {
@@ -636,7 +631,6 @@ import UIKit
                     billingPhoneNumber: nil,
                     allowRedisplay: nil
                 )!
-                paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
 
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,

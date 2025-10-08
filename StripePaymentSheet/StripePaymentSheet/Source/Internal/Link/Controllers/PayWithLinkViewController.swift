@@ -86,6 +86,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let shouldFinishOnClose: Bool
         let shouldShowSecondaryCta: Bool
         let launchedFromFlowController: Bool
+        let launchedFromMPE: Bool
         let canSkipWalletAfterVerification: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
@@ -150,6 +151,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             shouldFinishOnClose: Bool,
             shouldShowSecondaryCta: Bool = true,
             launchedFromFlowController: Bool = false,
+            launchedFromMPE: Bool,
             canSkipWalletAfterVerification: Bool,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
@@ -165,6 +167,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.shouldFinishOnClose = shouldFinishOnClose
             self.shouldShowSecondaryCta = shouldShowSecondaryCta
             self.launchedFromFlowController = launchedFromFlowController
+            self.launchedFromMPE = launchedFromMPE
             self.canSkipWalletAfterVerification = canSkipWalletAfterVerification
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
@@ -212,6 +215,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         shouldFinishOnClose: Bool = false,
         shouldShowSecondaryCta: Bool = true,
         launchedFromFlowController: Bool = false,
+        launchedFromMPE: Bool,
         initiallySelectedPaymentDetailsID: String? = nil,
         canSkipWalletAfterVerification: Bool,
         callToAction: ConfirmButton.CallToActionType? = nil,
@@ -231,6 +235,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 shouldFinishOnClose: shouldFinishOnClose,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
                 launchedFromFlowController: launchedFromFlowController,
+                launchedFromMPE: launchedFromMPE,
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,

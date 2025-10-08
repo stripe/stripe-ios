@@ -159,7 +159,8 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
                 configuration: flowController.configuration,
-                analyticsHelper: flowController.analyticsHelper
+                analyticsHelper: flowController.analyticsHelper,
+                launchedFromMPE: true
             )
             linkController.presentForPaymentMethodSelection(
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
