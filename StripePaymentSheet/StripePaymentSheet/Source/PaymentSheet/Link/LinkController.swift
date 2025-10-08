@@ -245,6 +245,33 @@ import UIKit
         }
     }
 
+    /// Looks up the consumer using the provided auth token.
+    ///
+    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    /// - Parameter completion: A closure that is called with the result of the lookup. It returns `true` if the email is associated with a registered Link consumer, or `false` otherwise.
+    @_spi(STP) public func lookupConsumer(
+        withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        Self.lookupConsumer(
+            linkAuthTokenClientSecret: linkAuthTokenClientSecret,
+            linkAccountService: linkAccountService,
+            requestSurface: requestSurface
+        ) { result in
+            switch result {
+            case .success(let linkAccount):
+                LinkAccountContext.shared.account = linkAccount
+                if let linkAccount {
+                    completion(.success(()))
+                } else {
+                    completion(.failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: "")))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     /// Registers a new Link user with the provided details.
     /// `lookupConsumer` must be called before this.
     ///
@@ -677,6 +704,20 @@ import UIKit
     }
 
     private static func lookupConsumer(
+        linkAuthTokenClientSecret: String,
+        linkAccountService: any LinkAccountServiceProtocol,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    ) {
+        linkAccountService.lookupAccount(
+            withLinkAuthTokenClientSecret: linkAuthTokenClientSecret,
+            doNotLogConsumerFunnelEvent: false,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    private static func lookupConsumer(
         email: String,
         linkAccountService: any LinkAccountServiceProtocol,
         requestSurface: LinkRequestSurface,
@@ -812,6 +853,19 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     func lookupConsumer(with email: String) async throws -> Bool {
         try await withCheckedThrowingContinuation { continuation in
             lookupConsumer(with: email) { result in
+                switch result {
+                case .success(let isExistingLinkConsumer):
+                    continuation.resume(returning: isExistingLinkConsumer)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func lookupConsumer(withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            lookupConsumer(withLinkAuthTokenClientSecret: linkAuthTokenClientSecret) { result in
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
