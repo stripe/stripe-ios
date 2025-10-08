@@ -36,6 +36,19 @@ protocol LinkAccountServiceProtocol {
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
 
+    /// Looks up an account by link auth token.
+    /// - Parameters:
+    ///   - linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    ///   - doNotLogConsumerFunnelEvent: Whether or not this lookup call should be logged backend side.
+    ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
+    ///   - completion: Completion block.
+    func lookupAccount(
+        withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String,
+        doNotLogConsumerFunnelEvent: Bool,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    )
+
     /// Looks up an account by Link Auth Intent ID.
     ///
     /// - Parameters:
@@ -158,6 +171,50 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                         completion(.success(nil))
                     }
                 case .noAvailableLookupParams:
+                    completion(.success(nil))
+                }
+            case .failure(let error):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func lookupAccount(
+        withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String,
+        doNotLogConsumerFunnelEvent: Bool,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    ) {
+        ConsumerSession.lookupSession(
+            for: nil,
+            emailSource: nil,
+            sessionID: sessionID,
+            customerID: customerID,
+            with: apiClient,
+            useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
+            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
+            requestSurface: requestSurface
+        ) { [apiClient] result in
+            switch result {
+            case .success(let lookupResponse):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
+                switch lookupResponse.responseType {
+                case .found(let session):
+                    completion(.success(
+                        PaymentSheetLinkAccount(
+                            email: session.consumerSession.emailAddress,
+                            session: session.consumerSession,
+                            publishableKey: session.publishableKey,
+                            displayablePaymentDetails: session.displayablePaymentDetails,
+                            apiClient: apiClient,
+                            useMobileEndpoints: self.useMobileEndpoints,
+                            canSyncAttestationState: self.canSyncAttestationState,
+                            requestSurface: requestSurface
+                        )
+                    ))
+                case .notFound, .noAvailableLookupParams:
                     completion(.success(nil))
                 }
             case .failure(let error):
