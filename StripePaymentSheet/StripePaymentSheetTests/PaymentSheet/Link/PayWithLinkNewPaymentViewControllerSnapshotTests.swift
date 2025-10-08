@@ -30,7 +30,7 @@ class PayWithLinkNewPaymentViewControllerSnapshotTests: STPSnapshotTestCase {
             }
         }
         waitForExpectations(timeout: 1)
-        
+
     }
 
     func testIsAddingFirstPaymentMethod() throws {
