@@ -261,7 +261,7 @@ import UIKit
             switch result {
             case .success(let linkAccount):
                 LinkAccountContext.shared.account = linkAccount
-                if let linkAccount {
+                if linkAccount != nil {
                     completion(.success(()))
                 } else {
                     completion(.failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: "")))
