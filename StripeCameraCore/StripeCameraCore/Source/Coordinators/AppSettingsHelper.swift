@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public protocol AppSettingsHelperProtocol {
+@_spi(STP) public protocol AppSettingsHelperProtocol {
     var canOpenAppSettings: Bool { get }
     func openAppSettings()
 }
