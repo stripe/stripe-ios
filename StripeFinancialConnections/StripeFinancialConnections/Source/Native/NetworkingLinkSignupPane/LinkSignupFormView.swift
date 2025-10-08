@@ -194,6 +194,7 @@ extension LinkSignupFormView: PhoneTextFieldDelegate {
         _ phoneTextField: PhoneTextField,
         didChangePhoneNumber phoneNumber: PhoneNumber?
     ) {
+        phoneTextField.clearErrorText()
         delegate?.linkSignupFormViewDidUpdateFields(self)
     }
 }
