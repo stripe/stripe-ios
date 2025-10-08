@@ -116,13 +116,14 @@ jobs:
         id: resolve_comment
         if: env.diff == '' && steps.find_comment.outputs.comment-id != ''
         with:
-          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             ✅ Dead code has been resolved in this PR.
 
             [find-dead-code]
 
           edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail if not acknowledged
