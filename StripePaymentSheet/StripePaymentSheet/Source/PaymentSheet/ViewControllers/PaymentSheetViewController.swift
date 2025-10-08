@@ -131,7 +131,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
         let button = ConfirmButton(
             callToAction: callToAction,
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
@@ -368,7 +367,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
         self.buyButton.update(
             state: buyButtonStatus,
-            style: buyButtonStyle,
             callToAction: callToAction,
             animated: animated,
             completion: nil

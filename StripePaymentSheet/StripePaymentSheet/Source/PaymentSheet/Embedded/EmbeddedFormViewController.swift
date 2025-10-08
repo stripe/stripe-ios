@@ -115,7 +115,6 @@ class EmbeddedFormViewController: UIViewController {
     private lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
@@ -222,7 +221,6 @@ class EmbeddedFormViewController: UIViewController {
         }()
         primaryButton.update(
             state: state,
-            style: .stripe,
             callToAction: callToAction,
             animated: true
         )

@@ -59,7 +59,6 @@ class ConfirmButtonTests: XCTestCase {
 
     func testUpdateShouldCallTheCompletionBlock() {
         let sut = ConfirmButton(
-            style: .stripe,
             callToAction: .pay(amount: 1000, currency: "usd"),
             didTap: {}
         )
@@ -75,7 +74,6 @@ class ConfirmButtonTests: XCTestCase {
 
     func testUpdateShouldCallTheCompletionBlockWhenAnimated() {
         let sut = ConfirmButton(
-            style: .stripe,
             callToAction: .pay(amount: 1000, currency: "usd"),
             didTap: {}
         )
