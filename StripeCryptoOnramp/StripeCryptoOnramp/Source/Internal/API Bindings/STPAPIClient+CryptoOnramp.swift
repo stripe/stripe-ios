@@ -13,28 +13,35 @@
 extension STPAPIClient {
 
     /// Errors that can occur that are specific to usage of crypto endpoints.
-    enum CryptoOnrampAPIError: Error {
+    @_spi(STP)
+    public enum CryptoOnrampAPIError: LocalizedError {
 
         /// No consumer session client secret was found to be associated with the active link account session.
         case missingConsumerSessionClientSecret
 
         /// The request requires a session with a verified link account, but the account was found to not be verified.
         case linkAccountNotVerified
+
+        @_spi(STP)
+        public var errorDescription: String? {
+            switch self {
+            case .missingConsumerSessionClientSecret:
+                return "No consumer session client secret was found to be associated with the active link account session."
+            case .linkAccountNotVerified:
+                return "The request requires a session with a verified link account, but the account was found to not be verified."
+            }
+        }
     }
 
     /// Creates a crypto customer on the backend, upon granting the partner-merchant permission to facilitate crypto onramp transactions upon a customer’s behalf.
     /// - Parameter linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
-    func grantPartnerMerchantPermissions(with linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CustomerResponse {
+    func createCryptoCustomer(with linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CustomerResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
 
         try validateSessionState(using: linkAccountInfo)
-
-        guard case .verified = linkAccountInfo.sessionState else {
-            throw CryptoOnrampAPIError.linkAccountNotVerified
-        }
 
         let endpoint = "crypto/internal/customers"
         let requestObject = CustomerRequest(consumerSessionClientSecret: consumerSessionClientSecret)
@@ -128,39 +135,33 @@ extension STPAPIClient {
     /// Creates a crypto payment token from a given payment method and consumer.
     /// - Parameters:
     ///   - paymentMethodId: The originating payment method ID.
-    ///   - linkAccountInfo: Information associated with the link account including the client secret.
+    ///   - cryptoCustomerId: The crypto customer ID.
     /// - Returns: The created crypto payment token.
     /// Throws if an API error occurs.
     func createPaymentToken(
         for paymentMethodId: String,
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+        cryptoCustomerId: String
     ) async throws -> CreatePaymentTokenResponse {
-        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
-            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
-        }
-
         let endpoint = "crypto/internal/payment_token"
         let requestObject = CreatePaymentTokenRequest(
             paymentMethod: paymentMethodId,
-            consumerSessionClientSecret: consumerSessionClientSecret
+            cryptoCustomerId: cryptoCustomerId
         )
         return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameter linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+        cryptoCustomerId: String
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        var parameters: [String: Any] = [:]
-        if let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret {
-            parameters["credentials"] = ["consumer_session_client_secret": consumerSessionClientSecret]
-        }
-
+        let parameters: [String: Any] = [
+            "crypto_customer_id": cryptoCustomerId
+        ]
         return try await get(resource: endpoint, parameters: parameters)
     }
 

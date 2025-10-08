@@ -160,7 +160,8 @@ class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
             unredactedPhoneNumber: "(555) 555-5555",
             phoneNumberCountry: "US",
             verificationSessions: [],
-            supportedPaymentDetailsTypes: [.card, .bankAccount]
+            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            mobileFallbackWebviewParams: nil
         )
         completion(.success(stubSession))
         expectation.fulfill()
@@ -195,7 +196,8 @@ extension PaymentSheetLinkAccountTests {
             publishableKey: nil,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
     }
 

@@ -147,6 +147,10 @@ final class LinkInlineSignupViewModel {
         }
     }
 
+    var useLiquidGlass: Bool {
+        configuration.appearance.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp
+    }
+
     var requiresNameCollection: Bool {
         return country != "US"
     }
@@ -301,7 +305,7 @@ final class LinkInlineSignupViewModel {
     var bordered: Bool {
         switch mode {
         case .checkbox:
-            return !LiquidGlassDetector.isEnabled
+            return !useLiquidGlass
         case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             return false
         }
@@ -310,7 +314,7 @@ final class LinkInlineSignupViewModel {
     var containerBackground: UIColor {
         switch mode {
         case .checkbox:
-            if LiquidGlassDetector.isEnabled {
+            if useLiquidGlass {
                 return configuration.appearance.colors.componentBackground
             } else {
                 return configuration.appearance.colors.background
@@ -320,10 +324,10 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    var containerCornerRadius: CGFloat {
+    var containerCornerRadius: CGFloat? {
         switch mode {
         case .checkbox:
-            return LiquidGlassDetector.isEnabled ? LinkUI.cornerRadius : configuration.appearance.cornerRadius
+            return configuration.appearance.cornerRadius
         case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             // The content is right at the border of the view. Remove the corner radius so that we don't cut off anything.
             return 0

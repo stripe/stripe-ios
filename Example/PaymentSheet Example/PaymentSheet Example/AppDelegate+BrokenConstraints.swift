@@ -10,10 +10,6 @@ import UIKit
 extension AppDelegate {
     /// - Note: Only call this **once**!
     func catchBrokenConstraints() {
-        if #available(iOS 26.0, *) {
-            // TODO(iOS26): Something is broken, I think the swizzled method changed slightly
-            return
-        }
         let sel = NSSelectorFromString("engine:willBreakConstraint:dueToMutuallyExclusiveConstraints:")
         let method = class_getInstanceMethod(UIView.self, sel)!
         let impl = method_getImplementation(method)
@@ -41,11 +37,11 @@ extension AppDelegate {
         // Sometimes the broken constraint references something that is unique, in which case we can ignore it easily
         let ignoredBrokenConstraints = [
             "STP_Internal_LinkMoreInfoView", // https://jira.corp.stripe.com/browse/RUN_MOBILESDK-4562
-
-            "_UIRemoteKeyboardPlaceholderView", // Broken constraints in Apple's keyboard; unclear how it's our fault
-            "SystemInputAssistantView", // Same as ^
             "verticalSeparatorWidth' separator|.width == 0.333333", // Apple broken UIAlert constraint - oddly they never log this either; maybe they also have an ignorelist!
             "UISV-spacing' H:[_UIInterfaceActionCustomViewRepresentationView:", // Same as ^
+            "_UIModernBarButton:", // iOS 26+ keyboard toolbar issue
+            "_UIRemoteKeyboardPlaceholderView:", // iOS 26+ keyboard toolbar issue
+            "TUIKeyplane", // iOS 26+ keyboard issue
         ]
         guard !ignoredBrokenConstraints.contains(where: { constraint.debugDescription.contains($0) }) else {
             return
@@ -62,7 +58,10 @@ extension AppDelegate {
         }
         let alert = UIAlertController(title: "Broken constraint!", message: "\(constraint)\nPlease fix it or file a bug!", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
-        window?.rootViewController?.findTopMostPresentedViewController().present(alert, animated: true)
+        DispatchQueue.main.async {
+            // Async'ing this avoids a strange iOS 26 exception that looks like "Tried accessing the col index for a variable that is a row head:tempToBeOptimizedToZero{id: 8279}"
+            window?.rootViewController?.findTopMostPresentedViewController().present(alert, animated: true)
+        }
     }
 }
 

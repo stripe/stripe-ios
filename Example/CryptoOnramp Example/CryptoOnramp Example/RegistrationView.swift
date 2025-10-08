@@ -29,12 +29,13 @@ struct RegistrationView: View {
     /// Whether the app is running in livemode or testmode.
     let livemode: Bool
 
+    /// Called when registration and authentication succeed. Provides the crypto customer id.
+    let onCompleted: (_ customerId: String) -> Void
+
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
-    @State private var showAuthenticatedView: Bool = false
-    @State private var registrationCustomerId: String?
     @State private var isRegistrationComplete: Bool = false
     @State private var showUpdatePhoneNumberSheet: Bool = false
     @State private var updatePhoneNumberInput: String = ""
@@ -46,14 +47,14 @@ struct RegistrationView: View {
     @FocusState private var isCountryFieldFocused: Bool
 
     private var isRegisterButtonDisabled: Bool {
-        isLoading.wrappedValue || phoneNumber.isEmpty || registrationCustomerId != nil
+        isLoading.wrappedValue || phoneNumber.isEmpty
     }
 
     private var isUpdatePhoneNumberButtonDisabled: Bool {
-        !isRegistrationComplete
+        isLoading.wrappedValue || !isRegistrationComplete
     }
 
-    private var shouldDisableButtons: Bool {
+    private var isAuthenticateButtonDisabled: Bool {
         isLoading.wrappedValue
     }
 
@@ -101,15 +102,17 @@ struct RegistrationView: View {
 
                 if isRegistrationComplete {
                     Button("Authenticate") {
+                        resetFocusState()
                         Task {
                             try await verify()
                         }
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .disabled(shouldDisableButtons)
-                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                    .disabled(isAuthenticateButtonDisabled)
+                    .opacity(isAuthenticateButtonDisabled ? 0.5 : 1)
                 } else {
                     Button("Register") {
+                        resetFocusState()
                         registerUser()
                     }
                     .buttonStyle(PrimaryButtonStyle())
@@ -118,6 +121,7 @@ struct RegistrationView: View {
                 }
 
                 Button("Update Phone Number") {
+                    resetFocusState()
                     updatePhoneNumberInput = phoneNumber
                     showUpdatePhoneNumberSheet = true
                 }
@@ -129,12 +133,6 @@ struct RegistrationView: View {
                     ErrorMessageView(message: errorMessage)
                 }
 
-                if let customerId = registrationCustomerId {
-                    HiddenNavigationLink(
-                        destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
-                        isActive: $showAuthenticatedView
-                    )
-                }
             }
             .padding()
         }
@@ -201,12 +199,7 @@ struct RegistrationView: View {
         if let customerId = await presentAuthorization(laiId: laiId, using: coordinator) {
             await MainActor.run {
                 isLoading.wrappedValue = false
-                self.registrationCustomerId = customerId
-
-                // Delay so the navigation link animation doesn't get canceled.
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    showAuthenticatedView = true
-                }
+                onCompleted(customerId)
             }
         } else {
             await MainActor.run {
@@ -265,6 +258,12 @@ struct RegistrationView: View {
             }
         }
     }
+
+    private func resetFocusState() {
+        isFullNameFieldFocused = false
+        isPhoneNumberFieldFocused = false
+        isCountryFieldFocused = false
+    }
 }
 
 #Preview {
@@ -272,8 +271,9 @@ struct RegistrationView: View {
         RegistrationView(
             coordinator: coordinator,
             email: "test@example.com",
-            selectedScopes: OAuthScopes.onrampScope,
-            livemode: false
+            selectedScopes: OAuthScopes.requiredScopes,
+            livemode: false,
+            onCompleted: { _ in }
         )
     }
 }

@@ -132,6 +132,9 @@ import Foundation
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
     case mcOptionSelectEmbeddedSavedPM = "mc_embedded_paymentoption_savedpm_select"
 
+    // MARK: - PaymentSheet Wallet Button Tap
+    case mcWalletButtonTapped = "mc_wallet_button_tapped"
+
     // MARK: - PaymentSheet Saved Payment Method Removed
     case mcOptionRemoveCustomSavedPM = "mc_custom_paymentoption_removed"
     case mcOptionRemoveCompleteSavedPM = "mc_complete_paymentoption_removed"
@@ -293,6 +296,8 @@ import Foundation
     case assertionSucceeded = "stripeios.attest.assertion.succeeded"
     case resetKeyForAssertionError = "stripeios.attest.reset_key_for_assertion_error"
     case resetKeyForAttestationError = "stripeios.attest.reset_key_for_attestation_error"
+    case stateMismatchNotAttestedLocally = "stripeios.attest.state_mismatch.not_attested_locally"
+    case stateMismatchNotAttestedRemotely = "stripeios.attest.state_mismatch.not_attested_remotely"
 
     // MARK: - Custom Payment Methods
     case paymentSheetInvalidCPM = "mc_invalid_cpm"

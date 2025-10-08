@@ -96,7 +96,22 @@ extension LinkStubs {
             unredactedPhoneNumber: "(555) 555-5555",
             phoneNumberCountry: "US",
             verificationSessions: [],
-            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes
+            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
+            mobileFallbackWebviewParams: nil
+        )
+    }
+
+    static func account(
+        email: String = "user@example.com",
+        session: ConsumerSession? = Self.consumerSession()
+    ) -> PaymentSheetLinkAccount {
+        .init(
+            email: email,
+            session: session,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
     }
 

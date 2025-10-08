@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Tambah maklumat pembayaran anda";
 
-"Agree and continue" = "Setuju dan teruskan";
-
 "Approve payment" = "Luluskan pembayaran";
 
 "Are you sure you want to remove this card?" = "Anda pasti ingin mengalih keluar kad ini?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %1$@ dan %2$@, anda bersetuju untuk menyimpan maklumat anda dengan %3$@ bagi pembelian masa hadapan, serta bersetuju untuk membenarkan pembayaran dibuat menurut <terms>terma ini</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %@ anda bersetuju untuk mengizinkan pembayaran mengikut <terms>terma-terma ini</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -133,8 +133,6 @@
 "Failed to connect" = "Gagal disambungkan";
 
 "Fast, secure checkout" = "Proses bayar dan keluar yang pantas dan selamat";
-
-"For security, please re-enter your card’s security code." = "Bagi tujuan keselamatan, sila masukkan semula kod keselamatan kad anda.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran untuk kali pertama dengan bank anda. <terms>Lihat terma</terms>";
 
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "Kod penentusahan yang diberikan telah tamat tempoh.";
 
 "The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Kad ini telah tamat tempoh. Kemas kinikan maklumat kad anda atau pilih kaedah pembayaran yang lain.";
 
 "This is your default" = "Ini tetapan asal anda";
 

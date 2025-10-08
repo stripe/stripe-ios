@@ -389,7 +389,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         stubClientAttributionMetadata(base: "payment_method_options", clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
-        sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", consumerAccountPublishableKey: nil, allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil, clientAttributionMetadata: clientAttributionMetadata) { _ in
+        sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil, clientAttributionMetadata: clientAttributionMetadata) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)

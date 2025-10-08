@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Добавете своята информация за плащането";
 
-"Agree and continue" = "Съгласяване и продължаване";
-
 "Approve payment" = "Одобряване на плащането";
 
 "Are you sure you want to remove this card?" = "Сигурни ли сте, че желаете да премахнете тази банкова карта?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да оторизирате плащания съгласно <terms>тези условия</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %1$@ и %2$@ се съгласявате да запазите информацията си в %3$@ за бъдещи покупки и се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %@ Вие се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -133,8 +133,6 @@
 "Failed to connect" = "Неуспешно свързване";
 
 "Fast, secure checkout" = "Бързо и сигурно финализиране на плащане";
-
-"For security, please re-enter your card’s security code." = "От съображения за сигурност, моля, въведете отново защитния код на Вашата банкова карта.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Получете %@ обратно при първо плащане по банков път. <terms>Вижте условията</terms>";
 
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "Предоставеният код за потвърждаване е изтекъл.";
 
 "The provided verification code is incorrect." = "Предоставеният код за потвърждаване е неправилен.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Срокът на валидност на тази банкова карта е изтекъл. Актуализирайте информацията за картата си или изберете друг начин на плащане.";
 
 "This is your default" = "Това е настройката по подразбиране.";
 

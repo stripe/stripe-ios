@@ -16,16 +16,22 @@ import UIKit
 // @iOS26
 final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
 
+    override static func setUp() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+    }
+
     override func setUp() {
         super.setUp()
-
         // `LinkPaymentMethodFormElement` depends on `AddressSectionElement`, which requires
         // address specs to be loaded in memory.
         let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             expectation.fulfill()
         }
-
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
@@ -131,7 +137,6 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         if requestPhone {
             configuration.billingDetailsCollectionConfiguration.phone = .always
         }
-
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: configuration,
