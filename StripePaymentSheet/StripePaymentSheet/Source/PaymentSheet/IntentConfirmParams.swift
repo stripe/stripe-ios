@@ -202,9 +202,6 @@ final class IntentConfirmParams {
         }
     }
 
-    func setClientAttributionMetadata(clientAttributionMetadata: STPClientAttributionMetadata) {
-        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-    }
 }
 
 extension STPConfirmPaymentMethodOptions {

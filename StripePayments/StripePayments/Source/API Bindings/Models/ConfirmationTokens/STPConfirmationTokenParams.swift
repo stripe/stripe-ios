@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// An object representing parameters used to create a ConfirmationToken object.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
@@ -39,7 +38,7 @@ import Foundation
     @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+    @objc @_spi(STP) public var clientAttributionMetadata: STPFormEncodableClientAttributionMetadata?
 
     /// Client context for the ConfirmationToken, containing information about the payment flow context
     @objc @_spi(STP) public var clientContext: STPConfirmationTokenClientContext?

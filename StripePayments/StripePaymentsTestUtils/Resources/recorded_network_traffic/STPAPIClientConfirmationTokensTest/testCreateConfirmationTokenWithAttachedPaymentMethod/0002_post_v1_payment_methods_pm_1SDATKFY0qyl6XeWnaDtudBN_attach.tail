@@ -1,0 +1,77 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_methods\/pm_1SDATKFY0qyl6XeWnaDtudBN\/attach$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=pNWsb0kMFvfdN_bLVkfy9w0tty2_LinG4ofajjb995H9j9CcGsbmxOyyiCTXrap5PrXx8hADg7cFdK-e
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_QT4WBxK8bDa9v8
+Content-Length: 1046
+Vary: Origin
+Date: Tue, 30 Sep 2025 20:48:31 GMT
+original-request: req_QT4WBxK8bDa9v8
+stripe-version: 2020-08-27
+idempotency-key: 417fb905-f388-46ca-a0fb-16a2bab1bf7f
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: customer=cus_T9TQcm7hcfR3Qq
+
+{
+  "object" : "payment_method",
+  "id" : "pm_1SDATKFY0qyl6XeWnaDtudBN",
+  "billing_details" : {
+    "email" : null,
+    "phone" : null,
+    "tax_id" : null,
+    "name" : null,
+    "address" : {
+      "state" : null,
+      "country" : null,
+      "line2" : null,
+      "city" : null,
+      "line1" : null,
+      "postal_code" : null
+    }
+  },
+  "card" : {
+    "regulated_status" : "unregulated",
+    "fingerprint" : "96sroMqLCHmUdUpL",
+    "last4" : "4242",
+    "funding" : "credit",
+    "generated_from" : null,
+    "networks" : {
+      "available" : [
+        "visa"
+      ],
+      "preferred" : null
+    },
+    "brand" : "visa",
+    "checks" : {
+      "address_postal_code_check" : null,
+      "cvc_check" : null,
+      "address_line1_check" : null
+    },
+    "three_d_secure_usage" : {
+      "supported" : true
+    },
+    "wallet" : null,
+    "display_brand" : "visa",
+    "exp_month" : 12,
+    "exp_year" : 2030,
+    "country" : "US"
+  },
+  "livemode" : false,
+  "created" : 1759265310,
+  "allow_redisplay" : "unspecified",
+  "type" : "card",
+  "customer" : "cus_T9TQcm7hcfR3Qq"
+}
