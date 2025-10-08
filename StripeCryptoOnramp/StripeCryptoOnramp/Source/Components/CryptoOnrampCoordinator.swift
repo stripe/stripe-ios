@@ -61,6 +61,11 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
     func updatePhoneNumber(to phoneNumber: String) async throws
 
+    /// Authenticates the user with an encrypted Link auth token.
+    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    /// Throws if the user is the auth token is expired, has already been used, has been revoked, or an API error occurs.
+    func authenticateUser(withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String) throws
+
     /// Presents Link UI to authenticate an existing Link user.
     /// `hasLinkAccount` must be called before this.
     ///
@@ -298,6 +303,15 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.linkPhoneNumberUpdated)
         } catch {
             try handlePhoneFormatError(error, during: .updatePhoneNumber)
+        }
+    }
+
+    public func authenticateUser(withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String) throws {
+        do {
+            try await linkController.lookupConsumer(withLinkAuthTokenClientSecret: linkAuthTokenClientSecret)
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
+            throw error
         }
     }
 

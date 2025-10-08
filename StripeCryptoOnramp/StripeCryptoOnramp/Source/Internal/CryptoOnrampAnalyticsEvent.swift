@@ -13,6 +13,7 @@ enum CryptoOnrampOperation: String {
     case registerLinkUser = "register_link_user"
     case updatePhoneNumber = "update_phone_number"
     case authenticateUser = "authenticate_user"
+    case authenticateUserWithAuthToken = "authenticate_user_with_auth_token"
     case authorize = "authorize"
     case attachKycInfo = "attach_kyc_info"
     case verifyIdentity = "verify_identity"
