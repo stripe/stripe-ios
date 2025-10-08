@@ -39,9 +39,8 @@ final class FormElementSnapshotTest: STPSnapshotTestCase {
         let section1 = SectionElement(title: "Example title", elements: [multiElementRow, textFieldElement3], theme: theme)
         let section2 = SectionElement(elements: [dropdownField], theme: theme)
         let section3 = SectionElement(elements: [phoneNumberField], theme: theme)
-        let section4 = SectionElement(elements: [dateField], theme: theme)
         let formElement = FormElement(
-            elements: [section1, section2, section3, section4, addressSectionElement, checkboxButton],
+            elements: [section1, section2, section3, addressSectionElement, checkboxButton],
             theme: theme
         )
         formElement.formView.backgroundColor = appearance.colors.background
