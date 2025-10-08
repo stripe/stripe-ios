@@ -91,7 +91,7 @@ enum HCaptchaError: Error, CustomStringConvertible {
             return "Invalid JSON or JSObject as customTheme"
 
         case .challengeStopped:
-            return "HCaptcha was stopped"
+            return "HCaptcha stopped"
         }
     }
 }

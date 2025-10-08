@@ -44,7 +44,8 @@ import Foundation
         case timeout
     }
 
-    private let passiveCaptcha: PassiveCaptchaData
+    private let passiveCaptchaData: PassiveCaptchaData
+    private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
     private var hasFetchedToken = false
 
@@ -54,8 +55,13 @@ import Foundation
         self.timeout = timeout
     }
 
-    public init(passiveCaptcha: PassiveCaptchaData) {
-        self.passiveCaptcha = passiveCaptcha
+    public init(passiveCaptchaData: PassiveCaptchaData) {
+        self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
+    }
+
+    init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
+        self.passiveCaptchaData = passiveCaptchaData
+        self.hcaptchaFactory = hcaptchaFactory
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
@@ -64,14 +70,11 @@ import Foundation
             return try await tokenTask.value
         }
 
-        let tokenTask = Task<String, Error> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, weak self] () -> String in
+        let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, rqdata = passiveCaptchaData.rqdata, hcaptchaFactory, weak self] () -> String in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             let startTime = Date()
             do {
-                let hcaptcha = try HCaptcha(apiKey: siteKey,
-                                            passiveApiKey: true,
-                                            rqdata: rqdata,
-                                            host: "stripecdn.com")
+                let hcaptcha = try hcaptchaFactory.create(siteKey: siteKey, rqdata: rqdata)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let result = try await withTaskCancellationHandler {
                     try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
@@ -104,6 +107,7 @@ import Foundation
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
                 return result
             } catch {
+                try Task.checkCancellation()
                 let duration = Date().timeIntervalSince(startTime)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
                 throw error
@@ -120,7 +124,7 @@ import Foundation
     public func fetchTokenWithTimeout() async -> String? {
         let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
-        let siteKey = passiveCaptcha.siteKey
+        let siteKey = passiveCaptchaData.siteKey
         do {
             return try await withThrowingTaskGroup(of: String.self) { group in
                 let isReady = hasFetchedToken
@@ -130,7 +134,7 @@ import Foundation
                 }
                 // Add timeout task
                 group.addTask {
-                    try? await Task.sleep(nanoseconds: timeoutNs)
+                    try await Task.sleep(nanoseconds: timeoutNs)
                     throw PassiveCaptchaError.timeout
                 }
                 defer {
@@ -151,6 +155,21 @@ import Foundation
     }
 
 }
+
+// Protocol for creating HCaptcha instances
+protocol HCaptchaFactory {
+    func create(siteKey: String, rqdata: String?) throws -> HCaptcha
+}
+
+struct PassiveHCaptchaFactory: HCaptchaFactory {
+    func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
+        return try HCaptcha(apiKey: siteKey,
+                            passiveApiKey: true,
+                            rqdata: rqdata,
+                            host: "stripecdn.com")
+    }
+}
+
 
 // All duration analytics are in milliseconds
 extension STPAnalyticsClient {
