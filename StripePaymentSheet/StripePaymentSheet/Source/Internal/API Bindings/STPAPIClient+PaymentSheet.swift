@@ -26,10 +26,12 @@ extension STPAPIClient {
             "locale": Locale.current.toLanguageTag(),
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
             "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
-            "link": [
-                "disallow_funding_source_creation": Array(linkDisallowFundingSourceCreation),
-            ],
         ]
+        if !linkDisallowFundingSourceCreation.isEmpty {
+            parameters["link"] = [
+                "disallow_funding_source_creation": Array(linkDisallowFundingSourceCreation),
+            ]
+        }
         if let userOverrideCountry {
             parameters["country_override"] = userOverrideCountry
         }
