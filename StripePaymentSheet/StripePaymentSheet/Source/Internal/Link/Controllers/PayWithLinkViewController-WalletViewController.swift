@@ -138,18 +138,17 @@ extension PayWithLinkViewController {
             return stackView
         }()
 
-        private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: theme)
-            label.textAlignment = .center
-            label.isHidden = true
-            return label
+        private lazy var errorView: LinkHintMessageView = {
+            let view = LinkHintMessageView(message: nil, style: .error)
+            view.isHidden = true
+            return view
         }()
 
         private lazy var containerView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
-                errorLabel,
+                errorView,
                 mandateView,
                 confirmButton,
             ])
@@ -278,8 +277,8 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorLabel.text = error?.nonGenericDescription
-            containerView.toggleArrangedSubview(errorLabel, shouldShow: error != nil, animated: true)
+            errorView.text = error?.nonGenericDescription
+            containerView.toggleArrangedSubview(errorView, shouldShow: error != nil, animated: true)
         }
 
         func reloadPaymentDetails(completion: (() -> Void)?) {
@@ -338,13 +337,7 @@ extension PayWithLinkViewController {
                     case .success(let paymentDetails):
                         confirmWithPaymentDetails(paymentDetails)
                     case .failure(let error):
-                        let alertController = UIAlertController(
-                            title: nil,
-                            message: error.localizedDescription,
-                            preferredStyle: .alert
-                        )
-                        alertController.addAction(.init(title: String.Localized.ok, style: .default))
-                        self?.present(alertController, animated: true)
+                        self?.updateErrorLabel(for: error)
                         self?.confirmButton.update(state: .enabled)
                     }
                 }

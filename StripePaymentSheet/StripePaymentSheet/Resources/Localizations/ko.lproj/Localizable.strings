@@ -132,8 +132,6 @@
 
 "Fast, secure checkout" = "빠르고 안전한 체크아웃";
 
-"For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
-
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "은행으로 처음 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "은행으로 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
@@ -281,8 +279,6 @@
 "The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
 
 "The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
-
-"This card has expired. Update your card info or choose a different payment method." = "이 카드의 유효기간이 만료되었습니다. 카드 정보를 업데이트하거나 다른 결제 방식을 선택하십시오.";
 
 "This is your default" = "기본값입니다";
 
