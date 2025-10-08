@@ -191,7 +191,7 @@ extension STPAnalyticsClient {
         usesWebAuthSession: Bool,
         isComplete: Bool
     ) {
-        var params: [String: Any] = ["redirect_type": usesWebAuthSession ? "SFVC" : "ASWAS"]
+        var params: [String: Any] = ["redirect_type": usesWebAuthSession ? "ASWAS" : "SFVC"]
         if let intentID {
             params["intent_id"] = intentID
         }
