@@ -144,7 +144,6 @@ x-content-type-options: nosniff
     "elements_enable_external_payment_method_gcash" : false,
     "elements_enable_card_brand_choice_payment_element_link" : true,
     "elements_enable_external_payment_method_payit" : false,
-    "elements_enable_blik" : true,
     "elements_enable_south_korea_market_underlying_pms" : false,
     "elements_enable_external_payment_method_girocard" : false,
     "elements_enable_external_payment_method_oney" : false,
