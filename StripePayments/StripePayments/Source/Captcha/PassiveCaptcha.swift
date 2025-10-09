@@ -78,11 +78,11 @@ import Foundation
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let result = try await withTaskCancellationHandler {
                     try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
-                        // Prevent Swift Task continuation misuse - the validate completion block can get called from multiple places
+                        // Prevent Swift Task continuation misuse - the validate completion block can get called multiple times
                         var nillableContinuation: CheckedContinuation<String, Error>? = continuation
 
                         hcaptcha.validate { result in
-                            Task { @MainActor in
+                            Task { @MainActor in // MainActor to prevent continuation from different threads
                                 do {
                                     let token = try result.dematerialize()
                                     nillableContinuation?.resume(returning: token)
@@ -138,7 +138,7 @@ import Foundation
                     throw PassiveCaptchaError.timeout
                 }
                 defer {
-                    tokenTask?.cancel()
+                    tokenTask?.cancel() // TaskGroups can't return until all child tasks have completed, so we need to cancel the tokenTask and handle cancellation to complete as quickly as possible
                 }
                 // Wait for first completion
                 let result = try await group.next()
