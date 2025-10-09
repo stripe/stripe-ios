@@ -31,6 +31,7 @@ enum CryptoOnrampAnalyticsEvent {
     case linkPhoneNumberUpdated
     case linkUserAuthenticationStarted
     case linkUserAuthenticationCompleted
+    case linkUserAuthenticationWithTokenCompleted
     case linkAuthorizationStarted
     case linkAuthorizationCompleted(consented: Bool)
     case identityVerificationStarted
@@ -59,6 +60,8 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.link_user_authentication_started"
         case .linkUserAuthenticationCompleted:
             return "onramp.link_user_authentication_completed"
+        case .linkUserAuthenticationWithTokenCompleted:
+            return "onramp.link_user_authentication_with_token_completed"
         case .linkAuthorizationStarted:
             return "onramp.link_authorization_started"
         case .linkAuthorizationCompleted:
@@ -95,6 +98,7 @@ enum CryptoOnrampAnalyticsEvent {
              .linkPhoneNumberUpdated,
              .linkUserAuthenticationStarted,
              .linkUserAuthenticationCompleted,
+             .linkUserAuthenticationWithTokenCompleted,
              .linkAuthorizationStarted,
              .identityVerificationStarted,
              .identityVerificationCompleted,
