@@ -468,7 +468,6 @@ extension AddressSectionElement: ElementDelegate {
             && phone.countryDropdownElement.selectedIndex != country.selectedIndex {
             phone.selectCountry(index: country.selectedIndex, shouldUpdateDefaultNumber: true)
         }
-        continueToNextField(element: self)
     }
 }
 
