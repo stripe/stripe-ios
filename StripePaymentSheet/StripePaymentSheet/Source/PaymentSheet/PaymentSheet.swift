@@ -181,23 +181,37 @@ public class PaymentSheet {
                     self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                 }
                 if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
-                    let verificationController = LinkVerificationController(
-                        mode: .inlineLogin,
-                        linkAccount: linkAccount,
-                        configuration: self.configuration
-                    )
-
-                    verificationController.present(from: self.bottomSheetViewController) { result in
-                        switch result {
-                        case .completed:
-                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
+                    // Phone number verification requires full sized presentation
+                    if linkAccount.requiredPhoneNumberVerificationForEmailOtp {
+                        self.presentPayWithNativeLinkController(
+                            from: self.bottomSheetViewController,
+                            intent: loadResult.intent,
+                            elementsSession: loadResult.elementsSession,
+                            shouldOfferApplePay: self.configuration.isApplePayEnabled,
+                            shouldFinishOnClose: false,
+                            onClose: {
                                 presentPaymentSheet()
-                            })
-                        case .canceled, .switchAccount:
-                            presentPaymentSheet()
-                        case .failed:
-                            // Error is logged within LinkVerificationViewController
-                            presentPaymentSheet()
+                            }
+                        )
+                    } else {
+                        let verificationController = LinkVerificationController(
+                            mode: .inlineLogin,
+                            linkAccount: linkAccount,
+                            configuration: self.configuration
+                        )
+
+                        verificationController.present(from: self.bottomSheetViewController) { result in
+                            switch result {
+                            case .completed:
+                                self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
+                                    presentPaymentSheet()
+                                })
+                            case .canceled, .switchAccount:
+                                presentPaymentSheet()
+                            case .failed:
+                                // Error is logged within LinkVerificationViewController
+                                presentPaymentSheet()
+                            }
                         }
                     }
                 } else {

@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 /// Standalone verification controller.
@@ -133,6 +134,30 @@ extension LinkVerificationController: LinkVerificationViewControllerDelegate {
         controller.dismiss(animated: true) { [weak self] in
             self?.completion?(result)
             self?.selfRetainer = nil
+        }
+    }
+
+    func verificationController(
+        _ controller: LinkVerificationViewController,
+        shouldSendCodeToEmail: Bool
+    ) {
+        controller.verificationView.sendingCode = true
+        controller.verificationView.errorMessage = nil
+        controller.verificationFactor = .email
+
+        linkAccount.startVerification(factor: .email) { result in
+            controller.verificationView.sendingCode = false
+
+            switch result {
+            case .success:
+                let toast = LinkToast(
+                    type: .success,
+                    text: String.Localized.codeSentSuccessMessage
+                )
+                toast.show(from: controller.verificationView)
+            case .failure(let error):
+                controller.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
+            }
         }
     }
 
