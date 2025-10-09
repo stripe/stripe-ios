@@ -12,7 +12,6 @@ import StripePaymentsTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
@@ -77,28 +76,32 @@ class STPSetupIntentFunctionalTestSwift: STPNetworkStubbingTestCase {
         completion(clientSecret)
     }
 
-    func testConfirmSetupIntentWithUSBankAccount_verifyWithAmounts() {
-        createAndConfirmSetupIntentWithUSBankAccount { [self] clientSecret in
-            guard let clientSecret = clientSecret else {
-                XCTFail("Failed to create SetupIntent")
-                return
+    func testConfirmSetupIntentWithUSBankAccount_verifyWithAmounts() async throws {
+        let clientSecret: String? = await withCheckedContinuation { continuation in
+            createAndConfirmSetupIntentWithUSBankAccount { clientSecret in
+                continuation.resume(returning: clientSecret)
             }
-
-            let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-
-            let verificationExpectation = expectation(description: "Verify with microdeposits")
-            client.verifySetupIntentWithMicrodeposits(
-                clientSecret: clientSecret,
-                firstAmount: 32,
-                secondAmount: 45
-            ) { setupIntent, error in
-                XCTAssertNil(error)
-                XCTAssertNotNil(setupIntent)
-                XCTAssertEqual(setupIntent?.status, .succeeded)
-                verificationExpectation.fulfill()
-            }
-            waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
         }
+        guard let clientSecret = clientSecret else {
+            XCTFail("Failed to create SetupIntent")
+            return
+        }
+
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let verificationExpectation = expectation(description: "Verify with microdeposits")
+        client.verifySetupIntentWithMicrodeposits(
+            clientSecret: clientSecret,
+            firstAmount: 32,
+            secondAmount: 45
+        ) { setupIntent, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(setupIntent)
+            XCTAssertEqual(setupIntent?.status, .succeeded)
+            verificationExpectation.fulfill()
+        }
+        _ = try await client.verifySetupIntentWithMicrodeposits(clientSecret: clientSecret, firstAmount: 32, secondAmount: 45)
+        await fulfillment(of: [verificationExpectation])
     }
 
     func testConfirmSetupIntentWithUSBankAccount_verifyWithDescriptorCode() {
