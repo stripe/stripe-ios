@@ -248,7 +248,7 @@ import UIKit
     /// Looks up the consumer using the provided auth token.
     ///
     /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
-    /// - Parameter completion: A closure that is called with the result of the lookup. It returns `true` if the email is associated with a registered Link consumer, or `false` otherwise.
+    /// - Parameter completion: A closure that is called when the lookup completes or fails.
     @_spi(STP) public func lookupConsumer(
         withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String,
         completion: @escaping (Result<Void, Error>) -> Void

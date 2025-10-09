@@ -63,7 +63,7 @@ protocol CryptoOnrampCoordinatorProtocol {
 
     /// Authenticates the user with an encrypted Link auth token.
     /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
-    /// Throws if the user is the auth token is expired, has already been used, has been revoked, or an API error occurs.
+    /// Throws if the auth token is expired, has already been used, has been revoked, or an API error occurs.
     func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws
 
     /// Presents Link UI to authenticate an existing Link user.
