@@ -1,6 +1,6 @@
 ## x.x.x yyyy-yy-yy
 ### PaymentSheet
-* [Fixed] Logic on detecting liquid glass executing, to avoid executing liquid glass specific code on <iOS26 devices.
+* [Fixed] Logic on detecting liquid glass executing. Link visual styling issues are present and `DoneButtonToolbar` was not tappable on devices using < iOS26 when compilling with Xcode26.
 
 ## 24.24.2 2025-10-06
 
