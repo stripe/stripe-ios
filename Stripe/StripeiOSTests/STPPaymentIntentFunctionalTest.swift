@@ -67,6 +67,22 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testRetrievePreviousCreatedPaymentIntent() async throws {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let paymentIntent = try await client.retrievePaymentIntent(withClientSecret: "pi_1GGCGfFY0qyl6XeWbSAsh2hn_secret_jbhwsI0DGWhKreJs3CCrluUGe")
+        XCTAssertEqual(paymentIntent.stripeId, "pi_1GGCGfFY0qyl6XeWbSAsh2hn")
+        XCTAssertEqual(paymentIntent.amount, 100)
+        XCTAssertEqual(paymentIntent.currency, "usd")
+        XCTAssertFalse(paymentIntent.livemode)
+        XCTAssertNil(paymentIntent.sourceId)
+        XCTAssertNil(paymentIntent.paymentMethodId)
+        XCTAssertEqual(paymentIntent.status, .canceled)
+        XCTAssertEqual(paymentIntent.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
+        XCTAssertNil(paymentIntent.perform(NSSelectorFromString("nextSourceAction")))
+        XCTAssertNil(paymentIntent.nextAction)
+    }
+
     func testRetrieveWithWrongSecret() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let expectation = self.expectation(description: "Payment Intent retrieve")

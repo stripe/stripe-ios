@@ -499,10 +499,11 @@ extension STPAPIClient {
         }
     }
 
-    /// Retrieves the PaymentIntent object using the given secret. - seealso: https://stripe.com/docs/api#retrieve_payment_intent
+    /// Retrieves the PaymentIntent object using the given secret.
     /// - Parameters:
-    ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
+    ///   - secret:      The client secret of the payment intent to be retrieved.
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#retrieve_payment_intent]
     @objc(retrievePaymentIntentWithClientSecret:completion:)
     public func retrievePaymentIntent(
         withClientSecret secret: String,
@@ -515,11 +516,12 @@ extension STPAPIClient {
         )
     }
 
-    /// Retrieves the PaymentIntent object using the given secret. - seealso: https://stripe.com/docs/api#retrieve_payment_intent
+    /// Retrieves the PaymentIntent object using the given secret.
     /// - Parameters:
-    ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
-    ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
+    ///   - secret:  The client secret of the payment intent to be retrieved.
+    ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable.
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#retrieve_payment_intent]
     @objc(retrievePaymentIntentWithClientSecret:expand:completion:)
     public func retrievePaymentIntent(
         withClientSecret secret: String,
@@ -527,6 +529,29 @@ extension STPAPIClient {
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         retrievePaymentIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
+    }
+
+    /// Retrieves the PaymentIntent object using the given secret.
+    /// - Parameters:
+    ///   - secret: The client secret of the payment intent to be retrieved.
+    ///   - expand: An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable.
+    /// - Returns: A PaymentIntent object.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#retrieve_payment_intent]
+    public func retrievePaymentIntent(
+        withClientSecret secret: String,
+        expand: [String]? = nil
+    ) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrievePaymentIntent(withClientSecret: secret, expand: expand) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
     }
 
     // Internal helper to pass timeout
