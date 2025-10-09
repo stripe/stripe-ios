@@ -12,7 +12,7 @@ import StripePaymentsTestUtils
 import XCTest
 
 class STPCardFunctionalTest: STPNetworkStubbingTestCase {
-    func testCreateCardToken() async throws {
+    func testCreateCardToken() {
         let card = STPCardParams()
 
         card.number = "4242 4242 4242 4242"
@@ -45,8 +45,33 @@ class STPCardFunctionalTest: STPNetworkStubbingTestCase {
                 expectation.fulfill()
 
         }
-        _ = try await client.createToken(withCard: card)
-        await fulfillment(of: [expectation])
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+
+    func testCreateCardTokenAsync() async throws {
+        let card = STPCardParams()
+
+        card.number = "4242 4242 4242 4242"
+        card.expMonth = 6
+        card.expYear = 2050
+        card.currency = "usd"
+        card.address.line1 = "123 Fake Street"
+        card.address.line2 = "Apartment 4"
+        card.address.city = "New York"
+        card.address.state = "NY"
+        card.address.country = "USA"
+        card.address.postalCode = "10002"
+
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let token = try await client.createToken(withCard: card)
+        XCTAssertNotNil(token.tokenId)
+        XCTAssertEqual(token.type, .card)
+        XCTAssertEqual(6, token.card?.expMonth)
+        XCTAssertEqual(2050, token.card?.expYear)
+        XCTAssertEqual("4242", token.card?.last4)
+        XCTAssertEqual("usd", token.card?.currency)
+        XCTAssertEqual("10002", token.card?.address?.postalCode)
     }
 
     func testCardTokenCreationWithInvalidParams() {
