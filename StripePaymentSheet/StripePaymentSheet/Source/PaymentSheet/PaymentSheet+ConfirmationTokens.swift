@@ -19,17 +19,15 @@ extension PaymentSheet {
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession,
         mandateData: STPMandateDataParams? = nil,
-        radarOptions: STPRadarOptions? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
             do {
-                // 1. Create the confirmation token params
-                let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
-                                                                            configuration: configuration,
-                                                                            intentConfig: intentConfig,
-                                                                            elementsSession: elementsSession,
-                                                                            radarOptions: radarOptions)
+            // 1. Create the confirmation token params
+            let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
+                                                                        configuration: configuration,
+                                                                        intentConfig: intentConfig,
+                                                                        elementsSession: elementsSession)
 
                 let ephemeralKeySecret: String? = {
                     // Only needed when using existing saved payment methods, API will error if provided for new payment methods
@@ -67,6 +65,18 @@ extension PaymentSheet {
                     completion(makePaymentSheetResult(for: status, error: error), deferredIntentConfirmationType)
                 }
 
+                let savedPaymentMethodRadarOptions: STPRadarOptions? = {
+                    switch confirmType {
+                    case .saved(_, _, _, let radarOptions):
+                        // Edge-case we need to send radarOptions to level for CSC as there is no top level radarOptions property on the CT
+                        // hCaptcha is only supported client-side so this is acceptable
+                        return radarOptions
+                    case .new:
+                        // Radar options is already attached to the paymentMethodData that was used to create the confirmation token
+                        return nil
+                    }
+                }()
+
                 // 4. Retrieve the PaymentIntent or SetupIntent
                 switch intentConfig.mode {
                 case .payment:
@@ -78,7 +88,7 @@ extension PaymentSheet {
                         let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.confirmationToken = confirmationToken.stripeId
                         paymentIntentParams.returnURL = configuration.returnURL
-                        paymentIntentParams.radarOptions = radarOptions
+                        paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
 
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
@@ -105,7 +115,7 @@ extension PaymentSheet {
                         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                         setupIntentParams.confirmationToken = confirmationToken.stripeId
                         setupIntentParams.returnURL = configuration.returnURL
-                        setupIntentParams.radarOptions = radarOptions
+                        setupIntentParams.radarOptions = savedPaymentMethodRadarOptions
 
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
@@ -137,8 +147,7 @@ extension PaymentSheet {
         intentConfig: PaymentSheet.IntentConfiguration,
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession,
-        mandateData: STPMandateDataParams? = nil,
-        radarOptions: STPRadarOptions? = nil
+        mandateData: STPMandateDataParams? = nil
     ) -> STPConfirmationTokenParams {
 
         // 1. Initialize confirmation token with basic configuration
@@ -149,14 +158,13 @@ extension PaymentSheet {
 
         // 2. Configure payment method details based on confirm type
         switch confirmType {
-        case .saved(let paymentMethod, let paymentOptions, let clientAttributionMetadata):
+        case .saved(let paymentMethod, let paymentOptions, let clientAttributionMetadata, _):
             // Use existing saved payment method
             confirmationTokenParams.paymentMethod = paymentMethod.stripeId
             confirmationTokenParams.paymentMethodOptions = paymentOptions
             confirmationTokenParams.clientAttributionMetadata = clientAttributionMetadata
         case .new(let paymentMethodParams, let paymentOptions, _, _, let shouldSetAsDefaultPM):
             confirmationTokenParams.paymentMethodData = paymentMethodParams
-            confirmationTokenParams.paymentMethodData?.radarOptions = radarOptions
             confirmationTokenParams.paymentMethodOptions = paymentOptions
             confirmationTokenParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
 
@@ -229,7 +237,7 @@ extension PaymentSheet {
     /// - Returns: The  payment method type for API operations
     private static func paymentMethodType(from confirmType: ConfirmPaymentMethodType) -> STPPaymentMethodType {
         switch confirmType {
-        case .saved(let paymentMethod, _, _):
+        case .saved(let paymentMethod, _, _, _):
             return paymentMethod.type
         case .new(let params, _, _, _, _):
             return params.type
@@ -242,7 +250,7 @@ extension PaymentSheet {
     /// - Returns: True if the payment method originated from Link
     private static func isSavedFromLink(from confirmType: ConfirmPaymentMethodType) -> Bool {
         switch confirmType {
-        case .saved(let paymentMethod, _, _):
+        case .saved(let paymentMethod, _, _, _):
             return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.usBankAccount?.linkedAccount != nil
         case .new:
             return false

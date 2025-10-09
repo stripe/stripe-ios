@@ -19,8 +19,14 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     private var subscribers: Set<AnyCancellable> = []
 
     convenience init() {
-        let settings = Self.settingsFromDefaults() ?? .defaultValues()
-        self.init(settings: settings)
+        self.init(settings: .defaultValues())
+        Task.detached {
+            let settings = Self.settingsFromDefaults() ?? .defaultValues()
+
+            await MainActor.run {
+                self.settings = settings
+            }
+        }
     }
 
     init(settings: CustomerSheetTestPlaygroundSettings) {

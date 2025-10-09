@@ -591,9 +591,18 @@ class PlaygroundController: ObservableObject {
     private var subscribers: Set<AnyCancellable> = []
 
     convenience init() {
-        let settings = Self.settingsFromDefaults() ?? .defaultValues()
-        let appearance = Self.appearanceFromDefaults() ?? .default
-        self.init(settings: settings, appearance: appearance)
+        self.init(settings: .defaultValues(), appearance: .default)
+
+        Task.detached {
+            let settings = Self.settingsFromDefaults() ?? .defaultValues()
+            let appearance = Self.appearanceFromDefaults() ?? .default
+
+            await MainActor.run {
+                self.settings = settings
+                self.appearance = appearance
+                self.loadLastSavedCustomer()
+            }
+        }
     }
 
     init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {

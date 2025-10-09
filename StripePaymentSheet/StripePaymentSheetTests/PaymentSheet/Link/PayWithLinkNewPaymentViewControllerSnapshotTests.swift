@@ -1,5 +1,5 @@
 //
-//  PayWithLinkViewController-NewPaymentViewControllerSnapshotTests.swift
+//  PayWithLinkNewPaymentViewControllerSnapshotTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Jeremy Kelleher on 10/1/25.
@@ -10,7 +10,8 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-class PayWithLinkViewController_NewPaymentViewControllerSnapshotTests: STPSnapshotTestCase {
+// @iOS26
+class PayWithLinkNewPaymentViewControllerSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
 
@@ -54,7 +55,7 @@ class PayWithLinkViewController_NewPaymentViewControllerSnapshotTests: STPSnapsh
 
 }
 
-extension PayWithLinkViewController_NewPaymentViewControllerSnapshotTests {
+extension PayWithLinkNewPaymentViewControllerSnapshotTests {
 
     func makeSUT(isAddingFirstPaymentMethod: Bool) throws -> PayWithLinkViewController.NewPaymentViewController {
 
