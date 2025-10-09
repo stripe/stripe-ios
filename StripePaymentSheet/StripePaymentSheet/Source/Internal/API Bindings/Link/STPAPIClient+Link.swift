@@ -73,7 +73,7 @@ extension STPAPIClient {
             var parameters: [String: Any] = [
                 "request_surface": requestSurface.rawValue,
                 "session_id": sessionID,
-                "link_auth_token_client_secret": linkAuthTokenClientSecret
+                "link_auth_token_client_secret": linkAuthTokenClientSecret,
             ]
 
             parameters["customer_id"] = customerID
