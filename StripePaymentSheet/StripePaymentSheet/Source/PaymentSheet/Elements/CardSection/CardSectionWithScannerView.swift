@@ -88,6 +88,7 @@ final class CardSectionWithScannerView: UIView {
         self.cardScanningView.prepDismissAnimation()
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
             self.cardScanButton.alpha = 1
+            self.cardScanningView.alpha = 0
             self.cardScanningView.setHiddenIfNecessary(true)
             self.layoutIfNeeded()
         } completion: { _ in
@@ -98,6 +99,7 @@ final class CardSectionWithScannerView: UIView {
     private func showCardScanner() {
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
             self.cardScanButton.alpha = 0
+            self.cardScanningView.alpha = 1
             self.cardScanningView.setHiddenIfNecessary(false)
             self.layoutIfNeeded()
         }
