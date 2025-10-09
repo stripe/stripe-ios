@@ -308,7 +308,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     public func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws {
         do {
-            try await linkController.lookupAuthToken(linkAuthTokenClientSecret)
+            try await linkController.lookupLinkAuthToken(linkAuthTokenClientSecret)
             analyticsClient.log(.linkUserAuthenticationWithTokenCompleted)
         } catch {
             analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))

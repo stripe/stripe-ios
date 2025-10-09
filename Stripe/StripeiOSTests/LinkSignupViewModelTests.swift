@@ -284,7 +284,7 @@ extension LinkInlineSignupViewModelTests {
             }
         }
 
-        func lookupAuthToken(
+        func lookupLinkAuthToken(
             _ linkAuthTokenClientSecret: String,
             doNotLogConsumerFunnelEvent: Bool,
             requestSurface: StripePaymentSheet.LinkRequestSurface,

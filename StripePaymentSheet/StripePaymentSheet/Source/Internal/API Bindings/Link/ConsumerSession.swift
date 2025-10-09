@@ -158,7 +158,7 @@ extension ConsumerSession {
         )
     }
 
-    class func lookupAuthToken(
+    class func lookupLinkAuthToken(
         _ linkAuthTokenClientSecret: String,
         sessionID: String,
         customerID: String?,

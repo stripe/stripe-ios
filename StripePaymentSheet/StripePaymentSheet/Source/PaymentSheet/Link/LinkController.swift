@@ -249,12 +249,12 @@ import UIKit
     ///
     /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
     /// - Parameter completion: A closure that is called when the lookup completes or fails.
-    @_spi(STP) public func lookupAuthToken(
+    @_spi(STP) public func lookupLinkAuthToken(
         _ linkAuthTokenClientSecret: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        Self.lookupConsumer(
-            linkAuthTokenClientSecret: linkAuthTokenClientSecret,
+        Self.lookupLinkAuthToken(
+            linkAuthTokenClientSecret,
             linkAccountService: linkAccountService,
             requestSurface: requestSurface
         ) { result in
@@ -703,13 +703,13 @@ import UIKit
         return result
     }
 
-    private static func lookupConsumer(
-        linkAuthTokenClientSecret: String,
+    private static func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
         linkAccountService: any LinkAccountServiceProtocol,
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
-        linkAccountService.lookupAuthToken(
+        linkAccountService.lookupLinkAuthToken(
             linkAuthTokenClientSecret,
             doNotLogConsumerFunnelEvent: false,
             requestSurface: requestSurface,
@@ -863,9 +863,9 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         }
     }
 
-    func lookupAuthToken(_ linkAuthTokenClientSecret: String) async throws {
+    func lookupLinkAuthToken(_ linkAuthTokenClientSecret: String) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            lookupAuthToken(linkAuthTokenClientSecret) { result in
+            lookupLinkAuthToken(linkAuthTokenClientSecret) { result in
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
