@@ -14,7 +14,7 @@ import StripeCoreTestUtils
 @testable import StripePaymentsTestUtils
 
 class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
-    func testCreateCardPaymentMethod() {
+    func testCreateCardPaymentMethod() async throws {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let card = STPPaymentMethodCardParams()
         card.number = "4242424242424242"
@@ -77,8 +77,8 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertTrue(paymentMethod!.card!.threeDSecureUsage!.supported)
             expectation.fulfill()
         }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        _ = try await client.createPaymentMethod(with: params)
+        await fulfillment(of: [expectation])
     }
 
     func testUpdateCardPaymentMethod() async throws {

@@ -957,16 +957,32 @@ extension STPAPIClient {
 /// STPAPIClient extensions for working with PaymentMethod objects.
 extension STPAPIClient {
     /// Creates a PaymentMethod object with the provided params object.
-    /// - seealso: https://stripe.com/docs/api/payment_methods/create
     /// - Parameters:
-    ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.
     ///   - completion:           The callback to run with the returned PaymentMethod object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/payment_methods/create)
     @objc(createPaymentMethodWithParams:completion:)
     public func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
         createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], overridePublishableKey: nil, completion: completion)
+    }
+
+    /// Creates a PaymentMethod object with the provided params object.
+    /// - Parameters:
+    ///   - paymentMethodParams: The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.
+    /// - Returns: The created PaymentMethod object.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/payment_methods/create)
+    public func createPaymentMethod(
+        with paymentMethodParams: STPPaymentMethodParams
+    ) async throws -> STPPaymentMethod {
+        return try await createPaymentMethod(
+            with: paymentMethodParams,
+            additionalPaymentUserAgentValues: [],
+            overridePublishableKey: nil
+        )
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
