@@ -79,7 +79,7 @@ import UIKit
 
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hitView = super.hitTest(point, with: event)
-        guard #available(iOS 26.0, *), LiquidGlassDetector.isEnabledInMerchantApp else {
+        guard LiquidGlassDetector.isEnabledInMerchantApp else {
             return hitView
         }
 
