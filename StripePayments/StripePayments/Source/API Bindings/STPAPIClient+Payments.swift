@@ -253,8 +253,9 @@ extension StripeFile {
 extension STPAPIClient {
     /// Converts an STPCardParams object into a Stripe token using the Stripe API.
     /// - Parameters:
-    ///   - cardParams:  The user's card details. Cannot be nil. - seealso: https://stripe.com/docs/api#create_card_token
+    ///   - cardParams:  The user's card details.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_card_token)
     @objc(createTokenWithCard:completion:)
     public func createToken(
         withCard cardParams: STPCardParams,
@@ -264,6 +265,27 @@ extension STPAPIClient {
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         createToken(withParameters: params, completion: completion)
         STPTelemetryClient.shared.sendTelemetryData()
+    }
+
+    /// Converts an `STPCardParams` object into a Stripe token using the Stripe API.
+    /// - Parameters:
+    ///   - cardParams: The user's card details.
+    /// - Returns: A Stripe token.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_card_token)
+    public func createToken(
+        withCard cardParams: STPCardParams
+    ) async throws -> STPToken {
+        return try await withCheckedThrowingContinuation { continuation in
+            createToken(withCard: cardParams) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
     }
 
     /// Converts a CVC string into a Stripe token using the Stripe API.

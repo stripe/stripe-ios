@@ -12,7 +12,7 @@ import StripePaymentsTestUtils
 import XCTest
 
 class STPCardFunctionalTest: STPNetworkStubbingTestCase {
-    func testCreateCardToken() {
+    func testCreateCardToken() async throws {
         let card = STPCardParams()
 
         card.number = "4242 4242 4242 4242"
@@ -45,7 +45,8 @@ class STPCardFunctionalTest: STPNetworkStubbingTestCase {
                 expectation.fulfill()
 
         }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        _ = try await client.createToken(withCard: card)
+        await fulfillment(of: [expectation])
     }
 
     func testCardTokenCreationWithInvalidParams() {
