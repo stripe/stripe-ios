@@ -40,7 +40,7 @@ extension STPAPIClient {
                 parameters["email_address"] = email.lowercased()
                 parameters["email_source"] = emailSource.rawValue
             } else {
-                // no request to make if we don't have an email or auth token
+                // no request to make if we don't have an email
                 DispatchQueue.main.async {
                     completion(.success(
                         ConsumerSession.LookupResponse(.noAvailableLookupParams)
