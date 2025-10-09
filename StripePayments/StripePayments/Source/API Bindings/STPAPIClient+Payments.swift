@@ -107,8 +107,9 @@ extension STPAPIClient {
 
     /// Converts the last 4 SSN digits into a Stripe token using the Stripe API.
     /// - Parameters:
-    ///   - ssnLast4: The last 4 digits of the user's SSN. Cannot be nil.
+    ///   - ssnLast4: The last 4 digits of the user's SSN.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_pii_token)
     @objc(createTokenWithSSNLast4:completion:)
     public func createToken(
         withSSNLast4 ssnLast4: String,
@@ -122,6 +123,27 @@ extension STPAPIClient {
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         createToken(withParameters: params, completion: completion)
         STPTelemetryClient.shared.sendTelemetryData()
+    }
+
+    /// Converts the last 4 SSN digits into a Stripe token using the Stripe API.
+    /// - Parameters:
+    ///   - ssnLast4: The last 4 digits of the user's SSN.
+    /// - Returns: A Stripe token.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_pii_token)
+    public func createToken(
+        withSSNLast4 ssnLast4: String
+    ) async throws -> STPToken {
+        return try await withCheckedThrowingContinuation { continuation in
+            createToken(withSSNLast4: ssnLast4) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
     }
 }
 

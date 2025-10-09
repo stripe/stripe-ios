@@ -28,7 +28,7 @@ class STPPIIFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
-    func testSSNLast4Token() {
+    func testSSNLast4Token() async throws {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         let expectation = self.expectation(description: "PII creation")
@@ -40,7 +40,7 @@ class STPPIIFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertNotNil(token?.tokenId)
             XCTAssertEqual(token?.type, .PII)
         }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        _ = try await client.createToken(withSSNLast4: "1234")
+        await fulfillment(of: [expectation])
     }
 }
