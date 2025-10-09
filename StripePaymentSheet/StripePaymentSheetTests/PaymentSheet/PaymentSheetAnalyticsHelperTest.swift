@@ -102,7 +102,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(isApplePayEnabled, lastEvent.additionalParams[jsonDict: "mpe_config"]?["apple_pay_config"] as? Bool)
             XCTAssertEqual(isCustomerProvided, lastEvent.additionalParams[jsonDict: "mpe_config"]?["customer"] as? Bool)
             switch integrationShape {
-            case .complete, .flowController:
+            case .complete, .flowController, .linkController:
                 XCTAssertEqual("automatic", lastEvent.additionalParams[jsonDict: "mpe_config"]?["payment_method_layout"] as? String)
             case .embedded:
                 XCTAssertEqual("continue", lastEvent.additionalParams[jsonDict: "mpe_config"]?["form_sheet_action"] as? String)
@@ -697,7 +697,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
     ) -> PaymentElementConfiguration {
         switch integrationShape {
-        case .flowController, .complete:
+        case .flowController, .complete, .linkController:
             var config = PaymentSheet.Configuration()
             config.applePay = applePay
             config.customer = customer
