@@ -591,9 +591,18 @@ class PlaygroundController: ObservableObject {
     private var subscribers: Set<AnyCancellable> = []
 
     convenience init() {
-        let settings = Self.settingsFromDefaults() ?? .defaultValues()
-        let appearance = Self.appearanceFromDefaults() ?? .default
-        self.init(settings: settings, appearance: appearance)
+        self.init(settings: .defaultValues(), appearance: .default)
+
+        Task.detached {
+            let settings = Self.settingsFromDefaults() ?? .defaultValues()
+            let appearance = Self.appearanceFromDefaults() ?? .default
+
+            await MainActor.run {
+                self.settings = settings
+                self.appearance = appearance
+                self.loadLastSavedCustomer()
+            }
+        }
     }
 
     init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
@@ -830,6 +839,7 @@ extension PlaygroundController {
             "link_mode": settings.linkEnabledMode.rawValue,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            "is_confirmation_token": settings.integrationType == .deferred_csc_ct || settings.integrationType == .deferred_ssc_ct,
             "customer_session_component_name": "mobile_payment_element",
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
             "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,

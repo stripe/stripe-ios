@@ -63,7 +63,6 @@ import UIKit
         let stackView = UIStackView(arrangedSubviews: [textView, descriptionLabel])
         stackView.spacing = 4
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
