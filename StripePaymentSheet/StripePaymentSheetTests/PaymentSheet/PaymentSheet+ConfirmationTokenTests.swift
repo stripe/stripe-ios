@@ -171,11 +171,12 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
 
     func testCreateConfirmationTokenParams_newPaymentMethod() {
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
-        let paymentMethodParams = createTestPaymentMethodParams()
+        var paymentMethodParams = createTestPaymentMethodParams()
         let clientAttributionMetadata = STPClientAttributionMetadata()
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         let paymentOptions = STPConfirmPaymentMethodOptions()
         let radarOptions = createTestRadarOptions()
+        paymentMethodParams.radarOptions = radarOptions
 
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
             params: paymentMethodParams,
