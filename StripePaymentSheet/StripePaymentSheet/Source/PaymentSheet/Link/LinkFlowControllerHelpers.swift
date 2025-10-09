@@ -30,7 +30,6 @@ extension UIViewController {
         linkConfiguration: LinkConfiguration? = nil,
         shouldShowSecondaryCta: Bool = true,
         passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
-        launchedFromMPE: Bool,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -44,7 +43,6 @@ extension UIViewController {
             linkAppearance: linkAppearance,
             linkConfiguration: linkConfiguration,
             passiveCaptchaChallenge: passiveCaptchaChallenge,
-            launchedFromMPE: launchedFromMPE
         )
 
         payWithLinkController.presentForPaymentMethodSelection(

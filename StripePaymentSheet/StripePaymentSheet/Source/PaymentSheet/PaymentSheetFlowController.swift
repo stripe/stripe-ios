@@ -500,7 +500,6 @@ extension PaymentSheet {
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
                 passiveCaptchaChallenge: passiveCaptchaChallenge,
-                launchedFromMPE: true,
                 callback: completionCallback
             )
         }

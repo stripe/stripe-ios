@@ -59,7 +59,6 @@ final class PayWithNativeLinkController {
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    private let launchedFromMPE: Bool
 
     init(
         mode: Mode,
@@ -71,8 +70,7 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
-        launchedFromMPE: Bool
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -85,7 +83,6 @@ final class PayWithNativeLinkController {
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
         self.passiveCaptchaChallenge = passiveCaptchaChallenge
-        self.launchedFromMPE = launchedFromMPE
     }
 
     func presentAsBottomSheet(
@@ -163,7 +160,6 @@ final class PayWithNativeLinkController {
                 shouldFinishOnClose: shouldFinishOnClose,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
                 launchedFromFlowController: launchedFromFlowController,
-                launchedFromMPE: self.launchedFromMPE,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 callToAction: callToAction,

@@ -195,7 +195,7 @@ import UIKit
                     configuration.style = appearance.style
                 }
 
-                let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration)
+                let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .linkController, configuration: configuration)
 
                 let loadResult = try await Self.loadElementsSession(
                     configuration: configuration,
@@ -344,8 +344,7 @@ import UIKit
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             linkAppearance: appearance,
             linkConfiguration: linkConfiguration,
-            shouldShowSecondaryCta: false,
-            launchedFromMPE: false
+            shouldShowSecondaryCta: false
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
