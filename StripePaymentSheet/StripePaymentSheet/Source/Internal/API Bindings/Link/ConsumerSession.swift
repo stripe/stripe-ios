@@ -160,6 +160,31 @@ extension ConsumerSession {
         )
     }
 
+    class func lookupAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        sessionID: String,
+        customerID: String?,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
+        doNotLogConsumerFunnelEvent: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
+        apiClient.lookupLinkAuthToken(
+            linkAuthTokenClientSecret,
+            sessionID: sessionID,
+            customerID: customerID,
+            cookieStore: cookieStore,
+            useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
+            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
     class func lookupLinkAuthIntent(
         linkAuthIntentID: String,
         sessionID: String,

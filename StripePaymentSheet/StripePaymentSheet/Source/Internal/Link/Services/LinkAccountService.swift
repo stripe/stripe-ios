@@ -42,8 +42,8 @@ protocol LinkAccountServiceProtocol {
     ///   - doNotLogConsumerFunnelEvent: Whether or not this lookup call should be logged backend side.
     ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
     ///   - completion: Completion block.
-    func lookupAccount(
-        withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String,
+    func lookupAuthToken(
+        _ linkAuthTokenClientSecret: String,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
@@ -180,23 +180,20 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         }
     }
 
-    func lookupAccount(
-        withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String,
+    func lookupAuthToken(
+        _ linkAuthTokenClientSecret: String,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
-        ConsumerSession.lookupSession(
-            for: nil,
-            emailSource: nil,
+        ConsumerSession.lookupAuthToken(
+            linkAuthTokenClientSecret,
             sessionID: sessionID,
             customerID: customerID,
-            with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
-            requestSurface: requestSurface,
-            linkAuthTokenClientSecret: linkAuthTokenClientSecret
+            requestSurface: requestSurface
         ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):

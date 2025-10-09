@@ -249,8 +249,8 @@ import UIKit
     ///
     /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
     /// - Parameter completion: A closure that is called when the lookup completes or fails.
-    @_spi(STP) public func lookupConsumer(
-        withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String,
+    @_spi(STP) public func lookupAuthToken(
+        _ linkAuthTokenClientSecret: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         Self.lookupConsumer(
@@ -709,8 +709,8 @@ import UIKit
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
-        linkAccountService.lookupAccount(
-            withLinkAuthTokenClientSecret: linkAuthTokenClientSecret,
+        linkAccountService.lookupAuthToken(
+            linkAuthTokenClientSecret,
             doNotLogConsumerFunnelEvent: false,
             requestSurface: requestSurface,
             completion: completion
@@ -863,9 +863,9 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         }
     }
 
-    func lookupConsumer(withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String) async throws {
+    func lookupAuthToken(_ linkAuthTokenClientSecret: String) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            lookupConsumer(withLinkAuthTokenClientSecret: linkAuthTokenClientSecret) { result in
+            lookupAuthToken(linkAuthTokenClientSecret) { result in
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)

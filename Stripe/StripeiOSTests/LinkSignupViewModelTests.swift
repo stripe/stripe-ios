@@ -284,8 +284,8 @@ extension LinkInlineSignupViewModelTests {
             }
         }
 
-        func lookupAccount(
-            withLinkAuthTokenClientSecret linkAuthTokenClientSecret: String,
+        func lookupAuthToken(
+            _ linkAuthTokenClientSecret: String,
             doNotLogConsumerFunnelEvent: Bool,
             requestSurface: StripePaymentSheet.LinkRequestSurface,
             completion: @escaping (Result<StripePaymentSheet.PaymentSheetLinkAccount?, any Error>) -> Void
