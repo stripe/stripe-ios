@@ -1,6 +1,7 @@
 ## x.x.x yyyy-yy-yy
 ### PaymentSheet
-* [Fixed] Logic on detecting liquid glass executing. Link visual styling issues are present and `DoneButtonToolbar` was not tappable on devices using < iOS26 when compilling with Xcode26.
+* [Fixed] Fixed a bug where the`DoneButtonToolbar` was not tappable on devices < iOS 26 when compiled with Xcode26.
+* [Fixed] Fixed minor styling issues with Link UI on < iOS 26 when compiled with Xcode26.
 
 ## 24.24.2 2025-10-06
 
