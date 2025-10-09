@@ -11,6 +11,9 @@ import UIKit
 @_spi(STP) public class LiquidGlassDetector {
     /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
     @_spi(STP) public static var isEnabledInMerchantApp: Bool {
+        guard #available(iOS 26.0, *) else {
+            return false
+        }
         return meetsCompilerRequirements && !hasOptedOut
     }
 
