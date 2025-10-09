@@ -253,6 +253,31 @@ extension STPSetupIntentFunctionalTestSwift {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testConfirmSetupIntentSucceeds() async throws {
+        let clientSecret: String = await withCheckedContinuation { continuation in
+            STPTestingAPIClient.shared.createSetupIntent(withParams: nil) { createdClientSecret, creationError in
+                XCTAssertNotNil(createdClientSecret)
+                XCTAssertNil(creationError)
+                continuation.resume(returning: createdClientSecret!)
+            }
+        }
+
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let params = STPSetupIntentConfirmParams(clientSecret: clientSecret)
+        params.returnURL = "example-app-scheme://authorized"
+        params.paymentMethodID = "pm_card_authenticationRequired"
+
+        let setupIntent = try await client.confirmSetupIntent(with: params)
+        XCTAssertEqual(setupIntent.stripeID, STPSetupIntent.id(fromClientSecret: params.clientSecret))
+        XCTAssertEqual(setupIntent.clientSecret, clientSecret)
+        XCTAssertFalse(setupIntent.livemode)
+        XCTAssertEqual(setupIntent.status, STPSetupIntentStatus.requiresAction)
+        XCTAssertNotNil(setupIntent.nextAction)
+        XCTAssertEqual(setupIntent.nextAction?.type, STPIntentActionType.redirectToURL)
+        XCTAssertEqual(setupIntent.nextAction?.redirectToURL?.returnURL, URL(string: "example-app-scheme://authorized"))
+        XCTAssertNotNil(setupIntent.paymentMethodID)
+    }
+
     // MARK: - AU BECS Debit
 
     func testConfirmAUBECSDebitSetupIntent() {

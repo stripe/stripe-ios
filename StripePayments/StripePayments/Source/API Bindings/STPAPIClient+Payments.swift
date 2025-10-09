@@ -648,12 +648,12 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
-    /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
-    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
+    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
     @objc(confirmPaymentIntentWithParams:completion:)
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
@@ -668,13 +668,14 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
-    /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
-    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
+    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
-    ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
+    ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable.
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/payment_intents/object)
     @objc(confirmPaymentIntentWithParams:expand:completion:)
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
@@ -729,7 +730,7 @@ extension STPAPIClient {
 
     /// Confirms the PaymentIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - paymentIntentParams: The `STPPaymentIntentParams` to pass to `/confirm`
@@ -906,12 +907,12 @@ extension STPAPIClient {
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - seealso: https://stripe.com/docs/api/setup_intents/confirm
-    /// @note Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
-    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
+    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/confirm)
     @objc(confirmSetupIntentWithParams:completion:)
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
@@ -926,13 +927,14 @@ extension STPAPIClient {
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
-    /// - seealso: https://stripe.com/docs/api/setup_intents/confirm
-    /// @note Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
-    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/mobile/ios/authentication
+    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
-    ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
-    ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
-    ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    ///   - setupIntentParams: The `STPSetupIntentConfirmParams` to pass to `/confirm`
+    ///   - expand: An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable.
+    ///   - completion: The callback to run with the returned PaymentIntent object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/confirm)
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/object)
     @objc(confirmSetupIntentWithParams:expand:completion:)
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
@@ -977,6 +979,33 @@ extension STPAPIClient {
             parameters: params
         ) { setupIntent, _, error in
             completion(setupIntent, error)
+        }
+    }
+
+    /// Confirms the SetupIntent object with the provided params object.
+    /// At a minimum, the params object must include the `clientSecret`.
+    /// - Note: Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you.
+    /// - Parameters:
+    ///   - setupIntentParams: The `STPSetupIntentConfirmParams` to pass to `/confirm`
+    ///   - expand: An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable.
+    /// - Returns: A SetupIntent object.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/confirm)
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/object)
+    public func confirmSetupIntent(
+        with setupIntentParams: STPSetupIntentConfirmParams,
+        expand: [String]? = nil
+    ) async throws -> STPSetupIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            confirmSetupIntent(with: setupIntentParams, expand: expand) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
         }
     }
 
