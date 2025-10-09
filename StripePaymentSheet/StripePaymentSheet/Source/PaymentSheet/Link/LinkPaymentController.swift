@@ -481,7 +481,7 @@ import UIKit
                 let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, type: .link)
                 PaymentSheet
                     .routeDeferredIntentConfirmation(
-                        confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+                        confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
                         configuration: configuration,
                         intentConfig: intentConfiguration,
                         authenticationContext: authenticationContext,
