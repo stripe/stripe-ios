@@ -727,6 +727,32 @@ extension STPAPIClient {
         }
     }
 
+    /// Confirms the PaymentIntent object with the provided params object.
+    /// At a minimum, the params object must include the `clientSecret`.
+    /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you.
+    /// - Parameters:
+    ///   - paymentIntentParams: The `STPPaymentIntentParams` to pass to `/confirm`
+    ///   - expand: An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable.
+    /// - Returns: A PaymentIntent object.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
+    public func confirmPaymentIntent(
+        with paymentIntentParams: STPPaymentIntentParams,
+        expand: [String]? = nil
+    ) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            confirmPaymentIntent(with: paymentIntentParams, expand: expand) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
     /// Endpoint to call to indicate that the web-based challenge flow for 3DS authentication was canceled.
     func cancel3DSAuthentication(
         forPaymentIntent paymentIntentID: String,

@@ -203,6 +203,26 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testConfirmPaymentIntentAsync() async throws {
+        let clientSecret: String = await withCheckedContinuation { continuation in
+            STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
+                XCTAssertNotNil(createdClientSecret)
+                XCTAssertNil(creationError)
+                continuation.resume(returning: createdClientSecret!)
+            }
+        }
+
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let params = STPPaymentIntentParams(clientSecret: clientSecret)
+        params.sourceParams = cardSourceParams()
+        params.returnURL = "example-app-scheme://authorized"
+
+        let paymentIntent = try await client.confirmPaymentIntent(with: params)
+        XCTAssertEqual(paymentIntent.stripeId, params.stripeId)
+        XCTAssertEqual(paymentIntent.status, .requiresAction)
+    }
+
     func testConfirmPaymentIntentWith3DSCardPaymentMethodSucceeds() {
 
         var clientSecret: String?
