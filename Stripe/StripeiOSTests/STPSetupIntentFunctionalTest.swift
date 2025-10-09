@@ -104,27 +104,31 @@ class STPSetupIntentFunctionalTestSwift: STPNetworkStubbingTestCase {
         await fulfillment(of: [verificationExpectation])
     }
 
-    func testConfirmSetupIntentWithUSBankAccount_verifyWithDescriptorCode() {
-        createAndConfirmSetupIntentWithUSBankAccount { [self] clientSecret in
-            guard let clientSecret = clientSecret else {
-                XCTFail("Failed to create SetupIntent")
-                return
+    func testConfirmSetupIntentWithUSBankAccount_verifyWithDescriptorCode() async throws {
+        let clientSecret: String? = await withCheckedContinuation { continuation in
+            createAndConfirmSetupIntentWithUSBankAccount { clientSecret in
+                continuation.resume(returning: clientSecret)
             }
-
-            let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-
-            let verificationExpectation = expectation(description: "Verify with microdeposits")
-            client.verifySetupIntentWithMicrodeposits(
-                clientSecret: clientSecret,
-                descriptorCode: "SM11AA"
-            ) { setupIntent, error in
-                XCTAssertNil(error)
-                XCTAssertNotNil(setupIntent)
-                XCTAssertEqual(setupIntent?.status, .succeeded)
-                verificationExpectation.fulfill()
-            }
-            waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
         }
+        guard let clientSecret = clientSecret else {
+            XCTFail("Failed to create SetupIntent")
+            return
+        }
+
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let verificationExpectation = expectation(description: "Verify with microdeposits")
+        client.verifySetupIntentWithMicrodeposits(
+            clientSecret: clientSecret,
+            descriptorCode: "SM11AA"
+        ) { setupIntent, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(setupIntent)
+            XCTAssertEqual(setupIntent?.status, .succeeded)
+            verificationExpectation.fulfill()
+        }
+        _ = try await client.verifySetupIntentWithMicrodeposits(clientSecret: clientSecret, descriptorCode: "SM11AA")
+        await fulfillment(of: [verificationExpectation])
     }
 }
 
