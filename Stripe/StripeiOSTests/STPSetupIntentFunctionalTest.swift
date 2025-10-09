@@ -196,6 +196,24 @@ extension STPSetupIntentFunctionalTestSwift {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testRetrieveSetupIntentSucceeds() async throws {
+        let setupIntentClientSecret = "seti_1GGCuIFY0qyl6XeWVfbQK6b3_secret_GnoX2tzX2JpvxsrcykRSVna2lrYLKew"
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let setupIntent = try await client.retrieveSetupIntent(withClientSecret: setupIntentClientSecret)
+        XCTAssertEqual(setupIntent.stripeID, "seti_1GGCuIFY0qyl6XeWVfbQK6b3")
+        XCTAssertEqual(setupIntent.clientSecret, setupIntentClientSecret)
+        XCTAssertEqual(setupIntent.created, Date(timeIntervalSince1970: 1582673622))
+        XCTAssertNil(setupIntent.customerID)
+        XCTAssertNil(setupIntent.stripeDescription)
+        XCTAssertFalse(setupIntent.livemode)
+        XCTAssertNil(setupIntent.nextAction)
+        XCTAssertNil(setupIntent.paymentMethodID)
+        XCTAssertEqual(setupIntent.paymentMethodTypes, [NSNumber(value: STPPaymentMethodType.card.rawValue)])
+        XCTAssertEqual(setupIntent.status, STPSetupIntentStatus.requiresPaymentMethod)
+        XCTAssertEqual(setupIntent.usage, STPSetupIntentUsage.offSession)
+    }
+
     func testConfirmSetupIntentSucceeds() {
 
         var clientSecret: String?

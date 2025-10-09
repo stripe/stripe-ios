@@ -812,11 +812,13 @@ extension STPAPIClient {
         )
     }
 
-    /// Retrieves the SetupIntent object using the given secret. - seealso: https://stripe.com/docs/api/setup_intents/retrieve
+    /// Retrieves the SetupIntent object using the given secret.
     /// - Parameters:
-    ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
-    ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
-    ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
+    ///   - secret: The client secret of the SetupIntent to be retrieved.
+    ///   - expand: An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable.
+    ///   - completion: The callback to run with the returned SetupIntent object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/retrieve)
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/object)
     @objc(retrieveSetupIntentWithClientSecret:expand:completion:)
     public func retrieveSetupIntent(
         withClientSecret secret: String,
@@ -825,6 +827,30 @@ extension STPAPIClient {
     ) {
 
         retrieveSetupIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
+    }
+
+    /// Retrieves the SetupIntent object using the given secret.
+    /// - Parameters:
+    ///   - secret: The client secret of the SetupIntent to be retrieved.
+    ///   - expand: An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable.
+    /// - Returns: A SetupIntent object.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/retrieve)
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/setup_intents/object)
+    public func retrieveSetupIntent(
+        withClientSecret secret: String,
+        expand: [String]? = nil
+    ) async throws -> STPSetupIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrieveSetupIntent(withClientSecret: secret, expand: expand) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
     }
 
     // Internal helper to pass timeout to URL request
