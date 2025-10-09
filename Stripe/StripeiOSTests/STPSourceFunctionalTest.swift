@@ -15,7 +15,7 @@ import XCTest
 
 class STPSourceFunctionalTest: STPNetworkStubbingTestCase {
 
-    func testCreateSource_card() async throws {
+    func testCreateSource_card() {
         let card = STPCardParams()
         card.number = "4242 4242 4242 4242"
         card.expMonth = 6
@@ -54,8 +54,42 @@ class STPSourceFunctionalTest: STPNetworkStubbingTestCase {
 
             expectation.fulfill()
         }
-        _ = try await client.createSource(with: params)
-        await fulfillment(of: [expectation])
+        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+    }
+
+    func testCreateSource_cardAsync() async throws {
+        let card = STPCardParams()
+        card.number = "4242 4242 4242 4242"
+        card.expMonth = 6
+        card.expYear = 2050
+        card.currency = "usd"
+        card.name = "Jenny Rosen"
+        card.address.line1 = "123 Fake Street"
+        card.address.line2 = "Apartment 4"
+        card.address.city = "New York"
+        card.address.state = "NY"
+        card.address.country = "USA"
+        card.address.postalCode = "10002"
+        let params = STPSourceParams.cardParams(withCard: card)
+        params.metadata = [
+            "foo": "bar",
+        ]
+
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let source = try await client.createSource(with: params)
+        XCTAssertEqual(source.type, STPSourceType.card)
+        XCTAssertEqual(source.cardDetails?.last4, "4242")
+        XCTAssertEqual(source.cardDetails?.expMonth, card.expMonth)
+        XCTAssertEqual(source.cardDetails?.expYear, card.expYear)
+        XCTAssertEqual(source.owner?.name, card.name)
+        let address = source.owner?.address
+        XCTAssertEqual(address?.line1, card.address.line1)
+        XCTAssertEqual(address?.line2, card.address.line2)
+        XCTAssertEqual(address?.city, card.address.city)
+        XCTAssertEqual(address?.state, card.address.state)
+        XCTAssertEqual(address?.country, card.address.country)
+        XCTAssertEqual(address?.postalCode, card.address.postalCode)
+        XCTAssertNil(source.perform(NSSelectorFromString("metadata")), "Metadata is not returned.")
     }
 
     func skip_testCreateSourceVisaCheckout() {
