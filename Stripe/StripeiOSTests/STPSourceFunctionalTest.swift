@@ -15,7 +15,7 @@ import XCTest
 
 class STPSourceFunctionalTest: STPNetworkStubbingTestCase {
 
-    func testCreateSource_card() {
+    func testCreateSource_card() async throws {
         let card = STPCardParams()
         card.number = "4242 4242 4242 4242"
         card.expMonth = 6
@@ -54,7 +54,8 @@ class STPSourceFunctionalTest: STPNetworkStubbingTestCase {
 
             expectation.fulfill()
         }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        _ = try await client.createSource(with: params)
+        await fulfillment(of: [expectation])
     }
 
     func skip_testCreateSourceVisaCheckout() {

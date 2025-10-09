@@ -314,10 +314,11 @@ extension STPAPIClient {
     /// Creates a Source object using the provided details.
     /// Note: in order to create a source on a connected account, you can set your
     /// API client's `stripeAccount` property to the ID of the account.
-    /// - seealso: https://stripe.com/docs/sources/connect#creating-direct-charges
     /// - Parameters:
-    ///   - sourceParams: The details of the source to create. Cannot be nil. - seealso: https://stripe.com/docs/api#create_source
+    ///   - sourceParams: The details of the source to create.
     ///   - completion:   The callback to run with the returned Source object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_source)
+    /// - Seealso: [Creating direct charges on connected accounts](https://stripe.com/docs/sources/connect#creating-direct-charges)
     @objc(createSourceWithParams:completion:)
     public func createSource(
         with sourceParams: STPSourceParams,
@@ -340,6 +341,30 @@ extension STPAPIClient {
             completion(object, error)
         }
         STPTelemetryClient.shared.sendTelemetryData()
+    }
+
+    /// Creates a Source object using the provided details.
+    /// Note: in order to create a source on a connected account, you can set your
+    /// API client's `stripeAccount` property to the ID of the account.
+    /// - Parameters:
+    ///   - sourceParams: The details of the source to create.
+    /// - Returns: A Source object.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_source)
+    /// - Seealso: [Creating direct charges on connected accounts](https://stripe.com/docs/sources/connect#creating-direct-charges)
+    public func createSource(
+        with sourceParams: STPSourceParams
+    ) async throws -> STPSource {
+        return try await withCheckedThrowingContinuation { continuation in
+            createSource(with: sourceParams) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
     }
 
     /// Retrieves the Source object with the given ID. - seealso: https://stripe.com/docs/api#retrieve_source
