@@ -42,7 +42,7 @@ extension UIViewController {
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             linkAppearance: linkAppearance,
             linkConfiguration: linkConfiguration,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            passiveCaptchaChallenge: passiveCaptchaChallenge
         )
 
         payWithLinkController.presentForPaymentMethodSelection(
