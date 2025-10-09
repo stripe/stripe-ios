@@ -1,3 +1,7 @@
+## x.x.x yyyy-yy-yy
+### PaymentSheet
+* [Fixed] DoneButtonToolbar not tappable when compiling with Xcode 26 running on < iOS26
+
 ## 24.24.2 2025-10-06
 
 ### PaymentSheet
