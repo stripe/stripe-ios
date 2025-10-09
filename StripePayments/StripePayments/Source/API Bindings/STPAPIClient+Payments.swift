@@ -367,11 +367,12 @@ extension STPAPIClient {
         }
     }
 
-    /// Retrieves the Source object with the given ID. - seealso: https://stripe.com/docs/api#retrieve_source
+    /// Retrieves the Source object with the given ID.
     /// - Parameters:
-    ///   - identifier:  The identifier of the source to be retrieved. Cannot be nil.
-    ///   - secret:      The client secret of the source. Cannot be nil.
+    ///   - identifier:  The identifier of the source to be retrieved.
+    ///   - secret:      The client secret of the source.
     ///   - completion:  The callback to run with the returned Source object, or an error.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#retrieve_source)
     @objc(retrieveSourceWithId:clientSecret:completion:)
     public func retrieveSource(
         withId identifier: String,
@@ -385,6 +386,29 @@ extension STPAPIClient {
                 completion(object, error)
             }
         )
+    }
+
+    /// Retrieves the Source object with the given ID.
+    /// - Parameters:
+    ///   - identifier:  The identifier of the source to be retrieved.
+    ///   - secret:      The client secret of the source.
+    /// - Returns: A Source object.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#retrieve_source)
+    public func retrieveSource(
+        withId identifier: String,
+        clientSecret secret: String
+    ) async throws -> STPSource {
+        return try await withCheckedThrowingContinuation { continuation in
+            retrieveSource(withId: identifier, clientSecret: secret) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
     }
 
     func retrieveSource(

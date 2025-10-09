@@ -139,7 +139,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
 
     // MARK: Sources
 
-    func testCreateRetrieveAndPollSource() {
+    func testCreateRetrieveAndPollSource() async throws {
         let exp = expectation(description: "Upload file")
         let expR = expectation(description: "Retrieve source")
         let expP = expectation(description: "Poll source")
@@ -173,8 +173,9 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
                 expP.fulfill()
             }
         }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        let source = try await client.createSource(with: params)
+        _ = try await client.retrieveSource(withId: source.stripeID, clientSecret: source.clientSecret!)
+        await fulfillment(of: [exp, expR, expP])
     }
 
     // MARK: Payment Intents
