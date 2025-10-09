@@ -1238,6 +1238,30 @@ extension STPAPIClient {
     }
 
     /// Verify a customer's bank account with micro-deposits
+    /// This function should only be called when the PaymentIntent is in the `requires_action`
+    /// state and `next_action.type` equals `verify_with_microdeposits`
+    /// - Parameters:
+    ///   - clientSecret: The client secret of the PaymentIntent.
+    ///   - descriptorCode: a unique, 6-digit descriptor code that starts with SM that was sent as statement descriptor to the bank account.
+    /// - Returns: The verified PaymentIntent object.
+    /// - Throws: The error that occurred making the Stripe API request.
+    public func verifyPaymentIntentWithMicrodeposits(
+        clientSecret: String,
+        descriptorCode: String
+    ) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            verifyPaymentIntentWithMicrodeposits(clientSecret: clientSecret, descriptorCode: descriptorCode) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
+    /// Verify a customer's bank account with micro-deposits
     /// This function should only be called when the SetupIntent is in the `requires_action`
     /// state and `next_action.type` equals `verify_with_microdeposits`
     /// - Parameters:
