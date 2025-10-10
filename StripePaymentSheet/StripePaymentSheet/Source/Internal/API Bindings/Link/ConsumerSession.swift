@@ -239,6 +239,7 @@ extension ConsumerSession {
             billingDetails: paymentMethodParams.nonnil_billingDetails,
             isDefault: isDefault,
             requestSurface: requestSurface,
+            clientAttributionMetadata: paymentMethodParams.clientAttributionMetadata,
             completion: completion)
     }
 
@@ -360,7 +361,7 @@ extension ConsumerSession {
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {

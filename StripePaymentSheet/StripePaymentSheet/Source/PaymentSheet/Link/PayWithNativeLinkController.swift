@@ -97,7 +97,7 @@ final class PayWithNativeLinkController {
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
             shouldFinishOnClose: shouldFinishOnClose,
-            canSkipWalletAfterVerification: false // Only available for payment method selection
+            canSkipWalletAfterVerification: false // Only available for payment method selection,
         ) { completionResult in
             guard case .full(let result, let deferredIntentConfirmationType, let didFinish) = completionResult else {
                 return

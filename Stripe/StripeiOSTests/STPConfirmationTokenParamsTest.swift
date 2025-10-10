@@ -234,7 +234,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
 
         XCTAssertNil(params.clientAttributionMetadata)
 
-        let clientMetadata = STPClientAttributionMetadata()
+        let clientMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
         params.clientAttributionMetadata = clientMetadata
         XCTAssertEqual(params.clientAttributionMetadata, clientMetadata)
 
@@ -390,7 +390,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         params.setupFutureUsage = STPPaymentIntentSetupFutureUsage.offSession
 
         // Add client attribution metadata
-        let clientMetadata = STPClientAttributionMetadata()
+        let clientMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
         params.clientAttributionMetadata = clientMetadata
 
         // Verify all properties are set

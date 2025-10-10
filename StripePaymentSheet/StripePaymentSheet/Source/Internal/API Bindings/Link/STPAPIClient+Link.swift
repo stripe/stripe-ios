@@ -225,6 +225,7 @@ extension STPAPIClient {
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
         requestSurface: LinkRequestSurface = .default,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         createPaymentDetails(
@@ -234,6 +235,7 @@ extension STPAPIClient {
             billingDetails: billingDetails,
             isDefault: isDefault,
             requestSurface: requestSurface,
+            clientAttributionMetadata: clientAttributionMetadata,
             completion: completion
         )
     }
@@ -245,13 +247,14 @@ extension STPAPIClient {
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
         requestSurface: LinkRequestSurface = .default,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
 
         let billingParams = billingDetails.consumersAPIParams
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": requestSurface.rawValue,
             "type": "card",
@@ -261,6 +264,10 @@ extension STPAPIClient {
             "active": true, // card details are created with active true so they can be shared for passthrough mode
             "is_default": isDefault,
         ]
+
+        if let clientAttributionMetadata {
+            parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
+        }
 
         makePaymentDetailsRequest(
             endpoint: endpoint,
@@ -370,7 +377,7 @@ extension STPAPIClient {
         cvc: String?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -387,7 +394,9 @@ extension STPAPIClient {
         if let cvc = cvc {
             paymentMethodOptionsDict["card"] = ["cvc": cvc]
         }
-        paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, clientAttributionMetadata: clientAttributionMetadata)
+        if let clientAttributionMetadata {
+            paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, clientAttributionMetadata: clientAttributionMetadata)
+        }
         parameters["payment_method_options"] = paymentMethodOptionsDict
 
         if let allowRedisplay {

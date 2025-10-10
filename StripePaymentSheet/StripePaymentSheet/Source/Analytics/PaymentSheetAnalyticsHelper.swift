@@ -27,6 +27,7 @@ final class PaymentSheetAnalyticsHelper {
         case flowController
         case complete
         case embedded
+        case linkController
 
         var analyticsValue: String {
             switch self {
@@ -36,6 +37,17 @@ final class PaymentSheetAnalyticsHelper {
                 return "paymentsheet"
             case .embedded:
                 return "embedded"
+            case .linkController:
+                return "linkcontroller"
+            }
+        }
+
+        var isMPE: Bool {
+            switch self {
+            case .complete, .flowController, .embedded:
+                return true
+            case .linkController:
+                return false
             }
         }
     }
@@ -69,7 +81,7 @@ final class PaymentSheetAnalyticsHelper {
                 case (true, true):
                     return .mcInitCustomCustomerApplePay
                 }
-            case .complete:
+            case .complete, .linkController:
                 switch (configuration.customer != nil, configuration.applePay != nil) {
                 case (false, false):
                     return .mcInitCompleteDefault
@@ -200,7 +212,7 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return (.mcOptionSelectCustomLink, nil)
                 }
-            case .complete:
+            case .complete, .linkController:
                 switch option {
                 case .add:
                     return (.mcOptionSelectCompleteNewPM, nil)
@@ -249,7 +261,7 @@ final class PaymentSheetAnalyticsHelper {
             switch integrationShape {
             case .flowController:
                 return .mcOptionRemoveCustomSavedPM
-            case .complete:
+            case .complete, .linkController:
                 return .mcOptionRemoveCompleteSavedPM
             case .embedded:
                 return .mcOptionRemoveEmbeddedSavedPM
@@ -352,7 +364,7 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return success ? .mcPaymentCustomLinkSuccess : .mcPaymentCustomLinkFailure
                 }
-            case .complete:
+            case .complete, .linkController:
                 switch paymentOption {
                 case .new, .external:
                     return success ? .mcPaymentCompleteNewPMSuccess : .mcPaymentCompleteNewPMFailure

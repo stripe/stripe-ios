@@ -108,7 +108,7 @@ class STPAPIClientTest: XCTestCase {
     func testClientAttributionMetadata() {
         AnalyticsHelper.shared.generateSessionID()
         var params: [String: Any] = [:]
-        params = STPAPIClient.paramsAddingClientAttributionMetadata(params)
+        params = STPAPIClient.paramsAddingClientAttributionMetadata(params, clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123"))
         let clientAttributionMetadata = params["client_attribution_metadata"] as? [String: String]
         XCTAssertEqual(clientAttributionMetadata?["client_session_id"], AnalyticsHelper.shared.sessionID)
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_source"], "elements")
