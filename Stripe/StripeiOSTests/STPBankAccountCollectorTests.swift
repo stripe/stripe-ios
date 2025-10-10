@@ -105,6 +105,25 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         waitForExpectations(timeout: 2.0)
     }
 
+    func testCollectBankAccountForPaymentSucceedsAsync() async throws {
+        let paymentIntentID = "pi_123"
+        let clientSecret = "\(paymentIntentID)_secret_abc"
+
+        // Set up stubs for network interactions
+        stubCreateLinkAccountSession(paymentIntentID: paymentIntentID)
+        stubAttachLinkAccountSession(paymentIntentID: paymentIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+
+        let intent = try await collector.collectBankAccountForPayment(
+            clientSecret: clientSecret,
+            params: makeParams(),
+            from: UIViewController()
+        )
+        XCTAssertEqual(intent.stripeId, paymentIntentID)
+        XCTAssertEqual(intent.status, .succeeded)
+    }
+
     func testCollectBankAccountForPaymentWithReturnURLSucceeds() {
         let paymentIntentID = "pi_456"
         let clientSecret = "\(paymentIntentID)_secret_xyz"

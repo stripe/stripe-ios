@@ -195,6 +195,39 @@ public class STPBankAccountCollector: NSObject {
         )
     }
 
+    /// Presents a modal from the viewController to collect bank account
+    /// and if completed successfully, link your bank account to a PaymentIntent
+    /// - Parameters:
+    ///   - clientSecret:      Client secret of the payment intent
+    ///   - returnURL:         A URL that redirects back to your app to be used to return after completing authentication in another app (such as bank app or Safari).
+    ///   - params:            Parameters for this call
+    ///   - viewController:    Presenting view controller that will present the modal
+    ///   - onEvent:           The `onEvent` closure is triggered upon the occurrence of specific events during the process of a user connecting their financial accounts.
+    /// - Returns: An `STPPaymentIntent` instance with an expanded `paymentMethod` containing detailed payment method information
+    public func collectBankAccountForPayment(
+        clientSecret: String,
+        returnURL: String? = nil,
+        params: STPCollectBankAccountParams,
+        from viewController: UIViewController,
+        onEvent: ((FinancialConnectionsEvent) -> Void)? = nil
+    ) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            collectBankAccountForPayment(
+                clientSecret: clientSecret,
+                returnURL: returnURL,
+                params: params,
+                from: viewController,
+                onEvent: onEvent
+            ) { result, error in
+                guard let result else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericErrorOccurredError())
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
     @_spi(STP) public typealias CollectBankAccountCompletionBlock = (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void
     @_spi(STP) public func collectBankAccountForPayment(
         clientSecret: String,
