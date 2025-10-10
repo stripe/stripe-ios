@@ -1,29 +1,25 @@
-POST
-https:\/\/api\.stripe\.com\/v1\/sources$
+GET
+https:\/\/api\.stripe\.com\/v1\/sources\/src_1SGOFjFY0qyl6XeWqMHQBQMb\?client_secret=src_client_secret_uAk4KAZsrZIEfipCPqm33CZ8$
 200
 application/json
-access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2oFZMgD6uWpob0Hr5Kfi-a7EPgw86d_rCt-apCH-M6w2-HRXNNLu9NfvXs7phq9Lv6TqNrKvLaSFol-K
-Server: nginx
-Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Content-Type: application/json
 Access-Control-Allow-Origin: *
-stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_su61R0MIJhzHHV
-Content-Length: 926
-Vary: Origin
-Date: Thu, 09 Oct 2025 18:07:47 GMT
-original-request: req_su61R0MIJhzHHV
-stripe-version: 2020-08-27
-idempotency-key: eb15ba4e-401f-41f3-ac7b-3a1b23c5acf1
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=tMHV-lqj9websgFoE-ykf1OaQYWPAq_vWmGhrnbBDUkeskQMfiIPxQESiXy2G2xpfgtjZa68qYoX5FpF
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Thu, 09 Oct 2025 18:07:48 GMT
+stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Type: application/json
-X-Stripe-Mock-Request: card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=42&card\[number]=4242424242424242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
+Content-Length: 926
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_Y1myU1csB8R7xK
 
 {
   "id" : "src_1SGOFjFY0qyl6XeWqMHQBQMb",
