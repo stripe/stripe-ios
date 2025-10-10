@@ -1,0 +1,73 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SFgKkFY0qyl6XeWrLwDYyE2\?client_secret=seti_1SFgKkFY0qyl6XeWrLwDYyE2_secret_TC4Tqb8jpQsKUuFR77D4j2ubIAUmFlV&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=dKHae6kJK9_PrW0p5fLkgO8LJ56JWWcKqVP-96oqQe3f2V9It4dSptkO2_dJHZTQjQ3v5HGHkUaNAIRF
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Tue, 07 Oct 2025 19:14:03 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1290
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_BFZ8yXAiRuZl9z
+
+{
+  "id" : "seti_1SFgKkFY0qyl6XeWrLwDYyE2",
+  "description" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_TC4TTdxkXRXWCAPFqGlZvkZxTv0Bfrg"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "sofort" : {
+      "country" : "AT"
+    },
+    "id" : "pm_1SFgKjFY0qyl6XeWdZXHKb8i",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1759864441,
+    "allow_redisplay" : "unspecified",
+    "type" : "sofort",
+    "customer" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "sofort"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1759864442,
+  "client_secret" : "seti_1SFgKkFY0qyl6XeWrLwDYyE2_secret_TC4Tqb8jpQsKUuFR77D4j2ubIAUmFlV",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}
