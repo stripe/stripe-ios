@@ -17,90 +17,105 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 
 class STPAPIClientStubbedTest: APIStubbedTestCase {
-    func testCreatePaymentMethodWithRadarOptions() {
-        let sut = stubbedAPIClient()
+    private func stubRadarOptions(base: String? = nil,
+                                  shouldContainRadarOptions: Bool = true,
+                                  radarOptions: STPRadarOptions) {
         stub { urlRequest in
             guard let queryItems = urlRequest.queryItems else {
                 return false
             }
-            XCTAssertTrue(queryItems.contains(where: { item in
-                item.name == "radar_options[hcaptcha_token]" && item.value == "test_hcaptcha_token"
-            }))
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[radar_options][hcaptcha_token]" && item.value == radarOptions.hcaptchaToken
+                }
+                return item.name == "radar_options[hcaptcha_token]" && item.value == radarOptions.hcaptchaToken
+            }), shouldContainRadarOptions)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[radar_options][ios_verification_object][ios_assertion_object]" && item.value == radarOptions.iosVerificationObject?["ios_assertion_object"]
+                }
+                return item.name == "radar_options[ios_verification_object][ios_assertion_object]" && item.value == radarOptions.iosVerificationObject?["ios_assertion_object"]
+            }), shouldContainRadarOptions)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[radar_options][ios_verification_object][device_id]" && item.value == radarOptions.iosVerificationObject?["device_id"]
+                }
+                return item.name == "radar_options[ios_verification_object][device_id]" && item.value == radarOptions.iosVerificationObject?["device_id"]
+            }), shouldContainRadarOptions)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[radar_options][ios_verification_object][app_id]" && item.value == radarOptions.iosVerificationObject?["app_id"]
+                }
+                return item.name == "radar_options[ios_verification_object][app_id]" && item.value == radarOptions.iosVerificationObject?["app_id"]
+            }), shouldContainRadarOptions)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[radar_options][ios_verification_object][key_id]" && item.value == radarOptions.iosVerificationObject?["key_id"]
+                }
+                return item.name == "radar_options[ios_verification_object][key_id]" && item.value == radarOptions.iosVerificationObject?["key_id"]
+            }), shouldContainRadarOptions)
             return true
         } response: { _ in
             return .init()
         }
+    }
+
+    func testCreatePaymentMethodWithRadarOptions() async {
+        let sut = stubbedAPIClient()
+        let testAssertion = await StripeAttest.Assertion(assertionData: Data(bytes: [0x01, 0x02, 0x03], count: 3),
+                                                         deviceID: (try? await sut.stripeAttest.getDeviceID()) ?? "test-device-id",
+                                                         appID: (try? sut.stripeAttest.getAppID()) ?? "com.example.test",
+                                                         keyID: "TestKeyID")
+        let radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token", assertion: testAssertion)
+        stubRadarOptions(radarOptions: radarOptions)
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        paymentMethodParams.radarOptions = radarOptions
         sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
             e.fulfill()
         }
-        waitForExpectations(timeout: 10)
+        await fulfillment(of: [e], timeout: 10)
     }
 
     func testCreatePaymentMethodWithoutRadarOptions() {
         let sut = stubbedAPIClient()
-        stub { urlRequest in
-            guard let queryItems = urlRequest.queryItems else {
-                return false
-            }
-            XCTAssertFalse(queryItems.contains(where: { item in
-                item.name == "radar_options[hcaptcha_token]"
-            }))
-            return true
-        } response: { _ in
-            return .init()
-        }
+        let radarOptions = STPRadarOptions()
+        stubRadarOptions(shouldContainRadarOptions: false, radarOptions: radarOptions)
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        paymentMethodParams.radarOptions = radarOptions
         sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
     }
 
-    func testConfirmPaymentIntentWithRadarOptions() {
+    func testConfirmPaymentIntentWithRadarOptions() async {
         let sut = stubbedAPIClient()
-        stub { urlRequest in
-            guard let queryItems = urlRequest.queryItems else {
-                return false
-            }
-            XCTAssertTrue(queryItems.contains(where: { item in
-                item.name == "payment_method_data[radar_options][hcaptcha_token]" && item.value == "test_hcaptcha_token"
-            }))
-            return true
-        } response: { _ in
-            return .init()
-        }
+        let testAssertion = await StripeAttest.Assertion(assertionData: Data(bytes: [0x01, 0x02, 0x03], count: 3),
+                                                         deviceID: (try? await sut.stripeAttest.getDeviceID()) ?? "test-device-id",
+                                                         appID: (try? sut.stripeAttest.getAppID()) ?? "com.example.test",
+                                                         keyID: "TestKeyID")
+        let radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token", assertion: testAssertion)
+        stubRadarOptions(base: "payment_method_data", radarOptions: radarOptions)
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        paymentMethodParams.radarOptions = radarOptions
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
             e.fulfill()
         }
-        waitForExpectations(timeout: 10)
+        await fulfillment(of: [e], timeout: 10)
     }
 
     func testConfirmPaymentIntentWithoutRadarOptions() {
         let sut = stubbedAPIClient()
-        stub { urlRequest in
-            guard let queryItems = urlRequest.queryItems else {
-                return false
-            }
-            XCTAssertFalse(queryItems.contains(where: { item in
-                item.name == "payment_method_data[radar_options][hcaptcha_token]"
-            }))
-            return true
-        } response: { _ in
-            return .init()
-        }
+        let radarOptions = STPRadarOptions()
+        stubRadarOptions(base: "payment_method_data", shouldContainRadarOptions: false, radarOptions: radarOptions)
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        paymentMethodParams.radarOptions = radarOptions
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
@@ -109,22 +124,17 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    func testConfirmSetupIntentWithRadarOptions() {
+    func testConfirmSetupIntentWithRadarOptions() async {
         let sut = stubbedAPIClient()
-        stub { urlRequest in
-            guard let queryItems = urlRequest.queryItems else {
-                return false
-            }
-            XCTAssertTrue(queryItems.contains(where: { item in
-                item.name == "payment_method_data[radar_options][hcaptcha_token]" && item.value == "test_hcaptcha_token"
-            }))
-            return true
-        } response: { _ in
-            return .init()
-        }
+        let testAssertion = await StripeAttest.Assertion(assertionData: Data(bytes: [0x01, 0x02, 0x03], count: 3),
+                                                         deviceID: (try? await sut.stripeAttest.getDeviceID()) ?? "test-device-id",
+                                                         appID: (try? sut.stripeAttest.getAppID()) ?? "com.example.test",
+                                                         keyID: "TestKeyID")
+        let radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token", assertion: testAssertion)
+        stubRadarOptions(base: "payment_method_data", radarOptions: radarOptions)
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        paymentMethodParams.radarOptions = radarOptions
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.paymentMethodParams = paymentMethodParams
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
@@ -132,25 +142,16 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
             e.fulfill()
         }
-        waitForExpectations(timeout: 10)
+        await fulfillment(of: [e], timeout: 10)
     }
 
     func testConfirmSetupIntentWithoutRadarOptions() {
         let sut = stubbedAPIClient()
-        stub { urlRequest in
-            guard let queryItems = urlRequest.queryItems else {
-                return false
-            }
-            XCTAssertFalse(queryItems.contains(where: { item in
-                item.name == "payment_method_data[radar_options][hcaptcha_token]"
-            }))
-            return true
-        } response: { _ in
-            return .init()
-        }
+        let radarOptions = STPRadarOptions()
+        stubRadarOptions(base: "payment_method_data", shouldContainRadarOptions: false, radarOptions: radarOptions)
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        paymentMethodParams.radarOptions = radarOptions
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         setupIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
