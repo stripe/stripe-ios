@@ -33,6 +33,10 @@
     },
     {
       "selectedTests": [
+        "BankAccountInfoViewSnapshotTests/test_eligibleForPromo()",
+        "BankAccountInfoViewSnapshotTests/test_eligibleForPromo_longName()",
+        "BankAccountInfoViewSnapshotTests/test_ineligibleForPromo()",
+        "BankAccountInfoViewSnapshotTests/test_noPromoBadge()",
         "CVCReconfirmationViewControllerSnapshotTest/testCVCRecollectionScreen()",
         "FormElementSnapshotTest/testDefaultTheme()",
         "LinkHintMessageViewSnapshotTests/testLongMessageWithWrapping()",
