@@ -36,6 +36,7 @@ do
   if [[ $? -ne 0 ]]; then
       echo -e "\t\033[0;31mAdded or deleted strings detected in ${directory}:\033[0m"
       git diff -U0 --color=always -- "${directory}/Resources/Localizations/en.lproj/Localizable.strings" | grep --color=always -E '^(\x1b\[[0-9;]*m)*[+-]' | tail -n +3
+      echo -e "\t\033[0;31mIf you removed a string, run ci_scripts/l10n/lint.rb to clean up other languages.\033[0m"
       EXIT_CODE=1
   fi
 done
