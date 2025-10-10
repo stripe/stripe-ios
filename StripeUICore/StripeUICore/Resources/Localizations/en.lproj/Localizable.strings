@@ -63,9 +63,6 @@ Section header for address fields */
 Label of an address field */
 "County" = "County";
 
-/* Error message for empty date. */
-"Date is empty." = "Date is empty.";
-
 /* Label of an address field */
 "Department" = "Department";
 
