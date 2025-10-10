@@ -128,7 +128,7 @@ class CVCReconfirmationViewController: UIViewController {
     }
 
     func updateButton() {
-        let state: ConfirmButton.Status = {
+        let status: ConfirmButton.Status = {
             if isPaymentInFlight {
                 return .processing
             }
@@ -136,7 +136,7 @@ class CVCReconfirmationViewController: UIViewController {
         }()
 
         confirmButton.update(
-            state: state,
+            status: status,
             animated: true
         )
     }

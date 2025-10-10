@@ -396,7 +396,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                         self.view.layoutIfNeeded()
                     }
                 }
-                confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled, callToAction: callToAction, animated: true)
+                confirmButton.update(status: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled, callToAction: callToAction, animated: true)
             } else {
                 if !confirmButton.isHidden {
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -434,7 +434,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             }
 
             confirmButton.update(
-                state: confirmButtonState,
+                status: confirmButtonState,
                 callToAction: callToAction,
                 animated: true
             )
