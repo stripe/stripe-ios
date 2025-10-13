@@ -163,7 +163,27 @@ extension PaymentSheet {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSError?) -> Void = { status, error in
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
-
+        let createAssertionHandle: () async -> StripeAttest.AssertionHandle? = {
+            if elementsSession.shouldAttestOnConfirmation {
+                do {
+                    let assertionHandle = try await configuration.apiClient.stripeAttest.assert()
+                    return assertionHandle
+                } catch {
+                    // If we can't get an assertion, we'll try the request anyway. It may fail.
+                }
+            }
+            return nil
+        }
+        let assertionCompletion: (StripeAttest.AssertionHandle?, Error?) -> Void = { assertionHandle, error in
+            Task { @MainActor in
+                // If there's an assertion error, send it to StripeAttest
+                if let error,
+                   StripeAttest.isLinkAssertionError(error: error) {
+                    await configuration.apiClient.stripeAttest.receivedAssertionError(error)
+                }
+                assertionHandle?.complete()
+            }
+        }
         let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
 
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
@@ -191,17 +211,7 @@ extension PaymentSheet {
         case let .new(confirmParams):
             Task { @MainActor in
                 let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-                let assertionHandle: StripeAttest.AssertionHandle? = await {
-                    if elementsSession.attestOnIntentConfirmation {
-                        do {
-                            let assertionHandle = try await configuration.apiClient.stripeAttest.assert()
-                            return assertionHandle
-                        } catch {
-                            // If we can't get an assertion, we'll try the request anyway. It may fail.
-                        }
-                    }
-                    return nil
-                }()
+                let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
                 let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, iosVerificationObject: assertionHandle?.assertion.requestFields)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
@@ -238,6 +248,7 @@ extension PaymentSheet {
                             if let paymentIntent {
                                 setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                             }
+                            assertionCompletion(assertionHandle, error)
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
@@ -260,6 +271,7 @@ extension PaymentSheet {
                             if let setupIntent {
                                 setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                             }
+                            assertionCompletion(assertionHandle, error)
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
@@ -279,10 +291,12 @@ extension PaymentSheet {
                         isFlowController: isFlowController,
                         allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                         elementsSession: elementsSession,
-                        completion: completion
+                        completion: { result, confirmType in
+                            assertionCompletion(assertionHandle, result.error)
+                            completion(result, confirmType)
+                        }
                     )
                 }
-                assertionHandle?.complete()
             }
 
         // MARK: - Saved Payment Method
@@ -346,7 +360,8 @@ extension PaymentSheet {
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
+                    let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
+                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, iosVerificationObject: assertionHandle?.assertion.requestFields)
                     paymentMethodParams.radarOptions = radarOptions
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
@@ -364,6 +379,7 @@ extension PaymentSheet {
                             paymentIntentParams,
                             with: authenticationContext,
                             completion: { actionStatus, _, error in
+                                assertionCompletion(assertionHandle, error)
                                 paymentHandlerCompletion(actionStatus, error)
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
@@ -378,6 +394,7 @@ extension PaymentSheet {
                             setupIntentParams,
                             with: authenticationContext,
                             completion: { actionStatus, _, error in
+                                assertionCompletion(assertionHandle, error)
                                 paymentHandlerCompletion(actionStatus, error)
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
@@ -401,6 +418,7 @@ extension PaymentSheet {
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
                                 }
+                                assertionCompletion(assertionHandle, psResult.error)
                                 completion(psResult, confirmationType)
                             }
                         )
@@ -410,7 +428,8 @@ extension PaymentSheet {
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethod, linkAccount, shouldSave in
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
+                    let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
+                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, iosVerificationObject: assertionHandle?.assertion.requestFields)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                     let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                     // Tell Stripe to infer mandate info from client
@@ -438,6 +457,7 @@ extension PaymentSheet {
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
                                 }
+                                assertionCompletion(assertionHandle, error)
                                 paymentHandlerCompletion(actionStatus, error)
                             }
                         )
@@ -454,6 +474,7 @@ extension PaymentSheet {
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
                                 }
+                                assertionCompletion(assertionHandle, error)
                                 paymentHandlerCompletion(actionStatus, error)
                             }
                         )
@@ -471,6 +492,7 @@ extension PaymentSheet {
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
                                 }
+                                assertionCompletion(assertionHandle, psResult.error)
                                 completion(psResult, confirmationType)
                             }
                         )
