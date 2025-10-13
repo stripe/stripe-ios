@@ -536,7 +536,8 @@ extension NativeFlowController {
             consumerSessionClientSecret: consumerSession.clientSecret,
             bankAccountId: bankAccountId,
             billingAddress: elementsSessionContext?.billingAddress,
-            billingEmail: email
+            billingEmail: email,
+            clientAttributionMetadata: elementsSessionContext?.clientAttributionMetadata
         )
         .chained { [weak self] response -> Future<LinkBankPaymentMethod> in
             guard let self else {
@@ -554,7 +555,8 @@ extension NativeFlowController {
                     expectedPaymentMethodType: linkMode.expectedPaymentMethodType,
                     billingEmail: email,
                     billingPhone: phone,
-                    allowRedisplay: elementsSessionContext?.allowRedisplay
+                    allowRedisplay: elementsSessionContext?.allowRedisplay,
+                    clientAttributionMetadata: elementsSessionContext?.clientAttributionMetadata
                 )
                 .transformed { $0.paymentMethod }
             } else {

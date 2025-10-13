@@ -649,9 +649,14 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             verificationSessions: verificationSessions
         )
 
-        func createPaymentDetails(linkedAccountId: String) {
-            let clientAttributionMetadata: STPClientAttributionMetadata? = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
+        let clientAttributionMetadata: STPClientAttributionMetadata? = {
+            if context.analyticsHelper.integrationShape.isMPE {
+                return context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID)
+            }
+            return nil
+        }()
 
+        func createPaymentDetails(linkedAccountId: String) {
             linkAccount.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
                 isDefault: false,
@@ -673,7 +678,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
             style: .automatic,
-            elementsSessionContext: nil,
+            elementsSessionContext: ElementsSessionContext(clientAttributionMetadata: clientAttributionMetadata),
             onEvent: nil,
             from: self,
             completion: { result in

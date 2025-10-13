@@ -339,6 +339,12 @@ extension PaymentMethodFormViewController {
         let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
         let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
+        let clientAttributionMetadata: STPClientAttributionMetadata? = {
+            if analyticsHelper.integrationShape.isMPE {
+                return intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
+            }
+            return nil
+        }()
 
         return ElementsSessionContext(
             amount: intent.amount,
@@ -348,8 +354,16 @@ extension PaymentMethodFormViewController {
             linkMode: linkMode,
             billingDetails: billingDetails,
             eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
-            allowRedisplay: allowRedisplay?.stringValue
+            allowRedisplay: allowRedisplay?.stringValue,
+            clientAttributionMetadata: clientAttributionMetadata
         )
+    }
+
+    private var clientAttributionMetadata: STPClientAttributionMetadata? {
+        if analyticsHelper.integrationShape.isMPE {
+            return intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
+        }
+        return nil
     }
 
     private var bankAccountCollectorStyle: STPBankAccountCollectorUserInterfaceStyle {

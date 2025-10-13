@@ -321,7 +321,8 @@ import UIKit
             intentId: nil,
             linkMode: nil,
             billingDetails: billingDetails,
-            eligibleForIncentive: false
+            eligibleForIncentive: false,
+            clientAttributionMetadata: nil
         )
     }
 

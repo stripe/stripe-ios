@@ -432,14 +432,16 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails> {
         wrapAsyncToFuture {
             try await self.paymentDetails(
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 bankAccountId: bankAccountId,
                 billingAddress: billingAddress,
-                billingEmail: billingEmail
+                billingEmail: billingEmail,
+                clientAttributionMetadata: clientAttributionMetadata
             )
         }
     }
@@ -450,7 +452,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         expectedPaymentMethodType: String,
         billingEmail: String?,
         billingPhone: String?,
-        allowRedisplay: String?
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsSharePaymentDetails> {
         wrapAsyncToFuture {
             try await self.sharePaymentDetails(
@@ -459,7 +462,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 expectedPaymentMethodType: expectedPaymentMethodType,
                 billingEmail: billingEmail,
                 billingPhone: billingPhone,
-                allowRedisplay: allowRedisplay
+                allowRedisplay: allowRedisplay,
+                clientAttributionMetadata: clientAttributionMetadata
             )
         }
     }
