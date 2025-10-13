@@ -97,7 +97,6 @@ request-id: req_bw1iJkyTuxAFTR
     "disable_cbc_in_link_popup" : false,
     "link_enable_card_brand_choice" : true,
     "elements_stop_move_focus_to_first_errored_field" : true,
-    "elements_enable_blik" : true,
     "apple_pay_pe_killswitch" : false,
     "elements_enable_invalid_country_for_pm_error" : true,
     "link_express_checkout_element_inline_otp_killswitch" : false,
