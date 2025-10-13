@@ -444,6 +444,7 @@ struct LinkPMDisplayDetails {
     func updatePaymentDetails(
         id: String,
         updateParams: UpdatePaymentDetailsParams,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { [apiClient] completionRetryingOnAuthErrors in
@@ -462,6 +463,7 @@ struct LinkPMDisplayDetails {
                 with: apiClient,
                 id: id,
                 updateParams: updateParams,
+                clientAttributionMetadata: clientAttributionMetadata,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )

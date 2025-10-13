@@ -344,12 +344,14 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
         updateParams: UpdatePaymentDetailsParams,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         apiClient.updatePaymentDetails(
             for: clientSecret, id: id,
             updateParams: updateParams,
+            clientAttributionMetadata: clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion)
     }

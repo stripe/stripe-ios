@@ -204,6 +204,7 @@ extension PayWithLinkViewController {
         ) {
             self.linkAccount = linkAccount
             self.context = context
+            self.clientAttributionMetadata = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
             self.paymentMethods = paymentMethods
             self.selectedPaymentMethodIndex = Self.determineInitiallySelectedPaymentMethod(
                 context: context,
@@ -248,9 +249,12 @@ extension PayWithLinkViewController {
         ) {
             let paymentMethod = paymentMethods[index]
 
+            let clientAttributionMetadata: STPClientAttributionMetadata? = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
+
             linkAccount.updatePaymentDetails(
                 id: paymentMethod.stripeID,
-                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil)
+                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil),
+                clientAttributionMetadata: clientAttributionMetadata,
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {
                     paymentMethods.forEach({ $0.isDefault = false })
@@ -303,9 +307,12 @@ extension PayWithLinkViewController {
                 return
             }
 
+            let clientAttributionMetadata: STPClientAttributionMetadata? = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
+
             linkAccount.updatePaymentDetails(
                 id: id,
                 updateParams: UpdatePaymentDetailsParams(details: .card(expiryDate: expiryDate)),
+                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
         }
