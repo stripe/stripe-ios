@@ -387,6 +387,15 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testCreateRadarSessionAsync() async throws {
+        // Set fake SID/MUID to make this test replicable
+        FraudDetectionData.shared.sid = "123"
+        FraudDetectionData.shared.muid = "123"
+        FraudDetectionData.shared.sidCreationDate = Date()
+
+        _ = try await client?.createRadarSession()
+    }
+
     // MARK: ApplePay
 
     func testCreateApplePayToken() {
