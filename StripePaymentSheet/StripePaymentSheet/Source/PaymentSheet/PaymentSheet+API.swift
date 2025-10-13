@@ -212,7 +212,7 @@ extension PaymentSheet {
             Task { @MainActor in
                 let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
                 let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
-                let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, iosVerificationObject: assertionHandle?.assertion.requestFields)
+                let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
                     case .stripe(let paymentMethodType):
@@ -361,7 +361,7 @@ extension PaymentSheet {
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
                     let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
-                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, iosVerificationObject: assertionHandle?.assertion.requestFields)
+                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                     paymentMethodParams.radarOptions = radarOptions
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
@@ -429,7 +429,7 @@ extension PaymentSheet {
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
                     let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
-                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, iosVerificationObject: assertionHandle?.assertion.requestFields)
+                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                     let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                     // Tell Stripe to infer mandate info from client

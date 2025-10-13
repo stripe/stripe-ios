@@ -156,6 +156,11 @@ public class PaymentSheet {
                 if self.configuration.enablePassiveCaptcha, let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
                     self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
                 }
+                Task {
+                    if loadResult.elementsSession.shouldAttestOnConfirmation {
+                        _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
+                    }
+                }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {

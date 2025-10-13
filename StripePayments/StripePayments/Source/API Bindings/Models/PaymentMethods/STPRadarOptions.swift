@@ -16,10 +16,10 @@
 
     public init(
         hcaptchaToken: String? = nil,
-        iosVerificationObject: [String: String]? = nil
+        assertion: StripeAttest.Assertion? = nil
     ) {
         self.hcaptchaToken = hcaptchaToken
-        self.iosVerificationObject = iosVerificationObject
+        self.iosVerificationObject = assertion?.requestFields
     }
 }
 
