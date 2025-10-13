@@ -74,29 +74,27 @@ class FlowRouter {
     }
 
     private var shouldUseNativeFinancialConnections: Bool {
-        return true
-//        // Override all other conditions if the example app has native or web selected.
-//        guard case .none = exampleAppSdkOverride else {
-//            return exampleAppSdkOverride.shouldUseNativeFlow
-//        }
-//
-//        // if this version is killswitched by server, fallback to webview.
-//        if killswitchActive { return false }
-//
-//        // If native experiment is missing, fallback to webview.
-//        guard let experimentVariant = experimentVariant else { return false }
-//
-//        return experimentVariant == Constants.nativeExperimentTreatment
+        // Override all other conditions if the example app has native or web selected.
+        guard case .none = exampleAppSdkOverride else {
+            return exampleAppSdkOverride.shouldUseNativeFlow
+        }
+
+        // if this version is killswitched by server, fallback to webview.
+        if killswitchActive { return false }
+
+        // If native experiment is missing, fallback to webview.
+        guard let experimentVariant = experimentVariant else { return false }
+
+        return experimentVariant == Constants.nativeExperimentTreatment
     }
 
     private var shouldUseNativeInstantDebits: Bool {
-        return true
-//        // Override all other conditions if the example app has native or web selected.
-//        guard case .none = exampleAppSdkOverride else {
-//            return exampleAppSdkOverride.shouldUseNativeFlow
-//        }
-//
-//        return !killswitchActive
+        // Override all other conditions if the example app has native or web selected.
+        guard case .none = exampleAppSdkOverride else {
+            return exampleAppSdkOverride.shouldUseNativeFlow
+        }
+
+        return !killswitchActive
     }
 
     private var experimentVariant: String? {
