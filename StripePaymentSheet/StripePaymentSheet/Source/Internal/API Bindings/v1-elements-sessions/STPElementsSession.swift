@@ -373,7 +373,7 @@ extension STPElementsSession {
         linkFlags["link_sign_up_opt_in_initial_value"] == true
     }
 
-    var isAttestationEnabled: Bool {
+    var shouldAttestOnConfirmation: Bool {
         flags["elements_mobile_attest_on_intent_confirmation"] == true
     }
 }

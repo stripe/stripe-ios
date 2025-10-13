@@ -62,11 +62,11 @@ class STPElementsSessionTest: XCTestCase {
         elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": true]
 
         var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertTrue(elementsSession.isAttestationEnabled)
+        XCTAssertTrue(elementsSession.shouldAttestOnConfirmation)
 
         elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": false]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertFalse(elementsSession.isAttestationEnabled)
+        XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
     }
 
     func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
