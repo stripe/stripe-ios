@@ -224,8 +224,8 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
-        requestSurface: LinkRequestSurface = .default,
         clientAttributionMetadata: STPClientAttributionMetadata?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         createPaymentDetails(
@@ -234,8 +234,8 @@ extension STPAPIClient {
             billingEmailAddress: billingEmailAddress,
             billingDetails: billingDetails,
             isDefault: isDefault,
-            requestSurface: requestSurface,
             clientAttributionMetadata: clientAttributionMetadata,
+            requestSurface: requestSurface,
             completion: completion
         )
     }
@@ -246,8 +246,8 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
-        requestSurface: LinkRequestSurface = .default,
         clientAttributionMetadata: STPClientAttributionMetadata?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
@@ -280,12 +280,13 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         linkedAccountId: String,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": requestSurface.rawValue,
             "bank_account": [
@@ -294,6 +295,10 @@ extension STPAPIClient {
             "type": "bank_account",
             "is_default": isDefault,
         ]
+
+        if let clientAttributionMetadata {
+            parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
+        }
 
         makePaymentDetailsRequest(
             endpoint: endpoint,

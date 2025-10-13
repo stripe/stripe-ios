@@ -650,9 +650,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         )
 
         func createPaymentDetails(linkedAccountId: String) {
+            let clientAttributionMetadata: STPClientAttributionMetadata? = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
+
             linkAccount.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
                 isDefault: false,
+                clientAttributionMetadata: clientAttributionMetadata,
                 completion: { paymentDetailsResult in
                     switch paymentDetailsResult {
                     case .success:

@@ -238,8 +238,8 @@ extension ConsumerSession {
             billingEmailAddress: billingEmailAddress,
             billingDetails: paymentMethodParams.nonnil_billingDetails,
             isDefault: isDefault,
-            requestSurface: requestSurface,
             clientAttributionMetadata: paymentMethodParams.clientAttributionMetadata,
+            requestSurface: requestSurface,
             completion: completion)
     }
 
@@ -247,6 +247,7 @@ extension ConsumerSession {
         linkedAccountId: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -254,6 +255,7 @@ extension ConsumerSession {
             for: clientSecret,
             linkedAccountId: linkedAccountId,
             isDefault: isDefault,
+            clientAttributionMetadata: clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion)
     }
