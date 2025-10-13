@@ -1470,32 +1470,18 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
 
     // MARK: - US Bank Account
     func createAndConfirmPaymentIntentWithUSBankAccount(
-        paymentMethodOptions: STPConfirmUSBankAccountOptions? = nil,
-        completion: @escaping (String?) -> Void
-    ) {
+        paymentMethodOptions: STPConfirmUSBankAccountOptions? = nil
+    ) async throws -> String {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-        var clientSecret: String?
-        let createPIExpectation = expectation(description: "Create PaymentIntent")
-        STPTestingAPIClient.shared.createPaymentIntent(
+        let clientSecret = try await STPTestingAPIClient.shared.createPaymentIntent(
             withParams: [
                 "payment_method_types": ["us_bank_account"],
                 "currency": "usd",
                 "amount": 1000,
             ],
             account: nil
-        ) { intentClientSecret, error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(intentClientSecret)
-            clientSecret = intentClientSecret
-            createPIExpectation.fulfill()
-        }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
-        guard let clientSecret = clientSecret else {
-            XCTFail("Failed to create PaymentIntent")
-            return
-        }
-
+        )
         let usBankAccountParams = STPPaymentMethodUSBankAccountParams()
         usBankAccountParams.accountType = .checking
         usBankAccountParams.accountHolderType = .individual
@@ -1520,119 +1506,74 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             paymentIntentParams.paymentMethodOptions = pmo
         }
 
-        let confirmPIExpectation = expectation(description: "Confirm PaymentIntent")
-        client.confirmPaymentIntent(with: paymentIntentParams, expand: ["payment_method"]) {
-            paymentIntent,
-            error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(paymentIntent)
-            XCTAssertNotNil(paymentIntent?.paymentMethod)
-            XCTAssertNotNil(paymentIntent?.paymentMethod?.usBankAccount)
-            XCTAssertEqual(paymentIntent?.paymentMethod?.usBankAccount?.last4, "6789")
-            XCTAssertEqual(paymentIntent?.status, .requiresAction)
-            XCTAssertEqual(paymentIntent?.nextAction?.type, .verifyWithMicrodeposits)
-            if let paymentMethodOptions = paymentMethodOptions {
-                XCTAssertEqual(
-                    paymentIntent?.paymentMethodOptions?.usBankAccount?.setupFutureUsage,
-                    paymentMethodOptions.setupFutureUsage
-                )
-            }
-            confirmPIExpectation.fulfill()
+        let paymentIntent = try await client.confirmPaymentIntent(with: paymentIntentParams, expand: ["payment_method"])
+        XCTAssertNotNil(paymentIntent.paymentMethod)
+        XCTAssertNotNil(paymentIntent.paymentMethod?.usBankAccount)
+        XCTAssertEqual(paymentIntent.paymentMethod?.usBankAccount?.last4, "6789")
+        XCTAssertEqual(paymentIntent.status, .requiresAction)
+        XCTAssertEqual(paymentIntent.nextAction?.type, .verifyWithMicrodeposits)
+        if let paymentMethodOptions = paymentMethodOptions {
+            XCTAssertEqual(
+                paymentIntent.paymentMethodOptions?.usBankAccount?.setupFutureUsage,
+                paymentMethodOptions.setupFutureUsage
+            )
         }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
-        completion(clientSecret)
+        return clientSecret
     }
 
-    func testConfirmPaymentIntentWithUSBankAccount_verifyWithAmounts() {
-        createAndConfirmPaymentIntentWithUSBankAccount { [self] clientSecret in
-            guard let clientSecret = clientSecret else {
-                XCTFail("Failed to create PaymentIntent")
-                return
-            }
+    func testConfirmPaymentIntentWithUSBankAccount_verifyWithAmounts() async throws {
+        let clientSecret = try await createAndConfirmPaymentIntentWithUSBankAccount()
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-            let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-
-            let verificationExpectation = expectation(description: "Verify with microdeposits")
-            client.verifyPaymentIntentWithMicrodeposits(
-                clientSecret: clientSecret,
-                firstAmount: 32,
-                secondAmount: 45
-            ) { paymentIntent, error in
-                XCTAssertNil(error)
-                XCTAssertNotNil(paymentIntent)
-                XCTAssertEqual(paymentIntent?.status, .processing)
-                verificationExpectation.fulfill()
-            }
-            waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
+        let verificationExpectation = expectation(description: "Verify with microdeposits")
+        client.verifyPaymentIntentWithMicrodeposits(
+            clientSecret: clientSecret,
+            firstAmount: 32,
+            secondAmount: 45
+        ) { paymentIntent, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentIntent)
+            XCTAssertEqual(paymentIntent?.status, .processing)
+            verificationExpectation.fulfill()
         }
+        await fulfillment(of: [verificationExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testConfirmPaymentIntentWithUSBankAccount_verifyWithAmountsAsync() async throws {
-        let clientSecret: String? = await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                createAndConfirmPaymentIntentWithUSBankAccount { clientSecret in
-                    continuation.resume(returning: clientSecret)
-                }
-            }
-        }
-        guard let clientSecret = clientSecret else {
-            XCTFail("Failed to create PaymentIntent")
-            return
-        }
-
+        let clientSecret = try await createAndConfirmPaymentIntentWithUSBankAccount()
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let paymentIntent = try await client.verifyPaymentIntentWithMicrodeposits(clientSecret: clientSecret, firstAmount: 32, secondAmount: 45)
         XCTAssertEqual(paymentIntent.status, .processing)
     }
 
-    func testConfirmPaymentIntentWithUSBankAccount_verifyWithDescriptorCode() {
-        createAndConfirmPaymentIntentWithUSBankAccount { [self] clientSecret in
-            guard let clientSecret = clientSecret else {
-                XCTFail("Failed to create PaymentIntent")
-                return
-            }
+    func testConfirmPaymentIntentWithUSBankAccount_verifyWithDescriptorCode() async throws {
+        let clientSecret = try await createAndConfirmPaymentIntentWithUSBankAccount()
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-            let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-
-            let verificationExpectation = expectation(description: "Verify with microdeposits")
-            client.verifyPaymentIntentWithMicrodeposits(
-                clientSecret: clientSecret,
-                descriptorCode: "SM11AA"
-            ) { paymentIntent, error in
-                XCTAssertNil(error)
-                XCTAssertNotNil(paymentIntent)
-                XCTAssertEqual(paymentIntent?.status, .processing)
-                verificationExpectation.fulfill()
-            }
-            waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
+        let verificationExpectation = expectation(description: "Verify with microdeposits")
+        client.verifyPaymentIntentWithMicrodeposits(
+            clientSecret: clientSecret,
+            descriptorCode: "SM11AA"
+        ) { paymentIntent, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(paymentIntent)
+            XCTAssertEqual(paymentIntent?.status, .processing)
+            verificationExpectation.fulfill()
         }
+        await fulfillment(of: [verificationExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testConfirmPaymentIntentWithUSBankAccount_verifyWithDescriptorCodeAsync() async throws {
-        let clientSecret: String? = await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                createAndConfirmPaymentIntentWithUSBankAccount { clientSecret in
-                    continuation.resume(returning: clientSecret)
-                }
-            }
-        }
-        guard let clientSecret = clientSecret else {
-            XCTFail("Failed to create PaymentIntent")
-            return
-        }
-
+        let clientSecret = try await createAndConfirmPaymentIntentWithUSBankAccount()
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let paymentIntent = try await client.verifyPaymentIntentWithMicrodeposits(clientSecret: clientSecret, descriptorCode: "SM11AA")
         XCTAssertEqual(paymentIntent.status, .processing)
     }
 
-    func testConfirmUSBankAccountWithPaymentMethodOptions() {
-        createAndConfirmPaymentIntentWithUSBankAccount(
+    func testConfirmUSBankAccountWithPaymentMethodOptions() async throws {
+        _ = try await createAndConfirmPaymentIntentWithUSBankAccount(
             paymentMethodOptions: STPConfirmUSBankAccountOptions(setupFutureUsage: .offSession)
-        ) { clientSecret in
-            XCTAssertNotNil(clientSecret)
-        }
+        )
     }
 
     // MARK: - Helpers
