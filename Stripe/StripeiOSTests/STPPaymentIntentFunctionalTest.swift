@@ -191,9 +191,9 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             // Test deprecated property still works too
             // #pragma clang diagnostic push
             // #pragma clang diagnostic ignored "-Wdeprecated"
-                XCTAssertNotNil(paymentIntent?.nextSourceAction?.authorizeWithURL?.returnURL)
+                XCTAssertNotNil(paymentIntent?.nextAction?.redirectToURL?.returnURL)
             XCTAssertEqual(
-                paymentIntent?.nextSourceAction?.authorizeWithURL?.returnURL,
+                paymentIntent?.nextAction?.redirectToURL?.returnURL,
                 URL(string: "example-app-scheme://authorized"))
             // #pragma clang diagnostic pop
 
@@ -204,14 +204,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
     }
 
     func testConfirmPaymentIntentAsync() async throws {
-        let clientSecret: String = await withCheckedContinuation { continuation in
-            STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) { createdClientSecret, creationError in
-                XCTAssertNotNil(createdClientSecret)
-                XCTAssertNil(creationError)
-                continuation.resume(returning: createdClientSecret!)
-            }
-        }
-
+        let clientSecret = try await STPTestingAPIClient.shared.createPaymentIntent(withParams: nil)
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         let params = STPPaymentIntentParams(clientSecret: clientSecret)
@@ -1577,8 +1570,10 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
 
     func testConfirmPaymentIntentWithUSBankAccount_verifyWithAmountsAsync() async throws {
         let clientSecret: String? = await withCheckedContinuation { continuation in
-            createAndConfirmPaymentIntentWithUSBankAccount { clientSecret in
-                continuation.resume(returning: clientSecret)
+            Task { @MainActor in
+                createAndConfirmPaymentIntentWithUSBankAccount { clientSecret in
+                    continuation.resume(returning: clientSecret)
+                }
             }
         }
         guard let clientSecret = clientSecret else {
@@ -1616,8 +1611,10 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
 
     func testConfirmPaymentIntentWithUSBankAccount_verifyWithDescriptorCodeAsync() async throws {
         let clientSecret: String? = await withCheckedContinuation { continuation in
-            createAndConfirmPaymentIntentWithUSBankAccount { clientSecret in
-                continuation.resume(returning: clientSecret)
+            Task { @MainActor in
+                createAndConfirmPaymentIntentWithUSBankAccount { clientSecret in
+                    continuation.resume(returning: clientSecret)
+                }
             }
         }
         guard let clientSecret = clientSecret else {
