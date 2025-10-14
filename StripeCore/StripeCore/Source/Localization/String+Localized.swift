@@ -42,7 +42,7 @@ import Foundation
         public static var enter_code_sent_to: String {
             return STPLocalizedString(
                 "Enter the code sent to %@.",
-                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number.",
+                "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
             )
         }
 
