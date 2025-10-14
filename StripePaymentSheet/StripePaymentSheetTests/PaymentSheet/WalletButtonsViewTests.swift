@@ -30,7 +30,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -69,7 +69,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -108,7 +108,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -147,7 +147,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -195,7 +195,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -243,7 +243,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -291,7 +291,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -339,7 +339,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -392,7 +392,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 
@@ -446,7 +446,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil
         )
 

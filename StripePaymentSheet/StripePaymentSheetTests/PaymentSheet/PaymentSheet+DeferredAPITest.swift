@@ -253,7 +253,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -370,7 +370,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -418,7 +418,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -468,7 +468,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
