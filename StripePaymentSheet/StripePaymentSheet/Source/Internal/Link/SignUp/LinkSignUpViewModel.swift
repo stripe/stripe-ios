@@ -73,6 +73,14 @@ final class LinkSignUpViewModel: NSObject {
         }
     }
 
+    private(set) var suggestedEmail: String? {
+        didSet {
+            if suggestedEmail != oldValue {
+                notifyUpdate()
+            }
+        }
+    }
+
     var requiresNameCollection: Bool {
         return country != "US"
     }
@@ -186,6 +194,7 @@ private extension LinkSignUpViewModel {
     func onEmailUpdate() {
         linkAccount = nil
         errorMessage = nil
+        suggestedEmail = nil
 
         guard let emailAddress = emailAddress else {
             accountLookupDebouncer.cancel()
@@ -216,6 +225,7 @@ private extension LinkSignUpViewModel {
                 switch result {
                 case .success(let account):
                     self.linkAccount = account
+                    self.suggestedEmail = account?.suggestedEmail
                     self.delegate?.viewModel(self, didLookupAccount: account)
                 case .failure(let error):
                     self.linkAccount = nil

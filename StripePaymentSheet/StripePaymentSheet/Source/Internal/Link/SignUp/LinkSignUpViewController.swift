@@ -113,6 +113,19 @@ final class LinkSignUpViewController: UIViewController {
         return legalTermsView
     }()
 
+    private lazy var emailSuggestionLabel: UILabel = {
+        let label = UILabel()
+        label.font = LinkUI.font(forTextStyle: .caption)
+        label.textColor = .linkTextSecondary
+        label.adjustsFontForContentSizeCategory = true
+        label.numberOfLines = 0
+        label.isHidden = true
+        label.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapEmailSuggestion(_:)))
+        label.addGestureRecognizer(tapGesture)
+        return label
+    }()
+
     private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(theme: theme)
         label.isHidden = true
@@ -138,6 +151,7 @@ final class LinkSignUpViewController: UIViewController {
             titleLabel,
             subtitleLabel,
             emailSection.view,
+            emailSuggestionLabel,
             phoneNumberSection.view,
             nameSection.view,
             legalTermsView,
@@ -149,6 +163,7 @@ final class LinkSignUpViewController: UIViewController {
         stackView.spacing = LinkUI.contentSpacing
         stackView.setCustomSpacing(LinkUI.smallContentSpacing, after: titleLabel)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: subtitleLabel)
+        stackView.setCustomSpacing(LinkUI.smallContentSpacing, after: emailSection.view)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: legalTermsView)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = LinkUI.contentMargins
@@ -224,6 +239,22 @@ final class LinkSignUpViewController: UIViewController {
             emailElement.stopAnimating()
         }
 
+        // Email suggestion
+        if let suggestedEmail = viewModel.suggestedEmail {
+            updateEmailSuggestionLabel(with: suggestedEmail)
+            stackView.toggleArrangedSubview(
+                emailSuggestionLabel,
+                shouldShow: true,
+                animated: animated
+            )
+        } else {
+            stackView.toggleArrangedSubview(
+                emailSuggestionLabel,
+                shouldShow: false,
+                animated: animated
+            )
+        }
+
         // Phone number
         stackView.toggleArrangedSubview(
             phoneNumberSection.view,
@@ -256,6 +287,93 @@ final class LinkSignUpViewController: UIViewController {
         // Signup button
         signUpButton.title = viewModel.signUpButtonTitle
         signUpButton.isEnabled = viewModel.shouldEnableSignUpButton
+    }
+
+    private var currentSuggestedEmail: String?
+
+    private var yesUpdateLocalizedText: String {
+        STPLocalizedString(
+            "Yes, update",
+            "Text for a tappable link that will update the email field with a suggested email address."
+        )
+    }
+
+    private func updateEmailSuggestionLabel(with suggestedEmail: String) {
+        currentSuggestedEmail = suggestedEmail
+
+        let baseText = STPLocalizedString(
+            "Did you mean %@? %@",
+            "Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link."
+        )
+        let fullText = String(format: baseText, suggestedEmail, yesUpdateLocalizedText)
+
+        let attributedString = NSMutableAttributedString(string: fullText)
+        let fullRange = NSRange(location: 0, length: attributedString.length)
+
+        attributedString.addAttribute(
+            .font,
+            value: LinkUI.font(forTextStyle: .caption),
+            range: fullRange
+        )
+        attributedString.addAttribute(
+            .foregroundColor,
+            value: UIColor.linkTextSecondary,
+            range: fullRange
+        )
+
+        let yesRange = (fullText as NSString).range(of: yesUpdateLocalizedText, options: .backwards)
+        if yesRange.location != NSNotFound {
+            attributedString.addAttribute(
+                .font,
+                value: LinkUI.font(forTextStyle: .captionEmphasized),
+                range: yesRange
+            )
+            attributedString.addAttribute(
+                .foregroundColor,
+                value: UIColor.linkTextBrand,
+                range: yesRange
+            )
+        }
+
+        emailSuggestionLabel.attributedText = attributedString
+    }
+
+    @objc
+    private func didTapEmailSuggestion(_ gesture: UITapGestureRecognizer) {
+        guard let suggestedEmail = currentSuggestedEmail,
+              let attributedText = emailSuggestionLabel.attributedText else {
+            return
+        }
+
+        let fullText = attributedText.string
+        let yesRange = (fullText as NSString).range(of: yesUpdateLocalizedText, options: .backwards)
+
+        guard yesRange.location != NSNotFound else {
+            return
+        }
+
+        let tapLocation = gesture.location(in: emailSuggestionLabel)
+        let textStorage = NSTextStorage(attributedString: attributedText)
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: emailSuggestionLabel.bounds.size)
+
+        textContainer.lineFragmentPadding = 0
+        textContainer.maximumNumberOfLines = emailSuggestionLabel.numberOfLines
+        textContainer.lineBreakMode = emailSuggestionLabel.lineBreakMode
+
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+
+        let characterIndex = layoutManager.characterIndex(
+            for: tapLocation,
+            in: textContainer,
+            fractionOfDistanceBetweenInsertionPoints: nil
+        )
+
+        if NSLocationInRange(characterIndex, yesRange) {
+            emailElement.emailAddressElement.setText(suggestedEmail)
+            viewModel.emailAddress = suggestedEmail
+        }
     }
 
     @objc
@@ -345,25 +463,6 @@ extension LinkSignUpViewController: ElementDelegate {
 
 }
 
-extension LinkSignUpViewController: UITextViewDelegate {
-
-#if !os(visionOS)
-    func textView(
-        _ textView: UITextView,
-        shouldInteractWith URL: URL,
-        in characterRange: NSRange,
-        interaction: UITextItemInteraction
-    ) -> Bool {
-        if interaction == .invokeDefaultAction {
-            let safariVC = SFSafariViewController(url: URL)
-            present(safariVC, animated: true)
-        }
-
-        return false
-    }
-#endif
-
-}
 
 extension LinkSignUpViewController: LinkLegalTermsViewDelegate {
 

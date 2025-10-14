@@ -86,6 +86,7 @@ struct LinkPMDisplayDetails {
 
     var phoneNumberUsedInSignup: String?
     var nameUsedInSignup: String?
+    var suggestedEmail: String?
 
     @_spi(STP) public let email: String
 
