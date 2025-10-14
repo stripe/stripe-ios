@@ -167,7 +167,6 @@ extension LinkInlineSignupElementSnapshotTests {
 
         func lookupLinkAuthToken(
             _ linkAuthTokenClientSecret: String,
-            doNotLogConsumerFunnelEvent: Bool,
             requestSurface: StripePaymentSheet.LinkRequestSurface,
             completion: @escaping (Result<StripePaymentSheet.PaymentSheetLinkAccount?, any Error>) -> Void
         ) {
