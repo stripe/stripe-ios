@@ -19,25 +19,13 @@ import XCTest
 class STPSetupIntentFunctionalTestSwift: STPNetworkStubbingTestCase {
 
     // MARK: - US Bank Account
-    func createAndConfirmSetupIntentWithUSBankAccount(completion: @escaping (String?) -> Void) {
+    func createAndConfirmSetupIntentWithUSBankAccount() async throws -> String {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-        var clientSecret: String?
-        let createSIExpectation = expectation(description: "Create SetupIntent")
-        STPTestingAPIClient.shared.createSetupIntent(
+        let clientSecret = try await STPTestingAPIClient.shared.createSetupIntent(
             withParams: ["payment_method_types": ["us_bank_account"]],
             account: nil
-        ) { intentClientSecret, error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(intentClientSecret)
-            clientSecret = intentClientSecret
-            createSIExpectation.fulfill()
-        }
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
-        guard let clientSecret = clientSecret else {
-            XCTFail("Failed to create SetupIntent")
-            return
-        }
+        )
 
         let usBankAccountParams = STPPaymentMethodUSBankAccountParams()
         usBankAccountParams.accountType = .checking
@@ -58,98 +46,59 @@ class STPSetupIntentFunctionalTestSwift: STPNetworkStubbingTestCase {
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
         setupIntentParams.paymentMethodParams = paymentMethodParams
 
-        let confirmSIExpectation = expectation(description: "Confirm SetupIntent")
-        client.confirmSetupIntent(with: setupIntentParams, expand: ["payment_method"]) {
-            setupIntent,
-            error in
-            XCTAssertNil(error)
-            guard let setupIntent else { XCTFail(); return }
-            XCTAssertNotNil(setupIntent.paymentMethod)
-            XCTAssertNotNil(setupIntent.paymentMethod?.usBankAccount)
-            XCTAssertEqual(setupIntent.paymentMethod?.usBankAccount?.last4, "6789")
-            XCTAssertEqual(setupIntent.status, .requiresAction)
-            XCTAssertEqual(setupIntent.nextAction?.type, .verifyWithMicrodeposits)
-            confirmSIExpectation.fulfill()
-        }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
-        completion(clientSecret)
+        let setupIntent = try await client.confirmSetupIntent(with: setupIntentParams, expand: ["payment_method"])
+        XCTAssertNotNil(setupIntent.paymentMethod)
+        XCTAssertNotNil(setupIntent.paymentMethod?.usBankAccount)
+        XCTAssertEqual(setupIntent.paymentMethod?.usBankAccount?.last4, "6789")
+        XCTAssertEqual(setupIntent.status, .requiresAction)
+        XCTAssertEqual(setupIntent.nextAction?.type, .verifyWithMicrodeposits)
+        return clientSecret
     }
 
-    func testConfirmSetupIntentWithUSBankAccount_verifyWithAmounts() {
-        createAndConfirmSetupIntentWithUSBankAccount { [self] clientSecret in
-            guard let clientSecret = clientSecret else {
-                XCTFail("Failed to create SetupIntent")
-                return
-            }
+    func testConfirmSetupIntentWithUSBankAccount_verifyWithAmounts() async throws {
+        let clientSecret = try await createAndConfirmSetupIntentWithUSBankAccount()
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-            let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-
-            let verificationExpectation = expectation(description: "Verify with microdeposits")
-            client.verifySetupIntentWithMicrodeposits(
-                clientSecret: clientSecret,
-                firstAmount: 32,
-                secondAmount: 45
-            ) { setupIntent, error in
-                XCTAssertNil(error)
-                XCTAssertNotNil(setupIntent)
-                XCTAssertEqual(setupIntent?.status, .succeeded)
-                verificationExpectation.fulfill()
-            }
-            waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
+        let verificationExpectation = expectation(description: "Verify with microdeposits")
+        client.verifySetupIntentWithMicrodeposits(
+            clientSecret: clientSecret,
+            firstAmount: 32,
+            secondAmount: 45
+        ) { setupIntent, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(setupIntent)
+            XCTAssertEqual(setupIntent?.status, .succeeded)
+            verificationExpectation.fulfill()
         }
+        await fulfillment(of: [verificationExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testConfirmSetupIntentWithUSBankAccount_verifyWithAmountsAsync() async throws {
-        let clientSecret: String? = await withCheckedContinuation { continuation in
-            createAndConfirmSetupIntentWithUSBankAccount { clientSecret in
-                continuation.resume(returning: clientSecret)
-            }
-        }
-        guard let clientSecret = clientSecret else {
-            XCTFail("Failed to create SetupIntent")
-            return
-        }
-
+        let clientSecret = try await createAndConfirmSetupIntentWithUSBankAccount()
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let setupIntent = try await client.verifySetupIntentWithMicrodeposits(clientSecret: clientSecret, firstAmount: 32, secondAmount: 45)
         XCTAssertEqual(setupIntent.status, .succeeded)
     }
 
-    func testConfirmSetupIntentWithUSBankAccount_verifyWithDescriptorCode() {
-        createAndConfirmSetupIntentWithUSBankAccount { [self] clientSecret in
-            guard let clientSecret = clientSecret else {
-                XCTFail("Failed to create SetupIntent")
-                return
-            }
+    func testConfirmSetupIntentWithUSBankAccount_verifyWithDescriptorCode() async throws {
+        let clientSecret = try await createAndConfirmSetupIntentWithUSBankAccount()
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
-            let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-
-            let verificationExpectation = expectation(description: "Verify with microdeposits")
-            client.verifySetupIntentWithMicrodeposits(
-                clientSecret: clientSecret,
-                descriptorCode: "SM11AA"
-            ) { setupIntent, error in
-                XCTAssertNil(error)
-                XCTAssertNotNil(setupIntent)
-                XCTAssertEqual(setupIntent?.status, .succeeded)
-                verificationExpectation.fulfill()
-            }
-            waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
+        let verificationExpectation = expectation(description: "Verify with microdeposits")
+        client.verifySetupIntentWithMicrodeposits(
+            clientSecret: clientSecret,
+            descriptorCode: "SM11AA"
+        ) { setupIntent, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(setupIntent)
+            XCTAssertEqual(setupIntent?.status, .succeeded)
+            verificationExpectation.fulfill()
         }
+        await fulfillment(of: [verificationExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testConfirmSetupIntentWithUSBankAccount_verifyWithDescriptorCodeAsync() async throws {
-        let clientSecret: String? = await withCheckedContinuation { continuation in
-            createAndConfirmSetupIntentWithUSBankAccount { clientSecret in
-                continuation.resume(returning: clientSecret)
-            }
-        }
-        guard let clientSecret = clientSecret else {
-            XCTFail("Failed to create SetupIntent")
-            return
-        }
-
+        let clientSecret: String = try await createAndConfirmSetupIntentWithUSBankAccount()
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let setupIntent = try await client.verifySetupIntentWithMicrodeposits(clientSecret: clientSecret, descriptorCode: "SM11AA")
         XCTAssertEqual(setupIntent.status, .succeeded)
