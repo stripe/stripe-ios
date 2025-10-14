@@ -60,10 +60,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
             contentView: PaneLayoutView.createContentView(
                 iconView: nil,
                 title: String.Localized.confirm_its_you,
-                subtitle: String(format: STPLocalizedString(
-                    "Enter the code sent to %@.",
-                    "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
-                ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
+                subtitle: String(format: String.Localized.enter_code_sent_to, AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
                 contentView: otpView
             ),
             footerView: PaneLayoutView.createFooterView(
