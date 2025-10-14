@@ -21,16 +21,14 @@ extension PaymentSheet {
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession?,
         mandateData: STPMandateDataParams? = nil,
-        radarOptions: STPRadarOptions? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        // Assert that exactly one confirm handler is populated
-        let hasConfirmHandler = intentConfig.confirmHandler != nil
-        let hasConfirmationTokenHandler = intentConfig.confirmationTokenConfirmHandler != nil
-        stpAssert(hasConfirmHandler != hasConfirmationTokenHandler, "Exactly one confirm handler should be set (either confirmHandler or confirmationTokenConfirmHandler, but not both or neither)")
-
         // Route based on which handler is available in the intent configuration
         if intentConfig.confirmationTokenConfirmHandler != nil {
+            guard let elementsSession else {
+                stpAssertionFailure("Unexpected nil elementsSession when handling deferred intent confirmation with confirmation token flow")
+                return
+            }
             // Use confirmation token flow
             handleDeferredIntentConfirmation_confirmationToken(
                 confirmType: confirmType,
@@ -42,7 +40,6 @@ extension PaymentSheet {
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 elementsSession: elementsSession,
                 mandateData: mandateData,
-                radarOptions: radarOptions,
                 completion: completion
             )
         } else {
@@ -56,7 +53,6 @@ extension PaymentSheet {
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 mandateData: mandateData,
-                radarOptions: radarOptions,
                 completion: completion
             )
         }
@@ -71,7 +67,6 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         mandateData: STPMandateDataParams? = nil,
-        radarOptions: STPRadarOptions? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
@@ -80,7 +75,7 @@ extension PaymentSheet {
                 // 1. Create PM if necessary
                 let paymentMethod: STPPaymentMethod
                 switch confirmType {
-                case let .saved(savedPaymentMethod, _, _):
+                case let .saved(savedPaymentMethod, _, _, _):
                     paymentMethod = savedPaymentMethod
                 case let .new(params, paymentOptions, newPaymentMethod, shouldSave, shouldSetAsDefaultPM):
                     if let newPaymentMethod {
@@ -160,8 +155,7 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
                             configuration: configuration,
-                            mandateData: mandateData,
-                            radarOptions: radarOptions
+                            mandateData: mandateData
                         )
                         // Set top-level SFU and PMO SFU to match the intent config
                         setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
@@ -194,8 +188,7 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
                             configuration: configuration,
-                            mandateData: mandateData,
-                            radarOptions: radarOptions
+                            mandateData: mandateData
                         )
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,

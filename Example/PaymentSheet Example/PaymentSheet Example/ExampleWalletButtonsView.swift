@@ -24,6 +24,7 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
     @State private var showingAppearancePlayground = false
     @State private var disableLink = false
+    @State private var hideBankTab = false
 
     // Wallet button visibility options
     @State private var applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic
@@ -39,6 +40,12 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var rejectShippingAddressChange: Bool = false
     @State private var rejectShippingRateChange: Bool = false
     @State private var simulatePaymentFailed: Bool = false
+
+    // Click handler testing options
+    @State private var enableClickHandler: Bool = false
+    @State private var rejectApplePay: Bool = false
+    @State private var rejectLink: Bool = false
+    @State private var rejectShopPay: Bool = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -58,6 +65,8 @@ struct ExampleWalletButtonsContainerView: View {
                         }
 
                     Toggle("Disable Link", isOn: $disableLink)
+
+                    Toggle("Hide Bank tab", isOn: $hideBankTab)
 
                     Button("Customize Appearance") {
                         showingAppearancePlayground = true
@@ -126,6 +135,15 @@ struct ExampleWalletButtonsContainerView: View {
                         Toggle("Reject Shipping Rate Change", isOn: $rejectShippingRateChange)
                         Toggle("Simulate Payment Failed", isOn: $simulatePaymentFailed)
                     }
+                }
+
+                Section("Click Handler Testing") {
+                    Toggle("Enable Click Handler", isOn: $enableClickHandler)
+                    if enableClickHandler {
+                        Toggle("Reject Apple Pay", isOn: $rejectApplePay)
+                        Toggle("Reject Link", isOn: $rejectLink)
+                        Toggle("Reject Shop Pay", isOn: $rejectShopPay)
+                    }
                 }.sheet(isPresented: $showingAppearancePlayground) {
                     AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
                         appearance = updatedAppearance
@@ -139,6 +157,7 @@ struct ExampleWalletButtonsContainerView: View {
                             email: email,
                             shopId: shopId,
                             disableLink: disableLink,
+                            hideBankTab: hideBankTab,
                             appearance: appearance,
                             applePayVisibilityInPaymentElement: applePayVisibilityInPaymentElement,
                             linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
@@ -152,7 +171,11 @@ struct ExampleWalletButtonsContainerView: View {
                                 rejectShippingAddressChange: rejectShippingAddressChange,
                                 rejectShippingRateChange: rejectShippingRateChange,
                                 simulatePaymentFailed: simulatePaymentFailed
-                            )
+                            ),
+                            enableClickHandler: enableClickHandler,
+                            rejectApplePay: rejectApplePay,
+                            rejectLink: rejectLink,
+                            rejectShopPay: rejectShopPay
                         )
                     }
                 }
@@ -171,23 +194,33 @@ struct ExampleWalletButtonsView: View {
         email: String,
         shopId: String,
         disableLink: Bool,
+        hideBankTab: Bool,
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(),
         applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
         linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
         applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
         linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
-        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()
+        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions(),
+        enableClickHandler: Bool = false,
+        rejectApplePay: Bool = false,
+        rejectLink: Bool = false,
+        rejectShopPay: Bool = false
     ) {
         self.model = ExampleWalletButtonsModel(
             email: email,
             shopId: shopId,
             disableLink: disableLink,
+            hideBankTab: hideBankTab,
             appearance: appearance,
             applePayVisibilityInPaymentElement: applePayVisibilityInPaymentElement,
             linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
             applePayVisibilityInWalletButtonsView: applePayVisibilityInWalletButtonsView,
             linkVisibilityInWalletButtonsView: linkVisibilityInWalletButtonsView,
-            shopPayTestingOptions: shopPayTestingOptions
+            shopPayTestingOptions: shopPayTestingOptions,
+            enableClickHandler: enableClickHandler,
+            rejectApplePay: rejectApplePay,
+            rejectLink: rejectLink,
+            rejectShopPay: rejectShopPay
         )
     }
 
@@ -198,7 +231,11 @@ struct ExampleWalletButtonsView: View {
                     WalletButtonsFlowControllerView(
                         flowController: flowController,
                         isConfirmingPayment: $isConfirmingPayment,
-                        onCompletion: model.onCompletion
+                        onCompletion: model.onCompletion,
+                        enableClickHandler: model.enableClickHandler,
+                        rejectApplePay: model.rejectApplePay,
+                        rejectLink: model.rejectLink,
+                        rejectShopPay: model.rejectShopPay
                     )
                 } else if model.paymentResult == nil {
                     ExampleLoadingView()
@@ -208,6 +245,11 @@ struct ExampleWalletButtonsView: View {
                         self.model.preparePaymentSheet()
                     })
                 }
+
+                Button("Simulate update") {
+                    self.model.update()
+                }
+                .disabled(model.paymentSheetFlowController == nil || model.isProcessing)
 
                 // Debug logs section
                 if !model.debugLogs.isEmpty {
@@ -237,13 +279,41 @@ struct WalletButtonsFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
     @Binding var isConfirmingPayment: Bool
     let onCompletion: (PaymentSheetResult) -> Void
+    let enableClickHandler: Bool
+    let rejectApplePay: Bool
+    let rejectLink: Bool
+    let rejectShopPay: Bool
+
+    @State private var showingError: Bool = false
+    @State private var errorMessage: String = ""
 
     var body: some View {
         if flowController.paymentOption == nil {
             WalletButtonsView(
-                flowController: flowController
-            ) { _ in }
-                .padding(.horizontal)
+                flowController: flowController,
+                confirmHandler: { _ in },
+                clickHandler: enableClickHandler ? { walletType in
+                    let shouldReject = switch walletType {
+                    case "apple_pay": rejectApplePay
+                    case "link": rejectLink
+                    case "shop_pay": rejectShopPay
+                    default: false
+                    }
+
+                    if shouldReject {
+                        errorMessage = "Click rejected for \(walletType)"
+                        showingError = true
+                        return false
+                    }
+                    return true
+                } : nil
+            )
+            .padding(.horizontal)
+            .alert("Click Handler Rejected", isPresented: $showingError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(errorMessage)
+            }
         }
         PaymentSheet.FlowController.PaymentOptionsButton(
             paymentSheetFlowController: flowController,
@@ -284,12 +354,17 @@ class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let shopId: String
     let disableLink: Bool
+    let hideBankTab: Bool
     let appearance: PaymentSheet.Appearance
     let applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
     let linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
     let applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
     let linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
     let shopPayTestingOptions: ShopPayTestingOptions
+    let enableClickHandler: Bool
+    let rejectApplePay: Bool
+    let rejectLink: Bool
+    let rejectShopPay: Bool
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
     let SPTTestCustomerUrl = URL(string: "https://2f6qwl-3000.csb.app/api/customer")!
@@ -299,26 +374,38 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
 
+    private var latestIntentConfig: PaymentSheet.IntentConfiguration?
+
     init(
         email: String,
         shopId: String,
         disableLink: Bool,
+        hideBankTab: Bool,
         appearance: PaymentSheet.Appearance,
         applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
         linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
         applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
         linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
-        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()
+        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions(),
+        enableClickHandler: Bool = false,
+        rejectApplePay: Bool = false,
+        rejectLink: Bool = false,
+        rejectShopPay: Bool = false
     ) {
         self.email = email
         self.shopId = shopId
         self.disableLink = disableLink
+        self.hideBankTab = hideBankTab
         self.appearance = appearance
         self.applePayVisibilityInPaymentElement = applePayVisibilityInPaymentElement
         self.linkVisibilityInPaymentElement = linkVisibilityInPaymentElement
         self.applePayVisibilityInWalletButtonsView = applePayVisibilityInWalletButtonsView
         self.linkVisibilityInWalletButtonsView = linkVisibilityInWalletButtonsView
         self.shopPayTestingOptions = shopPayTestingOptions
+        self.enableClickHandler = enableClickHandler
+        self.rejectApplePay = rejectApplePay
+        self.rejectLink = rejectLink
+        self.rejectShopPay = rejectShopPay
     }
 
     func addDebugLog(_ message: String) {
@@ -340,6 +427,18 @@ class ExampleWalletButtonsModel: ObservableObject {
         self.addDebugLog("Preparing payment sheet...")
         self.addDebugLog("Using SPT test backend")
         preparePaymentSheetWithSPTTestBackend()
+    }
+
+    func update() {
+        guard let paymentSheetFlowController, let latestIntentConfig else {
+            return
+        }
+
+        addDebugLog("Updating FlowController…")
+
+        paymentSheetFlowController.update(intentConfiguration: latestIntentConfig) { [weak self] _ in
+            self?.addDebugLog("Updating FlowController complete")
+        }
     }
 
     private func preparePaymentSheetWithSPTTestBackend() {
@@ -394,7 +493,11 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
                 configuration.appearance = self.appearance ?? PaymentSheet.Appearance()
-                configuration.link = .init(display: self.disableLink == true ? .never : .automatic)
+
+                var linkConfiguration = PaymentSheet.LinkConfiguration()
+                linkConfiguration.display = self.disableLink == true ? .never : .automatic
+                linkConfiguration.disallowFundingSourceCreation = self.hideBankTab ? ["usInstantBankPayment"] : []
+                configuration.link = linkConfiguration
 
                 // Configure wallet button visibility
                 configuration.walletButtonsVisibility.paymentElement[.applePay] = self.applePayVisibilityInPaymentElement
@@ -402,15 +505,17 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.walletButtonsVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
                 configuration.walletButtonsVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
 
+                self.latestIntentConfig = .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    self?.isProcessing = true
+                    self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
+                    self?.addDebugLog("Address: \(address)")
+                    // Create the payment intent on the rough-lying-carriage backend
+                    self?.createPaymentIntentWithSPTTestBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
+                })
+
                 self.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
-                        self?.isProcessing = true
-                        self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
-                        self?.addDebugLog("Address: \(address)")
-                        // Create the payment intent on the rough-lying-carriage backend
-                        self?.createPaymentIntentWithSPTTestBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
-                    }),
+                    intentConfiguration: latestIntentConfig!,
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {

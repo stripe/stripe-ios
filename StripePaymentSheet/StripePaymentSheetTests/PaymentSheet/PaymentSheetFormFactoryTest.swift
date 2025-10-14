@@ -1809,7 +1809,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         _ = factory.make()
-        XCTAssertEqual(STPAssertTestUtil.lastAssertMessage, "Failed to get form spec for card_present!")
+        XCTAssertTrue(STPAssertTestUtil.lastAssertMessage.contains("missingFormSpec"))
         let errorAnalytic = analyticsClient._testLogHistory.first!
         XCTAssertEqual(errorAnalytic["event"] as? String, STPAnalyticEvent.unexpectedPaymentSheetFormFactoryError.rawValue)
         XCTAssertEqual(errorAnalytic["payment_method"] as? String, "card_present")
@@ -1841,7 +1841,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     session: nil,
                     publishableKey: nil,
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
@@ -1887,7 +1888,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     session: nil,
                     publishableKey: nil,
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
@@ -1931,7 +1933,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     session: nil,
                     publishableKey: nil,
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
@@ -1975,7 +1978,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     session: nil,
                     publishableKey: nil,
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)

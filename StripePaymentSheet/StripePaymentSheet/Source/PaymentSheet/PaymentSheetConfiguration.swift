@@ -490,6 +490,9 @@ extension PaymentSheet {
         /// The Link display mode.
         public var display: Display = .automatic
 
+        /// The Link funding sources that should be disabled. Defaults to an empty set.
+        @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
+
         /// Whether missing billing details should be collected for existing Link payment methods.
         @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
 
@@ -941,7 +944,7 @@ extension STPPaymentMethodBillingDetails {
     }
 }
 extension PaymentSheet.CustomerConfiguration {
-    func ephemeralKeySecretBasedOn(elementsSession: STPElementsSession?) -> String? {
+    func ephemeralKeySecret(basedOn elementsSession: STPElementsSession?) -> String? {
         switch customerAccessProvider {
         case .legacyCustomerEphemeralKey(let legacy):
             return legacy

@@ -22,7 +22,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case identity
         case wallets(customerId: String)
         case payment(customerId: String, wallet: CustomerWalletsResponse.Wallet)
-        case authenticated(createOnrampSessionResponse: CreateOnrampSessionResponse)
+        case paymentSummary(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String)
+        case checkoutSuccess(message: String)
     }
 
     /// Indicates whether the global loading interface should be shown.
@@ -36,6 +37,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var isKycVerified = false
     private var isIdDocumentVerified = false
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
+    private var selectedPaymentMethodDescription: String?
+    private var successfulCheckoutMessage: String?
 
     /// Creates a new `CryptoOnrampFlowCoordinator`.
     init() {
@@ -90,9 +93,19 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Advances after configuring payment.
-    /// - Parameter createOnrampSessionResponse: The onramp session that was created for checking out.
-    func advanceAfterPayment(createOnrampSessionResponse: CreateOnrampSessionResponse) {
+    /// - Parameters:
+    ///   - createOnrampSessionResponse: The onramp session that was created for checking out.
+    ///   - selectedPaymentMethodDescription: A description of the selected payment used to start the onramp session.
+    func advanceAfterPayment(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String) {
         self.createOnrampSessionResponse = createOnrampSessionResponse
+        self.selectedPaymentMethodDescription = selectedPaymentMethodDescription
+        advanceToNextStep()
+    }
+
+    /// Advances after the payment summary step, which indicates a successful checkout.
+    /// - Parameter successfulCheckoutMessage: The message to display on the final step.
+    func advanceAfterPaymentSummary(successfulCheckoutMessage: String) {
+        self.successfulCheckoutMessage = successfulCheckoutMessage
         advanceToNextStep()
     }
 
@@ -118,8 +131,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             path.append(.kycInfo)
         } else if !isIdDocumentVerified {
             path.append(.identity)
-        } else if let createOnrampSessionResponse {
-            path.append(.authenticated(createOnrampSessionResponse: createOnrampSessionResponse))
+        } else if let successfulCheckoutMessage {
+            path.append(.checkoutSuccess(message: successfulCheckoutMessage))
+        } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription {
+            path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription))
         } else if let selectedWallet, let customerId {
             path.append(.payment(customerId: customerId, wallet: selectedWallet))
         } else if let customerId {
@@ -140,6 +155,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         customerId = nil
         selectedWallet = nil
         createOnrampSessionResponse = nil
+        selectedPaymentMethodDescription = nil
+        successfulCheckoutMessage = nil
     }
 }
 
@@ -150,5 +167,28 @@ private extension CustomerInformationResponse {
 
     var isIdDocumentVerified: Bool {
         verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
+    }
+}
+
+extension CryptoOnrampFlowCoordinator.Route {
+
+    /// Whether the user should be able to advance backwards from this step.
+    var allowsBackNavigation: Bool {
+        switch self {
+        case .registration, .payment, .paymentSummary:
+            true
+        case .wallets, .kycInfo, .identity, .checkoutSuccess:
+            false
+        }
+    }
+
+    /// Whether to display the toolbar item for authenticated user actions, such as logging out.
+    var showsAuthenticatedUserToolbarItem: Bool {
+        switch self {
+        case .wallets, .kycInfo, .identity, .payment, .paymentSummary, .checkoutSuccess:
+            true
+        case .registration:
+            false
+        }
     }
 }

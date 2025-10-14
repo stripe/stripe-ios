@@ -153,8 +153,8 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
-                if self.configuration.enablePassiveCaptcha, let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
-                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+                if self.configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
+                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
                 }
                 if loadResult.elementsSession.shouldAttestOnConfirmation {
                     Task {

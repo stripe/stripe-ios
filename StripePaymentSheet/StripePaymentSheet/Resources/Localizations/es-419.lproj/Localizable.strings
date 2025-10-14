@@ -134,8 +134,6 @@
 
 "Fast, secure checkout" = "Proceso de compra rápido y seguro";
 
-"For security, please re-enter your card’s security code." = "Por razones de seguridad, vuelve a ingresar el código de seguridad de tu tarjeta.";
-
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Obtén %@ cuando pagues por primera vez con tu banco. <terms>Consulta las condiciones</terms>";
 
 "Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Obtén %@ al pagar con tu banco. <terms>Consulta las condiciones</terms>";
@@ -283,8 +281,6 @@
 "The provided verification code has expired." = "El código de verificación suministrado está vencido.";
 
 "The provided verification code is incorrect." = "El código de verificación proporcionado es incorrecto.";
-
-"This card has expired. Update your card info or choose a different payment method." = "Esta tarjeta se venció. Actualiza los datos de la tarjeta o elige un método de pago diferente.";
 
 "This is your default" = "Tu método predeterminado";
 

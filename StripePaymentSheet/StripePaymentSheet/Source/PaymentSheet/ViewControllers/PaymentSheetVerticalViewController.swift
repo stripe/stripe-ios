@@ -135,7 +135,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
@@ -307,16 +306,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
             return selectedPaymentOption == nil ? .disabled : .enabled
         }()
-        let style: ConfirmButton.Style = {
-            // If the button invokes Apple Pay, it must be styled as the Apple Pay button
-            if case .applePay = selectedPaymentOption, !isFlowController {
-                return .applePay
-            }
-            return .stripe
-        }()
+        if case .applePay = selectedPaymentOption, !isFlowController {
+            stpAssertionFailure("Apple Pay should be handled by the wallet button, not the primary button")
+        }
         primaryButton.update(
             state: state,
-            style: style,
             callToAction: callToAction,
             animated: true
         )
@@ -446,7 +440,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
         var initialSelection = selection ?? calculateInitialSelection()
         // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option.
-        if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) &&
+        if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
                 (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always) ||
                 initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {

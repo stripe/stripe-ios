@@ -63,20 +63,20 @@ class STPElementsSessionTest: XCTestCase {
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002", "rqdata": nil]
 
         var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNotNil(elementsSession.passiveCaptcha)
+        XCTAssertNotNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002"]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNotNil(elementsSession.passiveCaptcha)
+        XCTAssertNotNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["passive_captcha"] = ["rqdata": "data"]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNil(elementsSession.passiveCaptcha)
+        XCTAssertNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": false]
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002", "rqdata": nil]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNil(elementsSession.passiveCaptcha)
+        XCTAssertNil(elementsSession.passiveCaptchaData)
     }
 
     func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {

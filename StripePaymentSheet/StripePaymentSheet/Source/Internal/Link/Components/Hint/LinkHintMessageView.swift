@@ -18,6 +18,69 @@ final class LinkHintMessageView: UIView {
         static let minimumHeight: CGFloat = LinkUI.minimumButtonHeight
     }
 
+    enum Style {
+        case filled
+        case outlined
+        case error
+
+        var backgroundColor: UIColor {
+            switch self {
+            case .filled:
+                return .linkSurfaceSecondary
+            case .outlined, .error:
+                return .linkSurfacePrimary
+            }
+        }
+
+        var textColor: UIColor {
+            switch self {
+            case .filled:
+                return .linkTextTertiary
+            case .outlined:
+                return .linkOutlinedHintMessageForeground
+            case .error:
+                return .linkTextCritical
+            }
+        }
+
+        var textStyle: LinkUI.TextStyle {
+            switch self {
+            case .filled, .outlined:
+                    .detail
+            case .error:
+                    .caption
+            }
+        }
+
+        var iconColor: UIColor {
+            switch self {
+            case .filled, .outlined:
+                UIColor.linkIconTertiary
+            case .error:
+                UIColor.linkTextCritical
+            }
+        }
+
+        var icon: Image {
+            switch self {
+            case .filled, .outlined:
+                Image.icon_info
+            case .error:
+                Image.icon_link_warning_circle
+            }
+        }
+
+        var isBordered: Bool {
+            switch self {
+            case .filled:
+                false
+            case .outlined, .error:
+                true
+            }
+        }
+
+    }
+
     var text: String? {
         get {
             return textLabel.text
@@ -29,7 +92,7 @@ final class LinkHintMessageView: UIView {
 
     private lazy var iconView: UIImageView = {
         let imageView = UIImageView()
-        imageView.tintColor = .linkIconTertiary
+        imageView.tintColor = style.iconColor
         imageView.contentMode = .scaleAspectFit
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -43,14 +106,17 @@ final class LinkHintMessageView: UIView {
 
     private lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .linkTextTertiary
-        label.font = LinkUI.font(forTextStyle: .detail)
+        label.textColor = style.textColor
+        label.font = LinkUI.font(forTextStyle: style.textStyle)
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         return label
     }()
 
-    init(message: String) {
+    private let style: Style
+
+    init(message: String?, style: Style) {
+        self.style = style
         super.init(frame: .zero)
         setupUI()
         configureImage()
@@ -75,9 +141,12 @@ final class LinkHintMessageView: UIView {
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
-        backgroundColor = .linkSurfaceSecondary
+        backgroundColor = style.backgroundColor
+
+        applyOutlineIfNecessary()
 
         if let cornerRadius = LinkUI.appearance.cornerRadius {
             layer.cornerRadius = cornerRadius
@@ -88,7 +157,48 @@ final class LinkHintMessageView: UIView {
         heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minimumHeight).isActive = true
     }
 
-    private func configureImage() {
-        iconView.image = Image.icon_info.makeImage(template: true)
+    private func applyOutlineIfNecessary() {
+        if style.isBordered {
+            layer.borderColor = UIColor.linkOutlinedHintMessageBorder.cgColor
+            layer.borderWidth = 1.0
+        }
     }
+
+    private func configureImage() {
+        iconView.image = style.icon.makeImage(template: true)
+    }
+
+    #if !os(visionOS)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        applyOutlineIfNecessary()
+    }
+    #endif
+}
+
+@available(iOS 17.0, *)
+#Preview {
+
+    let stackView = UIStackView(arrangedSubviews: [
+
+        LinkHintMessageView(message: "Some short text.", style: .filled),
+        LinkHintMessageView(message: "Medium text that stretches a little farther.", style: .filled),
+        LinkHintMessageView(message: "Here's a really long message that we can use for testing. It even spans multiple lines.", style: .filled),
+
+        LinkHintMessageView(message: "Some short text.", style: .outlined),
+        LinkHintMessageView(message: "Medium text that stretches a little farther.", style: .outlined),
+        LinkHintMessageView(message: "Here's a really long message that we can use for testing. It even spans multiple lines.", style: .outlined),
+
+        LinkHintMessageView(message: "Something went wrong", style: .error),
+        LinkHintMessageView(message: "There was an error connecting to Stripe.", style: .error),
+        LinkHintMessageView(message: "Here's a really long message that we can use for testing. It even spans multiple lines.", style: .error),
+
+    ])
+
+    stackView.axis = .vertical
+    stackView.spacing = 5
+    stackView.distribution = .fillEqually
+
+    return stackView
+
 }

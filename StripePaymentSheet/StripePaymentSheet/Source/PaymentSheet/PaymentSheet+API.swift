@@ -166,7 +166,7 @@ extension PaymentSheet {
         let createAssertionHandle: () async -> StripeAttest.AssertionHandle? = {
             if elementsSession.shouldAttestOnConfirmation {
                 do {
-                    let assertionHandle = try await configuration.apiClient.stripeAttest.assert()
+                    let assertionHandle = try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
                     return assertionHandle
                 } catch {
                     // If we can't get an assertion, we'll try the request anyway. It may fail.
@@ -210,7 +210,7 @@ extension PaymentSheet {
         // MARK: - New Payment Method
         case let .new(confirmParams):
             Task { @MainActor in
-                let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+                let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
                 let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
                 let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                 let paymentMethodType: STPPaymentMethodType = {
@@ -310,7 +310,7 @@ extension PaymentSheet {
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
 
-                let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata), paymentIntent: paymentIntent, configuration: configuration)
+                let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil), paymentIntent: paymentIntent, configuration: configuration)
 
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
@@ -322,7 +322,7 @@ extension PaymentSheet {
             // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
-                    confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata),
+                    confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil),
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
@@ -341,7 +341,7 @@ extension PaymentSheet {
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
                 routeDeferredIntentConfirmation(
-                    confirmType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata),
+                    confirmType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil),
                     configuration: configuration,
                     intentConfig: intentConfig,
                     authenticationContext: authenticationContext,
@@ -359,7 +359,7 @@ extension PaymentSheet {
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task { @MainActor in
-                    let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+                    let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
                     let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                     paymentMethodParams.radarOptions = radarOptions
@@ -427,7 +427,7 @@ extension PaymentSheet {
             }
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethod, linkAccount, shouldSave in
                 Task { @MainActor in
-                    let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+                    let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
                     let assertionHandle: StripeAttest.AssertionHandle? = await createAssertionHandle()
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
@@ -480,14 +480,13 @@ extension PaymentSheet {
                         )
                     case .deferredIntent(let intentConfig):
                         routeDeferredIntentConfirmation(
-                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: radarOptions),
                             configuration: configuration,
                             intentConfig: intentConfig,
                             authenticationContext: authenticationContext,
                             paymentHandler: paymentHandler,
                             isFlowController: isFlowController,
                             elementsSession: elementsSession,
-                            radarOptions: radarOptions,
                             completion: { psResult, confirmationType in
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
@@ -727,7 +726,7 @@ extension PaymentSheet {
     }
 
     enum ConfirmPaymentMethodType {
-        case saved(STPPaymentMethod, paymentOptions: STPConfirmPaymentMethodOptions?, clientAttributionMetadata: STPClientAttributionMetadata?)
+        case saved(STPPaymentMethod, paymentOptions: STPConfirmPaymentMethodOptions?, clientAttributionMetadata: STPClientAttributionMetadata?, radarOptions: STPRadarOptions?)
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
         case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool, shouldSetAsDefaultPM: Bool? = nil)
         var shouldSave: Bool {
@@ -744,14 +743,13 @@ extension PaymentSheet {
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
         configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil,
-        radarOptions: STPRadarOptions? = nil
+        mandateData: STPMandateDataParams? = nil
     ) -> STPPaymentIntentParams {
         let params: STPPaymentIntentParams
         let shouldSave: Bool
         let paymentMethodType: STPPaymentMethodType
         switch confirmPaymentMethodType {
-        case .saved(let paymentMethod, let paymentMethodOptions, let clientAttributionMetadata):
+        case .saved(let paymentMethod, let paymentMethodOptions, let clientAttributionMetadata, let radarOptions):
             shouldSave = false
             paymentMethodType = paymentMethod.type
             params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
@@ -775,9 +773,8 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay]
             let isSetupFutureUsageOffSession = paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session"
-            if requiresMandateData.contains(paymentMethodType) && isSetupFutureUsageOffSession
+            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) && isSetupFutureUsageOffSession
             {
                 params.mandateData = .makeWithInferredValues()
             }
@@ -804,12 +801,11 @@ extension PaymentSheet {
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
         configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil,
-        radarOptions: STPRadarOptions? = nil
+        mandateData: STPMandateDataParams? = nil
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
-        case let .saved(paymentMethod, _, clientAttributionMetadata):
+        case let .saved(paymentMethod, _, clientAttributionMetadata, radarOptions):
             params = STPSetupIntentConfirmParams(
                 clientSecret: setupIntent.clientSecret,
                 paymentMethodType: paymentMethod.type
@@ -831,8 +827,8 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            // Paypal & revolut & satispay requires mandate_data if setting up
-            if params.paymentMethodType == .payPal || params.paymentMethodType == .revolutPay || params.paymentMethodType == .satispay {
+            // These payment methods require mandate_data if setting up
+            if let paymentMethodType = params.paymentMethodType, STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
                 params.mandateData = .makeWithInferredValues()
             }
         }

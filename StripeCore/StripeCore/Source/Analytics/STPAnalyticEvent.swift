@@ -36,7 +36,6 @@ import Foundation
     case _3DS2ChallengeFlowCompleted = "stripeios.3ds2_challenge_flow_completed"
     case _3DS2ChallengeFlowErrored = "stripeios.3ds2_challenge_flow_errored"
     case _3DS2RedirectUserCanceled = "stripeios.3ds2_redirect_canceled"
-    case applePayContextCompletePaymentFinished = "stripeios.applepaycontext.complete_payment.finished"
     case paymentHandlerConfirmStarted = "stripeios.paymenthandler.confirm.started"
     case paymentHandlerConfirmFinished = "stripeios.paymenthandler.confirm.finished"
     case paymentHandlerHandleNextActionStarted = "stripeios.paymenthandler.handle_next_action.started"
@@ -262,11 +261,10 @@ import Foundation
     case bankAccountCollectorFinished = "stripeios.bankaccountcollector.finished"
 
     // MARK: - Unexpected errors
-    // These errors should _never happen_ and indicate a problem with the SDK or the Stripe backend.
+    // ⚠️ Errors with the "unexpected_error" prefix should **never happen** and indicate a problem with the SDK or the Stripe backend and will trigger an assertion + cerberus alert.
     case unexpectedPaymentSheetFormFactoryError = "unexpected_error.paymentsheet.formfactory"
     case unexpectedStripeUICoreAddressSpecProvider = "unexpected_error.stripeuicore.addressspecprovider"
     case unexpectedStripeUICoreBSBNumberProvider = "unexpected_error.stripeuicore.bsbnumberprovider"
-    case unexpectedApplePayError = "unexpected_error.applepay"
     case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
     case unexpectedCustomerSheetError = "unexpected_error.customersheet"
     case unexpectedPaymentSheetConfirmationError = "unexpected_error.paymentsheet.confirmation"
@@ -296,6 +294,8 @@ import Foundation
     case assertionSucceeded = "stripeios.attest.assertion.succeeded"
     case resetKeyForAssertionError = "stripeios.attest.reset_key_for_assertion_error"
     case resetKeyForAttestationError = "stripeios.attest.reset_key_for_attestation_error"
+    case stateMismatchNotAttestedLocally = "stripeios.attest.state_mismatch.not_attested_locally"
+    case stateMismatchNotAttestedRemotely = "stripeios.attest.state_mismatch.not_attested_remotely"
 
     // MARK: - Custom Payment Methods
     case paymentSheetInvalidCPM = "mc_invalid_cpm"
@@ -311,4 +311,8 @@ import Foundation
     case passiveCaptchaSuccess = "elements.captcha.passive.success"
     case passiveCaptchaError = "elements.captcha.passive.error"
     case passiveCaptchaAttach = "elements.captcha.passive.attach"
+
+    // MARK: - STPApplePayContext
+    case applePayContextStarted = "stripeios.applepaycontext.confirm.started"
+    case applePayContextFinished = "stripeios.applepaycontext.confirm.finished"
 }

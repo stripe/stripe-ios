@@ -267,6 +267,11 @@ public extension PaymentSheet {
             _ shouldSavePaymentMethod: Bool
         ) async throws -> String
 
+        /// An async version of `ConfirmationTokenConfirmHandler`.
+        typealias AsyncConfirmationTokenConfirmHandler = (
+            _ confirmationToken: STPConfirmationToken
+        ) async throws -> String
+
         /// An async version of the initializer. See the other initializer for documentation.
         init(
             mode: Mode,
@@ -288,6 +293,36 @@ public extension PaymentSheet {
                 }
             }
             // TODO
+            self.requireCVCRecollection = false
+            self.sellerDetails = nil
+        }
+
+        /// An async version of the confirmation token initializer. See the other initializer for documentation.
+        init(
+            mode: Mode,
+            paymentMethodTypes: [String]? = nil,
+            onBehalfOf: String? = nil,
+            confirmationTokenConfirmHandler2: @escaping AsyncConfirmationTokenConfirmHandler
+        ) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.confirmationTokenConfirmHandler = { confirmationToken, callback in
+                Task {
+                    do {
+                        let clientSecret = try await confirmationTokenConfirmHandler2(confirmationToken)
+                        callback(.success(clientSecret))
+                    } catch {
+                        callback(.failure(error))
+                    }
+                }
+            }
+            self.confirmHandler = { _, _, callback in
+                // fail immediately, this should never be called
+                stpAssertionFailure("Confirmation token configuration should use confirmationTokenConfirmHandler, not confirmHandler")
+                let error = PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Confirmation Token error. Please file an issue at https://github.com/stripe/stripe-ios.")
+                callback(.failure(error))
+            }
             self.requireCVCRecollection = false
             self.sellerDetails = nil
         }

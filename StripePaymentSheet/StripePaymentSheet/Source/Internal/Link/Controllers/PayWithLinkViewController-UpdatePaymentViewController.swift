@@ -33,18 +33,12 @@ extension PayWithLinkViewController {
 
         private let linkAppearance: LinkAppearance?
 
-        private lazy var thisIsYourDefaultLabel: UILabel = {
-            let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.textColor = .linkTextSecondary
-            label.adjustsFontForContentSizeCategory = true
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = STPLocalizedString(
+        private lazy var thisIsYourDefaultView: LinkHintMessageView = {
+            let message = STPLocalizedString(
                 "This is your default",
                 "Text of a label indicating that a payment method is the default."
             )
-            return label
+            return LinkHintMessageView(message: message, style: .outlined)
         }()
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
@@ -66,8 +60,8 @@ extension PayWithLinkViewController {
             paymentMethodEditElement.showAllValidationErrors()
         }
 
-        private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
+        private lazy var errorView: LinkHintMessageView = {
+            LinkHintMessageView(message: nil, style: .error)
         }()
 
         private lazy var paymentMethodEditElement = LinkPaymentMethodFormElement(
@@ -115,12 +109,12 @@ extension PayWithLinkViewController {
             self.paymentMethodEditElement.delegate = self
             view.backgroundColor = .linkSurfacePrimary
             view.directionalLayoutMargins = LinkUI.contentMargins
-            errorLabel.isHidden = true
+            errorView.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
                 paymentMethodEditElement.view,
-                errorLabel,
-                thisIsYourDefaultLabel,
+                thisIsYourDefaultView,
+                errorView,
                 updateButton,
             ])
 
@@ -132,13 +126,11 @@ extension PayWithLinkViewController {
             contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.bottomInset))
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
-                thisIsYourDefaultLabel.isHidden = true
-                stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: paymentMethodEditElement.view)
-            } else {
-                stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: thisIsYourDefaultLabel)
+                thisIsYourDefaultView.isHidden = true
             }
 
             updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
+
         }
 
         func updatePaymentMethod() {
@@ -186,7 +178,7 @@ extension PayWithLinkViewController {
                         confirmationExtras = .init(billingPhoneNumber: self.isBillingDetailsUpdateFlow ? params.billingDetails.phone : nil)
                     }
 
-                    self.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
+                    self.updateButton.update(state: .succeeded, callToAction: nil, animated: true) {
                         self.coordinator?.allowSheetDismissal(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
@@ -204,8 +196,8 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorLabel.text = error?.nonGenericDescription
-            errorLabel.setHiddenIfNecessary(error == nil)
+            errorView.text = error?.nonGenericDescription
+            errorView.setHiddenIfNecessary(error == nil)
         }
 
         private func createUpdateDetails(for params: LinkPaymentMethodFormElement.Params) -> UpdatePaymentDetailsParams.DetailsType? {

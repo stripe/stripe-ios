@@ -136,10 +136,8 @@ final class PaymentSheetAnalyticsHelper {
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
             "integration_shape": integrationShape.analyticsValue,
         ]
-        let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        if linkEnabled {
-            let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
-            params["link_mode"] = linkMode
+        if let linkMode = elementsSession.linkSettings?.linkMode {
+            params["link_mode"] = linkMode.rawValue
         }
         params["link_display"] = configuration.link.display.rawValue
         if elementsSession.customer?.customerSession != nil {
@@ -153,6 +151,9 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
+
+        params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
+        params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
 
         log(
             event: .paymentSheetLoadSucceeded,
@@ -448,7 +449,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
         additionalParams["elements_session_config_id"] = elementsSession?.sessionID
-
+        additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
         }

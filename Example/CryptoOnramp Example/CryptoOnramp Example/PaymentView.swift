@@ -55,10 +55,8 @@ struct PaymentView: View {
         case image(UIImage)
     }
 
-    private struct Alert: Identifiable {
-        var id: String { title + message }
-        let title: String
-        let message: String
+    private struct EditCurrencyAlert: Identifiable {
+        let id = UUID()
     }
 
     /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
@@ -70,8 +68,8 @@ struct PaymentView: View {
     /// The wallet being funded.
     let wallet: CustomerWalletsResponse.Wallet
 
-    /// Upon success, this closure is called delivering the created onramp session, ready for checkout.
-    let onContinue: (CreateOnrampSessionResponse) -> Void
+    /// Upon success, this closure is called delivering the created onramp session and a description of the selected payment method, ready for checkout.
+    let onContinue: (CreateOnrampSessionResponse, _ selectedPaymentMethodDescription: String) -> Void
 
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
@@ -81,6 +79,9 @@ struct PaymentView: View {
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
     @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
+    @State private var destinationCurrency: String = "usdc"
+    @State private var editCurrencyAlert: EditCurrencyAlert?
+    @State private var editingCurrencyText: String = ""
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -92,6 +93,15 @@ struct PaymentView: View {
         })
     }
 
+    private var isPresentingEditCurrencyAlert: Binding<Bool> {
+        Binding(get: {
+            editCurrencyAlert != nil
+        }, set: { newValue in
+            if !newValue {
+                editCurrencyAlert = nil
+            }
+        })
+    }
     // This example UI is intended for USD ($) only, but we respect the
     // current locale’s decimal separator.
     //
@@ -171,10 +181,28 @@ struct PaymentView: View {
         VStack(spacing: 0) {
             Spacer()
 
-            Text("$" + (amountText.isEmpty ? "0" : amountText))
-                .font(.system(size: 56, weight: .bold))
-                .monospacedDigit()
-                .frame(maxWidth: .infinity, alignment: .center)
+            VStack(spacing: 8) {
+                Text("$" + (amountText.isEmpty ? "0" : amountText))
+                    .font(.system(size: 56, weight: .bold))
+                    .monospacedDigit()
+                    .frame(maxWidth: .infinity, alignment: .center)
+
+                Button {
+                    editingCurrencyText = destinationCurrency
+                    editCurrencyAlert = EditCurrencyAlert()
+                } label: {
+                    HStack(spacing: 4) {
+                        Text("to \(destinationCurrency)")
+                            .font(.callout)
+                            .foregroundColor(.secondary)
+
+                        Image(systemName: "pencil")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .buttonStyle(.plain)
+            }
 
             Spacer()
 
@@ -291,6 +319,30 @@ struct PaymentView: View {
                 Button("OK") {}
             }, message: { alert in
                 Text(alert.message)
+            }
+        )
+        .alert(
+            "Edit Destination Currency",
+            isPresented: isPresentingEditCurrencyAlert,
+            actions: {
+                TextField("Currency (e.g. usdc)", text: $editingCurrencyText)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+
+                Button("Save") {
+                    let trimmed = editingCurrencyText.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !trimmed.isEmpty {
+                        destinationCurrency = trimmed
+                    }
+                    editCurrencyAlert = nil
+                }
+
+                Button("Cancel", role: .cancel) {
+                    editCurrencyAlert = nil
+                }
+            },
+            message: {
+                Text("Enter the destination currency code (e.g. usdc, btc, eth)")
             }
         )
     }
@@ -633,8 +685,10 @@ struct PaymentView: View {
             paymentToken: cryptoPaymentTokenId,
             sourceAmount: Decimal(string: amountText) ?? 0,
             sourceCurrency: "usd", // <--- hardcoded for demo
-            destinationCurrency: "usdc", // <--- hardcoded for demo
+            destinationCurrency: destinationCurrency,
             destinationNetwork: wallet.network,
+            destinationCurrencies: [destinationCurrency],
+            destinationNetworks: [wallet.network],
             walletAddress: wallet.walletAddress,
             cryptoCustomerId: customerId,
             customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
@@ -645,7 +699,7 @@ struct PaymentView: View {
                 let response = try await APIClient.shared.createOnrampSession(requestObject: request)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onContinue(response)
+                    onContinue(response, selectPaymentMethodButtonTitle)
                 }
             } catch {
                 await MainActor.run {
@@ -708,7 +762,7 @@ private extension PaymentTokensResponse.PaymentToken {
                 network: "solana",
                 walletAddress: ""
             ),
-            onContinue: { _ in }
+            onContinue: { _, _ in }
         )
     }
 }
