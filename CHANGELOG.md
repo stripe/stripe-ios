@@ -1,4 +1,4 @@
-## x.x.x yyyy-yy-yy
+## 24.24.3 2025-10-13
 ### PaymentSheet
 * [Fixed] Fixed a bug where the`DoneButtonToolbar` was not tappable on devices < iOS 26 when compiled with Xcode26.
 * [Fixed] Fixed minor styling issues with Link UI on < iOS 26 when compiled with Xcode26.

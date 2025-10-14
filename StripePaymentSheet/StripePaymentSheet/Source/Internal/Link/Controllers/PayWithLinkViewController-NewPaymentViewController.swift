@@ -339,7 +339,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         if viewController.selectedPaymentMethodType == .instantDebits {
-            confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: .instantDebits))
+            confirmButton.update(state: .enabled, callToAction: .add(paymentMethodType: .instantDebits))
         } else {
             confirmButton.update(
                 state: viewController.paymentOption != nil ? .enabled : .disabled,
