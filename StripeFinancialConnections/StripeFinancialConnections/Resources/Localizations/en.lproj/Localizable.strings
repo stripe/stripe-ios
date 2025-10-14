@@ -16,9 +16,6 @@
 /* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
 "Checking and savings accounts are supported." = "Checking and savings accounts are supported.";
 
-/* A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't checking or savings accounts.' */
-"checking or savings" = "checking or savings";
-
 /* Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one. */
 "Choose a different bank" = "Choose a different bank";
 
@@ -61,9 +58,6 @@
 
 /* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@" = "Enter the code sent to %@";
-
-/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
-"Enter the code sent to %@." = "Enter the code sent to %@.";
 
 /* The subtitle/description of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. '%@' is replaced with an email, for example, 'test@test.com'. */
 "Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Enter the code sent to %@. We periodically request this extra step to keep your account safe.";
@@ -188,9 +182,6 @@
 /* Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. The '%@' will be replaced by a tappable text that says: 'manually enter details'. */
 "Try searching another bank or %@" = "Try searching another bank or %@";
 
-/* A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't US checking accounts.' */
-"US checking" = "US checking";
-
 /* The subtitle/description of a screen where users are informed that they can sign-in-to Link. */
 "Use information you previously saved with your Link account." = "Use information you previously saved with your Link account.";
 
@@ -204,16 +195,28 @@
 "Verify your email" = "Verify your email";
 
 /* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.' */
-"We found %d %@ accounts but you can only link %@ accounts to %@." = "We found %1$d %2$@ accounts but you can only link %3$@ accounts to %4$@.";
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "We found %1$d %2$@ accounts but you can only link checking or savings accounts to %3$@.";
 
 /* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.' */
-"We found %d %@ accounts but you can only link %@ accounts." = "We found %1$d %2$@ accounts but you can only link %3$@ accounts.";
+"We found %d %@ accounts but you can only link checking or savings accounts." = "We found %1$d %2$@ accounts but you can only link checking or savings accounts.";
+
+/* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.' */
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "We found %1$d %2$@ accounts but you can only link US checking accounts to %3$@.";
+
+/* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.' */
+"We found %d %@ accounts but you can only link US checking accounts." = "We found %1$d %2$@ accounts but you can only link US checking accounts.";
 
 /* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.' */
-"We found 1 %@ account but you can only link %@ accounts to %@." = "We found 1 %1$@ account but you can only link %2$@ accounts to %3$@.";
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "We found 1 %1$@ account but you can only link checking or savings accounts to %2$@.";
 
 /* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.' */
-"We found 1 %@ account but you can only link %@ accounts." = "We found 1 %1$@ account but you can only link %2$@ accounts.";
+"We found 1 %@ account but you can only link checking or savings accounts." = "We found 1 %@ account but you can only link checking or savings accounts.";
+
+/* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.' */
+"We found 1 %@ account but you can only link US checking accounts to %@." = "We found 1 %1$@ account but you can only link US checking accounts to %2$@.";
+
+/* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.' */
+"We found 1 %@ account but you can only link US checking accounts." = "We found 1 %@ account but you can only link US checking accounts.";
 
 /* A button title. The user encounters it as part of a confirmation sheet when trying to exit a screen. Pressing it will exit the screen, and cancel the process of connecting the users bank account. */
 "Yes, exit" = "Yes, exit";
