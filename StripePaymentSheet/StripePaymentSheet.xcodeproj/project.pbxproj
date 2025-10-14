@@ -196,6 +196,7 @@
 		49F532FD2E4E7610002CD0CA /* LinkHintMessageViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F532FC2E4E7610002CD0CA /* LinkHintMessageViewSnapshotTests.swift */; };
 		49F533002E4F966F002CD0CA /* LinkConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F532FF2E4F966F002CD0CA /* LinkConfiguration.swift */; };
 		49F62EDF394F18E5BB201D53 /* StripePaymentSheet.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA6166F234C3A2129CBD573 /* StripePaymentSheet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		49FE44F32E9E96A600B81F71 /* TappableAttributedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE44F22E9E96A600B81F71 /* TappableAttributedLabel.swift */; };
 		4A1A0A542B824C830A200BE0 /* StubbedBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF8498CCD12A5190F9267CD /* StubbedBackend.swift */; };
 		4A8C7B2AFB290567C961DAB0 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F22354BD25171B8DC2B922D2 /* StripePaymentsUI.framework */; };
 		4D9D6DD01C7FACE61D459AFB /* BottomSheetTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD715F32B61017198E9F952 /* BottomSheetTransitioningDelegate.swift */; };
@@ -712,6 +713,7 @@
 		49F532FA2E4E6FA8002CD0CA /* LinkHintMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHintMessageView.swift; sourceTree = "<group>"; };
 		49F532FC2E4E7610002CD0CA /* LinkHintMessageViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHintMessageViewSnapshotTests.swift; sourceTree = "<group>"; };
 		49F532FF2E4F966F002CD0CA /* LinkConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkConfiguration.swift; sourceTree = "<group>"; };
+		49FE44F22E9E96A600B81F71 /* TappableAttributedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappableAttributedLabel.swift; sourceTree = "<group>"; };
 		4BEFE8C0CFEAE73F9FD736D3 /* STPStringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPStringUtils.swift; sourceTree = "<group>"; };
 		4C6AA41454A6757B3E26AE67 /* StripePaymentSheetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripePaymentSheetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D595AA033BC84CB4E1C277F /* PaymentSheetFormFactorySnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetFormFactorySnapshotTest.swift; sourceTree = "<group>"; };
@@ -1228,6 +1230,7 @@
 				3147CEC92CC1BF550067B5E4 /* PaymentMethodPicker */,
 				31CC9B942CB5F74A00E84A38 /* Toast */,
 				497FDA442E5BEDD700CA82A5 /* Consent */,
+				49FE44F22E9E96A600B81F71 /* TappableAttributedLabel.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2600,6 +2603,7 @@
 				3EC4378036CBFDB6183E5F3C /* CustomerSavedPaymentMethodsViewController.swift in Sources */,
 				F42DEC1850964E75ACAC29AB /* CustomerSheet+API.swift in Sources */,
 				50C68C68B007A926BE99B2B8 /* CustomerSheet+PaymentMethodAvailability.swift in Sources */,
+				49FE44F32E9E96A600B81F71 /* TappableAttributedLabel.swift in Sources */,
 				DB8A4C5FC11D0EED55E8C975 /* CustomerSheet+SwiftUI.swift in Sources */,
 				648FDD85FD6ECDA1BBC71D45 /* CustomerSheet.swift in Sources */,
 				9E77F1E9F801AE970F1A5BE1 /* CustomerSheetConfiguration.swift in Sources */,
