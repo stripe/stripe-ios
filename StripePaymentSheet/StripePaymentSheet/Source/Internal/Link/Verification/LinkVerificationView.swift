@@ -118,7 +118,7 @@ final class LinkVerificationView: UIView {
         return stackView
     }()
 
-    private lazy var : Button = {
+    private lazy var resendCodeButton: Button = {
         let button = Button(configuration: .linkPlain(foregroundColor: appearance?.colors?.primary ?? .linkTextBrand), title: String.Localized.resend_code)
         button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
