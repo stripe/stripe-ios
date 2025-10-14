@@ -39,12 +39,10 @@ protocol LinkAccountServiceProtocol {
     /// Looks up an account by link auth token.
     /// - Parameters:
     ///   - linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
-    ///   - doNotLogConsumerFunnelEvent: Whether or not this lookup call should be logged backend side.
     ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
     ///   - completion: Completion block.
     func lookupLinkAuthToken(
         _ linkAuthTokenClientSecret: String,
-        doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
@@ -182,7 +180,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
 
     func lookupLinkAuthToken(
         _ linkAuthTokenClientSecret: String,
-        doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
@@ -192,7 +189,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             customerID: customerID,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
-            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
             requestSurface: requestSurface
         ) { [apiClient] result in
             switch result {

@@ -65,7 +65,6 @@ extension STPAPIClient {
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
-        doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
@@ -77,10 +76,6 @@ extension STPAPIClient {
             ]
 
             parameters["customer_id"] = customerID
-
-            if doNotLogConsumerFunnelEvent {
-                parameters["do_not_log_consumer_funnel_event"] = true
-            }
 
             await performConsumerLookup(
                 parameters: parameters,

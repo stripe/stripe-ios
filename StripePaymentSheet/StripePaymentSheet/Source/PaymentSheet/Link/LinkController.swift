@@ -711,7 +711,6 @@ import UIKit
     ) {
         linkAccountService.lookupLinkAuthToken(
             linkAuthTokenClientSecret,
-            doNotLogConsumerFunnelEvent: false,
             requestSurface: requestSurface,
             completion: completion
         )
