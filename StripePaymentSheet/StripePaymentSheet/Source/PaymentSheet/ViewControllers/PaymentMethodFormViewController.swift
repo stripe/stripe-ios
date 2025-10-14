@@ -359,13 +359,6 @@ extension PaymentMethodFormViewController {
         )
     }
 
-    private var clientAttributionMetadata: STPClientAttributionMetadata? {
-        if analyticsHelper.integrationShape.isMPE {
-            return intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
-        }
-        return nil
-    }
-
     private var bankAccountCollectorStyle: STPBankAccountCollectorUserInterfaceStyle {
         switch configuration.style {
         case .automatic: return .automatic
