@@ -156,8 +156,8 @@ public class PaymentSheet {
                 if self.configuration.enablePassiveCaptcha, let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
                     self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
                 }
-                Task {
-                    if loadResult.elementsSession.shouldAttestOnConfirmation {
+                if loadResult.elementsSession.shouldAttestOnConfirmation {
+                    Task {
                         _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
                     }
                 }

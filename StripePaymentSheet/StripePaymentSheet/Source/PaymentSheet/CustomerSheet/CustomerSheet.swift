@@ -171,6 +171,11 @@ public class CustomerSheet {
                 if self.configuration.enablePassiveCaptcha, let passiveCaptcha = elementsSession.passiveCaptcha {
                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
                 }
+                if elementsSession.shouldAttestOnConfirmation {
+                    Task {
+                        _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
+                    }
+                }
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
                 let paymentMethodRemoveIsPartial = customerSheetDataSource.paymentMethodRemoveIsPartial(elementsSession: elementsSession)

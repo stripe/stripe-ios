@@ -374,8 +374,7 @@ extension STPElementsSession {
     }
 
     var shouldAttestOnConfirmation: Bool {
-        true
-//        flags["elements_mobile_attest_on_intent_confirmation"] == true
+        flags["elements_mobile_attest_on_intent_confirmation"] == true
     }
 }
 

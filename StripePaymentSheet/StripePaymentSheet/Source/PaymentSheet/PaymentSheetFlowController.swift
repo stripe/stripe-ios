@@ -297,6 +297,11 @@ extension PaymentSheet {
                 self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
                 self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
             }
+            if loadResult.elementsSession.shouldAttestOnConfirmation {
+                Task {
+                    _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
+                }
+            }
             updatePaymentOption()
         }
 
