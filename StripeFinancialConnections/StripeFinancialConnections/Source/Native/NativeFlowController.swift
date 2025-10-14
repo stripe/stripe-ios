@@ -564,7 +564,8 @@ extension NativeFlowController {
                     consumerSessionClientSecret: consumerSession.clientSecret,
                     paymentDetailsId: response.redactedPaymentDetails.id,
                     billingDetails: elementsSessionContext?.billingDetails,
-                    allowRedisplay: elementsSessionContext?.allowRedisplay
+                    allowRedisplay: elementsSessionContext?.allowRedisplay,
+                    clientAttributionMetadata: elementsSessionContext?.clientAttributionMetadata
                 )
             }
         }

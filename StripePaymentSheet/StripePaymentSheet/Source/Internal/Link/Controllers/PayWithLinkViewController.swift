@@ -649,12 +649,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             verificationSessions: verificationSessions
         )
 
-        let clientAttributionMetadata: STPClientAttributionMetadata? = {
-            if context.analyticsHelper.integrationShape.isMPE {
-                return context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID)
-            }
-            return nil
-        }()
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
 
         func createPaymentDetails(linkedAccountId: String) {
             linkAccount.createPaymentDetails(

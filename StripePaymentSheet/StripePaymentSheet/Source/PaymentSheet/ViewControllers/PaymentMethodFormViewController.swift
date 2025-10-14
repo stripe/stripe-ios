@@ -339,12 +339,7 @@ extension PaymentMethodFormViewController {
         let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
         let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
-        let clientAttributionMetadata: STPClientAttributionMetadata? = {
-            if analyticsHelper.integrationShape.isMPE {
-                return intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
-            }
-            return nil
-        }()
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
 
         return ElementsSessionContext(
             amount: intent.amount,

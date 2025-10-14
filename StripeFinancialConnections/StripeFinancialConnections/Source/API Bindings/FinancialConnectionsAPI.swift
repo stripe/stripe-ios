@@ -213,7 +213,8 @@ protocol FinancialConnectionsAPI {
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
         billingDetails: ElementsSessionContext.BillingDetails?,
-        allowRedisplay: String?
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<LinkBankPaymentMethod>
 
     func updateAvailableIncentives(
