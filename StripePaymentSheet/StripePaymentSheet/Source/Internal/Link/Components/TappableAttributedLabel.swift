@@ -45,8 +45,12 @@ final class TappableAttributedLabel: UILabel {
         let attributedString = NSMutableAttributedString(string: text)
         let fullRange = NSRange(location: 0, length: attributedString.length)
 
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = textAlignment
+
         attributedString.addAttribute(.font, value: baseFont, range: fullRange)
         attributedString.addAttribute(.foregroundColor, value: baseColor, range: fullRange)
+        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: fullRange)
 
         let nsString = text as NSString
         for highlight in highlights {
@@ -66,7 +70,7 @@ final class TappableAttributedLabel: UILabel {
 
     @objc
     private func handleTap(_ gesture: UITapGestureRecognizer) {
-        guard let attributedText = attributedText else {
+        guard let attributedText else {
             return
         }
 
