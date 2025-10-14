@@ -154,7 +154,9 @@ extension PaymentSheet {
         let confirmationTokenParams = STPConfirmationTokenParams()
         confirmationTokenParams.returnURL = configuration.returnURL
         confirmationTokenParams.shipping = configuration.shippingDetails()?.paymentIntentShippingDetailsParams
+        #if DEBUG
         confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customer?.id)
+        #endif
 
         // 2. Configure payment method details based on confirm type
         switch confirmType {
