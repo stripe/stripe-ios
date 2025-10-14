@@ -117,6 +117,7 @@ final class LinkSignUpViewController: UIViewController {
         let label = TappableAttributedLabel()
         label.font = LinkUI.font(forTextStyle: .caption)
         label.textColor = .linkTextSecondary
+        label.textAlignment = .center
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         label.isHidden = true
@@ -297,7 +298,7 @@ final class LinkSignUpViewController: UIViewController {
         currentSuggestedEmail = suggestedEmail
 
         let baseText = STPLocalizedString(
-            "Did you mean %@? %@",
+            "Did you mean %@? %@.",
             "Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link."
         )
         let fullText = String(format: baseText, suggestedEmail, Self.yesUpdateLocalizedText)
@@ -309,7 +310,7 @@ final class LinkSignUpViewController: UIViewController {
             highlights: [
                 TappableAttributedLabel.TappableHighlight(
                     text: Self.yesUpdateLocalizedText,
-                    font: LinkUI.font(forTextStyle: .captionEmphasized),
+                    font: LinkUI.font(forTextStyle: .caption),
                     color: .linkTextBrand,
                     action: { [weak self] in
                         self?.didTapYesUpdate()

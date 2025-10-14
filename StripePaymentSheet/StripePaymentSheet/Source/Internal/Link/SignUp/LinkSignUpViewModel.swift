@@ -157,6 +157,7 @@ final class LinkSignUpViewModel: NSObject {
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
+        self.suggestedEmail = linkAccount?.suggestedEmail
         self.legalName = legalName
         self.country = country
         super.init()

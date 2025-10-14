@@ -100,5 +100,3 @@ final class TappableAttributedLabel: UILabel {
     }
 
 }
-
-
