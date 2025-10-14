@@ -129,7 +129,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private lazy var actionButton: ConfirmButton = {
         let button = ConfirmButton(
             callToAction: self.defaultCallToAction(),
-            applePayButtonType: .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapActionButton()
@@ -315,7 +314,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
         self.actionButton.update(
             state: actionButtonStatus,
-            style: .stripe,
             callToAction: callToAction,
             animated: animated,
             completion: nil
@@ -606,7 +604,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
         if case .new(let confirmParams) = paymentOption  {
             Task {
-                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
                 confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
                     if let error = error {

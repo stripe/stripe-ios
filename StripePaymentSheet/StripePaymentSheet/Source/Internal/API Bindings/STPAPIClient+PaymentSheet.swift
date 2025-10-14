@@ -19,6 +19,7 @@ extension STPAPIClient {
         cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
         clientDefaultPaymentMethod: String?,
         customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
+        linkDisallowFundingSourceCreation: Set<String>,
         userOverrideCountry: String? = nil
     ) -> [String: Any] {
         var parameters: [String: Any] = [
@@ -26,6 +27,11 @@ extension STPAPIClient {
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
             "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
         ]
+        if !linkDisallowFundingSourceCreation.isEmpty {
+            parameters["link"] = [
+                "disallow_funding_source_creation": Array(linkDisallowFundingSourceCreation),
+            ]
+        }
         if let userOverrideCountry {
             parameters["country_override"] = userOverrideCountry
         }
@@ -110,6 +116,7 @@ extension STPAPIClient {
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                 customerAccessProvider: configuration.customer?.customerAccessProvider,
+                linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
         )
@@ -138,6 +145,7 @@ extension STPAPIClient {
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                 customerAccessProvider: configuration.customer?.customerAccessProvider,
+                linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
         )
@@ -163,6 +171,7 @@ extension STPAPIClient {
             cpmConfiguration: configuration.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
             customerAccessProvider: configuration.customer?.customerAccessProvider,
+            linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
             userOverrideCountry: configuration.userOverrideCountry
         )
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(

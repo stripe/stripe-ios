@@ -178,7 +178,7 @@ extension PayWithLinkViewController {
                         confirmationExtras = .init(billingPhoneNumber: self.isBillingDetailsUpdateFlow ? params.billingDetails.phone : nil)
                     }
 
-                    self.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
+                    self.updateButton.update(state: .succeeded, callToAction: nil, animated: true) {
                         self.coordinator?.allowSheetDismissal(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
