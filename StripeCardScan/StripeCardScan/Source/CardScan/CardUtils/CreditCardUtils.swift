@@ -1,9 +1,6 @@
 import Foundation
 
 struct CreditCardUtils {
-    static let maxCvvLength = 3
-    static let maxCvvLengthAmex = 4
-
     static let maxPanLength = 16
     static let maxPanLengthAmericanExpress = 15
     static let maxPanLengthDinersClub = 14
@@ -26,29 +23,11 @@ struct CreditCardUtils {
 
     static var prefixesRegional: [String] = []
 
-    private static var cardTypeMap: [(ClosedRange<Int>, CardType)]?
-
-    ///    Adds the BINs implemented by the MIR network in Russia as regional cards
-    static func addMirSupport() {
-        prefixesRegional += ["2200", "2201", "2202", "2203", "2204"]
-    }
-
     ///    Checks if the card number is valid.
     ///    -   Parameter cardNumber: The card number as a string .
     ///    -   Returns: `true` if valid, `false` otherwise
     static func isValidNumber(cardNumber: String) -> Bool {
         return isValidLuhnNumber(cardNumber: cardNumber) && isValidLength(cardNumber: cardNumber)
-    }
-
-    ///    Checks if the card's cvv is valid
-    ///    -   Parameters:
-    ///        -   cvv: The cvv as a string
-    ///        -   network: The card's bank network
-    ///    -   Returns: `true` if valid, `false ` otherwise
-    static func isValidCvv(cvv: String, network: CardNetwork) -> Bool {
-        let cvv = cvv.trimmingCharacters(in: .whitespacesAndNewlines)
-        return (network == CardNetwork.AMEX && cvv.count == maxCvvLengthAmex)
-            || (cvv.count == maxCvvLength)
     }
 
     ///    Checks if the card's expiration date is valid
@@ -246,60 +225,6 @@ struct CreditCardUtils {
         }
     }
 
-    ///    Returns the card's type (debit, credit, preiad, unknown) based on the card number
-    ///    -   Parameter cardNumber: The card number as a string
-    ///    -   Returns: The card's type as a CardType enum
-    static func determineCardType(cardNumber: String) -> CardType {
-        guard let iin = Int(cardNumber.prefix(6)) else {
-            return .UNKNOWN
-        }
-
-        let cardTypes: [(ClosedRange<Int>, CardType)]
-        if let cardTypeMap = self.cardTypeMap {
-            cardTypes = cardTypeMap
-        } else {
-            guard
-                let filePath = StripeCardScanBundleLocator.resourcesBundle.path(
-                    forResource: "card_types",
-                    ofType: "txt"
-                )
-            else {
-                // unable to find the file
-                return .UNKNOWN
-            }
-
-            guard let contents = try? String(contentsOfFile: filePath) else {
-                // unable to read the contents of the file
-                return .UNKNOWN
-            }
-
-            cardTypes = contents.components(separatedBy: "\n").compactMap {
-                let items = $0.components(separatedBy: ",")
-                guard items.count == 3 else {
-                    return nil
-                }
-
-                let cardType = CardType.fromString(items[2])
-                guard let startIin = Int(items[0]), let endIin = Int(items[1]) else {
-                    return nil
-                }
-                guard cardType != .UNKNOWN else {
-                    return nil
-                }
-
-                return (startIin...endIin, cardType)
-            }
-
-            guard !cardTypes.isEmpty else {
-                return .UNKNOWN
-            }
-
-            self.cardTypeMap = cardTypes
-        }
-
-        return cardTypes.first { $0.0.contains(iin) }?.1 ?? .UNKNOWN
-    }
-
     ///     Determines whether a card number belongs to any bank network according to their bin
     ///     -   Parameters:
     ///         -   cardNumber: The card number as a string
@@ -327,22 +252,6 @@ struct CreditCardUtils {
         }
     }
 
-    ///    Returns the card's expiration date formatted for display
-    ///    -   Parameters:
-    ///            -   expMonth: The expiration month as a string
-    ///            -   expYear: The expiration year as a string
-    ///    -   Returns: The card's expiration date formatted as MM/YY
-    static func formatExpirationDate(expMonth: String, expYear: String) -> String {
-        var month = expMonth
-        let year = "\(expYear.suffix(2))"
-
-        if expMonth.count == 1 {
-            month = "0\(expMonth)"
-        }
-
-        return "\(month)/\(year)"
-    }
-
     static func format15(cardNumber: String) -> String {
         var displayNumber = ""
         for (idx, char) in cardNumber.enumerated() {
@@ -366,25 +275,3 @@ struct CreditCardUtils {
     }
 }
 
-// TODO: Added extension to make older network changes available, will remove in future version
-extension CreditCardUtils {
-    static func isVisa(number: String) -> Bool {
-        return determineCardNetwork(cardNumber: number) == CardNetwork.VISA
-    }
-
-    static func isAmex(number: String) -> Bool {
-        return determineCardNetwork(cardNumber: number) == CardNetwork.AMEX
-    }
-
-    static func isDiscover(number: String) -> Bool {
-        return determineCardNetwork(cardNumber: number) == CardNetwork.DISCOVER
-    }
-
-    static func isMastercard(number: String) -> Bool {
-        return determineCardNetwork(cardNumber: number) == CardNetwork.MASTERCARD
-    }
-
-    static func isUnionPay(number: String) -> Bool {
-        return determineCardNetwork(cardNumber: number) == CardNetwork.UNIONPAY
-    }
-}

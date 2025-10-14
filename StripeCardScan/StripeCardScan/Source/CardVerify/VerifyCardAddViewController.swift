@@ -50,22 +50,11 @@ class VerifyCardAddViewController: SimpleScanViewController {
     }
 
     override func createOcrMainLoop() -> OcrMainLoop? {
-        var uxAndOcrMainLoop = UxAndOcrMainLoop(
+        let uxAndOcrMainLoop = UxAndOcrMainLoop(
             stateMachine: CardVerifyStateMachine(
                 strictModeFramesCount: configuration.strictModeFrames
             )
         )
-
-        if scanPerformancePriority == .accurate {
-            uxAndOcrMainLoop = UxAndOcrMainLoop(
-                stateMachine: CardVerifyAccurateStateMachine(
-                    requiredLastFour: nil,
-                    requiredBin: nil,
-                    maxNameExpiryDurationSeconds: maxErrorCorrectionDuration,
-                    strictModeFramesCount: configuration.strictModeFrames
-                )
-            )
-        }
 
         return uxAndOcrMainLoop
     }

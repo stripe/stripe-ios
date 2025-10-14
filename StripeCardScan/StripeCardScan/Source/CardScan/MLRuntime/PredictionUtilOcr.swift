@@ -8,6 +8,11 @@
 import Foundation
 
 struct PredictionUtilOcr {
+    struct Result {
+        var pickedBoxes = [[Float]]()
+        var pickedLabels = [Int]()
+        var pickedBoxProbs = [Float]()
+    }
 
     /// * A utitliy struct that applies non-max supression to each class
     /// * picks out the remaining boxes, the class probabilities for classes

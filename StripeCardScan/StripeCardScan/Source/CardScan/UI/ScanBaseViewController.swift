@@ -153,27 +153,6 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         return ScanBaseViewController.isPadAndFormsheet ? .allButUpsideDown : .portrait
     }
 
-    static func isCompatible() -> Bool {
-        return self.isCompatible(configuration: ScanConfiguration())
-    }
-
-    static func isCompatible(configuration: ScanConfiguration) -> Bool {
-        // check to see if the user has already denined camera permission
-        let authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
-        if authorizationStatus != .authorized && authorizationStatus != .notDetermined
-            && configuration.setPreviouslyDeniedDevicesAsIncompatible
-        {
-            return false
-        }
-
-        // make sure that we don't run on iPhone 6 / 6plus or older
-        if configuration.runOnOldDevices {
-            return true
-        }
-
-        return true
-    }
-
     func cancelScan() {
         guard let ocrMainLoop = ocrMainLoop() else {
             return

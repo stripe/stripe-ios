@@ -9,23 +9,50 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension ScanAnalyticsPayload {
-    /// Default app info used when uploading scan stats
-    struct AppInfo: Encodable {
-        let appPackageName = Bundle.stp_applicationName() ?? ""
-        let build = Bundle.buildVersion() ?? ""
-        let isDebugBuild = AppInfoUtils.getIsDebugBuild()
-        let sdkVersion = StripeAPIConfiguration.STPSDKVersion
-    }
-
-    /// Default device info used when uploading scan stats
-    struct DeviceInfo: Encodable {
-        /// API  requirement but have no purpose
-        let deviceId = "Redacted"
-        let deviceType = DeviceUtils.getDeviceType()
-        let osVersion = DeviceUtils.getOsVersion()
-        let platform = "iOS"
-        /// API  requirement but have no purpose
-        let vendorId = "Redacted"
+    init(
+        configuration: ConfigurationInfo,
+        payloadInfo: PayloadInfo?,
+        scanStats: ScanStatsTasks
+    ) {
+        self.app = AppInfo(
+            appPackageName: Bundle.stp_applicationName() ?? "",
+            build: Bundle.buildVersion() ?? "",
+            isDebugBuild: {
+                #if DEBUG
+                    return true
+                #else
+                    return false
+                #endif
+            }(),
+            sdkVersion: StripeAPIConfiguration.STPSDKVersion
+        )
+        self.configuration = configuration
+        self.device = DeviceInfo(
+            deviceId: "Redacted",
+            deviceType: {
+                var systemInfo = utsname()
+                uname(&systemInfo)
+                var deviceType = ""
+                for char in Mirror(reflecting: systemInfo.machine).children {
+                    guard let charDigit = (char.value as? Int8) else {
+                        break
+                    }
+                    if charDigit == 0 {
+                        break
+                    }
+                    deviceType += String(UnicodeScalar(UInt8(charDigit)))
+                }
+                return deviceType
+            }(),
+            osVersion: {
+                let version = ProcessInfo().operatingSystemVersion
+                return "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+            }(),
+            platform: "iOS",
+            vendorId: "Redacted"
+        )
+        self.payloadInfo = payloadInfo
+        self.scanStats = scanStats
     }
 
     /// Configuration values set when before running a scan flow
