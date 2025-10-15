@@ -58,6 +58,34 @@ extension STPAPIClient {
         }
     }
 
+    func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        sessionID: String,
+        customerID: String?,
+        cookieStore: LinkCookieStore,
+        useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
+        Task {
+            var parameters: [String: Any] = [
+                "request_surface": requestSurface.rawValue,
+                "session_id": sessionID,
+                "link_auth_token_client_secret": linkAuthTokenClientSecret,
+            ]
+
+            parameters["customer_id"] = customerID
+
+            await performConsumerLookup(
+                parameters: parameters,
+                useMobileEndpoints: useMobileEndpoints,
+                canSyncAttestationState: canSyncAttestationState,
+                completion: completion
+            )
+        }
+    }
+
     func lookupLinkAuthIntent(
         linkAuthIntentID: String,
         sessionID: String,
