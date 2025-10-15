@@ -117,11 +117,6 @@ import UIKit
         elementsSession.sessionID
     }
 
-    /// The merchant logo URL from the elements session, if available.
-    @_spi(STP) public var merchantLogoUrl: URL? {
-        elementsSession.merchantLogoUrl
-    }
-
     /// Completion handler for full consent screen
     private var fullConsentCompletion: ((Result<AuthorizationResult, Error>) -> Void)?
 
