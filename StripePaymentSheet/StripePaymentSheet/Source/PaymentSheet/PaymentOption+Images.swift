@@ -17,8 +17,7 @@ extension PaymentOption {
     func makeIcon(
         for traitCollection: UITraitCollection? = nil,
         currency: String?,
-        iconStyle: PaymentSheet.Appearance.IconStyle,
-        updateImageHandler: DownloadManager.UpdateImageHandler?
+        iconStyle: PaymentSheet.Appearance.IconStyle
     ) -> UIImage {
         switch self {
         case .applePay:
@@ -30,11 +29,11 @@ extension PaymentOption {
                 return paymentMethod.makeIcon(iconStyle: iconStyle)
             }
         case .new(let confirmParams):
-            return confirmParams.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: updateImageHandler)
+            return confirmParams.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: nil)
         case .link(let linkConfirmOption):
             switch linkConfirmOption {
             case .signUp(_, _, _, _, let confirmParams):
-                return confirmParams.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: updateImageHandler)
+                return confirmParams.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: nil)
             case .wallet, .withPaymentMethod, .withPaymentDetails:
                 return Image.link_icon.makeImage()
             }
