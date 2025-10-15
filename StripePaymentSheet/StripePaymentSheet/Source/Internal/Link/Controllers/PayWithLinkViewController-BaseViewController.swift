@@ -22,6 +22,10 @@ extension PayWithLinkViewController {
             LinkUI.contentMargins
         }
 
+        var preferredNavigationBarStyle: SheetNavigationBar.Style? {
+            return nil
+        }
+
         private(set) lazy var contentView = UIView()
 
         init(context: Context, navigationTitle: String? = nil) {

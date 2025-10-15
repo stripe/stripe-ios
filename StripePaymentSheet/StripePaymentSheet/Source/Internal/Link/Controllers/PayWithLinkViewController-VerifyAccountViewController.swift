@@ -15,17 +15,28 @@ extension PayWithLinkViewController {
     final class VerifyAccountViewController: BaseViewController {
 
         private let linkAccount: PaymentSheetLinkAccount
+        private let initialVerificationFactor: LinkVerificationView.VerificationFactor
         private var isUsingWebviewFallback: Bool = false
 
         private lazy var verificationVC: LinkVerificationViewController = {
-            let vc = LinkVerificationViewController(mode: .embedded, linkAccount: linkAccount)
+            let vc = LinkVerificationViewController(
+                mode: .embedded,
+                linkAccount: linkAccount,
+                skipStartVerification: initialVerificationFactor == .email
+            )
+            vc.verificationFactor = initialVerificationFactor
             vc.delegate = self
             vc.view.backgroundColor = .clear
             return vc
         }()
 
-        init(linkAccount: PaymentSheetLinkAccount, context: Context) {
+        init(
+            linkAccount: PaymentSheetLinkAccount,
+            context: Context,
+            initialVerificationFactor: LinkVerificationView.VerificationFactor = .sms
+        ) {
             self.linkAccount = linkAccount
+            self.initialVerificationFactor = initialVerificationFactor
             super.init(context: context)
         }
 
@@ -174,6 +185,38 @@ extension PayWithLinkViewController.VerifyAccountViewController: LinkVerificatio
         didFinishWithResult result: LinkVerificationViewController.VerificationResult
     ) {
         handleVerificationResult(result)
+    }
+
+    func verificationController(
+        _ controller: LinkVerificationViewController,
+        shouldSendCodeToEmail: Bool
+    ) {
+        if linkAccount.requiredPhoneNumberVerificationForEmailOtp {
+            let phoneVerificationVC = PayWithLinkViewController.PhoneVerificationViewController(
+                linkAccount: linkAccount,
+                context: context
+            )
+            coordinator?.pushContentViewController(phoneVerificationVC)
+        } else {
+            controller.verificationView.sendingCode = true
+            controller.verificationView.errorMessage = nil
+            controller.verificationFactor = .email
+
+            linkAccount.startVerification(factor: .email) { result in
+                controller.verificationView.sendingCode = false
+
+                switch result {
+                case .success:
+                    let toast = LinkToast(
+                        type: .success,
+                        text: String.Localized.codeSentSuccessMessage
+                    )
+                    toast.show(from: controller.verificationView)
+                case .failure(let error):
+                    controller.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
+                }
+            }
+        }
     }
 
 }

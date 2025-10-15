@@ -14,17 +14,20 @@ extension ConsumerSession {
         let publishableKey: String
         let displayablePaymentDetails: DisplayablePaymentDetails?
         let consentDataModel: LinkConsentDataModel?
+        let settings: LookupSettings?
 
         init(
             consumerSession: ConsumerSession,
             publishableKey: String,
             displayablePaymentDetails: DisplayablePaymentDetails? = nil,
-            consentDataModel: LinkConsentDataModel? = nil
+            consentDataModel: LinkConsentDataModel? = nil,
+            settings: LookupSettings? = nil
         ) {
             self.consumerSession = consumerSession
             self.publishableKey = publishableKey
             self.displayablePaymentDetails = displayablePaymentDetails
             self.consentDataModel = consentDataModel
+            self.settings = settings
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -32,6 +35,7 @@ extension ConsumerSession {
             case publishableKey = "publishable_key"
             case displayablePaymentDetails = "displayable_payment_details"
             case consentDataModel = "consent_ui"
+            case settings
         }
     }
 }
@@ -68,6 +72,32 @@ extension ConsumerSession {
             self.defaultCardBrand = try container.decodeIfPresent(String.self, forKey: .defaultCardBrand)
             self.defaultPaymentType = try container.decodeIfPresent(PaymentType.self, forKey: .defaultPaymentType)
             self.last4 = try container.decodeIfPresent(String.self, forKey: .last4)
+        }
+    }
+}
+
+extension ConsumerSession {
+    final class LookupSettings: Decodable {
+        let emailOtpRequiresAdditionalInfo: Bool
+        let emailOtpVerifyPhoneDespiteSmsOtp: Bool
+
+        init(
+            emailOtpRequiresAdditionalInfo: Bool = false,
+            emailOtpVerifyPhoneDespiteSmsOtp: Bool = false
+        ) {
+            self.emailOtpRequiresAdditionalInfo = emailOtpRequiresAdditionalInfo
+            self.emailOtpVerifyPhoneDespiteSmsOtp = emailOtpVerifyPhoneDespiteSmsOtp
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case emailOtpRequiresAdditionalInfo = "email_otp_requires_additional_info"
+            case emailOtpVerifyPhoneDespiteSmsOtp = "email_otp_verify_phone_despite_sms_otp"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.emailOtpRequiresAdditionalInfo = try container.decodeIfPresent(Bool.self, forKey: .emailOtpRequiresAdditionalInfo) ?? false
+            self.emailOtpVerifyPhoneDespiteSmsOtp = try container.decodeIfPresent(Bool.self, forKey: .emailOtpVerifyPhoneDespiteSmsOtp) ?? false
         }
     }
 }

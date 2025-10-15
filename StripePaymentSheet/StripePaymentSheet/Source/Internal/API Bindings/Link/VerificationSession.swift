@@ -37,6 +37,10 @@ extension Sequence where Iterator.Element == ConsumerSession.VerificationSession
         return contains(where: { $0.type == .sms && $0.state == .verified })
     }
 
+    var containsVerifiedEmailSession: Bool {
+        return contains(where: { $0.type == .email && $0.state == .verified })
+    }
+
     var isVerifiedForSignup: Bool {
         return contains(where: { $0.type == .signup && $0.state == .started })
     }

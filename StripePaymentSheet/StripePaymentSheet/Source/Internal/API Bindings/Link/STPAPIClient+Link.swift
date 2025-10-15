@@ -649,27 +649,31 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         type: ConsumerSession.VerificationSession.SessionType,
         locale: Locale,
+        accountPhoneNumber: String? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-
         let typeString: String = {
             switch type {
-            case .sms:
-                return "SMS"
-            case .unparsable, .signup, .email:
-                assertionFailure("We don't support any verification except sms")
+            case .sms, .email:
+                return type.rawValue
+            case .unparsable, .signup:
+                assertionFailure("Unexpected verification type")
                 return ""
             }
         }()
         let endpoint: String = "consumers/sessions/start_verification"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
             "locale": locale.toLanguageTag(),
             "request_surface": requestSurface.rawValue,
         ]
+
+        if let accountPhoneNumber {
+            parameters["account_phone_number"] = accountPhoneNumber
+        }
 
         makeConsumerSessionRequest(
             endpoint: endpoint,
@@ -678,18 +682,28 @@ extension STPAPIClient {
         )
     }
 
-    func confirmSMSVerification(
+    func confirmVerification(
         for consumerSessionClientSecret: String,
         with code: String,
+        type: ConsumerSession.VerificationSession.SessionType,
         requestSurface: LinkRequestSurface = .default,
         consentGranted: Bool? = nil,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
+        let typeString: String = {
+            switch type {
+            case .sms, .email:
+                return type.rawValue
+            case .unparsable, .signup:
+                assertionFailure("Unexpected verification type")
+                return ""
+            }
+        }()
         let endpoint: String = "consumers/sessions/confirm_verification"
 
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "type": "SMS",
+            "type": typeString,
             "code": code,
             "request_surface": requestSurface.rawValue,
         ]

@@ -17,6 +17,7 @@ final class LinkUtils {
         case consumerVerificationCodeInvalid = "consumer_verification_code_invalid"
         case consumerVerificationExpired = "consumer_verification_expired"
         case consumerVerificationMaxAttemptsExceeded = "consumer_verification_max_attempts_exceeded"
+        case phoneNumberMismatch = "phone_number_mismatch"
 
         var localizedDescription: String {
             switch self {
@@ -35,6 +36,11 @@ final class LinkUtils {
                     "Too many attempts. Please try again in a few minutes.",
                     "Error message shown when the user enters an incorrect verification code too many times."
                 )
+            case .phoneNumberMismatch:
+                return STPLocalizedString(
+                    "That phone number is not associated with this account. Double check it and try again.",
+                    "Error message shown when the user enters a phone number that doesn't match the account."
+                )
             }
         }
     }
@@ -47,5 +53,4 @@ final class LinkUtils {
 
         return errorCode.localizedDescription
     }
-
 }

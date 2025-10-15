@@ -61,6 +61,8 @@ protocol PayWithLinkCoordinating: AnyObject {
     func bailToWebFlow()
     func allowSheetDismissal(_ enable: Bool)
     func cancel3DS2ChallengeFlow()
+    func pushContentViewController(_ contentViewController: any BottomSheetContentViewController)
+    func setViewControllers(_ viewControllers: [any BottomSheetContentViewController])
 }
 
 /// A view controller for paying with Link.
@@ -329,7 +331,11 @@ final class PayWithLinkViewController: BottomSheetViewController {
         if let viewController = contentViewController as? BaseViewController {
             viewController.coordinator = self
             if contentStack.count > 1 {
-                viewController.navigationBar.setStyle(.back(showAdditionalButton: false))
+                if let preferredStyle = viewController.preferredNavigationBarStyle {
+                    viewController.navigationBar.setStyle(preferredStyle)
+                } else {
+                    viewController.navigationBar.setStyle(.back(showAdditionalButton: false))
+                }
             }
             viewController.navigationBar.delegate = self
         }
