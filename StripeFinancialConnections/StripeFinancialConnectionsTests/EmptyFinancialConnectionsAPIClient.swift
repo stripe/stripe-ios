@@ -251,7 +251,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> StripeCore.Future<StripeFinancialConnections.FinancialConnectionsPaymentDetails> {
         Promise<StripeFinancialConnections.FinancialConnectionsPaymentDetails>()
     }
@@ -262,7 +263,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         expectedPaymentMethodType: String,
         billingEmail: String?,
         billingPhone: String?,
-        allowRedisplay: String?
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsSharePaymentDetails> {
         Promise<StripeFinancialConnections.FinancialConnectionsSharePaymentDetails>()
     }
@@ -271,7 +273,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
         billingDetails: ElementsSessionContext.BillingDetails?,
-        allowRedisplay: String?
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> StripeCore.Future<StripeFinancialConnections.LinkBankPaymentMethod> {
         Promise<StripeFinancialConnections.LinkBankPaymentMethod>()
     }
