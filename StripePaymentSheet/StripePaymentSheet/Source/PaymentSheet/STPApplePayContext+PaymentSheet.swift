@@ -136,6 +136,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         confirmationTokenParams.paymentMethod = paymentMethod.stripeId
         confirmationTokenParams.returnURL = context.returnUrl
         confirmationTokenParams.clientAttributionMetadata = context.clientAttributionMetadata
+        // Only send clientContext in DEBUG to validate client IntentConfiguration matches server intent.
+        // This helps catch integration errors during development (e.g. mismatched currency/amount/SFU)
+        // without breaking production payments if server intent changes after client configuration.
         #if DEBUG
         confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: paymentMethod.customerId)
         #endif
