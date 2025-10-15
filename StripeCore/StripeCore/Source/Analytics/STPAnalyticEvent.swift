@@ -164,6 +164,7 @@ import Foundation
     case link2FAComplete = "link.2fa.complete"
     case link2FACancel = "link.2fa.cancel"
     case link2FAFailure = "link.2fa.failure"
+    case link2FAResendCode = "link.2fa.resend_code"
     case linkNativeBailed = "link.native.bailed"
 
     // MARK: - Link Misc
