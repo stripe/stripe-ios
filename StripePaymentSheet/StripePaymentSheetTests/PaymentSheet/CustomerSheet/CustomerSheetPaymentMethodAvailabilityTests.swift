@@ -120,36 +120,3 @@ class CustomerSheetPaymentMethodAvailabilityTests: XCTestCase {
         XCTAssertNil(result)
     }
 }
-
-class MockCustomerAdapter: CustomerAdapter {
-    let mockedValue: Bool
-    init(mockedValue: Bool) {
-        self.mockedValue = mockedValue
-    }
-    func fetchPaymentMethods() async throws -> [StripePayments.STPPaymentMethod] {
-        return []
-    }
-    func attachPaymentMethod(_ paymentMethodId: String) async throws {
-    }
-
-    func detachPaymentMethod(paymentMethodId: String) async throws {
-    }
-    func setSelectedPaymentOption(paymentOption: StripePaymentSheet.CustomerPaymentOption?) async throws {
-    }
-    func fetchSelectedPaymentOption() async throws -> StripePaymentSheet.CustomerPaymentOption? {
-        return nil
-    }
-    func setupIntentClientSecretForCustomerAttach() async throws -> String {
-        return ""
-    }
-    var canCreateSetupIntents: Bool {
-        return mockedValue
-    }
-
-    func updatePaymentMethod(paymentMethodId: String, paymentMethodUpdateParams: StripePayments.STPPaymentMethodUpdateParams) async throws -> StripePayments.STPPaymentMethod {
-        throw CustomerSheetError.unknown(debugDescription: "Not implemented")
-    }
-    var paymentMethodTypes: [String]? {
-        return nil
-    }
-}

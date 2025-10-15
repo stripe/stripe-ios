@@ -474,30 +474,4 @@ private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDi
         consumerSessionClientSecret: nil
     )
 }
-
-struct LinkButtonPreviews_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            UIViewPreview {
-                let lb = PayWithLinkButton()
-                return lb
-            }.padding()
-            UIViewPreview {
-                let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theop@example.com", isRegistered: true, lastPM: nil)
-                return lb
-            }.padding()
-            UIViewPreview {
-                let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theopetersonmarks@longestemaildomain.com", isRegistered: true, lastPM: nil)
-                return lb
-            }.padding()
-            UIViewPreview {
-                let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "test@test.com", isRegistered: true, lastPM: .init(last4: "3155", brand: .visa))
-                return lb
-            }.padding()
-        }
-    }
-}
 #endif

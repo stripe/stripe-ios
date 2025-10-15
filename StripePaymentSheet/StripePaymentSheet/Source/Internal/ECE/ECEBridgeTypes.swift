@@ -219,10 +219,6 @@ struct ECEShippingUpdateResponse: Codable {
     let totalAmount: Int?
 }
 
-/// Response for payment confirmation
-struct ECEPaymentConfirmationResponse: Codable {
-    // Define based on your payment confirmation needs
-}
 
 // MARK: - Confirm Event Types
 
@@ -263,17 +259,6 @@ extension ECEShippingAddressData {
     }
 }
 
-// MARK: - Express Payment Type
-
-/// The payment method the customer checks out with
-enum ECEExpressPaymentType: String, Codable {
-    case applePay = "apple_pay"
-    case googlePay = "google_pay"
-    case amazonPay = "amazon_pay"
-    case paypal
-    case link
-    case klarna
-}
 
 // MARK: - Bridge Error
 
