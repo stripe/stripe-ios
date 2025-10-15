@@ -526,7 +526,7 @@ extension PaymentSheet {
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
-                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave, clientAttributionMetadata) // don't need to send client attribution metadata here because we sent it on /v1/payment_details/share
+                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave, clientAttributionMetadata)
                                     case .failure(let error):
                                         STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
@@ -615,7 +615,7 @@ extension PaymentSheet {
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
-                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave, nil) // don't need to send client attribution metadata here because we sent it on /v1/payment_details/share
+                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave, clientAttributionMetadata)
                         case .failure(let error):
                             STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                             paymentHandlerCompletion(.failed, error as NSError)
