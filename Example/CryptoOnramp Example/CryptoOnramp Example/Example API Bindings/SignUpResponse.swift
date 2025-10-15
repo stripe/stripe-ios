@@ -13,7 +13,6 @@ struct SignUpResponse: Decodable {
     struct User: Decodable {
         let userId: Int
         let email: String
-        let createdAt: Date
     }
 
     let success: Bool
