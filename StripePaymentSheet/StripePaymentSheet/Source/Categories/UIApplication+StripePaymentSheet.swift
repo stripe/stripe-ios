@@ -38,7 +38,7 @@ extension UIApplication {
         if activeScene == nil {
             let errorAnalytic = ErrorAnalytic(
                 event: .unexpectedPaymentSheetError,
-                error: Error.missingActiveScene,
+                error: Error.missingActiveScene
             )
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure("Couldn't find active scene!")
