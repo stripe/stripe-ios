@@ -176,7 +176,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
     func verificationViewResendCode(_ view: LinkVerificationView) {
         STPAnalyticsClient.sharedClient.logLink2FAResendCode()
-        
+
         view.sendingCode = true
         view.errorMessage = nil
 
