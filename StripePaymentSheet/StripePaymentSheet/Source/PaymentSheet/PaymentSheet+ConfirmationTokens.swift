@@ -150,7 +150,12 @@ extension PaymentSheet {
         let confirmationTokenParams = STPConfirmationTokenParams()
         confirmationTokenParams.returnURL = configuration.returnURL
         confirmationTokenParams.shipping = configuration.shippingDetails()?.paymentIntentShippingDetailsParams
+        // Only send clientContext in DEBUG to validate client IntentConfiguration matches server intent.
+        // This helps catch integration errors during development (e.g. mismatched currency/amount/SFU)
+        // without breaking production payments if server intent changes after client configuration.
+        #if DEBUG
         confirmationTokenParams.clientContext = intentConfig.createClientContext(customerId: configuration.customer?.id)
+        #endif
 
         // 2. Configure payment method details based on confirm type
         switch confirmType {
