@@ -20,8 +20,6 @@ import UIKit
     /// Any additional Elements context useful for the Financial Connections SDK.
     @_spi(STP) public var elementsSessionContext: ElementsSessionContext?
 
-    @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
-
     /// A existing consumer, if avaialble.
     @_spi(STP) public var existingConsumer: FinancialConnectionsConsumer?
 
