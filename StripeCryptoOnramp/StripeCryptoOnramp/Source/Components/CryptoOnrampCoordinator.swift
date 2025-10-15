@@ -391,7 +391,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 verificationSessionId: response.id,
                 ephemeralKeySecret: ephemeralKey,
                 configuration: IdentityVerificationSheet.Configuration(
-                    brandLogo: await fetchMerchantImageWithFallback()
+                    brandLogo: Image.linkIconSquare.makeImage()
                 )
             )
 
