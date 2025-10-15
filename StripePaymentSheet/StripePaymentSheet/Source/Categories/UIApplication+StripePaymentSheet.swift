@@ -21,4 +21,18 @@ extension UIApplication {
         return windows.first { $0.isKeyWindow }
         #endif
     }
+
+    /// Returns the currently active `UIWindowScene` in the foreground.
+    ///
+    /// This function searches through all scenes connected to the shared application,
+    /// filters for those of type `UIWindowScene`, and returns the first one whose
+    /// activation state is `.foregroundActive`.
+    ///
+    /// - Returns: The `UIWindowScene` instance that is currently active and in the foreground,
+    ///            or `nil` if there is no such scene.
+    var activeScene: UIWindowScene? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first(where: { $0.activationState == .foregroundActive })
+    }
 }
