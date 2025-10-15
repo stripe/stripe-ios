@@ -206,7 +206,7 @@ extension PaymentSheet {
                     isSettingUp: isSettingUp(paymentMethodType)
                 )
                 confirmParams.paymentMethodParams.radarOptions = radarOptions
-                confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+                confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                 switch intent {
                     // MARK: ↪ PaymentIntent
                 case .paymentIntent(let paymentIntent):
@@ -348,6 +348,7 @@ extension PaymentSheet {
                         paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                        paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
@@ -362,6 +363,7 @@ extension PaymentSheet {
                         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                         setupIntentParams.paymentMethodParams = paymentMethodParams
                         setupIntentParams.returnURL = configuration.returnURL
+                        setupIntentParams.clientAttributionMetadata = setupIntentParams.clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
                             with: authenticationContext,
@@ -730,6 +732,7 @@ extension PaymentSheet {
                 params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
                 params.paymentMethodId = paymentMethod.stripeId
                 params.paymentMethodOptions = paymentMethodoptions
+                params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             } else {
                 params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
