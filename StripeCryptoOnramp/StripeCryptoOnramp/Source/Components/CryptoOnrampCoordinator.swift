@@ -650,18 +650,6 @@ private enum NextActionResult {
 }
 
 private extension CryptoOnrampCoordinator {
-    func fetchMerchantImageWithFallback() async -> UIImage {
-        guard let merchantLogoUrl = await linkController.merchantLogoUrl else {
-            return Image.wallet.makeImage()
-        }
-
-        do {
-            return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
-        } catch {
-            return Image.wallet.makeImage()
-        }
-    }
-
     @MainActor
     func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
