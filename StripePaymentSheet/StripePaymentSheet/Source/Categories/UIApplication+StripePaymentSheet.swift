@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import UIKit
 
 extension UIApplication {
@@ -18,7 +19,7 @@ extension UIApplication {
             .sorted { firstWindow, _ in firstWindow.isKeyWindow }
         return windows.first
         #else
-        return windows.first { $0.isKeyWindow }
+        return activeScene?.windows.first { $0.isKeyWindow }
         #endif
     }
 
@@ -31,8 +32,20 @@ extension UIApplication {
     /// - Returns: The `UIWindowScene` instance that is currently active and in the foreground,
     ///            or `nil` if there is no such scene.
     var activeScene: UIWindowScene? {
-        UIApplication.shared.connectedScenes
+        let activeScene = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .first(where: { $0.activationState == .foregroundActive })
+        if activeScene == nil {
+            let errorAnalytic = ErrorAnalytic(
+                event: .unexpectedPaymentSheetError,
+                error: Error.missingActiveScene,
+            )
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+            stpAssertionFailure("Couldn't find active scene!")
+        }
+        return activeScene
+    }
+    enum Error: Swift.Error {
+       case missingActiveScene
     }
 }

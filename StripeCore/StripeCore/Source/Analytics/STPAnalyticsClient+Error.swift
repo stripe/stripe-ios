@@ -10,9 +10,9 @@ import Foundation
 /// An error analytic that can be logged to our analytics system.
 @_spi(STP) public struct ErrorAnalytic: Analytic {
     public let event: STPAnalyticEvent
-    public let error: Error
+    public let error: Error?
     public var params: [String: Any] {
-        var params = error.serializeForV1Analytics()
+        var params = error?.serializeForV1Analytics() ?? [:]
         params.mergeAssertingOnOverwrites(additionalNonPIIParams)
         return params
     }
