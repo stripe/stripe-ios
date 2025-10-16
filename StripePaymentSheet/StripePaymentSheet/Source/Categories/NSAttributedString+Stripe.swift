@@ -6,7 +6,6 @@
 //
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 import UIKit
 
 extension NSMutableAttributedString {
