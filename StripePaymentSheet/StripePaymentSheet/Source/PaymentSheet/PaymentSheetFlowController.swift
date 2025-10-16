@@ -165,7 +165,7 @@ extension PaymentSheet {
             }
 
             init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) {
-                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: nil)
+                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
