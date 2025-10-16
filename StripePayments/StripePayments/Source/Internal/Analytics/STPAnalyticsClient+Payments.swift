@@ -18,7 +18,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .tokenCreation,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "token_type": tokenType ?? "unknown",
                 ]
@@ -33,7 +32,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .sourceCreation,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "source_type": sourceType ?? "unknown",
                 ]
@@ -49,7 +47,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .paymentMethodCreation,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "source_type": paymentMethodType ?? "unknown",
                 ]
@@ -64,7 +61,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .paymentMethodUpdate,
-                paymentConfiguration: configuration,
                 additionalParams: [:]
             )
         )
@@ -76,7 +72,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .confirmationTokenCreation,
-                paymentConfiguration: configuration,
                 additionalParams: [:]
             )
         )
@@ -93,7 +88,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .paymentMethodIntentCreation,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "source_type": paymentMethodType ?? "unknown",
                 ]
@@ -110,7 +104,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .setupIntentConfirmationAttempt,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "source_type": paymentMethodType ?? "unknown",
                 ]
@@ -130,7 +123,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentErrorAnalytic(
                 event: ._3DS2AuthenticationRequestParamsFailed,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                 ],
@@ -146,7 +138,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: ._3DS2AuthenticationAttempt,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                 ]
@@ -161,7 +152,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: ._3DS2FrictionlessFlow,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                 ]
@@ -198,7 +188,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: isComplete ? .urlRedirectNextActionCompleted : .urlRedirectNextAction,
-                paymentConfiguration: configuration,
                 additionalParams: params
             )
         )
@@ -212,7 +201,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: ._3DS2ChallengeFlowPresented,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                     "3ds2_ui_type": uiType,
@@ -229,7 +217,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: ._3DS2ChallengeFlowTimedOut,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                     "3ds2_ui_type": uiType,
@@ -246,7 +233,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: ._3DS2ChallengeFlowUserCanceled,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                     "3ds2_ui_type": uiType,
@@ -262,7 +248,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: ._3DS2RedirectUserCanceled,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                 ]
@@ -278,7 +263,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: ._3DS2ChallengeFlowCompleted,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                     "3ds2_ui_type": uiType,
@@ -295,7 +279,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentErrorAnalytic(
                 event: ._3DS2ChallengeFlowErrored,
-                paymentConfiguration: configuration,
                 additionalParams: [
                     "intent_id": intentID,
                 ],
@@ -311,7 +294,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .cardMetadataLoadedTooSlow,
-                paymentConfiguration: nil,
                 additionalParams: [:]
             )
         )
@@ -321,7 +303,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .cardMetadataResponseFailure,
-                paymentConfiguration: nil,
                 additionalParams: [:]
             )
         )
@@ -331,7 +312,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .cardMetadataMissingRange,
-                paymentConfiguration: nil,
                 additionalParams: [:]
             )
         )
@@ -341,7 +321,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields,
-                paymentConfiguration: nil,
                 additionalParams: [:]
             )
         )
@@ -379,7 +358,6 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .cardElementConfigLoadFailure,
-                paymentConfiguration: nil,
                 additionalParams: [:]
             )
         )
