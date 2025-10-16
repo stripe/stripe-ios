@@ -428,7 +428,10 @@ extension STPAPIClient {
             paymentMethodOptionsDict["card"] = ["cvc": cvc]
         }
         if let clientAttributionMetadata {
+            // Send CAM at the top-level of all requests in scope for consistency
+            // Also send under payment_method_options because there are existing dependencies
             paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, clientAttributionMetadata: clientAttributionMetadata)
+            parameters = Self.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
         parameters["payment_method_options"] = paymentMethodOptionsDict
 
