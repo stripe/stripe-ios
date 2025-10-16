@@ -734,6 +734,7 @@ extension PaymentSheet {
                 params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
                 params.paymentMethodId = paymentMethod.stripeId
                 params.paymentMethodOptions = paymentMethodoptions
+                params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             } else {
                 params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
@@ -791,6 +792,7 @@ extension PaymentSheet {
                     paymentMethodType: paymentMethod.type
                 )
                 params.paymentMethodID = paymentMethod.stripeId
+                params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             } else {
                 params = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
