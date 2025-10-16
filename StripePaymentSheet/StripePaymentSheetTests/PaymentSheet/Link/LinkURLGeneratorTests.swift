@@ -366,6 +366,7 @@ extension STPElementsSession {
                 "country_code": "US",
             ],
             "session_id": "123",
+            "config_id": "123",
             "apple_pay_preference": "enabled",
             "link_settings": [
                 "link_funding_sources": ["CARD"],
