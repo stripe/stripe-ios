@@ -652,6 +652,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         type: ConsumerSession.VerificationSession.SessionType,
         locale: Locale,
+        isResendingSmsCode: Bool = false,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -667,12 +668,17 @@ extension STPAPIClient {
         }()
         let endpoint: String = "consumers/sessions/start_verification"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
             "locale": locale.toLanguageTag(),
             "request_surface": requestSurface.rawValue,
         ]
+
+        // This parameter is specifically when resending SMS codes.
+        if isResendingSmsCode {
+            parameters["is_resend_sms_code"] = true
+        }
 
         makeConsumerSessionRequest(
             endpoint: endpoint,

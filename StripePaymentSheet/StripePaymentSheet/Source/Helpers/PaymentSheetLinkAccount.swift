@@ -212,7 +212,10 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
+    func startVerification(
+        isResendingSmsCode: Bool = false,
+        completion: @escaping (Result<Bool, Error>) -> Void
+    ) {
         guard let session = currentSession else {
             stpAssertionFailure()
             DispatchQueue.main.async {
@@ -226,6 +229,7 @@ struct LinkPMDisplayDetails {
         }
 
         session.startVerification(
+            isResendingSmsCode: isResendingSmsCode,
             with: apiClient,
             requestSurface: requestSurface
         ) { [weak self] result in

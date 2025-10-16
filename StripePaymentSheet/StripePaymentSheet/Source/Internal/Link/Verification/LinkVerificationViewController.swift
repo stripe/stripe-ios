@@ -179,7 +179,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
         view.errorMessage = nil
 
         // To resend the code we just start a new verification session.
-        linkAccount.startVerification { [weak self] (result) in
+        linkAccount.startVerification(isResendingSmsCode: true) { [weak self] (result) in
             view.sendingCode = false
 
             switch result {
