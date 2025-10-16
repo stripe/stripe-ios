@@ -44,8 +44,7 @@ extension PaymentSheet {
         let payWithLinkVC = PayWithLinkWebController(
             intent: intent,
             elementsSession: elementsSession,
-            configuration: configuration,
-            analyticsHelper: analyticsHelper
+            configuration: configuration
         )
 
         payWithLinkVC.payWithLinkDelegate = self

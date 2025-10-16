@@ -51,11 +51,11 @@ struct LinkURLParams: Encodable {
     var setupFutureUsage: Bool
     var cardBrandChoice: CardBrandChoiceInfo?
     var linkFundingSources: [LinkSettings.FundingSource]
-    var clientAttributionMetadata: STPClientAttributionMetadata?
+    var clientAttributionMetadata: STPClientAttributionMetadata
 }
 
 class LinkURLGenerator {
-    static func linkParams(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession, analyticsHelper: PaymentSheetAnalyticsHelper) throws -> LinkURLParams {
+    static func linkParams(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) throws -> LinkURLParams {
         guard let publishableKey = configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey else {
             throw LinkURLGeneratorError.noPublishableKey
         }
@@ -87,7 +87,7 @@ class LinkURLGenerator {
             loggerMetadata = ["mobile_session_id": sessionID]
         }
 
-        let clientAttributionMetadata: STPClientAttributionMetadata? = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
 
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 

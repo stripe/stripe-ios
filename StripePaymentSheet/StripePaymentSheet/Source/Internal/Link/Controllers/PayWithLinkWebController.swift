@@ -65,7 +65,6 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         let alwaysUseEphemeralSession: Bool
-        let analyticsHelper: PaymentSheetAnalyticsHelper
 
         /// Creates a new Context object.
         /// - Parameters:
@@ -79,15 +78,13 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             elementsSession: STPElementsSession,
             configuration: PaymentElementConfiguration,
             callToAction: ConfirmButton.CallToActionType?,
-            alwaysUseEphemeralSession: Bool,
-            analyticsHelper: PaymentSheetAnalyticsHelper
+            alwaysUseEphemeralSession: Bool
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
             self.configuration = configuration
             self.callToAction = callToAction ?? intent.callToAction
             self.alwaysUseEphemeralSession = alwaysUseEphemeralSession
-            self.analyticsHelper = analyticsHelper
         }
     }
 
@@ -100,8 +97,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         callToAction: ConfirmButton.CallToActionType? = nil,
-        alwaysUseEphemeralSession: Bool = false,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        alwaysUseEphemeralSession: Bool = false
     ) {
         self.init(
             context: Context(
@@ -109,8 +105,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 elementsSession: elementsSession,
                 configuration: configuration,
                 callToAction: callToAction,
-                alwaysUseEphemeralSession: alwaysUseEphemeralSession,
-                analyticsHelper: analyticsHelper
+                alwaysUseEphemeralSession: alwaysUseEphemeralSession
             )
         )
     }
@@ -130,7 +125,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         STPAnalyticsClient.sharedClient.logLinkPopupShow(sessionType: self.context.elementsSession.linkPopupWebviewOption)
         do {
             // Generate Link URL, fetching the customer if needed
-            let linkPopupParams = try LinkURLGenerator.linkParams(configuration: self.context.configuration, intent: self.context.intent, elementsSession: self.context.elementsSession, analyticsHelper: self.context.analyticsHelper)
+            let linkPopupParams = try LinkURLGenerator.linkParams(configuration: self.context.configuration, intent: self.context.intent, elementsSession: self.context.elementsSession)
             let linkPopupUrl = try LinkURLGenerator.url(params: linkPopupParams)
 
             let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
