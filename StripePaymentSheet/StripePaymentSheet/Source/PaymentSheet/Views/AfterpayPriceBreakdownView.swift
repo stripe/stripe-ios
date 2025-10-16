@@ -78,7 +78,7 @@ class AfterpayPriceBreakdownView: UIView {
     private func didTapInfoButton() {
         if let url = infoURL {
             let safariController = SFSafariViewController(url: url)
-            safariController.modalPresentationStyle = .formSheet
+            safariController.modalPresentationStyle = .overCurrentContext
             parentViewController?.present(safariController, animated: true)
         }
     }
