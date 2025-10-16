@@ -167,6 +167,8 @@ extension PaymentSheet {
         case .new(let paymentMethodParams, let paymentOptions, _, _, let shouldSetAsDefaultPM):
             confirmationTokenParams.paymentMethodData = paymentMethodParams
             confirmationTokenParams.paymentMethodOptions = paymentOptions
+            // Send CAM at the top-level of all requests in scope for consistency
+            // Also send under payment_method_data because there are existing dependencies
             confirmationTokenParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
 
             // Set as default payment method if requested and allowed
