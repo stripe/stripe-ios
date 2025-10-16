@@ -71,16 +71,11 @@ extension NSMutableAttributedString {
 
     private static func attributedStringOfImageWithoutLink(
         uiImage: UIImage,
-        font: UIFont,
-        tintColor: UIColor? = nil
+        font: UIFont
     ) -> NSAttributedString {
         let imageAttachment = NSTextAttachment()
         imageAttachment.bounds = boundsOfImage(font: font, uiImage: uiImage)
-        if let tintColor {
-            imageAttachment.image = uiImage.withTintColor(tintColor, renderingMode: .alwaysTemplate)
-        } else {
-            imageAttachment.image = uiImage
-        }
+        imageAttachment.image = uiImage
         return NSAttributedString(attachment: imageAttachment)
     }
 
