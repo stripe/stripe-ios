@@ -103,6 +103,7 @@ extension PayWithLinkViewController {
         var clientAttributionMetadata: STPClientAttributionMetadata? {
             STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
         }
+
         /// Returns a hint message, if it is supported.
         /// - The `link_show_prefer_debit_card_hint` flag must be enabled.
         /// - A non-empty hint message must exist in the `LinkConfiguration`.
@@ -255,7 +256,7 @@ extension PayWithLinkViewController {
             linkAccount.updatePaymentDetails(
                 id: paymentMethod.stripeID,
                 updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil),
-                clientAttributionMetadata: clientAttributionMetadata,
+                clientAttributionMetadata: clientAttributionMetadata
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {
                     paymentMethods.forEach({ $0.isDefault = false })
