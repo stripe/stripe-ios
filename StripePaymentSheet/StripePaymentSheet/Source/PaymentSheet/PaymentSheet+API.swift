@@ -734,11 +734,11 @@ extension PaymentSheet {
                 params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
                 params.paymentMethodId = paymentMethod.stripeId
                 params.paymentMethodOptions = paymentMethodoptions
-                params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             } else {
                 params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
                 params.paymentMethodOptions = paymentMethodoptions
+                params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
                 paymentMethodType = paymentMethodParams.type
             }
             if let shouldSetAsDefaultPM {
@@ -794,6 +794,7 @@ extension PaymentSheet {
             } else {
                 params = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
+                params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             }
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
