@@ -8,7 +8,7 @@
 import Foundation
 
 struct CreateAuthIntentResponse: Decodable {
-    enum State: Decodable {
+    enum State: String, Decodable {
         case created, authenticated, consented, rejected, expired
     }
 
