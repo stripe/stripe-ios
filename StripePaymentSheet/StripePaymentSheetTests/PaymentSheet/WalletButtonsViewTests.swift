@@ -16,6 +16,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card, .link],
             orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
             unactivatedPaymentMethodTypes: [],
@@ -55,6 +56,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card, .link],
             orderedPaymentMethodTypesAndWallets: ["link", "apple_pay"],
             unactivatedPaymentMethodTypes: [],
@@ -94,6 +96,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [],
             orderedPaymentMethodTypesAndWallets: ["google_pay"], // inexplicably, the server only sends us google pay
             unactivatedPaymentMethodTypes: [],
@@ -133,6 +136,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card, .link],
             orderedPaymentMethodTypesAndWallets: ["apple_pay", "shop_pay", "link"],
             unactivatedPaymentMethodTypes: [],
@@ -181,6 +185,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card],
             orderedPaymentMethodTypesAndWallets: ["apple_pay", "shop_pay"],
             unactivatedPaymentMethodTypes: [],
@@ -229,6 +234,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card], // Link not in payment method types
             orderedPaymentMethodTypesAndWallets: ["apple_pay", "link", "shop_pay"],
             unactivatedPaymentMethodTypes: [],
@@ -277,6 +283,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card, .link],
             orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
             unactivatedPaymentMethodTypes: [],
@@ -325,6 +332,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card, .link],
             orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
             unactivatedPaymentMethodTypes: [],
@@ -378,6 +386,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card, .link],
             orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
             unactivatedPaymentMethodTypes: [],
@@ -432,6 +441,7 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
+            configID: "test_config",
             orderedPaymentMethodTypes: [.card, .link],
             orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
             unactivatedPaymentMethodTypes: [],
