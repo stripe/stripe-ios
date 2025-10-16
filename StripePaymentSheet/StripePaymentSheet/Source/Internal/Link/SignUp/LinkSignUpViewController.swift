@@ -161,7 +161,6 @@ final class LinkSignUpViewController: UIViewController {
         stackView.spacing = LinkUI.contentSpacing
         stackView.setCustomSpacing(LinkUI.smallContentSpacing, after: titleLabel)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: subtitleLabel)
-        stackView.setCustomSpacing(LinkUI.smallContentSpacing, after: emailSection.view)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: legalTermsView)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = LinkUI.contentMargins
@@ -240,12 +239,14 @@ final class LinkSignUpViewController: UIViewController {
         // Email suggestion
         if let suggestedEmail = viewModel.suggestedEmail {
             updateEmailSuggestionLabel(with: suggestedEmail)
+            stackView.setCustomSpacing(LinkUI.smallContentSpacing, after: emailSection.view)
             stackView.toggleArrangedSubview(
                 emailSuggestionLabel,
                 shouldShow: true,
                 animated: animated
             )
         } else {
+            stackView.setCustomSpacing(LinkUI.contentSpacing, after: emailSection.view)
             stackView.toggleArrangedSubview(
                 emailSuggestionLabel,
                 shouldShow: false,
