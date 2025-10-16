@@ -17,6 +17,9 @@ import Foundation
     /// Elements Session ID for analytics purposes, looks like "elements_session_1234"
     let sessionID: String
 
+    /// Backend-logged Elements Session Config ID
+    let configID: String
+
     /// The ordered payment method preference for this ElementsSession.
     let orderedPaymentMethodTypes: [STPPaymentMethodType]
 
@@ -71,6 +74,7 @@ import Foundation
     internal init(
         allResponseFields: [AnyHashable: Any],
         sessionID: String,
+        configID: String,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         orderedPaymentMethodTypesAndWallets: [String],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType],
@@ -91,6 +95,7 @@ import Foundation
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
+        self.configID = configID
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.orderedPaymentMethodTypesAndWallets = orderedPaymentMethodTypesAndWallets
         self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
@@ -136,6 +141,7 @@ import Foundation
         return STPElementsSession(
             allResponseFields: allResponseFields,
             sessionID: UUID().uuidString,
+            configID: UUID().uuidString,
             orderedPaymentMethodTypes: sortedPaymentMethodTypes,
             orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: [],
@@ -164,7 +170,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
         guard let response,
               let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
               let paymentMethodTypeStrings = paymentMethodPrefDict["ordered_payment_method_types"] as? [String],
-              let sessionID = response["session_id"] as? String
+              let sessionID = response["session_id"] as? String,
+              let configID = response["config_id"] as? String
         else {
             return nil
         }
@@ -239,6 +246,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
         return self.init(
             allResponseFields: response,
             sessionID: sessionID,
+            configID: configID,
             orderedPaymentMethodTypes: paymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             orderedPaymentMethodTypesAndWallets: orderedPaymentMethodTypesAndWallets,
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),

@@ -161,21 +161,4 @@ enum Intent {
             }
         }
     }
-
-    func clientAttributionMetadata(elementsSessionConfigId: String) -> STPClientAttributionMetadata {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return .init(elementsSessionConfigId: elementsSessionConfigId,
-                         paymentIntentCreationFlow: .standard,
-                         paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
-        case .setupIntent(let setupIntent):
-            return .init(elementsSessionConfigId: elementsSessionConfigId,
-                         paymentIntentCreationFlow: .standard,
-                         paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
-        case .deferredIntent(let intentConfig):
-            return .init(elementsSessionConfigId: elementsSessionConfigId,
-                         paymentIntentCreationFlow: .deferred,
-                         paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
-        }
-    }
 }

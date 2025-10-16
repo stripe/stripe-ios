@@ -59,7 +59,7 @@ extension CustomerSheet {
            case .setupIntent(let setupIntent) = intent {
             confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
             confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
-            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID))
+            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID))
             let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
             setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
             setupIntentParams.returnURL = configuration.returnURL
