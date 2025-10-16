@@ -46,7 +46,7 @@ extension APIClient {
         return try await request("v1/auth/create_link_auth_token", method: .POST, bearerToken: token)
     }
 
-    func getCryptoCustomerId() async throws -> GetCryptoCustomerIdResponse {
+    func fetchCryptoCustomerId() async throws -> CryptoCustomerIdResponse {
         guard let token = authTokenWithLAI else { throw APIError.missingAuthTokenWithLAI }
         return try await request("v1/auth/crypto_customer", bearerToken: token)
     }
