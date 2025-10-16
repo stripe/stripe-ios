@@ -12,8 +12,12 @@ struct CreateAuthIntentRequest: Encodable {
 
     // MARK: - Encodable
 
+    enum CodingKeys: CodingKey {
+        case oauthScopes
+    }
+
     func encode(to encoder: any Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(oauthScopes.map(\.rawValue).joined(separator: ","))
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(oauthScopes.map(\.rawValue).joined(separator: ","), forKey: .oauthScopes)
     }
 }
