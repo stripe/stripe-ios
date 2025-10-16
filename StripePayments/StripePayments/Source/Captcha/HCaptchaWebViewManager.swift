@@ -100,6 +100,9 @@ internal class HCaptchaWebViewManager: NSObject {
     /// Responsible for external link handling
     internal let urlOpener: HCaptchaURLOpener
 
+    /// A test-only flag that delays dematerialization by 30s
+    var shouldDelayToken: Bool = false
+
     /**
      - parameters:
          - `config`: HCaptcha config
@@ -163,6 +166,7 @@ internal class HCaptchaWebViewManager: NSObject {
         stopInitWebViewConfiguration = true
         webView.stopLoading()
         resultHandled = true
+        completion?(HCaptchaResult(self, error: .challengeStopped))
     }
 
     /**
@@ -219,7 +223,14 @@ fileprivate extension HCaptchaWebViewManager {
 
         switch result {
         case .token(let token):
-            completion?(HCaptchaResult(self, token: token))
+            if shouldDelayToken {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 30) { [weak self] in
+                    guard let self else { return }
+                    completion?(HCaptchaResult(self, token: token))
+                }
+            } else {
+                completion?(HCaptchaResult(self, token: token))
+            }
         case .error(let error):
             handle(error: error)
             onEvent?(.error, error)

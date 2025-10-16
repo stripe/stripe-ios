@@ -99,6 +99,10 @@ extension PayWithLinkViewController {
             mandate != nil
         }
 
+        /// Client attribution metadata for analytics
+        var clientAttributionMetadata: STPClientAttributionMetadata? {
+            STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+        }
         /// Returns a hint message, if it is supported.
         /// - The `link_show_prefer_debit_card_hint` flag must be enabled.
         /// - A non-empty hint message must exist in the `LinkConfiguration`.
@@ -204,7 +208,6 @@ extension PayWithLinkViewController {
         ) {
             self.linkAccount = linkAccount
             self.context = context
-            self.clientAttributionMetadata = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
             self.paymentMethods = paymentMethods
             self.selectedPaymentMethodIndex = Self.determineInitiallySelectedPaymentMethod(
                 context: context,
@@ -248,8 +251,6 @@ extension PayWithLinkViewController {
             completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
         ) {
             let paymentMethod = paymentMethods[index]
-
-            let clientAttributionMetadata: STPClientAttributionMetadata? = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
 
             linkAccount.updatePaymentDetails(
                 id: paymentMethod.stripeID,
@@ -306,8 +307,6 @@ extension PayWithLinkViewController {
                 stpAssertionFailure("Called with no selected payment method or expiry date provided.")
                 return
             }
-
-            let clientAttributionMetadata: STPClientAttributionMetadata? = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
 
             linkAccount.updatePaymentDetails(
                 id: id,

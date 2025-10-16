@@ -61,6 +61,11 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
     func updatePhoneNumber(to phoneNumber: String) async throws
 
+    /// Authenticates the user with an encrypted Link auth token.
+    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    /// Throws if the auth token is expired, has already been used, has been revoked, or an API error occurs.
+    func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws
+
     /// Presents Link UI to authenticate an existing Link user.
     /// `hasLinkAccount` must be called before this.
     ///
@@ -301,6 +306,16 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
+    public func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws {
+        do {
+            try await linkController.lookupLinkAuthToken(linkAuthTokenClientSecret)
+            analyticsClient.log(.linkUserAuthenticationWithTokenCompleted)
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
+            throw error
+        }
+    }
+
     public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
         analyticsClient.log(.linkUserAuthenticationStarted)
         do {
@@ -376,7 +391,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 verificationSessionId: response.id,
                 ephemeralKeySecret: ephemeralKey,
                 configuration: IdentityVerificationSheet.Configuration(
-                    brandLogo: await fetchMerchantImageWithFallback()
+                    brandLogo: Image.linkIconSquare.makeImage()
                 )
             )
 
@@ -635,18 +650,6 @@ private enum NextActionResult {
 }
 
 private extension CryptoOnrampCoordinator {
-    func fetchMerchantImageWithFallback() async -> UIImage {
-        guard let merchantLogoUrl = await linkController.merchantLogoUrl else {
-            return Image.wallet.makeImage()
-        }
-
-        do {
-            return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
-        } catch {
-            return Image.wallet.makeImage()
-        }
-    }
-
     @MainActor
     func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in

@@ -129,6 +129,11 @@ import UIKit
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
+        // Unexpected errors should never happen; make sure we fail loudly in our own tests and test apps
+        if analytic.event.rawValue.starts(with: "unexpected_error") {
+            stpAssertionFailure(payload.debugDescription)
+        }
+
         if let translatedEvent = analyticsEventTranslator.translate(analytic.event, payload: payload) {
             notificationCenter.post(name: translatedEvent.notificationName,
                                     object: translatedEvent.event)

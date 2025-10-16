@@ -649,10 +649,13 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             verificationSessions: verificationSessions
         )
 
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+
         func createPaymentDetails(linkedAccountId: String) {
             linkAccount.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
                 isDefault: false,
+                clientAttributionMetadata: clientAttributionMetadata,
                 completion: { paymentDetailsResult in
                     switch paymentDetailsResult {
                     case .success:
@@ -670,7 +673,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
             style: .automatic,
-            elementsSessionContext: nil,
+            elementsSessionContext: ElementsSessionContext(clientAttributionMetadata: clientAttributionMetadata),
             onEvent: nil,
             from: self,
             completion: { result in

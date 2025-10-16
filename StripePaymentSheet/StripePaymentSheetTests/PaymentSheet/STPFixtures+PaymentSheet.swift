@@ -78,7 +78,7 @@ extension STPElementsSession {
         isApplePayEnabled: Bool = true,
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
-        passiveCaptcha: PassiveCaptcha? = nil,
+        passiveCaptchaData: PassiveCaptchaData? = nil,
         customer: ElementsCustomer? = nil,
         isBackupInstance: Bool = false
     ) -> STPElementsSession {
@@ -99,7 +99,7 @@ extension STPElementsSession {
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
-            passiveCaptcha: passiveCaptcha,
+            passiveCaptchaData: passiveCaptchaData,
             customer: customer
         )
     }

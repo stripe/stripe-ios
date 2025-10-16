@@ -12,5 +12,5 @@ import Foundation
 @_spi(STP) public enum Image: String, CaseIterable, ImageMaker {
     @_spi(STP) public typealias BundleLocator = StripeCryptoOnrampBundleLocator
 
-    case wallet = "wallet"
+    case linkIconSquare = "link_icon_square"
 }

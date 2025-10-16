@@ -158,6 +158,29 @@ extension ConsumerSession {
         )
     }
 
+    class func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        sessionID: String,
+        customerID: String?,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
+        apiClient.lookupLinkAuthToken(
+            linkAuthTokenClientSecret,
+            sessionID: sessionID,
+            customerID: customerID,
+            cookieStore: cookieStore,
+            useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
     class func lookupLinkAuthIntent(
         linkAuthIntentID: String,
         sessionID: String,
@@ -238,8 +261,8 @@ extension ConsumerSession {
             billingEmailAddress: billingEmailAddress,
             billingDetails: paymentMethodParams.nonnil_billingDetails,
             isDefault: isDefault,
-            requestSurface: requestSurface,
             clientAttributionMetadata: paymentMethodParams.clientAttributionMetadata,
+            requestSurface: requestSurface,
             completion: completion)
     }
 
@@ -247,6 +270,7 @@ extension ConsumerSession {
         linkedAccountId: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -254,6 +278,7 @@ extension ConsumerSession {
             for: clientSecret,
             linkedAccountId: linkedAccountId,
             isDefault: isDefault,
+            clientAttributionMetadata: clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion)
     }

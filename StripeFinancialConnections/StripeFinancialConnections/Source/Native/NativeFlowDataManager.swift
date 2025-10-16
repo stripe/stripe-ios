@@ -43,7 +43,8 @@ protocol NativeFlowDataManager: AnyObject {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails>
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
@@ -159,13 +160,15 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails> {
         apiClient.paymentDetails(
             consumerSessionClientSecret: consumerSessionClientSecret,
             bankAccountId: bankAccountId,
             billingAddress: billingAddress,
-            billingEmail: billingEmail
+            billingEmail: billingEmail,
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 
