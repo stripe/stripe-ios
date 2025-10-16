@@ -288,21 +288,16 @@ final class LinkSignUpViewController: UIViewController {
         signUpButton.isEnabled = viewModel.shouldEnableSignUpButton
     }
 
-    private var currentSuggestedEmail: String?
-
-    private static let yesUpdateLocalizedText: String = STPLocalizedString(
-        "Yes, update",
-        "Text for a tappable link that will update the email field with a suggested email address."
-    )
-
     private func updateEmailSuggestionLabel(with suggestedEmail: String) {
-        currentSuggestedEmail = suggestedEmail
-
         let baseText = STPLocalizedString(
             "Did you mean %@? %@.",
             "Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link."
         )
-        let fullText = String(format: baseText, suggestedEmail, Self.yesUpdateLocalizedText)
+        let yesUpdateLocalizedText = STPLocalizedString(
+            "Yes, update",
+            "Text for a tappable link that will update the email field with a suggested email address."
+        )
+        let fullText = String(format: baseText, suggestedEmail, yesUpdateLocalizedText)
 
         emailSuggestionLabel.setText(
             fullText,
@@ -310,7 +305,7 @@ final class LinkSignUpViewController: UIViewController {
             baseColor: .linkTextSecondary,
             highlights: [
                 TappableAttributedLabel.TappableHighlight(
-                    text: Self.yesUpdateLocalizedText,
+                    text: yesUpdateLocalizedText,
                     font: LinkUI.font(forTextStyle: .caption),
                     color: .linkTextBrand,
                     action: { [weak self] in
@@ -322,7 +317,7 @@ final class LinkSignUpViewController: UIViewController {
     }
 
     private func didTapYesUpdate() {
-        guard let suggestedEmail = currentSuggestedEmail else {
+        guard let suggestedEmail = viewModel.suggestedEmail else {
             return
         }
 
@@ -414,6 +409,25 @@ extension LinkSignUpViewController: ElementDelegate {
     func continueToNextField(element: Element) {
         // No-op
     }
+
+}
+
+extension LinkSignUpViewController: UITextViewDelegate {
+#if !os(visionOS)
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
+        if interaction == .invokeDefaultAction {
+            let safariVC = SFSafariViewController(url: URL)
+            present(safariVC, animated: true)
+        }
+
+        return false
+    }
+#endif
 
 }
 
