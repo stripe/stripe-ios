@@ -225,6 +225,10 @@ extension PayWithLinkViewController {
             confirmButton.update(state: .processing)
             coordinator?.allowSheetDismissal(false)
 
+            if context.analyticsHelper.integrationShape.isMPE {
+                confirmParams.paymentMethodParams.clientAttributionMetadata = context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID)
+            }
+
             linkAccount.createPaymentDetails(
                 with: confirmParams.paymentMethodParams,
                 isDefault: isAddingFirstPaymentMethod
@@ -335,7 +339,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         if viewController.selectedPaymentMethodType == .instantDebits {
-            confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: .instantDebits))
+            confirmButton.update(state: .enabled, callToAction: .add(paymentMethodType: .instantDebits))
         } else {
             confirmButton.update(
                 state: viewController.paymentOption != nil ? .enabled : .disabled,

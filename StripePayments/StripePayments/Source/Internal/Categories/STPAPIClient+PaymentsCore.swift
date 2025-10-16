@@ -23,7 +23,7 @@ extension STPAPIClient {
 
     @_spi(STP) public class func paramsAddingClientAttributionMetadata(
         _ params: [String: Any],
-        clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
+        clientAttributionMetadata: STPClientAttributionMetadata
     ) -> [String: Any] {
         stpAssert(
             params["client_attribution_metadata"] == nil,

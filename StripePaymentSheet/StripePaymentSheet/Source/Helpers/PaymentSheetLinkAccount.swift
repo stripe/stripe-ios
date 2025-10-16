@@ -325,6 +325,7 @@ struct LinkPMDisplayDetails {
     func createPaymentDetails(
         linkedAccountId: String,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
@@ -337,6 +338,7 @@ struct LinkPMDisplayDetails {
             session.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
                 isDefault: isDefault,
+                clientAttributionMetadata: clientAttributionMetadata,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -474,7 +476,7 @@ struct LinkPMDisplayDetails {
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>
     ) -> Void) {
         retryingOnAuthError(completion: completion) { [apiClient] completionRetryingOnAuthErrors in

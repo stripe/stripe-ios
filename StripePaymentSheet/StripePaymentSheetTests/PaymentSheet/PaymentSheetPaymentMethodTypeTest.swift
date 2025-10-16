@@ -450,7 +450,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testSupportsInstantBankPayments_onboardingDisabled() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
         let configuration = PaymentSheet.Configuration()
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
@@ -459,7 +459,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
-        let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession
