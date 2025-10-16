@@ -363,7 +363,7 @@ extension PaymentSheet {
                         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                         setupIntentParams.paymentMethodParams = paymentMethodParams
                         setupIntentParams.returnURL = configuration.returnURL
-                        setupIntentParams.clientAttributionMetadata = setupIntentParams.clientAttributionMetadata
+                        setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
                             with: authenticationContext,
