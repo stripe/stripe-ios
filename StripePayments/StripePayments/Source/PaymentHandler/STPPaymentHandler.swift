@@ -1704,6 +1704,7 @@ public class STPPaymentHandler: NSObject {
             object: nil
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
+        logURLRedirectNextActionFinished(returnType: .appForegrounded)
         _retrieveAndCheckIntentForCurrentAction()
     }
 
@@ -1743,12 +1744,6 @@ public class STPPaymentHandler: NSObject {
             STPURLCallbackHandler.shared().register(self, for: returnURL)
         }
 
-        analyticsClient.logURLRedirectNextAction(
-            with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID,
-            usesWebAuthSession: useWebAuthSession
-        )
-
         // Open the link in SafariVC
         let presentSFViewControllerBlock: (() -> Void) = {
             let context = currentAction.authenticationContext
@@ -1773,6 +1768,7 @@ public class STPPaymentHandler: NSObject {
                             // No-op if the redirect shim is active, as we don't want to open the consent dialog. We'll call the completion block automatically.
                             return
                         }
+                        self.logURLRedirectNextActionStarted(redirectType: .ASWebAuthenticationSession)
                         // Note that ASWebAuthenticationSession will also close based on the `redirectURL` defined in the app's Info.plist if called within the ASWAS,
                         // not only via this callbackURLScheme.
                         let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "stripesdk", completionHandler: { _, _ in
@@ -1785,11 +1781,7 @@ public class STPPaymentHandler: NSObject {
                             // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
                             self.callContextDidDismissIfNeeded(context, UIViewController())
                             STPURLCallbackHandler.shared().unregisterListener(self)
-                            self.analyticsClient.logURLRedirectNextActionCompleted(
-                                with: currentAction.apiClient._stored_configuration,
-                                intentID: currentAction.intentStripeID,
-                                usesWebAuthSession: true
-                            )
+                            self.logURLRedirectNextActionFinished(returnType: .ASWebAuthenticationSession)
                             self._retrieveAndCheckIntentForCurrentAction()
                             self.asWebAuthenticationSession = nil
                         })
@@ -1804,6 +1796,7 @@ public class STPPaymentHandler: NSObject {
                             asWebAuthenticationSession.start()
                         }
                     } else {
+                        self.logURLRedirectNextActionStarted(redirectType: .SFSafariViewController)
                         let safariViewController = SFSafariViewController(url: fallbackURL)
                         safariViewController.modalPresentationStyle = .overFullScreen
 #if !os(visionOS)
@@ -1861,6 +1854,7 @@ public class STPPaymentHandler: NSObject {
                         // no app installed, launch safari view controller
                         presentSFViewControllerBlock()
                     } else {
+                        self.logURLRedirectNextActionStarted(redirectType: .nativeApp)
                         completion?(nil)
                         NotificationCenter.default.addObserver(
                             self,
@@ -2293,13 +2287,8 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
 
         safariViewController = nil
         STPURLCallbackHandler.shared().unregisterListener(self)
+        logURLRedirectNextActionFinished(returnType: .SFSafariViewController)
         _retrieveAndCheckIntentForCurrentAction()
-
-        self.analyticsClient.logURLRedirectNextActionCompleted(
-            with: currentAction?.apiClient._stored_configuration,
-            intentID: currentAction?.intentStripeID,
-            usesWebAuthSession: true
-        )
     }
 }
 #endif
@@ -2314,6 +2303,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
             // (such as a banking app) and is waiting for a response from that app.
             return false
         }
+        logURLRedirectNextActionFinished(returnType: .returnURLCallback)
         // Note: At least my iOS 15 device, willEnterForegroundNotification is triggered before this method when returning from another app, which means this method isn't called because it unregisters from STPURLCallbackHandler.
         let context = currentAction?.authenticationContext
         if context?.responds(

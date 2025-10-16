@@ -159,40 +159,6 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logURLRedirectNextAction(
-        with configuration: NSObject?,
-        intentID: String?,
-        usesWebAuthSession: Bool
-    ) {
-        logURLRedirectNextAction(with: configuration, intentID: intentID, usesWebAuthSession: usesWebAuthSession, isComplete: false)
-    }
-
-    func logURLRedirectNextActionCompleted(
-        with configuration: NSObject?,
-        intentID: String?,
-        usesWebAuthSession: Bool
-    ) {
-        logURLRedirectNextAction(with: configuration, intentID: intentID, usesWebAuthSession: usesWebAuthSession, isComplete: true)
-    }
-
-    func logURLRedirectNextAction(
-        with configuration: NSObject?,
-        intentID: String?,
-        usesWebAuthSession: Bool,
-        isComplete: Bool
-    ) {
-        var params: [String: Any] = ["redirect_type": usesWebAuthSession ? "SFVC" : "ASWAS"]
-        if let intentID {
-            params["intent_id"] = intentID
-        }
-        log(
-            analytic: GenericPaymentAnalytic(
-                event: isComplete ? .urlRedirectNextActionCompleted : .urlRedirectNextAction,
-                additionalParams: params
-            )
-        )
-    }
-
     func log3DS2ChallengeFlowPresented(
         with configuration: NSObject?,
         intentID: String,
