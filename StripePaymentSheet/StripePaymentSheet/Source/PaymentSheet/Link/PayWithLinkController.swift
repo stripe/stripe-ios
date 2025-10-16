@@ -46,7 +46,7 @@ final class PayWithLinkController {
         self.selfRetainer = self
         self.completion = completion
 
-        let payWithLinkWebController = PayWithLinkWebController(intent: intent, elementsSession: elementsSession, configuration: configuration)
+        let payWithLinkWebController = PayWithLinkWebController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
         payWithLinkWebController.payWithLinkDelegate = self
         payWithLinkWebController.present(over: presentingController)
     }

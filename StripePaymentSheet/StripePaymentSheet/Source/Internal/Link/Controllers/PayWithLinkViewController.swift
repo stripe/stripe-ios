@@ -803,7 +803,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             intent: context.intent,
             elementsSession: context.elementsSession,
             configuration: context.configuration,
-            alwaysUseEphemeralSession: true
+            alwaysUseEphemeralSession: true,
+            analyticsHelper: context.analyticsHelper
         )
         payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
         // Dismiss ourselves...

@@ -51,10 +51,11 @@ struct LinkURLParams: Encodable {
     var setupFutureUsage: Bool
     var cardBrandChoice: CardBrandChoiceInfo?
     var linkFundingSources: [LinkSettings.FundingSource]
+    var clientAttributionMetadata: STPClientAttributionMetadata?
 }
 
 class LinkURLGenerator {
-    static func linkParams(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) throws -> LinkURLParams {
+    static func linkParams(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession, analyticsHelper: PaymentSheetAnalyticsHelper) throws -> LinkURLParams {
         guard let publishableKey = configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey else {
             throw LinkURLGeneratorError.noPublishableKey
         }
@@ -86,6 +87,8 @@ class LinkURLGenerator {
             loggerMetadata = ["mobile_session_id": sessionID]
         }
 
+        let clientAttributionMetadata: STPClientAttributionMetadata? = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
+
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
         let intentMode: LinkURLParams.IntentMode = intent.isPaymentIntent ? .payment : .setup
@@ -114,7 +117,8 @@ class LinkURLGenerator {
                              intentMode: intentMode,
                              setupFutureUsage: intent.isSetupFutureUsageSet(for: linkPaymentMethodType),
                              cardBrandChoice: cardBrandChoiceInfo,
-                             linkFundingSources: linkFundingSources)
+                             linkFundingSources: linkFundingSources,
+                             clientAttributionMetadata: clientAttributionMetadata)
     }
 
     static func url(params: LinkURLParams) throws -> URL {
@@ -126,10 +130,6 @@ class LinkURLGenerator {
         return url
     }
 
-    static func url(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) throws -> URL {
-        let params = try Self.linkParams(configuration: configuration, intent: intent, elementsSession: elementsSession)
-        return try url(params: params)
-    }
 }
 
 // Used to get deterministic ordering for FundingSource tests
