@@ -51,12 +51,10 @@ extension NSMutableAttributedString {
                 resultingString.append(bnplLogo)
 
                 // Add info icon
-                let infoIconColor = UIColor.dynamic(
-                    light: UIColor(hex: 0x1A1A1A),
-                    dark: UIColor.white
-                ).withAlphaComponent(0.7)
-                if let infoIconImage = UIImage(systemName: "info.circle")?
-                    .withTintColor(infoIconColor, renderingMode: .alwaysTemplate) {
+                let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12)
+                let iconColor = foregroundColor.withAlphaComponent(0.7)
+                if let infoIconImage = UIImage(systemName: "info.circle", withConfiguration: symbolConfig)?
+                    .withTintColor(iconColor, renderingMode: .alwaysTemplate) {
                     let infoIcon = Self.attributedStringOfImageWithoutLink(uiImage: infoIconImage, font: font)
                     resultingString.append(NSAttributedString(string: "\u{00A0}\u{00A0}", attributes: stringAttributes))
                     resultingString.append(infoIcon)
