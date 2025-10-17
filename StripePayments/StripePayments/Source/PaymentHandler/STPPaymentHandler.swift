@@ -1711,47 +1711,6 @@ public class STPPaymentHandler: NSObject {
         _handleRedirect(to: url, fallbackURL: url, return: returnURL, useWebAuthSession: useWebAuthSession)
     }
 
-    @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?) {
-        if let _redirectShim {
-            _redirectShim(url, returnURL, false)
-        }
-        guard let currentAction else {
-            stpAssert(false, "Calling _handleRedirect without a currentAction")
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _handleRedirect without a currentAction"])
-            analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
-            return
-        }
-        if let returnURL {
-            STPURLCallbackHandler.shared().register(self, for: returnURL)
-        }
-        analyticsClient.logURLRedirectNextAction(
-            with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID,
-            usesWebAuthSession: false
-        )
-
-        // Setting universalLinksOnly to false will allow iOS to open https:// urls in an external browser, hopefully Safari.
-        // The links are expected to be either universal links or Stripe owned URLs.
-        // In the case that it is a stripe owned URL, the URL is expected to redirect our financial partners, at which point Safari can
-        // redirect to a native app if the app has been installed.  If Safari is not the default browser, then users not be
-        // automatically navigated to the native app.
-        let options: [UIApplication.OpenExternalURLOptionsKey: Any] = [
-            UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false,
-        ]
-        UIApplication.shared.open(
-            url,
-            options: options,
-            completionHandler: { _ in
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: #selector(self._handleWillForegroundNotification),
-                    name: UIApplication.willEnterForegroundNotification,
-                    object: nil
-                )
-            }
-        )
-    }
-
     /// Handles redirection to URLs using a native URL or a fallback URL and updates the current action.
     /// Redirects to an app if possible, if that fails opens the url in a web view
     /// - Parameters:
