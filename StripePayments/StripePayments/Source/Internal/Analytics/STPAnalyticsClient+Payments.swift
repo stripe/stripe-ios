@@ -12,7 +12,6 @@ import Foundation
 // MARK: - Creation
 extension STPAnalyticsClient {
     func logTokenCreationAttempt(
-        with configuration: NSObject?,
         tokenType: String?
     ) {
         log(
@@ -26,7 +25,6 @@ extension STPAnalyticsClient {
     }
 
     func logSourceCreationAttempt(
-        with configuration: NSObject?,
         sourceType: String?
     ) {
         log(
@@ -40,7 +38,6 @@ extension STPAnalyticsClient {
     }
 
     func logPaymentMethodCreationAttempt(
-        with configuration: NSObject?,
         paymentMethodType: String?,
         apiClient: STPAPIClient
     ) {
@@ -66,9 +63,7 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logConfirmationTokenCreationAttempt(
-        with configuration: NSObject?
-    ) {
+    func logConfirmationTokenCreationAttempt() {
         log(
             analytic: GenericPaymentAnalytic(
                 event: .confirmationTokenCreation,
@@ -81,7 +76,6 @@ extension STPAnalyticsClient {
 // MARK: - Confirmation
 extension STPAnalyticsClient {
     func logPaymentIntentConfirmationAttempt(
-        with configuration: NSObject?,
         paymentMethodType: String?,
         apiClient: STPAPIClient
     ) {
@@ -97,7 +91,6 @@ extension STPAnalyticsClient {
     }
 
     func logSetupIntentConfirmationAttempt(
-        with configuration: NSObject?,
         paymentMethodType: String?,
         apiClient: STPAPIClient
     ) {
@@ -116,7 +109,6 @@ extension STPAnalyticsClient {
 // MARK: - 3DS2 Flow
 extension STPAnalyticsClient {
     func log3DS2AuthenticationRequestParamsFailed(
-        with configuration: NSObject?,
         intentID: String,
         error: NSError
     ) {
@@ -132,7 +124,6 @@ extension STPAnalyticsClient {
     }
 
     func log3DS2AuthenticateAttempt(
-        with configuration: NSObject?,
         intentID: String
     ) {
         log(
@@ -146,7 +137,6 @@ extension STPAnalyticsClient {
     }
 
     func log3DS2FrictionlessFlow(
-        with configuration: NSObject?,
         intentID: String
     ) {
         log(
@@ -160,7 +150,6 @@ extension STPAnalyticsClient {
     }
 
     func log3DS2ChallengeFlowPresented(
-        with configuration: NSObject?,
         intentID: String,
         uiType: String
     ) {
@@ -176,7 +165,6 @@ extension STPAnalyticsClient {
     }
 
     func log3DS2ChallengeFlowTimedOut(
-        with configuration: NSObject?,
         intentID: String,
         uiType: String
     ) {
@@ -192,7 +180,6 @@ extension STPAnalyticsClient {
     }
 
     func log3DS2ChallengeFlowUserCanceled(
-        with configuration: NSObject?,
         intentID: String,
         uiType: String
     ) {
@@ -208,7 +195,6 @@ extension STPAnalyticsClient {
     }
 
     func log3DS2RedirectUserCanceled(
-        with configuration: NSObject?,
         intentID: String
     ) {
         log(
@@ -222,7 +208,6 @@ extension STPAnalyticsClient {
     }
 
     func log3DS2ChallengeFlowCompleted(
-        with configuration: NSObject?,
         intentID: String,
         uiType: String
     ) {
@@ -238,7 +223,6 @@ extension STPAnalyticsClient {
     }
 
     func log3DS2ChallengeFlowErrored(
-        with configuration: NSObject?,
         intentID: String,
         error: NSError
     ) {

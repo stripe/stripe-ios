@@ -1165,7 +1165,6 @@ public class STPPaymentHandler: NSObject {
 
                             self.analyticsClient
                                 .log3DS2AuthenticationRequestParamsFailed(
-                                    with: currentAction.apiClient._stored_configuration,
                                     intentID: currentAction.intentStripeID,
                                     error: self._error(
                                         for: .stripe3DS2ErrorCode,
@@ -1186,7 +1185,6 @@ public class STPPaymentHandler: NSObject {
                     )
 
                     analyticsClient.log3DS2AuthenticateAttempt(
-                        with: currentAction.apiClient._stored_configuration,
                         intentID: currentAction.intentStripeID
                     )
 
@@ -1288,7 +1286,6 @@ public class STPPaymentHandler: NSObject {
                                 transaction.close()
                                 currentAction.threeDS2Transaction = nil
                                 self.analyticsClient.log3DS2FrictionlessFlow(
-                                    with: currentAction.apiClient._stored_configuration,
                                     intentID: currentAction.intentStripeID
                                 )
 
@@ -1977,7 +1974,6 @@ public class STPPaymentHandler: NSObject {
             }
 
             analyticsClient.log3DS2RedirectUserCanceled(
-                with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID
             )
 
@@ -2003,7 +1999,6 @@ public class STPPaymentHandler: NSObject {
             }
 
             analyticsClient.log3DS2RedirectUserCanceled(
-                with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID
             )
 
@@ -2345,8 +2340,7 @@ extension STPPaymentHandler {
         }
         let transactionStatus = completionEvent.transactionStatus
         analyticsClient.log3DS2ChallengeFlowCompleted(
-            with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID,
+                        intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
         if transactionStatus == "Y" {
@@ -2400,7 +2394,6 @@ extension STPPaymentHandler {
         }
 
         analyticsClient.log3DS2ChallengeFlowUserCanceled(
-            with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
@@ -2421,7 +2414,6 @@ extension STPPaymentHandler {
         }
 
         analyticsClient.log3DS2ChallengeFlowTimedOut(
-            with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
@@ -2459,7 +2451,6 @@ extension STPPaymentHandler {
                 userInfo: userInfo
             )
             self?.analyticsClient.log3DS2ChallengeFlowErrored(
-                with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID,
                 error: localizedError
             )
@@ -2496,7 +2487,6 @@ extension STPPaymentHandler {
             )
 
             self?.analyticsClient.log3DS2ChallengeFlowErrored(
-                with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID,
                 error: localizedError
             )
@@ -2518,7 +2508,6 @@ extension STPPaymentHandler {
         }
 
         analyticsClient.log3DS2ChallengeFlowPresented(
-            with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
