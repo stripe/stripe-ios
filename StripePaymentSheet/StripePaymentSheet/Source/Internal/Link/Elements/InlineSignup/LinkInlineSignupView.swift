@@ -392,6 +392,11 @@ extension LinkInlineSignupView: EventHandler {
                 break
             }
         }
+
+        if case .viewDidAppear = event {
+            // TODO: Log event
+        }
+
     }
 }
 
