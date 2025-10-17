@@ -67,6 +67,10 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .linkAccountLookupFailure, error: error)
     }
 
+    func logLinkEmailSuggestionAccepted() {
+        self.logPaymentSheetEvent(event: .linkEmailSuggestionAccepted)
+    }
+
     // MARK: - 2FA
 
     func logLink2FAStart() {
