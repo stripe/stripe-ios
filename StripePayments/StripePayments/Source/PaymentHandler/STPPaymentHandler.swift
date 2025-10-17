@@ -165,7 +165,14 @@ public class STPPaymentHandler: NSObject {
     }
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
     /// Date at which `confirm` or `handleNextAction` is called. Used to report how long the call took.
-    internal var startTime: Date?
+    internal var startTime: Date? {
+        didSet {
+            actionID = startTime == nil ? nil : UUID().uuidString
+        }
+    }
+    /// A uuid unique to a given `confirm` or `handleNextAction` call, so that we can group together all the analytics sent during a confirmation / next action handling.
+    /// Note that Session ID is not good enough, since a single session may have multiple calls to confirm.
+    internal var actionID: String?
 
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
