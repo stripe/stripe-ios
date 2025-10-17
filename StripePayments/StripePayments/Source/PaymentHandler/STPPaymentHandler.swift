@@ -650,7 +650,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             if let setupIntent, error == nil {
-                self.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, completion: completion)
+                self.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, completion: completion)
             } else {
                 completion(.failed, setupIntent, error as NSError?)
             }
