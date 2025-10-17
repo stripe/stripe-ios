@@ -40,6 +40,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
     let passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    let elementsSessionConfigId: String
 
     // MARK: - Writable Properties
     var savedPaymentMethods: [STPPaymentMethod]
@@ -163,6 +164,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
         passiveCaptchaChallenge: PassiveCaptchaChallenge?,
+        elementsSessionConfigId: String,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
     ) {
@@ -179,6 +181,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
         self.passiveCaptchaChallenge = passiveCaptchaChallenge
+        self.elementsSessionConfigId = elementsSessionConfigId
         self.csCompletion = csCompletion
         self.delegate = delegate
 
@@ -414,6 +417,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 stpAssertionFailure()
                 return
+            }
+            if case .new(let confirmParams) = newPaymentOption {
+                confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: elementsSessionConfigId)
             }
             addPaymentOptionToCustomer(paymentOption: newPaymentOption, customerSheetDataSource: customerSheetDataSource)
         case .selectingSaved:

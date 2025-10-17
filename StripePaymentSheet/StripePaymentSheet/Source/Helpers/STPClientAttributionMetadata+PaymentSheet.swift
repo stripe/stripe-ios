@@ -32,4 +32,8 @@ extension STPClientAttributionMetadata {
                          paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
         }
     }
+
+    static func makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: String) -> STPClientAttributionMetadata {
+        return STPClientAttributionMetadata(elementsSessionConfigId: elementsSessionConfigId)
+    }
 }

@@ -187,7 +187,8 @@ public class CustomerSheet {
                              paymentMethodUpdate: paymentMethodUpdate,
                              paymentMethodSyncDefault: paymentMethodSyncDefault,
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
-                             cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
+                             cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false,
+                             elementsSessionConfigId: elementsSession.configID)
                 var params: [String: Any] = [:]
                 if elementsSession.customer?.customerSession != nil {
                     params["sync_default_enabled"] = paymentMethodSyncDefault
@@ -222,7 +223,8 @@ public class CustomerSheet {
                  paymentMethodUpdate: Bool,
                  paymentMethodSyncDefault: Bool,
                  allowsRemovalOfLastSavedPaymentMethod: Bool,
-                 cbcEligible: Bool) {
+                 cbcEligible: Bool,
+                 elementsSessionConfigId: String) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
             loadSpecsPromise.resolve(with: ())
@@ -243,6 +245,7 @@ public class CustomerSheet {
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
                                                                                 passiveCaptchaChallenge: self.passiveCaptchaChallenge,
+                                                                                elementsSessionConfigId: elementsSessionConfigId,
                                                                                 csCompletion: self.csCompletion,
                                                                                 delegate: self)
             self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
