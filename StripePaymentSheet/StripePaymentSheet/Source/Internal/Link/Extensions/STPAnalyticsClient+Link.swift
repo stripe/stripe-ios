@@ -93,6 +93,11 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .link2FACancel)
     }
 
+    func logLink2FAResendCode(type: ConsumerSession.VerificationSession.SessionType = .sms) {
+        let params = ["verification_type": type.rawValue]
+        self.logPaymentSheetEvent(event: .link2FAResendCode, params: params)
+    }
+
     func logLinkBailedToWebFlow() {
         self.logPaymentSheetEvent(event: .linkNativeBailed)
     }
