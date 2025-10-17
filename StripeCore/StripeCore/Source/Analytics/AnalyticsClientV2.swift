@@ -45,7 +45,7 @@ import UIKit
 
     static let shouldCollectAnalytics: Bool = {
         #if targetEnvironment(simulator)
-            return true
+            return false
         #else
             return NSClassFromString("XCTest") == nil
         #endif
