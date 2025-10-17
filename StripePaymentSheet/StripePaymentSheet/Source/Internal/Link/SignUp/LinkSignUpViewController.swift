@@ -321,6 +321,7 @@ final class LinkSignUpViewController: UIViewController {
             return
         }
 
+        STPAnalyticsClient.sharedClient.logLinkEmailSuggestionAccepted()
         emailElement.emailAddressElement.setText(suggestedEmail)
         viewModel.emailAddress = suggestedEmail
     }

@@ -170,6 +170,7 @@ import Foundation
     // MARK: - Link Misc
     case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"
+    case linkEmailSuggestionAccepted = "link.email_suggestion.accepted"
 
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"
