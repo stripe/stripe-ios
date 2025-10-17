@@ -394,7 +394,7 @@ extension LinkInlineSignupView: EventHandler {
         }
 
         if case .viewDidAppear = event {
-            // TODO: Log event
+            viewModel.logInlineSignupShown()
         }
 
     }

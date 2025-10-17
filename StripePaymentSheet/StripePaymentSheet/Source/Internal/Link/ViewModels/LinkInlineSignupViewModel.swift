@@ -33,6 +33,8 @@ final class LinkInlineSignupViewModel {
 
     private let accountService: LinkAccountServiceProtocol
 
+    let analyticsHelper: PaymentSheetAnalyticsHelper?
+
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
 
     private let country: String?
@@ -399,10 +401,12 @@ final class LinkInlineSignupViewModel {
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        country: String? = nil
+        country: String? = nil,
+        analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
         self.configuration = configuration
         self.accountService = accountService
+        self.analyticsHelper = analyticsHelper
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
         if let email = self.emailAddress,
@@ -431,6 +435,10 @@ final class LinkInlineSignupViewModel {
                 return signupOptInInitialValue
             }
         }()
+    }
+
+    func logInlineSignupShown() {
+        analyticsHelper?.log(linkEvent: .inlineSignupShown(mode: self.mode))
     }
 }
 
@@ -485,4 +493,5 @@ private extension LinkInlineSignupViewModel {
             }
         }
     }
+
 }
