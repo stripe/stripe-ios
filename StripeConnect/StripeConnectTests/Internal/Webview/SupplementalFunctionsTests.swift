@@ -54,7 +54,7 @@ final class SupplementalFunctionsTests: XCTestCase {
     }
 
     func testDecodeArgs() throws {
-        let json = "[{\"checkScanToken\":\"testToken\"}]".data(using: .utf8)!
+        let json = Data("[{\"checkScanToken\":\"testToken\"}]".utf8)
 
         let payload = try JSONDecoder().decode(ArgsPayload.self, from: json)
 
@@ -66,7 +66,7 @@ final class SupplementalFunctionsTests: XCTestCase {
     }
 
     func testDecodeArgs_handleCheckScanSubmitted_invalidEmptyArray() throws {
-        let json = "[]".data(using: .utf8)!
+        let json = Data("[]".utf8)
         let decoder = JSONDecoder()
 
         XCTAssertThrowsError(try decoder.decode(ArgsPayload.self, from: json),
@@ -74,7 +74,7 @@ final class SupplementalFunctionsTests: XCTestCase {
     }
 
     func testDecodeArgs_handleCheckScanSubmitted_invalidLongArray() throws {
-        let json = "[1, 2]".data(using: .utf8)!
+        let json = Data("[1, 2]".utf8)
         let decoder = JSONDecoder()
 
         XCTAssertThrowsError(try decoder.decode(ArgsPayload.self, from: json),
