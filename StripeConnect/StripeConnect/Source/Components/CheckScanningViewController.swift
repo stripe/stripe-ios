@@ -5,12 +5,12 @@ import UIKit
 public final class CheckScanningViewController: UIViewController {
     struct Props: HasSupplementalFunctions {
         enum CodingKeys: CodingKey {}
-        
+
         let supplementalFunctions: SupplementalFunctions
     }
 
     private(set) var webVC: ConnectComponentWebViewController!
-    
+
     public weak var delegate: CheckScanningViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
@@ -18,7 +18,7 @@ public final class CheckScanningViewController: UIViewController {
          analyticsClientFactory: ComponentAnalyticsClientFactory,
          handleCheckScanSubmitted: @escaping HandleCheckScanSubmittedFn) {
         super.init(nibName: nil, bundle: nil)
-        
+
         let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: handleCheckScanSubmitted)
 
         webVC = ConnectComponentWebViewController(
@@ -26,11 +26,11 @@ public final class CheckScanningViewController: UIViewController {
             componentType: .checkScanning,
             loadContent: loadContent,
             analyticsClientFactory: analyticsClientFactory,
-            fetchInitProps: { Props(supplementalFunctions: supplementalFunctions)},
+            fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
             didFailLoadWithError: { [weak self] error in
                 guard let self else { return }
                 delegate?.checkScanning(self, didFailLoadWithError: error)
-            },
+            }
         )
 
         addChildAndPinView(webVC)
