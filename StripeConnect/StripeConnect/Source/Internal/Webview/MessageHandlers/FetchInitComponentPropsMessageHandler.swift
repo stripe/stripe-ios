@@ -11,7 +11,7 @@ import Foundation
 @available(iOS 15, *)
 class FetchInitComponentPropsMessageHandler<Props: Encodable>: ScriptMessageHandlerWithReply<VoidPayload, Props> {
     init(_ fetchInitProps: @escaping () async throws -> Props,
-        registerSupplementalFunctions: @escaping (SupplementalFunctions) -> Void
+         registerSupplementalFunctions: @escaping (SupplementalFunctions) -> Void
     ) {
         super.init(name: "fetchInitComponentProps") { _ in
             let props = try await fetchInitProps()

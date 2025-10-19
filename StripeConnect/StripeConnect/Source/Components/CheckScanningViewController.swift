@@ -45,11 +45,11 @@ public final class CheckScanningViewController: UIViewController {
 @available(iOS 15, *)
 public protocol CheckScanningViewControllerDelegate: AnyObject {
     func checkScanning(_ checkScanning: CheckScanningViewController,
-                 didFailLoadWithError error: Error)
+                       didFailLoadWithError error: Error)
 }
 
 @available(iOS 15, *)
 public extension CheckScanningViewControllerDelegate {
     func checkScanning(_ checkScanning: CheckScanningViewController,
-                 didFailLoadWithError error: Error) { }
+                       didFailLoadWithError error: Error) { }
 }
