@@ -249,65 +249,59 @@ struct OAuthScopeSelector: View {
     let onAllScopesSelected: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("OAuth Scopes")
-                    .font(.headline)
-                    .foregroundColor(.primary)
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        Button("Required") {
+                            onOnrampScopesSelected()
+                        }
 
-                Spacer()
+                        Button("All") {
+                            onAllScopesSelected()
+                        }
 
-                HStack(spacing: 8) {
-                    Button("Required") {
-                        onOnrampScopesSelected()
+                        Spacer()
                     }
                     .buttonStyle(.bordered)
                     .controlSize(.small)
 
-                    Button("All") {
-                        onAllScopesSelected()
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                }
-            }
+                    VStack(spacing: 8) {
+                        ForEach(OAuthScopes.allCases, id: \.self) { scope in
+                            Button(action: {
+                                if selectedScopes.contains(scope) {
+                                    selectedScopes.remove(scope)
+                                } else {
+                                    selectedScopes.insert(scope)
+                                }
+                            }) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: selectedScopes.contains(scope) ? "checkmark.circle.fill" : "circle")
+                                        .foregroundColor(selectedScopes.contains(scope) ? .blue : .gray)
+                                        .font(.system(size: 14))
 
-            LazyVGrid(columns: [GridItem()], spacing: 8) {
-                ForEach(OAuthScopes.allCases, id: \.self) { scope in
-                    Button(action: {
-                        if selectedScopes.contains(scope) {
-                            selectedScopes.remove(scope)
-                        } else {
-                            selectedScopes.insert(scope)
+                                    Text(scope.rawValue)
+                                        .font(.system(.caption, design: .monospaced))
+                                        .foregroundColor(.primary)
+                                        .multilineTextAlignment(.leading)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .fill(selectedScopes.contains(scope) ? Color.blue.opacity(0.1) : Color.gray.opacity(0.05))
+                                )
+                            }
+                            .buttonStyle(.plain)
                         }
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: selectedScopes.contains(scope) ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(selectedScopes.contains(scope) ? .blue : .gray)
-                                .font(.system(size: 14))
-
-                            Text(scope.rawValue)
-                                .font(.system(.caption, design: .monospaced))
-                                .foregroundColor(.primary)
-                                .multilineTextAlignment(.leading)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(selectedScopes.contains(scope) ? Color.blue.opacity(0.1) : Color.gray.opacity(0.05))
-                        )
                     }
-                    .buttonStyle(.plain)
                 }
+                .padding([.bottom, .horizontal])
             }
+            .navigationTitle("OAuth Scopes")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.gray.opacity(0.05))
-        )
     }
 }
 

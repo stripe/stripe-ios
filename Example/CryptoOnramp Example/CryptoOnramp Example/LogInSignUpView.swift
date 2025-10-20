@@ -11,7 +11,10 @@ import SwiftUI
 import StripeCryptoOnramp
 
 struct LogInSignUpView: View {
-    enum AuthMode { case logIn, signUp }
+    enum AuthMode {
+        case logIn
+        case signUp
+    }
 
     let coordinator: CryptoOnrampCoordinator?
     let flowCoordinator: CryptoOnrampFlowCoordinator
@@ -24,6 +27,7 @@ struct LogInSignUpView: View {
     @State private var password: String = ""
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
     @State private var alert: Alert?
+    @State private var isShowingScopesSheet = false
 
     @FocusState private var isEmailFieldFocused: Bool
 
@@ -70,32 +74,6 @@ struct LogInSignUpView: View {
                         .onSubmit { if !isContinueDisabled { continueTapped() } }
                 }
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Toggle("Livemode", isOn: $livemode)
-                        .font(.headline)
-                        .disabled(isRunningOnSimulator)
-
-                    if isRunningOnSimulator {
-                        HStack(spacing: 4) {
-                            Image(systemName: "exclamationmark.octagon")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Text("Livemode is not supported in the simulator.")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-
-                OAuthScopeSelector(
-                    selectedScopes: $selectedScopes,
-                    onOnrampScopesSelected: {
-                        selectedScopes = Set(OAuthScopes.requiredScopes)
-                    },
-                    onAllScopesSelected: {
-                        selectedScopes = Set(OAuthScopes.allScopes)
-                    }
-                )
 
                 Button(authMode == .logIn ? "Log In" : "Sign Up") {
                     isEmailFieldFocused = false
@@ -114,6 +92,39 @@ struct LogInSignUpView: View {
             actions: { _ in Button("OK") {} },
             message: { alert in Text(alert.message) }
         )
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Toggle(isOn: $livemode) {
+                        Label("Livemode", systemImage: "server.rack")
+                    }
+                    // Livemode is disabled on the simulator.
+                    .disabled(isRunningOnSimulator)
+
+                    Divider()
+
+                    Button {
+                        isShowingScopesSheet = true
+                    } label: {
+                        Label("OAuth Scopes…", systemImage: "slider.horizontal.3")
+                    }
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+            }
+        }
+        .sheet(isPresented: $isShowingScopesSheet) {
+            OAuthScopeSelector(
+                selectedScopes: $selectedScopes,
+                onOnrampScopesSelected: {
+                    selectedScopes = Set(OAuthScopes.requiredScopes)
+                },
+                onAllScopesSelected: {
+                    selectedScopes = Set(OAuthScopes.allScopes)
+                }
+            )
+            .presentationDetents([.medium])
+        }
     }
 
     // MARK: - Actions
