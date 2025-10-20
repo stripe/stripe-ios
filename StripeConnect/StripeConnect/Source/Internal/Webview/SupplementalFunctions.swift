@@ -81,8 +81,10 @@ enum SupplementalFunctionReturnValue: Encodable {
     }
 }
 
+@_spi(DashboardOnly)
 public typealias HandleCheckScanSubmittedFn = ((HandleCheckScanSubmittedArgs) async throws -> (HandleCheckScanSubmittedReturnValue))
 
+@_spi(DashboardOnly)
 public struct HandleCheckScanSubmittedArgs: Decodable, Equatable {
     public var checkScanToken: String
 
@@ -91,6 +93,7 @@ public struct HandleCheckScanSubmittedArgs: Decodable, Equatable {
     }
 }
 
+@_spi(DashboardOnly)
 public struct HandleCheckScanSubmittedReturnValue: Encodable, Equatable {
     public init() {}
 }

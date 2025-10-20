@@ -1,4 +1,4 @@
-@testable import StripeConnect
+@_spi(DashboardOnly) @testable import StripeConnect
 import XCTest
 
 class SupplementalFunctionCompletedSenderTests: ScriptWebTestBase {
