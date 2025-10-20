@@ -11,18 +11,12 @@ import SwiftUI
 import StripeCryptoOnramp
 
 struct LogInSignUpView: View {
-    enum AuthMode {
-        case logIn
-        case signUp
-    }
-
     let coordinator: CryptoOnrampCoordinator?
     let flowCoordinator: CryptoOnrampFlowCoordinator
     @Binding var livemode: Bool
 
     @Environment(\.isLoading) private var isLoading
 
-    @State private var authMode: AuthMode = .logIn
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
@@ -30,12 +24,19 @@ struct LogInSignUpView: View {
     @State private var isShowingScopesSheet = false
 
     @FocusState private var isEmailFieldFocused: Bool
+    @FocusState private var isPasswordFieldFocused: Bool
 
     private var isPresentingAlert: Binding<Bool> {
-        Binding(get: { alert != nil }, set: { if !$0 { alert = nil } })
+        Binding(get: {
+            alert != nil
+        }, set: { newValue in
+            if !newValue {
+                alert = nil
+            }
+        })
     }
 
-    private var isContinueDisabled: Bool {
+    private var shouldDisableButtons: Bool {
         isLoading.wrappedValue || email.isEmpty || password.isEmpty || coordinator == nil
     }
 
@@ -50,12 +51,6 @@ struct LogInSignUpView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                Picker("", selection: $authMode) {
-                    Text("Log In").tag(AuthMode.logIn)
-                    Text("Sign Up").tag(AuthMode.signUp)
-                }
-                .pickerStyle(.segmented)
-
                 FormField("Email") {
                     TextField("Enter email address", text: $email)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -70,18 +65,10 @@ struct LogInSignUpView: View {
                     SecureField("Enter password", text: $password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .textContentType(.password)
-                        .submitLabel(.go)
-                        .onSubmit { if !isContinueDisabled { continueTapped() } }
-                }
+                        .focused($isPasswordFieldFocused)
+                        .submitLabel(.done)
 
-
-                Button(authMode == .logIn ? "Log In" : "Sign Up") {
-                    isEmailFieldFocused = false
-                    continueTapped()
                 }
-                .buttonStyle(PrimaryButtonStyle())
-                .disabled(isContinueDisabled)
-                .opacity(isContinueDisabled ? 0.5 : 1)
             }
             .padding()
         }
@@ -113,6 +100,26 @@ struct LogInSignUpView: View {
                 }
             }
         }
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 8) {
+                Button("Log In") {
+                    isEmailFieldFocused = false
+                    isPasswordFieldFocused = false
+                    logIn()
+                }
+                .buttonStyle(PrimaryButtonStyle())
+
+                Button("Sign Up") {
+                    isEmailFieldFocused = false
+                    isPasswordFieldFocused = false
+                    signUp()
+                }
+                .buttonStyle(PrimaryButtonStyle())
+            }
+            .disabled(shouldDisableButtons)
+            .opacity(shouldDisableButtons ? 0.5 : 1)
+            .padding()
+        }
         .sheet(isPresented: $isShowingScopesSheet) {
             OAuthScopeSelectionView(
                 selectedScopes: $selectedScopes,
@@ -128,13 +135,6 @@ struct LogInSignUpView: View {
     }
 
     // MARK: - Actions
-
-    private func continueTapped() {
-        switch authMode {
-        case .logIn: logIn()
-        case .signUp: signUp()
-        }
-    }
 
     private func logIn() {
         isLoading.wrappedValue = true
