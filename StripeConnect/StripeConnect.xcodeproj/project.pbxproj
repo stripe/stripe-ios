@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		358F51772EA69BF300DAB439 /* CheckScanningController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358F51762EA69BF300DAB439 /* CheckScanningController.swift */; };
+		358F51792EA69C8B00DAB439 /* CheckScanningControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358F51782EA69C8B00DAB439 /* CheckScanningControllerTests.swift */; };
 		35E10BF02EA4975E00141D83 /* SupplementalFunctionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E10BEF2EA4975E00141D83 /* SupplementalFunctionsTests.swift */; };
 		35E3AC462EA3040700EA6F9B /* CallSupplementalFunctionMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E3AC452EA3040700EA6F9B /* CallSupplementalFunctionMessageHandler.swift */; };
 		35E3AC492EA3042A00EA6F9B /* SupplementalFunctionCompletedSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E3AC482EA3042A00EA6F9B /* SupplementalFunctionCompletedSender.swift */; };
 		35F691722EA30DA700F761E3 /* SupplementalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F691712EA30DA700F761E3 /* SupplementalFunctions.swift */; };
 		35F691F62EA3270B00F761E3 /* SupplementalFunctionCompletedSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F691F52EA3270B00F761E3 /* SupplementalFunctionCompletedSenderTests.swift */; };
 		35F6926F2EA3401800F761E3 /* CallSupplementalFunctionMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F6926E2EA3401800F761E3 /* CallSupplementalFunctionMessageHandlerTests.swift */; };
-		35F692712EA3E8D500F761E3 /* CheckScanningViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F692702EA3E8D500F761E3 /* CheckScanningViewControllerTests.swift */; };
-		35F692732EA3E9E300F761E3 /* CheckScanningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F692722EA3E9E300F761E3 /* CheckScanningViewController.swift */; };
 		41054E432C989AAD00383C09 /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41054E422C989AAD00383C09 /* Font+Extension.swift */; };
 		410D0FCA2C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */; };
 		410D0FCC2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */; };
@@ -184,14 +184,14 @@
 
 /* Begin PBXFileReference section */
 		1405894C2DC8571600DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
+		358F51762EA69BF300DAB439 /* CheckScanningController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckScanningController.swift; sourceTree = "<group>"; };
+		358F51782EA69C8B00DAB439 /* CheckScanningControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckScanningControllerTests.swift; sourceTree = "<group>"; };
 		35E10BEF2EA4975E00141D83 /* SupplementalFunctionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementalFunctionsTests.swift; sourceTree = "<group>"; };
 		35E3AC452EA3040700EA6F9B /* CallSupplementalFunctionMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallSupplementalFunctionMessageHandler.swift; sourceTree = "<group>"; };
 		35E3AC482EA3042A00EA6F9B /* SupplementalFunctionCompletedSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementalFunctionCompletedSender.swift; sourceTree = "<group>"; };
 		35F691712EA30DA700F761E3 /* SupplementalFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementalFunctions.swift; sourceTree = "<group>"; };
 		35F691F52EA3270B00F761E3 /* SupplementalFunctionCompletedSenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementalFunctionCompletedSenderTests.swift; sourceTree = "<group>"; };
 		35F6926E2EA3401800F761E3 /* CallSupplementalFunctionMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallSupplementalFunctionMessageHandlerTests.swift; sourceTree = "<group>"; };
-		35F692702EA3E8D500F761E3 /* CheckScanningViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckScanningViewControllerTests.swift; sourceTree = "<group>"; };
-		35F692722EA3E9E300F761E3 /* CheckScanningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckScanningViewController.swift; sourceTree = "<group>"; };
 		41054E422C989AAD00383C09 /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandlerTests.swift; sourceTree = "<group>"; };
 		410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSessionClaimedMessageHandler.swift; sourceTree = "<group>"; };
@@ -557,7 +557,7 @@
 		416E9E792C762C6E00A0B917 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				35F692722EA3E9E300F761E3 /* CheckScanningViewController.swift */,
+				358F51762EA69BF300DAB439 /* CheckScanningController.swift */,
 				E6C5F5F52C9FEE0200861709 /* AccountManagementViewController.swift */,
 				4171B1582C9A5EEC00547F7D /* AccountOnboardingController.swift */,
 				416E9E832C76AE0900A0B917 /* ComponentType.swift */,
@@ -572,7 +572,7 @@
 		416E9E882C76B36F00A0B917 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				35F692702EA3E8D500F761E3 /* CheckScanningViewControllerTests.swift */,
+				358F51782EA69C8B00DAB439 /* CheckScanningControllerTests.swift */,
 				E656911F2CA5248300E0DB00 /* AccountManagementViewControllerTests.swift */,
 				4161C2722C9D0A8A005BD67C /* AccountOnboardingControllerTests.swift */,
 				E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */,
@@ -1101,7 +1101,6 @@
 				41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */,
 				413987CA2C63F34B001D375E /* ScriptMessageHandler.swift in Sources */,
 				416E9E862C76B35E00A0B917 /* PayoutsViewController.swift in Sources */,
-				35F692732EA3E9E300F761E3 /* CheckScanningViewController.swift in Sources */,
 				416E9E8A2C76B37000A0B917 /* PaymentsViewController.swift in Sources */,
 				E6660DA92CDC563C002A7631 /* AuthenticatedWebViewOpenedEvent.swift in Sources */,
 				41542A6B2C88B79E004E728E /* JSONSerialization+extension.swift in Sources */,
@@ -1114,6 +1113,7 @@
 				4186664E2C66ACB3003DB62E /* OnLoadErrorMessageHandler.swift in Sources */,
 				410D0FE52C6D32F0009B0E26 /* ApplicationURLOpener.swift in Sources */,
 				E6F485F82C9E35A5000D914F /* PaymentDetailsViewController.swift in Sources */,
+				358F51772EA69BF300DAB439 /* CheckScanningController.swift in Sources */,
 				E6660D8F2CDC418C002A7631 /* ConnectAnalyticEvent.swift in Sources */,
 				35E3AC492EA3042A00EA6F9B /* SupplementalFunctionCompletedSender.swift in Sources */,
 				E6660D902CDC418C002A7631 /* ComponentAnalyticsClient.swift in Sources */,
@@ -1154,7 +1154,6 @@
 				E6660DB12CDD8E25002A7631 /* ComponentAnalyticsClient+Mock.swift in Sources */,
 				E6660DC72CDE8F28002A7631 /* ScriptMessageHandlerTests.swift in Sources */,
 				35F6926F2EA3401800F761E3 /* CallSupplementalFunctionMessageHandlerTests.swift in Sources */,
-				35F692712EA3E8D500F761E3 /* CheckScanningViewControllerTests.swift in Sources */,
 				41814EEB2C6BCAB30014EB5E /* DebugMessageHandlerTests.swift in Sources */,
 				41814EEF2C6BEF2C0014EB5E /* FetchInitParamsMessageHandlerTests.swift in Sources */,
 				41810D692C88C4B100F10EB7 /* AppearanceTests.swift in Sources */,
@@ -1172,6 +1171,7 @@
 				E6660DC42CDE7F47002A7631 /* ApplicationURLOpenerTests.swift in Sources */,
 				E6660DBC2CDDC5C7002A7631 /* ComponentAnalyticsClientTests.swift in Sources */,
 				E65691202CA5248300E0DB00 /* AccountManagementViewControllerTests.swift in Sources */,
+				358F51792EA69C8B00DAB439 /* CheckScanningControllerTests.swift in Sources */,
 				410D0FCA2C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift in Sources */,
 				41BCCFF32C8B449800797E01 /* TestHelpers.swift in Sources */,
 				E6660DC22CDE7D66002A7631 /* URL+ExtensionTests.swift in Sources */,

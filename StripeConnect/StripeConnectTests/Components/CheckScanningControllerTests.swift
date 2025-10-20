@@ -4,7 +4,7 @@ import SafariServices
 import WebKit
 import XCTest
 
-class CheckScanningViewControllerTests: XCTestCase {
+class CheckScanningControllerTests: XCTestCase {
     let componentManager = EmbeddedComponentManager(fetchClientSecret: {
         return nil
     })
@@ -17,22 +17,22 @@ class CheckScanningViewControllerTests: XCTestCase {
         componentManager.analyticsClientFactory = MockComponentAnalyticsClient.init
     }
 
-    class CheckScanningViewControllerDelegatePassThrough: CheckScanningViewControllerDelegate {
-        var checkScanningDidFail: ((_ checkScanning: CheckScanningViewController, _ error: any Error) -> Void)?
+    class CheckScanningControllerDelegatePassThrough: CheckScanningControllerDelegate {
+        var checkScanningDidFail: ((_ checkScanning: CheckScanningController, _ error: any Error) -> Void)?
 
-        init(checkScanningDidFail: ((CheckScanningViewController, any Error) -> Void)? = nil) {
+        init(checkScanningDidFail: ((CheckScanningController, any Error) -> Void)? = nil) {
             self.checkScanningDidFail = checkScanningDidFail
         }
 
-        func checkScanning(_ checkScanning: CheckScanningViewController, didFailLoadWithError error: any Error) {
+        func checkScanning(_ checkScanning: CheckScanningController, didFailLoadWithError error: any Error) {
             checkScanningDidFail?(checkScanning, error)
         }
     }
 
     @MainActor
     func testDelegate() async throws {
-        let delegate = CheckScanningViewControllerDelegatePassThrough()
-        let controller = componentManager.createCheckScanningViewController { _ in return HandleCheckScanSubmittedReturnValue() }
+        let delegate = CheckScanningControllerDelegatePassThrough()
+        let controller = componentManager.createCheckScanningController { _ in return HandleCheckScanSubmittedReturnValue() }
         controller.delegate = delegate
 
         let expectationDidFail = XCTestExpectation(description: "didFail called")
@@ -49,7 +49,7 @@ class CheckScanningViewControllerTests: XCTestCase {
 
     @MainActor
     func testFetchInitComponentProps() async throws {
-        let controller = componentManager.createCheckScanningViewController { _ in return HandleCheckScanSubmittedReturnValue() }
+        let controller = componentManager.createCheckScanningController { _ in return HandleCheckScanSubmittedReturnValue() }
 
         try await controller.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                                     json: "{}",
