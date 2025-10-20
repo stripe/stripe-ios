@@ -248,6 +248,8 @@ struct OAuthScopeSelector: View {
     let onOnrampScopesSelected: () -> Void
     let onAllScopesSelected: () -> Void
 
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -301,6 +303,13 @@ struct OAuthScopeSelector: View {
             }
             .navigationTitle("OAuth Scopes")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }
