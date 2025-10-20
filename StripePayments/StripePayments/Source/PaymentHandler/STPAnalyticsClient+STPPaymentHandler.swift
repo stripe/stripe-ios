@@ -180,40 +180,4 @@ extension STPPaymentHandler {
         ])
         analyticsClient.log(analytic: analytic, apiClient: apiClient)
     }
-
-    // MARK: - URL Redirect next action
-
-    enum URLRedirectNextActionRedirectType: String {
-        /// ASWebAuthenticationSession opened
-        case ASWebAuthenticationSession = "ASWAS"
-        /// SFSafariViewController opened
-        case SFSafariViewController = "SFVC"
-        /// Native app opened
-        case nativeApp = "native_app"
-    }
-
-    enum URLRedirectNextActionReturnType: String {
-        /// ASWebAuthenticationSession closed
-        case ASWebAuthenticationSession = "ASWAS"
-        /// SFSafariViewController closed
-        case SFSafariViewController = "SFVC"
-        /// Customer returned to app automatically via something (Safari, another app, etc) opening return url
-        case returnURLCallback = "return_url"
-        /// Customer returned to app by foregrounding it manually, only possible when native app is opened
-        case appForegrounded = "app_foregrounded"
-    }
-
-    func logURLRedirectNextActionStarted(redirectType: URLRedirectNextActionRedirectType) {
-        let analytic = GenericAnalytic(event: .urlRedirectNextAction, params: [
-            "redirect_type": redirectType.rawValue
-        ])
-        analyticsClient.log(analytic: analytic, apiClient: apiClient)
-    }
-
-    func logURLRedirectNextActionFinished(returnType: URLRedirectNextActionReturnType) {
-        let analytic = GenericAnalytic(event: .urlRedirectNextActionCompleted, params: [
-            "redirect_type": returnType.rawValue
-        ])
-        analyticsClient.log(analytic: analytic, apiClient: apiClient)
-    }
 }
