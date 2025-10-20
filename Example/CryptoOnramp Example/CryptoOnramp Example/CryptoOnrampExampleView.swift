@@ -44,64 +44,11 @@ struct CryptoOnrampExampleView: View {
 
     var body: some View {
         NavigationStack(path: flowCoordinator.pathBinding) {
-            ScrollView {
-                VStack(spacing: 20) {
-                    FormField("Email") {
-                        TextField("Enter email address", text: $email)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .focused($isEmailFieldFocused)
-                            .submitLabel(.go)
-                            .onSubmit {
-                                if !isNextButtonDisabled {
-                                    lookupConsumerAndContinue()
-                                }
-                            }
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Toggle("Livemode", isOn: $livemode)
-                            .font(.headline)
-                            .disabled(isRunningOnSimulator)
-
-                        if isRunningOnSimulator {
-                            HStack(spacing: 4) {
-                                Image(systemName: "exclamationmark.octagon")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Text("Livemode is not supported in the simulator.")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
-
-                    OAuthScopeSelector(
-                        selectedScopes: $selectedScopes,
-                        onOnrampScopesSelected: {
-                            selectedScopes = Set(OAuthScopes.requiredScopes)
-                        },
-                        onAllScopesSelected: {
-                            selectedScopes = Set(OAuthScopes.allScopes)
-                        }
-                    )
-
-                    Button("Next") {
-                        isEmailFieldFocused = false
-                        lookupConsumerAndContinue()
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(isNextButtonDisabled)
-                    .opacity(isNextButtonDisabled ? 0.5 : 1)
-
-                    if let errorMessage {
-                        ErrorMessageView(message: errorMessage)
-                    }
-                }
-                .padding()
-            }
+            LogInSignUpView(
+                coordinator: coordinator,
+                flowCoordinator: flowCoordinator,
+                livemode: $livemode
+            )
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
