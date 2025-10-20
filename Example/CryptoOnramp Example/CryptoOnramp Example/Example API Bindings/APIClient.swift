@@ -16,6 +16,7 @@ final class APIClient {
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
     private(set) var authToken: String?
+    private(set) var authTokenWithLAI: String?
 
     private init(session: URLSession = .shared) {
         self.session = session
@@ -39,6 +40,7 @@ final class APIClient {
     enum APIError: Error, LocalizedError {
         case httpError(status: Int, message: String)
         case missingAuthToken
+        case missingAuthTokenWithLAI
 
         var errorDescription: String? {
             switch self {
@@ -46,12 +48,18 @@ final class APIClient {
                 return "HTTP \(status): \(message)"
             case .missingAuthToken:
                 return "Missing Authorization token"
+            case .missingAuthTokenWithLAI:
+                return "Missing Authorization token with LAI"
             }
         }
     }
 
     func setAuthToken(_ token: String?) {
         self.authToken = token
+    }
+
+    func setAuthTokenWithLAI(_ token: String?) {
+        self.authTokenWithLAI = token
     }
 
     func request<T: Decodable, Body: Encodable>(
