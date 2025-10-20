@@ -122,6 +122,8 @@
 
 "Default payment method" = "Προεπιλεγμένη μέθοδος πληρωμής";
 
+"Did you mean %@? %@." = "Εννοούσατε %1$@; %2$@.";
+
 "EPS Bank" = "Τράπεζα με EPS";
 
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Χρήση διεύθυνσης χρέωσης για αποστολή";
 
 "View more" = "Προβολή περισσότερων";
+
+"Yes, update" = "Ναι, κάντε ενημέρωση";
 
 "Your IBAN should start with a two-letter country code." = "Ο κωδικός IBAN σας πρέπει να αρχίζει με έναν διψήφιο κωδικό χώρας.";
 

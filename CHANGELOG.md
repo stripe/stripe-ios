@@ -1,4 +1,6 @@
-## X.Y.Z x-y-z
+## X.Y.Z - changes pending release 
+
+## 24.24.4 2025-10-20
 ### PaymentSheet
 * [Fixed] Fixed a bug with `FlowController` and `EmbeddedPaymentElement` in dark mode where `paymentOption.image` could be a blank icon for Alma, Billie, Multibanco, Paynow, Promptpay, Satispay, and Sunbit
 

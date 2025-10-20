@@ -122,6 +122,8 @@
 
 "Default payment method" = "Oletusmaksutapa";
 
+"Did you mean %@? %@." = "Tarkoititko %1$@? %2$@.";
+
 "EPS Bank" = "EPS-pankki";
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Käytä laskutusosoitetta toimituksessa";
 
 "View more" = "Näytä lisää";
+
+"Yes, update" = "Kyllä, päivitä";
 
 "Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
 

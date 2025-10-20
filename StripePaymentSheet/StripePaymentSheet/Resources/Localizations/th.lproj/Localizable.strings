@@ -122,6 +122,8 @@
 
 "Default payment method" = "วิธีการชำระเงินตามค่าเริ่มต้น";
 
+"Did you mean %@? %@." = "คุณหมายถึง %1$@ ใช่หรือไม่ %2$@";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "ป้อนที่อยู่ด้วยตนเอง";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "ใช้ที่อยู่เรียกเก็บเงินสำหรับการจัดส่ง";
 
 "View more" = "ดูเพิ่มเติม";
+
+"Yes, update" = "ใช่ อัปเดต";
 
 "Your IBAN should start with a two-letter country code." = "IBAN ควรเริ่มต้นด้วยรหัสประเทศ 2 ตัวอักษร";
 
