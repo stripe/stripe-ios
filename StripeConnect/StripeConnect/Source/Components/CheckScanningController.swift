@@ -11,7 +11,7 @@ public final class CheckScanningController {
 
     private(set) var webVC: ConnectComponentWebViewController!
 
-    private var retainedSelf: CheckScanningController?
+    var retainedSelf: CheckScanningController?
 
     public weak var delegate: CheckScanningControllerDelegate?
 
