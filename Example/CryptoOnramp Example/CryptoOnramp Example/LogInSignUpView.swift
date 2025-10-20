@@ -114,7 +114,7 @@ struct LogInSignUpView: View {
             }
         }
         .sheet(isPresented: $isShowingScopesSheet) {
-            OAuthScopeSelector(
+            OAuthScopeSelectionView(
                 selectedScopes: $selectedScopes,
                 onOnrampScopesSelected: {
                     selectedScopes = Set(OAuthScopes.requiredScopes)
