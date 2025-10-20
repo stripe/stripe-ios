@@ -123,7 +123,10 @@ struct PaymentSheetTestPlayground: View {
                             setting: integrationTypeBinding,
                             disabledSettings: playgroundController.settings.uiStyle == .embedded ? [.normal] : []
                         )
-                        SettingView(setting: $playgroundController.settings.customerKeyType)
+                        SettingPickerView(
+                            setting: customerKeyTypeBinding,
+                            disabledSettings: playgroundController.settings.integrationType.usesConfirmationTokens ? [.legacy] : []
+                        )
                         SettingView(setting: customerModeBinding)
                         HStack {
                             SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
@@ -325,7 +328,24 @@ struct PaymentSheetTestPlayground: View {
             if newIntegrationType == .normal && playgroundController.settings.uiStyle == .embedded {
                 playgroundController.settings.uiStyle = .paymentSheet
             }
+            // If switching to a CT integration type, ensure customerKeyType is not legacy
+            if newIntegrationType.usesConfirmationTokens && playgroundController.settings.customerKeyType == .legacy {
+                playgroundController.settings.customerKeyType = .customerSession
+            }
             playgroundController.settings.integrationType = newIntegrationType
+        }
+    }
+
+    var customerKeyTypeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerKeyType> {
+        Binding<PaymentSheetTestPlaygroundSettings.CustomerKeyType> {
+            return playgroundController.settings.customerKeyType
+        } set: { newCustomerKeyType in
+            // Prevent switching to legacy if using CT integration types
+            if newCustomerKeyType == .legacy && playgroundController.settings.integrationType.usesConfirmationTokens {
+                // Stay on customerSession
+                return
+            }
+            playgroundController.settings.customerKeyType = newCustomerKeyType
         }
     }
 }
