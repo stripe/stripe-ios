@@ -62,9 +62,6 @@ struct PaymentView: View {
     /// The coordinator to use for collecting new payment methods and creating crypto payment tokens.
     let coordinator: CryptoOnrampCoordinator
 
-    /// The unique id of the customer.
-    let customerId: String
-
     /// The wallet being funded.
     let wallet: CustomerWalletsResponse.Wallet
 
@@ -593,7 +590,7 @@ struct PaymentView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let response = try await APIClient.shared.fetchPaymentTokens(cryptoCustomerToken: customerId)
+                let response = try await APIClient.shared.fetchPaymentTokens()
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     paymentTokens = response.data
@@ -690,7 +687,6 @@ struct PaymentView: View {
             destinationCurrencies: [destinationCurrency],
             destinationNetworks: [wallet.network],
             walletAddress: wallet.walletAddress,
-            cryptoCustomerId: customerId,
             customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
         )
 
@@ -754,7 +750,6 @@ private extension PaymentTokensResponse.PaymentToken {
     PreviewWrapperView { coordinator in
         PaymentView(
             coordinator: coordinator,
-            customerId: "cus_example",
             wallet: .init(
                 id: "0",
                 object: "",

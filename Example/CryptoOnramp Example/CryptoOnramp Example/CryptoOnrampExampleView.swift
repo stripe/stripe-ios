@@ -51,10 +51,9 @@ struct CryptoOnrampExampleView: View {
                             RegistrationView(
                                 coordinator: coordinator,
                                 email: email,
-                                selectedScopes: scopes,
-                                livemode: livemode
-                            ) { customerId in
-                                flowCoordinator.advanceAfterRegistration(customerId: customerId)
+                                selectedScopes: scopes
+                            ) {
+                                flowCoordinator.advanceAfterRegistration()
                             }
                         case .kycInfo:
                             KYCInfoView(coordinator: coordinator) {
@@ -64,17 +63,15 @@ struct CryptoOnrampExampleView: View {
                             IdentityVerificationView(coordinator: coordinator) {
                                 flowCoordinator.advanceAfterIdentity()
                             }
-                        case let .wallets(customerId):
+                        case .wallets:
                             WalletSelectionView(
-                                coordinator: coordinator,
-                                customerId: customerId
+                                coordinator: coordinator
                             ) { wallet in
                                 flowCoordinator.advanceAfterWalletSelection(wallet)
                             }
-                        case let .payment(customerId, wallet):
+                        case let .payment(wallet):
                             PaymentView(
                                 coordinator: coordinator,
-                                customerId: customerId,
                                 wallet: wallet
                             ) { response, selectedPaymentMethodDescription in
                                 flowCoordinator.advanceAfterPayment(

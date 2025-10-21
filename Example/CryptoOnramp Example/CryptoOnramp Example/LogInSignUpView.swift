@@ -200,8 +200,8 @@ struct LogInSignUpView: View {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     switch authorizationResult {
-                    case .consented(let customerId):
-                        flowCoordinator.startForExistingUser(customerId: customerId)
+                    case .consented:
+                        flowCoordinator.startForExistingUser()
                     case .denied:
                         alert = Alert(title: "Authorization Denied", message: "Authorization was denied.")
                     case .canceled:
