@@ -21,15 +21,15 @@ extension STPClientAttributionMetadata {
         case .paymentIntent(let paymentIntent):
             return .init(elementsSessionConfigId: elementsSession.sessionID,
                          paymentIntentCreationFlow: .standard,
-                         paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
+                         paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified) // if automaticPaymentMethods is nil, default to merchant_specified
         case .setupIntent(let setupIntent):
             return .init(elementsSessionConfigId: elementsSession.sessionID,
                          paymentIntentCreationFlow: .standard,
-                         paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
+                         paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified) // if automaticPaymentMethods is nil, default to merchant_specified
         case .deferredIntent(let intentConfig):
             return .init(elementsSessionConfigId: elementsSession.sessionID,
                          paymentIntentCreationFlow: .deferred,
-                         paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
+                         paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified) // if no payment method types specified in the intent config, default to automatic
         }
     }
 }
