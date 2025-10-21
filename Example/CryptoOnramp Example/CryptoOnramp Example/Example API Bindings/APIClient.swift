@@ -71,10 +71,13 @@ final class APIClient {
         UserDefaults.standard.set(token, forKey: DefaultsKeys.authTokenWithLAI)
     }
 
-    func clearAuthTokens() {
+    func clearAuthState() {
         self.authToken = nil
         self.authTokenWithLAI = nil
         self.email = nil
+
+        UserDefaults.standard.removeObject(forKey: DefaultsKeys.email)
+        UserDefaults.standard.removeObject(forKey: DefaultsKeys.authTokenWithLAI)
     }
 
     func request<T: Decodable, Body: Encodable>(
