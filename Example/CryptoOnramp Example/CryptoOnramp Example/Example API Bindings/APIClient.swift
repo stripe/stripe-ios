@@ -9,6 +9,11 @@ import Foundation
 
 /// Client API for an example merchant backend.
 final class APIClient {
+    private enum DefaultsKeys {
+        static let authTokenWithLAI = "authTokenWithLAI"
+        static let email = "email"
+    }
+
     static let shared = APIClient()
 
     private let session: URLSession
@@ -16,8 +21,8 @@ final class APIClient {
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
     private(set) var authToken: String?
-    private(set) var authTokenWithLAI: String?
-    private(set) var email: String?
+    private(set) var authTokenWithLAI = UserDefaults.standard.string(forKey: DefaultsKeys.authTokenWithLAI)
+    private(set) var email = UserDefaults.standard.string(forKey: DefaultsKeys.email)
 
     private init(session: URLSession = .shared) {
         self.session = session
@@ -58,10 +63,12 @@ final class APIClient {
     func setAuthToken(_ token: String, email: String) {
         self.authToken = token
         self.email = email
+        UserDefaults.standard.set(email, forKey: DefaultsKeys.email)
     }
 
     func setAuthTokenWithLAI(_ token: String) {
         self.authTokenWithLAI = token
+        UserDefaults.standard.set(token, forKey: DefaultsKeys.authTokenWithLAI)
     }
 
     func clearAuthTokens() {
