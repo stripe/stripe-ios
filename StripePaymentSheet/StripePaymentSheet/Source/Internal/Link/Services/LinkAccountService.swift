@@ -151,20 +151,20 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             requestSurface: requestSurface
                         )
                     ))
-                case .notFound:
+                case .notFound(_, let suggestedEmail):
                     if let email = email {
-                        completion(.success(
-                            PaymentSheetLinkAccount(
-                                email: email,
-                                session: nil,
-                                publishableKey: nil,
-                                displayablePaymentDetails: nil,
-                                apiClient: self.apiClient,
-                                useMobileEndpoints: self.useMobileEndpoints,
-                                canSyncAttestationState: self.canSyncAttestationState,
-                                requestSurface: requestSurface
-                            )
-                        ))
+                        let linkAccount = PaymentSheetLinkAccount(
+                            email: email,
+                            session: nil,
+                            publishableKey: nil,
+                            displayablePaymentDetails: nil,
+                            apiClient: self.apiClient,
+                            useMobileEndpoints: self.useMobileEndpoints,
+                            canSyncAttestationState: self.canSyncAttestationState,
+                            requestSurface: requestSurface
+                        )
+                        linkAccount.suggestedEmail = suggestedEmail
+                        completion(.success(linkAccount))
                     } else {
                         completion(.success(nil))
                     }

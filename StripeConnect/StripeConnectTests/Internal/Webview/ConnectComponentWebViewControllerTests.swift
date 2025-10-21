@@ -146,6 +146,31 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testFetchInitComponentPropsWithFunction() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        struct Props: HasSupplementalFunctions {
+            let supplementalFunctions: SupplementalFunctions
+
+            enum CodingKeys: CodingKey {}
+        }
+
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { _ in return HandleCheckScanSubmittedReturnValue() })
+
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .checkScanning,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
+
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                         json: "{}",
+                                                         expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
+    }
+
+    @MainActor
     func testUpdateTraitCollection() async throws {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.colors.actionPrimaryText = UIColor { $0.userInterfaceStyle == .light ? .red : .green }
@@ -225,6 +250,128 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         // Wait for the animation state to settle after the async operation
         try await Task.sleep(nanoseconds: 100_000_000) // 100ms
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
+    }
+
+    @MainActor
+    func testDispatchSupplementalFunction() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        struct Props: HasSupplementalFunctions {
+            let supplementalFunctions: SupplementalFunctions
+
+            enum CodingKeys: CodingKey {}
+        }
+
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: {payload in
+            XCTAssertEqual(payload.checkScanToken, "testToken")
+            return HandleCheckScanSubmittedReturnValue()
+        })
+
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .checkScanning,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
+
+        // This step is required to register the supplemental functions within the controller
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                         json: "{}",
+                                                         expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: SupplementalFunctionCompletedSender(payload: .init(
+                functionName: .handleCheckScanSubmitted,
+                invocationId: "testInvocation",
+                result: .success(.handleCheckScanSubmitted(.init()))
+            ))
+        )
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    @MainActor
+    func testDispatchSupplementalFunction_notRegistered() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        struct Props: HasSupplementalFunctions {
+            let supplementalFunctions: SupplementalFunctions
+
+            enum CodingKeys: CodingKey {}
+        }
+
+        let supplementalFunctions = SupplementalFunctions()
+
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .checkScanning,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
+
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                         json: "{}",
+                                                         expectedResponse: "{}")
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: SupplementalFunctionCompletedSender(payload: .init(
+                functionName: .handleCheckScanSubmitted,
+                invocationId: "testInvocation",
+                result: .error("No supplemental function registered for handleCheckScanSubmitted")
+            ))
+        )
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    @MainActor
+    func testDispatchSupplementalFunction_callError() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        struct Props: HasSupplementalFunctions {
+            let supplementalFunctions: SupplementalFunctions
+
+            enum CodingKeys: CodingKey {}
+        }
+
+        enum CustomError: Error {
+            case err(String)
+        }
+
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: {_ in
+            throw CustomError.err("test error")
+        })
+
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .checkScanning,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
+
+        // This step is required to register the supplemental functions within the controller
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                         json: "{}",
+                                                         expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: SupplementalFunctionCompletedSender(payload: .init(
+                functionName: .handleCheckScanSubmitted,
+                invocationId: "testInvocation",
+                result: .error("Error calling supplemental function")
+            ))
+        )
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 
     // MARK: - Errors

@@ -122,6 +122,8 @@
 
 "Default payment method" = "Standaardbetaalmethode";
 
+"Did you mean %@? %@." = "Bedoelde je %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Adres handmatig invoeren";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Gebruik factuuradres voor verzending";
 
 "View more" = "Meer weergeven";
+
+"Yes, update" = "Ja, bijwerken";
 
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
 

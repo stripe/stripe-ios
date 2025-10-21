@@ -67,6 +67,10 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .linkAccountLookupFailure, error: error)
     }
 
+    func logLinkEmailSuggestionAccepted() {
+        self.logPaymentSheetEvent(event: .linkEmailSuggestionAccepted)
+    }
+
     // MARK: - 2FA
 
     func logLink2FAStart() {
@@ -87,6 +91,11 @@ extension STPAnalyticsClient {
 
     func logLink2FACancel() {
         self.logPaymentSheetEvent(event: .link2FACancel)
+    }
+
+    func logLink2FAResendCode(type: ConsumerSession.VerificationSession.SessionType = .sms) {
+        let params = ["verification_type": type.rawValue]
+        self.logPaymentSheetEvent(event: .link2FAResendCode, params: params)
     }
 
     func logLinkBailedToWebFlow() {

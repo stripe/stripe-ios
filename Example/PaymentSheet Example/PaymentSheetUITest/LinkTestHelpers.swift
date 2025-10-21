@@ -51,6 +51,7 @@ extension XCTestCase {
             nameField.typeText("John Doe")
         }
 
+        app.swipeDown()
         XCTAssertTrue(app.buttons["Continue"].waitForExistenceAndTap(timeout: 10))
     }
 

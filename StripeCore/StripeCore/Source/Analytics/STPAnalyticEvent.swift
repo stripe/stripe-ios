@@ -164,11 +164,13 @@ import Foundation
     case link2FAComplete = "link.2fa.complete"
     case link2FACancel = "link.2fa.cancel"
     case link2FAFailure = "link.2fa.failure"
+    case link2FAResendCode = "link.2fa.resend_code"
     case linkNativeBailed = "link.native.bailed"
 
     // MARK: - Link Misc
     case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"
+    case linkEmailSuggestionAccepted = "link.email_suggestion.accepted"
 
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"

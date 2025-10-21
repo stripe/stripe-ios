@@ -122,6 +122,8 @@
 
 "Default payment method" = "Metodu tal-pagament standard";
 
+"Did you mean %@? %@." = "Ridt tfisser %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Uża l-indirizz tal-ħlas għall-kunsinna";
 
 "View more" = "Uri iktar";
+
+"Yes, update" = "Iva, aġġorna";
 
 "Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
 

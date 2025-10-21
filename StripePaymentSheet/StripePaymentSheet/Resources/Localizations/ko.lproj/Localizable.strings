@@ -120,6 +120,8 @@
 
 "Default payment method" = "기본 결제 방식";
 
+"Did you mean %@? %@." = "%1$@을(를) 의미하는 건가요? %2$@.";
+
 "EPS Bank" = "EPS 은행";
 
 "Enter address manually" = "주소 직접 입력";
@@ -295,6 +297,8 @@
 "Use billing address for shipping" = "배송에 청구지 주소 사용";
 
 "View more" = "자세히 보기";
+
+"Yes, update" = "예, 업데이트합니다";
 
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
 

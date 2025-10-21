@@ -122,6 +122,8 @@
 
 "Default payment method" = "デフォルトの決済手段";
 
+"Did you mean %@? %@." = "%1$@ のことですか？ %2$@。";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "住所を手動で入力";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "請求先住所を配送先として使用";
 
 "View more" = "さらに表示";
+
+"Yes, update" = "はい、更新します";
 
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 
