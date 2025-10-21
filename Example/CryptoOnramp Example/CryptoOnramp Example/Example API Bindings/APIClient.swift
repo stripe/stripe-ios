@@ -17,6 +17,7 @@ final class APIClient {
     private let jsonEncoder: JSONEncoder
     private(set) var authToken: String?
     private(set) var authTokenWithLAI: String?
+    private(set) var email: String?
 
     private init(session: URLSession = .shared) {
         self.session = session
@@ -54,8 +55,9 @@ final class APIClient {
         }
     }
 
-    func setAuthToken(_ token: String) {
+    func setAuthToken(_ token: String, email: String) {
         self.authToken = token
+        self.email = email
     }
 
     func setAuthTokenWithLAI(_ token: String) {
@@ -65,6 +67,7 @@ final class APIClient {
     func clearAuthTokens() {
         self.authToken = nil
         self.authTokenWithLAI = nil
+        self.email = nil
     }
 
     func request<T: Decodable, Body: Encodable>(
