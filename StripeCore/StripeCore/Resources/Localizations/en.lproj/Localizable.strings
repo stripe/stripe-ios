@@ -13,6 +13,9 @@
 /* An error message displayed when setting a default payment method fails. */
 "Default payment method was not updated. Please try again." = "Default payment method was not updated. Please try again.";
 
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+"Enter the code sent to %@." = "Enter the code sent to %@.";
+
 /* Label shown when a network-related error has occured. */
 "Failed to connect" = "Failed to connect";
 
