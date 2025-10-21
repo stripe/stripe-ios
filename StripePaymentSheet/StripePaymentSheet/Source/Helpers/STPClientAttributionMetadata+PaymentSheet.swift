@@ -17,19 +17,23 @@ extension STPClientAttributionMetadata {
     }
 
     static func makeClientAttributionMetadata(intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata {
+        let elementsSessionConfigId = elementsSession.sessionID
         switch intent {
         case .paymentIntent(let paymentIntent):
-            return .init(elementsSessionConfigId: elementsSession.sessionID,
+            let isAutomaticPaymentMethodsEnabled = paymentIntent.automaticPaymentMethods?.enabled ?? false // if automaticPaymentMethods is nil, default to merchant_specified
+            return .init(elementsSessionConfigId: elementsSessionConfigId,
                          paymentIntentCreationFlow: .standard,
-                         paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified) // if automaticPaymentMethods is nil, default to merchant_specified
+                         paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
         case .setupIntent(let setupIntent):
-            return .init(elementsSessionConfigId: elementsSession.sessionID,
+            let isAutomaticPaymentMethodsEnabled = setupIntent.automaticPaymentMethods?.enabled ?? false // if automaticPaymentMethods is nil, default to merchant_specified
+            return .init(elementsSessionConfigId: elementsSessionConfigId,
                          paymentIntentCreationFlow: .standard,
-                         paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified) // if automaticPaymentMethods is nil, default to merchant_specified
+                         paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
         case .deferredIntent(let intentConfig):
-            return .init(elementsSessionConfigId: elementsSession.sessionID,
+            let isAutomaticPaymentMethodsEnabled = intentConfig.paymentMethodTypes?.isEmpty ?? true // if no payment method types specified in the intent config, default to automatic
+            return .init(elementsSessionConfigId: elementsSessionConfigId,
                          paymentIntentCreationFlow: .deferred,
-                         paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified) // if no payment method types specified in the intent config, default to automatic
+                         paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
         }
     }
 }
