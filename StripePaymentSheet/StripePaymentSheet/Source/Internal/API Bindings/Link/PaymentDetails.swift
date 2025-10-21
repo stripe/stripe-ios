@@ -317,7 +317,7 @@ extension ConsumerPaymentDetails.Details {
             self.last4 = last4
             self.country = country
         }
-        
+
         func displayName(with nickname: String?) -> String {
             if let nickname {
                 return nickname
