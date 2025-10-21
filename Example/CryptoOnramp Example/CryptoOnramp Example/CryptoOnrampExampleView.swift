@@ -20,17 +20,9 @@ struct CryptoOnrampExampleView: View {
 
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
-    @State private var email: String = ""
-    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
-    @State private var linkAuthIntentId: String?
     @State private var livemode: Bool = false
 
     @Environment(\.isLoading) private var isLoading
-    @FocusState private var isEmailFieldFocused: Bool
-
-    private var isNextButtonDisabled: Bool {
-        isLoading.wrappedValue || email.isEmpty || coordinator == nil
-    }
 
     private var isRunningOnSimulator: Bool {
         #if targetEnvironment(simulator)
@@ -126,7 +118,6 @@ struct CryptoOnrampExampleView: View {
         }
         .onChange(of: livemode) { _ in
             coordinator = nil
-            linkAuthIntentId = nil
             errorMessage = nil
             initializeCoordinator()
         }
@@ -162,83 +153,6 @@ struct CryptoOnrampExampleView: View {
                     self.errorMessage = "Failed to initialize CryptoOnrampCoordinator: \(error.localizedDescription)"
                 }
             }
-        }
-    }
-
-    private func lookupConsumerAndContinue() {
-        guard let coordinator else { return }
-        isLoading.wrappedValue = true
-        Task {
-            do {
-                let lookupResult = try await coordinator.hasLinkAccount(with: email)
-                let laiId: String?
-                if lookupResult {
-                    // Get Link Auth Intent ID from the demo merchant backend.
-                    let response = try await APIClient.shared.authenticateUser(
-                        with: email,
-                        oauthScopes: Array(selectedScopes),
-                        livemode: livemode
-                    )
-                    laiId = response.data.id
-                    print( "Successfully got Link Auth Intent ID from demo backend. Id: \(laiId!)")
-                } else {
-                    laiId = nil
-                }
-
-                await MainActor.run {
-                    errorMessage = nil
-                    isLoading.wrappedValue = false
-                    linkAuthIntentId = laiId
-
-                    if lookupResult {
-                        presentVerification(using: coordinator)
-                    } else {
-                        flowCoordinator.startForNewUser(email: email, selectedScopes: Array(selectedScopes))
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Customer lookup failed. Ensure the email address is properly formatted. (Underlying error: \(error.localizedDescription))"
-                }
-            }
-        }
-    }
-
-    private func presentVerification(using coordinator: CryptoOnrampCoordinator) {
-        guard let linkAuthIntentId = linkAuthIntentId else {
-            errorMessage = "No Link Auth Intent ID available for authorization."
-            return
-        }
-
-        if let viewController = UIApplication.shared.findTopNavigationController() {
-            Task {
-                do {
-                    let result = try await coordinator.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
-                    switch result {
-                    case .consented(let customerId):
-                        await MainActor.run {
-                            flowCoordinator.startForExistingUser(customerId: customerId)
-                        }
-                    case .denied:
-                        await MainActor.run {
-                            errorMessage = "Authorization was denied."
-                        }
-                    case .canceled:
-                        // do nothing, authorization canceled.
-                        break
-                    @unknown default:
-                        // do nothing, authorization canceled.
-                        break
-                    }
-                } catch {
-                    await MainActor.run {
-                        errorMessage = error.localizedDescription
-                    }
-                }
-            }
-        } else {
-            errorMessage = "Unable to find view controller to present from."
         }
     }
 }
