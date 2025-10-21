@@ -51,8 +51,20 @@ struct LogInSignUpView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
+                Image(systemName: "wallet.bifold")
+                    .font(.title.bold())
+                    .offset(y: -1)
+                    .rotationEffect(.degrees(-10))
+                    .foregroundStyle(.white)
+                    .padding(24)
+                    .background {
+                        Circle()
+                            .foregroundStyle(Color.accentColor)
+                    }
+
                 FormField("Email") {
                     TextField("Enter email address", text: $email)
+                        .font(.title3)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.emailAddress)
                         .autocapitalization(.none)
@@ -63,11 +75,11 @@ struct LogInSignUpView: View {
 
                 FormField("Password") {
                     SecureField("Enter password", text: $password)
+                        .font(.title3)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .textContentType(.password)
                         .focused($isPasswordFieldFocused)
                         .submitLabel(.done)
-
                 }
             }
             .padding()
