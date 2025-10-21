@@ -1,7 +1,13 @@
+## X.Y.Z - changes pending release 
+
+## 24.24.4 2025-10-20
+### PaymentSheet
+* [Fixed] Fixed a bug with `FlowController` and `EmbeddedPaymentElement` in dark mode where `paymentOption.image` could be a blank icon for Alma, Billie, Multibanco, Paynow, Promptpay, Satispay, and Sunbit
+
 ## 24.24.3 2025-10-13
 ### PaymentSheet
-* [Fixed] Fixed a bug where the`DoneButtonToolbar` was not tappable on devices < iOS 26 when compiled with Xcode26.
-* [Fixed] Fixed minor styling issues with Link UI on < iOS 26 when compiled with Xcode26.
+* [Fixed] Fixed a bug where the keyboard done button was not tappable on devices < iOS 26 when compiled with Xcode 26.
+* [Fixed] Fixed minor styling issues with Link UI on < iOS 26 when compiled with Xcode 26.
 
 ## 24.24.2 2025-10-06
 

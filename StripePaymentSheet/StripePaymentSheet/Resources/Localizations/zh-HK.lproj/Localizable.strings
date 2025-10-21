@@ -122,6 +122,8 @@
 
 "Default payment method" = "預設支付方式";
 
+"Did you mean %@? %@." = "您的意思是 %1$@ 嗎？%2$@。";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "手動輸入地址";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "使用帳單地址作為送貨地址";
 
 "View more" = "查看更多";
+
+"Yes, update" = "是，更新";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
 

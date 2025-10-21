@@ -175,6 +175,7 @@ extension STPAnalyticsClient {
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
         payload["session_id"] = AnalyticsHelper.shared.sessionID
+        payload["timestamp"] = Date().timeIntervalSince1970
         if STPAnalyticsClient.isSimulatorOrTest {
             payload["is_development"] = true
         }
