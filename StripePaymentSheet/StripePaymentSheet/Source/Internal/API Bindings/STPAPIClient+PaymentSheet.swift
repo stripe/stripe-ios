@@ -201,10 +201,12 @@ extension STPAPIClient {
     }
 
     func retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
+                                                         onBehalfOf: String?,
                                                          clientDefaultPaymentMethod: String?,
                                                          customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
 
         let parameters = makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
+                                                                            onBehalfOf: onBehalfOf,
                                                                             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                             customerSessionClientSecret: customerSessionClientSecret)
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
@@ -217,6 +219,7 @@ extension STPAPIClient {
     }
 
     func makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
+                                                            onBehalfOf: String?,
                                                             clientDefaultPaymentMethod: String?,
                                                             customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
         var parameters: [String: Any] = [:]
@@ -240,6 +243,7 @@ extension STPAPIClient {
         if let paymentMethodTypes {
             deferredIntent["payment_method_types"] = paymentMethodTypes
         }
+        deferredIntent["on_behalf_of"] = onBehalfOf
         parameters["deferred_intent"] = deferredIntent
         return parameters
     }
