@@ -114,7 +114,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         isLoading?.wrappedValue = true
         defer { isLoading?.wrappedValue = false }
         do {
-            let info = try await APIClient.shared.fetchCustomerInfo(cryptoCustomerToken: customerId)
+            let info = try await APIClient.shared.fetchCustomerInfo()
             isKycVerified = info.isKycVerified
             isIdDocumentVerified = info.isIdDocumentVerified
             advanceToNextStep()

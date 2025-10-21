@@ -184,19 +184,14 @@ struct RegistrationView: View {
 
     private func verify() async throws {
         // Authenticate with the demo merchant backend as well.
-        let response = try await APIClient.shared.authenticateUser(
-            with: email,
-            oauthScopes: selectedScopes,
-            livemode: livemode
-        )
-        let laiId = response.data.id
+        let response = try await APIClient.shared.createAuthIntent(oauthScopes: selectedScopes)
 
         await MainActor.run {
             isLoading.wrappedValue = true
             errorMessage = nil
         }
 
-        if let customerId = await presentAuthorization(laiId: laiId, using: coordinator) {
+        if let customerId = await presentAuthorization(laiId: response.authIntentId, using: coordinator) {
             await MainActor.run {
                 isLoading.wrappedValue = false
                 onCompleted(customerId)
