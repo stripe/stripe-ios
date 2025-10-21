@@ -19,10 +19,20 @@ struct CryptoOnrampExampleView: View {
     @StateObject private var flowCoordinator = CryptoOnrampFlowCoordinator()
 
     @State private var coordinator: CryptoOnrampCoordinator?
-    @State private var errorMessage: String?
     @State private var livemode: Bool = false
+    @State private var alert: Alert?
 
     @Environment(\.isLoading) private var isLoading
+
+    private var isPresentingAlert: Binding<Bool> {
+        Binding(get: {
+            alert != nil
+        }, set: { newValue in
+            if !newValue {
+                alert = nil
+            }
+        })
+    }
 
     private var isRunningOnSimulator: Bool {
         #if targetEnvironment(simulator)
@@ -100,6 +110,16 @@ struct CryptoOnrampExampleView: View {
                 }
             }
         }
+        .alert(
+            alert?.title ?? "Error",
+            isPresented: isPresentingAlert,
+            presenting: alert,
+            actions: { _ in
+                Button("OK") {}
+            }, message: { alert in
+                Text(alert.message)
+            }
+        )
         .onAppear {
             flowCoordinator.isLoading = isLoading
 
@@ -115,7 +135,6 @@ struct CryptoOnrampExampleView: View {
         }
         .onChange(of: livemode) { _ in
             coordinator = nil
-            errorMessage = nil
             initializeCoordinator()
         }
     }
@@ -147,7 +166,10 @@ struct CryptoOnrampExampleView: View {
             } catch {
                 await MainActor.run {
                     self.isLoading.wrappedValue = false
-                    self.errorMessage = "Failed to initialize CryptoOnrampCoordinator: \(error.localizedDescription)"
+                    self.alert = Alert(
+                        title: "Failed to initialize CryptoOnrampCoordinator",
+                        message: error.localizedDescription
+                    )
                 }
             }
         }
