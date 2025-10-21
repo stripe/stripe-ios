@@ -58,6 +58,34 @@ extension STPAPIClient {
         }
     }
 
+    func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        sessionID: String,
+        customerID: String?,
+        cookieStore: LinkCookieStore,
+        useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
+        Task {
+            var parameters: [String: Any] = [
+                "request_surface": requestSurface.rawValue,
+                "session_id": sessionID,
+                "link_auth_token_client_secret": linkAuthTokenClientSecret,
+            ]
+
+            parameters["customer_id"] = customerID
+
+            await performConsumerLookup(
+                parameters: parameters,
+                useMobileEndpoints: useMobileEndpoints,
+                canSyncAttestationState: canSyncAttestationState,
+                completion: completion
+            )
+        }
+    }
+
     func lookupLinkAuthIntent(
         linkAuthIntentID: String,
         sessionID: String,
@@ -224,6 +252,7 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -233,6 +262,7 @@ extension STPAPIClient {
             billingEmailAddress: billingEmailAddress,
             billingDetails: billingDetails,
             isDefault: isDefault,
+            clientAttributionMetadata: clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -244,6 +274,7 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -251,7 +282,7 @@ extension STPAPIClient {
 
         let billingParams = billingDetails.consumersAPIParams
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": requestSurface.rawValue,
             "type": "card",
@@ -261,6 +292,10 @@ extension STPAPIClient {
             "active": true, // card details are created with active true so they can be shared for passthrough mode
             "is_default": isDefault,
         ]
+
+        if let clientAttributionMetadata {
+            parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
+        }
 
         makePaymentDetailsRequest(
             endpoint: endpoint,
@@ -273,12 +308,13 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         linkedAccountId: String,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": requestSurface.rawValue,
             "bank_account": [
@@ -287,6 +323,10 @@ extension STPAPIClient {
             "type": "bank_account",
             "is_default": isDefault,
         ]
+
+        if let clientAttributionMetadata {
+            parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
+        }
 
         makePaymentDetailsRequest(
             endpoint: endpoint,
@@ -370,7 +410,7 @@ extension STPAPIClient {
         cvc: String?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
@@ -387,7 +427,12 @@ extension STPAPIClient {
         if let cvc = cvc {
             paymentMethodOptionsDict["card"] = ["cvc": cvc]
         }
-        paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, clientAttributionMetadata: clientAttributionMetadata)
+        if let clientAttributionMetadata {
+            // Send CAM at the top-level of all requests in scope for consistency
+            // Also send under payment_method_options because there are existing dependencies
+            paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, clientAttributionMetadata: clientAttributionMetadata)
+            parameters = Self.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
+        }
         parameters["payment_method_options"] = paymentMethodOptionsDict
 
         if let allowRedisplay {
@@ -607,6 +652,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         type: ConsumerSession.VerificationSession.SessionType,
         locale: Locale,
+        isResendingSmsCode: Bool = false,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -622,12 +668,17 @@ extension STPAPIClient {
         }()
         let endpoint: String = "consumers/sessions/start_verification"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
             "locale": locale.toLanguageTag(),
             "request_surface": requestSurface.rawValue,
         ]
+
+        // This parameter is specifically when resending SMS codes.
+        if isResendingSmsCode {
+            parameters["is_resend_sms_code"] = true
+        }
 
         makeConsumerSessionRequest(
             endpoint: endpoint,
