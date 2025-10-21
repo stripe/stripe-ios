@@ -438,7 +438,7 @@ final class LinkInlineSignupViewModel {
     }
 
     func logInlineSignupShown() {
-        analyticsHelper?.log(linkEvent: .inlineSignupShown(mode: self.mode))
+        analyticsHelper?.analyticsClient.logLinkInlineSignupShown(mode: self.mode)
     }
 }
 

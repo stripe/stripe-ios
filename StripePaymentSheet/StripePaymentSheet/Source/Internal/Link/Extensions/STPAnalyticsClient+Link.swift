@@ -71,6 +71,11 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .linkEmailSuggestionAccepted)
     }
 
+    func logLinkInlineSignupShown(mode: LinkInlineSignupViewModel.Mode) {
+        let params = ["mode": mode.analyticsValue]
+        self.logPaymentSheetEvent(event: .linkInlineSignupShown, params: params)
+    }
+
     // MARK: - 2FA
 
     func logLink2FAStart() {
@@ -153,4 +158,23 @@ extension STPAnalyticsClient {
                                  linkSessionType: sessionType,
                                  params: params)
         }
+}
+
+extension LinkInlineSignupViewModel.Mode {
+
+    var analyticsValue: String {
+        switch self {
+        case .checkbox:
+            "checkbox_default_unchecked"
+        case .checkboxWithDefaultOptIn:
+            "checkbox_default_checked"
+        case .textFieldsOnlyEmailFirst:
+            "text_fields_only_email_first"
+        case .textFieldsOnlyPhoneFirst:
+            "text_fields_only_phone_first"
+        case .signupOptIn:
+            "signup_opt_in"
+        }
+    }
+
 }
