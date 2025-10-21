@@ -43,11 +43,11 @@ class LinkURLGeneratorTests: XCTestCase {
                 "merchant_integration_subtype": "mobile",
                 "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)",
                 "payment_intent_creation_flow": "standard",
-                "payment_method_selection_flow": "merchant_specified"
+                "payment_method_selection_flow": "merchant_specified",
             ],
             "customerInfo": [
                 "country": "US",
-                "email": "test@example.com"
+                "email": "test@example.com",
             ],
             "experiments": [:] as [String: Any],
             "flags": [:] as [String: Any],
@@ -58,18 +58,18 @@ class LinkURLGeneratorTests: XCTestCase {
             "loggerMetadata": [:] as [String: Any],
             "merchantInfo": [
                 "businessName": "Test test",
-                "country": "US"
+                "country": "US",
             ],
             "path": "mobile_pay",
             "paymentInfo": [
                 "amount": 100,
-                "currency": "USD"
+                "currency": "USD",
             ],
             "paymentObject": "link_payment_method",
             "paymentUserAgent": "test",
             "publishableKey": "pk_test_123",
             "setupFutureUsage": false,
-            "stripeAccount": "acct_1234"
+            "stripeAccount": "acct_1234",
         ]
 
         let jsonData = try! JSONSerialization.data(withJSONObject: expectedJSON, options: [.sortedKeys])
