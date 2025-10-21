@@ -301,7 +301,7 @@ extension ConsumerPaymentDetails.Details {
 
         private enum CodingKeys: String, CodingKey {
             case iconCode = "bankIconCode"
-            case name = "bankName"
+            case name = "bankAccountName"
             case last4
             case country
         }
