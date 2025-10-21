@@ -54,12 +54,17 @@ final class APIClient {
         }
     }
 
-    func setAuthToken(_ token: String?) {
+    func setAuthToken(_ token: String) {
         self.authToken = token
     }
 
-    func setAuthTokenWithLAI(_ token: String?) {
+    func setAuthTokenWithLAI(_ token: String) {
         self.authTokenWithLAI = token
+    }
+
+    func clearAuthTokens() {
+        self.authToken = nil
+        self.authTokenWithLAI = nil
     }
 
     func request<T: Decodable, Body: Encodable>(

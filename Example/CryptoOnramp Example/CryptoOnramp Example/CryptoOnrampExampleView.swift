@@ -135,6 +135,7 @@ struct CryptoOnrampExampleView: View {
         }
         .onChange(of: livemode) { _ in
             coordinator = nil
+            APIClient.shared.clearAuthTokens()
             initializeCoordinator()
         }
     }
