@@ -10,9 +10,16 @@ import SwiftUI
 @_spi(STP)
 import StripeCryptoOnramp
 
+/// The first screen in the example app flow, allowing a user to log in and sign up using the demo backend, and begin link authentication.
 struct LogInSignUpView: View {
+
+    /// The coordinator used for link authentication.
     let coordinator: CryptoOnrampCoordinator?
+
+    /// The flow coordinator used to advance to the next steps after authentication.
     let flowCoordinator: CryptoOnrampFlowCoordinator
+
+    /// Whether livemode is enabled, which can be toggled from this view.
     @Binding var livemode: Bool
 
     @Environment(\.isLoading) private var isLoading
@@ -47,6 +54,8 @@ struct LogInSignUpView: View {
         return false
         #endif
     }
+
+    // MARK: - View
 
     var body: some View {
         ScrollView {
@@ -152,7 +161,7 @@ struct LogInSignUpView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                _ = try await APIClient.shared.logIn(email: email, password: password, livemode: livemode)
+                try await APIClient.shared.logIn(email: email, password: password, livemode: livemode)
                 await proceedToLinkAuthorization()
             } catch {
                 await MainActor.run {
@@ -167,7 +176,7 @@ struct LogInSignUpView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                _ = try await APIClient.shared.signUp(email: email, password: password, livemode: livemode)
+                try await APIClient.shared.signUp(email: email, password: password, livemode: livemode)
                 await proceedToLinkAuthorization()
             } catch {
                 await MainActor.run {
