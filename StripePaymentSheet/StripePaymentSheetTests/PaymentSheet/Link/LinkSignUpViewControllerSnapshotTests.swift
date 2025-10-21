@@ -38,6 +38,13 @@ final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(sut.stackView)
     }
 
+    func testWithEmailSuggestion() throws {
+        let sut = try makeSUT(email: "user@example.con", suggestedEmail: "user@example.com")
+        sut.updateUI()
+
+        verify(sut.stackView)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -52,20 +59,23 @@ final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
 
 extension LinkSignUpViewControllerSnapshotTests {
 
-    func makeSUT(email: String?) throws -> LinkSignUpViewController {
+    func makeSUT(email: String?, suggestedEmail: String? = nil) throws -> LinkSignUpViewController {
         let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
         let session = email == nil ? LinkStubs.consumerSession(supportedPaymentDetailsTypes: [.card]) : nil
 
+        let linkAccount = PaymentSheetLinkAccount(
+            email: email ?? "",
+            session: session,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        linkAccount.suggestedEmail = suggestedEmail
+
         return LinkSignUpViewController(
             accountService: LinkAccountService(elementsSession: elementsSession),
-            linkAccount: .init(
-                email: email ?? "",
-                session: session,
-                publishableKey: nil,
-                displayablePaymentDetails: nil,
-                useMobileEndpoints: false,
-                canSyncAttestationState: false
-            ),
+            linkAccount: linkAccount,
             defaultBillingDetails: nil
         )
     }

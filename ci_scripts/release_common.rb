@@ -126,7 +126,7 @@ def changelog(version)
 end
 
 def update_placeholder(version, filename)
-  changelog = IO.readlines(filename).map do |line|
+  changelog = File.readlines(filename).map do |line|
     if line.upcase.start_with?('## X')
       "## X.Y.Z - changes pending release \n\n" + "## #{version} #{Time.now.strftime('%Y-%m-%d')}\n"
     elsif line.start_with?('### Migrating from versions < X')
