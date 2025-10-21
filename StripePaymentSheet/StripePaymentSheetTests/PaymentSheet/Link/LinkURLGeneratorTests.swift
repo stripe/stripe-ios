@@ -29,12 +29,12 @@ class LinkURLGeneratorTests: XCTestCase {
                                    intentMode: .payment,
                                    setupFutureUsage: false,
                                    linkFundingSources: [.card],
-                                   clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123")
+                                   clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .standard, paymentMethodSelectionFlow: .merchantSpecified)
     )
 
     func testURLCreation() {
         let url = try! LinkURLGenerator.url(params: testParams)
-        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJjdXN0b21lckluZm8iOnsiY291bnRyeSI6IlVTIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0sImV4cGVyaW1lbnRzIjp7fSwiZmxhZ3MiOnt9LCJpbnRlZ3JhdGlvblR5cGUiOiJtb2JpbGUiLCJpbnRlbnRNb2RlIjoicGF5bWVudCIsImxpbmtGdW5kaW5nU291cmNlcyI6WyJDQVJEIl0sImxvY2FsZSI6ImVuLVVTIiwibG9nZ2VyTWV0YWRhdGEiOnt9LCJtZXJjaGFudEluZm8iOnsiYnVzaW5lc3NOYW1lIjoiVGVzdCB0ZXN0IiwiY291bnRyeSI6IlVTIn0sInBhdGgiOiJtb2JpbGVfcGF5IiwicGF5bWVudEluZm8iOnsiYW1vdW50IjoxMDAsImN1cnJlbmN5IjoiVVNEIn0sInBheW1lbnRPYmplY3QiOiJsaW5rX3BheW1lbnRfbWV0aG9kIiwicGF5bWVudFVzZXJBZ2VudCI6InRlc3QiLCJwdWJsaXNoYWJsZUtleSI6InBrX3Rlc3RfMTIzIiwic2V0dXBGdXR1cmVVc2FnZSI6ZmFsc2UsInN0cmlwZUFjY291bnQiOiJhY2N0XzEyMzQifQ==")
+        XCTAssertEqual(url.absoluteString, "https://checkout.link.com/#eyJjbGllbnRBdHRyaWJ1dGlvbk1ldGFkYXRhIjp7ImVsZW1lbnRzX3Nlc3Npb25fY29uZmlnX2lkIjoiMTIzIiwibWVyY2hhbnRfaW50ZWdyYXRpb25fc291cmNlIjoiZWxlbWVudHMiLCJtZXJjaGFudF9pbnRlZ3JhdGlvbl9zdWJ0eXBlIjoibW9iaWxlIiwibWVyY2hhbnRfaW50ZWdyYXRpb25fdmVyc2lvbiI6InN0cmlwZS1pb3NcLzI0LjI0LjMiLCJwYXltZW50X2ludGVudF9jcmVhdGlvbl9mbG93Ijoic3RhbmRhcmQiLCJwYXltZW50X21ldGhvZF9zZWxlY3Rpb25fZmxvdyI6Im1lcmNoYW50X3NwZWNpZmllZCJ9LCJjdXN0b21lckluZm8iOnsiY291bnRyeSI6IlVTIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0sImV4cGVyaW1lbnRzIjp7fSwiZmxhZ3MiOnt9LCJpbnRlZ3JhdGlvblR5cGUiOiJtb2JpbGUiLCJpbnRlbnRNb2RlIjoicGF5bWVudCIsImxpbmtGdW5kaW5nU291cmNlcyI6WyJDQVJEIl0sImxvY2FsZSI6ImVuLVVTIiwibG9nZ2VyTWV0YWRhdGEiOnt9LCJtZXJjaGFudEluZm8iOnsiYnVzaW5lc3NOYW1lIjoiVGVzdCB0ZXN0IiwiY291bnRyeSI6IlVTIn0sInBhdGgiOiJtb2JpbGVfcGF5IiwicGF5bWVudEluZm8iOnsiYW1vdW50IjoxMDAsImN1cnJlbmN5IjoiVVNEIn0sInBheW1lbnRPYmplY3QiOiJsaW5rX3BheW1lbnRfbWV0aG9kIiwicGF5bWVudFVzZXJBZ2VudCI6InRlc3QiLCJwdWJsaXNoYWJsZUtleSI6InBrX3Rlc3RfMTIzIiwic2V0dXBGdXR1cmVVc2FnZSI6ZmFsc2UsInN0cmlwZUFjY291bnQiOiJhY2N0XzEyMzQifQ==")
     }
 
     func testURLCreationRegularUnicode() {
@@ -71,7 +71,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            linkFundingSources: [],
-                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123"))
+                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
     }
@@ -103,7 +103,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: true,
                                            linkFundingSources: [.card],
-                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123"))
+                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
     }
@@ -135,7 +135,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: true,
                                            linkFundingSources: [.card],
-                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123"))
+                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
     }
@@ -167,7 +167,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            linkFundingSources: [.card],
-                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123"))
+                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
     }
@@ -199,7 +199,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            linkFundingSources: [.card],
-                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123"))
+                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
     }
@@ -235,7 +235,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            setupFutureUsage: false,
                                            cardBrandChoice: LinkURLParams.CardBrandChoiceInfo(isMerchantEligibleForCBC: true, stripePreferredNetworks: ["cartes_bancaires"], supportedCobrandedNetworks: ["cartes_bancaires": true]),
                                            linkFundingSources: [],
-                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123")
+                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         )
 
         XCTAssertEqual(params, expectedParams)
@@ -270,7 +270,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            setupFutureUsage: false,
                                            cardBrandChoice: nil,
                                            linkFundingSources: [.card],
-                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123")
+                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         )
 
         XCTAssertEqual(params, expectedParams)
@@ -305,7 +305,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            setupFutureUsage: false,
                                            cardBrandChoice: nil,
                                            linkFundingSources: [.bankAccount, .card],
-                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "config_id_123")
+                                           clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         )
 
         XCTAssertEqual(params, expectedParams)
