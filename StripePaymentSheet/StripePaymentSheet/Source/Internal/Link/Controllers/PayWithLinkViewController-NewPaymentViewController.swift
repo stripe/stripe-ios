@@ -225,9 +225,7 @@ extension PayWithLinkViewController {
             confirmButton.update(state: .processing)
             coordinator?.allowSheetDismissal(false)
 
-            if context.analyticsHelper.integrationShape.isMPE {
-                confirmParams.paymentMethodParams.clientAttributionMetadata = context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID)
-            }
+            confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
 
             linkAccount.createPaymentDetails(
                 with: confirmParams.paymentMethodParams,
