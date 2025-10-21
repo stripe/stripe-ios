@@ -141,7 +141,7 @@ import Foundation
         return STPElementsSession(
             allResponseFields: allResponseFields,
             sessionID: UUID().uuidString,
-            configID: UUID().uuidString,
+            configID: "",
             orderedPaymentMethodTypes: sortedPaymentMethodTypes,
             orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: [],
