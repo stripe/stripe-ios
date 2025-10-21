@@ -211,7 +211,10 @@ struct LogInSignUpView: View {
                     }
                 }
             } else {
-                flowCoordinator.startForNewUser(email: email, selectedScopes: scopes)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    flowCoordinator.startForNewUser(email: email, selectedScopes: scopes)
+                }
             }
         } catch {
             await MainActor.run {
