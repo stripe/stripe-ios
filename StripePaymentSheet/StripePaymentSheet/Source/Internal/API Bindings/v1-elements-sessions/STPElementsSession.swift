@@ -18,7 +18,7 @@ import Foundation
     let sessionID: String
 
     /// Backend-logged Elements Session Config ID
-    let configID: String
+    let configID: String?
 
     /// The ordered payment method preference for this ElementsSession.
     let orderedPaymentMethodTypes: [STPPaymentMethodType]
@@ -74,7 +74,7 @@ import Foundation
     internal init(
         allResponseFields: [AnyHashable: Any],
         sessionID: String,
-        configID: String,
+        configID: String?,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         orderedPaymentMethodTypesAndWallets: [String],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType],
@@ -141,7 +141,7 @@ import Foundation
         return STPElementsSession(
             allResponseFields: allResponseFields,
             sessionID: UUID().uuidString,
-            configID: "",
+            configID: nil,
             orderedPaymentMethodTypes: sortedPaymentMethodTypes,
             orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: [],
@@ -170,12 +170,12 @@ extension STPElementsSession: STPAPIResponseDecodable {
         guard let response,
               let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
               let paymentMethodTypeStrings = paymentMethodPrefDict["ordered_payment_method_types"] as? [String],
-              let sessionID = response["session_id"] as? String,
-              let configID = response["config_id"] as? String
+              let sessionID = response["session_id"] as? String
         else {
             return nil
         }
 
+        let configID = response["config_id"] as? String
         // Optional fields:
         let unactivatedPaymentMethodTypeStrings = response["unactivated_payment_method_types"] as? [String] ?? []
         let orderedPaymentMethodTypesAndWallets = response["ordered_payment_method_types_and_wallets"] as? [String] ?? []
