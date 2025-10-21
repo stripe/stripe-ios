@@ -37,6 +37,7 @@ extension APIClient {
         return response
     }
 
+    @discardableResult
     func saveUser(cryptoCustomerId: String) async throws -> SaveUserResponse {
         guard let token = authTokenWithLAI else { throw APIError.missingAuthTokenWithLAI }
         let saveUserRequest = SaveUserRequest(cryptoCustomerId: cryptoCustomerId)

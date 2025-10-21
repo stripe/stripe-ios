@@ -196,6 +196,10 @@ struct LogInSignUpView: View {
                 }
 
                 let authorizationResult = try await coordinator.authorize(linkAuthIntentId: createAuthIntentResponse.authIntentId, from: navController)
+                
+                if case let .consented(cryptoCustomerId) = authorizationResult {
+                    try await APIClient.shared.saveUser(cryptoCustomerId: cryptoCustomerId)
+                }
 
                 await MainActor.run {
                     isLoading.wrappedValue = false

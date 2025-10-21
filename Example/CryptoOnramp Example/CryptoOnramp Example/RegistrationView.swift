@@ -206,7 +206,8 @@ struct RegistrationView: View {
                 let result = try await coordinator.authorize(linkAuthIntentId: laiId, from: viewController)
 
                 switch result {
-                case .consented:
+                case let .consented(customerId):
+                    try await APIClient.shared.saveUser(cryptoCustomerId: customerId)
                     return true
                 case .denied:
                     await MainActor.run {
