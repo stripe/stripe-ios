@@ -122,6 +122,8 @@
 
 "Default payment method" = "Mètode de pagament per defecte";
 
+"Did you mean %@? %@." = "Volíeu dir %1$@? %2$@.";
+
 "EPS Bank" = "Banc EPS";
 
 "Enter address manually" = "Introduir l'adreça manualment";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Utilitzar l'adreça de facturació per a l'enviament";
 
 "View more" = "Visualitza més";
+
+"Yes, update" = "Sí, actualitzar";
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 

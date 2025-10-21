@@ -29,20 +29,26 @@ extension APIClient {
         ])
     }
 
-    func createOnrampSession(requestObject: CreateOnrampSessionRequest) async throws -> CreateOnrampSessionResponse {
-        guard let token = authToken else { throw APIError.missingAuthToken }
-        return try await request("create_onramp_session", method: .POST, body: requestObject, bearerToken: token)
+    func createOnrampSession(requestObject: CreateOnrampSessionRequest, useV1API: Bool = false) async throws -> CreateOnrampSessionResponse {
+        let path = useV1API ? "v1/create_onramp_session" : "create_onramp_session"
+        let token = useV1API ? authTokenWithLAI : authToken
+        guard let token else { throw useV1API ? APIError.missingAuthTokenWithLAI : APIError.missingAuthToken }
+        return try await request(path, method: .POST, body: requestObject, bearerToken: token)
     }
 
     @discardableResult
-    func refreshQuote(onrampSessionId: String) async throws -> QuoteResponse {
-        guard let token = authToken else { throw APIError.missingAuthToken }
-        return try await request("quote", method: .POST, body: QuoteRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
+    func refreshQuote(onrampSessionId: String, useV1API: Bool = false) async throws -> QuoteResponse {
+        let path = useV1API ? "v1/quote" : "quote"
+        let token = useV1API ? authTokenWithLAI : authToken
+        guard let token else { throw useV1API ? APIError.missingAuthTokenWithLAI : APIError.missingAuthToken }
+        return try await request(path, method: .POST, body: QuoteRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
     }
 
-    func checkout(onrampSessionId: String) async throws -> CheckoutResponse {
-        guard let token = authToken else { throw APIError.missingAuthToken }
-        return try await request("checkout", method: .POST, body: CheckoutRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
+    func checkout(onrampSessionId: String, useV1API: Bool = false) async throws -> CheckoutResponse {
+        let path = useV1API ? "v1/checkout" : "checkout"
+        let token = useV1API ? authTokenWithLAI : authToken
+        guard let token else { throw useV1API ? APIError.missingAuthTokenWithLAI : APIError.missingAuthToken }
+        return try await request(path, method: .POST, body: CheckoutRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
     }
 
     func fetchSessionStatus(cryptoOnrampSessionId: String) async throws -> SessionStatusResponse {

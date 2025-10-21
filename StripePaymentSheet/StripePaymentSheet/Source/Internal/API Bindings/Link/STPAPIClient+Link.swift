@@ -428,7 +428,10 @@ extension STPAPIClient {
             paymentMethodOptionsDict["card"] = ["cvc": cvc]
         }
         if let clientAttributionMetadata {
+            // Send CAM at the top-level of all requests in scope for consistency
+            // Also send under payment_method_options because there are existing dependencies
             paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, clientAttributionMetadata: clientAttributionMetadata)
+            parameters = Self.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
         parameters["payment_method_options"] = paymentMethodOptionsDict
 
@@ -649,6 +652,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         type: ConsumerSession.VerificationSession.SessionType,
         locale: Locale,
+        isResendingSmsCode: Bool = false,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -664,12 +668,17 @@ extension STPAPIClient {
         }()
         let endpoint: String = "consumers/sessions/start_verification"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
             "locale": locale.toLanguageTag(),
             "request_surface": requestSurface.rawValue,
         ]
+
+        // This parameter is specifically when resending SMS codes.
+        if isResendingSmsCode {
+            parameters["is_resend_sms_code"] = true
+        }
 
         makeConsumerSessionRequest(
             endpoint: endpoint,

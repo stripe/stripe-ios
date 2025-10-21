@@ -122,6 +122,8 @@
 
 "Default payment method" = "Phương thức thanh toán mặc định";
 
+"Did you mean %@? %@." = "Ý của quý vị có phải là %1$@? %2$@.";
+
 "EPS Bank" = "Ngân hàng EPS";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Sử dụng địa chỉ thanh toán cho việc giao hàng";
 
 "View more" = "Xem thêm";
+
+"Yes, update" = "Có, cập nhật";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 

@@ -206,7 +206,7 @@ extension PaymentSheet {
                     isSettingUp: isSettingUp(paymentMethodType)
                 )
                 confirmParams.paymentMethodParams.radarOptions = radarOptions
-                confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+                confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                 switch intent {
                     // MARK: ↪ PaymentIntent
                 case .paymentIntent(let paymentIntent):
@@ -348,6 +348,7 @@ extension PaymentSheet {
                         paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
+                        paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
@@ -362,6 +363,7 @@ extension PaymentSheet {
                         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                         setupIntentParams.paymentMethodParams = paymentMethodParams
                         setupIntentParams.returnURL = configuration.returnURL
+                        setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
                             with: authenticationContext,
@@ -738,6 +740,9 @@ extension PaymentSheet {
                 params.paymentMethodOptions = paymentMethodoptions
                 paymentMethodType = paymentMethodParams.type
             }
+            // Send CAM at the top-level of all requests in scope for consistency
+            // Also send under payment_method_data because there are existing dependencies
+            params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
@@ -792,6 +797,9 @@ extension PaymentSheet {
                 params = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
             }
+            // Send CAM at the top-level of all requests in scope for consistency
+            // Also send under payment_method_data because there are existing dependencies
+            params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
