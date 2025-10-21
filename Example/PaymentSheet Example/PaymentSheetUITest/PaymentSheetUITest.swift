@@ -253,8 +253,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
         // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
-        XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_form_shown")
-        XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
+        XCTAssertEqual(analyticsLog[12][string: "event"], "mc_form_shown")
+        XCTAssertEqual(analyticsLog[12][string: "selected_lpm"], "card")
 
         try! fillCardData(app)
 
