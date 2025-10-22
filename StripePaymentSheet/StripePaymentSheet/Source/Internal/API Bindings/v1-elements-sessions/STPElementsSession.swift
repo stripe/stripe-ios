@@ -170,8 +170,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
         guard let response,
               let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
               let paymentMethodTypeStrings = paymentMethodPrefDict["ordered_payment_method_types"] as? [String],
-              let sessionID = response["session_id"] as? String,
-              let configID = response["config_id"] as? String
+              let sessionID = response["session_id"] as? String
         else {
             return nil
         }
