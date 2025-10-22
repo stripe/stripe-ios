@@ -26,11 +26,8 @@ struct RegistrationView: View {
     /// The OAuth scopes selected for authentication.
     let selectedScopes: [OAuthScopes]
 
-    /// Whether the app is running in livemode or testmode.
-    let livemode: Bool
-
-    /// Called when registration and authentication succeed. Provides the crypto customer id.
-    let onCompleted: (_ customerId: String) -> Void
+    /// Called when registration and authentication succeed.
+    let onCompleted: () -> Void
 
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
@@ -184,22 +181,17 @@ struct RegistrationView: View {
 
     private func verify() async throws {
         // Authenticate with the demo merchant backend as well.
-        let response = try await APIClient.shared.authenticateUser(
-            with: email,
-            oauthScopes: selectedScopes,
-            livemode: livemode
-        )
-        let laiId = response.data.id
+        let response = try await APIClient.shared.createAuthIntent(oauthScopes: selectedScopes)
 
         await MainActor.run {
             isLoading.wrappedValue = true
             errorMessage = nil
         }
 
-        if let customerId = await presentAuthorization(laiId: laiId, using: coordinator) {
+        if await presentAuthorization(laiId: response.authIntentId, using: coordinator) {
             await MainActor.run {
                 isLoading.wrappedValue = false
-                onCompleted(customerId)
+                onCompleted()
             }
         } else {
             await MainActor.run {
@@ -208,35 +200,36 @@ struct RegistrationView: View {
         }
     }
 
-    private func presentAuthorization(laiId: String, using coordinator: CryptoOnrampCoordinator) async -> String? {
+    private func presentAuthorization(laiId: String, using coordinator: CryptoOnrampCoordinator) async -> Bool {
         if let viewController = UIApplication.shared.findTopNavigationController() {
             do {
                 let result = try await coordinator.authorize(linkAuthIntentId: laiId, from: viewController)
 
                 switch result {
-                case .consented(let customerId):
-                    return customerId
+                case let .consented(customerId):
+                    try await APIClient.shared.saveUser(cryptoCustomerId: customerId)
+                    return true
                 case .denied:
                     await MainActor.run {
                         errorMessage = "Consent rejected"
                     }
-                    return nil
+                    return false
                 case .canceled:
-                    return nil
+                    return false
                 @unknown default:
-                    return nil
+                    return false
                 }
             } catch {
                 await MainActor.run {
                     errorMessage = error.localizedDescription
                 }
-                return nil
+                return false
             }
         } else {
             await MainActor.run {
                 errorMessage = "Unable to find view controller to present from."
             }
-            return nil
+            return false
         }
     }
 
@@ -272,8 +265,7 @@ struct RegistrationView: View {
             coordinator: coordinator,
             email: "test@example.com",
             selectedScopes: OAuthScopes.requiredScopes,
-            livemode: false,
-            onCompleted: { _ in }
+            onCompleted: {}
         )
     }
 }
