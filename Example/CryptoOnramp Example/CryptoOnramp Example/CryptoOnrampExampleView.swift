@@ -163,9 +163,8 @@ struct CryptoOnrampExampleView: View {
         .onChange(of: flowCoordinator.pathBinding.wrappedValue.isEmpty) { isEmpty in
             // Update our local storage to remember the authenticated user once we've navigated
             // away from this view. See the comments in the `onChange(of:)` above.
-            if !isEmpty {
-                seamlessSignInEmail = APIClient.shared.seamlessSignInEmail
-            }
+            guard !isEmpty else { return }
+            seamlessSignInEmail = APIClient.shared.seamlessSignInEmail
         }
     }
 
