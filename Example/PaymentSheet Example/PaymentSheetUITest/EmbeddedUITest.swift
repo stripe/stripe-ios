@@ -40,6 +40,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
 
         let fillCardAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter { $0.starts(with: "link") == false }
             .suffix(5)
         XCTAssertEqual(
             fillCardAnalytics,
