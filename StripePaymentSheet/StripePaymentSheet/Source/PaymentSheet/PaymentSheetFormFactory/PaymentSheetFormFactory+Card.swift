@@ -148,7 +148,8 @@ extension PaymentSheetFormFactory {
                 accountService: accountService,
                 allowsDefaultOptIn: allowsLinkDefaultOptIn,
                 signupOptInFeatureEnabled: signupOptInFeatureEnabled,
-                signupOptInInitialValue: signupOptInInitialValue
+                signupOptInInitialValue: signupOptInInitialValue,
+                analyticsHelper: analyticsHelper
             )
             elements.append(inlineSignupElement)
         }
