@@ -2924,7 +2924,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         let bankRow = app
             .otherElements
-            .matching(NSPredicate(format: "label CONTAINS 'Test Institution'"))
+            .matching(NSPredicate(format: "label CONTAINS 'Success'"))
             .firstMatch
         XCTAssertTrue(bankRow.waitForExistenceAndTap())
 
