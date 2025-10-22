@@ -252,9 +252,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.buttons["+ Add"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
-        // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
-        XCTAssertEqual(analyticsLog[12][string: "event"], "mc_form_shown")
-        XCTAssertEqual(analyticsLog[12][string: "selected_lpm"], "card")
+        let formShownAnalytic = try XCTUnwrap(analyticsLog.first { $0[string: "event"] == "mc_form_shown" }, "Should fire the `mc_form_shown`")
+        XCTAssertEqual(formShownAnalytic[string: "selected_lpm"], "card", "The `mc_form_shown` event should have `selected_lpm` = card")
 
         try! fillCardData(app)
 
