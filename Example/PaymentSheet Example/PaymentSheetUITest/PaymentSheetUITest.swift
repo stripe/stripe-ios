@@ -630,10 +630,10 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
         // filter out async passive captcha logs
         let filteredAnalytics = analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" && !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.starts(with: "link") ?? false) })
-        
+
         // fraud detection telemetry should not be sent in tests, so it should report an API failure
         let expected = ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown"]
-        
+
         XCTAssertEqual(filteredAnalytics, expected)
         XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.starts(with: "link") ?? false) }).last?[string: "selected_lpm"], "card")
 
