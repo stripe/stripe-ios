@@ -50,7 +50,6 @@ struct SeamlessSignInView: View {
                     .foregroundColor(Color.accentColor)
                     .padding()
 
-
                 Text(attributedContinueString)
                     .font(.title)
                     .bold()
