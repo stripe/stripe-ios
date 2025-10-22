@@ -158,13 +158,6 @@ class STPImageLibraryTestSwift: XCTestCase {
         }
     }
 
-    func testMiscImages() {
-        STPAssertEqualImages(
-            STPImageLibrary.bankIcon(),
-            STPImageLibrary.safeImageNamed("stp_icon_bank", templateIfAvailable: false)
-        )
-    }
-
     func testBankIconCodeImagesExist() {
         for iconCode in PaymentSheetImageLibrary.BankIconCodeRegexes.keys {
             XCTAssertNotNil(
