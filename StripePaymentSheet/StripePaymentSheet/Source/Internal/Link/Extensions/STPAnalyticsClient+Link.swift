@@ -67,6 +67,15 @@ extension STPAnalyticsClient {
         self.logPaymentSheetEvent(event: .linkAccountLookupFailure, error: error)
     }
 
+    func logLinkEmailSuggestionAccepted() {
+        self.logPaymentSheetEvent(event: .linkEmailSuggestionAccepted)
+    }
+
+    func logLinkInlineSignupShown(mode: LinkInlineSignupViewModel.Mode) {
+        let params = ["mode": mode.analyticsValue]
+        self.logPaymentSheetEvent(event: .linkInlineSignupShown, params: params)
+    }
+
     // MARK: - 2FA
 
     func logLink2FAStart() {
@@ -87,6 +96,11 @@ extension STPAnalyticsClient {
 
     func logLink2FACancel() {
         self.logPaymentSheetEvent(event: .link2FACancel)
+    }
+
+    func logLink2FAResendCode(type: ConsumerSession.VerificationSession.SessionType = .sms) {
+        let params = ["verification_type": type.rawValue]
+        self.logPaymentSheetEvent(event: .link2FAResendCode, params: params)
     }
 
     func logLinkBailedToWebFlow() {
@@ -144,4 +158,23 @@ extension STPAnalyticsClient {
                                  linkSessionType: sessionType,
                                  params: params)
         }
+}
+
+extension LinkInlineSignupViewModel.Mode {
+
+    var analyticsValue: String {
+        switch self {
+        case .checkbox:
+            "checkbox_default_unchecked"
+        case .checkboxWithDefaultOptIn:
+            "checkbox_default_checked"
+        case .textFieldsOnlyEmailFirst:
+            "text_fields_only_email_first"
+        case .textFieldsOnlyPhoneFirst:
+            "text_fields_only_phone_first"
+        case .signupOptIn:
+            "signup_opt_in"
+        }
+    }
+
 }

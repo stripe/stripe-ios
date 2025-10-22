@@ -122,6 +122,8 @@
 
 "Default payment method" = "Metodă de plată implicită";
 
+"Did you mean %@? %@." = "Ați vrut să spuneți %1$@? %2$@.";
+
 "EPS Bank" = "Banca EPS";
 
 "Enter address manually" = "Introduceți adresa manual";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Utilizați adresa de facturare pentru expediere";
 
 "View more" = "Vizualizați mai multe";
+
+"Yes, update" = "Da, actualizare";
 
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
 

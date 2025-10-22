@@ -20,8 +20,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case registration(email: String, oAuthScopes: [OAuthScopes])
         case kycInfo
         case identity
-        case wallets(customerId: String)
-        case payment(customerId: String, wallet: CustomerWalletsResponse.Wallet)
+        case wallets
+        case payment(wallet: CustomerWalletsResponse.Wallet)
         case paymentSummary(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String)
         case checkoutSuccess(message: String)
     }
@@ -32,7 +32,6 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// The current navigation path, intended to be used with `NavigationStack`.
     @Published var path: [Route] = []
 
-    private(set) var customerId: String?
     private(set) var selectedWallet: CustomerWalletsResponse.Wallet?
     private var isKycVerified = false
     private var isIdDocumentVerified = false
@@ -46,10 +45,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Begins the flow for an existing user.
-    /// - Parameter customerId: The user's customer id.
-    func startForExistingUser(customerId: String) {
+    func startForExistingUser() {
         resetInternalState()
-        self.customerId = customerId
         Task {
             await refreshCustomerInfoAndPushNext()
         }
@@ -65,9 +62,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Advances to the next step of the flow post-registration.
-    /// - Parameter customerId: The user's customer id.
-    func advanceAfterRegistration(customerId: String) {
-        self.customerId = customerId
+    func advanceAfterRegistration() {
         Task {
             await refreshCustomerInfoAndPushNext()
         }
@@ -110,11 +105,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     private func refreshCustomerInfoAndPushNext() async {
-        guard let customerId else { return }
         isLoading?.wrappedValue = true
         defer { isLoading?.wrappedValue = false }
         do {
-            let info = try await APIClient.shared.fetchCustomerInfo(cryptoCustomerToken: customerId)
+            let info = try await APIClient.shared.fetchCustomerInfo()
             isKycVerified = info.isKycVerified
             isIdDocumentVerified = info.isIdDocumentVerified
             advanceToNextStep()
@@ -135,10 +129,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             path.append(.checkoutSuccess(message: successfulCheckoutMessage))
         } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription {
             path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription))
-        } else if let selectedWallet, let customerId {
-            path.append(.payment(customerId: customerId, wallet: selectedWallet))
-        } else if let customerId {
-            path.append(.wallets(customerId: customerId))
+        } else if let selectedWallet {
+            path.append(.payment(wallet: selectedWallet))
+        } else {
+            path.append(.wallets)
         }
     }
 
@@ -152,7 +146,6 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private func resetInternalState() {
         isKycVerified = false
         isIdDocumentVerified = false
-        customerId = nil
         selectedWallet = nil
         createOnrampSessionResponse = nil
         selectedPaymentMethodDescription = nil

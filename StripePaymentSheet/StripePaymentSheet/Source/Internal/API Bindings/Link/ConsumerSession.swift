@@ -286,6 +286,7 @@ extension ConsumerSession {
     func startVerification(
         type: VerificationSession.SessionType = .sms,
         locale: Locale = .autoupdatingCurrent,
+        isResendingSmsCode: Bool = false,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
@@ -294,6 +295,7 @@ extension ConsumerSession {
             for: clientSecret,
             type: type,
             locale: locale,
+            isResendingSmsCode: isResendingSmsCode,
             requestSurface: requestSurface,
             completion: completion)
     }

@@ -122,6 +122,8 @@
 
 "Default payment method" = "Forma de pagamento padrão";
 
+"Did you mean %@? %@." = "Você quis dizer %1$@? %2$@.";
+
 "EPS Bank" = "Banco EPS";
 
 "Enter address manually" = "Inserir endereço manualmente";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Usar o endereço de faturamento para envio";
 
 "View more" = "Exibir mais";
+
+"Yes, update" = "Sim, atualizar";
 
 "Your IBAN should start with a two-letter country code." = "Seu IBAN deve começar com um código de país de duas letras.";
 
