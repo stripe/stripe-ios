@@ -9,7 +9,7 @@ import Foundation
 
 /// Information related to successful authentication that can be restored
 /// on subsequent launches for easier sign-in.
-struct SeamlessSignInDetails: Codable, Equatable {
+struct SeamlessSignInDetails: Codable {
 
     /// The user's email address.
     let email: String
