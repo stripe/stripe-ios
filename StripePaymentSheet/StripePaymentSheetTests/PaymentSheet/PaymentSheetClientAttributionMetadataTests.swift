@@ -567,7 +567,7 @@ extension PaymentSheetClientAttributionMetadataTests {
         let intent = try await createIntent(intentKind: intentKind,
                                             apiClient: apiClient,
                                             customerID: newCustomer.customer,
-                                            paymentMethodTypes: paymentMethodTypes) { cs in
+                                            paymentMethodTypes: paymentMethodTypes) { _ in
             clientSecretResolved.fulfill()
         }
         try await _testConfirm(intent: intent,
