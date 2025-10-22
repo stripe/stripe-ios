@@ -12,22 +12,20 @@ import StripeCryptoOnramp
 
 /// A view that allows the user to sign back in without manual authentication using a saved token.
 struct SeamlessSignInView: View {
+
+    /// The coordinator used for seamless sign-in.
     let coordinator: CryptoOnrampCoordinator?
+
+    /// The flow coordinator used to advance to the next steps after authentication.
     let flowCoordinator: CryptoOnrampFlowCoordinator
+
+    /// The email address associated with the user capable of signing in seamlessly.
     let email: String
 
-    @Environment(\.isLoading) private var isLoading
-    @State private var alert: Alert?
+    /// Specifies an alert originating from this view to display by the parent.
+    @Binding var alert: Alert?
 
-    private var isPresentingAlert: Binding<Bool> {
-        Binding(get: {
-            alert != nil
-        }, set: { newValue in
-            if !newValue {
-                alert = nil
-            }
-        })
-    }
+    @Environment(\.isLoading) private var isLoading
 
     private var shouldDisableButtons: Bool {
         isLoading.wrappedValue || coordinator == nil
@@ -75,13 +73,6 @@ struct SeamlessSignInView: View {
             .opacity(shouldDisableButtons ? 0.5 : 1)
             .padding()
         }
-        .alert(
-            alert?.title ?? "Error",
-            isPresented: isPresentingAlert,
-            presenting: alert,
-            actions: { _ in Button("OK") {} },
-            message: { alert in Text(alert.message) }
-        )
     }
 
     private func continueSeamlessSignIn() {
@@ -114,7 +105,8 @@ struct SeamlessSignInView: View {
         SeamlessSignInView(
             coordinator: coordinator,
             flowCoordinator: .init(),
-            email: "demo@example.com"
+            email: "demo@example.com",
+            alert: .constant(nil)
         )
     }
 }

@@ -54,13 +54,15 @@ struct CryptoOnrampExampleView: View {
                     SeamlessSignInView(
                         coordinator: coordinator,
                         flowCoordinator: flowCoordinator,
-                        email: seamlessSignInEmail
+                        email: seamlessSignInEmail,
+                        alert: $alert
                     )
                 } else {
                     LogInSignUpView(
                         coordinator: coordinator,
                         flowCoordinator: flowCoordinator,
-                        livemode: $livemode
+                        livemode: $livemode,
+                        alert: $alert
                     )
                 }
             }
