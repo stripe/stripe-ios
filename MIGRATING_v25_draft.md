@@ -3,17 +3,17 @@
 
 ```
 // Before:
-authorizationResultHandler: { result in
-  return await withCheckedThrowingContinuation { continuation in
-    let modifiedResult = // ...modify result (details omitted)
-    continuation.resume(returning: modifiedResult)
-  }
-}
-
-// After:
 authorizationResultHandler: { result, completion in
   // ...modify result (details omitted)
   completion(result)
+}
+
+// After:
+authorizationResultHandler: { result in
+  return await withCheckedContinuation { continuation in
+    let modifiedResult = // ...modify result (details omitted)
+    continuation.resume(returning: modifiedResult)
+  }
 }
 ```
 
