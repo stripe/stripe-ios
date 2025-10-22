@@ -103,7 +103,7 @@ class LinkBillingDetailsValidator {
             details: .card(billingDetails: billingDetails)
         )
 
-        let clientAttributionMetadata: STPClientAttributionMetadata? = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
 
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             self?.linkAccount.updatePaymentDetails(
