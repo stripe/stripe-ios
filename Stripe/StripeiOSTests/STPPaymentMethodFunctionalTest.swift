@@ -292,7 +292,7 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
             customerID: customerAndEphemeralKey.customer,
             ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
         )
-        
+
         // Wait one second to make sure the ordering is correct (the `created` dates are in seconds)
         try await Task.sleep(nanoseconds: NSEC_PER_SEC)
 
