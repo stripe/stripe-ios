@@ -40,11 +40,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
 
         let fillCardAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
-            .filter { $0.starts(with: "link") == false }
-            .suffix(5)
+            .suffix(6)
         XCTAssertEqual(
             fillCardAnalytics,
-            ["mc_form_shown", "mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
+            ["mc_form_shown", "link.inline_signup.shown", "mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
