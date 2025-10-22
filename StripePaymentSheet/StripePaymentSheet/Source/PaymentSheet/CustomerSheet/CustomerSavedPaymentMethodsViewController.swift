@@ -40,7 +40,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
     let passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    let elementsSessionConfigId: String
+    let elementsSessionConfigId: String?
 
     // MARK: - Writable Properties
     var savedPaymentMethods: [STPPaymentMethod]
@@ -164,7 +164,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
         passiveCaptchaChallenge: PassiveCaptchaChallenge?,
-        elementsSessionConfigId: String,
+        elementsSessionConfigId: String?,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
     ) {

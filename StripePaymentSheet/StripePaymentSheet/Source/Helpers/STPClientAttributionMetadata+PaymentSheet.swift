@@ -37,7 +37,7 @@ extension STPClientAttributionMetadata {
         }
     }
 
-    static func makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: String) -> STPClientAttributionMetadata {
+    static func makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: String?) -> STPClientAttributionMetadata {
         return .init(elementsSessionConfigId: elementsSessionConfigId)
     }
 }
