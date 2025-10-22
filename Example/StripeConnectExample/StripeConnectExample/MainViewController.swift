@@ -29,6 +29,8 @@ class MainViewController: UITableViewController {
         case onboarding = "Account onboarding"
         case payouts = "Payouts"
         case payments = "Payments"
+        // TODO: add this once in preview
+        // case checkScanning = "Check scanning"
 
         var label: String { rawValue }
 
@@ -77,7 +79,7 @@ class MainViewController: UITableViewController {
     lazy var embeddedComponentManager: EmbeddedComponentManager = {
         return .init(appearance: AppSettings.shared.appearanceInfo.appearance,
                      fonts: customFonts(),
-                     fetchClientSecret: { [weak self, merchant] in
+                     fetchClientSecret: { [merchant] in
                         do {
                             return try await API.accountSession(merchantId: merchant.id).get().clientSecret
                         } catch {

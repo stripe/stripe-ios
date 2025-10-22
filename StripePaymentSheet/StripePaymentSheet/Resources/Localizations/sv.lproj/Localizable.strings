@@ -122,6 +122,8 @@
 
 "Default payment method" = "Standardmetod för betalning";
 
+"Did you mean %@? %@." = "Menade du %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ange adress manuellt";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Använd faktureringsadress för leverans";
 
 "View more" = "Visa mer";
+
+"Yes, update" = "Ja, uppdatera";
 
 "Your IBAN should start with a two-letter country code." = "Ditt IBAN ska börja med en landskod (två bokstäver).";
 

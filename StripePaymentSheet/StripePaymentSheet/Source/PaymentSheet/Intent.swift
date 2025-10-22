@@ -11,7 +11,6 @@
 import Foundation
 import UIKit
 
-@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 
@@ -159,23 +158,6 @@ enum Intent {
             case .setup:
                 return true
             }
-        }
-    }
-
-    func clientAttributionMetadata(elementsSessionConfigId: String) -> STPClientAttributionMetadata {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return .init(elementsSessionConfigId: elementsSessionConfigId,
-                         paymentIntentCreationFlow: .standard,
-                         paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
-        case .setupIntent(let setupIntent):
-            return .init(elementsSessionConfigId: elementsSessionConfigId,
-                         paymentIntentCreationFlow: .standard,
-                         paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
-        case .deferredIntent(let intentConfig):
-            return .init(elementsSessionConfigId: elementsSessionConfigId,
-                         paymentIntentCreationFlow: .deferred,
-                         paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
         }
     }
 }

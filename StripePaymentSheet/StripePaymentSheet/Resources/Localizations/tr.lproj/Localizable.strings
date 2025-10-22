@@ -122,6 +122,8 @@
 
 "Default payment method" = "Varsayılan ödeme yöntemi";
 
+"Did you mean %@? %@." = "%1$@ mi demek istediniz? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Adresi manuel olarak girin";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Gönderim için fatura adresini kullanın";
 
 "View more" = "Daha fazla göster";
+
+"Yes, update" = "Evet, güncelle";
 
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
 

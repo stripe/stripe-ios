@@ -120,6 +120,8 @@
 
 "Default payment method" = "Alapértelmezett fizetési mód";
 
+"Did you mean %@? %@." = "Erre gondolt: %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Cím megadása kézzel";
@@ -295,6 +297,8 @@
 "Use billing address for shipping" = "Számlázási cím használata a szállításhoz";
 
 "View more" = "Továbbiak megjelenítése";
+
+"Yes, update" = "Igen, frissítés";
 
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 

@@ -16,6 +16,7 @@
     }
   },
   "card_installments_enabled": false,
+  "config_id": "123",
   "custom_payment_method_data": null,
   "customer": {
     "customer_session": {

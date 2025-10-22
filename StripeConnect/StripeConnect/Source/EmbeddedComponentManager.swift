@@ -172,6 +172,16 @@ public final class EmbeddedComponentManager {
               defaultFilters: defaultFilters)
     }
 
+    @_spi(DashboardOnly)
+    public func createCheckScanningController(
+        handleCheckScanSubmitted: @escaping (HandleCheckScanSubmittedArgs) async throws -> HandleCheckScanSubmittedReturnValue
+    ) -> CheckScanningController {
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory,
+              handleCheckScanSubmitted: handleCheckScanSubmitted)
+    }
+
     /// Used to keep reference of all web views associated with this component manager.
     /// - Parameters:
     ///   - webView: The web view associated with this component manager

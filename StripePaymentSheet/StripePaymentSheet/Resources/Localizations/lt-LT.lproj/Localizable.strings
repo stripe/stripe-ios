@@ -122,6 +122,8 @@
 
 "Default payment method" = "Numatytasis mokėjimo būdas";
 
+"Did you mean %@? %@." = "Ar norėjote %1$@? %2$@.";
+
 "EPS Bank" = "EPS bankas";
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Atsiskaitymo adresą naudoti siuntimui";
 
 "View more" = "Peržiūrėti daugiau";
+
+"Yes, update" = "Taip, atnaujinti";
 
 "Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
 
