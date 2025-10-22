@@ -21,7 +21,9 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var livemode: Bool = false
     @State private var alert: Alert?
-    @State private var seamlessSignInEmail: String? = APIClient.shared.authTokenWithLAI != nil ? APIClient.shared.email : nil
+    @State private var seamlessSignInEmail: String? = APIClient.shared.seamlessSignInEmail
+
+    @AppStorage(DefaultsKeys.seamlessSignInDetails) private var storedSeamlessSignInData: Data?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -52,8 +54,7 @@ struct CryptoOnrampExampleView: View {
                     SeamlessSignInView(
                         coordinator: coordinator,
                         flowCoordinator: flowCoordinator,
-                        email: seamlessSignInEmail,
-                        onFailed: { self.seamlessSignInEmail = nil }
+                        email: seamlessSignInEmail
                     )
                 } else {
                     LogInSignUpView(
@@ -150,6 +151,21 @@ struct CryptoOnrampExampleView: View {
             coordinator = nil
             APIClient.shared.clearAuthState()
             initializeCoordinator()
+        }
+        .onChange(of: storedSeamlessSignInData == nil) { didClearSeamlessSignInData in
+            // Clear our local seamless sign-in state if the app storage data becomes `nil`.
+            // Note that we don’t update it here if it becomes non-nil, as we don’t want this view
+            // to transition to display `SeamlessSignInView` while manually authenticating when
+            // the credentials initially become available.
+            guard didClearSeamlessSignInData else { return }
+            seamlessSignInEmail = nil
+        }
+        .onChange(of: flowCoordinator.pathBinding.wrappedValue.isEmpty) { isEmpty in
+            // Update our local storage to remember the authenticated user once we've navigated
+            // away from this view. See the comments in the `onChange(of:)` above.
+            if !isEmpty {
+                seamlessSignInEmail = APIClient.shared.seamlessSignInEmail
+            }
         }
     }
 

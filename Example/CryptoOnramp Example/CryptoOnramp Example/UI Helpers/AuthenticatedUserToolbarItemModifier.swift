@@ -63,13 +63,11 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     flowCoordinator?.path = []
-                    APIClient.shared.clearAuthState()
                 }
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     flowCoordinator?.path = []
-                    APIClient.shared.clearAuthState()
                     print("Log out failed. Still returning to root view. Error: \(error)")
                 }
             }

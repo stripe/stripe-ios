@@ -15,7 +15,6 @@ struct SeamlessSignInView: View {
     let coordinator: CryptoOnrampCoordinator?
     let flowCoordinator: CryptoOnrampFlowCoordinator
     let email: String
-    var onFailed: (() -> Void)? = nil
 
     @Environment(\.isLoading) private var isLoading
     @State private var alert: Alert?
@@ -30,7 +29,7 @@ struct SeamlessSignInView: View {
         })
     }
 
-    private var shouldDisableContinueButton: Bool {
+    private var shouldDisableButtons: Bool {
         isLoading.wrappedValue || coordinator == nil
     }
 
@@ -67,17 +66,13 @@ struct SeamlessSignInView: View {
                     continueSeamlessSignIn()
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                .disabled(shouldDisableContinueButton)
-                .opacity(shouldDisableContinueButton ? 0.5 : 1)
 
                 Button("Not Me") {
-                    // TODO: implement
+                    APIClient.shared.clearAuthState()
                 }
-                .disabled(shouldDisableContinueButton)
-                .opacity(shouldDisableContinueButton ? 0.5 : 1)
             }
-            .disabled(shouldDisableContinueButton)
-            .opacity(shouldDisableContinueButton ? 0.5 : 1)
+            .disabled(shouldDisableButtons)
+            .opacity(shouldDisableButtons ? 0.5 : 1)
             .padding()
         }
         .alert(
@@ -107,7 +102,6 @@ struct SeamlessSignInView: View {
                         title: "Failed to sign-in seamlessly. Please log in again manually.",
                         message: error.localizedDescription
                     )
-                    onFailed?()
                     APIClient.shared.clearAuthState()
                 }
             }
