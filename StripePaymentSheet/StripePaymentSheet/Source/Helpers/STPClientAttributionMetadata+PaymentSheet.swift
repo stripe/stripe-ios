@@ -17,7 +17,7 @@ extension STPClientAttributionMetadata {
     }
 
     static func makeClientAttributionMetadata(intent: Intent, elementsSession: STPElementsSession) -> STPClientAttributionMetadata {
-        let elementsSessionConfigId = elementsSession.sessionID
+        let elementsSessionConfigId = elementsSession.configID
         switch intent {
         case .paymentIntent(let paymentIntent):
             let isAutomaticPaymentMethodsEnabled = paymentIntent.automaticPaymentMethods?.enabled ?? false // if automaticPaymentMethods is nil, default to merchant_specified

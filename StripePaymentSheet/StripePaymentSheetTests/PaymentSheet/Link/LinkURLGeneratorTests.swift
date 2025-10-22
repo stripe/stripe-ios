@@ -374,6 +374,7 @@ extension STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
+                                          "config_id": "123",
                                           "apple_pay_preference": "enabled",
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
@@ -385,6 +386,7 @@ extension STPElementsSession {
                                           "flags": ["cbc_in_link_popup": true,
                                                     "disable_cbc_in_link_popup": false, ] as [String: Bool],
                                           "session_id": "123",
+                                          "config_id": "123",
                                           "card_brand_choice": ["eligible": true,
                                                                 "preferred_networks": ["cartes_bancaires"],
                                                                 "supported_cobranded_networks": ["cartes_bancaires": true],
@@ -398,6 +400,7 @@ extension STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
+                                          "config_id": "123",
                                           "apple_pay_preference": "enabled",
                                           "link_settings": ["link_funding_sources": ["CARD"],
                                                             "link_passthrough_mode_enabled": false,
@@ -414,6 +417,7 @@ extension STPElementsSession {
                 "country_code": "US",
             ],
             "session_id": "123",
+            "config_id": "123",
             "apple_pay_preference": "enabled",
             "link_settings": [
                 "link_funding_sources": ["CARD"],
@@ -450,6 +454,7 @@ extension STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
+                                          "config_id": "123",
                                           "apple_pay_preference": "enabled",
                                           "link_settings": ["link_funding_sources": ["CARD"],
                                                             "link_passthrough_mode_enabled": true,
@@ -462,6 +467,7 @@ extension STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
                                           "session_id": "123",
+                                          "config_id": "123",
                                           "apple_pay_preference": "enabled",
                                           "link_settings": ["link_funding_sources": ["BANK_ACCOUNT",
                                                                                      "CARD",

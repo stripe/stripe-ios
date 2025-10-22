@@ -99,6 +99,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testMakeDeferredElementsSessionsParamsForCustomerSheet() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
             paymentMethodTypes: ["card"],
+            onBehalfOf: nil,
             clientDefaultPaymentMethod: "pm_12345",
             customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
 
@@ -115,6 +116,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testMakeDeferredElementsSessionsParamsForCustomerSheet_nilable() throws {
         let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
             paymentMethodTypes: nil,
+            onBehalfOf: nil,
             clientDefaultPaymentMethod: nil,
             customerSessionClientSecret: nil)
 
@@ -126,6 +128,24 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as?  [String: Any])
         XCTAssertEqual(deferredIntent["mode"] as? String, "setup")
         XCTAssertNil(deferredIntent["payment_method_types"])
+    }
+
+    func testMakeDeferredElementsSessionsParamsForCustomerSheet_withOnBehalfOf() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeDeferredElementsSessionsParamsForCustomerSheet(
+            paymentMethodTypes: ["card"],
+            onBehalfOf: "acct_connect",
+            clientDefaultPaymentMethod: "pm_12345",
+            customerSessionClientSecret: CustomerSessionClientSecret(customerId: "cus_12345", clientSecret: "cuss_54321"))
+
+        XCTAssertEqual(parameters["type"] as? String, "deferred_intent")
+        XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
+        XCTAssertEqual(parameters["customer_session_client_secret"] as? String, "cuss_54321")
+        XCTAssertEqual(parameters["client_default_payment_method"] as? String, "pm_12345")
+
+        let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as?  [String: Any])
+        XCTAssertEqual(deferredIntent["mode"] as? String, "setup")
+        XCTAssertEqual(deferredIntent["payment_method_types"] as? [String], ["card"])
+        XCTAssertEqual(deferredIntent["on_behalf_of"] as? String, "acct_connect")
     }
 
     func testMakeElementsSessionsParamsForCustomerSheet() throws {

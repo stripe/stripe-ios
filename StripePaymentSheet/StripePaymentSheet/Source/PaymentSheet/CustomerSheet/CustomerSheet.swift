@@ -396,18 +396,25 @@ public extension CustomerSheet {
     @_spi(CustomerSessionBetaAccess)
     struct IntentConfiguration {
         internal var paymentMethodTypes: [String]?
+        internal var onBehalfOf: String?
         internal let setupIntentClientSecretProvider: () async throws -> String
 
         /// - Parameter paymentMethodTypes: A list of payment method types to display to the customers
         ///             Valid values include: "card", "us_bank_account", "sepa_debit"
         ///             If nil or empty, the SDK will dynamically determine the payment methods using your
         ///             Stripe Dashboard settings.
+        /// - Parameter onBehalfOf: The account (if any) whose payment method configurations will apply to the CustomerSheet session.
+        ///             Affects the allowed payment methods and whether card brand choice is enabled.
+        ///             When provided, the payment method will be saved to your platform account.
+        ///             See our [SetupIntent docs](https://docs.stripe.com/api/setup_intents/object#setup_intent_object-on_behalf_of) for more information.
         /// - Parameter setupIntentClientSecretProvider: Creates a SetupIntent configured to attach a new
         ///             payment method to a customer. Returns the client secret for the created SetupIntent.
         ///             This will be used to confirm a new payment method.
         public init(paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
                     setupIntentClientSecretProvider: @escaping (() async throws -> String)) {
             self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
             self.setupIntentClientSecretProvider = setupIntentClientSecretProvider
         }
     }
