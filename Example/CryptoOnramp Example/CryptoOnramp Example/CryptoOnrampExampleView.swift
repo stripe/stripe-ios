@@ -21,6 +21,7 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var livemode: Bool = false
     @State private var alert: Alert?
+    @State private var seamlessSignInEmail: String? = APIClient.shared.authTokenWithLAI != nil ? APIClient.shared.email : nil
 
     @Environment(\.isLoading) private var isLoading
 
@@ -46,11 +47,23 @@ struct CryptoOnrampExampleView: View {
 
     var body: some View {
         NavigationStack(path: flowCoordinator.pathBinding) {
-            LogInSignUpView(
-                coordinator: coordinator,
-                flowCoordinator: flowCoordinator,
-                livemode: $livemode
-            )
+            ZStack {
+                if let seamlessSignInEmail {
+                    SeamlessSignInView(
+                        coordinator: coordinator,
+                        flowCoordinator: flowCoordinator,
+                        email: seamlessSignInEmail,
+                        onFailed: { self.seamlessSignInEmail = nil }
+                    )
+                } else {
+                    LogInSignUpView(
+                        coordinator: coordinator,
+                        flowCoordinator: flowCoordinator,
+                        livemode: $livemode
+                    )
+                }
+            }
+            .animation(.default, value: seamlessSignInEmail)
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
