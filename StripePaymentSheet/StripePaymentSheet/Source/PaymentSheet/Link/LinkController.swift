@@ -495,6 +495,7 @@ import UIKit
         completion: @escaping (Result<AuthorizationResult, Error>) -> Void
     ) {
         guard case .full(let fullConsentViewModel) = consentViewModel else {
+            LinkAccountContext.shared.account = self.linkAccount
             completion(.success(.consented))
             return
         }

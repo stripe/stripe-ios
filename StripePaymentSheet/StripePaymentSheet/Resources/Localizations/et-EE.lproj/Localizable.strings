@@ -122,6 +122,8 @@
 
 "Default payment method" = "Vaikemakseviis";
 
+"Did you mean %@? %@." = "Kas te pidasite silmas %1$@? %2$@.";
+
 "EPS Bank" = "EPS pank";
 
 "Enter address manually" = "Sisestage aadress käsitsi";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Kasutage saatmiseks arveldusaadressi";
 
 "View more" = "Kuva rohkem";
+
+"Yes, update" = "Jah, uuenda";
 
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
 

@@ -56,7 +56,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         // test
-        let payload = client.payload(from: analytic, apiClient: apiClient)
+        var payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
         var expectedPayload: [String: Any] = ([
@@ -68,6 +68,9 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         ] as [String: Any])
         // Add common payload
         expectedPayload.merge(client.commonPayload(apiClient)) { a, _ in a }
+        // Extract and separately validate timestamp, since that will always be different
+        XCTAssertNotNil(payload.removeValue(forKey: "timestamp"))
+        XCTAssertNotNil(expectedPayload.removeValue(forKey: "timestamp"))
         XCTAssertTrue((payload as NSDictionary).isEqual(to: expectedPayload))
     }
 
@@ -206,7 +209,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "LITE")
-            XCTAssertEqual(loadSucceededPayload["elements_session_config_id"] as? String, elementsSession.sessionID)
+            XCTAssertEqual(loadSucceededPayload["elements_session_config_id"] as? String, elementsSession.configID)
         }
     }
 

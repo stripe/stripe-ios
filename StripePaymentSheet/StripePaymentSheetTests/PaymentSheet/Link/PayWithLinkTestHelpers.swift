@@ -39,6 +39,7 @@ enum PayWithLinkTestHelpers {
             "payment_method_preference": paymentIntentResponse,
             "link_settings": linkSettingsJson,
             "session_id": "abc123",
+            "config_id": "abc123",
         ] as [String: Any]
         let elementsSession = try XCTUnwrap(
             STPElementsSession.decodedObject(fromAPIResponse: response)
@@ -72,6 +73,7 @@ enum PayWithLinkTestHelpers {
             "payment_method_preference": setupIntentResponse,
             "link_settings": linkSettingsJson,
             "session_id": "abc123",
+            "config_id": "abc123",
         ] as [String: Any]
         let elementsSession = try XCTUnwrap(
             STPElementsSession.decodedObject(fromAPIResponse: response)
