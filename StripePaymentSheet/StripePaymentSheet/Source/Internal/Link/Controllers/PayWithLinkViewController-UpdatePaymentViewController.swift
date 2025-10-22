@@ -157,7 +157,7 @@ extension PayWithLinkViewController {
                 details: updateDetails
             )
 
-            let clientAttributionMetadata: STPClientAttributionMetadata? = context.analyticsHelper.integrationShape.isMPE ? context.intent.clientAttributionMetadata(elementsSessionConfigId: context.elementsSession.sessionID) : nil
+            let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
 
             coordinator?.allowSheetDismissal(false)
 
