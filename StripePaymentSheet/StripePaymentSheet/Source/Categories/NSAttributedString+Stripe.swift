@@ -19,7 +19,7 @@ extension NSMutableAttributedString {
     static func bnplPromoString(
         font: UIFont,
         textColor: UIColor,
-        iconColor: UIColor,
+        infoIconColor: UIColor,
         template: String,
         substitution: (String, UIImage)?
     ) -> NSMutableAttributedString {
@@ -64,7 +64,7 @@ extension NSMutableAttributedString {
         // Add info icon
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12)
         if let infoIconImage = UIImage(systemName: "info.circle", withConfiguration: symbolConfig)?
-            .withTintColor(iconColor, renderingMode: .alwaysTemplate) {
+            .withTintColor(infoIconColor, renderingMode: .alwaysTemplate) {
             let infoIcon = Self.attributedStringOfImageWithoutLink(uiImage: infoIconImage, font: font)
             resultingString.append(NSAttributedString(string: "\u{00A0}\u{00A0}", attributes: stringAttributes))
             resultingString.append(infoIcon)

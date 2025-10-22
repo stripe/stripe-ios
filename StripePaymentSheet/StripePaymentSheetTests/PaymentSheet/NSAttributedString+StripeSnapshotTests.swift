@@ -22,7 +22,7 @@ class NSAttributedStringStripeSnapshotTests: STPSnapshotTestCase {
         let attributedString = NSMutableAttributedString.bnplPromoString(
             font: .boldSystemFont(ofSize: 20),
             textColor: UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 1.0),
-            iconColor: UIColor.purple,
+            infoIconColor: UIColor.purple,
             template: template,
             substitution: ("<img/>", image)
         )
@@ -40,7 +40,7 @@ class NSAttributedStringStripeSnapshotTests: STPSnapshotTestCase {
         let attributedString = NSMutableAttributedString.bnplPromoString(
             font: .systemFont(ofSize: 14),
             textColor: .darkGray,
-            iconColor: UIColor.red,
+            infoIconColor: UIColor.red,
             template: template,
             substitution: ("{partner}", systemImage)
         )
@@ -57,7 +57,7 @@ class NSAttributedStringStripeSnapshotTests: STPSnapshotTestCase {
         let attributedString = NSMutableAttributedString.bnplPromoString(
             font: .italicSystemFont(ofSize: 14),
             textColor: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0),
-            iconColor: UIColor.green,
+            infoIconColor: UIColor.green,
             template: template,
             substitution: nil
         )
