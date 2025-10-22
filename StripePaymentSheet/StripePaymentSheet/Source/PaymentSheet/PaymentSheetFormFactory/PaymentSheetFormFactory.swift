@@ -844,7 +844,13 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {
-        return SubtitleElement(view: AfterpayPriceBreakdownView(currency: currency, theme: theme), isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(
+            view: AfterpayPriceBreakdownView(
+                currency: currency,
+                appearance: configuration.appearance
+            ),
+            isHorizontalMode: configuration.isHorizontalMode
+        )
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {

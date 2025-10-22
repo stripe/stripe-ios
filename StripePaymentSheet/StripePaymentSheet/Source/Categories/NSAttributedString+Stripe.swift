@@ -18,53 +18,60 @@ extension NSMutableAttributedString {
 
     static func bnplPromoString(
         font: UIFont,
-        foregroundColor: UIColor,
+        textColor: UIColor,
+        iconColor: UIColor,
         template: String,
-        partnerPlaceholder: String,
-        bnplLogoImage: UIImage
+        substitution: (String, UIImage)?
     ) -> NSMutableAttributedString {
         let stringAttributes = [
             NSAttributedString.Key.font: font,
-            .foregroundColor: foregroundColor,
+            .foregroundColor: textColor,
         ]
 
         let resultingString = NSMutableAttributedString()
         resultingString.append(NSAttributedString(string: ""))
-        guard let img = template.range(of: partnerPlaceholder) else {
-            return resultingString
-        }
 
-        var imgAppended = false
-
-        // Go through string, replacing the placeholder with the BNPL logo
-        for (indexOffset, currCharacter) in template.enumerated() {
-            let currIndex = template.index(template.startIndex, offsetBy: indexOffset)
-            if img.contains(currIndex) {
-                if imgAppended {
-                    continue
-                }
-                imgAppended = true
-
-                // Add BNPL logo
-                let bnplLogo = Self.attributedStringOfImageWithoutLink(uiImage: bnplLogoImage, font: font)
-                resultingString.append(bnplLogo)
-
-                // Add info icon
-                let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12)
-                let iconColor = foregroundColor.withAlphaComponent(0.7)
-                if let infoIconImage = UIImage(systemName: "info.circle", withConfiguration: symbolConfig)?
-                    .withTintColor(iconColor, renderingMode: .alwaysTemplate) {
-                    let infoIcon = Self.attributedStringOfImageWithoutLink(uiImage: infoIconImage, font: font)
-                    resultingString.append(NSAttributedString(string: "\u{00A0}\u{00A0}", attributes: stringAttributes))
-                    resultingString.append(infoIcon)
-                } else {
-                    stpAssertionFailure("Failed to load system image info.circle")
-                }
-            } else {
-                resultingString.append(NSAttributedString(string: String(currCharacter),
-                                                          attributes: stringAttributes))
+        // Replace placeholder with BNPL image if needed
+        if let (partnerPlaceholder, bnplLogoImage) = substitution {
+            guard let img = template.range(of: partnerPlaceholder) else {
+                return resultingString
             }
+
+            var imgAppended = false
+
+            // Go through string, replacing the placeholder with the BNPL logo
+            for (indexOffset, currCharacter) in template.enumerated() {
+                let currIndex = template.index(template.startIndex, offsetBy: indexOffset)
+                if img.contains(currIndex) {
+                    if imgAppended {
+                        continue
+                    }
+                    imgAppended = true
+
+                    // Add BNPL logo
+                    let bnplLogo = Self.attributedStringOfImageWithoutLink(uiImage: bnplLogoImage, font: font)
+                    resultingString.append(bnplLogo)
+                } else {
+                    resultingString.append(NSAttributedString(string: String(currCharacter),
+                                                              attributes: stringAttributes))
+                }
+            }
+        } else {
+            // Otherwise just fill in the whole template
+            resultingString.append(NSAttributedString(string: template, attributes: stringAttributes))
         }
+
+        // Add info icon
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12)
+        if let infoIconImage = UIImage(systemName: "info.circle", withConfiguration: symbolConfig)?
+            .withTintColor(iconColor, renderingMode: .alwaysTemplate) {
+            let infoIcon = Self.attributedStringOfImageWithoutLink(uiImage: infoIconImage, font: font)
+            resultingString.append(NSAttributedString(string: "\u{00A0}\u{00A0}", attributes: stringAttributes))
+            resultingString.append(infoIcon)
+        } else {
+            stpAssertionFailure("Failed to load system image info.circle")
+        }
+
         return resultingString
     }
 
