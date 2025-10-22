@@ -25,7 +25,7 @@ import Foundation
     /// The identifier string for the session
     @objc public let clientSessionId: String?
     /// The identifier string for the elements session
-    @objc public let elementsSessionConfigId: String
+    @objc public let elementsSessionConfigId: String?
     /// The source for the merchant integration
     @objc public let merchantIntegrationSource: String
     /// The subtype for the merchant integration
@@ -37,7 +37,7 @@ import Foundation
     /// The payment method selection for the merchant integration. Can be `automatic` or `merchant_specified`
     @objc public let paymentMethodSelectionFlow: String?
 
-    public init(elementsSessionConfigId: String,
+    public init(elementsSessionConfigId: String?,
                 paymentIntentCreationFlow: IntentCreationFlow? = nil,
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
         self.clientSessionId = AnalyticsHelper.shared.sessionID
