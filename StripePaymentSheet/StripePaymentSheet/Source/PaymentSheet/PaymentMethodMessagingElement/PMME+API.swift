@@ -16,6 +16,7 @@ extension PaymentMethodMessagingElement {
         guard let publishableKey = configuration.apiClient.publishableKey else {
             throw PaymentMethodMessagingElementError.missingPublishableKey
         }
+        // https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/payment_method_messaging/data/parsed_common_request_params_struct.rb
         var parameters: [String: Encodable] = [
             "amount": configuration.amount,
             "currency": configuration.currency,
@@ -28,6 +29,9 @@ extension PaymentMethodMessagingElement {
         }
         if let paymentMethods = configuration.paymentMethodTypes {
             parameters["payment_methods"] = paymentMethods.map { $0.identifier }
+        }
+        if let stripeAccount = configuration.apiClient.stripeAccount {
+            parameters["stripe_account"] = stripeAccount
         }
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.get(url: pmmeApiEndpoint, parameters: parameters) { (result: Result<APIResponse, Error>) in
