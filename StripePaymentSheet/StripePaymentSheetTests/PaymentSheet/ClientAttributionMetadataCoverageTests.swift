@@ -555,8 +555,8 @@ class ClientAttributionMetadataCoverageTests: STPNetworkStubbingTestCase {
 // MARK: - Test Helpers
 extension ClientAttributionMetadataCoverageTests {
     func _testConfirm(intentKind: IntentKind,
-                        paymentOption: PaymentOption,
-                        paymentMethodTypes: [String] = ["card"]) async throws {
+                      paymentOption: PaymentOption,
+                      paymentMethodTypes: [String] = ["card"]) async throws {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: "us")
@@ -590,9 +590,6 @@ extension ClientAttributionMetadataCoverageTests {
             config.returnURL = "https://foo.com"
             config.apiClient = apiClient
             config.customer = PaymentSheet.CustomerConfiguration(id: customerId, customerSessionClientSecret: "cuss_123")
-            config.applePay = PaymentSheet.ApplePayConfiguration(
-                merchantId: "merchant.com.stripe.umbrella.test",
-                merchantCountryCode: "US")
             return config
         }()
         let e = expectation(description: "Confirm")
