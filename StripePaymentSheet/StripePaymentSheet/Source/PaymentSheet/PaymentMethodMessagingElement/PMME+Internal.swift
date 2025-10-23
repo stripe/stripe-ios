@@ -5,7 +5,7 @@
 //  Created by George Birch on 10/23/25.
 //
 
-public enum PaymentMethodMessagingElementError: Error, LocalizedError {
+enum PaymentMethodMessagingElementError: Error, LocalizedError {
     case missingPublishableKey
     case unexpectedResponseFromStripeAPI
     case unknown
