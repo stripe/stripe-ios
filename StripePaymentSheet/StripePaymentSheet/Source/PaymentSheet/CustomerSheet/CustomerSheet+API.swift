@@ -40,15 +40,10 @@ extension CustomerSheet {
         assertionHandle: StripeAttest.AssertionHandle? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
-        let assertionCompletion: (StripeAttest.AssertionHandle?) -> Void = { assertionHandle in
-            Task { @MainActor in
-                assertionHandle?.complete()
-            }
-        }
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
             {
                 (status, intent, error) in
-                assertionCompletion(assertionHandle)
+                assertionHandle?.complete()
                 switch status {
                 case .canceled:
                     completion(.canceled)

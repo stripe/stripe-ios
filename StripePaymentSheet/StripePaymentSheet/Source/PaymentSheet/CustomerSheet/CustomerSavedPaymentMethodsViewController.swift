@@ -40,6 +40,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
     let passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    let assertionHandle: StripeAttest.AssertionHandle?
     let elementsSessionConfigId: String?
 
     // MARK: - Writable Properties
@@ -164,6 +165,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
         passiveCaptchaChallenge: PassiveCaptchaChallenge?,
+        assertionHandle: StripeAttest.AssertionHandle?,
         elementsSessionConfigId: String?,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
@@ -181,6 +183,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
         self.passiveCaptchaChallenge = passiveCaptchaChallenge
+        self.assertionHandle = assertionHandle
         self.elementsSessionConfigId = elementsSessionConfigId
         self.csCompletion = csCompletion
         self.delegate = delegate
@@ -611,8 +614,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         if case .new(let confirmParams) = paymentOption  {
             Task {
                 let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
+                confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: self.assertionHandle?.assertion)
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
+                    self.assertionHandle?.complete()
                     if let error = error {
                         self.error = error
                         self.processingInFlight = false

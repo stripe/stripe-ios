@@ -23,6 +23,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
     var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    var assertionHandle: StripeAttest.AssertionHandle?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -298,7 +299,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            passiveCaptchaChallenge: passiveCaptchaChallenge
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            assertionHandle: assertionHandle
         ) { [weak self] confirmOption, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption
