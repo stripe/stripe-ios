@@ -28,12 +28,12 @@ extension NSMutableAttributedString {
         let stringAttributes = [
             NSAttributedString.Key.font: font,
             .foregroundColor: textColor,
-            .paragraphStyle: paragraphStyle
+            .paragraphStyle: paragraphStyle,
         ]
 
         let resultingString = NSMutableAttributedString()
         resultingString.append(NSAttributedString(string: ""))
-        
+
         // Replace placeholder with BNPL image if needed
         if let (partnerPlaceholder, bnplLogoImage, scale) = substitution {
             guard let img = template.range(of: partnerPlaceholder) else {
@@ -63,7 +63,7 @@ extension NSMutableAttributedString {
             // Otherwise just fill in the whole template
             resultingString.append(NSAttributedString(string: template, attributes: stringAttributes))
         }
-       
+
         // Add info icon
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: font.pointSize)
         if let infoIconImage = UIImage(systemName: "info.circle", withConfiguration: symbolConfig)?
@@ -74,7 +74,7 @@ extension NSMutableAttributedString {
         } else {
             stpAssertionFailure("Failed to load system image info.circle")
         }
-        
+
         return resultingString
     }
 

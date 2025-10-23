@@ -88,7 +88,7 @@ extension UIImage {
         draw(in: CGRect(x: 0, y: 0, width: newImageSize.width, height: newImageSize.height))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
-    
+
     // Returns a CGSize for the view that is scaled according to the size of the given font.
     // For example, a font with a higher or lower pointSize or using dynamic type will result in a
     //      proportionally larger or smaller image size
