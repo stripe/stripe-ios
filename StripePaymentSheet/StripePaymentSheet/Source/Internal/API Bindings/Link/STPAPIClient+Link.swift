@@ -297,6 +297,7 @@ extension STPAPIClient {
             parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
 
+        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details for card!")
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,
@@ -328,6 +329,7 @@ extension STPAPIClient {
             parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
 
+        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details for bank!")
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,
@@ -449,6 +451,10 @@ extension STPAPIClient {
             ? authorizationHeader(using: overridePublishableKey)
             : [:]
 
+        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details/share!")
+        if let paymentMethodOptionsDict = parameters["payment_method_options"] as? [String: Any] {
+            stpAssert(paymentMethodOptionsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_options on /v1/consumers/payment_details/share!")
+        }
         APIRequest<PaymentDetailsShareResponse>.post(
             with: self,
             endpoint: endpoint,
@@ -579,6 +585,7 @@ extension STPAPIClient {
             parameters = Self.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
 
+        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details/:id!")
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,

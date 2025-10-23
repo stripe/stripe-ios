@@ -575,6 +575,10 @@ extension STPAPIClient {
             params["client_secret"] = nil
         }
 
+        stpAssert(params["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/payment_intents/:id/confirm!")
+        if let paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
+            stpAssert(paymentMethodParamsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_data on /v1/payment_intents/:id/confirm!")
+        }
         APIRequest<STPPaymentIntent>.post(
             with: self,
             endpoint: endpoint,
@@ -775,6 +779,10 @@ extension STPAPIClient {
             params["client_secret"] = nil
         }
 
+        stpAssert(params["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/setup_intents/:id/confirm!")
+        if let paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
+            stpAssert(paymentMethodParamsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_data on /v1/setup_intents/:id/confirm!")
+        }
         APIRequest<STPSetupIntent>.post(
             with: self,
             endpoint: endpoint,
@@ -870,6 +878,7 @@ extension STPAPIClient {
             ? authorizationHeader(using: overridePublishableKey)
             : [:]
 
+        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/payment_methods!")
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,

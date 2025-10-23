@@ -897,6 +897,7 @@ extension FinancialConnectionsAsyncAPIClient {
             parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
         }
 
+        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details for Financial Connections!")
         return try await post(endpoint: .paymentDetails, parameters: parameters)
     }
 
@@ -936,6 +937,10 @@ extension FinancialConnectionsAsyncAPIClient {
         }
 
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
+        stpAssert(parametersWithFraudDetection["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details/share for Financial Connections!")
+        if let paymentMethodOptionsDict = parametersWithFraudDetection["payment_method_options"] as? [String: Any] {
+            stpAssert(paymentMethodOptionsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_options on /v1/consumers/payment_details/share for Financial Connections!")
+        }
         return try await post(endpoint: .sharePaymentDetails, parameters: parametersWithFraudDetection)
     }
 
@@ -969,6 +974,7 @@ extension FinancialConnectionsAsyncAPIClient {
             parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
         }
 
+        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/payment_methods for Financial Connections!")
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
         return try await post(endpoint: .paymentMethods, parameters: parametersWithFraudDetection)
     }

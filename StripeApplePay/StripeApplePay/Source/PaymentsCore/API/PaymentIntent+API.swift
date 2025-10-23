@@ -78,6 +78,7 @@ extension StripeAPI.PaymentIntent {
                 .paramsByAddingTelemetryFields(toParams: pmAdditionalParams)
         }
 
+        stpAssert(paramsWithTelemetry.clientAttributionMetadata != nil, "Missing client_attribution_metadata on /v1/payment_intents/:id/confirm for Apple Pay!")
         apiClient.post(resource: endpoint, object: paramsWithTelemetry, completion: completion)
     }
 

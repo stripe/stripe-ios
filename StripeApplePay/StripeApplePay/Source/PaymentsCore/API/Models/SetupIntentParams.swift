@@ -47,6 +47,9 @@ extension StripeAPI {
         /// app.
         @_spi(STP) public var useStripeSdk: Bool?
 
+        /// Contains metadata with identifiers for the session and information about the integration
+        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
         @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
 
         // MARK: - Utilities

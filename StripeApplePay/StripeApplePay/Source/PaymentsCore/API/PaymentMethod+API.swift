@@ -27,6 +27,7 @@ extension StripeAPI.PaymentMethod {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
             paymentMethodType: params.type.rawValue
         )
+        stpAssert(params.clientAttributionMetadata != nil, "Missing client_attribution_metadata on /v1/payment_methods for Apple Pay!")
         apiClient.post(resource: Resource, object: params, completion: completion)
     }
 
