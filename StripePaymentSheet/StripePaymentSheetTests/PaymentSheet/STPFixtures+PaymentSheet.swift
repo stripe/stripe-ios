@@ -85,6 +85,7 @@ extension STPElementsSession {
         return .init(
             allResponseFields: [:],
             sessionID: "test_123",
+            configID: "test_config",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
             orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,

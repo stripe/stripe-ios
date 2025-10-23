@@ -64,6 +64,7 @@ class CustomerSheetDataSource {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try customerAdapter.fetchSelectedPaymentOption()
                 async let elementsSessionResult = try self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes,
+                                                                                                                                   onBehalfOf: nil,
                                                                                                                                    clientDefaultPaymentMethod: nil,
                                                                                                                                    customerSessionClientSecret: nil)
 

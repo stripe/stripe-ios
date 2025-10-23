@@ -5,6 +5,7 @@
 //  Created by Joyce Qin on 7/31/25.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 
 /// Values for STPRadarOptions
@@ -14,10 +15,7 @@
     @objc public var hcaptchaToken: String?
     @objc public var iosVerificationObject: [String: String]?
 
-    public init(
-        hcaptchaToken: String? = nil,
-        assertion: StripeAttest.Assertion? = nil
-    ) {
+    public init(hcaptchaToken: String? = nil, assertion: StripeAttest.Assertion? = nil) {
         self.hcaptchaToken = hcaptchaToken
         self.iosVerificationObject = assertion?.requestFields
     }

@@ -122,6 +122,8 @@
 
 "Default payment method" = "Kaedah pembayaran tetapan asal";
 
+"Did you mean %@? %@." = "Adakah anda maksudkan %1$@? %2$@.";
+
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
@@ -297,6 +299,8 @@
 "Use billing address for shipping" = "Gunakan alamat pengebilan untuk penghantaran";
 
 "View more" = "Lihat lebih banyak";
+
+"Yes, update" = "Ya, kemas kini";
 
 "Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
 
