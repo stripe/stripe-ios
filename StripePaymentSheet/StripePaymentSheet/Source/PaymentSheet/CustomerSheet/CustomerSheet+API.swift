@@ -16,6 +16,7 @@ extension CustomerSheet {
         elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
         hcaptchaToken: String? = nil,
+        assertionHandle: StripeAttest.AssertionHandle? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         CustomerSheet.confirm(intent: intent,
@@ -25,6 +26,7 @@ extension CustomerSheet {
                               paymentHandler: self.paymentHandler,
                               authenticationContext: self.bottomSheetViewController,
                               hcaptchaToken: hcaptchaToken,
+                              assertionHandle: assertionHandle,
                               completion: completion)
     }
     static func confirm(
@@ -35,11 +37,18 @@ extension CustomerSheet {
         paymentHandler: STPPaymentHandler,
         authenticationContext: STPAuthenticationContext,
         hcaptchaToken: String? = nil,
+        assertionHandle: StripeAttest.AssertionHandle? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
+        let assertionCompletion: (StripeAttest.AssertionHandle?) -> Void = { assertionHandle in
+            Task { @MainActor in
+                assertionHandle?.complete()
+            }
+        }
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
             {
                 (status, intent, error) in
+                assertionCompletion(assertionHandle)
                 switch status {
                 case .canceled:
                     completion(.canceled)
@@ -58,7 +67,7 @@ extension CustomerSheet {
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
             confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
-            confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
+            confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
             confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID)
             let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
             setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams

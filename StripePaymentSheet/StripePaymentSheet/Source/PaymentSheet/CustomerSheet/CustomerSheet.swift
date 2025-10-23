@@ -299,7 +299,17 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
         }
         Task {
             let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
-            self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, hcaptchaToken: hcaptchaToken) { result in
+            let assertionHandle: StripeAttest.AssertionHandle? = await {
+                if elementsSession.shouldAttestOnConfirmation {
+                    do {
+                        return try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
+                    } catch {
+                        // If we can't get an assertion, we'll try the request anyway. It may fail.
+                    }
+                }
+                return nil
+            }()
+            self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, hcaptchaToken: hcaptchaToken, assertionHandle: assertionHandle) { result in
                 completion(result)
             }
         }
