@@ -297,7 +297,11 @@ extension STPAPIClient {
             parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
 
-        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details for card!")
+        if parameters["client_attribution_metadata"] == nil {
+            stpAssertionFailure("Missing client_attribution_metadata on \(endpoint) for card!")
+        } else {
+            print("Found client_attribution_metadata on \(endpoint) for card!")
+        }
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,
@@ -329,7 +333,11 @@ extension STPAPIClient {
             parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
 
-        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details for bank!")
+        if parameters["client_attribution_metadata"] == nil {
+            stpAssertionFailure("Missing client_attribution_metadata on \(endpoint) for bank!")
+        } else {
+            print("Found client_attribution_metadata on \(endpoint) for bank!")
+        }
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,
@@ -451,9 +459,17 @@ extension STPAPIClient {
             ? authorizationHeader(using: overridePublishableKey)
             : [:]
 
-        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details/share!")
+        if parameters["client_attribution_metadata"] == nil {
+            stpAssertionFailure("Missing client_attribution_metadata on \(endpoint)!")
+        } else {
+            print("Found client_attribution_metadata on \(endpoint)!")
+        }
         if let paymentMethodOptionsDict = parameters["payment_method_options"] as? [String: Any] {
-            stpAssert(paymentMethodOptionsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_options on /v1/consumers/payment_details/share!")
+            if paymentMethodOptionsDict["client_attribution_metadata"] == nil {
+                stpAssertionFailure("Missing client_attribution_metadata under payment_method_options on \(endpoint)!")
+            } else {
+                print("Found client_attribution_metadata under payment_method_options on \(endpoint)!")
+            }
         }
         APIRequest<PaymentDetailsShareResponse>.post(
             with: self,
@@ -585,7 +601,11 @@ extension STPAPIClient {
             parameters = Self.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
 
-        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/consumers/payment_details/:id!")
+        if parameters["client_attribution_metadata"] == nil {
+            stpAssertionFailure("Missing client_attribution_metadata on \(endpoint)!")
+        } else {
+            print("Found client_attribution_metadata on \(endpoint)!")
+        }
         makePaymentDetailsRequest(
             endpoint: endpoint,
             parameters: parameters,

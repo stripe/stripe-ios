@@ -575,9 +575,17 @@ extension STPAPIClient {
             params["client_secret"] = nil
         }
 
-        stpAssert(params["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/payment_intents/:id/confirm!")
+        if params["client_attribution_metadata"] == nil {
+            stpAssertionFailure("Missing client_attribution_metadata on \(endpoint)!")
+        } else {
+            print("Found client_attribution_metadata on \(endpoint)!")
+        }
         if let paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
-            stpAssert(paymentMethodParamsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_data on /v1/payment_intents/:id/confirm!")
+            if paymentMethodParamsDict["client_attribution_metadata"] == nil {
+                stpAssertionFailure("Missing client_attribution_metadata under payment_method_data on \(endpoint)!")
+            } else {
+                print("Found client_attribution_metadata under payment_method_data on \(endpoint)!")
+            }
         }
         APIRequest<STPPaymentIntent>.post(
             with: self,
@@ -779,9 +787,17 @@ extension STPAPIClient {
             params["client_secret"] = nil
         }
 
-        stpAssert(params["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/setup_intents/:id/confirm!")
+        if params["client_attribution_metadata"] == nil {
+            stpAssertionFailure("Missing client_attribution_metadata on \(endpoint)!")
+        } else {
+            print("Found client_attribution_metadata on \(endpoint)!")
+        }
         if let paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
-            stpAssert(paymentMethodParamsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_data on /v1/setup_intents/:id/confirm!")
+            if paymentMethodParamsDict["client_attribution_metadata"] == nil {
+                stpAssertionFailure("Missing client_attribution_metadata under payment_method_data on \(endpoint)!")
+            } else {
+                print("Found client_attribution_metadata under payment_method_data on \(endpoint)!")
+            }
         }
         APIRequest<STPSetupIntent>.post(
             with: self,
@@ -878,7 +894,11 @@ extension STPAPIClient {
             ? authorizationHeader(using: overridePublishableKey)
             : [:]
 
-        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/payment_methods!")
+        if parameters["client_attribution_metadata"] == nil {
+            stpAssertionFailure("Missing client_attribution_metadata on \(APIEndpointPaymentMethods)!")
+        } else {
+            print("Found client_attribution_metadata on \(APIEndpointPaymentMethods)!")
+        }
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
@@ -1580,9 +1600,17 @@ extension STPAPIClient {
             ? authorizationHeader(using: ephemeralKeySecret!)
             : [:]
 
-        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/confirmation_tokens!")
+        if parameters["client_attribution_metadata"] == nil {
+            stpAssertionFailure("Missing client_attribution_metadata on \(APIEndpointConfirmationTokens)!")
+        } else {
+            print("Found client_attribution_metadata on \(APIEndpointConfirmationTokens)!")
+        }
         if let paymentMethodParamsDict = parameters[PaymentMethodDataHash] as? [String: Any] {
-            stpAssert(paymentMethodParamsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_data on /v1/confirmation_tokens!")
+            if paymentMethodParamsDict["client_attribution_metadata"] == nil {
+                stpAssertionFailure("Missing client_attribution_metadata under payment_method_data on \(APIEndpointConfirmationTokens)!")
+            } else {
+                print("Found client_attribution_metadata under payment_method_data on \(APIEndpointConfirmationTokens)!")
+            }
         }
         APIRequest<STPConfirmationToken>.post(
             with: self,
