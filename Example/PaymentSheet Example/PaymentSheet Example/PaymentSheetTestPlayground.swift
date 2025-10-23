@@ -608,7 +608,7 @@ struct BillingDetailsView: View {
 struct AttestationResetButtonView: View {
     @State private var presentingAlert = false
     @EnvironmentObject var playgroundController: PlaygroundController
-    
+
     var body: some View {
         if #available(iOS 15.0, *) {
             Button {

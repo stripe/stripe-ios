@@ -691,7 +691,7 @@ class PlaygroundController: ObservableObject {
         PaymentSheet.resetCustomer()
         self.appearance = PaymentSheet.Appearance.default
     }
-    
+
     func didTapResetAttestation() {
         Task {
             await StripeAttest(apiClient: .shared).resetKey()
