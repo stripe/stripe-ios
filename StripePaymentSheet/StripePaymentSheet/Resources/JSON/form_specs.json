@@ -687,6 +687,30 @@
         }
     },
     {
+        "type": "paypay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypay-99ba82e1fd9596066217723802bbd69f.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypay-df0729cee353881be6a3b8f870c4f38e.svg"
+        },
+        "fields": [],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
         "type": "au_becs_debit",
         "async": true,
         "fields": [
