@@ -70,8 +70,6 @@ class ClientAttributionMetadataCoverageTests: STPNetworkStubbingTestCase {
         case confirm
         case paymentMethods = "payment_methods"
         case confirmationTokens = "confirmation_tokens"
-        case paymentDetails = "payment_details"
-        case sharePaymentDetails = "payment_details/share"
     }
 
     enum Nested: String {
@@ -408,7 +406,7 @@ class ClientAttributionMetadataCoverageTests: STPNetworkStubbingTestCase {
         testMethodName = testMethodName.replacingOccurrences(of: "_", with: "")
 
         // Construct the path to the recorded network traffic directory
-        let testClass = "PaymentSheetClientAttributionMetadataTests"
+        let testClass = "ClientAttributionMetadataCoverageTests"
 
         // The stubs are stored in the source tree relative to the repository root
         let fileManager = FileManager.default
@@ -437,7 +435,7 @@ class ClientAttributionMetadataCoverageTests: STPNetworkStubbingTestCase {
         var checkedFiles = 0
 
         for case let fileName as String in enumerator {
-            guard fileName.hasSuffix(".tail"), fileName.contains(endpoint.rawValue) else {
+            guard fileName.hasSuffix("\(endpoint.rawValue).tail") else {
                 continue
             }
 
