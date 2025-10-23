@@ -34,8 +34,8 @@ extension PaymentMethodMessagingElement {
                 switch result {
                 case .success(let apiResponse):
                     continuation.resume(returning: apiResponse)
-                case .failure:
-                    continuation.resume(throwing: PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
                 }
             }
         }
