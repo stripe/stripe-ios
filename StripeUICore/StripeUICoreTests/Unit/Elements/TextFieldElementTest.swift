@@ -75,4 +75,38 @@ class TextFieldElementTest: XCTestCase {
         element.textFieldView.textDidChange()
         XCTAssertEqual(element.didReceiveAutofill, false)
     }
+
+    func testSanitizeRemovesEmoji() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"))
+        XCTAssertEqual(element.sanitize(text: "☃️⛄️☃0️⃣0"), "0")
+    }
+
+    func testSanitizeRemovesFaceEmojis() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        XCTAssertEqual(element.sanitize(text: "Hello 😀 World 🎉"), "Hello  World ")
+    }
+
+    func testSanitizeRemovesModifiedEmojis() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        // Test skin tone modifiers
+        XCTAssertEqual(element.sanitize(text: "👋🏻👋🏼👋🏽👋🏾👋🏿"), "")
+    }
+
+    func testSanitizePreservesText() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        XCTAssertEqual(element.sanitize(text: "John Smith"), "John Smith")
+        XCTAssertEqual(element.sanitize(text: "123 Main St"), "123 Main St")
+        XCTAssertEqual(element.sanitize(text: "NY, NY 10001"), "NY, NY 10001")
+    }
+
+    func testSetTextRemovesEmojis() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        element.setText("John 😀 Doe")
+        XCTAssertEqual(element.text, "John  Doe")
+    }
+
+    func testDefaultValueWithEmojisIsSanitized() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "Hello 🌍 World Test Test"))
+        XCTAssertEqual(element.text, "Hello  World ") // Truncated to maxLength
+    }
 }
