@@ -302,6 +302,7 @@ extension PaymentSheet {
                 Task {
                     _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
                     self.assertionHandle = try await self.configuration.apiClient.stripeAttest.assert(canSyncState: false)
+                    self.viewController.assertionHandle = self.assertionHandle
                 }
             }
             updatePaymentOption()
