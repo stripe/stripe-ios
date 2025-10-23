@@ -5,6 +5,8 @@
 //  Created by George Birch on 10/23/25.
 //
 
+import Foundation
+
 enum PaymentMethodMessagingElementError: Error, LocalizedError {
     case missingPublishableKey
     case unexpectedResponseFromStripeAPI
