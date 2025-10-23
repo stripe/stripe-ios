@@ -18,9 +18,6 @@ struct WalletSelectionView: View {
     /// The coordinator used to attach new wallets.
     let coordinator: CryptoOnrampCoordinator
 
-    /// The id of the customer.
-    let customerId: String
-
     /// Closure called once the user attempts to advance from this view with a wallet selected.
     let onCompleted: (Wallet) -> Void
 
@@ -163,7 +160,7 @@ struct WalletSelectionView: View {
         errorMessage = nil
         Task {
             do {
-                let response = try await APIClient.shared.fetchCustomerWallets(cryptoCustomerToken: customerId)
+                let response = try await APIClient.shared.fetchCustomerWallets()
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     wallets = response.data
@@ -192,7 +189,6 @@ struct WalletSelectionView: View {
     PreviewWrapperView { coordinator in
         WalletSelectionView(
             coordinator: coordinator,
-            customerId: "cus_example",
             onCompleted: { _ in }
         )
     }

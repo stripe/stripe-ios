@@ -380,6 +380,10 @@ extension STPElementsSession {
     var linkSignupOptInInitialValue: Bool {
         linkFlags["link_sign_up_opt_in_initial_value"] == true
     }
+
+    var shouldAttestOnConfirmation: Bool {
+        flags["elements_mobile_attest_on_intent_confirmation"] == true
+    }
 }
 
 extension STPElementsSession {
