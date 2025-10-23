@@ -36,4 +36,8 @@ extension STPClientAttributionMetadata {
                          paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
         }
     }
+
+    static func makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: String?) -> STPClientAttributionMetadata {
+        return .init(elementsSessionConfigId: elementsSessionConfigId)
+    }
 }
