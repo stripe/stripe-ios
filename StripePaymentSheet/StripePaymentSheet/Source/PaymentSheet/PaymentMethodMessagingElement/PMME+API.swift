@@ -1,0 +1,84 @@
+//
+//  PMME+API.swift
+//  StripePaymentSheet
+//
+//  Created by George Birch on 10/9/25.
+//
+
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+
+private let pmmeApiEndpoint = URL(string: "https://ppm.stripe.com/config")!
+
+extension PaymentMethodMessagingElement {
+    static func get(configuration: Configuration) async throws -> APIResponse {
+        guard let publishableKey = configuration.apiClient.publishableKey else {
+            throw PaymentMethodMessagingElementError.missingPublishableKey
+        }
+        var parameters: [String: Encodable] = [
+            "amount": configuration.amount,
+            "currency": configuration.currency,
+            // backend accepts locales in the format ab-CD, not ab_CD
+            "locale": configuration.locale.replacingOccurrences(of: "_", with: "-"),
+            "key": publishableKey,
+        ]
+        if let countryCode = configuration.countryCode {
+            parameters["country"] = countryCode
+        }
+        if let paymentMethods = configuration.paymentMethodTypes {
+            parameters["payment_methods"] = paymentMethods.map { $0.identifier }
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            configuration.apiClient.get(url: pmmeApiEndpoint, parameters: parameters) { (result: Result<APIResponse, Error>) in
+                switch result {
+                case .success(let apiResponse):
+                    continuation.resume(returning: apiResponse)
+                case .failure:
+                    continuation.resume(throwing: PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI)
+                }
+            }
+        }
+    }
+}
+
+extension PaymentMethodMessagingElement {
+
+    struct APIResponse: Decodable {
+
+        let content: Content
+        let paymentPlanGroups: [PaymentPlanGroup]
+
+        struct Content: Decodable {
+            let images: [Image]
+            let promotion: Message?
+            let inlinePartnerPromotion: Message?
+            let learnMore: LearnMore
+        }
+
+        struct Image: Decodable {
+            let lightThemePng: IconInfo
+            let darkThemePng: IconInfo
+            let flatThemePng: IconInfo
+            let role: String
+            let text: String
+
+            struct IconInfo: Decodable {
+                let height: Int
+                let url: URL
+                let width: Int
+            }
+        }
+
+        struct Message: Decodable {
+            let message: String
+        }
+
+        struct LearnMore: Decodable {
+            let url: URL
+        }
+
+        struct PaymentPlanGroup: Decodable {
+            let content: Content
+        }
+    }
+}
