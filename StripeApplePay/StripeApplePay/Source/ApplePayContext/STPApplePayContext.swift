@@ -636,6 +636,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                             confirmParams.paymentMethod = paymentMethod.id
                             confirmParams.useStripeSdk = true
                             confirmParams.returnUrl = self.returnUrl
+                            confirmParams.clientAttributionMetadata = self.clientAttributionMetadata
 
                             StripeAPI.SetupIntent.confirm(
                                 apiClient: self.apiClient,
@@ -692,6 +693,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                             if paymentIntent.shipping != self._shippingDetails(from: payment) {
                                 paymentIntentParams.shipping = self._shippingDetails(from: payment)
                             }
+                            paymentIntentParams.clientAttributionMetadata = self.clientAttributionMetadata
 
                             self.paymentState = .pending  // After this point, we can't cancel
 
