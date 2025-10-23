@@ -5,6 +5,7 @@
 //  Created by George Birch on 10/9/25.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
