@@ -777,6 +777,7 @@ public class STPPaymentHandler: NSObject {
             .giropay,
             .EPS,
             .payPal,
+            .payPay,
             .przelewy24,
             .bancontact,
             .netBanking,
