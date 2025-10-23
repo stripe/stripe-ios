@@ -48,6 +48,7 @@ extension PaymentMethodMessagingElement {
 
 extension PaymentMethodMessagingElement {
 
+    // https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/payment_method_messaging/api/content_resource.rb
     struct APIResponse: Decodable {
 
         let content: Content
@@ -57,7 +58,7 @@ extension PaymentMethodMessagingElement {
             let images: [Image]
             let promotion: Message?
             let inlinePartnerPromotion: Message?
-            let learnMore: LearnMore
+            let learnMore: LearnMore?
         }
 
         struct Image: Decodable {
