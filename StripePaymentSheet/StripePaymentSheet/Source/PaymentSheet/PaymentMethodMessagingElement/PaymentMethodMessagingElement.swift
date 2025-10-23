@@ -71,17 +71,3 @@ public class PaymentMethodMessagingElement {
         public var appearance: PaymentMethodMessagingElement.Appearance = PaymentMethodMessagingElement.Appearance()
     }
 }
-
-public enum PaymentMethodMessagingElementError: Error, LocalizedError {
-    case missingPublishableKey
-    case unexpectedResponseFromStripeAPI
-    case unknown
-
-    public var debugDescription: String {
-        switch self {
-        case .missingPublishableKey: return "The publishable key is missing from the API client."
-        case .unexpectedResponseFromStripeAPI: return "Unexpected response from Stripe API."
-        case .unknown: return "An unknown error occurred."
-        }
-    }
-}
