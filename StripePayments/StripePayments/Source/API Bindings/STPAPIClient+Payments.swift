@@ -1580,6 +1580,10 @@ extension STPAPIClient {
             ? authorizationHeader(using: ephemeralKeySecret!)
             : [:]
 
+        stpAssert(parameters["client_attribution_metadata"] != nil, "Missing client_attribution_metadata on /v1/confirmation_tokens!")
+        if let paymentMethodParamsDict = parameters[PaymentMethodDataHash] as? [String: Any] {
+            stpAssert(paymentMethodParamsDict["client_attribution_metadata"] != nil, "Missing client_attribution_metadata under payment_method_data on /v1/confirmation_tokens!")
+        }
         APIRequest<STPConfirmationToken>.post(
             with: self,
             endpoint: APIEndpointConfirmationTokens,
