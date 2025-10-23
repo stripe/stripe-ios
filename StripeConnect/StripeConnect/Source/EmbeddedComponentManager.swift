@@ -174,7 +174,7 @@ public final class EmbeddedComponentManager {
 
     @_spi(DashboardOnly)
     public func createCheckScanningController(
-        handleCheckScanSubmitted: @escaping (HandleCheckScanSubmittedArgs) async throws -> HandleCheckScanSubmittedReturnValue
+        handleCheckScanSubmitted: @escaping HandleCheckScanSubmittedFn
     ) -> CheckScanningController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
