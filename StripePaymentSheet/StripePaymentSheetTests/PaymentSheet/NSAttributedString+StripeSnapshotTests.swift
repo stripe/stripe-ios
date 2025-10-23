@@ -24,7 +24,7 @@ class NSAttributedStringStripeSnapshotTests: STPSnapshotTestCase {
             textColor: UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 1.0),
             infoIconColor: UIColor.purple,
             template: template,
-            substitution: ("<img/>", image)
+            substitution: ("<img/>", image, 2.0)
         )
 
         let label = UILabel()
@@ -42,7 +42,7 @@ class NSAttributedStringStripeSnapshotTests: STPSnapshotTestCase {
             textColor: .darkGray,
             infoIconColor: UIColor.red,
             template: template,
-            substitution: ("{partner}", systemImage)
+            substitution: ("{partner}", systemImage, 0.8)
         )
 
         let label = UILabel()

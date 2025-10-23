@@ -88,6 +88,16 @@ extension UIImage {
         draw(in: CGRect(x: 0, y: 0, width: newImageSize.width, height: newImageSize.height))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
+    
+    // Returns a CGSize for the view that is scaled according to the size of the given font.
+    // For example, a font with a higher or lower pointSize or using dynamic type will result in a
+    //      proportionally larger or smaller image size
+    // `scale` determines the ratio between the returned height and the font height
+    @_spi(STP) public func sizeMatchingFont(_ font: UIFont, scale: CGFloat) -> CGSize {
+        let fontScale = font.capHeight / size.height
+        let totalScale = fontScale * scale
+        return CGSize(width: size.width * totalScale, height: size.height * totalScale)
+    }
 
     private func heicData(compressionQuality: CGFloat = UIImage.defaultCompressionQuality) -> Data?
     {
