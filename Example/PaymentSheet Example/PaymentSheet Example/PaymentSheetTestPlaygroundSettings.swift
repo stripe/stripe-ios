@@ -80,6 +80,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred server side confirmation with CTs"
             }
         }
+
+        var usesConfirmationTokens: Bool {
+            return self == .deferred_csc_ct || self == .deferred_ssc_ct
+        }
     }
 
     enum CustomerMode: String, PickerEnum {
