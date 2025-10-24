@@ -46,8 +46,11 @@ extension PaymentSheet {
                                                                                                   additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
 
                 // 3. Vend the ConfirmationToken and fetch the client secret from the merchant
-                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
-                                                                  confirmationToken: confirmationToken)
+                guard let handler = intentConfig.confirmationTokenConfirmHandler else {
+                    stpAssertionFailure("No confirmationTokenConfirmHandler available")
+                    throw PaymentSheetError.unknown(debugDescription: "No confirmationTokenConfirmHandler available")
+                }
+                let clientSecret = try await handler(confirmationToken)
 
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
@@ -259,26 +262,6 @@ extension PaymentSheet {
             return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.usBankAccount?.linkedAccount != nil || paymentMethod.link != nil
         case .new:
             return false
-        }
-    }
-
-    /// Calls merchant app confirm handler to get the intent client secret
-    ///
-    /// - Parameters:
-    ///   - intentConfig: The Intent configuration
-    ///   - confirmationToken: The newly created confirmation token
-    /// - Returns: Client secret for the PaymentIntent or SetupIntent
-    /// - Throws: Any error from the merchant's confirmation handler
-    private static func fetchIntentClientSecretFromMerchant(
-        intentConfig: IntentConfiguration,
-        confirmationToken: STPConfirmationToken
-    ) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                intentConfig.confirmationTokenConfirmHandler?(confirmationToken) { result in
-                    continuation.resume(with: result)
-                }
-            }
         }
     }
 }
