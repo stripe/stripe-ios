@@ -300,6 +300,7 @@ extension PaymentSheet {
             }
             if loadResult.elementsSession.shouldAttestOnConfirmation {
                 self.attestationConfirmationChallenge = AttestationConfirmationChallenge(stripeAttest: self.configuration.apiClient.stripeAttest)
+                self.viewController.attestationConfirmationChallenge = self.attestationConfirmationChallenge
             }
             updatePaymentOption()
         }
@@ -504,6 +505,7 @@ extension PaymentSheet {
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
                 passiveCaptchaChallenge: passiveCaptchaChallenge,
+                attestationConfirmationChallenge: attestationConfirmationChallenge,
                 callback: completionCallback
             )
         }
@@ -572,6 +574,7 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     integrationShape: .flowController,
                     passiveCaptchaChallenge: passiveCaptchaChallenge,
+                    attestationConfirmationChallenge: attestationConfirmationChallenge,
                     analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
                     analyticsHelper.logPayment(
@@ -837,6 +840,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     var passiveCaptchaChallenge: PassiveCaptchaChallenge? { get set }
+    var attestationConfirmationChallenge: AttestationConfirmationChallenge? { get set }
     func clearSelection()
 }
 

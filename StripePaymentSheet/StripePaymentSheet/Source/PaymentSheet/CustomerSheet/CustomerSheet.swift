@@ -192,7 +192,6 @@ public class CustomerSheet {
                              paymentMethodSyncDefault: paymentMethodSyncDefault,
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false,
-                             shouldAttestOnConfirmation: elementsSession.shouldAttestOnConfirmation,
                              elementsSessionConfigId: elementsSession.configID)
                 var params: [String: Any] = [:]
                 if elementsSession.customer?.customerSession != nil {
@@ -229,7 +228,6 @@ public class CustomerSheet {
                  paymentMethodSyncDefault: Bool,
                  allowsRemovalOfLastSavedPaymentMethod: Bool,
                  cbcEligible: Bool,
-                 shouldAttestOnConfirmation: Bool,
                  elementsSessionConfigId: String?) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
