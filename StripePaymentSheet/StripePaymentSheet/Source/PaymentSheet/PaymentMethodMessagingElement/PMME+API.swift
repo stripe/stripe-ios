@@ -39,6 +39,16 @@ extension PaymentMethodMessagingElement {
                 case .success(let apiResponse):
                     continuation.resume(returning: apiResponse)
                 case .failure(let error):
+                    if let decodingError = error as? DecodingError,
+                        case let .keyNotFound(codingKey, context) = decodingError {
+                        stpAssertionFailure(context.debugDescription)
+                        let problemKey = codingKey.stringValue
+                        let problemPath = context.codingPath
+                        let fullPath = problemPath.reduce("") { $0 + $1.stringValue + "." } + problemKey
+                        let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
+                        let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["missing_response_key": fullPath])
+                        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
+                    }
                     continuation.resume(throwing: error)
                 }
             }
@@ -58,7 +68,7 @@ extension PaymentMethodMessagingElement {
             let images: [Image]
             let promotion: Message?
             let inlinePartnerPromotion: Message?
-            let learnMore: LearnMore?
+            let learnMore: Message?
         }
 
         struct Image: Decodable {
@@ -77,9 +87,6 @@ extension PaymentMethodMessagingElement {
 
         struct Message: Decodable {
             let message: String
-        }
-
-        struct LearnMore: Decodable {
             let url: URL
         }
 
