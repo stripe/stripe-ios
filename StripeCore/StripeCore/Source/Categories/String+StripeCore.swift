@@ -33,10 +33,11 @@ import Foundation
 
 extension Character {
     // Check if each character contains a scalar that has a default emoji presentation
-    // This misses some combined emoji, but seems safer than `isEmoji` (which filters emoji-able things that people wouldn't normally consider emoji, like digits)
+    // or contains the emojification codepoint (U+FE0F, Variation Selector-16)
+    // This may miss some combined emoji, but seems safer than `isEmoji` (which filters emoji-able things that people wouldn't normally consider emoji, like digits)
     // I've seen suggestions to use `> 0x238C && isEmoji`, but I'm worried that this may fail if a character
     // above that range gains a default emoji presentation.
-    var isEmoji: Bool { unicodeScalars.first(where: { $0.properties.isEmojiPresentation }) != nil }
+    var isEmoji: Bool { unicodeScalars.first(where: { $0.properties.isEmojiPresentation || ($0.value == 0xFE0F) }) != nil }
 }
 
 @_spi(STP) public func stringIfHasContentsElseNil(
