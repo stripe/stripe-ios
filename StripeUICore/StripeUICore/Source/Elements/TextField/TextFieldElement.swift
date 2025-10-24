@@ -131,7 +131,9 @@ import UIKit
     // MARK: - Helpers
 
     func sanitize(text: String) -> String {
-        let sanitizedText = text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+        let sanitizedText = text
+            .stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+            .stp_stringByRemovingEmoji()
         return String(sanitizedText.prefix(configuration.maxLength(for: sanitizedText)))
     }
 }
