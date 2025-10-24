@@ -27,7 +27,9 @@ extension PaymentSheet {
             let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
                                                                         configuration: configuration,
                                                                         intentConfig: intentConfig,
-                                                                        elementsSession: elementsSession)
+                                                                        allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                                                                        elementsSession: elementsSession,
+                                                                        mandateData: mandateData)
 
                 let ephemeralKeySecret: String? = {
                     // Only needed when using existing saved payment methods, API will error if provided for new payment methods
