@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ 目前不可用";
+
+"%@ is undergoing maintenance" = "%@ 正在进行维护";
+
+"Account number is required." = "账号为必填。";
+
+"Almost there" = "马上好了";
+
+"Can't find your bank?" = "找不到您的银行？";
+
+"Checking and savings accounts are supported." = "支持支票账户和储蓄账户。";
+
+"Choose a different bank" = "选择其他银行";
+
+"Click “Resend code” and try again, or %@." = "点击“重新发送验证码”并重试，或%@。";
+
+"Confirm account number" = "确认账号";
+
+"Confirm the account number." = "确认账号。";
+
+"Connect account" = "Connect 账户";
+
+"Connect accounts" = "Connect 子账户";
+
+"Connect another account" = "连接另一账户";
+
+"Continue linking your account" = "继续关联您的账户";
+
+"Continue with Link" = "继续使用 Link";
+
+"Email address" = "邮件地址";
+
+"Enter bank details" = "输入银行信息";
+
+"Enter bank details manually" = "手动输入银行信息";
+
+"Enter the code sent to %@" = "请输入发送至 %@ 的验证码";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "请输入发送至 %@ 的验证码。我们会定期要求进行这个额外步骤，以保持您的账户安全。";
+
+"Exit without connecting?" = "退出而不关联？";
+
+"Hmm, that code didn’t work. Double check it and try again." = "呃，这个验证码无效。请再次检查并重试。";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "银行账号无效：最多为 %li 位，且只能包含数字。";
+
+"Invalid routing number." = "路径号码无效。";
+
+"It looks like the verification code you provided is not valid anymore." = "您提供的验证码似乎已失效。";
+
+"Learn more" = "了解更多";
+
+"Maintenance is scheduled to end at %@." = "维护预计于 %@ 结束。";
+
+"Maintenance is scheduled to end on %@ at %@." = "维护计划于 %1$@ %2$@ 结束。";
+
+"Manually enter details" = "手动输入详情";
+
+"No payment accounts available" = "没有可用的支付账户";
+
+"No results" = "没有结果";
+
+"Not now" = "现在不";
+
+"Only checking accounts are supported." = "仅支持支票账户。";
+
+"Please enter %d digits for your routing number." = "请输入您的 %li 位数路径号码。";
+
+"Please enter your bank details manually or select another bank." = "请手动输入您的银行信息，或选择另一银行。";
+
+"Please select another bank or try again later." = "请选择另一银行，或稍后再试。";
+
+"Please select another bank or try again." = "请选择另一银行，或重试。";
+
+"Please select another bank." = "请选择另一银行。";
+
+"Please try selecting another bank account." = "请尝试选择另一银行账户。";
+
+"Please try selecting another bank." = "请尝试选择另一银行。";
+
+"Retrieving accounts..." = "正在检索账户...";
+
+"Routing number" = "路径号码";
+
+"Routing number is required." = "路径号码为必填。";
+
+"Search for more banks" = "搜索更多银行";
+
+"Select account" = "选择账户";
+
+"Select accounts" = "选择账户";
+
+"Select another bank" = "选择另一银行";
+
 "Select bank" = "选择银行";
+
+"Something went wrong" = "出错了";
+
+"Submit" = "提交";
+
+"Success" = "成功";
+
+"The account you selected isn't available for payments" = "不能用您选择的账户完成付款";
+
+"The accounts you selected aren't available for payments" = "不能用您选择的账户完成付款";
+
+"There was a problem accessing your %@ account" = "访问您的 %@ 账户时遇到了问题";
+
+"Try again, or %@." = "请重试，或%@。";
+
+"Try searching another bank" = "尝试搜索另一银行";
+
+"Try searching another bank or %@" = "尝试搜索另一银行或%@";
+
+"Use information you previously saved with your Link account." = "使用您之前在 Link 账户中保存的信息。";
+
+"Use test account" = "使用测试账户";
+
+"Use test code" = "使用测试代码";
+
+"Verify your email" = "验证邮件地址";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "我们找到 %1$li 个 %2$@ 账户，但您只能将美国支票账户关联到 %3$@。";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "我们找到 %1$li 个 %2$@ 账户，但您只能关联美国支票账户。";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "我们找到 %1$li 个 %2$@ 账户，但您只能将支票或储蓄账户关联到 %3$@。";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "我们找到 %1$li 个 %2$@ 账户，但您只能关联支票或储蓄账户。";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "我们找到 1 个 %1$@ 账户，但您只能将美国支票账户关联到 %2$@。";
+
+"We found 1 %@ account but you can only link US checking accounts." = "我们找到 1 个 %@ 账户，但您只能关联美国支票账户。";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "我们找到 1 个 %1$@ 账户，但您只能将支票或储蓄账户关联到 %2$@。";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "我们找到 1 个 %@ 账户，但您只能关联支票或储蓄账户。";
+
+"Yes, exit" = "是，退出";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "预计 1-2 天内会向您的账户 ••••%@ 存入微额存款，同时会给您邮件发送进一步说明。";
+
+"You haven't finished linking your account. Press continue to finish the process." = "您尚未完成账户关联。点击继续以完成该过程。";
+
+"You haven't finished linking your bank account and all progress will be lost." = "您尚未完成账户关联，所有进度将丢失。";
+
+"You're in test mode." = "您处于测试模式。";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "目前无法关联您的账户。请手动输入您的银行信息，或稍后再试。";
+
+"Your account can’t be connected at this time. Please try again later." = "目前无法关联您的账户。请稍后再试。";
+
+"Your account number couldn’t be accessed at this time" = "目前无法访问您的账户";
+
+"Your account numbers don't match." = "您的账号不匹配。";
+
+"Your account was connected, but couldn't be saved to Link." = "您的账户已关联至，但无法保存到 Link。";
+
+"Your account was connected." = "您的账户已关联。";
+
+"Your accounts were connected, but couldn't be saved to Link." = "您的账户已关联，但无法保存到 Link。";
+
+"Your accounts were connected." = "您的账户已关联。";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "将通过向您的账户发送微存款来验证您的银行信息，通常需要 1-2 个工作日。仅支持支票账户。";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "将通过向您的账户发送微存款来验证您的银行信息，通常需要 1-2 个工作日。";
+
+"Your email address is invalid." = "您的邮件地址无效。";
+
+"Your mobile phone number is incomplete." = "您的手机号码不完整。";
+
+"contact us" = "联系我们";
+
+"manually enter details" = "手动输入详情";

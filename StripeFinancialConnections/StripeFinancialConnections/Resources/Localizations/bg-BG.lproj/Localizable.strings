@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ в момента не е достъпен";
+
+"%@ is undergoing maintenance" = "%@ преминава през техническа поддръжка";
+
+"Account number is required." = "Номерът на сметка е задължителен.";
+
+"Almost there" = "Почти е готово";
+
+"Can't find your bank?" = "Не можете да откриете вашата банка?";
+
+"Checking and savings accounts are supported." = "Поддържат се разплащателни и спестовни сметки.";
+
+"Choose a different bank" = "Изберете друга банка";
+
+"Click “Resend code” and try again, or %@." = "Щракнете върху „Повторно изпращане на код“ и опитайте отново или %@.";
+
+"Confirm account number" = "Потвърждение на номера на сметката";
+
+"Confirm the account number." = "Потвърдете номера на сметката.";
+
+"Connect account" = "Свързване на сметка";
+
+"Connect accounts" = "Свързване на сметки";
+
+"Connect another account" = "Свържете друга банкова сметка";
+
+"Continue linking your account" = "Продължете със свързването на вашата сметка";
+
+"Continue with Link" = "Продължаване с Link";
+
+"Email address" = "Имейл";
+
+"Enter bank details" = "Въвеждане на данни за банка";
+
+"Enter bank details manually" = "Въведете ръчно банковите данни";
+
+"Enter the code sent to %@" = "Въведете кода, изпратен на %@.";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Въведете кода, изпратен на %@. Периодично изискваме тази допълнителна стъпка, за да запазим профила ви в безопасност.";
+
+"Exit without connecting?" = "Изход без свързване?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Хм, този код не проработи. Проверете го повторно и опитайте отново.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Невалиден номер на банкова сметка: трябва да бъде с дължина най-много %li цифри и да съдържа само цифри.";
+
+"Invalid routing number." = "Невалиден маршрутен номер.";
+
+"It looks like the verification code you provided is not valid anymore." = "Изглежда, че кодът за верификация, който сте предоставили, вече не е валиден.";
+
+"Learn more" = "Научете повече";
+
+"Maintenance is scheduled to end at %@." = "Техническата поддръжка следва да приключи в %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Техническата поддръжка следва да приключи на %1$@ в %2$@.";
+
+"Manually enter details" = "Ръчно въвеждане на данни";
+
+"No payment accounts available" = "Няма налични платежни сметки";
+
+"No results" = "Няма резултати";
+
+"Not now" = "Не сега";
+
+"Only checking accounts are supported." = "Поддържат се само разплащателни сметки.";
+
+"Please enter %d digits for your routing number." = "Моля, въведете %li цифри за вашия маршрутен номер.";
+
+"Please enter your bank details manually or select another bank." = "Моля, въведете вашите банкови данни ръчно или изберете друга банка.";
+
+"Please select another bank or try again later." = "Моля, изберете друга банка или опитайте отново по-късно.";
+
+"Please select another bank or try again." = "Моля, изберете друга банка или опитайте отново.";
+
+"Please select another bank." = "Моля, изберете друга банка.";
+
+"Please try selecting another bank account." = "Моля, опитайте се да изберете друга сметка.";
+
+"Please try selecting another bank." = "Моля, опитайте се да изберете друга банка.";
+
+"Retrieving accounts..." = "Извличане на сметки...";
+
+"Routing number" = "Номер на маршрута";
+
+"Routing number is required." = "Маршрутният номер е задължителен.";
+
+"Search for more banks" = "Търсене на още банки";
+
+"Select account" = "Избор на сметка";
+
+"Select accounts" = "Избор на сметки";
+
+"Select another bank" = "Избор на друга банка";
+
 "Select bank" = "Избиране на банка";
+
+"Something went wrong" = "Възникна грешка";
+
+"Submit" = "Изпращане";
+
+"Success" = "Успешно";
+
+"The account you selected isn't available for payments" = "Сметката, която сте избрали, не е налична за плащания";
+
+"The accounts you selected aren't available for payments" = "Сметките, които сте избрали, не са налични за плащания";
+
+"There was a problem accessing your %@ account" = "Възникна проблем, свързан с достъпа до вашата сметка в %@";
+
+"Try again, or %@." = "Опитайте отново или %@.";
+
+"Try searching another bank" = "Опитайте да потърсите друга банка";
+
+"Try searching another bank or %@" = "Опитайте да потърсите друга банка или %@";
+
+"Use information you previously saved with your Link account." = "Използвайте информация, която вече сте запазили в акаунта си в Link.";
+
+"Use test account" = "Използване на тестов акаунт";
+
+"Use test code" = "Използване на тестов код";
+
+"Verify your email" = "Потвърдете имейла си";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Открихме %1$li %2$@ акаунта, но можете да свържете само американски разплащателни сметки към %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Открихме %1$li %2$@ акаунта, но можете да свържете само американски разплащателни сметки.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Открихме %1$li %2$@ акаунта, но можете да свържете само разплащателни или спестовни сметки към %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Открихме %1$li %2$@ акаунта, но можете да свържете само разплащателни или спестовни сметки.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Открихме 1 акаунт %1$@, но можете да свържете само американски разплащателни сметки към %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Открихме 1 акаунт %@, но можете да свържете само американски разплащателни сметки.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Отрихме 1 акаунт %1$@, но можете да свържете само разплащателни или спестовни сметки към %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Открихме 1 акаунт %@, но можете да свържете само разплащателни или спестовни сметки.";
+
+"Yes, exit" = "Да, излезте";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Можете да очаквате микродепозити в сметка •••%@ след 1-2 дни и имейл с допълнителни инструкции.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Не сте завършили свързването на вашата сметка. Моля, продължете, за да завършите процеса.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Не сте завършили свързването на вашата сметка и целият напредък ще бъде загубен.";
+
+"You're in test mode." = "Вие сте в тестов режим.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "В момента вашата сметка не може да бъде свързана. Моля, въведете вашите банкови данни ръчно или опитайте отново по-късно.";
+
+"Your account can’t be connected at this time. Please try again later." = "В момента вашата сметка не може да бъде свързана. Моля, опитайте отново по-късно.";
+
+"Your account number couldn’t be accessed at this time" = "Към този момент няма достъп до вашия номер на сметка";
+
+"Your account numbers don't match." = "Посочените номера на сметки не съвпадат.";
+
+"Your account was connected, but couldn't be saved to Link." = "Вашата сметка беше свързана, но не може да бъде запазена в Link.";
+
+"Your account was connected." = "Вашата сметка беше свързана.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Вашите сметки бяха свързани, но не могат да бъдат запазени в Link.";
+
+"Your accounts were connected." = "Вашите сметки бяха свързани.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Банковата ви информация ще бъде проверена чрез микродепозити в сметката ви, обикновено в рамките на 1-2 работни дни. Поддържат се само разплащателни сметки.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Вашата банкова информация ще бъде потвърдена с микродепозити във вашата сметка. Това обикновено отнема 1-2 работни дни.";
+
+"Your email address is invalid." = "Вашият имейл е невалиден.";
+
+"Your mobile phone number is incomplete." = "Вашият мобилен телефонен номер е непълен.";
+
+"contact us" = "свържете се с нас";
+
+"manually enter details" = "ръчно въвеждане на данни";

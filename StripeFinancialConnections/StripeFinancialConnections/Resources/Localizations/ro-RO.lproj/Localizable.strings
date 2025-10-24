@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ nu este disponibilă în prezent";
+
+"%@ is undergoing maintenance" = "%@ este în curs de întreținere";
+
+"Account number is required." = "Este necesar numărul de cont.";
+
+"Almost there" = "Aproape ați terminat";
+
+"Can't find your bank?" = "Nu vă puteți găsi banca?";
+
+"Checking and savings accounts are supported." = "Sunt acceptate conturile curente și de economii.";
+
+"Choose a different bank" = "Alegeți o altă bancă";
+
+"Click “Resend code” and try again, or %@." = "Faceți clic pe „Retrimitere cod” și încercați din nou sau %@.";
+
+"Confirm account number" = "Confirmare număr cont";
+
+"Confirm the account number." = "Confirmați numărul de cont.";
+
+"Connect account" = "Conectați contul";
+
+"Connect accounts" = "Conectați conturile";
+
+"Connect another account" = "Conectați un alt cont";
+
+"Continue linking your account" = "Continuați asocierea contului dvs.";
+
+"Continue with Link" = "Continuare cu Link";
+
+"Email address" = "Adresă de e-mail";
+
+"Enter bank details" = "Introduceți detaliile bancare";
+
+"Enter bank details manually" = "Introduceți detaliile bancare manual";
+
+"Enter the code sent to %@" = "Introduceți codul trimis la %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Introduceți codul trimis la %@. Solicităm periodic acest pas suplimentar pentru a vă menține contul în siguranță.";
+
+"Exit without connecting?" = "Ieșiți fără conectare?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Hmm, acel cod nu a funcționat. Verificați și încercați din nou.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Număr de cont bancar nevalid: trebuie să conțină cel mult %li caractere și să conțină doar cifre.";
+
+"Invalid routing number." = "Număr de ruting nevalid.";
+
+"It looks like the verification code you provided is not valid anymore." = "Se pare că ați furnizat un cod de verificare nevalid.";
+
+"Learn more" = "Aflați mai multe";
+
+"Maintenance is scheduled to end at %@." = "Întreținerea este programată să se încheie la %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Întreținerea este programată să se încheie în data de %1$@ la ora %2$@.";
+
+"Manually enter details" = "Introduceți manual detaliile";
+
+"No payment accounts available" = "Niciun cont de plată disponibil";
+
+"No results" = "Nu există rezultate";
+
+"Not now" = "Nu acum";
+
+"Only checking accounts are supported." = "Sunt acceptate doar conturile curente.";
+
+"Please enter %d digits for your routing number." = "Vă rugăm să introduceți %li cifre pentru numărul dvs. de rutare.";
+
+"Please enter your bank details manually or select another bank." = "Vă rugăm să introduceți detaliile dvs. bancare manual sau să selectați o altă bancă.";
+
+"Please select another bank or try again later." = "Vă rugăm să selectați o altă bancă sau să încercați din nou mai târziu.";
+
+"Please select another bank or try again." = "Vă rugăm să selectați o altă bancă sau să încercați din nou.";
+
+"Please select another bank." = "Vă rugăm să selectați o altă bancă.";
+
+"Please try selecting another bank account." = "Vă rugăm să încercați să selectați un alt cont bancar.";
+
+"Please try selecting another bank." = "Vă rugăm să încercați să selectați o altă bancă.";
+
+"Retrieving accounts..." = "Se recuperează conturile...";
+
+"Routing number" = "Număr de ruting";
+
+"Routing number is required." = "Este necesar numărul de rutare.";
+
+"Search for more banks" = "Căutați mai multe bănci";
+
+"Select account" = "Selectare cont";
+
+"Select accounts" = "Selectare conturi";
+
+"Select another bank" = "Selectați o altă bancă";
+
 "Select bank" = "Selectare bancă";
+
+"Something went wrong" = "Ceva nu a mers bine";
+
+"Submit" = "Trimitere";
+
+"Success" = "Succes";
+
+"The account you selected isn't available for payments" = "Contul selectat de dvs. nu este disponibil pentru plăți";
+
+"The accounts you selected aren't available for payments" = "Conturile selectate de dvs. nu sunt disponibile pentru plăți";
+
+"There was a problem accessing your %@ account" = "A apărut o problemă la accesare contului dvs. %@";
+
+"Try again, or %@." = "Încercați din nou sau %@.";
+
+"Try searching another bank" = "Încercați să căutați o altă bancă";
+
+"Try searching another bank or %@" = "Încercați să căutați o altă bancă sau %@";
+
+"Use information you previously saved with your Link account." = "Utilizați informațiile pe care le-ați salvat anterior cu contul dvs. Link.";
+
+"Use test account" = "Utilizați un cont de testare";
+
+"Use test code" = "Utilizați un cod de testare";
+
+"Verify your email" = "Verificați-vă e-mailul";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Am găsit %1$li %2$@ conturi, dar puteți asocia doar conturile curente din SUA la %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Am găsit %1$li %2$@ conturi, dar puteți asocia doar conturile curente din SUA.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Am găsit %1$li %2$@ conturi, dar puteți asocia numai conturile curente sau de economii la %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Am găsit %1$li %2$@ conturi, dar puteți asocia doar conturi curente sau de economii.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Am găsit 1 cont %1$@, dar puteți asocia doar conturile curente din SUA la %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Am găsit 1 cont %@, dar puteți asocia doar conturile curente din SUA.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Am găsit 1 cont %1$@, dar puteți asocia doar conturile curente sau de economii la %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Am găsit 1 cont %@, dar puteți asocia doar conturi curente sau de economii.";
+
+"Yes, exit" = "Da, părăsiți";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Vă puteți aștepta la două micro-depuneri în contul care se termină în ••••%@ în 1-2 zile și la un e-mail cu instrucțiuni suplimentare.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Nu ați finalizat asocierea contului dvs. Apăsați pe Continuare pentru a finaliza procesul.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Nu ați finalizat asocierea contului dvs. bancar și întregul progres va fi pierdut.";
+
+"You're in test mode." = "Sunteți în modul de testare.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Contul dvs. nu poate fi conectat în acest moment. Vă rugăm să introduceți detaliile dvs. bancare manual sau să încercați din nou mai târziu.";
+
+"Your account can’t be connected at this time. Please try again later." = "Contul dvs. nu poate fi conectat în acest moment. Vă rugăm să încercați din nou mai târziu.";
+
+"Your account number couldn’t be accessed at this time" = "Numărul dvs. de cont nu a putut fi accesat în acest moment";
+
+"Your account numbers don't match." = "Numerele dvs. de cont nu corespund.";
+
+"Your account was connected, but couldn't be saved to Link." = "Contul dvs. a fost conectat, dar nu a putut fi salvat în Link.";
+
+"Your account was connected." = "Contul dvs. a fost conectat.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Conturile dvs. au fost conectate, dar nu au putut fi salvate în Link.";
+
+"Your accounts were connected." = "Conturile dvs. au fost conectate.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Informațiile dvs. bancare vor fi verificate cu micro-depuneri în contul dvs. Acest lucru durează de obicei 1-2 zile lucrătoare. Sunt acceptate doar conturile curente.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Informațiile dvs. bancare vor fi verificate cu micro-depuneri în contul dvs. Acest lucru durează de obicei 1-2 zile lucrătoare.";
+
+"Your email address is invalid." = "Adresa dvs. de e-mail nu este validă.";
+
+"Your mobile phone number is incomplete." = "Numărul dvs. de telefon mobil nu este complet.";
+
+"contact us" = "contactați-ne";
+
+"manually enter details" = "introduceți manual detaliile";

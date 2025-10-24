@@ -88,8 +88,6 @@
 
 "Confirm" = "確定";
 
-"Confirm it's you" = "確認是您本人";
-
 "Confirm payment details" = "確認支付詳情";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的銀行或支付應用程式中確認向 %@ 的付款，以完成購物。";
@@ -112,11 +110,7 @@
 
 "Enter address manually" = "手動輸入地址";
 
-"Enter the code sent to %@." = "請輸入傳送至 %s 的驗證碼。";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "連接失敗";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "透過您的銀行首次支付時獲得 %@ 的返現。<terms>查看條款</terms>";
 
@@ -203,8 +197,6 @@
 "Remove card?" = "移除卡？";
 
 "Remove linked account" = "移除關聯帳戶";
-
-"Resend code" = "重新傳送驗證碼";
 
 "SEPA debit details cannot be changed." = "無法更改 SEPA 借記詳情。";
 

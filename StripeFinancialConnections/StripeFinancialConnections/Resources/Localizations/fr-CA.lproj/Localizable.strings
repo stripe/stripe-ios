@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ est actuellement indisponible";
+
+"%@ is undergoing maintenance" = "%@ est en cours de maintenance";
+
+"Account number is required." = "Le numéro de compte est obligatoire.";
+
+"Almost there" = "Vous y êtes presque";
+
+"Can't find your bank?" = "Vous ne trouvez pas votre institution financière?";
+
+"Checking and savings accounts are supported." = "Les comptes chèques et comptes d'épargne sont pris en charge.";
+
+"Choose a different bank" = "Choisir une autre institution financière";
+
+"Click “Resend code” and try again, or %@." = "Cliquez sur Renvoyer le code et réessayez, ou %@.";
+
+"Confirm account number" = "Confirmer le numéro de compte";
+
+"Confirm the account number." = "Confirmer le numéro de compte.";
+
+"Connect account" = "Associer le compte";
+
+"Connect accounts" = "Associer les comptes";
+
+"Connect another account" = "Associer un autre compte";
+
+"Continue linking your account" = "Poursuivre l'association de votre compte";
+
+"Continue with Link" = "Continuer avec Link";
+
+"Email address" = "Adresse de courriel";
+
+"Enter bank details" = "Saisie des coordonnées bancaires";
+
+"Enter bank details manually" = "Saisir les coordonnées bancaires manuellement";
+
+"Enter the code sent to %@" = "Saisissez le code envoyé au %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Saisissez le code envoyé à %@. Nous vous demandons régulièrement d'effectuer cette étape supplémentaire afin de protéger votre compte.";
+
+"Exit without connecting?" = "Voulez-vous quitter sans enregistrer?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Ce code n'est pas valide. Vérifiez-le et réessayez.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Numéro de compte bancaire non valide : ce numéro ne doit comporter que des chiffres, sans dépasser %li chiffres.";
+
+"Invalid routing number." = "Numéro d'acheminement non valide.";
+
+"It looks like the verification code you provided is not valid anymore." = "Le code de vérification fourni ne semble plus valide.";
+
+"Learn more" = "En savoir plus";
+
+"Maintenance is scheduled to end at %@." = "La maintenance doit se terminer à %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "La maintenance doit se terminer le %1$@ à %2$@.";
+
+"Manually enter details" = "Saisissez les informations manuellement";
+
+"No payment accounts available" = "Aucun compte de paiement disponible";
+
+"No results" = "Aucun résultat";
+
+"Not now" = "Pas maintenant";
+
+"Only checking accounts are supported." = "Seuls les comptes chèques sont pris en charge.";
+
+"Please enter %d digits for your routing number." = "Veuillez saisir un numéro d'acheminement à %li chiffres.";
+
+"Please enter your bank details manually or select another bank." = "Veuillez saisir vos coordonnées bancaires manuellement ou choisir un autre compte bancaire.";
+
+"Please select another bank or try again later." = "Veuillez choisir un autre compte bancaire ou réessayer plus tard.";
+
+"Please select another bank or try again." = "Veuillez choisir un autre compte bancaire ou réessayer.";
+
+"Please select another bank." = "Veuillez choisir un autre compte bancaire.";
+
+"Please try selecting another bank account." = "Veuillez essayer de sélectionner un autre compte bancaire.";
+
+"Please try selecting another bank." = "Veuillez essayer de sélectionner une autre institution financière.";
+
+"Retrieving accounts..." = "Récupération des comptes...";
+
+"Routing number" = "Numéro d'acheminement";
+
+"Routing number is required." = "Le numéro d'acheminement est obligatoire.";
+
+"Search for more banks" = "Rechercher d'autres institutions financières";
+
+"Select account" = "Choisir un compte";
+
+"Select accounts" = "Choisir des comptes";
+
+"Select another bank" = "Choisir une autre institution financière";
+
 "Select bank" = "Sélectionner l'institution financière";
+
+"Something went wrong" = "Un problème est survenu";
+
+"Submit" = "Envoyer";
+
+"Success" = "Réussie";
+
+"The account you selected isn't available for payments" = "Le compte que vous avez sélectionné n'est pas disponible pour les paiements";
+
+"The accounts you selected aren't available for payments" = "Les comptes que vous avez sélectionnés ne sont pas disponibles pour les paiements";
+
+"There was a problem accessing your %@ account" = "Un problème est survenu lors de l'accès à votre compte %@";
+
+"Try again, or %@." = "Essayez une nouvelle fois ou %@.";
+
+"Try searching another bank" = "Essayez de rechercher une autre institution financière";
+
+"Try searching another bank or %@" = "Essayez de rechercher une autre institution financière ou %@";
+
+"Use information you previously saved with your Link account." = "Utilisez les informations précédemment enregistrées sur votre compte Link.";
+
+"Use test account" = "Utiliser le compte de test";
+
+"Use test code" = "Utiliser le code de test";
+
+"Verify your email" = "Confirmez votre adresse de courriel";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Nous avons trouvé %1$li comptes %2$@, mais vous ne pouvez associer que des comptes courants américains à %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Nous avons trouvé %1$li comptes %2$@, mais vous ne pouvez associer que des comptes courants américains.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Nous avons trouvé %1$li comptes %2$@, mais vous ne pouvez associer que des comptes chèques ou d'épargne à %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Nous avons trouvé %1$li comptes %2$@, mais vous ne pouvez associer que des comptes courants ou des comptes d'épargne.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Nous avons trouvé 1 compte %1$@, mais vous ne pouvez associer que des comptes courants américains à %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Nous avons trouvé 1 compte %2$@, mais vous ne pouvez associer que des comptes courants américains.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Nous avons trouvé 1 compte %1$@, mais vous ne pouvez associer que des comptes chèques ou d'épargne à %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Nous avons trouvé 1 compte %2$@, mais vous ne pouvez associer que des comptes courants ou des comptes d'épargne.";
+
+"Yes, exit" = "Oui, quitter";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Attendez-vous à recevoir des microversements sur le compte ••••%@ d'ici 1 à 2 jours. Vous recevrez ensuite un courriel contenant des instructions supplémentaires.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Vous n'avez pas finalisé l'association de votre compte. Appuyez sur Continuer pour finaliser le processus.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Vous n'avez pas finalisé l'association de votre compte bancaire, et toutes les étapes déjà effectuées seront perdues.";
+
+"You're in test mode." = "Vous êtes en mode test.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Impossible d'associer votre compte pour le moment. Veuillez saisir vos coordonnées bancaires manuellement ou réessayer ultérieurement.";
+
+"Your account can’t be connected at this time. Please try again later." = "Impossible d'associer votre compte pour le moment. Veuillez réessayer ultérieurement.";
+
+"Your account number couldn’t be accessed at this time" = "Impossible d'accéder à votre numéro de compte actuellement";
+
+"Your account numbers don't match." = "Vos numéros de compte ne correspondent pas.";
+
+"Your account was connected, but couldn't be saved to Link." = "Votre compte a été associé, mais n'a pas pu être enregistré dans Link.";
+
+"Your account was connected." = "Votre compte a été associé.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Vos comptes ont été associés, mais n'ont pas pu être enregistrés dans Link.";
+
+"Your accounts were connected." = "Vos comptes ont été associés.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Vos coordonnées bancaires seront vérifiées à l'aide de microversements sur votre compte. Cette opération prend généralement 1 à 2 jours ouvrables. Seuls les comptes chèques sont pris en charge.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Vos coordonnées bancaires seront vérifiées à l'aide de microversements sur votre compte. Cette opération prend généralement 1 à 2 jours ouvrables.";
+
+"Your email address is invalid." = "Votre adresse de courriel n'est pas valide.";
+
+"Your mobile phone number is incomplete." = "Votre numéro de téléphone mobile est incomplet.";
+
+"contact us" = "contactez-nous";
+
+"manually enter details" = "saisissez les informations manuellement";

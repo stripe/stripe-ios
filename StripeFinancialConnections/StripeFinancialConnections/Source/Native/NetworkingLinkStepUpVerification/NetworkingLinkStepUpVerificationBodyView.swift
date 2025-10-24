@@ -81,10 +81,7 @@ private func CreateResendCodeLabel(
         textColor: appearance.colors.textAction,
         showLinkUnderline: false
     )
-    let text = STPLocalizedString(
-        "Resend code",
-        "The title of a button that allows a user to request a one-time-password (OTP) again in case they did not receive it."
-    )
+    let text = String.Localized.resend_code
     resendCodeLabel.setText(
         // we add a fake link to fire the `action` closure
         "[\(text)](https://www.just-fire-action.com)",
