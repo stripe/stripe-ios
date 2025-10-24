@@ -164,6 +164,19 @@ extension ConsumerPaymentDetails {
     }
 }
 
+extension ConsumerPaymentDetails.DetailsType {
+    var fundingSource: LinkSettings.FundingSource? {
+        switch self {
+        case .card:
+            return .card
+        case .bankAccount:
+            return .bankAccount
+        case .unparsable:
+            return nil
+        }
+    }
+}
+
 // MARK: - Card checks
 
 extension ConsumerPaymentDetails.Details {

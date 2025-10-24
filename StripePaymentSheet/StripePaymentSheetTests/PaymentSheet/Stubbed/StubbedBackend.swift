@@ -22,6 +22,7 @@ class StubbedBackend {
                     variables: [
                         "<paymentMethods>": paymentMethods,
                         "<currency>": "\"usd\"",
+                        "<linkMode>": "null",
                     ]
                 )
             }

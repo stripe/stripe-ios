@@ -625,6 +625,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                     variables: [
                         "<paymentMethods>": "\"link\"",
                         "<currency>": "\"USD\"",
+                        "<linkMode>": "\"PASSTHROUGH\"",
                     ]
                 )
             }
@@ -641,6 +642,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
+        UserDefaults.standard.removeObject(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
     }
 
     func testPaymentSheetSingleLPM() {
@@ -652,6 +654,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                     variables: [
                         "<paymentMethods>": "\"cashapp\"",
                         "<currency>": "\"usd\"",
+                        "<linkMode>": "null",
                     ]
                 )
             }
@@ -678,6 +681,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                     variables: [
                         "<paymentMethods>": "\"cashapp\"",
                         "<currency>": "\"usd\"",
+                        "<linkMode>": "null",
                     ]
                 )
             }

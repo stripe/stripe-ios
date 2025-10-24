@@ -10,8 +10,10 @@
 
 extension STPElementsSession {
     var supportsLink: Bool {
-        // Either Link is an allowed Payment Method in the elements/sessions response, or passthrough mode (Link as a Card PM) is allowed
-        orderedPaymentMethodTypes.contains(.link) || linkPassthroughModeEnabled
+        guard let linkSettings, linkSettings.fundingSourcesSupportedByClient else {
+            return false
+        }
+        return linkSettings.linkMode != nil
     }
 
     var linkPassthroughModeEnabled: Bool {
@@ -23,7 +25,7 @@ extension STPElementsSession {
     }
 
     var supportsLinkCard: Bool {
-        supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
+        supportsLink && (linkFundingSources?.contains(.card) ?? false)
     }
 
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
@@ -75,5 +77,13 @@ extension Intent {
                 return .setup
             }
         }
+    }
+}
+
+extension LinkSettings {
+    /// Returns true if at least one of the `link_funding_sources` is supported by the client.
+    var fundingSourcesSupportedByClient: Bool {
+        let clientSupportedFundingSources = ConsumerPaymentDetails.DetailsType.allCases.compactMap(\.fundingSource)
+        return !fundingSources.isDisjoint(with: clientSupportedFundingSources)
     }
 }

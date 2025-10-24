@@ -15,7 +15,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
             intent: ._testValue(),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], linkMode: nil),
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)]
         )
