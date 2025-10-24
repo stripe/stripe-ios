@@ -112,7 +112,6 @@ class SimpleScanViewController: ScanBaseViewController {
     static var privacyLinkString = String.Localized.scanCardExpectedPrivacyLinkText()
 
     weak var delegate: SimpleScanDelegate?
-    var scanPerformancePriority: ScanPerformance = .fast
     var maxErrorCorrectionDuration: Double = 4.0
 
     // MARK: Inits
@@ -165,14 +164,7 @@ class SimpleScanViewController: ScanBaseViewController {
     }
 
     func setUpMainLoop(errorCorrectionDuration: Double) {
-        if scanPerformancePriority == .accurate {
-            let mainLoop = self.mainLoop as? OcrMainLoop
-            mainLoop?.errorCorrection = ErrorCorrection(
-                stateMachine: OcrAccurateMainLoopStateMachine(
-                    maxErrorCorrection: maxErrorCorrectionDuration
-                )
-            )
-        }
+        // Error correction setup removed as scanPerformancePriority was unused
     }
 
     // MARK: - Visual and UI event setup for UI components

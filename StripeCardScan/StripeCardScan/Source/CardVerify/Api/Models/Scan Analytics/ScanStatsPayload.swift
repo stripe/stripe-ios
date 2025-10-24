@@ -15,9 +15,9 @@ struct ScanStatsPayload: Encodable {
 }
 
 struct ScanAnalyticsPayload: Encodable {
-    let app = AppInfo()
+    let app: AppInfo
     let configuration: ConfigurationInfo
-    let device = DeviceInfo()
+    let device: DeviceInfo
     /// API  requirement but have no purpose
     let instanceId: String = UUID().uuidString
     let payloadInfo: PayloadInfo?
@@ -25,6 +25,21 @@ struct ScanAnalyticsPayload: Encodable {
     /// API  requirement but have no purpose
     let scanId: String = UUID().uuidString
     let scanStats: ScanStatsTasks
+
+    struct AppInfo: Encodable {
+        let appPackageName: String
+        let build: String
+        let isDebugBuild: Bool
+        let sdkVersion: String
+    }
+
+    struct DeviceInfo: Encodable {
+        let deviceId: String
+        let deviceType: String
+        let osVersion: String
+        let platform: String
+        let vendorId: String
+    }
 }
 
 struct ScanStatsTasks: Encodable {
