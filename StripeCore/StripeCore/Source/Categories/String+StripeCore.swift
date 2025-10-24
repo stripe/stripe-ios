@@ -31,18 +31,13 @@ import Foundation
     }
 }
 
-// h/t https://medium.com/better-programming/understanding-swift-strings-characters-and-scalars-a4b82f2d8fde
 extension Character {
-    var isSimpleEmoji: Bool {
-        guard let firstScalar = unicodeScalars.first else {
-            return false
-        }
-        return firstScalar.properties.isEmoji && firstScalar.value > 0x238C
-    }
-    var isCombinedIntoEmoji: Bool {
-        unicodeScalars.count > 1 && unicodeScalars.first?.properties.isEmoji ?? false
-    }
-    var isEmoji: Bool { isSimpleEmoji || isCombinedIntoEmoji }
+    // Check if each character contains a scalar that has a default emoji presentation
+    // This misses some combined emoji, but seems safer than `isEmoji` (which filters too things like digits)
+    // or combining `isEmoji` with a set range (which could change over time).
+    // I've seen suggestions to use `> 0x238C && isEmoji`, but I'm worried that this may fail if a character
+    // above that range gains a default emoji presentation.
+    var isEmoji: Bool { unicodeScalars.first(where: { $0.properties.isEmojiPresentation }) != nil }
 }
 
 @_spi(STP) public func stringIfHasContentsElseNil(

@@ -76,11 +76,6 @@ class TextFieldElementTest: XCTestCase {
         XCTAssertEqual(element.didReceiveAutofill, false)
     }
 
-    func testSanitizeRemovesEmoji() {
-        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"))
-        XCTAssertEqual(element.sanitize(text: "☃️⛄️☃0️⃣0"), "0")
-    }
-
     func testSanitizeRemovesFaceEmojis() {
         let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
         XCTAssertEqual(element.sanitize(text: "Hello 😀 World 🎉"), "Hello  World ")
