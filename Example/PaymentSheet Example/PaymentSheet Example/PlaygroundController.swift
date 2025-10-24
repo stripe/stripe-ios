@@ -407,8 +407,11 @@ class PlaygroundController: ObservableObject {
 
         // Use confirmation token handler for CT integration types
         if settings.integrationType == .deferred_csc_ct || settings.integrationType == .deferred_ssc_ct {
-            let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] in
-                self?.confirmationTokenConfirmHandler($0, $1)
+            let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] confirmationToken in
+                guard let self = self else {
+                    throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
+                }
+                return try await self.confirmationTokenConfirmHandler(confirmationToken)
             }
 
             switch settings.mode {
@@ -1060,28 +1063,27 @@ extension PlaygroundController {
         )
     }
 
-    func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken,
-                                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+    func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken) async throws -> String {
         switch settings.integrationType {
         case .deferred_csc_ct:
-            if settings.integrationType == .deferred_csc_ct {
-                DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
-                    intentCreationCallback(.success(self.clientSecret!))
-                }
-            }
-            return
+            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second simulate creating an intent
+            return self.clientSecret!
         case .deferred_ssc_ct:
             break
         default:
-            assertionFailure("Unhandled integration type in confirmationTokenConfirmHandler setup")
+            throw NSError(domain: "PlaygroundController.confirmationTokenConfirmHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unhandled integration type"])
         }
 
-        confirmHandlerInternal(
-            paymentMethodId: nil,
-            shouldSavePaymentMethod: nil,
-            confirmationTokenId: confirmationToken.stripeId,
-            intentCreationCallback: intentCreationCallback
-        )
+        return try await withCheckedThrowingContinuation { continuation in
+            confirmHandlerInternal(
+                paymentMethodId: nil,
+                shouldSavePaymentMethod: nil,
+                confirmationTokenId: confirmationToken.stripeId,
+                intentCreationCallback: { result in
+                    continuation.resume(with: result)
+                }
+            )
+        }
     }
 
     // Internal helper that handles both payment method and confirmation token flows
