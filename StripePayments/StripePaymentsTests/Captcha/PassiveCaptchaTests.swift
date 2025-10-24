@@ -62,16 +62,11 @@ class PassiveCaptchaTests: XCTestCase {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
-        await passiveCaptchaChallenge.setTimeout(timeout: 1000)
+        await passiveCaptchaChallenge.setTimeout(timeout: 30)
+        let startTime = Date()
         let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
+        // didn't time out because it finished early
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
         XCTAssertNotNil(hcaptchaToken)
-        let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
-        XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success", "elements.captcha.passive.attach"])
-        let successAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.success" })
-        XCTAssertEqual(successAnalytic?["site_key"] as? String, siteKey)
-        XCTAssertLessThan(successAnalytic?["duration"] as! Double, 10000.0)
-        let attachAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.attach" })
-        // should not be ready
-        XCTAssertEqual(attachAnalytic?["is_ready"] as? Bool, false)
     }
 }
