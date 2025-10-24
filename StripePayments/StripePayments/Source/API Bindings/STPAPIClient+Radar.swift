@@ -50,6 +50,25 @@ extension STPAPIClient {
         }
     }
 
+    /// Creates a Radar Session.
+    ///
+    /// - Note: See https://stripe.com/docs/radar/radar-session
+    /// - Note: `StripeAPI.advancedFraudSignalsEnabled` must be `true` to use this method.
+    /// - Note: See `STPRadarSession`
+    ///
+    /// - Returns: A `STPRadarSession` instance.
+    public func createRadarSession() async throws -> STPRadarSession {
+        return try await withCheckedThrowingContinuation { continuation in
+            createRadarSession { radarSession, error in
+                guard let radarSession else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericErrorOccurredError())
+                    return
+                }
+                continuation.resume(returning: radarSession)
+            }
+        }
+    }
+
     /// Creates a Radar Session for a saved payment method.
     ///
     /// - Note: See https://stripe.com/docs/radar/radar-session

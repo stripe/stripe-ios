@@ -4,12 +4,15 @@ https:\/\/api\.stripe\.com\/v1\/tokens$
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
-access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+x-wc: ABHIJ
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=sIIZ9HfDhyM0BQ_QhSNJwr452izqZkeMYdR7ohdM4Pvn1APMSdBEy6IlQCdnfsaVQLNQty9UA5fWE-L-
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Wed, 31 Jul 2024 02:09:26 GMT
+Date: Thu, 09 Oct 2025 17:25:56 GMT
+x-robots-tag: none
 access-control-allow-credentials: true
 Content-Length: 122
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
