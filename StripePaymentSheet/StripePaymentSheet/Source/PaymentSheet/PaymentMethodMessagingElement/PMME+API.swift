@@ -87,7 +87,7 @@ extension PaymentMethodMessagingElement {
 
         struct Message: Decodable {
             let message: String
-            let url: URL
+            let url: URL?
         }
 
         struct PaymentPlanGroup: Decodable {
