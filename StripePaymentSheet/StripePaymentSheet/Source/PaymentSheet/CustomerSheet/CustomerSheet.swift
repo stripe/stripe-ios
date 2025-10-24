@@ -111,7 +111,6 @@ public class CustomerSheet {
     let customerAdapter: CustomerAdapter?
 
     var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    var assertionHandle: StripeAttest.AssertionHandle?
 
     private var csCompletion: CustomerSheetCompletion?
 
@@ -175,7 +174,6 @@ public class CustomerSheet {
                 if elementsSession.shouldAttestOnConfirmation {
                     Task {
                         _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
-                        self.assertionHandle = try await self.configuration.apiClient.stripeAttest.assert(canSyncState: false)
                     }
                 }
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
@@ -195,6 +193,7 @@ public class CustomerSheet {
                              paymentMethodSyncDefault: paymentMethodSyncDefault,
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false,
+                             shouldAttestOnConfirmation: elementsSession.shouldAttestOnConfirmation,
                              elementsSessionConfigId: elementsSession.configID)
                 var params: [String: Any] = [:]
                 if elementsSession.customer?.customerSession != nil {
@@ -231,6 +230,7 @@ public class CustomerSheet {
                  paymentMethodSyncDefault: Bool,
                  allowsRemovalOfLastSavedPaymentMethod: Bool,
                  cbcEligible: Bool,
+                 shouldAttestOnConfirmation: Bool,
                  elementsSessionConfigId: String?) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -251,8 +251,7 @@ public class CustomerSheet {
                                                                                 paymentMethodSyncDefault: paymentMethodSyncDefault,
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
-                                                                                passiveCaptchaChallenge: self.passiveCaptchaChallenge,
-                                                                                assertionHandle: self.assertionHandle,
+                                                                                passiveCaptchaChallenge: self.passiveCaptchaChallenge, shouldAttestOnConfirmation: shouldAttestOnConfirmation,
                                                                                 elementsSessionConfigId: elementsSessionConfigId,
                                                                                 csCompletion: self.csCompletion,
                                                                                 delegate: self)
@@ -302,6 +301,16 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
         }
         Task {
             let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
+            let assertionHandle: StripeAttest.AssertionHandle? = await {
+                if elementsSession.shouldAttestOnConfirmation {
+                    do {
+                        return try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
+                    } catch {
+                        // If we can't get an assertion, we'll try the request anyway. It may fail.
+                    }
+                }
+                return nil
+            }()
             self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, hcaptchaToken: hcaptchaToken, assertionHandle: assertionHandle) { result in
                 completion(result)
             }

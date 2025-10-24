@@ -279,7 +279,6 @@ extension PaymentSheet {
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
         private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-        private var assertionHandle: StripeAttest.AssertionHandle?
         let analyticsHelper: PaymentSheetAnalyticsHelper
 
         // MARK: - Initializer (Internal)
@@ -301,8 +300,6 @@ extension PaymentSheet {
             if loadResult.elementsSession.shouldAttestOnConfirmation {
                 Task {
                     _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
-                    self.assertionHandle = try await self.configuration.apiClient.stripeAttest.assert(canSyncState: false)
-                    self.viewController.assertionHandle = self.assertionHandle
                 }
             }
             updatePaymentOption()
@@ -508,7 +505,6 @@ extension PaymentSheet {
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
                 passiveCaptchaChallenge: passiveCaptchaChallenge,
-                assertionHandle: assertionHandle,
                 callback: completionCallback
             )
         }
@@ -577,7 +573,6 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     integrationShape: .flowController,
                     passiveCaptchaChallenge: passiveCaptchaChallenge,
-                    assertionHandle: assertionHandle,
                     analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
                     analyticsHelper.logPayment(
@@ -843,7 +838,6 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
     var passiveCaptchaChallenge: PassiveCaptchaChallenge? { get set }
-    var assertionHandle: StripeAttest.AssertionHandle? { get set }
     func clearSelection()
 }
 

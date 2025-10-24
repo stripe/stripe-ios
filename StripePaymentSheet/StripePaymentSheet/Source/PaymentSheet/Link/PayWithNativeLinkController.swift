@@ -59,7 +59,6 @@ final class PayWithNativeLinkController {
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    private let assertionHandle: StripeAttest.AssertionHandle?
 
     init(
         mode: Mode,
@@ -71,8 +70,7 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
-        assertionHandle: StripeAttest.AssertionHandle? = nil
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -85,7 +83,6 @@ final class PayWithNativeLinkController {
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
         self.passiveCaptchaChallenge = passiveCaptchaChallenge
-        self.assertionHandle = assertionHandle
     }
 
     func presentAsBottomSheet(
@@ -233,7 +230,6 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             passiveCaptchaChallenge: passiveCaptchaChallenge,
-            assertionHandle: assertionHandle,
             analyticsHelper: analyticsHelper,
             completion: { result, confirmationType in
                 if self.logPayment {
@@ -291,7 +287,6 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
             paymentHandler: paymentHandler,
             integrationShape: .complete,
             passiveCaptchaChallenge: passiveCaptchaChallenge,
-            assertionHandle: assertionHandle,
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in
             self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))

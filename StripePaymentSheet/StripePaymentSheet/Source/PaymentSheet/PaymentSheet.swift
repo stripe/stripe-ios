@@ -159,7 +159,6 @@ public class PaymentSheet {
                 if loadResult.elementsSession.shouldAttestOnConfirmation {
                     Task {
                         _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
-                        self.assertionHandle = try await self.configuration.apiClient.stripeAttest.assert(canSyncState: false)
                     }
                 }
                 let presentPaymentSheet: () -> Void = {
@@ -276,7 +275,6 @@ public class PaymentSheet {
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    var assertionHandle: StripeAttest.AssertionHandle?
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -297,7 +295,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentHandler: self.paymentHandler,
                 integrationShape: .complete,
                 passiveCaptchaChallenge: self.passiveCaptchaChallenge,
-                assertionHandle: self.assertionHandle,
                 analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {

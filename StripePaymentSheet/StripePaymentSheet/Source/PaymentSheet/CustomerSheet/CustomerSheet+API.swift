@@ -76,6 +76,7 @@ extension CustomerSheet {
                 with: authenticationContext,
                 completion: paymentHandlerCompletion)
         } else {
+            assertionHandle?.complete()
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                               error: InternalError.invalidStateOnConfirmation)
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)

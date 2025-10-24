@@ -357,7 +357,6 @@ public final class EmbeddedPaymentElement {
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    internal var assertionHandle: StripeAttest.AssertionHandle?
 
     internal init(
         configuration: Configuration,
@@ -382,7 +381,6 @@ public final class EmbeddedPaymentElement {
         if loadResult.elementsSession.shouldAttestOnConfirmation {
             Task {
                 _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
-                self.assertionHandle = try await self.configuration.apiClient.stripeAttest.assert(canSyncState: false)
             }
         }
     }

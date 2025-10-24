@@ -40,7 +40,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
     let passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    let assertionHandle: StripeAttest.AssertionHandle?
+    let shouldAttestOnConfirmation: Bool
     let elementsSessionConfigId: String?
 
     // MARK: - Writable Properties
@@ -165,7 +165,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
         passiveCaptchaChallenge: PassiveCaptchaChallenge?,
-        assertionHandle: StripeAttest.AssertionHandle?,
+        shouldAttestOnConfirmation: Bool,
         elementsSessionConfigId: String?,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
@@ -183,7 +183,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
         self.passiveCaptchaChallenge = passiveCaptchaChallenge
-        self.assertionHandle = assertionHandle
+        self.shouldAttestOnConfirmation = shouldAttestOnConfirmation
         self.elementsSessionConfigId = elementsSessionConfigId
         self.csCompletion = csCompletion
         self.delegate = delegate
@@ -614,9 +614,19 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         if case .new(let confirmParams) = paymentOption  {
             Task {
                 let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: self.assertionHandle?.assertion)
+                let assertionHandle: StripeAttest.AssertionHandle? = await {
+                    if shouldAttestOnConfirmation {
+                        do {
+                            return try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
+                        } catch {
+                            // If we can't get an assertion, we'll try the request anyway. It may fail.
+                        }
+                    }
+                    return nil
+                }()
+                confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
-                    self.assertionHandle?.complete()
+                    assertionHandle?.complete()
                     if let error = error {
                         self.error = error
                         self.processingInFlight = false

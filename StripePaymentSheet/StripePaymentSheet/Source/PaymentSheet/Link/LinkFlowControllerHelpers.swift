@@ -30,7 +30,6 @@ extension UIViewController {
         linkConfiguration: LinkConfiguration? = nil,
         shouldShowSecondaryCta: Bool = true,
         passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
-        assertionHandle: StripeAttest.AssertionHandle? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -43,8 +42,7 @@ extension UIViewController {
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             linkAppearance: linkAppearance,
             linkConfiguration: linkConfiguration,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
-            assertionHandle: assertionHandle
+            passiveCaptchaChallenge: passiveCaptchaChallenge
         )
 
         payWithLinkController.presentForPaymentMethodSelection(

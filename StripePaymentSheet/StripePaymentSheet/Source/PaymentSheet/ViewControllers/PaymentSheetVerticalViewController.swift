@@ -558,7 +558,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
             passiveCaptchaChallenge: passiveCaptchaChallenge,
-            assertionHandle: assertionHandle,
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
