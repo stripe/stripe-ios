@@ -111,6 +111,7 @@ public class CustomerSheet {
     let customerAdapter: CustomerAdapter?
 
     var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    var attestationConfirmationChallenge: AttestationConfirmationChallenge?
 
     private var csCompletion: CustomerSheetCompletion?
 
@@ -170,6 +171,9 @@ public class CustomerSheet {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
                 if self.configuration.enablePassiveCaptcha, let passiveCaptchaData = elementsSession.passiveCaptchaData {
                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
+                }
+                if elementsSession.shouldAttestOnConfirmation {
+                    self.attestationConfirmationChallenge = AttestationConfirmationChallenge(stripeAttest: self.configuration.apiClient.stripeAttest)
                 }
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
@@ -245,6 +249,7 @@ public class CustomerSheet {
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
                                                                                 passiveCaptchaChallenge: self.passiveCaptchaChallenge,
+                                                                                attestationConfirmationChallenge: self.attestationConfirmationChallenge,
                                                                                 elementsSessionConfigId: elementsSessionConfigId,
                                                                                 csCompletion: self.csCompletion,
                                                                                 delegate: self)
@@ -292,11 +297,8 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
             completion(.failed(error: CustomerSheetError.unknown(debugDescription: "No setup intent available")))
             return
         }
-        Task {
-            let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
-            self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, hcaptchaToken: hcaptchaToken) { result in
-                completion(result)
-            }
+        self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, passiveCaptchaChallenge: passiveCaptchaChallenge, attestationConfirmationChallenge: attestationConfirmationChallenge) { result in
+            completion(result)
         }
     }
 

@@ -156,6 +156,9 @@ public class PaymentSheet {
                 if self.configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
                     self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
                 }
+                if loadResult.elementsSession.shouldAttestOnConfirmation {
+                    self.attestationConfirmationChallenge = AttestationConfirmationChallenge(stripeAttest: self.configuration.apiClient.stripeAttest)
+                }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {
@@ -270,6 +273,7 @@ public class PaymentSheet {
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    var attestationConfirmationChallenge: AttestationConfirmationChallenge?
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -290,6 +294,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentHandler: self.paymentHandler,
                 integrationShape: .complete,
                 passiveCaptchaChallenge: self.passiveCaptchaChallenge,
+                attestationConfirmationChallenge: self.attestationConfirmationChallenge,
                 analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {

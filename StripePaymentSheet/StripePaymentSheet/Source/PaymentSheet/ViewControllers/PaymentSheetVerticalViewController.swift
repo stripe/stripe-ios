@@ -112,6 +112,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }()
 
     var passiveCaptchaChallenge: StripePayments.PassiveCaptchaChallenge?
+    var attestationConfirmationChallenge: AttestationConfirmationChallenge?
 
     // MARK: - UI properties
 
@@ -557,6 +558,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
             passiveCaptchaChallenge: passiveCaptchaChallenge,
+            attestationConfirmationChallenge: attestationConfirmationChallenge,
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption

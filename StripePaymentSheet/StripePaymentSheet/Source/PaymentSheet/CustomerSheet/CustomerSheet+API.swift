@@ -15,7 +15,8 @@ extension CustomerSheet {
         intent: Intent,
         elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
-        hcaptchaToken: String? = nil,
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
+        attestationConfirmationChallenge: AttestationConfirmationChallenge? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         CustomerSheet.confirm(intent: intent,
@@ -24,7 +25,8 @@ extension CustomerSheet {
                               configuration: configuration,
                               paymentHandler: self.paymentHandler,
                               authenticationContext: self.bottomSheetViewController,
-                              hcaptchaToken: hcaptchaToken,
+                              passiveCaptchaChallenge: passiveCaptchaChallenge,
+                              attestationConfirmationChallenge: attestationConfirmationChallenge,
                               completion: completion)
     }
     static func confirm(
@@ -34,7 +36,8 @@ extension CustomerSheet {
         configuration: CustomerSheet.Configuration,
         paymentHandler: STPPaymentHandler,
         authenticationContext: STPAuthenticationContext,
-        hcaptchaToken: String? = nil,
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
+        attestationConfirmationChallenge: AttestationConfirmationChallenge? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
@@ -57,20 +60,27 @@ extension CustomerSheet {
             }
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
-            confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
-            confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
-            confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID)
-            let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
-            setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
-            // Send CAM at the top-level of all requests in scope for consistency
-            // Also send under payment_method_data because there are existing dependencies
-            setupIntentParams.clientAttributionMetadata = confirmParams.paymentMethodParams.clientAttributionMetadata
-            setupIntentParams.returnURL = configuration.returnURL
-            setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
-            paymentHandler.confirmSetupIntent(
-                setupIntentParams,
-                with: authenticationContext,
-                completion: paymentHandlerCompletion)
+            Task {
+                let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
+                let assertion = await attestationConfirmationChallenge?.fetchAssertion()
+                confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
+                confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
+                confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID)
+                let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
+                // Send CAM at the top-level of all requests in scope for consistency
+                // Also send under payment_method_data because there are existing dependencies
+                setupIntentParams.clientAttributionMetadata = confirmParams.paymentMethodParams.clientAttributionMetadata
+                setupIntentParams.returnURL = configuration.returnURL
+                setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
+                paymentHandler.confirmSetupIntent(
+                    setupIntentParams,
+                    with: authenticationContext,
+                    completion: { status, intent, error in
+                        Task { await attestationConfirmationChallenge?.complete() }
+                        paymentHandlerCompletion(status, intent, error)
+                    })
+            }
         } else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                               error: InternalError.invalidStateOnConfirmation)
