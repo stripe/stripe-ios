@@ -105,6 +105,25 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         waitForExpectations(timeout: 2.0)
     }
 
+    func testCollectBankAccountForPaymentSucceedsAsync() async throws {
+        let paymentIntentID = "pi_123"
+        let clientSecret = "\(paymentIntentID)_secret_abc"
+
+        // Set up stubs for network interactions
+        stubCreateLinkAccountSession(paymentIntentID: paymentIntentID)
+        stubAttachLinkAccountSession(paymentIntentID: paymentIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+
+        let intent = try await collector.collectBankAccountForPayment(
+            clientSecret: clientSecret,
+            params: makeParams(),
+            from: UIViewController()
+        )
+        XCTAssertEqual(intent.stripeId, paymentIntentID)
+        XCTAssertEqual(intent.status, .succeeded)
+    }
+
     func testCollectBankAccountForPaymentWithReturnURLSucceeds() {
         let paymentIntentID = "pi_456"
         let clientSecret = "\(paymentIntentID)_secret_xyz"
@@ -143,9 +162,29 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         ) { intent, error in
             XCTAssertNil(error)
             XCTAssertEqual(intent?.stripeID, setupIntentID)
+            XCTAssertEqual(intent?.status, .succeeded)
             exp.fulfill()
         }
         waitForExpectations(timeout: 2.0)
+    }
+
+    func testCollectBankAccountForSetupSucceedsAsync() async throws {
+        let setupIntentID = "seti_456"
+        let clientSecret = "\(setupIntentID)_secret_xyz"
+
+        // Set up stubs for network interactions
+        stubCreateLinkAccountSessionForSetupIntent(setupIntentID: setupIntentID)
+        stubAttachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+
+        let intent = try await collector.collectBankAccountForSetup(
+            clientSecret: clientSecret,
+            params: makeParams(),
+            from: UIViewController()
+        )
+        XCTAssertEqual(intent.stripeID, setupIntentID)
+        XCTAssertEqual(intent.status, .succeeded)
     }
 
     func testCollectBankAccountForDeferredIntentSucceeds() {
@@ -376,7 +415,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             let response: [String: Any] = [
                 "id": setupIntentID,
                 "object": "setup_intent",
-                "status": "requires_confirmation",
+                "status": "succeeded",
                 "client_secret": "\(setupIntentID)_secret_def",
                 "created": 1609459200,
                 "payment_method_types": ["us_bank_account"],
