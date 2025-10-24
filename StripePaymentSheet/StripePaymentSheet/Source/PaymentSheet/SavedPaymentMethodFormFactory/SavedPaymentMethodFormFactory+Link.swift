@@ -30,6 +30,7 @@ extension SavedPaymentMethodFormFactory {
         cardDetails: LinkPaymentDetails.Card,
         configuration: UpdatePaymentMethodViewController.Configuration
     ) -> PaymentMethodElement {
+        let theme = configuration.appearance.asElementsTheme
         let panElement: TextFieldElement = {
             let panElementConfig = TextFieldElement.LastFourConfiguration(
                 lastFour: cardDetails.last4,
@@ -38,7 +39,7 @@ extension SavedPaymentMethodFormFactory {
                 cardBrandDropDown: nil
             )
 
-            let panElement = panElementConfig.makeElement(theme: configuration.appearance.asElementsTheme)
+            let panElement = panElementConfig.makeElement(theme: theme)
             return panElement
         }()
 
@@ -46,7 +47,7 @@ extension SavedPaymentMethodFormFactory {
             let expiryDate = CardExpiryDate(month: cardDetails.expMonth, year: cardDetails.expYear)
             let expirationDateConfig = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString,
                                                                                 editConfiguration: .readOnly)
-            let expirationField = expirationDateConfig.makeElement(theme: configuration.appearance.asElementsTheme)
+            let expirationField = expirationDateConfig.makeElement(theme: theme)
             let wrappedElement = PaymentMethodElementWrapper<TextFieldElement>(expirationField) { field, params in
                 if let month = Int(field.text.prefix(2)) {
                     cardParams(for: params).expMonth = NSNumber(value: month)
@@ -60,19 +61,19 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let cvcElement: TextFieldElement = {
-            return TextFieldElement.CensoredCVCConfiguration(brand: cardDetails.brand).makeElement(theme: configuration.appearance.asElementsTheme)
+            return TextFieldElement.CensoredCVCConfiguration(brand: cardDetails.brand).makeElement(theme: theme)
         }()
 
         let cardSection: SectionElement = {
             let allSubElements: [Element?] = [
                 panElement,
-                SectionElement.MultiElementRow([expiryDateElement, cvcElement]),
+                SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
             ]
             return SectionElement(title: nil, // billingAddressSection != nil ? String.Localized.card_information : nil,
                                   elements: allSubElements.compactMap { $0 },
-                                  theme: configuration.appearance.asElementsTheme)
+                                  theme: theme)
         }()
-        return FormElement(elements: [cardSection], theme: configuration.appearance.asElementsTheme)
+        return FormElement(elements: [cardSection], theme: theme)
     }
 
     private func makeLinkBankAccount(

@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Dodavanje informacija o plaćanju";
 
-"Agree and continue" = "Pristani i nastavi";
-
 "Approve payment" = "Odobri plaćanje";
 
 "Are you sure you want to remove this card?" = "Jeste li sigurni da želite ukloniti ovu karticu?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Spremanjem bankovnog računa za %@ pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Slanjem narudžbe na %1$@ i %2$@ pristajete na spremanje svojih podataka s %3$@ za buduće kupnje i pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Podnošenjem narudžbe za %@ pristajete na odobravanje plaćanja kojim ćete se pridržavati <terms>ovih uvjeta</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -122,19 +122,19 @@
 
 "Default payment method" = "Zadani način plaćanja";
 
+"Did you mean %@? %@." = "Jeste li mislili na %1$@? %2$@.";
+
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Unesite adresu ručno";
 
-"Enter the code sent to %@ to use your saved information." = "Unesite kôd poslan na %@ za korištenje vaših spremljenih podataka.";
+"Enter the code sent to %@." = "Unesite kôd poslan na %s.";
 
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "Povezivanje nije uspjelo";
 
 "Fast, secure checkout" = "Brzo i sigurno izvršenje plaćanja";
-
-"For security, please re-enter your card’s security code." = "Radi sigurnosti, ponovno unesite sigurnosni kod vaše kartice.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dobit ćete %@ povrat kada prvi put platite bankovnim prijenosom. <terms>Pogledajte uvjete</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "Navedeni kontrolni kôd nije točan.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Ova kartica je istekla. Ažurirajte svoje podatke o kartici ili odaberite drugi način plaćanja.";
-
 "This is your default" = "Ovo je vaša zadana vrijednost";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Ovaj način plaćanja bit će uklonjen, ali će ostati dostupan za pretplate %@.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Upotrijebite adresu naplate za dostavu";
 
 "View more" = "Vidi više";
+
+"Yes, update" = "Da, ažuriraj";
 
 "Your IBAN should start with a two-letter country code." = "Vaš bi IBAN trebao započeti s kodom države od dva slova.";
 

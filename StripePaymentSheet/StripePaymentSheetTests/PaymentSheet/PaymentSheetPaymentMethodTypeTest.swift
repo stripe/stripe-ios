@@ -34,7 +34,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset and a form spec image URL...
         let loadExpectation = expectation(description: "Load form spec image")
         let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage(forDarkBackground: false) { image in
             // ...should update to the form spec image
             XCTAssertNotEqual(image, clientImage)
             XCTAssertTrue(image.size.width > 1) // Sanity check
@@ -49,7 +49,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset but without a form spec image URL...
         let e = expectation(description: "Load form spec image")
         e.isInverted = true
-        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage { _ in
+        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage(forDarkBackground: false) { _ in
             // This shouldn't be called
             XCTFail()
             e.fulfill()
@@ -68,7 +68,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         waitForExpectations(timeout: 10)
         // A Payment methods without a client-side asset...
         let loadExpectation = expectation(description: "Load form spec image")
-        let image = PaymentSheet.PaymentMethodType.stripe(.amazonPay).makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.amazonPay).makeImage(forDarkBackground: false) { image in
             // ...should update to the form spec image
             XCTAssertTrue(image.size.width > 1) // Sanity check
             loadExpectation.fulfill()
@@ -450,7 +450,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     }
 
     func testSupportsInstantBankPayments_onboardingDisabled() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
         let configuration = PaymentSheet.Configuration()
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
@@ -459,7 +459,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
-        let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession

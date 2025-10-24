@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Adicione seus dados de pagamento";
 
-"Agree and continue" = "Concordar e continuar";
-
 "Approve payment" = "Aprovar pagamento";
 
 "Are you sure you want to remove this card?" = "Tem certeza de que deseja remover este cartão?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao salvar sua conta bancária para %@, você autoriza pagamentos de acordo com <terms>estes termos</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao enviar seu pedido para %1$@ e %2$@, você concorda em salvar suas informações com %3$@ para compras futuras e autoriza pagamentos de acordo com <terms>estes termos</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao enviar seu pedido para %@, você concorda em autorizar pagamentos de acordo com <terms>estes termos</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -122,19 +122,19 @@
 
 "Default payment method" = "Forma de pagamento padrão";
 
+"Did you mean %@? %@." = "Você quis dizer %1$@? %2$@.";
+
 "EPS Bank" = "Banco EPS";
 
 "Enter address manually" = "Inserir endereço manualmente";
 
-"Enter the code sent to %@ to use your saved information." = "Insira o código enviado para %@ para usar seus dados salvos.";
+"Enter the code sent to %@." = "Insira o código enviado para %s.";
 
 "FPX Bank" = "Banco do FPX";
 
 "Failed to connect" = "Falha ao conectar";
 
 "Fast, secure checkout" = "Checkout rápido e seguro";
-
-"For security, please re-enter your card’s security code." = "Por segurança, digite novamente o código de segurança do cartão.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Receba %@ de volta quando pagar pela primeira vez com seu banco. <terms>Ver termos</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "O código de verificação informado está incorreto.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Este cartão expirou. Atualize as informações do seu cartão ou escolha outra forma de pagamento.";
-
 "This is your default" = "Este é o seu padrão";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Esta forma de pagamento será removida, mas permanecerá disponível para %@ assinaturas.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Usar o endereço de faturamento para envio";
 
 "View more" = "Exibir mais";
+
+"Yes, update" = "Sim, atualizar";
 
 "Your IBAN should start with a two-letter country code." = "Seu IBAN deve começar com um código de país de duas letras.";
 

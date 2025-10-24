@@ -80,13 +80,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let expectation = expectation(description: "Confirm intent")
         // When we confirm the Intent...
         let examplePaymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
-        PaymentSheet.handleDeferredIntentConfirmation(
+        PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .new(params: examplePaymentMethodParams, paymentOptions: .init(), paymentMethod: nil, shouldSave: false, shouldSetAsDefaultPM: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: paymentHandler,
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { _, _ in
             expectation.fulfill()
         }
@@ -251,13 +252,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+        PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { result, deferredType in
             capturedResult = result
             capturedDeferredType = deferredType
@@ -317,7 +319,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
+        PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .new(
                 params: paymentMethodParams,
                 paymentOptions: .init(),
@@ -329,7 +331,8 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { result, _ in
             capturedResult = result
             completionCalledExpectation.fulfill()
@@ -366,13 +369,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+        PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { result, _ in
             capturedResult = result
             completionCalledExpectation.fulfill()
@@ -413,13 +417,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+        PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { result, deferredType in
             capturedResult = result
             capturedDeferredType = deferredType
@@ -458,17 +463,18 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let originalConfirmHandler = intentConfig.confirmHandler
         intentConfig.confirmHandler = { paymentMethod, shouldSave, callback in
             intentCreationCallbackInvoked = true
-            originalConfirmHandler(paymentMethod, shouldSave, callback)
+            originalConfirmHandler?(paymentMethod, shouldSave, callback)
         }
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+        PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { _, _ in
             completionCalledExpectation.fulfill()
         }

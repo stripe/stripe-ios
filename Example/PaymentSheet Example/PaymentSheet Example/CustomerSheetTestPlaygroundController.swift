@@ -17,6 +17,18 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     @Published var paymentOptionSelection: CustomerSheet.PaymentOptionSelection?
 
     private var subscribers: Set<AnyCancellable> = []
+
+    convenience init() {
+        self.init(settings: .defaultValues())
+        Task.detached {
+            let settings = Self.settingsFromDefaults() ?? .defaultValues()
+
+            await MainActor.run {
+                self.settings = settings
+            }
+        }
+    }
+
     init(settings: CustomerSheetTestPlaygroundSettings) {
         // Hack to ensure we don't force the native flow unless we're in a UI test
         if ProcessInfo.processInfo.environment["UITesting"] == nil {
@@ -147,6 +159,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.enablePassiveCaptcha = settings.enablePassiveCaptcha == .on
 
         return configuration
     }

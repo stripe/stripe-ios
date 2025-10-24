@@ -19,7 +19,7 @@ import UIKit
     /// Sign an assertion.
     /// Will create and attest a new device key if needed.
     /// Returns an AssertionHandle, which must be called after the network request completes (with success or failure) in order to unblock future assertions.
-    @_spi(STP) public func assert() async throws -> AssertionHandle {
+    @_spi(STP) public func assert(canSyncState: Bool) async throws -> AssertionHandle {
         // Make sure we only process one assertion at a time, until the latest
         if assertionInProgress {
             try await withCheckedThrowingContinuation { continuation in
@@ -29,7 +29,7 @@ import UIKit
         assertionInProgress = true
 
         do {
-            let assertion = try await _assert()
+            let assertion = try await _assert(canSyncState: canSyncState)
             let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
             if let apiClient {
                 STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
@@ -248,7 +248,7 @@ import UIKit
     private var assertionInProgress: Bool = false
     private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
 
-    func _assert() async throws -> Assertion {
+    func _assert(canSyncState: Bool, isRetry: Bool = false) async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
         if !successfullyAttested {
@@ -258,12 +258,29 @@ import UIKit
 
         let challenge = try await getChallenge()
 
-        // If the backend claims that attestation is required, but we already have an attested key,
-        // something has gone wrong.
-        if challenge.initial_attestation_required {
-            // Reset the key, we'll try again next time:
-            resetKey()
-            throw AttestationError.shouldAttestButKeyIsAlreadyAttested
+        // State alignment: sync client state with server
+        if canSyncState && !challenge.initial_attestation_required && !successfullyAttested {
+            // Server has attestation but client doesn't know - update client
+            successfullyAttested = true
+            let event = GenericAnalytic(event: .stateMismatchNotAttestedLocally, params: [:])
+            if let apiClient {
+                STPAnalyticsClient.sharedClient.log(analytic: event, apiClient: apiClient)
+            }
+        } else if challenge.initial_attestation_required && successfullyAttested {
+            // Server needs attestation but client thinks it's done - reset client and retry
+            if isRetry || !canSyncState {
+                // We already tried once - something is wrong
+                resetKey()
+                throw AttestationError.shouldAttestButKeyIsAlreadyAttested
+            } else {
+                // Reset and retry
+                resetKey()
+                let event = GenericAnalytic(event: .stateMismatchNotAttestedRemotely, params: [:])
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: event, apiClient: apiClient)
+                }
+                return try await _assert(canSyncState: canSyncState, isRetry: true)
+            }
         }
 
         let deviceId = try await getDeviceID()

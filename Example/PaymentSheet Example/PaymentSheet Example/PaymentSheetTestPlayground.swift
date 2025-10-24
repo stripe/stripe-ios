@@ -5,8 +5,7 @@
 //  Created by David Estes on 5/31/23.
 //
 
-@_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -14,6 +13,11 @@ struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
     @State var showingQRSheet = false
+    @State private var isViewReady = false
+
+    init() {
+        _playgroundController = StateObject(wrappedValue: PlaygroundController())
+    }
 
     init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
         _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings, appearance: appearance))
@@ -37,7 +41,7 @@ struct PaymentSheetTestPlayground: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
         }
-        SettingView(setting: enableIos26Binding)
+        SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SettingView(setting: linkEnabledModeBinding)
@@ -64,9 +68,26 @@ struct PaymentSheetTestPlayground: View {
     }
 
     var body: some View {
-        VStack {
-            ScrollView {
+        if !isViewReady {
+            return AnyView(
                 VStack {
+                    ProgressView()
+                    Text("Loading playground...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        isViewReady = true
+                    }
+                }
+            )
+        }
+
+        return AnyView(VStack {
+            ScrollView {
+                LazyVStack {
                     Group {
                         HStack {
                             if ProcessInfo.processInfo.environment["UITesting"] != nil {
@@ -201,7 +222,8 @@ struct PaymentSheetTestPlayground: View {
             Divider()
             PaymentSheetButtons()
                 .environmentObject(playgroundController)
-        }.animationUnlessTesting()
+        }
+        .animationUnlessTesting())
     }
 
     var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
@@ -304,15 +326,6 @@ struct PaymentSheetTestPlayground: View {
                 playgroundController.settings.uiStyle = .paymentSheet
             }
             playgroundController.settings.integrationType = newIntegrationType
-        }
-    }
-    var enableIos26Binding: Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
-        Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
-            return playgroundController.settings.enableIOS26Changes
-        } set: { newValue in
-            LiquidGlassDetector.allowNewDesign = newValue == .on
-            playgroundController.appearance = PaymentSheet.Appearance()
-            playgroundController.settings.enableIOS26Changes = newValue
         }
     }
 }
@@ -632,6 +645,6 @@ struct SettingPickerView<S: PickerEnum>: View {
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentSheetTestPlayground(settings: .defaultValues(), appearance: PaymentSheet.Appearance.default)
+        PaymentSheetTestPlayground()
     }
 }

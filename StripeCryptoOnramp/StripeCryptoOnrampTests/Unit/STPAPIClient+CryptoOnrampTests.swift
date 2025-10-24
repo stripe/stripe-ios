@@ -22,7 +22,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         static let errorDomain = "STPAPIClientCryptoOnrampTests.Error"
 
         // /v1/crypto/internal/customers
-        static let grantPartnerMerchantPermissionsAPIPath = "/v1/crypto/internal/customers"
+        static let createCryptoCustomerAPIPath = "/v1/crypto/internal/customers"
         static let responseID = "crc_12345"
         static let validLinkAccountInfo = LinkAccountInfo(
             email: "test@example.com",
@@ -85,11 +85,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var consumerSessionClientSecret: String?
     }
 
-    func testGrantPartnerMerchantPermissionsSuccess() async throws {
+    func testcreateCryptoCustomerSuccess() async throws {
         let mockResponseData = try JSONEncoder().encode(CustomerResponse(id: Constant.responseID))
 
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.grantPartnerMerchantPermissionsAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.createCryptoCustomerAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
@@ -106,16 +106,16 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         do {
-            let response = try await apiClient.grantPartnerMerchantPermissions(with: Constant.validLinkAccountInfo)
+            let response = try await apiClient.createCryptoCustomer(with: Constant.validLinkAccountInfo)
             XCTAssertEqual(response.id, Constant.responseID)
         } catch {
             XCTFail("Expected a success response but got an error: \(error).")
         }
     }
 
-    func testGrantPartnerMerchantPermissionsFailure() async {
+    func testcreateCryptoCustomerFailure() async {
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.grantPartnerMerchantPermissionsAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.createCryptoCustomerAPIPath)
             return true
         } response: { _ in
             return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
@@ -124,23 +124,23 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
 
         do {
-            _ = try await apiClient.grantPartnerMerchantPermissions(with: Constant.validLinkAccountInfo)
+            _ = try await apiClient.createCryptoCustomer(with: Constant.validLinkAccountInfo)
             XCTFail("Expected failure but got success.")
         } catch {
             XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
         }
     }
 
-    func testGrantPartnerMerchantPermissionsThrowsWithInvalidArguments() async {
+    func testcreateCryptoCustomerThrowsWithInvalidArguments() async {
         let apiClient = stubbedAPIClient()
 
         var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.grantPartnerMerchantPermissions(with: noSecretLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.createCryptoCustomer(with: noSecretLinkAccountInfo))
 
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.grantPartnerMerchantPermissions(with: unverifiedLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.createCryptoCustomer(with: unverifiedLinkAccountInfo))
     }
 
     func testCollectKycInfoSuccess() async throws {

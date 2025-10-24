@@ -23,6 +23,9 @@ public extension PaymentSheet.Configuration {
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
+        if #available(iOS 26.0, *) {
+            configuration.appearance.applyLiquidGlassIfPossible()
+        }
         return configuration
     }
 }
@@ -41,6 +44,25 @@ public extension EmbeddedPaymentElement.Configuration {
     }
 }
 
+public extension PaymentSheet.Appearance {
+    mutating func applyLiquidGlassIfPossible() {
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            self.applyLiquidGlass()
+        }
+        #endif
+    }
+    func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
+        var copy = self
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            copy.applyLiquidGlass()
+        }
+        #endif
+        return copy
+    }
+}
+
 extension STPElementsSession {
     static func _testValue(
         orderedPaymentMethodTypes: [STPPaymentMethodType] = [.card],
@@ -56,13 +78,14 @@ extension STPElementsSession {
         isApplePayEnabled: Bool = true,
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
-        passiveCaptcha: PassiveCaptcha? = nil,
+        passiveCaptchaData: PassiveCaptchaData? = nil,
         customer: ElementsCustomer? = nil,
         isBackupInstance: Bool = false
     ) -> STPElementsSession {
         return .init(
             allResponseFields: [:],
             sessionID: "test_123",
+            configID: "test_config",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
             orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
@@ -77,7 +100,7 @@ extension STPElementsSession {
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
-            passiveCaptcha: passiveCaptcha,
+            passiveCaptchaData: passiveCaptchaData,
             customer: customer
         )
     }
@@ -425,6 +448,7 @@ extension STPPaymentMethod {
 extension PaymentSheet.Appearance {
     static var _testMSPaintTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
+        appearance.applyLiquidGlassIfPossible()
 
         // Customize the font
         var font = PaymentSheet.Appearance.Font()

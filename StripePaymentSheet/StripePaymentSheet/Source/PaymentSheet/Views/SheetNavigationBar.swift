@@ -19,14 +19,15 @@ protocol SheetNavigationBarDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
-    static var height: CGFloat {
-        return LiquidGlassDetector.isEnabled ? 76 : 52
+    static func height(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return appearance.navigationBarStyle.isGlass ? 76 : 52
+
     }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
         stack.spacing = PaymentSheetUI.defaultPadding
-        stack.setCustomSpacing(PaymentSheetUI.navBarPadding, after: dummyView)
+        stack.setCustomSpacing(PaymentSheetUI.navBarPadding(appearance: appearance), after: dummyView)
         stack.alignment = .center
         return stack
     }()
@@ -87,11 +88,9 @@ class SheetNavigationBar: UIView {
         self.appearance = appearance
         super.init(frame: .zero)
 
-        #if !os(visionOS)
-        if !LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isPlain {
             backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         }
-        #endif
 
         [leftItemsStackView, closeButtonRight, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -106,11 +105,11 @@ class SheetNavigationBar: UIView {
             leftItemsStackView.heightAnchor.constraint(equalTo: heightAnchor),
 
             additionalButton.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding(appearance: appearance)),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
 
             closeButtonRight.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding(appearance: appearance)),
             closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
@@ -126,7 +125,7 @@ class SheetNavigationBar: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
+        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height(appearance: appearance))
     }
 
     @objc
@@ -175,49 +174,74 @@ class SheetNavigationBar: UIView {
     }
 
     func setShadowHidden(_ isHidden: Bool) {
-        if !LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isPlain {
             layer.shadowPath = CGPath(rect: bounds, transform: nil)
             layer.shadowOpacity = isHidden ? 0 : 0.1
             layer.shadowColor = UIColor.black.cgColor
             layer.shadowOffset = CGSize(width: 0, height: 2)
         }
     }
-
     func createBackButton() -> UIButton {
+        return appearance.navigationBarStyle.isGlass ? createGlassBackButton() : createPlainBackButton()
+    }
+    func createPlainBackButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
         let image = Image.icon_chevron_left_standalone.makeImage(template: true)
         button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
-            let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
-            button.setImage(resizedImage, for: .normal)
-            button.configuration = .glass()
-        }
-        #endif
+        return button
+    }
+    func createGlassBackButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
+        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
+
+        button.setImage(image, for: .normal)
+        button.tintColor = appearance.colors.icon
+
+        button.accessibilityLabel = String.Localized.back
+        button.accessibilityIdentifier = "UIButton.Back"
+        button.ios26_applyGlassConfiguration()
+
         return button
     }
 
     func createCloseButton() -> UIButton {
+        return appearance.navigationBarStyle.isGlass ? createGlassCloseButton() : createPlainCloseButton()
+    }
+    func createPlainCloseButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
         let image = Image.icon_x_standalone.makeImage(template: true)
         button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
+
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled{
-            // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
-            let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
-            button.setImage(resizedImage, for: .normal)
-            button.configuration = .glass()
-        }
-        #endif
+
+        return button
+    }
+    func createGlassCloseButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
+        let image = UIImage(systemName: "xmark", withConfiguration: config)
+
+        button.setImage(image, for: .normal)
+        button.tintColor = appearance.colors.icon
+
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
+        button.ios26_applyGlassConfiguration()
+
         return button
     }
 }
@@ -230,11 +254,8 @@ extension UIButton {
         titleLabel?.textAlignment = .right
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            configuration = .glass()
+        if appearance.navigationBarStyle.isGlass {
+            ios26_applyGlassConfiguration()
         }
-        #endif
     }
 }

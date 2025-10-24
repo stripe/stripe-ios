@@ -16,8 +16,6 @@
 
 "Add your payment information" = "Thêm thông tin thanh toán của bạn";
 
-"Agree and continue" = "Đồng ý và tiếp tục";
-
 "Approve payment" = "Chấp nhận thanh toán";
 
 "Are you sure you want to remove this card?" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
@@ -82,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng cách gửi đơn hàng của bạn đến %1$@ và %2$@, bạn đồng ý lưu thông tin của mình với %3$@ cho các giao dịch mua trong tương lai và đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng cách gửi đơn hàng của bạn đến %@, bạn đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -122,19 +122,19 @@
 
 "Default payment method" = "Phương thức thanh toán mặc định";
 
+"Did you mean %@? %@." = "Ý của quý vị có phải là %1$@? %2$@.";
+
 "EPS Bank" = "Ngân hàng EPS";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
-"Enter the code sent to %@ to use your saved information." = "Nhập mã đã được gửi đến %@để sử dụng thông tin đã lưu của mình.";
+"Enter the code sent to %@." = "Nhập mã đã được gửi tới %s.";
 
 "FPX Bank" = "Ngân hàng FPX";
 
 "Failed to connect" = "Không thể kết nối";
 
 "Fast, secure checkout" = "Thanh toán nhanh chóng, an toàn";
-
-"For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán lần đầu tiên với ngân hàng. <terms>Xem điều khoản</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Thẻ này đã hết hạn. Hãy cập nhật thông tin thẻ của bạn hoặc chọn một phương thức thanh toán khác.";
-
 "This is your default" = "Đây là thông tin mặc định của bạn";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Phương thức thanh toán này sẽ bị xóa nhưng sẽ vẫn khả dụng cho các gói đăng ký %@.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Sử dụng địa chỉ thanh toán cho việc giao hàng";
 
 "View more" = "Xem thêm";
+
+"Yes, update" = "Có, cập nhật";
 
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 

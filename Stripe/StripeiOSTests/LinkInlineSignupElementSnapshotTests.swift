@@ -14,6 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+// @iOS26
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
     // MARK: Normal mode
@@ -157,6 +158,27 @@ extension LinkInlineSignupElementSnapshotTests {
                         publishableKey: nil,
                         displayablePaymentDetails: nil,
                         useMobileEndpoints: false,
+                        canSyncAttestationState: false,
+                        requestSurface: requestSurface
+                    )
+                )
+            )
+        }
+
+        func lookupLinkAuthToken(
+            _ linkAuthTokenClientSecret: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface,
+            completion: @escaping (Result<StripePaymentSheet.PaymentSheetLinkAccount?, any Error>) -> Void
+        ) {
+            completion(
+                .success(
+                    PaymentSheetLinkAccount(
+                        email: "user@example.com",
+                        session: nil,
+                        publishableKey: nil,
+                        displayablePaymentDetails: nil,
+                        useMobileEndpoints: false,
+                        canSyncAttestationState: false,
                         requestSurface: requestSurface
                     )
                 )
@@ -174,6 +196,7 @@ extension LinkInlineSignupElementSnapshotTests {
                 publishableKey: nil,
                 displayablePaymentDetails: nil,
                 useMobileEndpoints: false,
+                canSyncAttestationState: false,
                 requestSurface: requestSurface
             )
             let response = StripePaymentSheet.LookupLinkAuthIntentResponse(
@@ -204,6 +227,7 @@ extension LinkInlineSignupElementSnapshotTests {
         configuration.merchantDisplayName = "[Merchant]"
         configuration.defaultBillingDetails.name = preFillName
         configuration.defaultBillingDetails.phone = preFillPhone
+        configuration.appearance.applyLiquidGlassIfPossible()
 
         var linkAccount: PaymentSheetLinkAccount?
 
@@ -213,7 +237,8 @@ extension LinkInlineSignupElementSnapshotTests {
                 session: nil,
                 publishableKey: nil,
                 displayablePaymentDetails: nil,
-                useMobileEndpoints: false
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
             )
         }
 

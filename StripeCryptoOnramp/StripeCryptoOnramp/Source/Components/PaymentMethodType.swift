@@ -10,7 +10,7 @@ import PassKit
 
 /// Represents possible payment types that can be collected for checkout.
 @_spi(STP)
-public enum PaymentMethodType {
+public enum PaymentMethodType: Equatable {
 
     /// Card-based payment, such as a credit or debit card.
     case card
@@ -31,6 +31,17 @@ extension PaymentMethodType {
             .bankAccount
         case .applePay:
             nil
+        }
+    }
+
+    var analyticsValue: String {
+        switch self {
+        case .card:
+            return "card"
+        case .bankAccount:
+            return "bank_account"
+        case .applePay:
+            return "apple_pay"
         }
     }
 }

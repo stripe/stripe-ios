@@ -66,7 +66,7 @@ extension LinkStubs {
                 details: .bankAccount(bankAccount: .init(iconCode: nil, name: "test", last4: "1234", country: "COUNTRY_US")),
                 billingAddress: nil,
                 billingEmailAddress: nil,
-                nickname: nil,
+                nickname: "Patrick's bank",
                 isDefault: false
             ),
             ConsumerPaymentDetails(
@@ -96,7 +96,22 @@ extension LinkStubs {
             unredactedPhoneNumber: "(555) 555-5555",
             phoneNumberCountry: "US",
             verificationSessions: [],
-            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes
+            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
+            mobileFallbackWebviewParams: nil
+        )
+    }
+
+    static func account(
+        email: String = "user@example.com",
+        session: ConsumerSession? = Self.consumerSession()
+    ) -> PaymentSheetLinkAccount {
+        .init(
+            email: email,
+            session: session,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
     }
 

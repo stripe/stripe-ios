@@ -92,6 +92,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
                                                },
                   "ordered_payment_method_types" : ["card"],
                   "session_id": "123",
+                  "config_id": "123",
                   "apple_pay_preference": "enabled",
                   "customer": {"payment_methods": [
                                ],

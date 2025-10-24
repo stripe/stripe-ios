@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An object representing parameters used to create a ConfirmationToken object.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
@@ -19,7 +20,7 @@ import Foundation
     @objc public var paymentMethodData: STPPaymentMethodParams?
 
     /// Payment-method-specific configuration for this ConfirmationToken.
-    @objc public var paymentMethodOptions: STPPaymentMethodOptions?
+    @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
     /// Return URL to redirect the customer back to your application after completion of 3D Secure authentication.
     @objc public var returnURL: String?
@@ -37,6 +38,12 @@ import Foundation
     /// This should be a boolean NSNumber, so that it can be `nil`
     @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
 
+    /// Contains metadata with identifiers for the session and information about the integration
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
+    /// Client context for the ConfirmationToken, containing information about the payment flow context
+    @objc @_spi(STP) public var clientContext: STPConfirmationTokenClientContext?
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -51,6 +58,8 @@ import Foundation
             "shipping = \(String(describing: shipping))",
             "mandateData = \(String(describing: mandateData))",
             "setAsDefaultPM = \(String(describing: setAsDefaultPM))",
+            "clientAttributionMetadata = \(String(describing: clientAttributionMetadata))",
+            "clientContext = \(String(describing: clientContext))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
@@ -72,6 +81,8 @@ import Foundation
             NSStringFromSelector(#selector(getter: shipping)): "shipping",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
+            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
+            NSStringFromSelector(#selector(getter: clientContext)): "client_context",
         ]
     }
 

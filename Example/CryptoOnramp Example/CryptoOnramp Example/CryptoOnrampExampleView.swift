@@ -16,102 +16,131 @@ import StripePaymentSheet
 
 /// The main content view of the example CryptoOnramp app.
 struct CryptoOnrampExampleView: View {
+    @StateObject private var flowCoordinator = CryptoOnrampFlowCoordinator()
+
     @State private var coordinator: CryptoOnrampCoordinator?
-    @State private var errorMessage: String?
-    @State private var email: String = ""
-    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
-    @State private var showRegistration: Bool = false
-    @State private var showAuthenticatedView: Bool = false
-    @State private var authenticationCustomerId: String?
-    @State private var linkAuthIntentId: String?
+    @State private var livemode: Bool = false
+    @State private var alert: Alert?
 
     @Environment(\.isLoading) private var isLoading
-    @FocusState private var isEmailFieldFocused: Bool
 
-    private var isNextButtonDisabled: Bool {
-        isLoading.wrappedValue || email.isEmpty || coordinator == nil
+    private var isPresentingAlert: Binding<Bool> {
+        Binding(get: {
+            alert != nil
+        }, set: { newValue in
+            if !newValue {
+                alert = nil
+            }
+        })
+    }
+
+    private var isRunningOnSimulator: Bool {
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        return false
+        #endif
     }
 
     // MARK: - View
 
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    FormField("Email") {
-                        TextField("Enter email address", text: $email)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .focused($isEmailFieldFocused)
-                            .submitLabel(.go)
-                            .onSubmit {
-                                if !isNextButtonDisabled {
-                                    lookupConsumerAndContinue()
-                                }
-                            }
-                    }
-
-                    OAuthScopeSelector(
-                        selectedScopes: $selectedScopes,
-                        onOnrampScopesSelected: {
-                            selectedScopes = Set(OAuthScopes.onrampScope)
-                        },
-                        onAllScopesSelected: {
-                            selectedScopes = Set(OAuthScopes.allScopes)
-                        }
-                    )
-
-                    Button("Next") {
-                        isEmailFieldFocused = false
-                        lookupConsumerAndContinue()
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(isNextButtonDisabled)
-                    .opacity(isNextButtonDisabled ? 0.5 : 1)
-
-                    if let errorMessage {
-                        ErrorMessageView(message: errorMessage)
-                    }
-
-                    if let coordinator {
-                        HiddenNavigationLink(
-                            destination: RegistrationView(
-                                coordinator: coordinator,
-                                email: email,
-                                selectedScopes: Array(selectedScopes)
-                            ),
-                            isActive: $showRegistration
-                        )
-
-                        if let customerId = authenticationCustomerId {
-                            HiddenNavigationLink(
-                                destination: AuthenticatedView(
-                                    coordinator: coordinator,
-                                    customerId: customerId
-                                ),
-                                isActive: $showAuthenticatedView
-                            )
-                        }
-                    }
-                }
-                .padding()
-            }
+        NavigationStack(path: flowCoordinator.pathBinding) {
+            LogInSignUpView(
+                coordinator: coordinator,
+                flowCoordinator: flowCoordinator,
+                livemode: $livemode
+            )
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
+                if let coordinator {
+                    ZStack {
+                        switch route {
+                        case let .registration(email, scopes):
+                            RegistrationView(
+                                coordinator: coordinator,
+                                email: email,
+                                selectedScopes: scopes
+                            ) {
+                                flowCoordinator.advanceAfterRegistration()
+                            }
+                        case .kycInfo:
+                            KYCInfoView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterKyc()
+                            }
+                        case .identity:
+                            IdentityVerificationView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterIdentity()
+                            }
+                        case .wallets:
+                            WalletSelectionView(
+                                coordinator: coordinator
+                            ) { wallet in
+                                flowCoordinator.advanceAfterWalletSelection(wallet)
+                            }
+                        case let .payment(wallet):
+                            PaymentView(
+                                coordinator: coordinator,
+                                wallet: wallet
+                            ) { response, selectedPaymentMethodDescription in
+                                flowCoordinator.advanceAfterPayment(
+                                    createOnrampSessionResponse: response,
+                                    selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                                )
+                            }
+                        case let .paymentSummary(createOnrampSessionResponse, selectedPaymentMethodDescription):
+                            PaymentSummaryView(
+                                coordinator: coordinator,
+                                onrampSessionResponse: createOnrampSessionResponse,
+                                selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                            ) { message in
+                                flowCoordinator.advanceAfterPaymentSummary(successfulCheckoutMessage: message)
+                            }
+                        case let .checkoutSuccess(message):
+                            CheckoutSuccessView(message: message)
+                        }
+                    }
+                    .navigationBarBackButtonHidden(!route.allowsBackNavigation)
+                    .authenticatedUserToolbar(
+                        isShown: route.showsAuthenticatedUserToolbarItem,
+                        coordinator: coordinator,
+                        flowCoordinator: flowCoordinator
+                    )
+                }
+            }
         }
-        .navigationViewStyle(.stack)
+        .alert(
+            alert?.title ?? "Error",
+            isPresented: isPresentingAlert,
+            presenting: alert,
+            actions: { _ in
+                Button("OK") {}
+            }, message: { alert in
+                Text(alert.message)
+            }
+        )
         .onAppear {
+            flowCoordinator.isLoading = isLoading
+
+            // Force livemode to false on simulator
+            if isRunningOnSimulator {
+                livemode = false
+            }
+
             guard coordinator == nil else {
                 return
             }
             initializeCoordinator()
         }
+        .onChange(of: livemode) { _ in
+            coordinator = nil
+            initializeCoordinator()
+        }
     }
 
     private func initializeCoordinator() {
-        STPAPIClient.shared.setUpPublishableKey()
+        STPAPIClient.shared.setUpPublishableKey(livemode: livemode)
 
         isLoading.wrappedValue = true
         Task {
@@ -137,156 +166,19 @@ struct CryptoOnrampExampleView: View {
             } catch {
                 await MainActor.run {
                     self.isLoading.wrappedValue = false
-                    self.errorMessage = "Failed to initialize CryptoOnrampCoordinator: \(error.localizedDescription)"
+                    self.alert = Alert(
+                        title: "Failed to initialize CryptoOnrampCoordinator",
+                        message: error.localizedDescription
+                    )
                 }
             }
-        }
-    }
-
-    private func lookupConsumerAndContinue() {
-        guard let coordinator else { return }
-        isLoading.wrappedValue = true
-        Task {
-            do {
-                let lookupResult = try await coordinator.hasLinkAccount(with: email)
-                let laiId: String?
-                if lookupResult {
-                    // Get Link Auth Intent ID from the demo merchant backend.
-                    let response = try await APIClient.shared.authenticateUser(with: email, oauthScopes: Array(selectedScopes))
-                    laiId = response.data.id
-                    print( "Successfully got Link Auth Intent ID from demo backend. Id: \(laiId!)")
-                } else {
-                    laiId = nil
-                }
-
-                await MainActor.run {
-                    errorMessage = nil
-                    isLoading.wrappedValue = false
-                    linkAuthIntentId = laiId
-
-                    if lookupResult {
-                        presentVerification(using: coordinator)
-                    } else {
-                        showRegistration = true
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Customer lookup failed. Ensure the email address is properly formatted. (Underlying error: \(error.localizedDescription))"
-                }
-            }
-        }
-    }
-
-    private func presentVerification(using coordinator: CryptoOnrampCoordinator) {
-        guard let linkAuthIntentId = linkAuthIntentId else {
-            errorMessage = "No Link Auth Intent ID available for authorization."
-            return
-        }
-
-        if let viewController = UIApplication.shared.findTopNavigationController() {
-            Task {
-                do {
-                    let result = try await coordinator.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
-                    switch result {
-                    case .consented(let customerId):
-                        await MainActor.run {
-                            authenticationCustomerId = customerId
-
-                            // Delay so the navigation link animation doesn't get canceled.
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showAuthenticatedView = true
-                            }
-                        }
-                    case .denied:
-                        await MainActor.run {
-                            errorMessage = "Authorization was denied."
-                        }
-                    case .canceled:
-                        // do nothing, authorization canceled.
-                        break
-                    @unknown default:
-                        // do nothing, authorization canceled.
-                        break
-                    }
-                } catch {
-                    await MainActor.run {
-                        errorMessage = error.localizedDescription
-                    }
-                }
-            }
-        } else {
-            errorMessage = "Unable to find view controller to present from."
         }
     }
 }
 
-struct OAuthScopeSelector: View {
-    @Binding var selectedScopes: Set<OAuthScopes>
-    let onOnrampScopesSelected: () -> Void
-    let onAllScopesSelected: () -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("OAuth Scopes")
-                    .font(.headline)
-                    .foregroundColor(.primary)
-
-                Spacer()
-
-                HStack(spacing: 8) {
-                    Button("Onramp") {
-                        onOnrampScopesSelected()
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-
-                    Button("All") {
-                        onAllScopesSelected()
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                }
-            }
-
-            LazyVGrid(columns: [GridItem()], spacing: 8) {
-                ForEach(OAuthScopes.allCases, id: \.self) { scope in
-                    Button(action: {
-                        if selectedScopes.contains(scope) {
-                            selectedScopes.remove(scope)
-                        } else {
-                            selectedScopes.insert(scope)
-                        }
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: selectedScopes.contains(scope) ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(selectedScopes.contains(scope) ? .blue : .gray)
-                                .font(.system(size: 14))
-
-                            Text(scope.rawValue)
-                                .font(.system(.caption, design: .monospaced))
-                                .foregroundColor(.primary)
-                                .multilineTextAlignment(.leading)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(selectedScopes.contains(scope) ? Color.blue.opacity(0.1) : Color.gray.opacity(0.05))
-                        )
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.gray.opacity(0.05))
-        )
+private extension CryptoOnrampFlowCoordinator {
+    var pathBinding: Binding<[Route]> {
+        Binding(get: { self.path }, set: { self.path = $0 })
     }
 }
 

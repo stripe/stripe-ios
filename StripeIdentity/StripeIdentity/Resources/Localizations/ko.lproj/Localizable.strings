@@ -6,9 +6,13 @@
 
 "App Settings" = "앱 설정";
 
-"Back identity card photo successfully uploaded" = "신분증 뒷면 사진 업로드 성공";
+"Back %@ photo successfully uploaded" = "%@ 뒷면 사진 업로드 성공";
 
-"Back of identity card" = "신분증 뒷면";
+"Back identity document photo successfully uploaded" = "신분증 뒷면 사진 업로드 성공";
+
+"Back of %@" = "%@ 뒷면";
+
+"Back of driver's license or government-issued photo ID" = "운전면허증 또는 정부에서 발급한 사진이 부착된 신분증의 뒷면";
 
 "Back of identity document" = "신분증 뒷면";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "세부사항이 보이지 않음";
 
+"Flip your %@ over to the other side" = "%@을(를) 반대쪽으로 뒤집으세요";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "운전면허증 또는 정부에서 발급한 사진이 부착된 신분증을 반대쪽으로 뒤집으세요";
+
 "Flip your identity card over to the other side" = "신분증 반대쪽 면이 보이게 뒤집으십시오.";
 
-"Front identity card photo successfully uploaded" = "신분증 앞면 사진 업로드 성공";
+"Front %@ photo successfully uploaded" = "%@ 앞면 사진 업로드 성공";
 
-"Front of identity card" = "신분증 앞면";
+"Front identity document photo successfully uploaded" = "신분증 앞면 사진 업로드 성공";
+
+"Front of %@" = "%@ 앞면";
+
+"Front of driver's license or government-issued photo ID" = "운전면허증 또는 정부에서 발급한 사진이 부착된 신분증의 앞면";
+
+"Front of driver's license or passport" = "운전면허증 또는 여권의 앞면";
+
+"Front of driver's license, passport, or government-issued photo ID" = "운전면허증, 여권 또는 정부에서 발급한 사진이 부착된 신분증의 앞면";
 
 "Front of identity document" = "신분증 앞면";
+
+"Front of passport or government-issued photo ID" = "여권 또는 정부에서 발급한 사진이 부착된 신분증의 앞면";
 
 "Get ready to scan your photo ID" = "사진이 있는 신분증 스캔 준비";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "사진 라이브러리";
 
-"Please upload images of the front and back of your identity card" = "신분증의 앞면과 뒷면 이미지를 업로드하십시오.";
+"Please upload images of the front and back of your %@" = "%@의 앞면과 뒷면 이미지를 업로드하세요";
+
+"Please upload images of the front and back of your identity document" = "신분증의 앞면과 뒷면 이미지를 업로드하세요";
+
+"Position your %@ in the center of the frame" = "프레임 중앙에 %@을(를) 놓으세요";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "프레임 중앙에 운전면허증 또는 정부에서 발급한 사진이 부착된 신분증을 놓으세요";
+
+"Position your driver's license or passport in the center of the frame" = "프레임 중앙에 운전면허증 또는 여권을 놓으세요";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "프레임 중앙에 운전면허증, 여권 또는 정부에서 발급한 사진이 부착된 신분증을 놓으세요";
 
 "Position your face in the center of the frame." = "프레임 중앙에 얼굴을 놓으십시오.";
 
-"Position your identity card in the center of the frame" = "프레임 중앙에 신분증을 놓으십시오.";
+"Position your identity document in the center of the frame" = "프레임 중앙에 신분증을 놓으세요";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "프레임 중앙에 여권 또는 정부에서 발급한 사진이 부착된 신분증을 놓으세요";
 
 "Retake Photos" = "사진 다시 찍기";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "신분 증명서 앞면을 업로드할 위치 선택 -";
 
-"Select back identity card photo" = "신분증 뒷면 사진 선택";
+"Select back %@ photo" = "%@ 뒷면 사진 선택";
 
-"Select front identity card photo" = "신분증 앞면 사진 선택";
+"Select back identity document photo" = "신분증 뒷면 사진 선택";
+
+"Select front %@ photo" = "%@ 앞면 사진 선택";
+
+"Select front identity document photo" = "신분증 앞면 사진 선택";
 
 "Selfie" = "셀카";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "사진 업로드";
 
+"Upload your %@" = "%@ 업로드";
+
 "Upload your photo ID" = "사진 ID 업로드";
 
-"Uploading back identity card photo" = "신분증 뒷면 사진 업로드하는 중";
+"Uploading back %@ photo" = "%@ 뒷면 사진 업로드하는 중";
 
-"Uploading front identity card photo" = "신분증 앞면 사진 업로드하는 중";
+"Uploading back identity document photo" = "신분증 뒷면 사진 업로드하는 중";
+
+"Uploading front %@ photo" = "%@ 앞면 사진 업로드하는 중";
+
+"Uploading front identity document photo" = "신분증 앞면 사진 업로드하는 중";
 
 "Verify your identity" = "ID 확인";
 

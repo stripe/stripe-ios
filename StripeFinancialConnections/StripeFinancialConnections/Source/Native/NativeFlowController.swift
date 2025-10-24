@@ -42,7 +42,7 @@ class NativeFlowController {
             action: #selector(didSelectNavigationBarCloseButton)
         )
         item.tintColor = FinancialConnectionsAppearance.Colors.icon
-        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
+        item.applyFinancialConnectionsCloseButtonEdgeInsets()
         return item
     }()
 
@@ -536,7 +536,8 @@ extension NativeFlowController {
             consumerSessionClientSecret: consumerSession.clientSecret,
             bankAccountId: bankAccountId,
             billingAddress: elementsSessionContext?.billingAddress,
-            billingEmail: email
+            billingEmail: email,
+            clientAttributionMetadata: elementsSessionContext?.clientAttributionMetadata
         )
         .chained { [weak self] response -> Future<LinkBankPaymentMethod> in
             guard let self else {
@@ -554,7 +555,8 @@ extension NativeFlowController {
                     expectedPaymentMethodType: linkMode.expectedPaymentMethodType,
                     billingEmail: email,
                     billingPhone: phone,
-                    allowRedisplay: elementsSessionContext?.allowRedisplay
+                    allowRedisplay: elementsSessionContext?.allowRedisplay,
+                    clientAttributionMetadata: elementsSessionContext?.clientAttributionMetadata
                 )
                 .transformed { $0.paymentMethod }
             } else {
@@ -562,7 +564,8 @@ extension NativeFlowController {
                     consumerSessionClientSecret: consumerSession.clientSecret,
                     paymentDetailsId: response.redactedPaymentDetails.id,
                     billingDetails: elementsSessionContext?.billingDetails,
-                    allowRedisplay: elementsSessionContext?.allowRedisplay
+                    allowRedisplay: elementsSessionContext?.allowRedisplay,
+                    clientAttributionMetadata: elementsSessionContext?.clientAttributionMetadata
                 )
             }
         }

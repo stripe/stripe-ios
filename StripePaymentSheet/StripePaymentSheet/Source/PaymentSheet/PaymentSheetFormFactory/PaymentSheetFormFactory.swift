@@ -101,14 +101,8 @@ class PaymentSheetFormFactory {
                 return false
             }
 
-            // If attestation is enabled for this app but the specific device doesn't support attestation, don't show inline signup: It's unlikely to provide a good experience. We'll only allow the web popup flow.
-            let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
-            if useAttestationEndpoints && !deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
-                return false
-            }
-
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
-            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
+            return isAccountNotRegisteredOrMissing
         }()
         let paymentMethodType: STPPaymentMethodType = {
             if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {
@@ -131,7 +125,7 @@ class PaymentSheetFormFactory {
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
-                  countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
+                  countryCode: elementsSession.countryCode,
                   currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
@@ -258,7 +252,6 @@ class PaymentSheetFormFactory {
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-                stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
                 analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
@@ -553,10 +546,21 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(sellerName: String?) -> NSAttributedString {
+    static func makeBankMandateText(
+        isSettingUp: Bool,
+        merchantName: String,
+        sellerName: String?
+    ) -> NSAttributedString {
         let links = ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
 
-        let string = if let sellerName {
+        let string = if let sellerName, isSettingUp {
+            String(
+                format: String.Localized.bank_continue_mandate_and_reuse_text_with_seller,
+                merchantName,
+                sellerName,
+                merchantName
+            )
+        } else if let sellerName {
             String(
                 format: String.Localized.bank_continue_mandate_text_with_seller,
                 sellerName
@@ -742,8 +746,11 @@ extension PaymentSheetFormFactory {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
-            params.confirmPaymentMethodOptions.konbiniOptions = .init()
-            params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = textField.text
+            let confirmationNumber = textField.text
+            if !confirmationNumber.isEmpty {
+                params.confirmPaymentMethodOptions.konbiniOptions = .init()
+                params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = confirmationNumber
+            }
             return params
         }
         let elements = [contactInfoSection, konbiniPhoneNumber, billingDetails].compactMap { $0 }
@@ -837,7 +844,13 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {
-        return SubtitleElement(view: AfterpayPriceBreakdownView(currency: currency, theme: theme), isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(
+            view: AfterpayPriceBreakdownView(
+                currency: currency,
+                appearance: configuration.appearance
+            ),
+            isHorizontalMode: configuration.isHorizontalMode
+        )
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
@@ -874,7 +887,7 @@ extension PaymentSheetFormFactory {
         return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
     }
 
-    func makeInstantDebits(countries: [String]? = nil) -> PaymentMethodElement {
+    func makeInstantDebits() -> PaymentMethodElement {
         let titleElement: SubtitleElement? = if case .paymentElement = configuration {
             makeSectionTitleLabelWith(text: Self.PayByBankDescriptionText)
         } else {
@@ -884,8 +897,10 @@ extension PaymentSheetFormFactory {
         let billingConfiguration = configuration.billingDetailsCollectionConfiguration
         let nameElement = billingConfiguration.name == .always ? makeName() : nil
         let phoneElement = billingConfiguration.phone == .always ? makePhone() : nil
+
+        let countries = configuration.billingDetailsCollectionConfiguration.allowedCountriesArray
         let addressElement = billingConfiguration.address == .full
-        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries)
+            ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries)
             : nil
 
         // An email is required, so only hide the email field iff:
@@ -906,6 +921,7 @@ extension PaymentSheetFormFactory {
             incentive: incentive,
             isPaymentIntent: isPaymentIntent,
             sellerName: sellerName,
+            isSettingUp: isSettingUp || forceSaveFutureUseBehavior,
             appearance: configuration.appearance
         )
 

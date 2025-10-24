@@ -100,6 +100,7 @@ class STPAPIClientMock: STPAPIClient {
     override func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
+        timeout: NSNumber?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         retrievePaymentIntentCalled = true
@@ -108,6 +109,7 @@ class STPAPIClientMock: STPAPIClient {
     override func retrieveSetupIntent(
         withClientSecret secret: String,
         expand: [String]?,
+        timeout: NSNumber?,
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
         retrieveSetupIntentCalled = true

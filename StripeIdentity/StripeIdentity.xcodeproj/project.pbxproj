@@ -37,6 +37,7 @@
 		34C09421E30F9BA262AB1532 /* CGImage+StripeIdentityUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEBC1A25D2C446219E7E733 /* CGImage+StripeIdentityUnitTest.swift */; };
 		36F0967E814234FE61EF3A0B /* VerificationPageDataDob.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E9FA49B13AC0A8826F8257 /* VerificationPageDataDob.swift */; };
 		375C63BC59BFC5F8615E266F /* VerificationPageData_no_errors.json in Resources */ = {isa = PBXBuildFile; fileRef = 3AA3F3B346FFC8E58BF8739A /* VerificationPageData_no_errors.json */; };
+		3A81E31A2E32AD9C007E5AA6 /* String+IDType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A81E3192E32AD95007E5AA6 /* String+IDType.swift */; };
 		3B9DB565B6C06BC058BF62D6 /* IndividualViewControllerSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E703FD28F5352DFC4115F1C /* IndividualViewControllerSnapshotTest.swift */; };
 		3C228BF28D1D56F1E74AE7AB /* VerificationPageData_submitted.json in Resources */ = {isa = PBXBuildFile; fileRef = 99607F36AF24C978953964E9 /* VerificationPageData_submitted.json */; };
 		3CB793BE23FC9716A0F35CCB /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF56E95E47DA51C3517E1EC /* IdentityElementsFactoryTest.swift */; };
@@ -371,6 +372,7 @@
 		3218882B7E1610E17BDB4522 /* VerificationPage_200.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPage_200.json; sourceTree = "<group>"; };
 		3943F18216635D56A3E6019C /* ErrorViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
 		3954F595B70115874BD88CCC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3A81E3192E32AD95007E5AA6 /* String+IDType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+IDType.swift"; sourceTree = "<group>"; };
 		3AA3F3B346FFC8E58BF8739A /* VerificationPageData_no_errors.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPageData_no_errors.json; sourceTree = "<group>"; };
 		3AFAC1FACF9A36AAFC19BF2F /* DocumentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentType.swift; sourceTree = "<group>"; };
 		3DD5FEA0E4E7EF1A4BA9646B /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
@@ -1011,6 +1013,7 @@
 		882FA766B74C9E5C2E2F5382 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				3A81E3192E32AD95007E5AA6 /* String+IDType.swift */,
 				20D40A569C2BB62F86D57C01 /* Image.swift */,
 				E94605BCADE912561ED6F710 /* STPLocalizedString.swift */,
 				F1559E966A487EE3867DD7B8 /* String+Localized.swift */,
@@ -1753,6 +1756,7 @@
 				D4715BA22B0E8E20008D07CC /* VerificationPageStaticContentBottomSheetContent.swift in Sources */,
 				D4715BC12B0E8E80008D07CC /* HeaderIconView.swift in Sources */,
 				D4715B992B0E8E20008D07CC /* VerificationPageStaticContentPhoneOtpPage.swift in Sources */,
+				3A81E31A2E32AD9C007E5AA6 /* String+IDType.swift in Sources */,
 				D4715BBC2B0E8E80008D07CC /* BottomSheetView.swift in Sources */,
 				D4715B9E2B0E8E20008D07CC /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
 				D4715BED2B0E8E96008D07CC /* BottomSheetViewController.swift in Sources */,

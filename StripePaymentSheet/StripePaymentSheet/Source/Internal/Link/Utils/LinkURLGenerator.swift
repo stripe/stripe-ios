@@ -51,6 +51,7 @@ struct LinkURLParams: Encodable {
     var setupFutureUsage: Bool
     var cardBrandChoice: CardBrandChoiceInfo?
     var linkFundingSources: [LinkSettings.FundingSource]
+    var clientAttributionMetadata: STPClientAttributionMetadata
 }
 
 class LinkURLGenerator {
@@ -60,7 +61,7 @@ class LinkURLGenerator {
         }
 
         // We only expect regionCode to be nil in rare situations with a buggy simulator. Use a default value we can detect server-side.
-        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? elementsSession.countryCode(overrideCountry: configuration.userOverrideCountry) ?? "US"
+        let customerCountryCode = configuration.defaultBillingDetails.address.country ?? Locale.current.stp_regionCode ?? elementsSession.countryCode ?? "US"
 
         let merchantCountryCode = elementsSession.merchantCountryCode ?? customerCountryCode
 
@@ -85,6 +86,8 @@ class LinkURLGenerator {
         if let sessionID = AnalyticsHelper.shared.sessionID {
             loggerMetadata = ["mobile_session_id": sessionID]
         }
+
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(intent: intent, elementsSession: elementsSession)
 
         let paymentObjectType: LinkURLParams.PaymentObjectMode = elementsSession.linkPassthroughModeEnabled ? .card_payment_method : .link_payment_method
 
@@ -114,7 +117,8 @@ class LinkURLGenerator {
                              intentMode: intentMode,
                              setupFutureUsage: intent.isSetupFutureUsageSet(for: linkPaymentMethodType),
                              cardBrandChoice: cardBrandChoiceInfo,
-                             linkFundingSources: linkFundingSources)
+                             linkFundingSources: linkFundingSources,
+                             clientAttributionMetadata: clientAttributionMetadata)
     }
 
     static func url(params: LinkURLParams) throws -> URL {
@@ -126,10 +130,6 @@ class LinkURLGenerator {
         return url
     }
 
-    static func url(configuration: PaymentSheet.Configuration, intent: Intent, elementsSession: STPElementsSession) throws -> URL {
-        let params = try Self.linkParams(configuration: configuration, intent: intent, elementsSession: elementsSession)
-        return try url(params: params)
-    }
 }
 
 // Used to get deterministic ordering for FundingSource tests

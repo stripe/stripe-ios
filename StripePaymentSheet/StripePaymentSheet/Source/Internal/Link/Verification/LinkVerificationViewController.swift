@@ -63,6 +63,11 @@ final class LinkVerificationViewController: UIViewController {
     private lazy var activityIndicator: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+
+        if let appearancePrimaryColor = appearance?.colors?.primary {
+            activityIndicator.tintColor = appearancePrimaryColor
+        }
+
         return activityIndicator
     }()
 
@@ -170,11 +175,13 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
     }
 
     func verificationViewResendCode(_ view: LinkVerificationView) {
+        STPAnalyticsClient.sharedClient.logLink2FAResendCode()
+
         view.sendingCode = true
         view.errorMessage = nil
 
         // To resend the code we just start a new verification session.
-        linkAccount.startVerification { [weak self] (result) in
+        linkAccount.startVerification(isResendingSmsCode: true) { [weak self] (result) in
             view.sendingCode = false
 
             switch result {

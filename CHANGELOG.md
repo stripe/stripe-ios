@@ -1,3 +1,63 @@
+## X.Y.Z - changes pending release 
+
+### CustomerSheet
+* [Added] Added support for `onBehalfOf` to CustomerSheet.IntentConfiguration. This parameter makes CustomerSheet use a connected account to determine the payment method that users see and whether CardBrandChoice is enabled. For more information, see the [SetupIntent docs](https://docs.stripe.com/api/setup_intents/object#setup_intent_object-on_behalf_of).
+
+## 24.24.4 2025-10-20
+### PaymentSheet
+* [Fixed] Fixed a bug with `FlowController` and `EmbeddedPaymentElement` in dark mode where `paymentOption.image` could be a blank icon for Alma, Billie, Multibanco, Paynow, Promptpay, Satispay, and Sunbit
+
+## 24.24.3 2025-10-13
+### PaymentSheet
+* [Fixed] Fixed a bug where the keyboard done button was not tappable on devices < iOS 26 when compiled with Xcode 26.
+* [Fixed] Fixed minor styling issues with Link UI on < iOS 26 when compiled with Xcode 26.
+
+## 24.24.2 2025-10-06
+
+### PaymentSheet
+* [Improved] Improved CVC recollection UI in Link
+
+### General
+* [Improved] Added automatic retry on network errors when fetching payment intents for improved resilience
+
+## 24.24.1 2025-09-29
+
+### Connect
+* [Fixed] Renamed `PrivateBetaConnect` to `PreviewConnect`.
+
+### PaymentSheet
+* [Fixed] Fixed a navigation bar shadow bug when `appearance.navigationBarStyle` is `glass` (iOS 26.1 fixed the underlying API). 
+
+## 24.24.0 2025-09-22
+
+### Connect
+* [Added] Payments and Payouts embedded components are available to use in public preview.
+
+### PaymentSheet
+* [Added] Added `Appearance.applyLiquidGlass()`, a convenience method that changes the values of various properties on the `Appearance` object used by PaymentSheet, PaymentSheet.FlowController, EmbeddedPaymentElement, CustomerSheet, and AddressViewController to match Liquid Glass when building with Xcode 26 or later and running on iOS 26. This includes `appearance.cornerRadius`, `appearance.borderWidth`, `appearance.navigationBarStyle`, `colors.background`, `navigationBarStyle`, and others. This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
+
+| <img src="https://github.com/user-attachments/assets/0d9d333e-41e0-43d0-816b-675916d19d0b" /> | <img src="https://github.com/user-attachments/assets/d043fe5d-65de-4901-be08-21945a2657c1" /> |
+| ------ | ------ |
+
+* [Added] Appearance.navigationBarStyle. Setting to `.glass` will change the sheet navigation bar to a glassy appearance when building with Xcode 26 or later and running on iOS 26. Calling `Appearance.applyLiquidGlass()` will set this value to `.glass`.
+* [Changed] `appearance.cornerRadius` is now nullable. Below iOS 26, When `nil`, the corner radius is 6.0 (ie unchanged from the current default). On iOS 26+, multiple rounder corner configurations are used to match Liquid Glass design.
+* [Fixed] Improved the cancellation UX when paying with Amazon Pay, Revolut Pay, P24, Twint, Swish, and 3DS2 card.
+
+## 24.23.3 2025-09-17
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
+## 24.23.2 2025-09-16
+
+### PaymentSheet
+* [Fixed] Fixed an issue with the Liquid Glass keyboard toolbar where tapping on the sheet immediately above the keyboard didn't have an effect.
+
+## 24.23.1 2025-09-08
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
 ## 24.23.0 2025-09-02
 
 ### CustomerSheet
@@ -1175,7 +1235,7 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 * Adds support for CVC recollection in PaymentIntent confirm [#1473](https://github.com/stripe/stripe-ios/pull/1473)
 * Fixes a race condition when setting `defaultPaymentMethod` on `STPPaymentOptionsViewController` [#1476](https://github.com/stripe/stripe-ios/pull/1476)
 
-## 18.3.0 2019-12-3
+## 18.3.0 2019-12-03
 * STPAddCardViewControllerDelegate methods previously removed in v16.0.0 are now marked as deprecated, to help migrating users [#1439](https://github.com/stripe/stripe-ios/pull/1439)
 * Fixes an issue where canceling 3DS authentication could leave PaymentIntents in an inaccurate `requires_action` state [#1443](https://github.com/stripe/stripe-ios/pull/1443)
 * Fixes text color for large titles [#1446](https://github.com/stripe/stripe-ios/pull/1446)
@@ -1290,7 +1350,7 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 * Updates sample apps to use `PaymentIntents` and `PaymentMethods` where available. [#1159](https://github.com/stripe/stripe-ios/pull/1159)
 * Changes `STPPaymentMethodCardParams` `expMonth` and `expYear` property types to `NSNumber *` to fix a bug using Apple Pay. [#1161](https://github.com/stripe/stripe-ios/pull/1161)
 
-## 15.0.0 2019-3-19
+## 15.0.0 2019-03-19
 * Renames all former references to 'PaymentMethod' to 'PaymentOption'. See [MIGRATING.md](/MIGRATING.md) for more details. [#1139](https://github.com/stripe/stripe-ios/pull/1139)
   * Renames `STPPaymentMethod` to `STPPaymentOption`
   * Renames `STPPaymentMethodType` to `STPPaymentOptionType`
@@ -1645,10 +1705,10 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 ## 2.0.1 2014-09-18
 * Fix some small bugs related to ApplePay and iOS8
 
-## 2.0 2014-09-09
+## 2.0.0 2014-09-09
 * Add support for native payments via Pay
 
-## 1.2 2014-08-21
+## 1.2.0 2014-08-21
 * Removed PaymentKit as a dependency. If you'd like to use it, you may still do so by including it separately.
 * Removed STPView. PaymentKit provides a near-identical version of this functionality if you need to migrate.
 * Improve example project

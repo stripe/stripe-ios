@@ -71,13 +71,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             if let _mandateData = _mandateData {
                 return _mandateData
             }
-            switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount,
-                    .cashApp, .payPal, .revolutPay, .klarna, .amazonPay:
-                return .makeWithInferredValues()
-            default: break
+            guard let paymentMethodType = paymentMethodType else {
+                return nil
             }
-            return nil
+            return Self.mandateDataIfRequired(for: paymentMethodType)
         }
         set(newMandateData) {
             _mandateData = newMandateData
@@ -97,6 +94,9 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
 
     /// Contains metadata with identifiers for the session and information about the integration
     @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
+    /// ID of an existing ConfirmationToken to use for this SetupIntent confirmation.
+    @objc @_spi(STP) public var confirmationToken: String?
 
     override convenience init() {
         // Not a valid clientSecret, but at least it'll be non-null
@@ -122,6 +122,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "radarOptions = \(String(describing: radarOptions))",
             // ClientAttributionMetadata
             "clientAttributionMetadata = @\(String(describing: clientAttributionMetadata))",
+            // ConfirmationToken
+            "confirmationToken = \(String(describing: confirmationToken))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters )",
         ]
@@ -145,6 +147,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         copy.mandateData = mandateData
         copy.radarOptions = radarOptions
         copy.clientAttributionMetadata = clientAttributionMetadata
+        copy.confirmationToken = confirmationToken
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy
@@ -166,6 +169,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
+            NSStringFromSelector(#selector(getter: confirmationToken)): "confirmation_token",
         ]
     }
 
@@ -181,5 +185,18 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
                 options: .anchored,
                 range: NSRange(location: 0, length: clientSecret.count)
             )) == 1
+    }
+
+    /// Returns mandate data for the specified payment method type, if required.
+    /// - Parameter paymentMethodType: The payment method type to check
+    /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
+    @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
+        switch paymentMethodType {
+        case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount,
+             .cashApp, .payPal, .revolutPay, .klarna, .amazonPay:
+            return .makeWithInferredValues()
+        default:
+            return nil
+        }
     }
 }

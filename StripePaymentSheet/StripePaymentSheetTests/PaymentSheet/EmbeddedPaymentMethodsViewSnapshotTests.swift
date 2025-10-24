@@ -902,7 +902,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedViewBigCustomIcon, identifier: "big_error_icon")
 
         // Custom svg
-        let image = UIImage(named: "afterpay_icon_info", in: Bundle(for: PaymentSheet.self), with: nil)
+        let image = UIImage(named: "icon_edit_outlined", in: Bundle(for: PaymentSheet.self), with: nil)
         appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage = image
         let embeddedViewSmallCustomIcon = EmbeddedPaymentMethodsView(
             savedPaymentMethod: ._testCard(),
@@ -1430,7 +1430,8 @@ extension PaymentSheetLinkAccount {
                 verificationSessions: [
                     .init(type: .sms, state: .verified)
                 ],
-                supportedPaymentDetailsTypes: [.card]
+                supportedPaymentDetailsTypes: [.card],
+                mobileFallbackWebviewParams: nil
             )
         }
         return .init(
@@ -1438,7 +1439,8 @@ extension PaymentSheetLinkAccount {
             session: session,
             publishableKey: "pk_123",
             displayablePaymentDetails: displayablePaymentDetails,
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }

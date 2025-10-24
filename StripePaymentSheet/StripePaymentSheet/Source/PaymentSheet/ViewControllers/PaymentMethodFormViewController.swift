@@ -204,7 +204,7 @@ class PaymentMethodFormViewController: UIViewController {
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             addressSpecProvider: AddressSpecProvider.shared,
-            verticalOffset: PaymentSheetUI.navBarPadding
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )
         autoCompleteViewController.delegate = self
 
@@ -339,6 +339,7 @@ extension PaymentMethodFormViewController {
         let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
         let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
 
         return ElementsSessionContext(
             amount: intent.amount,
@@ -348,7 +349,8 @@ extension PaymentMethodFormViewController {
             linkMode: linkMode,
             billingDetails: billingDetails,
             eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
-            allowRedisplay: allowRedisplay?.stringValue
+            allowRedisplay: allowRedisplay?.stringValue,
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 

@@ -321,7 +321,8 @@ import UIKit
             intentId: nil,
             linkMode: nil,
             billingDetails: billingDetails,
-            eligibleForIncentive: false
+            eligibleForIncentive: false,
+            clientAttributionMetadata: nil
         )
     }
 
@@ -480,13 +481,14 @@ import UIKit
             case .deferredIntent(let intentConfiguration):
                 let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, type: .link)
                 PaymentSheet
-                    .handleDeferredIntentConfirmation(
-                        confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+                    .routeDeferredIntentConfirmation(
+                        confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), // LinkPaymentController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id and doesn't have an elements session object so we don't want to send CAM here
                         configuration: configuration,
                         intentConfig: intentConfiguration,
                         authenticationContext: authenticationContext,
                         paymentHandler: STPPaymentHandler.shared(),
                         isFlowController: true,
+                        elementsSession: nil, // Headless link does not have an elements session object
                         mandateData: STPMandateDataParams.makeWithInferredValues()) { result, _ in
                     switch result {
                     case .canceled:

@@ -153,8 +153,9 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
-                self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
-                Task { await self.passiveCaptchaChallenge?.start() }
+                if self.configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
+                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
+                }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {
@@ -280,38 +281,35 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     ) {
         let presentingViewController = paymentSheetViewController.presentingViewController
         let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
-            Task { @MainActor in
-                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
-                PaymentSheet.confirm(
-                    configuration: self.configuration,
-                    authenticationContext: self.bottomSheetViewController,
-                    intent: paymentSheetViewController.intent,
-                    elementsSession: paymentSheetViewController.elementsSession,
-                    paymentOption: paymentOption,
-                    paymentHandler: self.paymentHandler,
-                    integrationShape: .complete,
-                    hcaptchaToken: hcaptchaToken,
-                    analyticsHelper: self.analyticsHelper
-                ) { result, deferredIntentConfirmationType in
-                    if case let .failed(error) = result {
-                        self.mostRecentError = error
-                    }
+            PaymentSheet.confirm(
+                configuration: self.configuration,
+                authenticationContext: self.bottomSheetViewController,
+                intent: paymentSheetViewController.intent,
+                elementsSession: paymentSheetViewController.elementsSession,
+                paymentOption: paymentOption,
+                paymentHandler: self.paymentHandler,
+                integrationShape: .complete,
+                passiveCaptchaChallenge: self.passiveCaptchaChallenge,
+                analyticsHelper: self.analyticsHelper
+            ) { result, deferredIntentConfirmationType in
+                if case let .failed(error) = result {
+                    self.mostRecentError = error
+                }
 
-                    if case .link = paymentOption {
-                        // End special Link blur animation before calling completion
-                        switch result {
-                        case .canceled, .failed:
-                            self.bottomSheetViewController.removeBlurEffect(animated: true) {
-                                completion(result, deferredIntentConfirmationType)
-                            }
-                        case .completed:
-                            self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
-                                completion(result, deferredIntentConfirmationType)
-                            }
+                if case .link = paymentOption {
+                    // End special Link blur animation before calling completion
+                    switch result {
+                    case .canceled, .failed:
+                        self.bottomSheetViewController.removeBlurEffect(animated: true) {
+                            completion(result, deferredIntentConfirmationType)
                         }
-                    } else {
-                        completion(result, deferredIntentConfirmationType)
+                    case .completed:
+                        self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
+                            completion(result, deferredIntentConfirmationType)
+                        }
                     }
+                } else {
+                    completion(result, deferredIntentConfirmationType)
                 }
             }
         }

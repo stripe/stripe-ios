@@ -8,11 +8,22 @@
 import Foundation
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
+@_spi(STP) import StripeUICore
 import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
+// @iOS26
 final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
+
+    override static func setUp() {
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+    }
+
     func testEmptyView() throws {
         let sut = try makeSUT(email: nil)
         sut.updateUI()
@@ -22,6 +33,13 @@ final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func testWithEmail() throws {
         let sut = try makeSUT(email: "user@example.com")
+        sut.updateUI()
+
+        verify(sut.stackView)
+    }
+
+    func testWithEmailSuggestion() throws {
+        let sut = try makeSUT(email: "user@example.con", suggestedEmail: "user@example.com")
         sut.updateUI()
 
         verify(sut.stackView)
@@ -41,19 +59,23 @@ final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
 
 extension LinkSignUpViewControllerSnapshotTests {
 
-    func makeSUT(email: String?) throws -> LinkSignUpViewController {
+    func makeSUT(email: String?, suggestedEmail: String? = nil) throws -> LinkSignUpViewController {
         let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
         let session = email == nil ? LinkStubs.consumerSession(supportedPaymentDetailsTypes: [.card]) : nil
 
+        let linkAccount = PaymentSheetLinkAccount(
+            email: email ?? "",
+            session: session,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        linkAccount.suggestedEmail = suggestedEmail
+
         return LinkSignUpViewController(
             accountService: LinkAccountService(elementsSession: elementsSession),
-            linkAccount: .init(
-                email: email ?? "",
-                session: session,
-                publishableKey: nil,
-                displayablePaymentDetails: nil,
-                useMobileEndpoints: false
-            ),
+            linkAccount: linkAccount,
             defaultBillingDetails: nil
         )
     }

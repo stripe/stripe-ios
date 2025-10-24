@@ -56,7 +56,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             publishableKey: nil,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
     }
 
@@ -288,7 +289,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for Link with bank account payment details - should show "Link" as label and formatted details as sublabel
         XCTAssertEqual(displayData.labels.label, "Link")
         // The sublabel should show the bank account details
-        XCTAssertEqual(displayData.labels.sublabel, "STRIPE TEST BANK •••• 6789")
+        XCTAssertEqual(displayData.labels.sublabel, "My Checking")
     }
 
     // MARK: - Enhanced Completion Block Tests
