@@ -852,6 +852,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             .cardPresent,
             .AUBECSDebit,
             .payPal,
+            .payPay,
             .blik,
             .weChatPay,
             .link,
@@ -1392,7 +1393,7 @@ extension STPPaymentMethodParams {
             multibanco = STPPaymentMethodMultibancoParams()
         case .shopPay:
             shopPay = STPPaymentMethodShopPayParams()
-        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint:
+        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint, .payPay:
             // These payment methods don't have any params
             break
         case .unknown:

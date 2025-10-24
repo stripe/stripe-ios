@@ -1,11 +1,11 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_OtOGvD0ZVacBoj&limit=100&type=sepa_debit$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_OtOGvD0ZVacBoj&limit=100&type=us_bank_account$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=205ZGRdnHqlvm9YMLaRe9gSff848nV8-_YUtPT-LGs1mrPdBFKCsQyAjoNh5mv4OflNLlWSwH3J10x24
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=LZ8O1K-fMSlE9V6fAVWasP232V5eS0bfPU-rhZlV7JUqpMPbL2dgfYTBhTf3sdzyQX3tDOFHgzmcoMCY
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
@@ -19,7 +19,7 @@ Content-Length: 89
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_lsTi5tjpH2SM05
+request-id: req_LrXDZ89E8qC56N
 
 {
   "has_more" : false,

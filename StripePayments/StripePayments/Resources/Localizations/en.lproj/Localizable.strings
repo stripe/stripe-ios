@@ -76,6 +76,9 @@
 /* Payment Method type brand name */
 "Swish" = "Swish";
 
+/* Payment Method type brand name */
+"PayPay" = "PayPay";
+
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
 

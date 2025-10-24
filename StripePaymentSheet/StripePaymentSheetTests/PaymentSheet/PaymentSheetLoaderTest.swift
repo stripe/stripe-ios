@@ -561,8 +561,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
 
         // Test successful load with valid payment method options
+        // Note: Some payment methods don't support setup_future_usage (e.g., PayPay)
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
-            guard type != .unknown else { return partialResult }
+            guard type != .unknown, type != .payPay else { return partialResult }
             return partialResult.merging([type: .offSession]) { a, _ in a }
         }
         let intentConfig = PaymentSheet.IntentConfiguration(
