@@ -531,6 +531,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         updateParams: UpdatePaymentDetailsParams,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -572,6 +573,10 @@ extension STPAPIClient {
 
         if let isDefault = updateParams.isDefault {
             parameters["is_default"] = isDefault
+        }
+
+        if let clientAttributionMetadata {
+            parameters = Self.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
 
         makePaymentDetailsRequest(
