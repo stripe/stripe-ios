@@ -142,6 +142,7 @@ import Foundation
                 }
                 // Wait for first completion
                 let result = try await group.next()
+                group.cancelAll()
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
                 return result
             }
