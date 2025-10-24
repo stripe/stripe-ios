@@ -5,6 +5,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import SwiftUI
 
 extension View {
@@ -73,13 +74,13 @@ extension CustomerSheet {
                     case (false, false):
                         break
                     case (false, true):
-                        guard let viewController = findViewController(for: view) else {
+                        guard let viewController = view.findViewController() else {
                             parent.presented = false
                             return
                         }
                         presentSheet(on: viewController)
                     case (true, false):
-                        guard let viewController = findViewController(for: view) else {
+                        guard let viewController = view.findViewController() else {
                             parent.presented = true
                             return
                         }
@@ -96,7 +97,7 @@ extension CustomerSheet {
             }
 
             func presentSheet(on controller: UIViewController) {
-                let presenter = findViewControllerPresenter(from: controller)
+                let presenter = controller.findViewControllerPresenter()
 
                 parent.customerSheet?.present(from: presenter) { (result: CustomerSheet.CustomerSheetResult) in
                     self.parent.presented = false

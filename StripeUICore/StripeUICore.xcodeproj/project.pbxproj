@@ -35,6 +35,7 @@
 		36376E12AE7ABA21FFC474E6 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4844F0B5436706225DE5A176 /* Events.swift */; };
 		377058C2363FA0348AFBD32E /* AddressSectionElement+DummyAddressLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B66D666BB3EA733B92A60AA /* AddressSectionElement+DummyAddressLine.swift */; };
 		39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34178B51599FDCB0D0D7475A /* TextFieldFormatter.swift */; };
+		41B285642D8B637200B6B34D /* UIResponder+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B285622D8B637200B6B34D /* UIResponder+Stripe.swift */; };
 		4755A24604B396D5A25058CD /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = CB8A9F7B4B2E8AA5A7E4FE98 /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D3B7C2983A8A25C6599119 /* OneTimeCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */; };
 		49377F042DE5F658005CA805 /* SectionSelectionBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49377F032DE5F658005CA805 /* SectionSelectionBehavior.swift */; };
@@ -183,6 +184,7 @@
 		3B8AFA3891DA214D9FBEF650 /* NSAttributedString+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+StripeUICore.swift"; sourceTree = "<group>"; };
 		40DF1A7FC5D84F937042D172 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		40E0822DE6CFA0D3CCD5D513 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		41B285622D8B637200B6B34D /* UIResponder+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIResponder+Stripe.swift"; sourceTree = "<group>"; };
 		43943E8FF7CD279F8D8605D3 /* UIFont+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+StripeUICore.swift"; sourceTree = "<group>"; };
 		4844F0B5436706225DE5A176 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		4893E4B43FEFCE920D432F0C /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
@@ -466,6 +468,7 @@
 				51C4AEB27F9734178E20836A /* UIColor+StripeUICore.swift */,
 				43943E8FF7CD279F8D8605D3 /* UIFont+StripeUICore.swift */,
 				4EE651DD3E5873538C7CE743 /* UIKeyboardType+StripeUICore.swift */,
+				41B285622D8B637200B6B34D /* UIResponder+Stripe.swift */,
 				71A81696ECEEF728F25202B6 /* UISpringTimingParameters+StripeUICore.swift */,
 				5855EA2F4F38847E3E47935D /* UIStackView+StripeUICore.swift */,
 				FAA22461E52111D9A4E8B133 /* UITraitCollection+StripeUICore.swift */,
@@ -947,6 +950,7 @@
 				0A3130227F7602524C9824D3 /* TextFieldElement+AddressFactory.swift in Sources */,
 				FC48FCDC5FD43E5E8AFC32D2 /* TextFieldElement+Factory.swift in Sources */,
 				4A5EADAF2F6514299BA4B8D8 /* FormElement.swift in Sources */,
+				41B285642D8B637200B6B34D /* UIResponder+Stripe.swift in Sources */,
 				C1CA6209591EDDBBE019FF22 /* FormView.swift in Sources */,
 				86427678E119E4AD22410E30 /* PhoneNumberElement.swift in Sources */,
 				019C76A03A30A67AE9F1FAEE /* PickerFieldView.swift in Sources */,
