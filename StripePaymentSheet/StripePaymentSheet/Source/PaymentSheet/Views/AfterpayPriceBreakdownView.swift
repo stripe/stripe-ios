@@ -17,7 +17,7 @@ import UIKit
 @objc(STP_Internal_AfterpayPriceBreakdownView)
 class AfterpayPriceBreakdownView: UIView {
     private let afterPayClearPayLabel = UILabel()
-    private let theme: ElementsAppearance
+    private let appearance: PaymentSheet.Appearance
     private lazy var afterpayMarkImage: UIImage = {
         return PaymentSheetImageLibrary.afterpayLogo(currency: currency)
     }()
@@ -32,10 +32,10 @@ class AfterpayPriceBreakdownView: UIView {
     let locale: Locale
     let currency: String?
 
-    init(locale: Locale = Locale.autoupdatingCurrent, currency: String?, theme: ElementsAppearance = .default) {
+    init(locale: Locale = Locale.autoupdatingCurrent, currency: String?, appearance: PaymentSheet.Appearance = .default) {
         self.locale = locale
         self.currency = currency
-        self.theme = theme
+        self.appearance = appearance
         super.init(frame: .zero)
 
         afterPayClearPayLabel.attributedText = makeAfterPayClearPayString()
@@ -66,11 +66,11 @@ class AfterpayPriceBreakdownView: UIView {
             "Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay"
         )
         return NSMutableAttributedString.bnplPromoString(
-            font: theme.fonts.subheadline,
-            foregroundColor: theme.colors.bodyText,
+            font: appearance.asElementsTheme.fonts.subheadline,
+            textColor: appearance.colors.text,
+            infoIconColor: appearance.colors.icon,
             template: template,
-            partnerPlaceholder: "<img/>",
-            bnplLogoImage: afterpayMarkImage
+            substitution: ("<img/>", afterpayMarkImage)
         )
     }
 

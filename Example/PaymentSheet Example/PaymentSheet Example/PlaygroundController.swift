@@ -692,6 +692,12 @@ class PlaygroundController: ObservableObject {
         self.appearance = PaymentSheet.Appearance.default
     }
 
+    func didTapResetAttestation() {
+        Task {
+            await StripeAttest(apiClient: .shared).resetKey()
+        }
+    }
+
     func appearanceButtonTapped() {
         if #available(iOS 14.0, *) {
             let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in

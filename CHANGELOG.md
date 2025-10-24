@@ -2,6 +2,9 @@
 ### PaymentSheet
 * [Fixed] Blocked emoji input in text fields.
 
+### CustomerSheet
+* [Added] Added support for `onBehalfOf` to CustomerSheet.IntentConfiguration. This parameter makes CustomerSheet use a connected account to determine the payment method that users see and whether CardBrandChoice is enabled. For more information, see the [SetupIntent docs](https://docs.stripe.com/api/setup_intents/object#setup_intent_object-on_behalf_of).
+
 ## 24.24.4 2025-10-20
 ### PaymentSheet
 * [Fixed] Fixed a bug with `FlowController` and `EmbeddedPaymentElement` in dark mode where `paymentOption.image` could be a blank icon for Alma, Billie, Multibanco, Paynow, Promptpay, Satispay, and Sunbit

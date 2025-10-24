@@ -4,6 +4,7 @@
   "experiments": {
     "miui_payment_element_aa_experiment": "control"
   },
+  "config_id": "123",
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,
     "elements_enable_mx_card_installments": false,
