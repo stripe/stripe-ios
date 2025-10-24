@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ no està disponible actualment";
+
+"%@ is undergoing maintenance" = "%@ està en manteniment";
+
+"Account number is required." = "El número de compte és obligatori.";
+
+"Almost there" = "Ja gairebé ho tenim";
+
+"Can't find your bank?" = "No trobeu el vostre banc?";
+
+"Checking and savings accounts are supported." = "S'admeten comptes corrents i d'estalvis.";
+
+"Choose a different bank" = "Tria un altre banc";
+
+"Click “Resend code” and try again, or %@." = "Feu clic a \"Torna a enviar el codi\" i torneu-ho a intentar, o %@.";
+
+"Confirm account number" = "Confirmeu el número de compte";
+
+"Confirm the account number." = "Confirmeu el número de compte.";
+
+"Connect account" = "Enllaça el compte";
+
+"Connect accounts" = "Enllaça els comptes";
+
+"Connect another account" = "Enllaça un altre compte";
+
+"Continue linking your account" = "Continua enllaçant el compte";
+
+"Continue with Link" = "Continua amb Link";
+
+"Email address" = "Adreça de correu electrònic";
+
+"Enter bank details" = "Introduïu les dades bancàries";
+
+"Enter bank details manually" = "Introdueix les dades bancàries manualment";
+
+"Enter the code sent to %@" = "Introduïu el codi que us hem enviat a %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Introduïu el codi que us hem enviat a %@. Periòdicament demanem aquest pas addicional per garantir la seguretat del compte.";
+
+"Exit without connecting?" = "Voleu sortir sense enllaçar-lo?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Vaja, aquest codi no ha funcionat. Comproveu-lo i torneu-ho a intentar.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Número de compte bancari no vàlid: ha de tenir com a màxim %li dígits i que només siguin números.";
+
+"Invalid routing number." = "Número d'encaminament no vàlid.";
+
+"It looks like the verification code you provided is not valid anymore." = "Sembla que el codi de verificació que heu proporcionat ja no és vàlid.";
+
+"Learn more" = "Més informació";
+
+"Maintenance is scheduled to end at %@." = "Està previst que el manteniment finalitzi el %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Està previst que el manteniment finalitzi el %1$@ a les %2$@.";
+
+"Manually enter details" = "Introdueix les dades manualment";
+
+"No payment accounts available" = "No hi ha comptes de pagament disponibles";
+
+"No results" = "Cap resultat";
+
+"Not now" = "Ara no";
+
+"Only checking accounts are supported." = "Només s'admeten comptes corrents.";
+
+"Please enter %d digits for your routing number." = "Introduïu %li dígits per al número d'encaminament.";
+
+"Please enter your bank details manually or select another bank." = "Introduïu les dades bancàries manualment o seleccioneu un altre banc.";
+
+"Please select another bank or try again later." = "Seleccioneu un altre banc o torneu-ho a intentar més tard.";
+
+"Please select another bank or try again." = "Seleccioneu un altre banc o torneu-ho a intentar.";
+
+"Please select another bank." = "Seleccioneu un altre banc.";
+
+"Please try selecting another bank account." = "Intenteu seleccionar un altre compte bancari.";
+
+"Please try selecting another bank." = "Intenteu seleccionar un altre banc.";
+
+"Retrieving accounts..." = "S'estan recuperant els comptes…";
+
+"Routing number" = "Número d'encaminament";
+
+"Routing number is required." = "El número d'encaminament és obligatori.";
+
+"Search for more banks" = "Cerca més bancs";
+
+"Select account" = "Seleccioneu un compte";
+
+"Select accounts" = "Seleccioneu els comptes";
+
+"Select another bank" = "Selecciona un altre banc";
+
+"Select bank" = "Seleccionar Banc";
+
+"Something went wrong" = "Hi ha hagut un error";
+
+"Submit" = "Envia";
+
+"Success" = "Correcte";
+
+"The account you selected isn't available for payments" = "El compte que heu seleccionat no està disponible per als pagaments";
+
+"The accounts you selected aren't available for payments" = "Els comptes que heu seleccionat no estan disponibles per als pagaments";
+
+"There was a problem accessing your %@ account" = "S'ha produït un problema en accedir al vostre compte de %@";
+
+"Try again, or %@." = "Torneu-ho a intentar o %@.";
+
+"Try searching another bank" = "Proveu de cercar un altre banc";
+
+"Try searching another bank or %@" = "Proveu de cercar un altre banc o %@";
+
+"Use information you previously saved with your Link account." = "Feu servir la informació que hàgiu desat prèviament amb el vostre compte de Link.";
+
+"Use test account" = "Utilitza el compte de prova";
+
+"Use test code" = "Utilitza el codi de prova";
+
+"Verify your email" = "Verifiqueu el correu electrònic";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Hem trobat %1$li comptes %2$@, però només podeu enllaçar comptes corrents dels EUA a %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Hem trobat %1$li comptes %2$@, però només podeu enllaçar comptes corrents dels EUA.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Hem trobat %1$li comptes %2$@, però només podeu enllaçar comptes corrents o d'estalvis dels EUA a %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Hem trobat %1$li comptes %2$@, però només podeu enllaçar comptes corrents o d'estalvis dels EUA.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Hem trobat 1 compte %1$@, però només podeu enllaçar comptes corrents dels EUA a %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Hem trobat 1 compte %@, però només podeu enllaçar comptes corrents dels EUA.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Hem trobat 1 compte %1$@, però només podeu enllaçar comptes corrents o d'estalvis dels EUA a %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Hem trobat 1 compte %@, però només podeu enllaçar comptes corrents o d'estalvis dels EUA.";
+
+"Yes, exit" = "Sí, surt";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Rebreu microdipòsits al compte ••••%@ en 1-2 dies i un correu electrònic amb més instruccions.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "No heu acabat d'enllaçar el compte. Premeu \"Continua\" per finalitzar el procés.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "No heu acabat d'enllaçar el compte bancari i tot el progrés es perdrà.";
+
+"You're in test mode." = "Esteu en mode de prova.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "En aquest moment, no es pot enllaçar el compte. Introduïu les dades bancàries manualment o torneu-ho a provar més tard.";
+
+"Your account can’t be connected at this time. Please try again later." = "No s'ha pogut enllaçar el compte. Torneu-ho a provar més tard.";
+
+"Your account number couldn’t be accessed at this time" = "No s'ha pogut accedir al número de compte en aquest moment";
+
+"Your account numbers don't match." = "Els números de compte no coincideixen.";
+
+"Your account was connected, but couldn't be saved to Link." = "El compte s'ha enllaçat, però no s'ha pogut desar a Link.";
+
+"Your account was connected." = "El compte s'ha enllaçat.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Els comptes s'han enllaçat, però no s'ha pogut desar a Link.";
+
+"Your accounts were connected." = "Els comptes s'han enllaçat.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Les dades bancàries es verificaran amb microdipòsits al vostre compte, normalment en un termini d'1 a 2 dies feiners. Només s'admeten els comptes corrents.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Les dades bancàries es verificaran amb microdipòsits al vostre compte. Aquest procés sol trigar entre 1 i 2 dies feiners.";
+
+"Your email address is invalid." = "L'adreça electrònica no és vàlida.";
+
+"Your mobile phone number is incomplete." = "El número de telèfon mòbil no està complet.";
+
+"contact us" = "poseu-vos en contacte amb nosaltres";
+
+"manually enter details" = "introduïu les dades manualment";

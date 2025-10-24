@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "„%@“ laikinai nepasiekiamas";
+
+"%@ is undergoing maintenance" = "Atliekama „%@“ techninė priežiūra";
+
+"Account number is required." = "Būtina nurodyti sąskaitos numerį.";
+
+"Almost there" = "Beveik baigta";
+
+"Can't find your bank?" = "Nerandate savo banko?";
+
+"Checking and savings accounts are supported." = "Palaikomos einamosios ir taupomosios sąskaitos.";
+
+"Choose a different bank" = "Pasirinkti kitą banką";
+
+"Click “Resend code” and try again, or %@." = "Spustelėkite „Persiųsti kodą“ ir bandykite dar kartą arba %@.";
+
+"Confirm account number" = "Patvirtinti sąskaitos numerį";
+
+"Confirm the account number." = "Patvirtinkite sąskaitos numerį.";
+
+"Connect account" = "Susieti sąskaitą";
+
+"Connect accounts" = "Susieti sąskaitas";
+
+"Connect another account" = "Susieti kitą sąskaitą";
+
+"Continue linking your account" = "Tęsti savo sąskaitos susiejimą";
+
+"Continue with Link" = "Tęsti naudojant „Link“";
+
+"Email address" = "El. pašto adresas";
+
+"Enter bank details" = "Įvesti banko duomenis";
+
+"Enter bank details manually" = "Įvesti banko duomenis rankiniu būdu";
+
+"Enter the code sent to %@" = "Įveskite kodą, išsiųstą %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Įveskite kodą, išsiųstą %@. Periodiškai prašome atlikti šį papildomą veiksmą, kad išlaikytume jūsų paskyrą saugią.";
+
+"Exit without connecting?" = "Išeiti nesusiejus?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Hmm, tas kodas neveikė. Dar kartą jį patikrinkite ir bandykite iš naujo.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Netinkamas banko sąskaitos numeris: jį turi sudaryti daugiausia %li skaitmenų (tik skaičiai).";
+
+"Invalid routing number." = "Neteisingas banko skyriaus kodas.";
+
+"It looks like the verification code you provided is not valid anymore." = "Atrodo, kad jūsų pateiktas patvirtinimo kodas nebegalioja.";
+
+"Learn more" = "Sužinoti daugiau";
+
+"Maintenance is scheduled to end at %@." = "Techninės priežiūros pabaiga numatoma %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Techninės priežiūros pabaiga numatoma %1$@ %2$@.";
+
+"Manually enter details" = "Rankiniu būdu įvesti duomenis";
+
+"No payment accounts available" = "Nėra prieinamų mokėjimo sąskaitų";
+
+"No results" = "Nėra rezultatų";
+
+"Not now" = "Ne dabar";
+
+"Only checking accounts are supported." = "Palaikomos tik einamosios sąskaitos.";
+
+"Please enter %d digits for your routing number." = "Įveskite %li skaitmenų savo banko skyriaus kodą.";
+
+"Please enter your bank details manually or select another bank." = "Įveskite savo banko duomenis rankiniu būdu arba pasirinkite kitą banką.";
+
+"Please select another bank or try again later." = "Pasirinkite kitą banką arba bandykite dar kartą vėliau.";
+
+"Please select another bank or try again." = "Pasirinkite kitą banką arba bandykite dar kartą.";
+
+"Please select another bank." = "Pasirinkite kitą banką.";
+
+"Please try selecting another bank account." = "Pabandykite pasirinkti kitą banko sąskaitą.";
+
+"Please try selecting another bank." = "Pabandykite pasirinkti kitą banką.";
+
+"Retrieving accounts..." = "Nuskaitomos sąskaitos...";
+
+"Routing number" = "Banko skyriaus kodas";
+
+"Routing number is required." = "Būtina nurodyti banko skyriaus kodą.";
+
+"Search for more banks" = "Ieškoti daugiau bankų";
+
+"Select account" = "Pasirinkite sąskaitą";
+
+"Select accounts" = "Pasirinkite sąskaitas";
+
+"Select another bank" = "Pasirinkite kitą banką";
+
+"Select bank" = "Pasirinkti banką";
+
+"Something went wrong" = "Kažkas nepavyko";
+
+"Submit" = "Pateikti";
+
+"Success" = "Sėkmingai";
+
+"The account you selected isn't available for payments" = "Jūsų pasirinkta sąskaita nėra prieinama mokėjimams atlikti";
+
+"The accounts you selected aren't available for payments" = "Jūsų pasirinktos sąskaitos nėra prieinamos mokėjimams atlikti";
+
+"There was a problem accessing your %@ account" = "Bandant pasiekti jūsų „%@“ paskyrą kilo problema";
+
+"Try again, or %@." = "Bandykite dar kartą arba %@.";
+
+"Try searching another bank" = "Pabandykite ieškoti kito banko";
+
+"Try searching another bank or %@" = "Pabandykite ieškoti kito banko arba %@";
+
+"Use information you previously saved with your Link account." = "Naudokite anksčiau savo „Link“ paskyroje įrašytą informaciją.";
+
+"Use test account" = "Naudoti bandomąją sąskaitą";
+
+"Use test code" = "Naudoti bandomąjį kodą";
+
+"Verify your email" = "Patvirtinkite savo el. pašto adresą";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Radome %1$li %2$@ sąskaitas, bet su %3$@ galite susieti tik JAV atsiskaitomąsias sąskaitas.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Radome %1$li %2$@ sąskaitas, bet galite susieti tik JAV atsiskaitomąsias sąskaitas.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Radome %1$li %2$@ sąskaitas, bet su %3$@ galite susieti tik atsiskaitomąsias ar taupomąsias sąskaitas.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Radome %1$li %2$@ sąskaitas, bet galite susieti tik atsiskaitomąsias ar taupomąsias sąskaitas.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Radome 1 %1$@ sąskaitą, bet su %2$@ galite susieti tik JAV atsiskaitomąsias sąskaitas.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Radome 1 %@ sąskaitą, bet galite susieti tik JAV atsiskaitomąsias sąskaitas.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Radome 1 %1$@ sąskaitą bet su %2$@ galite susieti tik atsiskaitomąsias ar taupomąsias sąskaitas.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Radome 1 %@ sąskaitą, bet galite susieti tik atsiskaitomąsias ar taupomąsias sąskaitas.";
+
+"Yes, exit" = "Taip, išeiti";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Laukite mikroindėlių į sąskaitą ••••%@ per 1–2 dienas ir el. laiško su papildomomis instrukcijomis.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Nebaigėte susieti savo banko sąskaitos. Norėdami baigti procesą, paspauskite „Tęsti“.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Nebaigėte susieti savo banko sąskaitos, tad visa eiga bus prarasta.";
+
+"You're in test mode." = "Naudojatės bandomuoju režimu.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Šiuo metu jūsų sąskaitos susieti negalima. Savo banko duomenis įveskite rankiniu būdu arba bandykite dar kartą vėliau.";
+
+"Your account can’t be connected at this time. Please try again later." = "Šiuo metu jūsų sąskaitos susieti negalima. Bandykite dar kartą vėliau.";
+
+"Your account number couldn’t be accessed at this time" = "Šiuo metu jūsų sąskaitos numerio negalima pasiekti";
+
+"Your account numbers don't match." = "Jūsų sąskaitos numeriai neatitinka.";
+
+"Your account was connected, but couldn't be saved to Link." = "Jūsų sąskaita buvo susieta, tačiau nepavyko išsaugoti „Link“.";
+
+"Your account was connected." = "Jūsų sąskaita buvo susieta.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Jūsų sąskaitos buvo susietos, tačiau nepavyko išsaugoti „Link“.";
+
+"Your accounts were connected." = "Jūsų sąskaitos buvo susietos.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Jūsų banko informacija bus patikrinta naudojant jūsų sąskaitoje esančius mikroindėlius (paprastai per 1–2 darbo dienas). Palaikomos tik einamosios sąskaitos.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Jūsų banko informacija bus patikrinta naudojant jūsų sąskaitoje esančius mikroindėlius. Paprastai tai trunka 1–2 darbo dienas.";
+
+"Your email address is invalid." = "Jūsų el. pašto adresas yra netinkamas.";
+
+"Your mobile phone number is incomplete." = "Nurodytas ne visas mobiliojo telefono numeris.";
+
+"contact us" = "susisiekite su mumis";
+
+"manually enter details" = "rankiniu būdu įvesti duomenis";

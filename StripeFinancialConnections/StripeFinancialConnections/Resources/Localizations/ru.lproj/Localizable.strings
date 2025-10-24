@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "Сайт %@ сейчас недоступен";
+
+"%@ is undergoing maintenance" = "Сайт %@ находится на техобслуживании";
+
+"Account number is required." = "Необходимо указать номер счета.";
+
+"Almost there" = "Почти у цели!";
+
+"Can't find your bank?" = "Не можете найти свой банк?";
+
+"Checking and savings accounts are supported." = "Поддерживаются только текущие и сберегательные счета.";
+
+"Choose a different bank" = "Выбрать другой банк";
+
+"Click “Resend code” and try again, or %@." = "Нажмите \"Отправить код снова\" и попробуйте еще раз, или %@";
+
+"Confirm account number" = "Подтвердить номер счета";
+
+"Confirm the account number." = "Подтвердите номер счета.";
+
+"Connect account" = "Подключить счет";
+
+"Connect accounts" = "Подключить счета";
+
+"Connect another account" = "Подключить другой счет";
+
+"Continue linking your account" = "Продолжить привязку счета";
+
+"Continue with Link" = "Продолжить с Link";
+
+"Email address" = "Адрес электронной почты";
+
+"Enter bank details" = "Введите банковские реквизиты";
+
+"Enter bank details manually" = "Ввести реквизиты банка вручную";
+
+"Enter the code sent to %@" = "Введите код, отправленный на %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Введите код, отправленный на %@. Этот дополнительный шаг выполняется время от времени для обеспечения безопасности вашего счета.";
+
+"Exit without connecting?" = "Выйти без подключения?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Введенный код недействителен. Перепроверьте его и попробуйте еще раз.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Недопустимый номер банковского счета: номер должен быть длиной не более %li знаков и состоять только из цифр.";
+
+"Invalid routing number." = "Недействительный код банка.";
+
+"It looks like the verification code you provided is not valid anymore." = "Похоже, введенный код уже недействителен.";
+
+"Learn more" = "Подробнее";
+
+"Maintenance is scheduled to end at %@." = "Техобслуживание должно завершиться в %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Техобслуживание должно завершиться %1$@ в %2$@.";
+
+"Manually enter details" = "Введите реквизиты вручную";
+
+"No payment accounts available" = "Нет ни одного доступного счета для оплаты";
+
+"No results" = "Ничего не найдено";
+
+"Not now" = "Не сейчас";
+
+"Only checking accounts are supported." = "Поддерживаются только текущие счета.";
+
+"Please enter %d digits for your routing number." = "Введите код банка, состоящий из %li цифр.";
+
+"Please enter your bank details manually or select another bank." = "Введите банковские реквизиты вручную или выберите другой банк.";
+
+"Please select another bank or try again later." = "Выберите другой банк или попробуйте еще раз чуть позже.";
+
+"Please select another bank or try again." = "Выберите другой банк или попробуйте еще раз.";
+
+"Please select another bank." = "Выберите другой банк.";
+
+"Please try selecting another bank account." = "Попробуйте выбрать другой банковский счет.";
+
+"Please try selecting another bank." = "Попробуйте выбрать другой банк.";
+
+"Retrieving accounts..." = "Идет получение счетов...";
+
+"Routing number" = "Код банка";
+
+"Routing number is required." = "Необходимо указать код банка.";
+
+"Search for more banks" = "Поискать другие банки";
+
+"Select account" = "Выбрать счет";
+
+"Select accounts" = "Выбрать счета";
+
+"Select another bank" = "Выбрать другой банк";
+
+"Select bank" = "Выбрать банк";
+
+"Something went wrong" = "Возникла неизвестная ошибка";
+
+"Submit" = "Отправить";
+
+"Success" = "Успех!";
+
+"The account you selected isn't available for payments" = "С выбранного счета невозможно произвести оплату";
+
+"The accounts you selected aren't available for payments" = "С выбранных счетов невозможно произвести оплату";
+
+"There was a problem accessing your %@ account" = "Не удается получить доступ к вашему счету в %@";
+
+"Try again, or %@." = "Попробуйте еще раз или %@.";
+
+"Try searching another bank" = "Попробуйте поискать другой банк";
+
+"Try searching another bank or %@" = "Попробуйте поискать другой банк или %@";
+
+"Use information you previously saved with your Link account." = "Используйте данные, ранее сохраненные в вашей учетной записи Link.";
+
+"Use test account" = "Использовать тестовый счет";
+
+"Use test code" = "Использовать тестовый код";
+
+"Verify your email" = "Подтвердите свой адрес электронной почты";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Мы нашли несколько (%1$li, %2$@) счетов, но привязать текущие счета в США можно только к %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Мы нашли несколько (%1$li, %2$@) счетов, но привязать можно только текущие счета в США.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Мы нашли несколько (%1$li, %2$@) счетов, но привязать текущие или сберегательные счета можно только к %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Мы нашли несколько (%1$li, %2$@) счетов, но привязать можно только текущие или сберегательные счета.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Мы нашли 1 счет (%1$@), но привязать текущие счета в США можно только к %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Мы нашли 1 счет (%@), но привязать можно только текущие счета в США.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Мы нашли 1 счет (%1$@), но привязать текущие или сберегательные счета можно только к %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Мы нашли 1 счет (%@), но привязать можно только текущие или сберегательные счета.";
+
+"Yes, exit" = "Да, выйти";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "В течение 1-2 дней мы переведем две небольшие суммы на банковский счет с номером, оканчивающимся на ••••%@, и пришлем электронное письмо с дальнейшими указаниями.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Вы не закончили привязку своего банковского счета. Нажмите \"Продолжить\", чтобы завершить процесс.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Вы не закончили привязку своего банковского счета, и все введенные до сих пор данные будут потеряны.";
+
+"You're in test mode." = "Вы находитесь в тестовом режиме.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "В данный момент подключить ваш счет не удается. Введите банковские реквизиты вручную или попробуйте еще раз чуть позже.";
+
+"Your account can’t be connected at this time. Please try again later." = "На данный момент не удалось подключить ваш счет. Попробуйте еще раз чуть позже.";
+
+"Your account number couldn’t be accessed at this time" = "На данный момент не удалось получить номер вашего счета";
+
+"Your account numbers don't match." = "Номера счетов не совпадают.";
+
+"Your account was connected, but couldn't be saved to Link." = "Ваш счет подключен, но его не удалось сохранить в Link.";
+
+"Your account was connected." = "Ваш счет подключен.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Ваши счета подключены, но их не удалось сохранить в Link.";
+
+"Your accounts were connected." = "Ваши счета подключены.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Ваши банковские реквизиты будут подтверждены с помощью микропереводов на ваш счет. Это обычно занимает 1-2 рабочих дня. Поддерживаются только текущие счета.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Ваши банковские реквизиты будут подтверждены с помощью микропереводов на ваш счет. Это обычно занимает 1-2 рабочих дня.";
+
+"Your email address is invalid." = "Адрес электронной почты недействителен.";
+
+"Your mobile phone number is incomplete." = "Номер мобильного телефона указан не полностью.";
+
+"contact us" = "Связаться с нами";
+
+"manually enter details" = "введите реквизиты вручную";

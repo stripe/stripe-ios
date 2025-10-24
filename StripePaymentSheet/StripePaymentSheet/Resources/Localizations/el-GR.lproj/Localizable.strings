@@ -100,8 +100,6 @@
 
 "Confirm" = "Επιβεβαίωση";
 
-"Confirm it's you" = "Επιβεβαιώστε ότι είστε εσείς";
-
 "Confirm payment details" = "Επιβεβαίωση στοιχείων πληρωμής";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή τράπεζας ή πληρωμής σας μέσα σε %@ για να ολοκληρώσετε την αγορά.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
 
-"Enter the code sent to %@." = "Εισαγάγετε τον κωδικό που στάλθηκε στο %@.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Δεν ήταν δυνατή η σύνδεση";
 
 "Fast, secure checkout" = "Γρήγορο, ασφαλές ταμείο";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Αφαίρεση κάρτας;";
 
 "Remove linked account" = "Αφαίρεση συνδεδεμένου λογαριασμού";
-
-"Resend code" = "Επανάληψη αποστολής κωδικού";
 
 "SEPA debit details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων χρέωσης SEPA.";
 
