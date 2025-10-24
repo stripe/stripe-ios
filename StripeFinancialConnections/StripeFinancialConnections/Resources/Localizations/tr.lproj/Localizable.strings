@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ şu anda kullanılamıyor";
+
+"%@ is undergoing maintenance" = "%@ bakımda";
+
+"Account number is required." = "Hesap numarası gerekli.";
+
+"Almost there" = "Neredeyse bitti";
+
+"Can't find your bank?" = "Bankanızı bulamadınız mı?";
+
+"Checking and savings accounts are supported." = "Cari hesaplar ve tasarruf hesapları desteklenir.";
+
+"Choose a different bank" = "Farklı bir banka seçin";
+
+"Click “Resend code” and try again, or %@." = "\"Kodu yeniden gönder\" seçeneğine tıklayıp yeniden deneyin veya %@.";
+
+"Confirm account number" = "Hesap numarasını onayla";
+
+"Confirm the account number." = "Hesap numarasını onaylayın.";
+
+"Connect account" = "Hesabı bağla";
+
+"Connect accounts" = "Hesapları bağla";
+
+"Connect another account" = "Başka bir banka hesabı bağlayın";
+
+"Continue linking your account" = "Hesabınızı bağlamaya devam edin";
+
+"Continue with Link" = "Link ile Devam Et";
+
+"Email address" = "E-posta adresi";
+
+"Enter bank details" = "Banka ayrıntılarını girin";
+
+"Enter bank details manually" = "Banka bilgilerini manuel olarak girin";
+
+"Enter the code sent to %@" = "%@ yoluyla gönderilen kodu girin";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "%@ yoluyla gönderilen kodu girin. Hesabınızı güvende tutmak için bu ek adımı düzenli olarak talep ederiz.";
+
+"Exit without connecting?" = "Bağlantı kurulmadan çıkış yapılsın mı?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Hmm, bu kod çalışmıyor. İki kez kontrol edip tekrar deneyin.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Banka hesap numarası geçersiz: En fazla %li hane uzunluğunda olmalı ve sadece sayı içermelidir.";
+
+"Invalid routing number." = "Geçersiz şube kodu.";
+
+"It looks like the verification code you provided is not valid anymore." = "Sağladığınız doğrulama kodu artık geçerli değil.";
+
+"Learn more" = "Daha fazla bilgi";
+
+"Maintenance is scheduled to end at %@." = "Bakımın %@ tarihinde bitmesi planlanıyor.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Bakımın planlanan bitiş zamanı: %1$@, %2$@.";
+
+"Manually enter details" = "Bilgileri manuel olarak girin";
+
+"No payment accounts available" = "Kullanılabilir ödeme hesabı yok";
+
+"No results" = "Sonuç yok";
+
+"Not now" = "Şimdi değil";
+
+"Only checking accounts are supported." = "Yalnızca cari hesaplar desteklenir.";
+
+"Please enter %d digits for your routing number." = "Lütfen şube kodunuz için %li rakam girin.";
+
+"Please enter your bank details manually or select another bank." = "Lütfen banka bilgilerinizi manuel olarak girin veya başka bir banka seçin.";
+
+"Please select another bank or try again later." = "Lütfen başka bir banka seçin veya daha sonra tekrar deneyin.";
+
+"Please select another bank or try again." = "Lütfen başka bir banka seçin veya tekrar deneyin.";
+
+"Please select another bank." = "Lütfen başka bir banka seçin.";
+
+"Please try selecting another bank account." = "Lütfen başka bir banka hesabı seçmeyi deneyin.";
+
+"Please try selecting another bank." = "Lütfen başka bir banka seçmeyi deneyin.";
+
+"Retrieving accounts..." = "Hesaplar alınıyor...";
+
+"Routing number" = "Banka/şube kodu";
+
+"Routing number is required." = "Yönlendirme numarası gereklidir.";
+
+"Search for more banks" = "Daha fazla banka ara";
+
+"Select account" = "Hesap seç";
+
+"Select accounts" = "Hesap seç";
+
+"Select another bank" = "Başka bir banka seçin";
+
+"Select bank" = "Banka seçin";
+
+"Something went wrong" = "Bir sorun oluştu";
+
+"Submit" = "Gönder";
+
+"Success" = "Başarılı";
+
+"The account you selected isn't available for payments" = "Seçtiğiniz hesap ödemeler için uygun değil";
+
+"The accounts you selected aren't available for payments" = "Seçtiğiniz hesaplar ödeme için uygun değil";
+
+"There was a problem accessing your %@ account" = "%@ hesabınıza erişilirken bir sorun oluştu";
+
+"Try again, or %@." = "Tekrar deneyin veya %@";
+
+"Try searching another bank" = "Başka bir banka aramayı deneyin";
+
+"Try searching another bank or %@" = "Başka bir banka veya %@ aramayı deneyin.";
+
+"Use information you previously saved with your Link account." = "Daha önce Link hesabınıza kaydettiğiniz bilgileri kullanın.";
+
+"Use test account" = "Test hesabı kullan";
+
+"Use test code" = "Test kodu kullan";
+
+"Verify your email" = "E-postanızı doğrulayın";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "%1$li %2$@ hesaplarını bulduk ancak yalnızca ABD vadesiz hesaplarını %3$@ hesaplarına bağlayabilirsiniz.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "%1$li %2$@ hesaplarını bulduk ancak yalnızca ABD vadesiz hesaplarını bağlayabilirsiniz.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "%1$li %2$@ hesaplarını bulduk ancak yalnızca çek veya tasarruf hesaplarını %3$@ hesaplarına bağlayabilirsiniz.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "%1$li %2$@ hesaplarını bulduk ancak yalnızca çek veya tasarruf hesaplarını bağlayabilirsiniz.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "1 %1$@ hesabı bulduk ancak yalnızca ABD vadesiz hesaplarını %2$@ hesabına bağlayabilirsiniz.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "1 %@ hesabı bulduk ancak yalnızca ABD vadesiz hesaplarını bağlayabilirsiniz.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "1 %1$@ hesabı bulduk ancak yalnızca çek veya tasarruf hesaplarını %2$@ hesabına bağlayabilirsiniz.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "1 %@ hesabı bulduk ancak yalnızca çek veya tasarruf hesaplarını bağlayabilirsiniz.";
+
+"Yes, exit" = "Evet, çıkmak istiyorum";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "1-2 gün içinde ••••%@ ile biten hesaba mikro ödeme ve daha detaylı talimatları içeren bir e-posta gelebilir.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Hesabınızı bağlamayı henüz bitirmediniz. İşlemi bitirmek için devam düğmesine basın.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Banka hesabınızı bağlamayı tamamlamadınız ve tüm ilerleme kaybedilecek.";
+
+"You're in test mode." = "Şu an test modundasınız.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Hesabınız şu anda bağlanamıyor. Lütfen banka bilgilerinizi manuel olarak girin veya daha sonra tekrar deneyin.";
+
+"Your account can’t be connected at this time. Please try again later." = "Hesabınız şu anda bağlanamıyor. Lütfen daha sonra tekrar deneyin.";
+
+"Your account number couldn’t be accessed at this time" = "Hesap numaranıza şu anda erişilemedi";
+
+"Your account numbers don't match." = "Hesap numaralarınız eşleşmiyor.";
+
+"Your account was connected, but couldn't be saved to Link." = "Hesabınız bağlandı, ancak Link'e kaydedilemedi.";
+
+"Your account was connected." = "Hesabınız bağlandı.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Hesaplarınız bağlandı, ancak Link'e kaydedilemedi.";
+
+"Your accounts were connected." = "Hesaplarınız bağlandı.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Banka bilgileriniz, hesabınıza yapılacak mikro ödemeler aracılığıyla doğrulanacaktır. Bu işlem genellikle 1-2 iş günü sürer. Yalnızca cari hesaplar desteklenir.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Banka bilgileriniz, hesabınıza yapılacak mikro ödeme işlemleriyle doğrulanacaktır. Bu işlem genellikle 1-2 iş günü sürer.";
+
+"Your email address is invalid." = "E-posta adresiniz geçersiz.";
+
+"Your mobile phone number is incomplete." = "Cep telefonu numaranız eksik.";
+
+"contact us" = "bizimle iletişime geçin";
+
+"manually enter details" = "bilgileri manuel olarak girin";

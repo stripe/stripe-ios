@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ está indisponível";
+
+"%@ is undergoing maintenance" = "%@ está passando por manutenção";
+
+"Account number is required." = "É obrigatório informar o número da conta.";
+
+"Almost there" = "Quase pronto";
+
+"Can't find your bank?" = "Não encontrou seu banco?";
+
+"Checking and savings accounts are supported." = "Contas correntes e poupança são aceitas.";
+
+"Choose a different bank" = "Escolha outro banco";
+
+"Click “Resend code” and try again, or %@." = "Clique em \"Reenviar código\" e tente novamente, ou %@.";
+
+"Confirm account number" = "Confirmar número da conta";
+
+"Confirm the account number." = "Confirme o número da conta.";
+
+"Connect account" = "Conectar conta";
+
+"Connect accounts" = "Conectar contas";
+
+"Connect another account" = "Conectar outra conta";
+
+"Continue linking your account" = "Continuar vinculando sua conta";
+
+"Continue with Link" = "Continuar com o Link";
+
+"Email address" = "E-mail";
+
+"Enter bank details" = "Informar dados bancários";
+
+"Enter bank details manually" = "Inserir dados bancários manualmente";
+
+"Enter the code sent to %@" = "Insira o código enviado para %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Insira o código enviado para %@. Solicitamos essa etapa adicional periodicamente para manter sua conta segura.";
+
+"Exit without connecting?" = "Sair sem conectar?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Esse código não funcionou. Verifique e tente novamente.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Número da conta bancária inválido: deve ter no máximo %li dígitos, contendo apenas números.";
+
+"Invalid routing number." = "Routing number inválido.";
+
+"It looks like the verification code you provided is not valid anymore." = "Parece que o código de verificação informado não é mais válido.";
+
+"Learn more" = "Saiba mais";
+
+"Maintenance is scheduled to end at %@." = "A manutenção está agendada para terminar às %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "A manutenção está agendada para terminar em %1$@ às %2$@.";
+
+"Manually enter details" = "Insira os dados manualmente";
+
+"No payment accounts available" = "Nenhuma conta de pagamentos disponível";
+
+"No results" = "Nenhum resultado";
+
+"Not now" = "Agora não";
+
+"Only checking accounts are supported." = "Somente contas correntes são aceitas.";
+
+"Please enter %d digits for your routing number." = "Insira um routing number com %li dígitos.";
+
+"Please enter your bank details manually or select another bank." = "Insira seus dados bancários manualmente ou selecione outro banco.";
+
+"Please select another bank or try again later." = "Selecione outro banco ou tente novamente mais tarde.";
+
+"Please select another bank or try again." = "Selecione outro banco ou tente novamente.";
+
+"Please select another bank." = "Selecione outro banco.";
+
+"Please try selecting another bank account." = "Tente selecionar outra conta bancária.";
+
+"Please try selecting another bank." = "Tente selecionar outro banco.";
+
+"Retrieving accounts..." = "Recuperando contas…";
+
+"Routing number" = "Routing number";
+
+"Routing number is required." = "O routing number é obrigatório.";
+
+"Search for more banks" = "Pesquisar mais bancos";
+
+"Select account" = "Selecionar conta";
+
+"Select accounts" = "Selecionar contas";
+
+"Select another bank" = "Selecionar outro banco";
+
+"Select bank" = "Selecionar banco";
+
+"Something went wrong" = "Ocorreu um erro";
+
+"Submit" = "Enviar";
+
+"Success" = "Sucesso";
+
+"The account you selected isn't available for payments" = "A conta que você selecionou não está disponível para pagamentos";
+
+"The accounts you selected aren't available for payments" = "As contas que você selecionou não estão disponíveis para pagamentos";
+
+"There was a problem accessing your %@ account" = "Ocorreu um problema ao acessar sua conta %@";
+
+"Try again, or %@." = "Tente novamente ou %@.";
+
+"Try searching another bank" = "Tente pesquisar outro banco";
+
+"Try searching another bank or %@" = "Tente pesquisar outro banco ou %@.";
+
+"Use information you previously saved with your Link account." = "Use as informações que você já salvou com sua conta do Link.";
+
+"Use test account" = "Usar conta de teste";
+
+"Use test code" = "Usar código de teste";
+
+"Verify your email" = "Verifique seu e-mail";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Encontramos %1$li %2$@ contas, mas você só pode vincular contas correntes dos EUA a %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Encontramos %1$li %2$@ contas, mas você só pode vincular contas correntes dos EUA.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Encontramos %1$li %2$@ contas, mas você só pode vincular contas correntes ou de poupança a %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Encontramos %1$li %2$@ contas, mas você só pode vincular contas correntes ou de poupança.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Encontramos 1 conta %1$@, mas você só pode vincular contas correntes dos EUA a %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Encontramos 1 conta %@, mas você só pode vincular contas correntes dos EUA.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Encontramos 1 conta %1$@, mas você só pode vincular contas correntes ou de poupança a %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Encontramos 1 conta %@, mas você só pode vincular contas correntes ou de poupança.";
+
+"Yes, exit" = "Sim, sair";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Enviaremos microdepósitos para a conta ••••%@ em 1 a 2 dias e um e-mail com instruções adicionais.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Você não terminou de vincular sua conta. Pressione continuar para concluir o processo.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Você não terminou de vincular sua conta bancária e todo o progresso será perdido.";
+
+"You're in test mode." = "Você está no modo de teste.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Não é possível conectar sua conta no momento. Insira os dados bancários manualmente ou tente novamente mais tarde.";
+
+"Your account can’t be connected at this time. Please try again later." = "Não foi possível conectar sua conta desta vez. Tente novamente mais tarde.";
+
+"Your account number couldn’t be accessed at this time" = "Não foi possível acessar sua conta bancária";
+
+"Your account numbers don't match." = "Os números da conta são diferentes.";
+
+"Your account was connected, but couldn't be saved to Link." = "Sua conta foi conectada, mas não foi possível salvá-las no Link.";
+
+"Your account was connected." = "Sua conta foi conectada.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Suas contas foram conectadas, mas não foi possível salvá-las no Link.";
+
+"Your accounts were connected." = "Suas contas foram conectadas.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "A conta bancária será verificada por microdepósitos em sua conta, normalmente em 1 a 2 dias úteis. Somente contas correntes são aceitas.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Seus dados bancários serão verificados com microdepósitos na sua conta. Isso normalmente leva entre 1 e 2 dias úteis.";
+
+"Your email address is invalid." = "Endereço de e-mail inválido.";
+
+"Your mobile phone number is incomplete." = "Número de telefone celular incompleto.";
+
+"contact us" = "fale conosco";
+
+"manually enter details" = "insira os dados manualmente";

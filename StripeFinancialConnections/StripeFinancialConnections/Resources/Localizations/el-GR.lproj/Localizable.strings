@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "Το ίδρυμα %@ δεν είναι διαθέσιμο επί του παρόντος";
+
+"%@ is undergoing maintenance" = "Το ίδρυμα %@ βρίσκεται υπό συντήρηση";
+
+"Account number is required." = "Απαιτείται αριθμός λογαριασμού.";
+
+"Almost there" = "Κοντεύετε";
+
+"Can't find your bank?" = "Δεν μπορείτε να βρείτε την τράπεζά σας;";
+
+"Checking and savings accounts are supported." = "Υποστηρίζονται τρεχούμενοι λογαριασμοί και λογαριασμοί ταμιευτηρίου.";
+
+"Choose a different bank" = "Επιλέξτε διαφορετική τράπεζα";
+
+"Click “Resend code” and try again, or %@." = "Κάντε κλικ στο «Επανάληψη αποστολής κωδικού» και δοκιμάστε ξανά ή %@.";
+
+"Confirm account number" = "Επιβεβαίωση αριθμού λογαριασμού";
+
+"Confirm the account number." = "Επιβεβαιώστε τον αριθμό λογαριασμού.";
+
+"Connect account" = "Σύνδεση λογαριασμού";
+
+"Connect accounts" = "Σύνδεση λογαριασμών";
+
+"Connect another account" = "Σύνδεση άλλου λογαριασμού";
+
+"Continue linking your account" = "Συνεχίστε τη σύνδεση του λογαριασμού σας";
+
+"Continue with Link" = "Συνέχεια με το Link";
+
+"Email address" = "Διεύθυνση email";
+
+"Enter bank details" = "Εισαγάγετε στοιχεία τράπεζας";
+
+"Enter bank details manually" = "Εισαγάγετε τα στοιχεία τράπεζας με μη αυτόματο τρόπο";
+
+"Enter the code sent to %@" = "Εισαγάγετε τον κωδικό που έχει σταλεί στο %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Εισαγάγετε τον κωδικό που έχει σταλεί στο %@. Ζητάμε περιοδικά αυτό το επιπλέον βήμα για να διατηρούμε ασφαλή τον λογαριασμό σας.";
+
+"Exit without connecting?" = "Έξοδος χωρίς σύνδεση;";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Χμμ, αυτός ο κωδικός δε λειτουργεί. Επανελέγξτε τον και δοκιμάστε ξανά.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Μη έγκυρος αριθμός τραπεζικού λογαριασμού: Πρέπει να αποτελείται από έως %li ψηφία και να περιέχει μόνο αριθμούς.";
+
+"Invalid routing number." = "Μη έγκυρος routing number.";
+
+"It looks like the verification code you provided is not valid anymore." = "Φαίνεται ότι ο κωδικός επαλήθευσης που παρείχατε δεν είναι έγκυρος πια.";
+
+"Learn more" = "Μάθετε περισσότερα";
+
+"Maintenance is scheduled to end at %@." = "Η συντήρηση έχει προγραμματιστεί να λήξει στις %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Η συντήρηση έχει προγραμματιστεί να λήξει %1$@ στις %2$@.";
+
+"Manually enter details" = "Εισαγάγετε στοιχεία με μη αυτόματο τρόπο";
+
+"No payment accounts available" = "Δεν υπάρχουν διαθέσιμοι λογαριασμοί πληρωμής";
+
+"No results" = "Δεν υπάρχουν αποτελέσματα";
+
+"Not now" = "Όχι τώρα";
+
+"Only checking accounts are supported." = "Υποστηρίζονται μόνο τρεχούμενοι λογαριασμοί.";
+
+"Please enter %d digits for your routing number." = "Εισαγάγετε %li ψηφία για τον routing number σας.";
+
+"Please enter your bank details manually or select another bank." = "Εισαγάγετε τα τραπεζικά σας στοιχεία με μη αυτόματο τρόπο ή επιλέξτε άλλη τράπεζα.";
+
+"Please select another bank or try again later." = "Επιλέξτε άλλη τράπεζα ή δοκιμάστε ξανά αργότερα.";
+
+"Please select another bank or try again." = "Επιλέξτε άλλη τράπεζα ή δοκιμάστε ξανά.";
+
+"Please select another bank." = "Επιλέξτε άλλη τράπεζα.";
+
+"Please try selecting another bank account." = "Δοκιμάστε να επιλέξετε άλλον τραπεζικό λογαριασμό.";
+
+"Please try selecting another bank." = "Δοκιμάστε να επιλέξετε άλλη τράπεζα.";
+
+"Retrieving accounts..." = "Ανάκτηση λογαριασμών…";
+
+"Routing number" = "Routing number";
+
+"Routing number is required." = "Απαιτείται routing number.";
+
+"Search for more banks" = "Αναζήτηση περισσότερων τραπεζών";
+
+"Select account" = "Επιλογή λογαριασμού";
+
+"Select accounts" = "Επιλογή λογαριασμών";
+
+"Select another bank" = "Επιλογή άλλης τράπεζας";
+
+"Select bank" = "Επιλογή τράπεζας";
+
+"Something went wrong" = "Παρουσιάστηκε κάποιο πρόβλημα";
+
+"Submit" = "Υποβολή";
+
+"Success" = "Επιτυχία";
+
+"The account you selected isn't available for payments" = "Ο λογαριασμός που επιλέξατε δεν είναι διαθέσιμος για πληρωμές";
+
+"The accounts you selected aren't available for payments" = "Οι λογαριασμοί που επιλέξατε δεν είναι διαθέσιμοι για πληρωμές";
+
+"There was a problem accessing your %@ account" = "Παρουσιάστηκε πρόβλημα κατά την πρόσβαση στον λογαριασμό %@";
+
+"Try again, or %@." = "Δοκιμάστε ξανά ή %@.";
+
+"Try searching another bank" = "Δοκιμάστε να αναζητήσετε άλλη τράπεζα";
+
+"Try searching another bank or %@" = "Δοκιμάστε να αναζητήσετε άλλη τράπεζα ή %@";
+
+"Use information you previously saved with your Link account." = "Χρησιμοποιήστε τα στοιχεία που είχατε αποθηκεύσει προηγουμένως με τον λογαριασμό σας στο Link.";
+
+"Use test account" = "Χρήση δοκιμαστικού λογαριασμού";
+
+"Use test code" = "Χρήση δοκιμαστικού κωδικού";
+
+"Verify your email" = "Επαληθεύστε το email σας";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Εντοπίσαμε %1$li %2$@ λογαριασμούς, αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς ΗΠΑ με %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Εντοπίσαμε %1$li %2$@ λογαριασμούς, αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς ΗΠΑ.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Εντοπίσαμε %1$li %2$@ λογαριασμούς, αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς ή λογαριασμούς ταμιευτηρίου με %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Εντοπίσαμε %1$li %2$@ λογαριασμούς, αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς ή λογαριασμούς ταμιευτηρίου.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Εντοπίσαμε 1 %1$@ λογαριασμό, αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς στις ΗΠΑ με %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Εντοπίσαμε 1 %@ λογαριασμό, αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς στις ΗΠΑ.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Εντοπίσαμε 1 λογαριασμό %1$@ αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς ή λογαριασμούς ταμιευτηρίου με τον λογαριασμό %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Εντοπίσαμε 1 λογαριασμό %@ αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς ή λογαριασμούς ταμιευτηρίου.";
+
+"Yes, exit" = "Ναι, έξοδος";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Μπορείτε να αναμένετε μικροκαταθέσεις στον λογαριασμό ••••%@ σε 1-2 ημέρες και ένα email με περαιτέρω οδηγίες.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Δεν έχετε ολοκληρώσει τη σύνδεση του λογαριασμού σας. Συνεχίστε για να ολοκληρώσετε τη διαδικασία.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Δεν έχετε ολοκληρώσει τη σύνδεση του τραπεζικού λογαριασμού σας και όλη η πρόοδος θα χαθεί.";
+
+"You're in test mode." = "Βρίσκεστε σε δοκιμαστική λειτουργία.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Ο λογαριασμός σας δεν μπορεί να συνδεθεί αυτή τη στιγμή. Εισαγάγετε τα τραπεζικά σας στοιχεία με μη αυτόματο τρόπο ή δοκιμάστε ξανά αργότερα.";
+
+"Your account can’t be connected at this time. Please try again later." = "Ο λογαριασμός σας δεν μπορεί να συνδεθεί αυτή τη στιγμή. Δοκιμάστε ξανά αργότερα.";
+
+"Your account number couldn’t be accessed at this time" = "Ο αριθμός λογαριασμού σας δεν μπορεί να προσπελαστεί αυτή τη στιγμή";
+
+"Your account numbers don't match." = "Οι αριθμοί λογαριασμού σας δε συμφωνούν.";
+
+"Your account was connected, but couldn't be saved to Link." = "Ο λογαριασμός σας συνδέθηκε, αλλά δεν ήταν δυνατή η αποθήκευσή του στο Link.";
+
+"Your account was connected." = "Ο λογαριασμός σας συνδέθηκε.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Οι λογαριασμοί σας συνδέθηκαν, αλλά δεν ήταν δυνατή η αποθήκευσή τους στο Link.";
+
+"Your accounts were connected." = "Οι λογαριασμοί σας συνδέθηκαν.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Τα τραπεζικά σας στοιχεία θα επαληθευτούν μέσω μικροκαταθέσεων στον λογαριασμό σας, συνήθως εντός 1-2 εργάσιμων ημερών. Υποστηρίζονται μόνο τρεχούμενοι λογαριασμοί.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Τα τραπεζικά σας στοιχεία θα επαληθευτούν με μικροκαταθέσεις στον λογαριασμό σας. Αυτή η διαδικασία συνήθως διαρκεί 1-2 εργάσιμες ημέρες.";
+
+"Your email address is invalid." = "Η διεύθυνση email σας δεν είναι έγκυρη.";
+
+"Your mobile phone number is incomplete." = "Ο αριθμός κινητού τηλεφώνου σας είναι ελλιπής.";
+
+"contact us" = "επικοινωνήστε μαζί μας";
+
+"manually enter details" = "εισαγάγετε στοιχεία με μη αυτόματο τρόπο";

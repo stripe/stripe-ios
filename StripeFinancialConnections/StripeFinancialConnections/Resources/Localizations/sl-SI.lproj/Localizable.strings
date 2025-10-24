@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ trenutno ni na voljo";
+
+"%@ is undergoing maintenance" = "%@ izvaja vzdrževanje";
+
+"Account number is required." = "Številka računa je obvezna.";
+
+"Almost there" = "Postopek je skoraj končan";
+
+"Can't find your bank?" = "Ali ne najdete svoje banke?";
+
+"Checking and savings accounts are supported." = "Podprti so transakcijski in varčevalni računi.";
+
+"Choose a different bank" = "Izberi drugo banko";
+
+"Click “Resend code” and try again, or %@." = "Kliknite “Znova pošlji kodo” in poskusite znova ali pa %@.";
+
+"Confirm account number" = "Potrdi številko računa";
+
+"Confirm the account number." = "Potrdite številko računa.";
+
+"Connect account" = "Poveži račun";
+
+"Connect accounts" = "Poveži račune";
+
+"Connect another account" = "Poveži drug račun";
+
+"Continue linking your account" = "Nadaljuj povezovanje svojega računa";
+
+"Continue with Link" = "Nadaljuj s storitvijo Link";
+
+"Email address" = "E-poštni naslov";
+
+"Enter bank details" = "Vnesite podatke o banki";
+
+"Enter bank details manually" = "Ročno vnesite podatke o banki";
+
+"Enter the code sent to %@" = "Vnesite kodo, ki je bila poslana na številko %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Vnesite kodo, poslano na e-poštni naslov %@. Za varnost vašega računa občasno zahtevamo ta dodatni korak.";
+
+"Exit without connecting?" = "Ali želite zapreti brez vzpostavitve povezave?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Ta koda žal ni delovala. Še enkrat jo preverite in poskusite znova.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Neveljavna številka bančnega računa: vsebuje lahko največ %li števk in samo številke.";
+
+"Invalid routing number." = "Neveljavna klirinška koda.";
+
+"It looks like the verification code you provided is not valid anymore." = "Videti je, da navedena potrditvena koda ni več veljavna.";
+
+"Learn more" = "Več informacij";
+
+"Maintenance is scheduled to end at %@." = "Vzdrževanje se bo predvidoma končalo ob %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Vzdrževanje se bo predvidoma končalo dne %1$@ ob %2$@.";
+
+"Manually enter details" = "Ročno vnesite podatke";
+
+"No payment accounts available" = "Na voljo ni noben plačilni račun";
+
+"No results" = "Ni rezultatov";
+
+"Not now" = "Trenutno ne";
+
+"Only checking accounts are supported." = "Podprti so samo transakcijski računi.";
+
+"Please enter %d digits for your routing number." = "Vnesite %li-mestno klirinško kodo.";
+
+"Please enter your bank details manually or select another bank." = "Ročno vnesite podatke o banki ali pa izberite drugo banko.";
+
+"Please select another bank or try again later." = "Izberite drugo banko ali poskusite znova pozneje.";
+
+"Please select another bank or try again." = "Izberite drugo banko ali poskusite znova.";
+
+"Please select another bank." = "Izberite drugo banko.";
+
+"Please try selecting another bank account." = "Poskusite izbrati drug bančni račun.";
+
+"Please try selecting another bank." = "Poskusite izbrati drugo banko.";
+
+"Retrieving accounts..." = "Pridobivanje računov ...";
+
+"Routing number" = "Klirinška koda";
+
+"Routing number is required." = "Klirinška koda je obvezna.";
+
+"Search for more banks" = "Poiščite več bank";
+
+"Select account" = "Izberite račun";
+
+"Select accounts" = "Izberite račune";
+
+"Select another bank" = "Izberite drugo banko";
+
+"Select bank" = "Izberite banko";
+
+"Something went wrong" = "Prišlo je do neznane napake";
+
+"Submit" = "Pošlji";
+
+"Success" = "Uspelo";
+
+"The account you selected isn't available for payments" = "Izbrani račun ni na voljo za plačila";
+
+"The accounts you selected aren't available for payments" = "Izbrani računi niso na voljo za plačila";
+
+"There was a problem accessing your %@ account" = "Pri dostopu do vašega računa %@ je prišlo do napake";
+
+"Try again, or %@." = "Poskusite znova ali pa %@.";
+
+"Try searching another bank" = "Poskusite poiskati drugo banko";
+
+"Try searching another bank or %@" = "Poskusite poiskati drugo banko ali pa %@.";
+
+"Use information you previously saved with your Link account." = "Uporabite podatke, ki ste jih predhodno shranili v računu Link.";
+
+"Use test account" = "Uporabi preskusni račun";
+
+"Use test code" = "Uporabi preskusno kodo";
+
+"Verify your email" = "Potrdite svoj e-poštni naslov";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Našli smo račune %1$li %2$@, vendar lahko z %3$@ povežete samo ameriške tekoče račune.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Našli smo račune %1$li %2$@, vendar lahko povežete samo ameriške tekoče račune.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Našli smo račune %1$li %2$@, vendar lahko z %3$@ povežete samo tekoče ali varčevalne račune.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Našli smo račune %1$li %2$@, vendar lahko povežete samo tekoče ali varčevalne račune.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Našli smo 1 račun %1$@, vendar lahko z %2$@ povežete samo ameriške tekoče račune.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Našli smo 1 račun %@, vendar lahko povežete samo ameriške tekoče račune.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Našli smo 1 račun %1$@, vendar lahko z %2$@ povežete samo tekoče ali varčevalne račune.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Našli smo 1 račun %@, vendar lahko povežete samo tekoče ali varčevalne račune.";
+
+"Yes, exit" = "Da, zapri";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Mikro pologe na račun ••••%@ lahko pričakujete v 1–2 dneh in e-poštno sporočilo z nadaljnjimi navodili.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Niste dokončali postopka povezovanja svojega računa. Za dokončanje postopka pritisnite Nadaljuj.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Niste dokončali postopka povezovanja svojega bančnega računa, zato bo ves napredek izgubljen.";
+
+"You're in test mode." = "Ste v načinu preskusne uporabe.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Vašega računa trenutno ni mogoče povezati. Ročno vnesite podatke o banki ali poskusite znova pozneje.";
+
+"Your account can’t be connected at this time. Please try again later." = "Vašega računa trenutno ni mogoče povezati. Poskusite znova pozneje.";
+
+"Your account number couldn’t be accessed at this time" = "Dostop do številke vašega računa trenutno ni mogoč";
+
+"Your account numbers don't match." = "Številke računov se ne ujemajo.";
+
+"Your account was connected, but couldn't be saved to Link." = "Vaš računi je bil povezan, vendar ga ni bilo mogoče shraniti s storitvijo Link.";
+
+"Your account was connected." = "Vaš račun je bil povezan.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Vaši računi so bili povezani, vendar jih ni bilo mogoče shraniti s storitvijo Link.";
+
+"Your accounts were connected." = "Vaši računi so bili povezani.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Podatki o vaši banki bodo preverjeni z mikro pologi na vaš račun, kar običajno traja 1–2 delovnega dneva. Podprti so samo transakcijski računi.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Podatki o vaši banki bodo preverjeni z mikro pologi na vaš račun. To običajno traja 1–2 delovna dneva.";
+
+"Your email address is invalid." = "Vaš e-poštni naslov ni veljaven.";
+
+"Your mobile phone number is incomplete." = "Vaša telefonska številka mobilnega telefona ni popolna.";
+
+"contact us" = "stik z nami";
+
+"manually enter details" = "ročno vnesite podatke";

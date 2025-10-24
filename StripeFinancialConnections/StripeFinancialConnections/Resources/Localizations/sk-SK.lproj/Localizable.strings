@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ nie je práve k dispozícii";
+
+"%@ is undergoing maintenance" = "Práve prebieha údržba %@";
+
+"Account number is required." = "Vyžaduje sa číslo účtu.";
+
+"Almost there" = "Už je to takmer hotové";
+
+"Can't find your bank?" = "Nemôžete nájsť vašu banku?";
+
+"Checking and savings accounts are supported." = "Bežné a sporiace účty sú podporované.";
+
+"Choose a different bank" = "Vybrať inú banku";
+
+"Click “Resend code” and try again, or %@." = "Kliknite na tlačidlo „Opätovné odoslanie kódu“ a skúste to znova alebo %@.";
+
+"Confirm account number" = "Potvrďte číslo účtu";
+
+"Confirm the account number." = "Potvrďte číslo účtu.";
+
+"Connect account" = "Pripojiť účet";
+
+"Connect accounts" = "Pripojiť iný účet";
+
+"Connect another account" = "Pripojte iný účet.";
+
+"Continue linking your account" = "Pokračujte s prepojením účtu.";
+
+"Continue with Link" = "Pokračovať so službou Link";
+
+"Email address" = "E-mailová adresa";
+
+"Enter bank details" = "Zadať bankové údaje";
+
+"Enter bank details manually" = "Zadať bankové údaje manuálne";
+
+"Enter the code sent to %@" = "Zadajte kód zaslaný na %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Zadajte kód odoslaný na %@. Tento dodatočný krok vyžadujeme pravidelne, aby sme váš účet udržali v bezpečí.";
+
+"Exit without connecting?" = "Ukončiť bez pripojenia?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Tento kód nefungoval. Skontrolujte ho ešte raz a skúste to znova.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Neplatné číslo bankového účtu: musí mať maximálne %li číslic, obsahujúc len číslice.";
+
+"Invalid routing number." = "Neplatné smerovacie číslo.";
+
+"It looks like the verification code you provided is not valid anymore." = "Zdá sa, že vami zadaný overovací kód už nie je platný.";
+
+"Learn more" = "Ďalšie informácie";
+
+"Maintenance is scheduled to end at %@." = "Koniec údržby je naplánovaný na %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Koniec údržby je naplánovaný na %1$@ o %2$@.";
+
+"Manually enter details" = "Manuálne zadajte podrobnosti";
+
+"No payment accounts available" = "Nie sú k dispozícii žiadne platobné účty";
+
+"No results" = "Žiadne výsledky";
+
+"Not now" = "Teraz nie";
+
+"Only checking accounts are supported." = "Len bežné účty sú podporované.";
+
+"Please enter %d digits for your routing number." = "Zadajte %li číslic pre smerové číslo.";
+
+"Please enter your bank details manually or select another bank." = "Zadajte bankové údaje manuálne alebo vyberte inú banku.";
+
+"Please select another bank or try again later." = "Vyberte inú banku alebo skúste znova neskôr.";
+
+"Please select another bank or try again." = "Vyberte inú banku alebo to skúste znova.";
+
+"Please select another bank." = "Vyberte inú banku.";
+
+"Please try selecting another bank account." = "Skúste vybrať iný bankový účet.";
+
+"Please try selecting another bank." = "Skúste vybrať inú banku.";
+
+"Retrieving accounts..." = "Načítavanie účtov...";
+
+"Routing number" = "Smerové číslo";
+
+"Routing number is required." = "Smerové číslo je povinné.";
+
+"Search for more banks" = "Vyhľadať viac bánk";
+
+"Select account" = "Vybrať účet";
+
+"Select accounts" = "Vybrať účty";
+
+"Select another bank" = "Vybrať inú banku";
+
+"Select bank" = "Zvoľte banku";
+
+"Something went wrong" = "Niečo sa pokazilo";
+
+"Submit" = "Odoslať";
+
+"Success" = "Úspech";
+
+"The account you selected isn't available for payments" = "Účet, ktorý ste vybrali, nie je k dispozícii pre platby";
+
+"The accounts you selected aren't available for payments" = "Účty, ktoré ste vybrali, nie sú k dispozícii pre platby";
+
+"There was a problem accessing your %@ account" = "Vyskytol sa problém s prístupom k vášmu %@ účtu";
+
+"Try again, or %@." = "Skúste to znova alebo %@.";
+
+"Try searching another bank" = "Skúste vyhľadať inú banku";
+
+"Try searching another bank or %@" = "Skúste vyhľadať inú banku alebo %@";
+
+"Use information you previously saved with your Link account." = "Použite informácie, ktoré ste predtým uložili pomocou svojho účtu Link.";
+
+"Use test account" = "Použiť testovací účet";
+
+"Use test code" = "Použiť testovací kód";
+
+"Verify your email" = "Overiť váš e-mail";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Našli sme účty %1$li %2$@, ale môžete prepojiť iba bežné účty v USA s účtami %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Našli sme účty %1$li %2$@, ale môžete prepojiť iba bežné účty v USA.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Našli sme účty %1$li %2$@, ale môžete prepojiť iba bežné účty alebo sporiace účty s účtami %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Našli sme účty %1$li %2$@, ale môžete prepojiť iba bežné účty alebo sporiace účty.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Našli sme 1 účet %1$@, ale môžete prepojiť iba bežné účty v USA s účtom %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Našli sme 1 účet %@, ale môžete prepojiť iba bežné účty v USA.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Našli sme 1 účet %1$@, ale môžete prepojiť iba bežné alebo sporiace účty s účtom %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Našli sme 1 účet %@, ale môžete prepojiť iba bežné alebo sporiace účty.";
+
+"Yes, exit" = "Áno, ukončiť";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Mikro vklady na účet ••••%@ môžete očakávať do 1 – 2 dní a e-mail s ďalšími pokynmi.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Nedokončili ste prepojenie svojho účtu. Postup dokončíte stlačením tlačidla pokračovať.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Nedokončili ste prepojenie svojho bankového účtu a celý pokrok sa stratí.";
+
+"You're in test mode." = "Ste v testovacom režime.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Váš účet nie je možné v tomto čase spojiť. Prosím, manuálne zadajte údaje banky alebo to skúste neskôr znova.";
+
+"Your account can’t be connected at this time. Please try again later." = "Váš účet nie je možné spojiť teraz. Skúste to znova neskôr.";
+
+"Your account number couldn’t be accessed at this time" = "Číslo vášho účtu nebolo možné teraz sprístupniť";
+
+"Your account numbers don't match." = "Čísla účtov sa nezhodujú.";
+
+"Your account was connected, but couldn't be saved to Link." = "Váš účet bol pripojený, ale nebolo možné uloženie do služby Link.";
+
+"Your account was connected." = "Váš účet bol pripojený.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Vaše účty boli pripojené, ale nebolo možné uloženie do služby Link.";
+
+"Your accounts were connected." = "Vaše účty boli prípojené.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Vaše bankové údaje sa overia mikro vkladmi na váš účet, zvyčajne to trvá 1 – 2 pracovné dni. Podporované sú len bežné účty.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Vaše bankové údaje sa overia mikro vkladmi na váš účet. Zvyčajne to trvá 1 – 2 pracovné dni.";
+
+"Your email address is invalid." = "Vaša e-mailová adresa je neplatná.";
+
+"Your mobile phone number is incomplete." = "Vaše číslo mobilného telefónu je neúplné.";
+
+"contact us" = "kontaktujte nás";
+
+"manually enter details" = "manuálne zadajte podrobnosti";

@@ -100,8 +100,6 @@
 
 "Confirm" = "Vahvista";
 
-"Confirm it's you" = "Vahvista, että se olet sinä";
-
 "Confirm payment details" = "Vahvista maksutiedot";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
@@ -128,11 +126,7 @@
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
-"Enter the code sent to %@." = "Syötä koodi, joka lähetettiin numeroon %s.";
-
 "FPX Bank" = "FPX-pankki";
-
-"Failed to connect" = "Yhteyden muodostaminen epäonnistui";
 
 "Fast, secure checkout" = "Nopea, turvallinen maksaminen";
 
@@ -223,8 +217,6 @@
 "Remove card?" = "Poista kortti?";
 
 "Remove linked account" = "Poista linkitetty tili";
-
-"Resend code" = "Lähetä koodi uudelleen";
 
 "SEPA debit details cannot be changed." = "SEPA-pankkimaksun tietoja ei voi muuttaa.";
 

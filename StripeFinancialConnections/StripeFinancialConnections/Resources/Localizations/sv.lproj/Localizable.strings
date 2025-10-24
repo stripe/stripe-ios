@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ är för närvarande inte tillgänglig";
+
+"%@ is undergoing maintenance" = "%@ genomgår underhåll";
+
+"Account number is required." = "Kontonummer är obligatoriskt.";
+
+"Almost there" = "Nästan klar";
+
+"Can't find your bank?" = "Kan du inte hitta din bank?";
+
+"Checking and savings accounts are supported." = "Check- och sparkonton stöds.";
+
+"Choose a different bank" = "Välj en annan bank";
+
+"Click “Resend code” and try again, or %@." = "Klicka på \"Skicka koden igen\" och försök på nytt eller %@.";
+
+"Confirm account number" = "Bekräfta kontonummer";
+
+"Confirm the account number." = "Bekräfta kontonumret.";
+
+"Connect account" = "Anslut konto";
+
+"Connect accounts" = "Anslut konton";
+
+"Connect another account" = "Anslut ett annat konto";
+
+"Continue linking your account" = "Fortsätt länka ditt konto";
+
+"Continue with Link" = "Fortsätt med Link";
+
+"Email address" = "E-postadress";
+
+"Enter bank details" = "Ange bankuppgifter";
+
+"Enter bank details manually" = "Ange bankuppgifter manuellt";
+
+"Enter the code sent to %@" = "Ange koden som skickades till %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Ange koden som skickades till %@. Vi begär regelbundet att du genomför detta extrasteg för att skydda ditt konto.";
+
+"Exit without connecting?" = "Stäng utan att ansluta?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Den koden fungerade inte. Kontrollera den och försök igen.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Ogiltigt bankkontonummer: får vara högst %li tecken långt och får bara innehålla siffror.";
+
+"Invalid routing number." = "Ogiltigt clearingnummer.";
+
+"It looks like the verification code you provided is not valid anymore." = "Det verkar som att den angivna verifieringskoden inte längre är giltig.";
+
+"Learn more" = "Läs mer";
+
+"Maintenance is scheduled to end at %@." = "Underhållet är planerat att vara avslutat den %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Underhållet är planerat att vara avslutat den %1$@ kl %2$@.";
+
+"Manually enter details" = "Ange uppgifter manuellt";
+
+"No payment accounts available" = "Inga betalningskonton tillgängliga";
+
+"No results" = "Inga resultat";
+
+"Not now" = "Inte nu";
+
+"Only checking accounts are supported." = "Endast checkkonton stöds.";
+
+"Please enter %d digits for your routing number." = "Ange %li siffror för ditt clearingnummer.";
+
+"Please enter your bank details manually or select another bank." = "Ange dina bankuppgifter manuellt eller välj en annan bank.";
+
+"Please select another bank or try again later." = "Välj en annan bank eller försök igen senare.";
+
+"Please select another bank or try again." = "Välj en annan bank eller försök igen.";
+
+"Please select another bank." = "Välj en annan bank.";
+
+"Please try selecting another bank account." = "Försök välja ett annat bankkonto.";
+
+"Please try selecting another bank." = "Försök välja en annan bank.";
+
+"Retrieving accounts..." = "Hämtar konton ...";
+
+"Routing number" = "Clearingnummer";
+
+"Routing number is required." = "Clearingnummer måste anges.";
+
+"Search for more banks" = "Sök efter fler banker";
+
+"Select account" = "Välj konto";
+
+"Select accounts" = "Välj konton";
+
+"Select another bank" = "Välj en annan bank";
+
+"Select bank" = "Välj bank";
+
+"Something went wrong" = "Det inträffade ett fel";
+
+"Submit" = "Skicka";
+
+"Success" = "Klart!";
+
+"The account you selected isn't available for payments" = "Det konto du valde är inte tillgängligt för betalningar";
+
+"The accounts you selected aren't available for payments" = "De konton du valde är inte tillgängliga för betalningar";
+
+"There was a problem accessing your %@ account" = "Det uppstod ett problem med att få tillgång till ditt %@-konto";
+
+"Try again, or %@." = "Försök igen eller %@.";
+
+"Try searching another bank" = "Försök söka efter en annan bank";
+
+"Try searching another bank or %@" = "Försök söka efter en annan bank eller %@";
+
+"Use information you previously saved with your Link account." = "Använd information som du tidigare sparat på ditt Link-konto.";
+
+"Use test account" = "Använd testkonto";
+
+"Use test code" = "Använd testkod";
+
+"Verify your email" = "Verifiera din e-postadress";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Vi hittade %1$li %2$@ konton men du kan bara koppla amerikanska checkkonton till %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Vi hittade %1$li %2$@ konton men du kan bara koppla amerikanska checkkonton.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Vi hittade %1$li %2$@ konton men du kan bara koppla check- eller sparkonton till %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Vi hittade %1$li %2$@ konton, men du kan bara koppla check- eller sparkonton.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Vi hittade 1 %1$@ konto men du kan bara koppla amerikanska checkkonton till %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Vi hittade 1 %@ konto, men du kan bara koppla amerikanska checkkonton.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Vi hittade 1 %1$@ konto men du kan bara koppla check- eller sparkonton till %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Vi hittade 1 %@ konto men du kan bara koppla check- eller sparkonton.";
+
+"Yes, exit" = "Ja, avsluta";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Du kan förvänta dig mikroinsättningar på konto ••••%@ om 1–2 dagar och ett e-postmeddelande med ytterligare instruktioner.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Du har inte avslutat länkningen av ditt konto. Klicka på fortsätt för att avsluta processen.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Du är inte klar med länkningen av ditt bankkonto och ändringarna kommer inte att sparas.";
+
+"You're in test mode." = "Du är i testläge.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Det gick inte att ansluta ditt konto just nu. Ange dina bankuppgifter manuellt eller försök igen senare.";
+
+"Your account can’t be connected at this time. Please try again later." = "Det gick inte att ansluta ditt konto just nu. Försök igen senare.";
+
+"Your account number couldn’t be accessed at this time" = "Ditt kontonummer är inte tillgängligt just nu";
+
+"Your account numbers don't match." = "Dina kontonummer matchar inte.";
+
+"Your account was connected, but couldn't be saved to Link." = "Ditt konto har anslutits, men kunde inte sparas på Link.";
+
+"Your account was connected." = "Ditt konto har anslutits.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Dina konton har anslutits, men kunde inte sparas på Link.";
+
+"Your accounts were connected." = "Dina konton har anslutits.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Dina bankuppgifter kommer att verifieras via mikroinsättningar på ditt konto, normalt inom 1–2 arbetsdagar. Endast checkkonton stöds.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Dina bankuppgifter kommer att verifieras med mikroinsättningar på ditt konto. Detta tar normalt 1–2 arbetsdagar.";
+
+"Your email address is invalid." = "Din e-postadress är ogiltig.";
+
+"Your mobile phone number is incomplete." = "Ditt mobilnummer är ofullständigt.";
+
+"contact us" = "kontakta oss";
+
+"manually enter details" = "ange uppgifter manuellt";

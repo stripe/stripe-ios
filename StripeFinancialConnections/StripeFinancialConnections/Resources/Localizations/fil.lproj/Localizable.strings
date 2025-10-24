@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ ay kasalukuyang hindi available";
+
+"%@ is undergoing maintenance" = "%@ ay sumasailalim sa pagpapanatili";
+
+"Account number is required." = "Kailangan ang numero ng account.";
+
+"Almost there" = "Malapit na";
+
+"Can't find your bank?" = "Hindi mahanap ang iyong bangko?";
+
+"Checking and savings accounts are supported." = "Suportado ang mga checking at savings account.";
+
+"Choose a different bank" = "Pumili ng ibang bangko";
+
+"Click “Resend code” and try again, or %@." = "I-click ang “Resend code” at subukan muli, o %@.";
+
+"Confirm account number" = "Kumpirmahin ang numero ng account";
+
+"Confirm the account number." = "Kumpirmahin ang numero ng account.";
+
+"Connect account" = "Ikonekta ang account";
+
+"Connect accounts" = "Magkonekta ng mga account";
+
+"Connect another account" = "Magkonekta ng ibang account";
+
+"Continue linking your account" = "Magpatuloy sa pag-link sa iyong account";
+
+"Continue with Link" = "Magpatuloy sa Link";
+
+"Email address" = "Email address";
+
+"Enter bank details" = "Ilagay ang mga detalye ng bangko";
+
+"Enter bank details manually" = "Manu-manong ilagay ang mga detalye ng bangko";
+
+"Enter the code sent to %@" = "Ilagay ang code na ipinadala sa %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Ilagay ang code na ipinadala sa %@. Paminsan-minsan naming hinihingi ang karagdagang hakbang na ito para panatilihing ligtas ang iyong account.";
+
+"Exit without connecting?" = "Lumabas nang hindi kumokonekta?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Hmm, hindi gumana ang code na iyan. Tingnan muli ito at subukan muli.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Hindi valid na numero ng account sa bangko: dapat ay hanggang %li (na) digit lang ang haba, na naglalaman lang ng mga numero.";
+
+"Invalid routing number." = "Hindi valid na numero ng pagruruta.";
+
+"It looks like the verification code you provided is not valid anymore." = "Mukhang ang ibinigay na code ng pagpapatunay ay hindi na valid.";
+
+"Learn more" = "Alamin ang higit pa";
+
+"Maintenance is scheduled to end at %@." = "Nakatakdang matapos ang pagpapanatili sa %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Nakatakdang matapos ang pagpapanatili sa %1$@ sa %2$@.";
+
+"Manually enter details" = "Manu-manong ilagay ang mga detalye";
+
+"No payment accounts available" = "Walang available na mga account ng pagbabayad";
+
+"No results" = "Walang mga resulta";
+
+"Not now" = "Hindi ngayon";
+
+"Only checking accounts are supported." = "Mga checking account lang ang suportado.";
+
+"Please enter %d digits for your routing number." = "Mangyaring maglagay ng %li (na) digit para sa iyong numero ng pagruruta.";
+
+"Please enter your bank details manually or select another bank." = "Mangyaring manu-manong ilagay ang iyong mga detalye ng bangko o pumili ng ibang bangko.";
+
+"Please select another bank or try again later." = "Mangyaring pumili ng ibang bangko o subukan muli mamaya.";
+
+"Please select another bank or try again." = "Mangyaring pumili ng ibang bangko o subukan muli mamaya.";
+
+"Please select another bank." = "Mangyaring pumili ng ibang bangko.";
+
+"Please try selecting another bank account." = "Pakisubukang pumili ng ibang account sa bangko.";
+
+"Please try selecting another bank." = "Pakisubukang pumili ng ibang bangko.";
+
+"Retrieving accounts..." = "Nire-retrieve ang mga account...";
+
+"Routing number" = "Numero ng pagruruta";
+
+"Routing number is required." = "Kailangan ang numero ng pagruruta";
+
+"Search for more banks" = "Maghanap ng mga iba pang bangko";
+
+"Select account" = "Pumili ng account";
+
+"Select accounts" = "Pumili ng mga account";
+
+"Select another bank" = "Pumili ng ibang bangko";
+
+"Select bank" = "Piliin ang bangko";
+
+"Something went wrong" = "May nangyaring mali";
+
+"Submit" = "Isumite";
+
+"Success" = "Tagumpay";
+
+"The account you selected isn't available for payments" = "Hindi available para sa mga pagbabayad ang account na napili mo";
+
+"The accounts you selected aren't available for payments" = "Hindi available para sa mga pagbabayad ang mga account na napili mo";
+
+"There was a problem accessing your %@ account" = "Nagkaroon ng problema sa pag-access sa iyong %@ account";
+
+"Try again, or %@." = "Subukan muli, o %@.";
+
+"Try searching another bank" = "Subukang maghanap ng ibang bangko";
+
+"Try searching another bank or %@" = "Subukang maghanap ng ibang bangko o %@";
+
+"Use information you previously saved with your Link account." = "Gamitin ang impormasyon na dati mong na-save sa iyong Link account.";
+
+"Use test account" = "Gumamit ng test account";
+
+"Use test code" = "Gumamit ng test code";
+
+"Verify your email" = "Patunayan ang iyong email";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "May nakita kaming %1$li %2$@ (na) account pero mga US checking account lang ang puwede mong i-link sa %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "May nakita kaming %1$li %2$@ (na) account pero mga US checking account lang ang puwede mong i-link.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "May nakita kaming %1$li %2$@ (na) account pero mga checking o savings account lang ang puwede mong i-link sa %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "May nakita kaming %1$li %2$@ (na) account pero mga checking o savings account lang ang puwede mong i-link.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "May nakita kaming 1 %1$@ account pero mga US checking account lang ang puwede mong i-link sa %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "May nakita kaming 1 %1$@ account pero mga US checking account lang ang puwede mong i-link.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "May nakita kaming 1 %1$@ account pero mga checking o savings account lang ang puwede mong i-link sa %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "May nakita kaming 1 %1$@ account pero mga checking o savings account lang ang puwede mong i-link.";
+
+"Yes, exit" = "Oo, umalis";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Asahan mo ang maliliit na deposito sa account na ••••%@ sa loob ng 1-2 araw at isang email na may mga iba pang tagubilin.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Hindi mo pa natapos ang pag-link sa iyong account. Pindutin ang magpatuloy para tapusin ang proseso.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Hindi mo pa natapos ang pag-link sa iyong account sa bangko at mawawala ang lahat ng nagawa.";
+
+"You're in test mode." = "Nasa test mode ka.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Hindi maikonekta ang iyong account sa ngayon. Mangyaring manu-manong ilagay ang iyong mga detalye ng bangko o subukan muli mamaya.";
+
+"Your account can’t be connected at this time. Please try again later." = "Hindi makonekta ang iyong account sa ngayon. Pakisubukan muli mamaya.";
+
+"Your account number couldn’t be accessed at this time" = "Hindi ma-access ang numero ng iyong account sa ngayon";
+
+"Your account numbers don't match." = "Hindi nagtutugma ang mga numero ng account mo.";
+
+"Your account was connected, but couldn't be saved to Link." = "Naikonekta ang iyong account, pero hindi mai-save sa Link.";
+
+"Your account was connected." = "Naikonekta ang iyong account.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Naikonekta ang iyong mga account, pero hindi mai-save sa Link.";
+
+"Your accounts were connected." = "Naikonekta ang iyong mga account.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Ibe-verify ang impormasyon ng iyong bangko sa pamamagitan ng mga micro-deposit sa iyong account, karaniwan sa loob ng 1-2 araw ng trabaho. Mga checking account lang ang suportado.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Ibe-verify ang impormasyon ng iyong bangko ng mga micro-deposit sa iyong account. Karaniwan itong tumatagal ng 1-2 araw ng trabaho.";
+
+"Your email address is invalid." = "Hindi valid ang iyong email address.";
+
+"Your mobile phone number is incomplete." = "Ang iyong numero ng mobile na telepono ay kulang.";
+
+"contact us" = "makipag-ugnayan sa amin";
+
+"manually enter details" = "manu-manong ilagay ang mga detalye";

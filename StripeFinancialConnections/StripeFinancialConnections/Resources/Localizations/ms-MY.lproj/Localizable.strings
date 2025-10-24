@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ tidak tersedia pada masa ini";
+
+"%@ is undergoing maintenance" = "%@ sedang menjalani penyelenggaraan";
+
+"Account number is required." = "Nombor akaun diperlukan.";
+
+"Almost there" = "Hampir selesai";
+
+"Can't find your bank?" = "Tidak jumpa bank anda?";
+
+"Checking and savings accounts are supported." = "Akaun semasa dan simpanan disokong.";
+
+"Choose a different bank" = "Pilih bank yang berbeza";
+
+"Click “Resend code” and try again, or %@." = "Klik “Hantar semula kod” dan cuba lagi, atau %@.";
+
+"Confirm account number" = "Sahkan nombor akaun";
+
+"Confirm the account number." = "Sahkan nombor akaun.";
+
+"Connect account" = "Hubungkan akaun";
+
+"Connect accounts" = "Hubungkan akaun";
+
+"Connect another account" = "Hubungkan akaun yang lain";
+
+"Continue linking your account" = "Teruskan pemautan akaun anda";
+
+"Continue with Link" = "Teruskan dengan Link";
+
+"Email address" = "Alamat e-mel";
+
+"Enter bank details" = "Masukkan butiran bank";
+
+"Enter bank details manually" = "Masukkan butiran bank secara manual";
+
+"Enter the code sent to %@" = "Masukkan kod yang dihantar ke %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Masukkan kod yang dihantar ke %@. Kami meminta langkah tambahan ini secara berkala untuk memastikan akaun anda selamat.";
+
+"Exit without connecting?" = "Keluar tanpa membuat sambungan?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Hmm, kod tersebut tidak betul. Semak sekali lagi dan cuba semula.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Nombor akaun bank tidak sah: mestilah paling banyak %li digit panjangnya, mengandungi nombor sahaja.";
+
+"Invalid routing number." = "Nombor penghalaan tidak sah.";
+
+"It looks like the verification code you provided is not valid anymore." = "Nampaknya kod penentusahan yang anda berikan tidak lagi sah.";
+
+"Learn more" = "Ketahui selanjutnya";
+
+"Maintenance is scheduled to end at %@." = "Penyelenggaraan dijadualkan tamat pada %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Penyelenggaraan dijadualkan tamat pada %1$@ %2$@.";
+
+"Manually enter details" = "Masukkan butiran secara manual";
+
+"No payment accounts available" = "Tiada akaun pembayaran tersedia";
+
+"No results" = "Tiada hasil";
+
+"Not now" = "Bukan sekarang";
+
+"Only checking accounts are supported." = "Hanya akaun semasa disokong.";
+
+"Please enter %d digits for your routing number." = "Sila masukkan %li digit untuk nombor penghalaan anda.";
+
+"Please enter your bank details manually or select another bank." = "Sila masukkan butiran bank anda secara manual atau pilih bank yang lain.";
+
+"Please select another bank or try again later." = "Sila pilih bank yang lain atau cuba lagi kemudian.";
+
+"Please select another bank or try again." = "Sila pilih bank yang lain atau cuba lagi.";
+
+"Please select another bank." = "Sila pilih bank yang lain.";
+
+"Please try selecting another bank account." = "Sila cuba pilih akaun bank yang lain.";
+
+"Please try selecting another bank." = "Sila cuba pilih bank yang lain.";
+
+"Retrieving accounts..." = "Akaun sedang didapatkan kembali...";
+
+"Routing number" = "Nombor penghalaan";
+
+"Routing number is required." = "Nombor penghalaan diperlukan.";
+
+"Search for more banks" = "Cari lebih banyak bank";
+
+"Select account" = "Pilih akaun";
+
+"Select accounts" = "Pilih akaun";
+
+"Select another bank" = "Pilih bank yang lain";
+
+"Select bank" = "Pilih bank";
+
+"Something went wrong" = "Ada sesuatu yang tidak kena";
+
+"Submit" = "Serahkan";
+
+"Success" = "Berjaya";
+
+"The account you selected isn't available for payments" = "Akaun yang anda pilih tidak tersedia untuk pembayaran";
+
+"The accounts you selected aren't available for payments" = "Akaun yang anda pilih tidak tersedia untuk pembayaran";
+
+"There was a problem accessing your %@ account" = "Ada masalah ketika mengakses akaun %@ anda";
+
+"Try again, or %@." = "Cuba lagi atau %@.";
+
+"Try searching another bank" = "Cuba cari bank lain";
+
+"Try searching another bank or %@" = "Cuba cari bank lain atau %@";
+
+"Use information you previously saved with your Link account." = "Gunakan maklumat yang anda simpan sebelum ini dengan akaun Link anda.";
+
+"Use test account" = "Gunakan akaun ujian";
+
+"Use test code" = "Gunakan kod ujian";
+
+"Verify your email" = "Tentusahkan e-mel anda";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Kami menemui akaun %1$li %2$@ tetapi anda hanya boleh memautkan akaun semakan AS kepada %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Kami menemui akaun %1$li %2$@ tetapi anda hanya boleh memautkan akaun semakan AS.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Kami menemui akaun %1$li %2$@ tetapi anda hanya boleh memautkan akaun semakan atau simpanan kepada %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Kami menemui akaun %1$li %2$@ tetapi anda hanya boleh memautkan akaun semakan atau simpanan.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Kami menemui 1 akaun %1$@ tetapi anda hanya boleh memautkan akaun semakan AS kepada %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Kami menemui 1 %@ akaun tetapi anda hanya boleh memautkan akaun semakan AS.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Kami menemui 1 akaun %1$@ tetapi anda hanya boleh memautkan akaun semakan atau simpanan kepada %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Kami menemui 1 %@ akaun tetapi anda hanya boleh memautkan akaun semakan atau simpanan.";
+
+"Yes, exit" = "Ya, keluar";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Anda boleh menjangkakan deposit mikro kepada akaun ••••%@ dalam masa 1 – 2 hari dan satu e-mel dengan arahan selanjutnya.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Anda belum selesai memautkan akaun anda. Tekan teruskan untuk menyelesaikan proses.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Anda belum selesai memautkan akaun bank anda dan semua kemajuan akan hilang.";
+
+"You're in test mode." = "Anda berada dalam mod ujian.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Akaun anda tidak boleh dihubungkan pada masa ini. Sila masukkan butiran bank anda secara manual atau cuba lagi kemudian.";
+
+"Your account can’t be connected at this time. Please try again later." = "Akaun anda tidak boleh dihubungkan pada masa ini. Sila cuba lagi kemudian.";
+
+"Your account number couldn’t be accessed at this time" = "Nombor akaun anda tidak dapat diakses pada masa ini";
+
+"Your account numbers don't match." = "Nombor akaun anda tidak sepadan.";
+
+"Your account was connected, but couldn't be saved to Link." = "Akaun anda telah dihubungkan, tetapi tidak dapat disimpan pada Link.";
+
+"Your account was connected." = "Akaun anda telah dihubungkan.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Akaun anda telah dihubungkan, tetapi tidak dapat disimpan pada Link.";
+
+"Your accounts were connected." = "Akaun anda telah dihubungkan.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Maklumat bank anda akan ditentusahkan melalui deposit mikro kepada akaun anda, yang biasanya mengambil masa 1 – 2 hari bekerja. Hanya akaun semasa disokong.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Maklumat bank anda akan ditentusahkan dengan deposit mikro kepada akaun anda. Ini biasanya mengambil masa 1 – 2 hari bekerja.";
+
+"Your email address is invalid." = "Alamat e-mel anda tidak sah.";
+
+"Your mobile phone number is incomplete." = "Nombor telefon mudah alih anda tidak lengkap.";
+
+"contact us" = "hubungi kami";
+
+"manually enter details" = "masukkan butiran secara manual";
