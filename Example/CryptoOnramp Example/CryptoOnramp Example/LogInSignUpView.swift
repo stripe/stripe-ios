@@ -22,26 +22,18 @@ struct LogInSignUpView: View {
     /// Whether livemode is enabled, which can be toggled from this view.
     @Binding var livemode: Bool
 
+    /// Specifies an alert originating from this view to display by the parent.
+    @Binding var alert: Alert?
+
     @Environment(\.isLoading) private var isLoading
 
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
-    @State private var alert: Alert?
     @State private var isShowingScopesSheet = false
 
     @FocusState private var isEmailFieldFocused: Bool
     @FocusState private var isPasswordFieldFocused: Bool
-
-    private var isPresentingAlert: Binding<Bool> {
-        Binding(get: {
-            alert != nil
-        }, set: { newValue in
-            if !newValue {
-                alert = nil
-            }
-        })
-    }
 
     private var shouldDisableButtons: Bool {
         isLoading.wrappedValue || email.isEmpty || password.isEmpty || coordinator == nil
@@ -93,13 +85,6 @@ struct LogInSignUpView: View {
             }
             .padding()
         }
-        .alert(
-            alert?.title ?? "Error",
-            isPresented: isPresentingAlert,
-            presenting: alert,
-            actions: { _ in Button("OK") {} },
-            message: { alert in Text(alert.message) }
-        )
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
@@ -243,7 +228,8 @@ struct LogInSignUpView: View {
         LogInSignUpView(
             coordinator: coordinator,
             flowCoordinator: .init(),
-            livemode: .constant(false)
+            livemode: .constant(false),
+            alert: .constant(nil)
         )
     }
 }

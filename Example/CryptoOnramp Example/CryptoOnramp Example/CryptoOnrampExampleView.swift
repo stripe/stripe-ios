@@ -21,6 +21,9 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var livemode: Bool = false
     @State private var alert: Alert?
+    @State private var seamlessSignInEmail: String? = APIClient.shared.seamlessSignInEmail
+
+    @AppStorage(DefaultsKeys.seamlessSignInDetails) private var storedSeamlessSignInData: Data?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -46,11 +49,24 @@ struct CryptoOnrampExampleView: View {
 
     var body: some View {
         NavigationStack(path: flowCoordinator.pathBinding) {
-            LogInSignUpView(
-                coordinator: coordinator,
-                flowCoordinator: flowCoordinator,
-                livemode: $livemode
-            )
+            ZStack {
+                if let seamlessSignInEmail {
+                    SeamlessSignInView(
+                        coordinator: coordinator,
+                        flowCoordinator: flowCoordinator,
+                        email: seamlessSignInEmail,
+                        alert: $alert
+                    )
+                } else {
+                    LogInSignUpView(
+                        coordinator: coordinator,
+                        flowCoordinator: flowCoordinator,
+                        livemode: $livemode,
+                        alert: $alert
+                    )
+                }
+            }
+            .animation(.default, value: seamlessSignInEmail)
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
@@ -135,7 +151,22 @@ struct CryptoOnrampExampleView: View {
         }
         .onChange(of: livemode) { _ in
             coordinator = nil
+            APIClient.shared.clearAuthState()
             initializeCoordinator()
+        }
+        .onChange(of: storedSeamlessSignInData == nil) { didClearSeamlessSignInData in
+            // Clear our local seamless sign-in state if the app storage data becomes `nil`.
+            // Note that we don’t update it here if it becomes non-nil, as we don’t want this view
+            // to transition to display `SeamlessSignInView` while manually authenticating when
+            // the credentials initially become available.
+            guard didClearSeamlessSignInData else { return }
+            seamlessSignInEmail = nil
+        }
+        .onChange(of: flowCoordinator.pathBinding.wrappedValue.isEmpty) { isEmpty in
+            // Update our local storage to remember the authenticated user once we've navigated
+            // away from this view. See the comments in the `onChange(of:)` above.
+            guard !isEmpty else { return }
+            seamlessSignInEmail = APIClient.shared.seamlessSignInEmail
         }
     }
 

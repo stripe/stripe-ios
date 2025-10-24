@@ -15,6 +15,7 @@ extension ConsumerSession {
             case signup = "SIGNUP"
             case email = "EMAIL"
             case sms = "SMS"
+            case linkAuthToken = "LINK_AUTH_TOKEN"
             case unparsable = ""
         }
 
@@ -35,6 +36,10 @@ extension ConsumerSession {
 extension Sequence where Iterator.Element == ConsumerSession.VerificationSession {
     var containsVerifiedSMSSession: Bool {
         return contains(where: { $0.type == .sms && $0.state == .verified })
+    }
+
+    var containsVerifiedLinkAuthTokenSession: Bool {
+        return contains(where: { $0.type == .linkAuthToken && $0.state == .verified })
     }
 
     var isVerifiedForSignup: Bool {

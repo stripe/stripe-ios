@@ -111,6 +111,10 @@ extension ConsumerSession {
         verificationSessions.containsVerifiedSMSSession
     }
 
+    var isVerifiedWithLinkAuthToken: Bool {
+        verificationSessions.containsVerifiedLinkAuthTokenSession
+    }
+
     var hasStartedSMSVerification: Bool {
         verificationSessions.contains( where: { $0.type == .sms && $0.state == .started })
     }
