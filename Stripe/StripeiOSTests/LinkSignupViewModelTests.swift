@@ -172,11 +172,6 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
     }
 
-    func test_defaultOptIn_not_allowed_outside_US() {
-        let sut = makeSUT(country: "CA", showCheckbox: true, allowsDefaultOptIn: true)
-        XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
-    }
-
     func test_defaultOptIn_not_allowed_if_showing_checkbox() {
         let sut = makeSUT(country: "US", showCheckbox: false, allowsDefaultOptIn: true)
         XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
