@@ -270,6 +270,7 @@ import Foundation
     case unexpectedStripeUICoreBSBNumberProvider = "unexpected_error.stripeuicore.bsbnumberprovider"
     case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
     case unexpectedCustomerSheetError = "unexpected_error.customersheet"
+    case unexpectedPMMEError = "unexpected_error.paymentmethodmessagingelement"
     case unexpectedPaymentSheetConfirmationError = "unexpected_error.paymentsheet.confirmation"
     case unexpectedPaymentSheetViewControllerError = "unexpected_error.paymentsheet.paymentsheetviewcontroller"
     case unexpectedFlowControllerViewControllerError = "unexpected_error.paymentsheet.flowcontrollerviewcontroller"
