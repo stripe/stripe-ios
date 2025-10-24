@@ -157,16 +157,7 @@ public class PaymentSheet {
                     self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
                 }
                 if loadResult.elementsSession.shouldAttestOnConfirmation {
-                    Task {
-                        STPAnalyticsClient.sharedClient.logAttestationConfirmationInit()
-                        let startTime = Date()
-                        let canAttest = await self.configuration.apiClient.stripeAttest.prepareAttestation()
-                        if canAttest {
-                            STPAnalyticsClient.sharedClient.logAttestationConfirmationInitSucceeded(duration: Date().timeIntervalSince(startTime))
-                        } else {
-                            STPAnalyticsClient.sharedClient.logAttestationConfirmationInitFailed(duration: Date().timeIntervalSince(startTime))
-                        }
-                    }
+                    self.attestationConfirmationChallenge = AttestationConfirmationChallenge(stripeAttest: self.configuration.apiClient.stripeAttest)
                 }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
@@ -282,6 +273,7 @@ public class PaymentSheet {
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    var attestationConfirmationChallenge: AttestationConfirmationChallenge?
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -302,6 +294,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentHandler: self.paymentHandler,
                 integrationShape: .complete,
                 passiveCaptchaChallenge: self.passiveCaptchaChallenge,
+                attestationConfirmationChallenge: self.attestationConfirmationChallenge,
                 analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {

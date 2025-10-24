@@ -43,6 +43,7 @@ extension PaymentSheet {
         integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
         passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
+        attestationConfirmationChallenge: AttestationConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -61,7 +62,7 @@ extension PaymentSheet {
                                                 confirmAction: {
                 // If confirmed, dismiss the MandateView and complete the transaction:
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
-                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, analyticsHelper: analyticsHelper, completion: completion)
+                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, attestationConfirmationChallenge: attestationConfirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
             }, cancelAction: {
                 // Dismiss the MandateView and return to PaymentSheet
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
@@ -90,7 +91,7 @@ extension PaymentSheet {
                 configuration: configuration,
                 onCompletion: { vc, intentConfirmParams in
                     vc.dismiss(animated: true)
-                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, analyticsHelper: analyticsHelper, completion: completion)
+                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, attestationConfirmationChallenge: attestationConfirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
                 },
                 onCancel: { vc in
                     vc.dismiss(animated: true)
@@ -109,7 +110,7 @@ extension PaymentSheet {
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, analyticsHelper: analyticsHelper, completion: completion)
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, attestationConfirmationChallenge: attestationConfirmationChallenge, analyticsHelper: analyticsHelper, completion: completion)
         }
     }
 
@@ -122,6 +123,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
         passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
+        attestationConfirmationChallenge: AttestationConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodID: String? = nil
     ) async -> (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) {
@@ -137,6 +139,7 @@ extension PaymentSheet {
                     integrationShape: integrationShape,
                     paymentMethodID: paymentMethodID,
                     passiveCaptchaChallenge: passiveCaptchaChallenge,
+                    attestationConfirmationChallenge: attestationConfirmationChallenge,
                     analyticsHelper: analyticsHelper
                 ) { result, deferredType in
                     continuation.resume(returning: (result, deferredType))
@@ -156,6 +159,7 @@ extension PaymentSheet {
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
         passiveCaptchaChallenge: PassiveCaptchaChallenge?,
+        attestationConfirmationChallenge: AttestationConfirmationChallenge?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -190,8 +194,8 @@ extension PaymentSheet {
         case let .new(confirmParams):
             Task { @MainActor in
                 let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                let assertionHandle: StripeAttest.AssertionHandle? = await elementsSession.shouldAttestOnConfirmation ? configuration.apiClient.stripeAttest.assertWithTimeout() : nil
-                let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
+                let assertion = await attestationConfirmationChallenge?.fetchAssertion()
+                let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
                     case .stripe(let paymentMethodType):
@@ -224,10 +228,10 @@ extension PaymentSheet {
                         params,
                         with: authenticationContext,
                         completion: { actionStatus, paymentIntent, error in
+                            Task { await attestationConfirmationChallenge?.complete() }
                             if let paymentIntent {
                                 setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                             }
-                            assertionHandle?.complete()
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
@@ -247,10 +251,10 @@ extension PaymentSheet {
                         setupIntentParams,
                         with: authenticationContext,
                         completion: { actionStatus, setupIntent, error in
+                            Task { await attestationConfirmationChallenge?.complete() }
                             if let setupIntent {
                                 setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
                             }
-                            assertionHandle?.complete()
                             paymentHandlerCompletion(actionStatus, error)
                         }
                     )
@@ -271,7 +275,7 @@ extension PaymentSheet {
                         allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                         elementsSession: elementsSession,
                         completion: { result, confirmType in
-                            assertionHandle?.complete()
+                            Task { await attestationConfirmationChallenge?.complete() }
                             completion(result, confirmType)
                         }
                     )
@@ -339,8 +343,8 @@ extension PaymentSheet {
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                    let assertionHandle: StripeAttest.AssertionHandle? = await elementsSession.shouldAttestOnConfirmation ? configuration.apiClient.stripeAttest.assertWithTimeout() : nil
-                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
+                    let assertion = await attestationConfirmationChallenge?.fetchAssertion()
+                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
                     paymentMethodParams.radarOptions = radarOptions
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
@@ -359,7 +363,7 @@ extension PaymentSheet {
                             paymentIntentParams,
                             with: authenticationContext,
                             completion: { actionStatus, _, error in
-                                assertionHandle?.complete()
+                                Task { await attestationConfirmationChallenge?.complete() }
                                 paymentHandlerCompletion(actionStatus, error)
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
@@ -375,7 +379,7 @@ extension PaymentSheet {
                             setupIntentParams,
                             with: authenticationContext,
                             completion: { actionStatus, _, error in
-                                assertionHandle?.complete()
+                                Task { await attestationConfirmationChallenge?.complete() }
                                 paymentHandlerCompletion(actionStatus, error)
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
@@ -396,10 +400,10 @@ extension PaymentSheet {
                             isFlowController: isFlowController,
                             elementsSession: elementsSession,
                             completion: { psResult, confirmationType in
+                                Task { await attestationConfirmationChallenge?.complete() }
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
                                 }
-                                assertionHandle?.complete()
                                 completion(psResult, confirmationType)
                             }
                         )
@@ -409,8 +413,8 @@ extension PaymentSheet {
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool, STPClientAttributionMetadata?) -> Void = { paymentMethod, linkAccount, shouldSave, clientAttributionMetadata in
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                    let assertionHandle: StripeAttest.AssertionHandle? = await elementsSession.shouldAttestOnConfirmation ? configuration.apiClient.stripeAttest.assertWithTimeout() : nil
-                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
+                    let assertion = await attestationConfirmationChallenge?.fetchAssertion()
+                    let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                     let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                     // Tell Stripe to infer mandate info from client
@@ -436,10 +440,10 @@ extension PaymentSheet {
                             paymentIntentParams,
                             with: authenticationContext,
                             completion: { actionStatus, _, error in
+                                Task { await attestationConfirmationChallenge?.complete() }
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
                                 }
-                                assertionHandle?.complete()
                                 paymentHandlerCompletion(actionStatus, error)
                             }
                         )
@@ -454,10 +458,10 @@ extension PaymentSheet {
                             setupIntentParams,
                             with: authenticationContext,
                             completion: { actionStatus, _, error in
+                                Task { await attestationConfirmationChallenge?.complete() }
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
                                 }
-                                assertionHandle?.complete()
                                 paymentHandlerCompletion(actionStatus, error)
                             }
                         )
@@ -471,10 +475,10 @@ extension PaymentSheet {
                             isFlowController: isFlowController,
                             elementsSession: elementsSession,
                             completion: { psResult, confirmationType in
+                                Task { await attestationConfirmationChallenge?.complete() }
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
                                 }
-                                assertionHandle?.complete()
                                 completion(psResult, confirmationType)
                             }
                         )
@@ -564,12 +568,12 @@ extension PaymentSheet {
             case .wallet:
                 let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
                 if useNativeLink {
-                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper, passiveCaptchaChallenge: passiveCaptchaChallenge)
+                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper, passiveCaptchaChallenge: passiveCaptchaChallenge, attestationConfirmationChallenge: attestationConfirmationChallenge)
                     linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                         completion(result, confirmationType)
                     })
                 } else {
-                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, passiveCaptchaChallenge: passiveCaptchaChallenge)
+                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, passiveCaptchaChallenge: passiveCaptchaChallenge, attestationConfirmationChallenge: attestationConfirmationChallenge)
                     linkController.present(from: authenticationContext.authenticationPresentingViewController(),
                                            completion: completion)
                 }

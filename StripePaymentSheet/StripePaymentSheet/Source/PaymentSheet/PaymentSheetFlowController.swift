@@ -279,6 +279,7 @@ extension PaymentSheet {
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
         private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+        private var attestationConfirmationChallenge: AttestationConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
 
         // MARK: - Initializer (Internal)
@@ -298,16 +299,7 @@ extension PaymentSheet {
                 self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
             }
             if loadResult.elementsSession.shouldAttestOnConfirmation {
-                Task {
-                    STPAnalyticsClient.sharedClient.logAttestationConfirmationInit()
-                    let startTime = Date()
-                    let canAttest = await self.configuration.apiClient.stripeAttest.prepareAttestation()
-                    if canAttest {
-                        STPAnalyticsClient.sharedClient.logAttestationConfirmationInitSucceeded(duration: Date().timeIntervalSince(startTime))
-                    } else {
-                        STPAnalyticsClient.sharedClient.logAttestationConfirmationInitFailed(duration: Date().timeIntervalSince(startTime))
-                    }
-                }
+                self.attestationConfirmationChallenge = AttestationConfirmationChallenge(stripeAttest: self.configuration.apiClient.stripeAttest)
             }
             updatePaymentOption()
         }

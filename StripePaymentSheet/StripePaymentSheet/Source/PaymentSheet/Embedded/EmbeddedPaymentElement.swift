@@ -357,6 +357,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    internal var attestationConfirmationChallenge: AttestationConfirmationChallenge?
 
     internal init(
         configuration: Configuration,
@@ -379,16 +380,7 @@ public final class EmbeddedPaymentElement {
             self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
         }
         if loadResult.elementsSession.shouldAttestOnConfirmation {
-            Task {
-                STPAnalyticsClient.sharedClient.logAttestationConfirmationInit()
-                let startTime = Date()
-                let canAttest = await self.configuration.apiClient.stripeAttest.prepareAttestation()
-                if canAttest {
-                    STPAnalyticsClient.sharedClient.logAttestationConfirmationInitSucceeded(duration: Date().timeIntervalSince(startTime))
-                } else {
-                    STPAnalyticsClient.sharedClient.logAttestationConfirmationInitFailed(duration: Date().timeIntervalSince(startTime))
-                }
-            }
+            self.attestationConfirmationChallenge = AttestationConfirmationChallenge(stripeAttest: self.configuration.apiClient.stripeAttest)
         }
     }
 }

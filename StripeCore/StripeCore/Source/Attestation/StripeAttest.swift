@@ -51,39 +51,6 @@ import UIKit
         }
     }
 
-    @_spi(STP) public func assertWithTimeout() async -> AssertionHandle? {
-        STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestToken()
-        let startTime = Date()
-        return await withCheckedContinuation { continuation in
-            var nillableContinuation: CheckedContinuation<AssertionHandle?, Never>? = continuation
-            // Start the assertion task
-            Task {
-                let result: AssertionHandle?
-                do {
-                    result = try await self.assert(canSyncState: false)
-                    STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
-                } catch {
-                    result = nil
-                    STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenFailed(duration: Date().timeIntervalSince(startTime))
-                }
-                Task { @MainActor in
-                    nillableContinuation?.resume(returning: result)
-                    nillableContinuation = nil
-                }
-            }
-
-            // Start the timeout task
-            Task {
-                try? await Task.sleep(nanoseconds: 500_000_000_000) // 6 seconds
-                STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenFailed(duration: Date().timeIntervalSince(startTime))
-                Task { @MainActor in
-                    nillableContinuation?.resume(returning: nil)
-                    nillableContinuation = nil
-                }
-            }
-        }
-    }
-
     /// Determines if the current device is able to sign requests.
     /// If the device has not attested previously, we will create a key and attest it.
     /// If `true`, the device is ready for attestation. If `false`, attestation is not possible.
@@ -519,43 +486,5 @@ extension StripeAttest {
                 await stripeAttest.assertionCompleted()
             }
         }
-    }
-}
-
-extension STPAnalyticsClient {
-    @_spi(STP) public func logAttestationConfirmationInit() {
-        log(
-            analytic: GenericAnalytic(event: .attestationConfirmationInit, params: [:])
-        )
-    }
-
-    @_spi(STP) public func logAttestationConfirmationInitSucceeded(duration: TimeInterval) {
-        log(
-            analytic: GenericAnalytic(event: .attestationConfirmationInitSucceeded, params: ["duration": duration * 1000])
-        )
-    }
-
-    @_spi(STP) public func logAttestationConfirmationInitFailed(duration: TimeInterval) {
-        log(
-            analytic: GenericAnalytic(event: .attestationConfirmationInitFailed, params: ["duration": duration * 1000])
-        )
-    }
-
-    func logAttestationConfirmationRequestToken() {
-        log(
-            analytic: GenericAnalytic(event: .attestationConfirmationRequestToken, params: [:])
-        )
-    }
-
-    func logAttestationConfirmationRequestTokenSucceeded(duration: TimeInterval) {
-        log(
-            analytic: GenericAnalytic(event: .attestationConfirmationRequestTokenSucceeded, params: ["duration": duration * 1000])
-        )
-    }
-
-    func logAttestationConfirmationRequestTokenFailed(duration: TimeInterval) {
-        log(
-            analytic: GenericAnalytic(event: .attestationConfirmationRequestTokenFailed, params: ["duration": duration * 1000])
-        )
     }
 }
