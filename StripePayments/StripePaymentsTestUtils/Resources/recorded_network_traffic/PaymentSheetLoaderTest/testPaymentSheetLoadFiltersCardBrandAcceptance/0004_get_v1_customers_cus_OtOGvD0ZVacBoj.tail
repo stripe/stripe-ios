@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_OtOGvD0ZVacBoj&limit=100&type=us_bank_account$
+https:\/\/api\.stripe\.com\/v1\/customers\/cus_OtOGvD0ZVacBoj\?$
 200
 application/json
 Content-Type: application/json
@@ -15,17 +15,19 @@ Cache-Control: no-cache, no-store
 Date: Fri, 24 Oct 2025 08:02:53 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 89
+Content-Length: 215
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_6E3ig5h5M4ky0r
+request-id: req_ZCZ03QH7vrPWRR
 
 {
-  "has_more" : false,
-  "object" : "list",
-  "data" : [
-
-  ],
-  "url" : "\/v1\/payment_methods"
+  "object" : "customer",
+  "id" : "cus_OtOGvD0ZVacBoj",
+  "livemode" : false,
+  "created" : 1698357141,
+  "email" : null,
+  "default_source" : "card_1O5upWIq2LmpyICo9tQmU9xY",
+  "description" : null,
+  "shipping" : null
 }

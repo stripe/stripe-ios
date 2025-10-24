@@ -5,21 +5,21 @@ application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MAggldubPwE68LH0Ck2_PolUUa61hQj3BPt5X8KDzsENbpUbFpMwGWwE6qUuZwn5YhKtoeDP5JEqme-n
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=1gwPOzIFhzUSL_Ghp44mm7O_KxOzOjAZrSDj8U2VIb49faDME8hxQ29ihLOJ2OIfCch5bxJJjZe6FiEA
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 23 Oct 2025 05:02:57 GMT
+Date: Fri, 24 Oct 2025 08:02:47 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 14893
+Content-Length: 14989
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_ZxzRSyjpyykqs5
+request-id: req_Dk14iyknw5yLsI
 
 {
   "payment_method_preference" : {
@@ -62,6 +62,7 @@ request-id: req_ZxzRSyjpyykqs5
     "elements_enable_billing_details_in_pe_change_event" : true,
     "link_disable_auth_partner_ua_check" : false,
     "distinctly_link_pe_purchase_protection" : true,
+    "elements_enable_payment_method_options_setup_future_usage" : false,
     "show_swish_factoring_notice" : true,
     "elements_disable_payment_element_card_country_zip_validations" : false,
     "elements_enable_nz_bank_account_spm" : false,
@@ -87,7 +88,7 @@ request-id: req_ZxzRSyjpyykqs5
     "elements_enable_ephemeral_key_for_confirmation_token_creation" : true,
     "elements_show_expanded_spm" : false,
     "elements_enable_19_digit_pans" : false,
-    "link_auth_partner_delay_recognition" : false,
+    "link_auth_partner_delay_recognition" : true,
     "elements_easel_disable_optimizations_check" : false,
     "elements_enable_new_google_places_api" : true,
     "elements_spm_messages" : false,
@@ -169,10 +170,10 @@ request-id: req_ZxzRSyjpyykqs5
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1JUT7oA9mOL",
+  "session_id" : "elements_session_1RlYT7KqwrF",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "f0e7e245-b107-4bd6-8bba-ff76c810e841",
+  "config_id" : "2202f2f0-29c9-4516-88a6-3ca9b551f9e7",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -200,14 +201,15 @@ request-id: req_ZxzRSyjpyykqs5
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "51c0587d-0839-4e8b-96e4-23975b738bb4",
+    "arb_id" : "022078d7-5336-4bf9-8697-877df59aa362",
     "experiment_metadata" : {
-      "seed" : "3affc7e1d930391b218289d29951481ff1516bdbc6ce694175b7487885633523",
+      "seed" : "643abc0e4806148ca5bf2743a42991235909029c6b1fb72bb6e4daa2805088ad",
       "semi_dominant_payment_methods" : [
 
       ],
       "lpm_holdback_t1_payment_methods" : [
-        "us_bank_account"
+        "us_bank_account",
+        "cashapp"
       ],
       "lpm_adoption_ranking_upe_v2_ignore_fixed_lpms" : false,
       "lpm_holdback_t2_payment_methods" : [
@@ -221,12 +223,12 @@ request-id: req_ZxzRSyjpyykqs5
       "ocs_buyer_xp_elements_remove_postal_code_card_non_us" : "control",
       "paypal_payment_handler" : "control",
       "ocs_buyer_xp_elements_lpm_holdback" : "control",
-      "ocs_buyer_xp_redirect_simplification_v2" : "control",
+      "ocs_buyer_xp_redirect_simplification_v2" : "treatment_1",
       "ocs_buyer_xp_elements_ece_timeout_time" : "control",
       "link_ab_test_aa" : "control",
       "ocs_buyer_xp_elements_redirect_form_simplification" : "control",
       "ocs_buyer_xp_elements_clover_collect_postal_code" : "control",
-      "connections_elements_us_bank_account_picker_icons" : "control"
+      "connections_elements_us_bank_account_picker_icons" : "treatment"
     }
   },
   "legacy_customer" : null,
