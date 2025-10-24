@@ -24,7 +24,7 @@ extension PaymentSheet.IntentConfiguration {
             clientContext.currency = currency
             clientContext.setupFutureUsage = setupFutureUsage?.rawValue
             clientContext.captureMethod = captureMethod.rawValue
-            clientContext.paymentMethodOptions = paymentMethodOptions?.toDictionary()
+            clientContext.paymentMethodOptions = paymentMethodOptions?.toDictionary(requireCVCRecollection: requireCVCRecollection)
 
         case .setup(let currency, let setupFutureUsage):
             clientContext.mode = "setup"
@@ -46,19 +46,25 @@ extension PaymentSheet.IntentConfiguration {
 private extension PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions {
 
     /// Converts PaymentSheet PaymentMethodOptions to a dictionary for API encoding
+    /// - Parameter requireCVCRecollection: Whether CVC recollection is required for card payments
     /// - Returns: Dictionary representation of payment method options
-    func toDictionary() -> [String: Any]? {
-        guard let setupFutureUsageValues = self.setupFutureUsageValues else {
-            return nil
-        }
-
+    func toDictionary(requireCVCRecollection: Bool) -> [String: Any]? {
         var options: [String: Any] = [:]
 
         // Convert setup future usage values for different payment method types
-        for (paymentMethodType, setupFutureUsage) in setupFutureUsageValues {
-            options[paymentMethodType.identifier] = [
-                "setup_future_usage": setupFutureUsage.rawValue
-            ]
+        if let setupFutureUsageValues = self.setupFutureUsageValues {
+            for (paymentMethodType, setupFutureUsage) in setupFutureUsageValues {
+                options[paymentMethodType.identifier] = [
+                    "setup_future_usage": setupFutureUsage.rawValue
+                ]
+            }
+        }
+
+        // Add CVC recollection for card if enabled
+        if requireCVCRecollection {
+            var cardOptions = options["card"] as? [String: Any] ?? [:]
+            cardOptions["require_cvc_recollection"] = true
+            options["card"] = cardOptions
         }
 
         return options.isEmpty ? nil : options

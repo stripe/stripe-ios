@@ -147,4 +147,107 @@ class IntentConfigurationClientContextTest: XCTestCase {
         // The actual conversion logic may be expanded in the future
         // This test ensures the conversion method is called
     }
+
+    // MARK: - CVC Recollection Tests
+
+    func testCreateClientContextWithCVCRecollectionEnabled() {
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1000, currency: "usd"),
+            confirmHandler: { _, _, _ in },
+            requireCVCRecollection: true
+        )
+
+        let clientContext = intentConfig.createClientContext(customerId: nil)
+
+        XCTAssertNotNil(clientContext.paymentMethodOptions)
+        let cardOptions = clientContext.paymentMethodOptions?["card"] as? [String: Any]
+        XCTAssertNotNil(cardOptions)
+        XCTAssertEqual(cardOptions?["require_cvc_recollection"] as? Bool, true)
+    }
+
+    func testCreateClientContextWithCVCRecollectionDisabled() {
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1000, currency: "usd"),
+            confirmHandler: { _, _, _ in },
+            requireCVCRecollection: false
+        )
+
+        let clientContext = intentConfig.createClientContext(customerId: nil)
+
+        // When requireCVCRecollection is false and no other options, paymentMethodOptions should be nil
+        XCTAssertNil(clientContext.paymentMethodOptions)
+    }
+
+    func testCreateClientContextWithCVCRecollectionAndSetupFutureUsage() {
+        let paymentMethodOptions = PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(
+            setupFutureUsageValues: [.card: .offSession]
+        )
+
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(
+                amount: 1000,
+                currency: "usd",
+                paymentMethodOptions: paymentMethodOptions
+            ),
+            confirmHandler: { _, _, _ in },
+            requireCVCRecollection: true
+        )
+
+        let clientContext = intentConfig.createClientContext(customerId: nil)
+
+        XCTAssertNotNil(clientContext.paymentMethodOptions)
+        let cardOptions = clientContext.paymentMethodOptions?["card"] as? [String: Any]
+        XCTAssertNotNil(cardOptions)
+        XCTAssertEqual(cardOptions?["setup_future_usage"] as? String, "off_session")
+        XCTAssertEqual(cardOptions?["require_cvc_recollection"] as? Bool, true)
+    }
+
+    func testCreateClientContextWithCVCRecollectionAndMultiplePaymentMethodOptions() {
+        let paymentMethodOptions = PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(
+            setupFutureUsageValues: [
+                .card: .onSession,
+                .USBankAccount: .offSession,
+            ]
+        )
+
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(
+                amount: 1000,
+                currency: "usd",
+                paymentMethodOptions: paymentMethodOptions
+            ),
+            confirmHandler: { _, _, _ in },
+            requireCVCRecollection: true
+        )
+
+        let clientContext = intentConfig.createClientContext(customerId: nil)
+
+        XCTAssertNotNil(clientContext.paymentMethodOptions)
+
+        // Card should have both setup_future_usage and require_cvc_recollection
+        let cardOptions = clientContext.paymentMethodOptions?["card"] as? [String: Any]
+        XCTAssertNotNil(cardOptions)
+        XCTAssertEqual(cardOptions?["setup_future_usage"] as? String, "on_session")
+        XCTAssertEqual(cardOptions?["require_cvc_recollection"] as? Bool, true)
+
+        // US Bank Account should only have setup_future_usage
+        let usBankOptions = clientContext.paymentMethodOptions?["us_bank_account"] as? [String: Any]
+        XCTAssertNotNil(usBankOptions)
+        XCTAssertEqual(usBankOptions?["setup_future_usage"] as? String, "off_session")
+        XCTAssertNil(usBankOptions?["require_cvc_recollection"])
+    }
+
+    func testCreateClientContextWithCVCRecollectionSetupMode() {
+        // CVC recollection should only apply to payment mode, not setup mode
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .setup(),
+            confirmHandler: { _, _, _ in },
+            requireCVCRecollection: true
+        )
+
+        let clientContext = intentConfig.createClientContext(customerId: nil)
+
+        // Setup mode doesn't have paymentMethodOptions
+        XCTAssertNil(clientContext.paymentMethodOptions)
+    }
 }
