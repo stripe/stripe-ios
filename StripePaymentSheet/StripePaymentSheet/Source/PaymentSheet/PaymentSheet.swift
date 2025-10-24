@@ -158,7 +158,14 @@ public class PaymentSheet {
                 }
                 if loadResult.elementsSession.shouldAttestOnConfirmation {
                     Task {
-                        _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
+                        STPAnalyticsClient.sharedClient.logAttestationConfirmationInit()
+                        let startTime = Date()
+                        let canAttest = await self.configuration.apiClient.stripeAttest.prepareAttestation()
+                        if canAttest {
+                            STPAnalyticsClient.sharedClient.logAttestationConfirmationInitSucceeded(duration: Date().timeIntervalSince(startTime))
+                        } else {
+                            STPAnalyticsClient.sharedClient.logAttestationConfirmationInitFailed(duration: Date().timeIntervalSince(startTime))
+                        }
                     }
                 }
                 let presentPaymentSheet: () -> Void = {

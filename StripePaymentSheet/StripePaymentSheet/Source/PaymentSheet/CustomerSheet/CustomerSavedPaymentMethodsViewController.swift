@@ -614,16 +614,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         if case .new(let confirmParams) = paymentOption  {
             Task {
                 let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                let assertionHandle: StripeAttest.AssertionHandle? = await {
-                    if shouldAttestOnConfirmation {
-                        do {
-                            return try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
-                        } catch {
-                            // If we can't get an assertion, we'll try the request anyway. It may fail.
-                        }
-                    }
-                    return nil
-                }()
+                let assertionHandle: StripeAttest.AssertionHandle? = await shouldAttestOnConfirmation ? configuration.apiClient.stripeAttest.assertWithTimeout() : nil
                 confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
                     assertionHandle?.complete()

@@ -112,7 +112,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }()
 
     var passiveCaptchaChallenge: StripePayments.PassiveCaptchaChallenge?
-    var assertionHandle: StripeAttest.AssertionHandle?
 
     // MARK: - UI properties
 

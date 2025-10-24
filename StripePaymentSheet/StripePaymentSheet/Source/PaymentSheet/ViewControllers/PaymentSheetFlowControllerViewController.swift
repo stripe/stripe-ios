@@ -23,7 +23,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
     var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    var assertionHandle: StripeAttest.AssertionHandle?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }

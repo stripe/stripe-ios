@@ -173,7 +173,14 @@ public class CustomerSheet {
                 }
                 if elementsSession.shouldAttestOnConfirmation {
                     Task {
-                        _ = await self.configuration.apiClient.stripeAttest.prepareAttestation()
+                        STPAnalyticsClient.sharedClient.logAttestationConfirmationInit()
+                        let startTime = Date()
+                        let canAttest = await self.configuration.apiClient.stripeAttest.prepareAttestation()
+                        if canAttest {
+                            STPAnalyticsClient.sharedClient.logAttestationConfirmationInitSucceeded(duration: Date().timeIntervalSince(startTime))
+                        } else {
+                            STPAnalyticsClient.sharedClient.logAttestationConfirmationInitFailed(duration: Date().timeIntervalSince(startTime))
+                        }
                     }
                 }
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
@@ -301,16 +308,7 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
         }
         Task {
             let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
-            let assertionHandle: StripeAttest.AssertionHandle? = await {
-                if elementsSession.shouldAttestOnConfirmation {
-                    do {
-                        return try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
-                    } catch {
-                        // If we can't get an assertion, we'll try the request anyway. It may fail.
-                    }
-                }
-                return nil
-            }()
+            let assertionHandle: StripeAttest.AssertionHandle? = await elementsSession.shouldAttestOnConfirmation ? configuration.apiClient.stripeAttest.assertWithTimeout() : nil
             self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, hcaptchaToken: hcaptchaToken, assertionHandle: assertionHandle) { result in
                 completion(result)
             }

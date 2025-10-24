@@ -315,6 +315,14 @@ import Foundation
     case passiveCaptchaError = "elements.captcha.passive.error"
     case passiveCaptchaAttach = "elements.captcha.passive.attach"
 
+    // MARK: - Attestation on Confirmation
+    case attestationConfirmationInit = "elements.attestation.confirmation.init"
+    case attestationConfirmationInitSucceeded = "elements.attestation.confirmation.init_succeeded"
+    case attestationConfirmationInitFailed = "elements.attestation.confirmation.init_failed"
+    case attestationConfirmationRequestToken = "elements.attestation.confirmation.request_token"
+    case attestationConfirmationRequestTokenSucceeded = "elements.attestation.confirmation.request_token_succeeded"
+    case attestationConfirmationRequestTokenFailed = "elements.attestation.confirmation.request_token_failed"
+
     // MARK: - STPApplePayContext
     case applePayContextStarted = "stripeios.applepaycontext.confirm.started"
     case applePayContextFinished = "stripeios.applepaycontext.confirm.finished"

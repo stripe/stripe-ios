@@ -190,16 +190,7 @@ extension PaymentSheet {
         case let .new(confirmParams):
             Task { @MainActor in
                 let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                let assertionHandle: StripeAttest.AssertionHandle? = await {
-                    if elementsSession.shouldAttestOnConfirmation {
-                        do {
-                            return try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
-                        } catch {
-                            // If we can't get an assertion, we'll try the request anyway. It may fail.
-                        }
-                    }
-                    return nil
-                }()
+                let assertionHandle: StripeAttest.AssertionHandle? = await elementsSession.shouldAttestOnConfirmation ? configuration.apiClient.stripeAttest.assertWithTimeout() : nil
                 let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
@@ -348,16 +339,7 @@ extension PaymentSheet {
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                    let assertionHandle: StripeAttest.AssertionHandle? = await {
-                        if elementsSession.shouldAttestOnConfirmation {
-                            do {
-                                return try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
-                            } catch {
-                                // If we can't get an assertion, we'll try the request anyway. It may fail.
-                            }
-                        }
-                        return nil
-                    }()
+                    let assertionHandle: StripeAttest.AssertionHandle? = await elementsSession.shouldAttestOnConfirmation ? configuration.apiClient.stripeAttest.assertWithTimeout() : nil
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                     paymentMethodParams.radarOptions = radarOptions
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
@@ -427,16 +409,7 @@ extension PaymentSheet {
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool, STPClientAttributionMetadata?) -> Void = { paymentMethod, linkAccount, shouldSave, clientAttributionMetadata in
                 Task { @MainActor in
                     let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                    let assertionHandle: StripeAttest.AssertionHandle? = await {
-                        if elementsSession.shouldAttestOnConfirmation {
-                            do {
-                                return try await configuration.apiClient.stripeAttest.assert(canSyncState: false)
-                            } catch {
-                                // If we can't get an assertion, we'll try the request anyway. It may fail.
-                            }
-                        }
-                        return nil
-                    }()
+                    let assertionHandle: StripeAttest.AssertionHandle? = await elementsSession.shouldAttestOnConfirmation ? configuration.apiClient.stripeAttest.assertWithTimeout() : nil
                     let radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertionHandle?.assertion)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                     let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
