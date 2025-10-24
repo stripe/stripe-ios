@@ -155,7 +155,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
             enum CodingKeys: CodingKey {}
         }
 
-        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { _ in return HandleCheckScanSubmittedReturnValue() })
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { _ in })
 
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
                                                       componentType: .checkScanning,
@@ -264,7 +264,6 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
         let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: {payload in
             XCTAssertEqual(payload.checkScanToken, "testToken")
-            return HandleCheckScanSubmittedReturnValue()
         })
 
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
@@ -286,7 +285,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
             sender: SupplementalFunctionCompletedSender(payload: .init(
                 functionName: .handleCheckScanSubmitted,
                 invocationId: "testInvocation",
-                result: .success(.handleCheckScanSubmitted(.init()))
+                result: .success(.handleCheckScanSubmitted)
             ))
         )
 
