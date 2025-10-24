@@ -479,7 +479,7 @@ import UIKit
                     }
                 }
             case .deferredIntent(let intentConfiguration):
-                let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, type: .link)
+                let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, created: Date(), type: .link)
                 PaymentSheet
                     .routeDeferredIntentConfirmation(
                         confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), // LinkPaymentController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id and doesn't have an elements session object so we don't want to send CAM here
