@@ -1,4 +1,6 @@
 ## X.Y.Z - changes pending release 
+### PaymentSheet
+* [Fixed] Blocked emoji input in text fields.
 
 ## 24.24.4 2025-10-20
 ### PaymentSheet
