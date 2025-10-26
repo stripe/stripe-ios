@@ -70,7 +70,7 @@ class AfterpayPriceBreakdownView: UIView {
             textColor: appearance.colors.text,
             infoIconColor: appearance.colors.icon,
             template: template,
-            substitution: ("<img/>", afterpayMarkImage, 2.0)
+            substitution: ("<img/>", afterpayMarkImage)
         )
     }
 

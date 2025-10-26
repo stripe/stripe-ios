@@ -94,12 +94,12 @@ class UIImage_StripeTests: XCTestCase {
             return XCTFail("Could not load test image")
         }
         let font = UIFont.systemFont(ofSize: 30)
-        let scaledSize = testImage.sizeMatchingFont(font, scale: 1.0)
+        let scaledSize = testImage.sizeMatchingFont(font, additionalScale: 1.0)
         XCTAssertEqual(scaledSize.width.rounded(), 21.0)
         XCTAssertEqual(scaledSize.height.rounded(), 21.0)
 
         let otherFont = UIFont(name: "AmericanTypewriter", size: 8)!
-        let otherScaledSize = testImage.sizeMatchingFont(otherFont, scale: 1.8)
+        let otherScaledSize = testImage.sizeMatchingFont(otherFont, additionalScale: 1.8)
         XCTAssertEqual(otherScaledSize.width.rounded(), 9.0)
         XCTAssertEqual(otherScaledSize.height.rounded(), 10.0)
     }
