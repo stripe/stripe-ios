@@ -83,9 +83,7 @@ extension PaymentMethodMessagingElement {
             let text: String
 
             struct IconInfo: Decodable {
-                let height: Int
                 let url: URL
-                let width: Int
             }
         }
 
