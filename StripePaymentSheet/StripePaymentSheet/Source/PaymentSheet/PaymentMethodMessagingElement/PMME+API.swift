@@ -39,15 +39,19 @@ extension PaymentMethodMessagingElement {
                 case .success(let apiResponse):
                     continuation.resume(returning: apiResponse)
                 case .failure(let error):
-                    if let decodingError = error as? DecodingError,
-                        case let .keyNotFound(codingKey, context) = decodingError {
-                        stpAssertionFailure(context.debugDescription)
-                        let problemKey = codingKey.stringValue
-                        let problemPath = context.codingPath
-                        let fullPath = problemPath.reduce("") { $0 + $1.stringValue + "." } + problemKey
-                        let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
-                        let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["missing_response_key": fullPath])
-                        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
+                    if let decodingError = error as? DecodingError {
+                        switch decodingError {
+                        case .keyNotFound(_, let context),
+                                .dataCorrupted(let context),
+                                .valueNotFound(_, let context),
+                                .typeMismatch(_, let context):
+                            stpAssertionFailure(context.debugDescription)
+                            let problemPath = context.codingPath.reduce("") { $0 + $1.stringValue + "." }
+                            let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
+                            let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["failed_decoding_path": problemPath])
+                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
+                        default: break
+                        }
                     }
                     continuation.resume(throwing: error)
                 }
