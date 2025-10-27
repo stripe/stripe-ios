@@ -124,7 +124,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         paymentMethod: STPPaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext,
-        confirmationTokenConfirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler,
+        confirmationTokenConfirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler
     ) async throws -> String {
         // Create confirmation token params
         let confirmationTokenParams = STPConfirmationTokenParams()
