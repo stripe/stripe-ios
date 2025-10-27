@@ -22,8 +22,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
-    var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    var attestationConfirmationChallenge: AttestationConfirmationChallenge?
+    var confirmationChallenge: ConfirmationChallenge?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -299,8 +298,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
-            attestationConfirmationChallenge: attestationConfirmationChallenge
+            confirmationChallenge: confirmationChallenge
         ) { [weak self] confirmOption, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption

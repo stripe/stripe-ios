@@ -153,12 +153,7 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
-                if self.configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
-                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
-                }
-                if loadResult.elementsSession.shouldAttestOnConfirmation {
-                    self.attestationConfirmationChallenge = AttestationConfirmationChallenge(stripeAttest: self.configuration.apiClient.stripeAttest)
-                }
+                self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: self.configuration.enablePassiveCaptcha, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {
@@ -272,8 +267,7 @@ public class PaymentSheet {
 
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
-    var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    var attestationConfirmationChallenge: AttestationConfirmationChallenge?
+    var confirmationChallenge: ConfirmationChallenge?
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -293,8 +287,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
                 integrationShape: .complete,
-                passiveCaptchaChallenge: self.passiveCaptchaChallenge,
-                attestationConfirmationChallenge: self.attestationConfirmationChallenge,
+                confirmationChallenge: self.confirmationChallenge,
                 analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {

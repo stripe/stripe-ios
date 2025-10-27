@@ -538,8 +538,7 @@ extension EmbeddedPaymentElement {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: .embedded,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
-            attestationConfirmationChallenge: attestationConfirmationChallenge,
+            confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         )
         analyticsHelper.logPayment(

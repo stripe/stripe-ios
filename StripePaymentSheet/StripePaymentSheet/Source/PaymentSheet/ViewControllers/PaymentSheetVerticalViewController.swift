@@ -111,8 +111,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
-    var passiveCaptchaChallenge: StripePayments.PassiveCaptchaChallenge?
-    var attestationConfirmationChallenge: AttestationConfirmationChallenge?
+    var confirmationChallenge: ConfirmationChallenge?
 
     // MARK: - UI properties
 
@@ -557,8 +556,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
-            attestationConfirmationChallenge: attestationConfirmationChallenge,
+            confirmationChallenge: confirmationChallenge,
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption

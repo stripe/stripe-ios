@@ -322,6 +322,8 @@ import Foundation
     case attestationConfirmationRequestToken = "elements.attestation.confirmation.request_token"
     case attestationConfirmationRequestTokenSucceeded = "elements.attestation.confirmation.request_token_succeeded"
     case attestationConfirmationRequestTokenFailed = "elements.attestation.confirmation.request_token_failed"
+    case attestationConfirmationError = "elements.attestation.confirmation.error"
+    case attestationConfirmationAttach = "elements.attestation.confirmation.attach"
 
     // MARK: - STPApplePayContext
     case applePayContextStarted = "stripeios.applepaycontext.confirm.started"

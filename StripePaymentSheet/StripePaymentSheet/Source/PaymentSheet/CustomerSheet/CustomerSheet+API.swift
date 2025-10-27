@@ -15,8 +15,7 @@ extension CustomerSheet {
         intent: Intent,
         elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
-        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
-        attestationConfirmationChallenge: AttestationConfirmationChallenge? = nil,
+        confirmationChallenge: ConfirmationChallenge? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         CustomerSheet.confirm(intent: intent,
@@ -25,8 +24,7 @@ extension CustomerSheet {
                               configuration: configuration,
                               paymentHandler: self.paymentHandler,
                               authenticationContext: self.bottomSheetViewController,
-                              passiveCaptchaChallenge: passiveCaptchaChallenge,
-                              attestationConfirmationChallenge: attestationConfirmationChallenge,
+                              confirmationChallenge: confirmationChallenge,
                               completion: completion)
     }
     static func confirm(
@@ -36,8 +34,7 @@ extension CustomerSheet {
         configuration: CustomerSheet.Configuration,
         paymentHandler: STPPaymentHandler,
         authenticationContext: STPAuthenticationContext,
-        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
-        attestationConfirmationChallenge: AttestationConfirmationChallenge? = nil,
+        confirmationChallenge: ConfirmationChallenge? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
@@ -61,8 +58,7 @@ extension CustomerSheet {
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
             Task {
-                let hcaptchaToken = await passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                let assertion = await attestationConfirmationChallenge?.fetchAssertion()
+                let (hcaptchaToken, assertion) = await confirmationChallenge?.fetchTokensWithTimeout() ?? (nil, nil)
                 confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
                 confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
                 confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID)
@@ -77,7 +73,7 @@ extension CustomerSheet {
                     setupIntentParams,
                     with: authenticationContext,
                     completion: { status, intent, error in
-                        Task { await attestationConfirmationChallenge?.complete() }
+                        Task { await confirmationChallenge?.complete() }
                         paymentHandlerCompletion(status, intent, error)
                     })
             }
