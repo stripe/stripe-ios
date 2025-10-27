@@ -1324,7 +1324,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             print("✅ Verified client_attribution_metadata in \(fileName)")
         }
     }
-    
+
     func buildFileNamesDictionary(stubURL: URL) {
         // Find all .tail files for this test
         guard let enumerator = fileManager.enumerator(atPath: stubURL.path) else {
@@ -1332,7 +1332,6 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             return
         }
 
-        
         // Collect and sort fileNames alphabetically
         for case let fileName as String in enumerator {
             for endpoint in Endpoint.allCases {
