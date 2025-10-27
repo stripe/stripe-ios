@@ -24,7 +24,8 @@ extension PaymentSheet.IntentConfiguration {
             clientContext.currency = currency
             clientContext.setupFutureUsage = setupFutureUsage?.rawValue
             clientContext.captureMethod = captureMethod.rawValue
-            clientContext.paymentMethodOptions = paymentMethodOptions?.toDictionary(requireCVCRecollection: requireCVCRecollection)
+            let pmo = paymentMethodOptions ?? .init()
+            clientContext.paymentMethodOptions = pmo.toDictionary(requireCVCRecollection: requireCVCRecollection)
 
         case .setup(let currency, let setupFutureUsage):
             clientContext.mode = "setup"
