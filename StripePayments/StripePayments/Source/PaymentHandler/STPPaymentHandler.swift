@@ -1327,6 +1327,8 @@ public class STPPaymentHandler: NSObject {
                         returnURL = nil
                     }
                     _handleRedirect(to: redirectURL, withReturn: returnURL, useWebAuthSession: false)
+                case .intentConfirmationChallenge:
+                    handleIntentConfirmationChallenge(useStripeSDK: useStripeSDK)
                 }
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1871,6 +1873,73 @@ public class STPPaymentHandler: NSObject {
             )
         } else {
             presentSFViewControllerBlock()
+        }
+    }
+
+    /// Handles intent confirmation challenge by presenting a WebView with the Stripe-hosted challenge page
+    private func handleIntentConfirmationChallenge(useStripeSDK: STPIntentActionUseStripeSDK) {
+        guard let currentAction = self.currentAction else {
+            stpAssertionFailure("Missing currentAction in handleIntentConfirmationChallenge")
+            return
+        }
+
+        // Extract client secret
+        let clientSecret: String
+        if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
+            clientSecret = piAction.paymentIntent.clientSecret
+        } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
+            clientSecret = siAction.setupIntent.clientSecret
+        } else {
+            currentAction.complete(
+                with: .failed,
+                error: _error(
+                    for: .unexpectedErrorCode,
+                    loggingSafeErrorMessage: "Unable to extract client secret for intent confirmation challenge"
+                )
+            )
+            return
+        }
+
+        let context = currentAction.authenticationContext
+        var presentationError: NSError?
+        guard _canPresent(with: context, error: &presentationError) else {
+            currentAction.complete(with: .failed, error: presentationError)
+            return
+        }
+
+        let challengeVC = IntentConfirmationChallengeViewController(
+            apiClient: apiClient,
+            clientSecret: clientSecret
+        ) { [weak self] result in
+            guard let self = self else { return }
+
+            let presentingVC = context.authenticationPresentingViewController()
+
+            // Dismiss the challenge view
+            presentingVC.dismiss(animated: true) {
+                switch result {
+                case .success:
+                    // The web page handled the next action via Stripe.js
+                    // Now retrieve the updated intent to check its status
+                    self._retrieveAndCheckIntentForCurrentAction()
+
+                case .failure(let error):
+                    currentAction.complete(with: .failed, error: error as NSError)
+                }
+            }
+        }
+
+        let presentingVC = context.authenticationPresentingViewController()
+
+        let doPresent: STPVoidBlock = {
+            challengeVC.modalPresentationStyle = .overFullScreen
+            presentingVC.present(challengeVC, animated: true, completion: nil)
+        }
+
+        if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
+            context.prepare?(forPresentation: doPresent)
+        } else {
+            doPresent()
         }
     }
 

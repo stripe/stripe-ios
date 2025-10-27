@@ -26,6 +26,7 @@
 		13DA3803BEF593A2126A0A99 /* STPContactField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E017212F9F71022883F9D5E8 /* STPContactField.swift */; };
 		141AA8A68D0A8C385704CD7A /* STPFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BC4B4F3696616E6765861 /* STPFile.swift */; };
 		1430CDF3A9BD4E125CFCD6DD /* STPIntentActionKonbiniDisplayDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3413DC6380ADC49B79FA0D71 /* STPIntentActionKonbiniDisplayDetails.swift */; };
+		1496D2212EAF2A6800DC0F15 /* IntentConfirmationChallengeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1496D2202EAF2A6800DC0F15 /* IntentConfirmationChallengeViewController.swift */; };
 		14F7613FC00DEB719DCB0B90 /* LinkAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51899EDD11947FDAD2C82D97 /* LinkAccountSession.swift */; };
 		15867BBB56A73E740FE5CC4E /* STPCustomer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B3D8567EEB33BC253105F4 /* STPCustomer.swift */; };
 		17083CBB3962C5ADB155EEF4 /* STPPaymentMethodBancontact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C7F01487694566A35BB319 /* STPPaymentMethodBancontact.swift */; };
@@ -406,6 +407,7 @@
 		1405894A2DC8568000DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		14358A02B8BB13A20E0047DB /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		146903A461196F8C4B791B24 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		1496D2202EAF2A6800DC0F15 /* IntentConfirmationChallengeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentConfirmationChallengeViewController.swift; sourceTree = "<group>"; };
 		161E1414061B7E2B7C36AE9C /* STPPaymentMethodFPX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodFPX.swift; sourceTree = "<group>"; };
 		1715FC35DA137EC14273808B /* Mock Files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Mock Files"; sourceTree = "<group>"; };
 		182D34C4338F9A7C214BEB6B /* STPBankAccountCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPBankAccountCollector.swift; sourceTree = "<group>"; };
@@ -793,6 +795,14 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		1496D21F2EAF2A4D00DC0F15 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				1496D2202EAF2A6800DC0F15 /* IntentConfirmationChallengeViewController.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
 		2646693731499ED1464C5C65 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -1139,6 +1149,7 @@
 		C7DC8B9CB4E4EC80F7235F2A /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				1496D21F2EAF2A4D00DC0F15 /* Authentication */,
 				3D76A22F29DA377FEAC740D7 /* Analytics */,
 				D4A1835C6C7E71002C0B703E /* API Bindings */,
 				4835A73894061488903E06BA /* Categories */,
@@ -1821,6 +1832,7 @@
 				B8C35DE8D237AA591ED70C9A /* STPPaymentMethodWeChatPayParams.swift in Sources */,
 				03A8995BD2286725969CDC9E /* STPPaymentMethodiDEAL.swift in Sources */,
 				D87B57BB41D406D98CC38E96 /* STPPaymentMethodiDEALParams.swift in Sources */,
+				1496D2212EAF2A6800DC0F15 /* IntentConfirmationChallengeViewController.swift in Sources */,
 				58A5121E267FADC02B2B2DC7 /* STPAPIResponseDecodable.swift in Sources */,
 				68F9810F66FB2D6B278429D7 /* STPAddress.swift in Sources */,
 				E1FB907D22CB302F5BD46A55 /* STPCardBrand.swift in Sources */,

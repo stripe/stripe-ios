@@ -13,6 +13,7 @@ enum STPIntentActionUseStripeSDKType: Int {
     case unknown = 0
     case threeDS2Fingerprint
     case threeDS2Redirect
+    case intentConfirmationChallenge
 }
 
 class STPIntentActionUseStripeSDK: NSObject {
@@ -203,6 +204,21 @@ extension STPIntentActionUseStripeSDK: STPAPIResponseDecodable {
             } else {
                 return nil
             }
+        case "intent_confirmation_challenge":
+            return STPIntentActionUseStripeSDK(
+                type: .intentConfirmationChallenge,
+                directoryServerName: nil,
+                directoryServerID: nil,
+                directoryServerCertificate: nil,
+                rootCertificateStrings: nil,
+                directoryServerKeyID: nil,
+                serverTransactionID: nil,
+                threeDSSourceID: nil,
+                publishableKeyOverride: nil,
+                threeDS2IntentOverride: nil,
+                redirectURL: nil,
+                allResponseFields: dict
+            ) as? Self
 
         default:
             return STPIntentActionUseStripeSDK(

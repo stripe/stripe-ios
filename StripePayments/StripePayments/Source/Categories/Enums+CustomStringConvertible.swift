@@ -183,6 +183,8 @@ extension STPIntentActionUseStripeSDKType: CustomStringConvertible {
             return "threeDS2Redirect"
         case .unknown:
             return "unknown"
+        case .intentConfirmationChallenge:
+            return "intentConfirmationChallenge"
         }
     }
 }
