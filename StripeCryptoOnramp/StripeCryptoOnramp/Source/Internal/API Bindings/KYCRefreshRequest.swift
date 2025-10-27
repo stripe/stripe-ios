@@ -14,7 +14,7 @@ struct KYCRefreshRequest: Encodable {
     let credentials: Credentials
 
     /// KYC-related info required to make the request.
-    let kycInfo: KycRefreshInfo
+    let kycInfo: KYCRefreshInfo
 
     // MARK: - Encodable
 

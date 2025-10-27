@@ -11,7 +11,7 @@ import Foundation
 struct RetrieveKYCInfoResponse: Decodable {
 
     /// The KYC info retrieved from the API.
-    let kycInfo: KycRefreshInfo
+    let kycInfo: KYCRefreshInfo
 
     // MARK: - Decodable
 
@@ -46,7 +46,7 @@ struct RetrieveKYCInfoResponse: Decodable {
             state: try addressContainer.decode(String.self, forKey: .state)
         )
 
-        kycInfo = KycRefreshInfo(
+        kycInfo = KYCRefreshInfo(
             firstName: firstName,
             lastName: lastName,
             dateOfBirth: dateOfBirth,

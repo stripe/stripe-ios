@@ -1,5 +1,5 @@
 //
-//  KycRefreshInfo.swift
+//  KYCRefreshInfo.swift
 //  StripeCryptoOnramp
 //
 //  Created by Michael Liberatore on 10/27/25.
@@ -10,7 +10,7 @@ import Foundation
 /// KYC information common to the KYC-refresh-related APIs:
 /// - /v1/crypto/internal/kyc_data_retrieve
 /// - /v1/crypto/internal/refresh_consumer_person
-struct KycRefreshInfo {
+struct KYCRefreshInfo {
 
     /// The user’s first name.
     let firstName: String
