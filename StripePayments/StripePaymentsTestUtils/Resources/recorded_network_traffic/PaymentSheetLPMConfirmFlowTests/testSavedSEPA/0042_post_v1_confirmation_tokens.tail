@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=IMTz6De0oMAmRgDBuQsWCjMi08B4AKe1U0xTi2R9HuBUyFI5ptgxTxqbhzQrHl1HRP5pcm9X0yyiE2N_
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QHZP3NBGhqSqTGm4d5DXOxkMoBTlWPN3vBdTZdI481YzHuGeEtWrT2i19X3XvBBV121cdyUiXgKyZjCg
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,21 +12,21 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_1LLYMSj3ET0PCT
-Content-Length: 1286
+request-id: req_AWgwGGc7jhOPUr
+Content-Length: 1285
 Vary: Origin
-Date: Mon, 27 Oct 2025 16:50:21 GMT
-original-request: req_1LLYMSj3ET0PCT
+Date: Tue, 07 Oct 2025 19:13:11 GMT
+original-request: req_AWgwGGc7jhOPUr
 stripe-version: 2020-08-27
-idempotency-key: 4e10fb25-320a-42c1-b1a9-fcfd5ec97a04
+idempotency-key: 439b41ec-3008-48fd-a71e-f11cd81bcbbe
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[customer]=cus_OaMPphpKbeixCz&client_context\[mode]=setup&client_context\[payment_method_types]\[0]=sepa_debit&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1NnBnhFY0qyl6XeW9ThDjAvw&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
+X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[customer]=cus_OaMPphpKbeixCz&client_context\[mode]=setup&client_context\[payment_method_types]\[0]=sepa_debit&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1NnBnhFY0qyl6XeW9ThDjAvw&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1SMtcfFY0qyl6XeWzOGyFk2T",
+  "id" : "ctoken_1SFgJvFY0qyl6XeWCw17nqgw",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
@@ -34,12 +34,12 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "customer_acceptance" : {
       "type" : "online",
       "online" : {
-        "ip_address" : "98.13.192.27",
-        "user_agent" : "StripePaymentSheetTestHostApp\/1 CFNetwork\/1568.100.1 Darwin\/24.6.0"
+        "ip_address" : "76.149.217.10",
+        "user_agent" : "StripePaymentSheetTestHostApp\/1 CFNetwork\/1406.0.4 Darwin\/24.6.0"
       }
     }
   },
-  "expires_at" : 1761627021,
+  "expires_at" : 1759907591,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -73,7 +73,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     },
     "type" : "sepa_debit"
   },
-  "created" : 1761583821,
+  "created" : 1759864391,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null
