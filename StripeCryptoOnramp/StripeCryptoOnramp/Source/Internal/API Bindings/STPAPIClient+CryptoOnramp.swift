@@ -203,22 +203,6 @@ extension STPAPIClient {
         return try await get(resource: endpoint, parameters: parameters)
     }
 
-    private func postKycInfo<Response: Decodable>(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol, isRefresh: Bool) async throws -> Response {
-        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
-            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
-        }
-
-        try validateSessionState(using: linkAccountInfo)
-
-        let endpoint = isRefresh ? "crypto/internal/refresh_consumer_person" : "crypto/internal/kyc_data_collection"
-        let requestObject = KYCDataCollectionRequest(
-            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
-            kycInfo: info
-        )
-
-        return try await post(resource: endpoint, object: requestObject)
-    }
-
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
