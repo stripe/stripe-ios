@@ -55,7 +55,7 @@ extension STPAPIClient {
     /// - Returns: A response object containing the user’s identifier.
     /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
-    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol, isRefresh: Bool) async throws -> KYCDataCollectionResponse {
+    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> KYCDataCollectionResponse {
         try await postKycInfo(info: info, linkAccountInfo: linkAccountInfo, isRefresh: false)
     }
 
