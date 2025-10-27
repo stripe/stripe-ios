@@ -68,7 +68,7 @@ class AfterpayPriceBreakdownView: UIView {
         return NSMutableAttributedString.bnplPromoString(
             font: appearance.asElementsTheme.fonts.subheadline,
             textColor: appearance.colors.text,
-            infoIconColor: appearance.colors.icon,
+            infoIconColor: appearance.colors.text,
             template: template,
             substitution: ("<img/>", afterpayMarkImage)
         )
