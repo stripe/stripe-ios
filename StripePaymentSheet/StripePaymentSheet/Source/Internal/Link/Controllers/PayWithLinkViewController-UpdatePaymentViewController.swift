@@ -157,9 +157,11 @@ extension PayWithLinkViewController {
                 details: updateDetails
             )
 
+            let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+
             coordinator?.allowSheetDismissal(false)
 
-            linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
+            linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams, clientAttributionMetadata: clientAttributionMetadata) { [weak self] result in
                 guard let self else {
                     return
                 }
