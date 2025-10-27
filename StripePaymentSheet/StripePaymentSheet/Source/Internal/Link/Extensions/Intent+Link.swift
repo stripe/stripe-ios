@@ -18,12 +18,12 @@ extension STPElementsSession {
         linkSettings?.passthroughModeEnabled ?? false
     }
 
-    var supportsLinkCard: Bool {
-        supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
+    var linkCardBrandFilteringEnabled: Bool {
+        linkPassthroughModeEnabled
     }
 
-    var onlySupportsLinkBank: Bool {
-        return supportsLink && (linkFundingSources == [.bankAccount])
+    var supportsLinkCard: Bool {
+        supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
@@ -38,25 +38,25 @@ extension STPElementsSession {
         linkSettings?.popupWebviewOption ?? .shared
     }
 
+    var canSkipLinkWallet: Bool {
+        linkFlags["link_mobile_skip_wallet_in_flow_controller"] ?? false
+    }
+
     func shouldShowLink2FABeforePaymentSheet(for linkAccount: PaymentSheetLinkAccount) -> Bool {
         return self.supportsLink &&
         linkAccount.sessionState == .requiresVerification &&
         !linkAccount.hasStartedSMSVerification &&
         linkAccount.useMobileEndpoints &&
-        self.linkSettings?.suppress2FAModal != true
-    }
-
-    func countryCode(overrideCountry: String?) -> String? {
-#if DEBUG
-        if let overrideCountry {
-            return overrideCountry
-        }
-#endif
-        return countryCode
+        self.linkSettings?.suppress2FAModal != true &&
+        linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required
     }
 
     var linkFlags: [String: Bool] {
         linkSettings?.linkFlags ?? [:]
+    }
+
+    var shouldShowPreferDebitCardHint: Bool {
+        linkSettings?.linkShowPreferDebitCardHint ?? false
     }
 }
 
@@ -69,7 +69,7 @@ extension Intent {
             return .setup
         case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
-            case .payment(let amount, let currency, _, _):
+            case .payment(let amount, let currency, _, _, _):
                 return .pay(amount: amount, currency: currency)
             case .setup:
                 return .setup

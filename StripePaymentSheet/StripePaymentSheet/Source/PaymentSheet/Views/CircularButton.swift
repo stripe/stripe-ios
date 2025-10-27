@@ -16,6 +16,18 @@ class CircularButton: UIControl {
     private let radius: CGFloat = 10
     private let shadowOpacity: Float = 0.5
     private let style: Style
+    var iconStyle: PaymentSheet.Appearance.IconStyle {
+        didSet {
+            // No-op when changing icon style for other styles
+            guard style == .edit else { return }
+            switch iconStyle {
+            case .filled:
+                imageView.image = Image.icon_edit.makeImage(template: true)
+            case .outlined:
+                imageView.image = Image.icon_edit_outlined.makeImage(template: true)
+            }
+        }
+    }
     var iconColor: UIColor {
         didSet {
             updateColor()
@@ -37,9 +49,10 @@ class CircularButton: UIControl {
         case edit
     }
 
-    required init(style: Style, iconColor: UIColor = .secondaryLabel, dangerColor: UIColor = .systemRed) {
+    required init(style: Style, iconColor: UIColor = .secondaryLabel, dangerColor: UIColor = .systemRed, iconStyle: PaymentSheet.Appearance.IconStyle = .filled) {
         self.style = style
         self.iconColor = iconColor
+        self.iconStyle = iconStyle
         super.init(frame: .zero)
 
         backgroundColor = UIColor.dynamic(
@@ -102,7 +115,12 @@ class CircularButton: UIControl {
             accessibilityLabel = String.Localized.remove
             accessibilityIdentifier = "CircularButton.Remove"
         case .edit:
-            imageView.image = Image.icon_edit.makeImage(template: true)
+            switch iconStyle {
+            case .filled:
+                imageView.image = Image.icon_edit.makeImage(template: true)
+            case .outlined:
+                imageView.image = Image.icon_edit_outlined.makeImage(template: true)
+            }
             accessibilityLabel = String.Localized.update_payment_method
             accessibilityIdentifier = "CircularButton.Edit"
         }
@@ -132,7 +150,7 @@ class CircularButton: UIControl {
         imageView.tintColor = isEnabled ? iconColor : .tertiaryLabel
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateShadow()

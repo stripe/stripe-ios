@@ -295,7 +295,7 @@ import UIKit
         updateColors()
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         invalidateIntrinsicContentSize()

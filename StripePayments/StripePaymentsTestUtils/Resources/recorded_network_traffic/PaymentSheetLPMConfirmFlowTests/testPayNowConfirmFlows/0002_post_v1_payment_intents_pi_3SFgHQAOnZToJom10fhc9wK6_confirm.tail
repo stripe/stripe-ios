@@ -1,0 +1,94 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SFgHQAOnZToJom10fhc9wK6\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QHZP3NBGhqSqTGm4d5DXOxkMoBTlWPN3vBdTZdI481YzHuGeEtWrT2i19X3XvBBV121cdyUiXgKyZjCg
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_Tl54hl3A0PAUwn
+Content-Length: 2022
+Vary: Origin
+Date: Tue, 07 Oct 2025 19:10:37 GMT
+original-request: req_Tl54hl3A0PAUwn
+stripe-version: 2020-08-27
+idempotency-key: 65d8631c-296a-479a-b9a9-1f14cb27f8ad
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3SFgHQAOnZToJom10fhc9wK6_secret_u0FdedIHLPUtZjF0dzJblG7yF&expand\[0]=payment_method&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=standard&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=paynow&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "sgd",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "paynow_display_qr_code" : {
+      "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xSDdvWE1BT25aVG9Kb20xLF9UQzRRRmFBZGlkVGtsem93REhNZUx2MjNyNTFMQktX0100qOPg6qi3.svg",
+      "data" : "https:\/\/payments.stripe.com\/payment_methods\/test_payment?payment_attempt=payatt_3SFgHQAOnZToJom10RdZjYnL",
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/paynow\/instructions\/CCIaFwoVYWNjdF8xSDdvWE1BT25aVG9Kb20xKK3LlccGMgZszOFcslI6L3dBAJhNY0RhuM5GAH9WN4gauyBn72XlYFgiAqdmrkEXM32AlYFfAqHpO31SsFpS",
+      "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xSDdvWE1BT25aVG9Kb20xLF9UQzRRRmFBZGlkVGtsem93REhNZUx2MjNyNTFMQktX0100qOPg6qi3.png"
+    },
+    "type" : "paynow_display_qr_code"
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "paynow" : {
+
+    },
+    "id" : "pm_1SFgHRAOnZToJom1IzTP1V03",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1759864237,
+    "allow_redisplay" : "unspecified",
+    "type" : "paynow",
+    "customer" : null
+  },
+  "client_secret" : "pi_3SFgHQAOnZToJom10fhc9wK6_secret_u0FdedIHLPUtZjF0dzJblG7yF",
+  "id" : "pi_3SFgHQAOnZToJom10fhc9wK6",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "paynow"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1759864236,
+  "description" : null
+}

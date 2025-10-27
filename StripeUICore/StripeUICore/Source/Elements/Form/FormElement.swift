@@ -48,7 +48,8 @@ import UIKit
     }
 
     var viewModel: ViewModel {
-        return ViewModel(elements: elements.map({ $0.view }), bordered: style == .bordered, theme: theme, customSpacing: customSpacing.map({ ($0.0.view, $0.1) }))
+        // filter out hidden elements so they don't take up any space in the form
+        return ViewModel(elements: elements.map({ $0.view }).filter({ !($0 is SectionElement.HiddenElement.HiddenView) }), bordered: style == .bordered, theme: theme, customSpacing: customSpacing.map({ ($0.0.view, $0.1) }))
     }
 
     // MARK: - Initializer

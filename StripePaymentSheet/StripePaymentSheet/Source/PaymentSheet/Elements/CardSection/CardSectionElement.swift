@@ -24,9 +24,16 @@ final class CardSectionElement: ContainerElement {
 
     weak var delegate: ElementDelegate?
     lazy var view: UIView = {
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
-            return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme, analyticsHelper: analyticsHelper)
+            return CardSectionWithScannerView(
+                cardSectionView: cardSection.view,
+                opensCardScannerAutomatically: opensCardScannerAutomatically,
+                delegate: self,
+                theme: theme,
+                analyticsHelper: analyticsHelper,
+                linkAppearance: linkAppearance
+            )
         } else {
             return cardSection.view
         }
@@ -37,6 +44,9 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
+    private let opensCardScannerAutomatically: Bool
+
+    private let linkAppearance: LinkAppearance?
 
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
@@ -70,12 +80,15 @@ final class CardSectionElement: ContainerElement {
         hostedSurface: HostedSurface,
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        cardBrandFilter: CardBrandFilter = .default
+        cardBrandFilter: CardBrandFilter = .default,
+        opensCardScannerAutomatically: Bool = false,
+        linkAppearance: LinkAppearance? = nil
     ) {
         self.hostedSurface = hostedSurface
         self.theme = theme
         self.analyticsHelper = analyticsHelper
         self.cardBrandFilter = cardBrandFilter
+        self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
@@ -92,7 +105,10 @@ final class CardSectionElement: ContainerElement {
         if cardBrandChoiceEligible {
             cardBrandDropDown = PaymentMethodElementWrapper(DropdownFieldElement.makeCardBrandDropdown(theme: theme)) { field, params in
                 let cardBrand = STPCard.brand(from: field.selectedItem.rawData)
-                cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
+                // Only set preferred networks for the confirm params if we have more than 1 brand fetched
+                if (cardBrandDropDown?.element.nonPlacerholderItems.count ?? 1) > 1 {
+                    cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
+                }
                 analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: cardBrand)
                 return params
             }
@@ -146,6 +162,7 @@ final class CardSectionElement: ContainerElement {
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks
         self.lastPanElementValidationState = panElement.validationState
+        self.linkAppearance = linkAppearance
         cardSection.delegate = self
     }
 
@@ -303,7 +320,7 @@ internal func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMet
     return cardParams
 }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 // MARK: - CardSectionWithScannerViewDelegate
 
 extension CardSectionElement: CardSectionWithScannerViewDelegate {

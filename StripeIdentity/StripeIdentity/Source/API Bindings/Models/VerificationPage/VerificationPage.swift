@@ -46,6 +46,10 @@ extension StripeAPI {
         /// session ID to identify experiement exposure
         let userSessionId: String
         let experiments: [VerificationPageStaticContentExperiment]
+        /// Whether this verification was triggered by Stripe
+        let isStripe: Bool
+        /// If true, the SDK will skip rendering a success page at the end of the flow
+        let skipSuccessPage: Bool
 
     }
 
@@ -53,6 +57,6 @@ extension StripeAPI {
 
 extension StripeAPI.VerificationPage {
     func copyWithNewMissings(newMissings: Set<StripeAPI.VerificationPageFieldType>) -> StripeAPI.VerificationPage {
-        return StripeAPI.VerificationPage(biometricConsent: self.biometricConsent, documentCapture: self.documentCapture, documentSelect: self.documentSelect, individual: self.individual, countryNotListed: self.countryNotListed, individualWelcome: self.individualWelcome, phoneOtp: self.phoneOtp, fallbackUrl: self.fallbackUrl, id: self.id, livemode: self.livemode, requirements: StripeAPI.VerificationPageRequirements(missing: newMissings), selfie: self.selfie, status: self.status, submitted: self.submitted, success: self.success, unsupportedClient: self.unsupportedClient, bottomsheet: self.bottomsheet, userSessionId: self.userSessionId, experiments: self.experiments)
+        return StripeAPI.VerificationPage(biometricConsent: self.biometricConsent, documentCapture: self.documentCapture, documentSelect: self.documentSelect, individual: self.individual, countryNotListed: self.countryNotListed, individualWelcome: self.individualWelcome, phoneOtp: self.phoneOtp, fallbackUrl: self.fallbackUrl, id: self.id, livemode: self.livemode, requirements: StripeAPI.VerificationPageRequirements(missing: newMissings), selfie: self.selfie, status: self.status, submitted: self.submitted, success: self.success, unsupportedClient: self.unsupportedClient, bottomsheet: self.bottomsheet, userSessionId: self.userSessionId, experiments: self.experiments, isStripe: self.isStripe, skipSuccessPage: self.skipSuccessPage)
     }
 }

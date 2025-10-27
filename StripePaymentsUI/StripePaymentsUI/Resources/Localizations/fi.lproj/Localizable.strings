@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@-kortti";
+
+"%1$@ Credit" = "%1$@-luottokortti";
+
+"%1$@ Debit" = "%1$@-pankkikortti";
+
+"%1$@ Prepaid" = "%1$@ Prepaid";
+
 "%1$@ account ending in %2$@" = "%1$@ -tili päättyy numeroihin %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ päättyy numeroihin %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Pankkitili";
 
 "Billing address" = "Laskutusosoite";
+
+"Billing details" = "Laskutustiedot";
 
 "CVC" = "CVC-tunnus";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
 
-"Your ZIP is invalid." = "Postinumero on virheellinen.";
-
 "Your card has expired." = "Korttisi on vanhentunut.";
 
 "Your card number is incomplete." = "Kortin numero on puutteellinen.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Kortin turvakoodi on puutteellinen.";
 
 "Your card's security code is invalid." = "Kortin turvakoodi on virheellinen.";
-
-"Your postal code is invalid." = "Postinumeroon virheellinen.";
 
 "card number" = "kortin numero";
 

@@ -6,7 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 
 import Foundation
 @_spi(STP) import StripeCore
@@ -14,15 +14,6 @@ import Foundation
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
-
-private class CardScanningEasilyTappableButton: UIButton {
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let newArea = bounds.insetBy(
-            dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
-            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
-        return newArea.contains(point)
-    }
-}
 
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
@@ -35,6 +26,7 @@ private class CardScanningEasilyTappableButton: UIButton {
 @objc(STP_Internal_CardScanningView)
 @available(macCatalyst 14.0, *)
 class CardScanningView: UIView, STPCardScannerDelegate {
+
     private(set) weak var cameraView: STPCameraView?
 
     weak var delegate: STP_Internal_CardScanningViewDelegate?
@@ -163,8 +155,28 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         self.stop()
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    var snapshotView: UIView?
+
+    // The shape layers don't animate cleanly during setHidden,
+    // so let's use a snapshot view instead.
+    func prepDismissAnimation() {
+        // Taking a snapshot while the view is offscreen can result in layout issues,
+        //    and is unnecessary since we won't show an animation in this case
+        guard window != nil else { return }
+
+        if let snapshot = snapshotView(afterScreenUpdates: false) {
+            self.addSubview(snapshot)
+            self.snapshotView = snapshot
+        }
+    }
+
+    func completeDismissAnimation() {
+        snapshotView?.removeFromSuperview()
+        snapshotView = nil
+    }
+
+    init(theme: ElementsAppearance) {
+        super.init(frame: .zero)
         self.setupBlurView()
 
         let cameraView = STPCameraView(frame: bounds)
@@ -177,58 +189,78 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
         closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
 
-        self.addSubview(cameraView)
-        self.addSubview(cardOutlineView)
-        self.addSubview(cardOuterBlurView)
-        self.addSubview(errorLabel)
-        self.addSubview(closeButton)
+        addSubview(cameraView)
+        addSubview(cardOutlineView)
+        addSubview(cardOuterBlurView)
+        addSubview(errorLabel)
+        addSubview(closeButton)
 
-        self.layer.cornerRadius = CardScanningView.cornerRadius
         self.cameraView = cameraView
-        cameraView.layer.cornerRadius = CardScanningView.cornerRadius
         self.cameraView?.translatesAutoresizingMaskIntoConstraints = false
         // The first few frames of the camera view will be black, so our background should be black too.
         self.cameraView?.backgroundColor = UIColor.black
+
+        let closeButtonInset: CGFloat
+        // If Liquid Glass is enabled, we use rounder corners to match the appearance of the text fields and other elements
+        // The close button is pushed a bit further away from the edge to compensate
+        // If the user has set a customer corner radius, we do not apply the Liquid Glass style, but we still use our corner radius
+        if theme.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyDefaultCornerConfiguration()
+            closeButtonInset = 12
+        } else {
+            layer.cornerRadius = Self.cornerRadius
+            cameraView.layer.cornerRadius = Self.cornerRadius
+            closeButtonInset = 8
+        }
+
+        // To get the right animation, we'll add a breakable bottom constraint
+        // and enable clipsToBounds. Then, when hidden, the view will shrink while
+        // the contents remain pinned to the top.
+        let bottomConstraints = [
+            cameraView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            cardOuterBlurView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            cardOutlineView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Self.cardInset),
+        ]
+        bottomConstraints.forEach {
+            $0.priority = .defaultHigh
+        }
+        self.clipsToBounds = true
+        self.addConstraints(bottomConstraints)
+
         self.addConstraints(
             [
-                cameraView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
-                cameraView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0),
-                cameraView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
-                cameraView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
+                cameraView.leftAnchor.constraint(equalTo: self.leftAnchor),
+                cameraView.rightAnchor.constraint(equalTo: self.rightAnchor),
+                cameraView.topAnchor.constraint(equalTo: self.topAnchor),
 
-                cardOuterBlurView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
-                cardOuterBlurView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0),
-                cardOuterBlurView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
-                cardOuterBlurView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
+                cardOuterBlurView.leftAnchor.constraint(equalTo: self.leftAnchor),
+                cardOuterBlurView.rightAnchor.constraint(equalTo: self.rightAnchor),
+                cardOuterBlurView.topAnchor.constraint(equalTo: self.topAnchor),
 
-                errorLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0),
                 errorLabel.leftAnchor.constraint(equalTo: cardOutlineView.leftAnchor, constant: 8),
                 errorLabel.rightAnchor.constraint(
                     equalTo: cardOutlineView.rightAnchor, constant: -8),
+                errorLabel.centerYAnchor.constraint(equalTo: cardOutlineView.centerYAnchor),
 
-                closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
-                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8),
+                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -closeButtonInset),
+                closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: closeButtonInset),
 
                 cardOutlineView.heightAnchor.constraint(
-                    equalTo: cardOutlineView.widthAnchor, multiplier: CardScanningView.cardSizeRatio
-                ),
-
-                cardOutlineView.topAnchor.constraint(
-                    equalTo: self.topAnchor, constant: CardScanningView.cardInset),
+                    equalTo: cardOutlineView.widthAnchor, multiplier: CardScanningView.cardSizeRatio),
                 cardOutlineView.leftAnchor.constraint(
                     equalTo: self.leftAnchor, constant: CardScanningView.cardInset),
                 cardOutlineView.rightAnchor.constraint(
                     equalTo: self.rightAnchor, constant: -CardScanningView.cardInset),
-                cardOutlineView.bottomAnchor.constraint(
-                    equalTo: self.bottomAnchor, constant: -CardScanningView.cardInset),
+                cardOutlineView.topAnchor.constraint(
+                    equalTo: self.topAnchor, constant: CardScanningView.cardInset),
             ])
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         let cornerRadius =
-            (self.bounds.size.width - (CardScanningView.cardInset * 2))
-            * CardScanningView.cardCornerRadius
+        (self.bounds.size.width - (CardScanningView.cardInset * 2))
+        * CardScanningView.cardCornerRadius
         cardOutlineView.layer.cornerRadius = cornerRadius
 
         let outerPath = UIBezierPath(
@@ -258,5 +290,4 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         super.willMove(toWindow: newWindow)
     }
 }
-
 #endif

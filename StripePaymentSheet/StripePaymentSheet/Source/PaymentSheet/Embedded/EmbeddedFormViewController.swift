@@ -70,8 +70,12 @@ class EmbeddedFormViewController: UIViewController {
         }
     }
 
+    var form: PaymentMethodElement {
+        return paymentMethodFormViewController.form
+    }
+
     var collectsUserInput: Bool {
-        return paymentMethodFormViewController.form.collectsUserInput
+        return form.collectsUserInput
     }
 
     enum Error: Swift.Error {
@@ -111,10 +115,12 @@ class EmbeddedFormViewController: UIViewController {
     private lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
+            },
+            didTapWhenDisabled: { [weak self] in
+                self?.didTapPrimaryButtonWhenDisabled()
             }
         )
     }()
@@ -133,6 +139,7 @@ class EmbeddedFormViewController: UIViewController {
             // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
             shouldUseNewCardHeader: shouldUseNewCardNewCardHeader,
             appearance: configuration.appearance,
+            currency: intent.currency,
             incentive: elementsSession.incentive?.takeIfAppliesTo(paymentMethodType)
         )
 
@@ -145,6 +152,7 @@ class EmbeddedFormViewController: UIViewController {
             configuration: configuration,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
+            isLinkUI: false,
             delegate: self
         )
     }()
@@ -213,7 +221,6 @@ class EmbeddedFormViewController: UIViewController {
         }()
         primaryButton.update(
             state: state,
-            style: .stripe,
             callToAction: callToAction,
             animated: true
         )
@@ -276,7 +283,7 @@ class EmbeddedFormViewController: UIViewController {
             stackView.addArrangedSubview(view)
         }
         stackView.spacing = 20
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.sendSubviewToBack(mandateView)
@@ -288,12 +295,12 @@ class EmbeddedFormViewController: UIViewController {
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            primaryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: PaymentSheetUI.defaultSheetMargins.leading),
-            primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -PaymentSheetUI.defaultSheetMargins.trailing),
+            primaryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: configuration.appearance.formInsets.leading),
+            primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
 
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -32),
-            primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+            primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
     }
 
@@ -321,7 +328,7 @@ class EmbeddedFormViewController: UIViewController {
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
                     // Update state
@@ -336,7 +343,7 @@ class EmbeddedFormViewController: UIViewController {
                     self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
@@ -376,6 +383,14 @@ class EmbeddedFormViewController: UIViewController {
         }
 
         pay(with: selectedPaymentOption)
+    }
+
+    @objc func didTapPrimaryButtonWhenDisabled() {
+        // When the disabled button is tapped, show validation errors on all form fields
+#if !os(visionOS)
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+        paymentMethodFormViewController.form.showAllValidationErrors()
     }
 }
 

@@ -39,7 +39,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
         super.setUp()
         apiClient = STPAPIClient()
         // HTTPBin clone
-        apiClient.apiURL = URL(string: "https://luxurious-alpine-devourer.glitch.me")
+        apiClient.apiURL = URL(string: "https://stripe-mobile-luxurious-alpine-devourer.stripedemos.com")
     }
 
     func testPublishableKeyAuthorization() {

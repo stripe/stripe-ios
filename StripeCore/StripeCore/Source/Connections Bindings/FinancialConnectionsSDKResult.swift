@@ -15,5 +15,6 @@ import Foundation
     @_spi(STP) public enum Completed {
         case financialConnections(FinancialConnectionsLinkedBank)
         case instantDebits(InstantDebitsLinkedBank)
+        case linkedAccount(id: String)
     }
 }

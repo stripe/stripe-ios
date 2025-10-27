@@ -22,7 +22,6 @@ class STPAnalyticsClientPaymentsUITest: XCTestCase {
         // setup
         let analytic = GenericPaymentAnalytic(
             event: .paymentMethodCreation,
-            paymentConfiguration: nil,
             additionalParams: [:]
         )
         let client = STPAnalyticsClient()

@@ -120,9 +120,17 @@ final class PlaygroundConfiguration {
         case automatic = "automatic"
         case web = "web"
         case native = "native"
+        case fcLite = "fc_lite"
 
         var id: String {
             return rawValue
+        }
+
+        var displayName: String {
+            switch self {
+            case .automatic, .web, .native: return rawValue.capitalized
+            case .fcLite: return "FC Lite"
+            }
         }
     }
     private static let sdkTypeKey = "sdk_type"
@@ -141,7 +149,7 @@ final class PlaygroundConfiguration {
             configurationStore[Self.sdkTypeKey] = newValue.rawValue
 
             switch newValue {
-            case .automatic:
+            case .automatic, .fcLite:
                 PlaygroundUserDefaults.enableNative = nil
             case .web:
                 PlaygroundUserDefaults.enableNative = false
@@ -179,7 +187,7 @@ final class PlaygroundConfiguration {
             self.stripeAccount = stripeAccount
         }
 
-        // The id's should use underscore as "-" is not supported in Glitch
+        // The id's should use underscore as "-" is not supported in our backend
         enum CustomId: String {
             case `default` = "default"
             case networking = "networking"
@@ -475,23 +483,6 @@ final class PlaygroundConfiguration {
 
     // MARK: - Experimental
 
-    private static let useAsyncAPIClientKey = "use_async_api_client"
-    var useAsyncAPIClient: Bool {
-        get {
-            if let useAsyncAPIClient = configurationStore[Self.useAsyncAPIClientKey] as? Bool {
-                return useAsyncAPIClient
-            } else {
-                return true
-            }
-        }
-        set {
-            // Save to configuration string
-            configurationStore[Self.useAsyncAPIClientKey] = newValue
-            // Save to experiment store
-            ExperimentStore.shared.useAsyncAPIClient = newValue
-        }
-    }
-
     enum Style: String, CaseIterable, Identifiable, Hashable {
         case automatic = "automatic"
         case alwaysLight = "always_light"
@@ -633,12 +624,6 @@ final class PlaygroundConfiguration {
             self.liveEvents = false
         }
 
-        if let useAsyncAPIClient = dictionary[Self.useAsyncAPIClientKey] as? Bool {
-            self.useAsyncAPIClient = useAsyncAPIClient
-        } else {
-            self.useAsyncAPIClient = true
-        }
-
         if let styleString = dictionary[Self.styleKey] as? String,
            let style = PlaygroundConfiguration.Style(rawValue: styleString) {
             self.style = style
@@ -689,11 +674,8 @@ final class PlaygroundConfigurationStore {
         set {
             do {
                 let configurationData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                if let configurationString = String(data: configurationData, encoding: .utf8) {
-                    Self.configurationString = configurationString
-                } else {
-                    assertionFailure("unable to convert `configurationData` to a `configurationString`")
-                }
+                let configurationString = String(decoding: configurationData, as: UTF8.self)
+                Self.configurationString = configurationString
             } catch {
                 assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
             }

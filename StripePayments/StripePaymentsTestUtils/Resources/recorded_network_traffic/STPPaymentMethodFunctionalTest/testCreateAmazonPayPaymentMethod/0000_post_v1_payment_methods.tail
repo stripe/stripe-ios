@@ -3,41 +3,38 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=05gMVmkOXJdvQzSi1aMNYG7pre87l3nk3GNEJvXcyVVRiizfPXjSZW0RL0c4SzqQi0paqOtxjA%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=WkkcALZ3U3d5HPHle59mjA2q1aMiUVlowSdqDr2UM5sVy4dtanPXSAI4RTcbUJQqyTiS7e04F1cSXKHZ
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_qDxN9zZiP8wX3Y
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 456
+request-id: req_oewbYkhomByaYO
+Content-Length: 476
 Vary: Origin
-Date: Thu, 02 Jan 2025 17:29:46 GMT
-original-request: req_qDxN9zZiP8wX3Y
+Date: Tue, 19 Aug 2025 17:59:31 GMT
+original-request: req_oewbYkhomByaYO
 stripe-version: 2020-08-27
-idempotency-key: 7e6e8466-ab56-4b96-97c5-2e2423027d4b
+idempotency-key: 4677ac67-4969-4bc6-9d9a-9cbe0874450d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
-X-Stripe-Mock-Request: allow_redisplay=unspecified&payment_user_agent=.*&type=amazon_pay
+X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=amazon_pay
 
 {
   "object" : "payment_method",
   "amazon_pay" : {
 
   },
-  "id" : "pm_1QcsDOFY0qyl6XeWZ1rvHYbP",
+  "id" : "pm_1RxtolFY0qyl6XeWvKwcyZed",
   "billing_details" : {
     "email" : null,
     "phone" : null,
+    "tax_id" : null,
     "name" : null,
     "address" : {
       "state" : null,
@@ -49,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&payment_user_agent=.*&type=am
     }
   },
   "livemode" : false,
-  "created" : 1735838986,
+  "created" : 1755626371,
   "allow_redisplay" : "unspecified",
   "type" : "amazon_pay",
   "customer" : null

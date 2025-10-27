@@ -15,7 +15,7 @@ extension View {
     public func customerSheet(
         isPresented: Binding<Bool>,
         customerSheet: CustomerSheet,
-        onCompletion: @escaping (CustomerSheet.CustomerSheetResult) -> Void
+        onCompletion: @escaping @MainActor (CustomerSheet.CustomerSheetResult) -> Void
     ) -> some View {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
         return self.modifier(
@@ -32,7 +32,7 @@ extension CustomerSheet {
     struct CustomerSheetPresentationModifier: ViewModifier {
         @Binding var isPresented: Bool
         let customerSheet: CustomerSheet
-        let onCompletion: (CustomerSheet.CustomerSheetResult) -> Void
+        let onCompletion: @MainActor (CustomerSheet.CustomerSheetResult) -> Void
 
         func body(content: Content) -> some View {
             content.background(
@@ -48,7 +48,7 @@ extension CustomerSheet {
     struct CustomerSheetPresenter: UIViewRepresentable {
         @Binding var presented: Bool
         weak var customerSheet: CustomerSheet?
-        let onCompletion: (CustomerSheet.CustomerSheetResult) -> Void
+        let onCompletion: @MainActor (CustomerSheet.CustomerSheetResult) -> Void
 
         func makeCoordinator() -> Coordinator {
             return Coordinator(parent: self)
@@ -100,7 +100,9 @@ extension CustomerSheet {
 
                 parent.customerSheet?.present(from: presenter) { (result: CustomerSheet.CustomerSheetResult) in
                     self.parent.presented = false
-                    self.parent.onCompletion(result)
+                    Task { @MainActor in
+                        self.parent.onCompletion(result)
+                    }
                 }
             }
 

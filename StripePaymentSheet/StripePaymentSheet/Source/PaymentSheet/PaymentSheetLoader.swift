@@ -50,6 +50,7 @@ final class PaymentSheetLoader {
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
+        isUpdate: Bool = false,
         completion: @escaping (Result<LoadResult, Error>) -> Void
     ) {
         analyticsHelper.logLoadStarted()
@@ -93,8 +94,42 @@ final class PaymentSheetLoader {
                 async let savedPaymentMethods = fetchSavedPaymentMethods(elementsSession: elementsSession, configuration: configuration)
 
                 // Load link account session. Continue without Link if it errors.
-                let linkAccount = try? await lookupLinkAccount(elementsSession: elementsSession, configuration: configuration)
+                let linkAccount = try? await lookupLinkAccount(
+                    elementsSession: elementsSession,
+                    configuration: configuration,
+                    isUpdate: isUpdate
+                )
                 LinkAccountContext.shared.account = linkAccount
+
+                // Log experiment exposures
+                if let arbId = elementsSession.experimentsData?.arbId {
+                    let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+                        arbId: arbId,
+                        session: elementsSession,
+                        configuration: configuration,
+                        linkAccount: linkAccount,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
+                    analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
+
+                    let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
+                        arbId: arbId,
+                        session: elementsSession,
+                        configuration: configuration,
+                        linkAccount: linkAccount,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
+                    analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
+
+                    let linkAbTestExperiment = LinkABTest(
+                        arbId: arbId,
+                        session: elementsSession,
+                        configuration: configuration,
+                        linkAccount: linkAccount,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
+                    analyticsHelper.logExposure(experiment: linkAbTestExperiment)
+                }
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                 let filteredSavedPaymentMethods = try await savedPaymentMethods
@@ -106,9 +141,17 @@ final class PaymentSheetLoader {
                             elementsSession: elementsSession
                         )
                     }
+                    .filter { Self.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) }
 
                 let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
                 let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+
+                // Disable FC Lite if killswitch is enabled
+                let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
+                FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
+
+                let remoteFcLiteOverrideEnabled = elementsSession.flags["elements_prefer_fc_lite"] == true
+                FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
 
                 // Send load finished analytic
                 // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
@@ -121,6 +164,14 @@ final class PaymentSheetLoader {
                     defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+
+                // Assert if using konbini or blik with confirmation tokens
+                if case .deferredIntent(let intentConfiguration) = mode,
+                   intentConfiguration.confirmationTokenConfirmHandler != nil {
+                    if paymentMethodTypes.contains(.stripe(.konbini)) || paymentMethodTypes.contains(.stripe(.blik)) {
+                        stpAssertionFailure("Konbini and BLIK payment methods are not supported with ConfirmationTokens. Use init(mode:paymentMethodTypes:onBehalfOf:paymentMethodConfigurationId:confirmHandler:requireCVCRecollection:) instead.")
+                    }
+                }
 
                 // Ensure that there's at least 1 payment method type available for the intent and configuration.
                 guard !paymentMethodTypes.isEmpty else {
@@ -135,6 +186,9 @@ final class PaymentSheetLoader {
                 if integrationShape.shouldStartCheckoutMeasurementOnLoad {
                     analyticsHelper.startTimeMeasurement(.checkout)
                 }
+
+                // Initialize telemetry. Don't wait for this to finish to call completion.
+                STPTelemetryClient.shared.sendTelemetryData()
 
                 // Call completion
                 let loadResult = LoadResult(
@@ -191,16 +245,52 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> PaymentSheetLinkAccount? {
-        // Only lookup the consumer account if Link is supported
-        guard PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
+    static func lookupLinkAccount(
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration,
+        isUpdate: Bool
+    ) async throws -> PaymentSheetLinkAccount? {
+        // If we already have a verified Link account and the merchant is just calling `update` on FlowController,
+        // keep the account logged-in. Otherwise, the user has to verify via OTP again.
+        if isUpdate, let currentLinkAccount = LinkAccountContext.shared.account, currentLinkAccount.sessionState == .verified {
+            return currentLinkAccount
+        }
+
+        // Lookup Link account if Link is enabled or the holdback killswitch is not enabled.
+        // Note: When the holdback experiment is over, we can ignore the killswitch and only lookup when Link is enabled.
+        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        let isLookupForHoldbackEnabled = elementsSession.flags["elements_disable_link_global_holdback_lookup"] != true
+
+        guard isLinkEnabled || isLookupForHoldbackEnabled else {
             return nil
         }
 
+        // Don't log this as a lookup on the backend side if Link is not enabled.
+        // As in, this will be true when this lookup is only happening to gather dimensions for the holdback experiment.
+        // Note: When the holdback experiment is over, we can remove this parameter from the lookup call.
+        let doNotLogConsumerFunnelEvent = !isLinkEnabled
+
+        // This lookup call will only happen if we have access to a user's email:
+        return try await _lookupLinkAccount(
+            elementsSession: elementsSession,
+            configuration: configuration,
+            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
+        )
+    }
+
+    private static func _lookupLinkAccount(
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration,
+        doNotLogConsumerFunnelEvent: Bool
+    ) async throws -> PaymentSheetLinkAccount? {
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
         func lookUpConsumerSession(email: String?, emailSource: EmailSource) async throws -> PaymentSheetLinkAccount? {
             return try await withCheckedThrowingContinuation { continuation in
-                linkAccountService.lookupAccount(withEmail: email, emailSource: emailSource) { result in
+                linkAccountService.lookupAccount(
+                    withEmail: email,
+                    emailSource: emailSource,
+                    doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
+                ) { result in
                     switch result {
                     case .success(let linkAccount):
                         continuation.resume(with: .success(linkAccount))
@@ -214,7 +304,7 @@ final class PaymentSheetLoader {
         if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email, emailSource: .customerEmail)
         } else if let customerID = configuration.customer?.id,
-                  let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
+                  let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
         {
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
             // If there's an error in this call we can just ignore it
@@ -339,11 +429,15 @@ final class PaymentSheetLoader {
               !ephemeralKey.isEmpty else {
             return []
         }
+
+        // We don't support Link payment methods with customer ephemeral keys
+        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link }
+
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
                 using: ephemeralKey,
-                types: PaymentSheet.supportedSavedPaymentMethods,
+                types: types,
                 limit: 100
             ) { paymentMethods, error in
                 guard var paymentMethods, error == nil else {
@@ -378,5 +472,22 @@ final class PaymentSheetLoader {
                 continuation.resume(returning: paymentMethods)
             }
         }
+    }
+
+    /// Determines if a saved payment method should be included based on allowed countries filtering
+    /// - Parameters:
+    ///   - paymentMethod: The payment method to evaluate
+    ///   - allowedCountries: Set of allowed country codes (empty set means all countries allowed)
+    /// - Returns: `true` if the payment method should be included, `false` otherwise
+    static func shouldIncludePaymentMethod(_ paymentMethod: STPPaymentMethod, allowedCountries: Set<String>) -> Bool {
+        // Empty set means all countries are allowed (no filtering)
+        guard !allowedCountries.isEmpty else { return true }
+
+        // Hide payment methods without billing country data when filtering is active
+        guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
+            return false
+        }
+
+        return allowedCountries.contains(billingCountry)
     }
 }

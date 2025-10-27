@@ -48,7 +48,7 @@ struct PlaygroundView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Picker("Select SDK Type", selection: viewModel.sdkType) {
                                 ForEach(PlaygroundConfiguration.SDKType.allCases) {
-                                    Text($0.rawValue.capitalized)
+                                    Text($0.displayName)
                                         .tag($0)
                                 }
                             }
@@ -200,10 +200,6 @@ struct PlaygroundView: View {
                         }
                         .disabled(viewModel.sessionOutput[.accountIds] == nil)
                         .accessibility(identifier: "playground-session-output-copy-account-ids")
-                    }
-
-                    Section(header: Text("Experimental")) {
-                        Toggle("Use async API client", isOn: viewModel.useAsyncAPIClient)
                     }
                 }
                 .simultaneousGesture(

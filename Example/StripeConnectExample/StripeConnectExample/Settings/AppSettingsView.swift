@@ -18,6 +18,8 @@ struct AppSettingsView: View {
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
     @State var onboardingSettings = AppSettings.shared.onboardingSettings
+    @State var paymentsSettings = AppSettings.shared.paymentsSettings
+    @State var presentationSettings = AppSettings.shared.presentationSettings
 
     var isCustomEndpointValid: Bool {
         URL(string: serverURLString)?.isValid == true
@@ -95,13 +97,29 @@ struct AppSettingsView: View {
                     Text("Select a demo account")
                 }
                 Section {
-                    NavigationLink {
-                        OnboardingSettingsView(onboardingSettings: $onboardingSettings)
-                    } label: {
-                        Text("Account onboarding")
-                            .font(.body)
-                            .foregroundColor(.primary)
+                                    NavigationLink {
+                    OnboardingSettingsView(onboardingSettings: $onboardingSettings)
+                } label: {
+                    Text("Account onboarding")
+                        .font(.body)
+                        .foregroundColor(.primary)
                     }
+
+                NavigationLink {
+                    PaymentsSettingsView(paymentsSettings: $paymentsSettings)
+                } label: {
+                    Text("Payments")
+                        .font(.body)
+                        .foregroundColor(.primary)
+                }
+
+                NavigationLink {
+                    PresentationSettingsView(presentationSettings: $presentationSettings)
+                } label: {
+                    Text("View controller options")
+                        .font(.body)
+                        .foregroundColor(.primary)
+                }
                 } header: {
                     Text("Component Settings")
                 }

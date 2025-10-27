@@ -8,6 +8,9 @@
 import XCTest
 
 final class StripeConnectOnboardingTests: XCTestCase {
+
+/*
+    // Temporarily disabled until we can get stable ids for UI elements in web views.
     func testOpenAndClose() throws {
         let app = XCUIApplication.sc_launch()
         app.sc_onboarding_cell.tap()
@@ -34,4 +37,5 @@ final class StripeConnectOnboardingTests: XCTestCase {
         _ = app.sc_onboarding_cell
         app.verifyToast(message: "Did exit called")
     }
+ */
 }

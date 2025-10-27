@@ -42,7 +42,6 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
     enum Error: Swift.Error, LocalizedError {
         case failedToStart
         case noURL
-        case unexpectedURL
         case noPaymentMethodID
         case canceled
 
@@ -164,16 +163,5 @@ extension InstantDebitsOnlyAuthenticationSessionManager {
             .queryItems?
             .first(where: { $0.name == key })?
             .value?.removingPercentEncoding
-    }
-}
-
-private extension URL {
-
-    func matchesSchemeHostAndPath(of otherURL: URL) -> Bool {
-        return (
-            self.scheme == otherURL.scheme &&
-            self.host == otherURL.host &&
-            self.path == otherURL.path
-        )
     }
 }

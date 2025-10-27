@@ -4,12 +4,12 @@ https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_setup_intent
 text/html
 Content-Type: text/html;charset=utf-8
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=RK15SjsaTlKE77yxh%2BPKPtIhpKVBrIs093rzIhuhvbtzWdO3bHv%2FY1aJLywU6Tw9X4SX6jb9p2U9d867WmvdZjmkoxFTsal79vPPiBXS1uDtCipIBDMQV6L%2BipegP8SOzwo33LmZ0dCKnj9g1dvCP%2FgufRG0XMvFLUyKL5gDt7IaIZkVlDKa9HfRPkYwG7FimI5qEOGd5Zvr6HDVZ5tOPpb21f8uoJS9V%2BB8QSw8WX4%3D; path=/
+Set-Cookie: rack.session=yG3%2FCsH49%2ByLrSgsOwTRg7aH%2F1jBL%2BV9cM0kMz69mZIp4rocYEVLnwEnzO8zjqO7mAesJC%2Bu2Oaw7%2BBemv4ZB%2B3E%2FjqdjLIZ9HbBqFPZ6i8kgoPx1z2VgsIOa6mIPwMlqnga7N3YDgB5EIR2WF5ecIfrtHEkLiwtXqpcu5xl3VnQqsM7fhV6KvCjj%2BZpjb1qa6xhSUIRevpESdXUIkwMtCLpdUr8gnfoHfHQAogz8aw%3D; path=/
 Server: Google Frontend
-x-cloud-trace-context: d8e935eba88d6501d6de8b448bff81b0
+x-cloud-trace-context: 98918074438498551a7a78d54dc05fbd
 Via: 1.1 google
 x-xss-protection: 1; mode=block
-Date: Thu, 02 Jan 2025 17:17:54 GMT
+Date: Tue, 29 Jul 2025 04:45:18 GMT
 x-robots-tag: noindex, nofollow
 Content-Length: 61
 x-content-type-options: nosniff

@@ -1,29 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_RXPmG7JszA2qaM&type=sepa_debit$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_SthDkCjYJ3hMQb&type=sepa_debit$
 200
 application/json
-access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=VNZN_F0mPeHqaLJJGKuRr2zkMury4Xtu2usOlk16dJo6RpbIVzBGwE3ZAh06Q9BUMoZDk6IiQw%3D%3D
-Server: nginx
-Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Content-Type: application/json
 Access-Control-Allow-Origin: *
-x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_3WGLtk7EB7q4sp
-Content-Length: 988
-Vary: Origin
-Date: Mon, 06 Jan 2025 18:23:04 GMT
-stripe-version: 2020-08-27
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=oS1WXbrdfG_zLhEHIa7uiWPuP6sZDK9TLg9d51Db4MVEz5G-S3zIANU052An0UEWw4EReGRsivaCf6vE
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Tue, 19 Aug 2025 17:59:39 GMT
+stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Type: application/json
-x-content-type-options: nosniff
+Content-Length: 1012
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_3yVqc3aYPC96d8
 
 {
   "has_more" : false,
@@ -42,10 +38,11 @@ x-content-type-options: nosniff
         },
         "branch_code" : ""
       },
-      "id" : "pm_1QeKx9FY0qyl6XeW4XW2ZgrC",
+      "id" : "pm_1RxtosFY0qyl6XeWNkJMyBe8",
       "billing_details" : {
         "email" : "email@email.com",
         "phone" : "555-555-5555",
+        "tax_id" : null,
         "name" : "Isaac Asimov",
         "address" : {
           "state" : null,
@@ -57,10 +54,10 @@ x-content-type-options: nosniff
         }
       },
       "livemode" : false,
-      "created" : 1736187783,
+      "created" : 1755626378,
       "allow_redisplay" : "unspecified",
       "type" : "sepa_debit",
-      "customer" : "cus_RXPmG7JszA2qaM"
+      "customer" : "cus_SthDkCjYJ3hMQb"
     }
   ],
   "url" : "\/v1\/payment_methods"

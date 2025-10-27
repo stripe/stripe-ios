@@ -7,11 +7,7 @@
 
 import UIKit
 
-/**
- The balance summary, the payout schedule, and a list of payouts for the connected account. It can also allow the user to perform instant or manual payouts.
- - Seealso: [Payouts component documentation](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios)
- */
-@_spi(DashboardOnly)
+@_spi(PreviewConnect)
 @available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
@@ -41,7 +37,7 @@ public class PayoutsViewController: UIViewController {
 }
 
 /// Delegate of an `PayoutsViewController`
-@_spi(DashboardOnly)
+@_spi(PreviewConnect)
 @available(iOS 15, *)
 public protocol PayoutsViewControllerDelegate: AnyObject {
 

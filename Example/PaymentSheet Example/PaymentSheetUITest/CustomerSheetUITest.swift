@@ -10,6 +10,21 @@ class CustomerSheetUITest: XCTestCase {
     var app: XCUIApplication!
     let timeout: TimeInterval = 10
 
+    /// This element's `label` contains all the analytic events sent by the SDK since the the playground was loaded, as a base-64 encoded string.
+    /// - Note: Only exists in test playground.
+    lazy var analyticsLogElement: XCUIElement = { app.staticTexts["_testAnalyticsLog"] }()
+    /// Convenience var to grab all the events sent since the playground was loaded.
+    var analyticsLog: [[String: Any]] {
+        let logRawString = analyticsLogElement.label
+        guard
+            let data = Data(base64Encoded: logRawString),
+            let json = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]]
+        else {
+            return []
+        }
+        return json
+    }
+
     override func setUpWithError() throws {
         try super.setUpWithError()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -381,18 +396,6 @@ class CustomerSheetUITest: XCTestCase {
         app.otherElements["consent_manually_verify_label"].links.firstMatch.tap()
         try! fillUSBankData_microdeposits(app)
 
-        let continueManualEntry = app.buttons["manual_entry_continue_button"]
-        XCTAssertTrue(continueManualEntry.waitForExistence(timeout: timeout))
-        continueManualEntry.tap()
-
-        // Fill out Link
-        XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: timeout))
-        app.typeText("test-\(UUID().uuidString)@example.com")
-        XCTAssertTrue(app.textFields["Phone number"].waitForExistence(timeout: timeout))
-        app.typeText("3105551234")
-        app.toolbars.buttons["Done"].tap()
-        app.buttons["Save with Link"].waitForExistenceAndTap(timeout: timeout)
-
         let doneManualEntry = app.buttons["success_done_button"]
         XCTAssertTrue(doneManualEntry.waitForExistence(timeout: timeout))
         doneManualEntry.tap()
@@ -607,8 +610,15 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Save"].tap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
 
-        // Shouldn't be able to edit only one saved PM when allowsRemovalOfLastSavedPaymentMethod = .off
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+        // Go to the edit screen
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+
+        // Shouldn't be able to remove non-CBC eligible card when allowsRemovalOfLastSavedPaymentMethod = .off
+        XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 1))
+        XCTAssertTrue(app.buttons["Back"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap(timeout: timeout))
 
         // Add another PM
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -629,8 +639,7 @@ class CustomerSheetUITest: XCTestCase {
         sleep(1)
 
         // Should be kicked out of edit mode now that we have one saved PM
-        XCTAssertFalse(app.staticTexts["Done"].waitForExistence(timeout: 1)) // "Done" button is gone - we are not in edit mode
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1)) // "Edit" button is gone - we can't edit
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap(timeout: timeout))
 
         // Add a CBC enabled PM
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -681,8 +690,15 @@ class CustomerSheetUITest: XCTestCase {
         app.buttons["Save"].tap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: timeout))
 
-        // Shouldn't be able to edit non-CBC eligible card when paymentMethodRemove = .disabled
-        XCTAssertFalse(app.staticTexts["Edit"].waitForExistence(timeout: 1))
+        // Go to the edit screen
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        XCTAssertTrue(app.staticTexts["Done"].waitForExistence(timeout: 1)) // Sanity check "Done" button is there
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+
+        // Shouldn't be able to remove non-CBC eligible card when paymentMethodRemove = .disabled
+        XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 1))
+        XCTAssertTrue(app.buttons["Back"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap(timeout: timeout))
 
         // Add a CBC enabled PM
         app.buttons["+ Add"].waitForExistenceAndTap()
@@ -696,7 +712,8 @@ class CustomerSheetUITest: XCTestCase {
 
         // Assert there are no remove buttons on each tile and the update screen
         XCTAssertNil(scroll(collectionView: app.collectionViews.firstMatch, toFindButtonWithId: "CircularButton.Remove"))
-        XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
+        XCTAssertTrue(app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap(timeout: timeout))
+        XCTAssertFalse(app.buttons["Remove"].waitForExistence(timeout: 1))
 
         // Dismiss Sheet
         app.buttons["Back"].waitForExistenceAndTap(timeout: timeout)
@@ -768,7 +785,6 @@ class CustomerSheetUITest: XCTestCase {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.customerKeyType = .customerSession
-        settings.paymentMethodUpdate = .enabled
         settings.merchantCountryCode = .FR
         loadPlayground(
             app,
@@ -797,7 +813,7 @@ class CustomerSheetUITest: XCTestCase {
         expField.typeText("99")
         XCTAssertTrue(app.staticTexts["Your card has expired."].waitForExistence(timeout: 3.0))
 
-        // Enter valid date of 02/32
+        // Enter valid date of mm/32
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText("32")
@@ -829,7 +845,7 @@ class CustomerSheetUITest: XCTestCase {
             XCTFail("Unable to get values from fields")
             return
         }
-        XCTAssertEqual(expirationDate, "03/32")
+        XCTAssertEqual(expirationDate.suffix(3), "/32")
         XCTAssertEqual(zipCode, "55555")
         XCTAssertEqual(country, "United States")
     }
@@ -838,7 +854,6 @@ class CustomerSheetUITest: XCTestCase {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.customerKeyType = .customerSession
-        settings.paymentMethodUpdate = .enabled
         settings.merchantCountryCode = .FR
         settings.collectAddress = .full
         loadPlayground(
@@ -857,6 +872,10 @@ class CustomerSheetUITest: XCTestCase {
 
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
+        app.toolbars.buttons["Done"].tap()
+
+        app.textFields["State"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
         app.toolbars.buttons["Done"].tap()
 
         let line1Field = app.textFields["Address line 1"]
@@ -904,6 +923,42 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertEqual(zipCode, "12345")
         XCTAssertEqual(country, "United States")
     }
+
+    func testCachesFormDetails() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        loadPlayground(app, settings)
+
+        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
+
+        // Tap Add button to open the form
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
+
+        // Start entering card details
+        let cardNumberField = app.textFields["Card number"]
+        cardNumberField.waitForExistenceAndTap(timeout: timeout)
+        cardNumberField.typeText("4")
+        app.toolbars.buttons["Done"].tap()
+
+        // Switch to bank form
+        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
+        let nameField = app.textFields["Full name"]
+        nameField.waitForExistenceAndTap(timeout: timeout)
+        nameField.typeText("H")
+
+        // Switch bank to card form and verify that input is still there
+        app.staticTexts["Card"].waitForExistenceAndTap(timeout: timeout)
+        // Hack - we do this twice since the first tap only dismisses the keyboard
+        app.staticTexts["Card"].waitForExistenceAndTap(timeout: timeout)
+        let cardInput = app.textFields["Card number"].value as? String
+        XCTAssertTrue(cardInput?.hasPrefix("4") == true, "Card number field should preserve entered data")
+
+        // Switch back to bank form and verify that input is still there
+        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
+        let bankInput = app.textFields["Full name"].value as? String
+        XCTAssertTrue(bankInput?.hasPrefix("H") == true, "Bank name field should preserve entered data")
+    }
+
     // MARK: - Helpers
 
     func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {
@@ -965,5 +1020,60 @@ class CustomerSheetUITest: XCTestCase {
 
         let alert = app.alerts[alertTitle]
         alert.buttons[buttonToTap].tap()
+    }
+
+    func testCustomerSheetCardScannerOpensAutomatically() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.opensCardScannerAutomatically = .on
+        settings.customerMode = .new
+
+        loadPlayground(app, settings)
+
+        let selectButton = app.staticTexts["None"]
+        XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
+        selectButton.tap()
+
+        // Verify STPCardScanner is NOT in analytics product_usage when sheet is open but card form hasn't been opened
+        let initialProductUsage = analyticsLog.last!["product_usage"] as! [String]
+        XCTAssertFalse(initialProductUsage.contains("STPCardScanner"), "STPCardScanner should not be in product_usage before opening card form")
+
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
+
+        // Wait for the close card scanner button to appear, which indicates the scanner is open and analytics updated
+        let closeScannerButton = app.buttons["Close card scanner"]
+        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Close card scanner button should appear when scanner opens")
+
+        // Verify STPCardScanner IS in analytics product_usage after opening card form
+        let updatedProductUsage = analyticsLog.last!["product_usage"] as! [String]
+        XCTAssertTrue(updatedProductUsage.contains("STPCardScanner"), "STPCardScanner should be in product_usage after opening card form")
+
+        // Close the card scanner
+        closeScannerButton.tap()
+
+        // Verify card scanner is closed
+        XCTAssertFalse(closeScannerButton.waitForExistence(timeout: 2.0), "Card scanner should be closed after tapping close button")
+
+        // Verify we can open the scanner again using the scan button
+        let scanCardButton = app.buttons["Scan card"]
+        XCTAssertTrue(scanCardButton.waitForExistence(timeout: 5.0), "Scan card button should exist")
+        scanCardButton.tap()
+        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Card scanner should open when tapping scan button")
+
+        // Verify that editing a form field closes the scanner
+        let cardNumberField = app.textFields["Card number"]
+        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should exist")
+        cardNumberField.tap()
+
+        // Verify scanner is closed after editing form field
+        XCTAssertFalse(closeScannerButton.exists, "Card scanner should be closed when editing form fields")
+
+        // Close the card entry form
+        let backButton = app.buttons["Back"]
+        XCTAssertTrue(backButton.waitForExistence(timeout: timeout))
+        backButton.tap()
+
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
+        closeButton.tap()
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
@@ -50,7 +51,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         didSet {
             let additionalButtonTitle = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
             navigationBar.additionalButton.setTitle(additionalButtonTitle, for: .normal)
-            headerLabel.text = headerText
+            // Update header text unless we removed the last pm and we're getting kicked out to the main screen
+            if !paymentMethodRows.isEmpty {
+                headerLabel.text = headerText
+            }
 
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
@@ -76,7 +80,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private var headerText: String {
-        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        let nonCardPaymentMethods = paymentMethods.filter(\.isNotCard)
         let hasOnlyCards = nonCardPaymentMethods.isEmpty
         if isEditingPaymentMethods {
             if hasOnlyCards {
@@ -137,9 +141,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         navBar.setStyle(navigationBarStyle())
         navBar.delegate = self
         navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
-        // TODO(porter) Read color from new secondary action color from appearance
-        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
-        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
         return navBar
     }()
@@ -183,7 +184,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
-        self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
+        self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
@@ -220,10 +221,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
 
-        view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+        view.addAndPinSubview(stackView, insets: configuration.appearance.formInsets)
 
         // Add a height constraint to the view to ensure a minimum height of 200
-        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height)
+        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height(appearance: configuration.appearance))
         minHeightConstraint.priority = .defaultHigh
         minHeightConstraint.isActive = true
     }
@@ -263,7 +264,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
         // If we deleted the last payment method kick back out to the main screen
         if paymentMethodRows.isEmpty {
-            complete()
+            complete(afterDelay: 0.3)
         }
     }
 
@@ -356,7 +357,11 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
                                                                            allowsSetAsDefaultPM: paymentMethodSetAsDefault,
                                                                            isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
-        let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+        let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
+            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+            paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
+            merchantName: configuration.merchantDisplayName)
+        let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
                                                                      isTestMode: configuration.apiClient.isTestmode,
                                                                      configuration: updateConfig)
         updateViewController.delegate = self
@@ -372,8 +377,15 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         if isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId) {
             defaultPaymentMethod = nil
         }
-        remove(paymentMethod: paymentMethod)
-       _ = viewController.bottomSheetController?.popContentViewController()
+        // if it's the last saved pm, there's some animation jank from trying to quickly dismiss the update pm screen and the manage screen, so we wait until the update pm screen is dismissed, animate the payment method fading, and return to the main screen
+        if paymentMethodRows.count == 1 {
+            _ = viewController.bottomSheetController?.popContentViewController {
+                self.remove(paymentMethod: paymentMethod)
+            }
+        } else {
+            remove(paymentMethod: paymentMethod)
+            _ = viewController.bottomSheetController?.popContentViewController()
+        }
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,
@@ -414,7 +426,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         do {
             // Update the payment method
             let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
-
+            updatedPaymentMethod.updateLocalFields(from: paymentMethod)
             replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
             return .success(())
         } catch {
@@ -473,4 +485,30 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         stackView.insertArrangedSubview(newButton, at: oldButtonViewIndex)
     }
 
+}
+
+private extension STPPaymentMethod {
+    var isNotCard: Bool {
+        guard let linkPaymentDetails else {
+            return type != .card
+        }
+        return linkPaymentDetails.isNotCard
+    }
+
+    func updateLocalFields(from original: STPPaymentMethod) {
+        // We don't receive the following fields as part of the update response, so we need to copy them over
+        linkPaymentDetails = original.linkPaymentDetails
+        isLinkPassthroughMode = original.isLinkPassthroughMode
+    }
+}
+
+private extension LinkPaymentDetails {
+    var isNotCard: Bool {
+        switch self {
+        case .card:
+            return false
+        case .bankAccount:
+            return true
+        }
+    }
 }

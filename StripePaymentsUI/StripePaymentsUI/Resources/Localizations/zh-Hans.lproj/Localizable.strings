@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ 银行卡";
+
+"%1$@ Credit" = "%1$@ 信用卡";
+
+"%1$@ Debit" = "%1$@ 借记卡";
+
+"%1$@ Prepaid" = "%1$@ 预付卡";
+
 "%1$@ account ending in %2$@" = "尾号为 %2$@ 的 %1$@ 账户";
 
 "%1$@ ending in %2$@" = "%1$@ - 尾号：%2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "银行账户";
 
 "Billing address" = "账单地址";
+
+"Billing details" = "账单详情";
 
 "CVC" = "安全码";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "要扫描您的银行卡，在“设置”中启用照相机。";
 
-"Your ZIP is invalid." = "您的邮编无效。";
-
 "Your card has expired." = "您的银行卡已过期。";
 
 "Your card number is incomplete." = "您的银行卡号不完整。";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "您的银行卡的安全码不完整。";
 
 "Your card's security code is invalid." = "您的银行卡的安全码无效。";
-
-"Your postal code is invalid." = "您的邮编无效。";
 
 "card number" = "卡号";
 

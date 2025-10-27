@@ -4,16 +4,17 @@
 //
 
 import Foundation
+import UIKit
 
 @_spi(STP) import StripePayments
 
 enum PaymentSheetFormFactoryConfig {
-    case paymentSheet(PaymentElementConfiguration) // TODO(porter) Change this back to PaymentSheet.Configuration when implementing embedded showing forms, and add a .embedded(EmbeddedPaymentElement.Configuration) case or consider just renaming this case to `paymentElement`.
+    case paymentElement(PaymentElementConfiguration, isLinkUI: Bool = false)
     case customerSheet(CustomerSheet.Configuration)
 
     var hasCustomer: Bool {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.customer != nil
         case .customerSheet:
             return true
@@ -21,23 +22,15 @@ enum PaymentSheetFormFactoryConfig {
     }
     var merchantDisplayName: String {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.merchantDisplayName
         case .customerSheet(let config):
             return config.merchantDisplayName
         }
     }
-    var overrideCountry: String? {
-        switch self {
-        case .paymentSheet(let config):
-            return config.userOverrideCountry
-        case .customerSheet:
-            return nil
-        }
-    }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.billingDetailsCollectionConfiguration
         case .customerSheet(let config):
             return config.billingDetailsCollectionConfiguration
@@ -45,7 +38,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var appearance: PaymentSheet.Appearance {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.appearance
         case .customerSheet(let config):
             return config.appearance
@@ -53,7 +46,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var defaultBillingDetails: PaymentSheet.BillingDetails {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.defaultBillingDetails
         case .customerSheet(let config):
             return config.defaultBillingDetails
@@ -61,7 +54,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var shippingDetails: () -> AddressViewController.AddressDetails? {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.shippingDetails
         case .customerSheet:
             return { return nil }
@@ -69,7 +62,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var savePaymentMethodOptInBehavior: PaymentSheet.SavePaymentMethodOptInBehavior {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.savePaymentMethodOptInBehavior
         case .customerSheet:
             return .automatic
@@ -78,7 +71,7 @@ enum PaymentSheetFormFactoryConfig {
 
     var preferredNetworks: [STPCardBrand]? {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.preferredNetworks
         case .customerSheet(let config):
             return config.preferredNetworks
@@ -87,7 +80,7 @@ enum PaymentSheetFormFactoryConfig {
 
     var isUsingBillingAddressCollection: Bool {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.requiresBillingDetailCollection()
         case .customerSheet(let config):
             return config.isUsingBillingAddressCollection()
@@ -96,7 +89,7 @@ enum PaymentSheetFormFactoryConfig {
 
     var cardBrandFilter: CardBrandFilter {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.cardBrandFilter
         case .customerSheet(let config):
             return config.cardBrandFilter
@@ -105,11 +98,42 @@ enum PaymentSheetFormFactoryConfig {
 
     var linkPaymentMethodsOnly: Bool {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config, _):
             return config.linkPaymentMethodsOnly
         case .customerSheet:
             return false
         }
     }
 
+    var isHorizontalMode: Bool {
+        switch self {
+        case .paymentElement(let paymentElementConfiguration, _):
+            switch paymentElementConfiguration.paymentMethodLayout {
+            case .horizontal:
+                return true
+            case .vertical, .automatic:
+                return false
+            }
+        case .customerSheet:
+            return true
+        }
+    }
+
+    var opensCardScannerAutomatically: Bool {
+        switch self {
+        case .customerSheet(let customerSheetConfiguration):
+            return customerSheetConfiguration.opensCardScannerAutomatically
+        case .paymentElement(let paymentElementConfiguration, _):
+            return paymentElementConfiguration.opensCardScannerAutomatically
+        }
+    }
+
+    func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheet.TermsDisplay {
+        switch self {
+        case .paymentElement(let configuration, _):
+            return configuration.termsDisplayFor(paymentMethodType: paymentMethodType)
+        case .customerSheet:
+            return .automatic
+        }
+    }
 }

@@ -69,7 +69,6 @@ opt_in_rules:
 excluded:
   - Package.swift
   - Pods
-  - Carthage
   - Tests/installation_tests
   - vendor
   - build*

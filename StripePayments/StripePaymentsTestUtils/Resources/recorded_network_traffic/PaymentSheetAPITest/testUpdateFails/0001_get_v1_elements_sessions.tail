@@ -1,35 +1,30 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bcurrency%5D=Invalid%20currency&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bcurrency%5D=Invalid%20currency&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&mobile_session_id=.*&type=deferred_intent$
 400
 application/json
-access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=4fToNJSgyuuEFEPsZlBwKMjaaOoM8r9q39Otr5mAk98Q6iXuT-jGTfcPsWs6cryLka7Mcj8P-A%3D%3D
-Server: nginx
-Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Content-Type: application/json
 Access-Control-Allow-Origin: *
-x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_5XiGHk8PmOLXhn
-Content-Length: 1044
-Vary: Origin
-Date: Thu, 02 Jan 2025 17:18:47 GMT
-stripe-version: 2020-08-27
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=AevTexlC3JU0-bre26eZ26fx4e3z-CHsbGVf86iLyGehc_FSwvcIlNWpgRJaKT1dv98Z8z1NzPuWpY4H
+x-wc: ABGHI
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Thu, 26 Jun 2025 20:36:30 GMT
+stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Type: application/json
-x-content-type-options: nosniff
+Content-Length: 952
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_Rg0m9aQmDALSW3
 
 {
   "error" : {
+    "message" : "Invalid currency: invalid currency. Stripe currently supports these currencies: usd, aed, afn, all, amd, ang, aoa, ars, aud, awg, azn, bam, bbd, bdt, bgn, bhd, bif, bmd, bnd, bob, brl, bsd, bwp, byn, bzd, cad, cdf, chf, clp, cny, cop, crc, cve, czk, djf, dkk, dop, dzd, egp, etb, eur, fjd, fkp, gbp, gel, gip, gmd, gnf, gtq, gyd, hkd, hnl, hrk, htg, huf, idr, ils, inr, isk, jmd, jod, jpy, kes, kgs, khr, kmf, krw, kwd, kyd, kzt, lak, lbp, lkr, lrd, lsl, mad, mdl, mga, mkd, mmk, mnt, mop, mur, mvr, mwk, mxn, myr, mzn, nad, ngn, nio, nok, npr, nzd, omr, pab, pen, pgk, php, pkr, pln, pyg, qar, ron, rsd, rub, rwf, sar, sbd, scr, sek, sgd, shp, sle, sos, srd, std, szl, thb, tjs, tnd, top, try, ttd, twd, tzs, uah, ugx, uyu, uzs, vnd, vuv, wst, xaf, xcd, xcg, xof, xpf, yer, zar, zmw, usdc, btn, ghs, eek, lvl, svc, vef, ltl, sll, mro",
     "param" : "deferred_intent[currency]",
-    "message" : "Invalid currency: invalid currency. Stripe currently supports these currencies: usd, aed, afn, all, amd, ang, aoa, ars, aud, awg, azn, bam, bbd, bdt, bgn, bhd, bif, bmd, bnd, bob, brl, bsd, bwp, byn, bzd, cad, cdf, chf, clp, cny, cop, crc, cve, czk, djf, dkk, dop, dzd, egp, etb, eur, fjd, fkp, gbp, gel, gip, gmd, gnf, gtq, gyd, hkd, hnl, hrk, htg, huf, idr, ils, inr, isk, jmd, jod, jpy, kes, kgs, khr, kmf, krw, kwd, kyd, kzt, lak, lbp, lkr, lrd, lsl, mad, mdl, mga, mkd, mmk, mnt, mop, mur, mvr, mwk, mxn, myr, mzn, nad, ngn, nio, nok, npr, nzd, omr, pab, pen, pgk, php, pkr, pln, pyg, qar, ron, rsd, rub, rwf, sar, sbd, scr, sek, sgd, shp, sle, sos, srd, std, szl, thb, tjs, tnd, top, try, ttd, twd, tzs, uah, ugx, uyu, uzs, vnd, vuv, wst, xaf, xcd, xof, xpf, yer, zar, zmw, usdc, btn, ghs, eek, lvl, svc, vef, ltl, sll, mro",
-    "type" : "invalid_request_error",
-    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_5XiGHk8PmOLXhn?t=1735838327"
+    "type" : "invalid_request_error"
   }
 }
