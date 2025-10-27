@@ -73,6 +73,21 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Retrieves existing KYC info for the current Link user.
+    /// - Parameters:
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An instance of `RetrieveKYCInfoResponse` containing the information stored for the user.
+    /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    func retrieveKycInfo(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> RetrieveKYCInfoResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        let endpoint = "crypto/internal/kyc_data_retrieve"
+        let parameters = ["credentials": ["consumer_session_client_secret": consumerSessionClientSecret]]
+        return try await get(resource: endpoint, parameters: parameters)
+    }
+
     /// Begins an identity verification session, providing the necessary data used to initialize the Identity SDK.
     /// - Parameter linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// - Returns: API response that includes information used to initialize the Identity SDK.
