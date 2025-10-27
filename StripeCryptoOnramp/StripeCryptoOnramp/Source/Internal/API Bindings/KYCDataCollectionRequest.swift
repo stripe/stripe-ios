@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Encodable model passed to the `/v1/crypto/internal/kyc_data_collection` endpoint.
+/// Encodable model passed to the `/v1/crypto/internal/kyc_data_collection` and `/v1/crypto/internal/refresh_consumer_person` endpoints.
 struct KYCDataCollectionRequest: Encodable {
 
     /// Contains credentials required to make the request.
@@ -15,9 +15,6 @@ struct KYCDataCollectionRequest: Encodable {
 
     /// KYC information required for crypto operations.
     let kycInfo: KycInfo
-
-    /// The calendar to use to convert the user’s date of birth (`KycInfo.dateOfBirth`) to components compatible with the API.
-    let calendar: Calendar
 
     // MARK: - Encodable
 
