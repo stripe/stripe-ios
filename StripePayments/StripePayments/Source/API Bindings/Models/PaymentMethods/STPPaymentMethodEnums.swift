@@ -96,6 +96,8 @@ import Foundation
     case twint
     /// A Multibanco payment method
     case multibanco
+    /// A PayPay payment method
+    case payPay
     /// A ShopPay payment method
     @_spi(STP) case shopPay
     /// An unknown type.
@@ -192,6 +194,8 @@ import Foundation
             return "TWINT"
         case .multibanco:
             return "Multibanco"
+        case .payPay:
+            return "PayPay"
         case .shopPay:
             return "ShopPay"
         case .cardPresent,
@@ -291,6 +295,8 @@ import Foundation
             return "twint"
         case .multibanco:
             return "multibanco"
+        case .payPay:
+            return "paypay"
         case .shopPay:
             return "shop_pay"
         }
