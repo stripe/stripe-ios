@@ -77,7 +77,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                             let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
                             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: context.apiClient)
                         }
-                        
+
                         // Call the handler regardless of radar session success/failure
                         preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
                         continuation.resume(returning: STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT)
@@ -167,17 +167,17 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 confirmationTokenParams.shipping = shippingDetailsParams
             }
         }
-        
+
         // Create the confirmation token
         let confirmationToken = try await context.apiClient.createConfirmationToken(
             with: confirmationTokenParams,
             ephemeralKeySecret: nil,
             additionalPaymentUserAgentValues: PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig)
         )
-        
+
         // Call the confirmation token handler
         let clientSecret = try await confirmationTokenConfirmHandler(confirmationToken)
-        
+
         // Handle case where payment is processed off Stripe
         guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
             return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
