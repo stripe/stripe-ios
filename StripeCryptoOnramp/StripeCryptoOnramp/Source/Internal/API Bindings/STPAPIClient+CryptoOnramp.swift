@@ -107,8 +107,8 @@ extension STPAPIClient {
         try validateSessionState(using: linkAccountInfo)
 
         let endpoint = "crypto/internal/kyc_data_retrieve"
-        let parameters = ["credentials": ["consumer_session_client_secret": consumerSessionClientSecret]]
-        return try await get(resource: endpoint, parameters: parameters)
+        let credentials = Credentials(consumerSessionClientSecret: consumerSessionClientSecret)
+        return try await post(resource: endpoint, object: credentials)
     }
 
     /// Begins an identity verification session, providing the necessary data used to initialize the Identity SDK.
