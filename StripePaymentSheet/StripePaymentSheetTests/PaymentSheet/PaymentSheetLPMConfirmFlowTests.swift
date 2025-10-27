@@ -71,11 +71,15 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    let fileManager = FileManager.default
+    var fileNamesDictionary: [Endpoint: [String]] = [:]
+
     override func setUp() async throws {
         await PaymentSheetLoader.loadMiscellaneousSingletons()
         // Don't follow redirects for this specific tests, as we want to record
         // the body of the redirect request for UnredirectableSessionDelegate.
         self.followRedirects = false
+        self.fileNamesDictionary = [:]
     }
 
     func testSEPADebitConfirmFlows() async throws {
@@ -436,6 +440,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSavedSEPA() async throws {
+        AnalyticsHelper.shared.generateSessionID()
         let customer = "cus_OaMPphpKbeixCz"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
         let savedSepaPM = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_1NnBnhFY0qyl6XeW9ThDjAvw", // A hardcoded SEPA PM for the ^ customer
@@ -503,6 +508,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                         XCTFail()
                     case .completed:
                         print("✅ \(description): PaymentSheet.confirm completed")
+                        if !self.recordingMode {
+                            self.verifyClientAttributionMetadataInStubs(description: description, isNewPM: false)
+                        }
                     }
                 }
                 await fulfillment(of: [e], timeout: 10)
@@ -901,6 +909,9 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                     XCTAssertTrue(redirectShimCalled, "❌ \(description): PaymentSheet.confirm canceled")
                 case .completed:
                     print("✅ \(description): PaymentSheet.confirm completed")
+                    if self.recordingMode == false {
+                        self.verifyClientAttributionMetadataInStubs(description: description)
+                    }
                 }
                 e.fulfill()
             }
@@ -1179,6 +1190,193 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
         XCTAssertNotNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
     }
+}
+
+// MARK: - CAM Verification Helper
+extension PaymentSheet_LPM_ConfirmFlowTests {
+    enum Endpoint: String, CaseIterable {
+        case confirm
+        case paymentMethods = "payment_methods"
+        case confirmationTokens = "confirmation_tokens"
+    }
+    enum Nested: String {
+        case paymentMethodData = "payment_method_data"
+    }
+
+    func verifyClientAttributionMetadataInStubs(description: String, isNewPM: Bool = true) {
+        let testName = self.name
+        let stubURL = getStubURL()
+        if fileNamesDictionary.isEmpty {
+            buildFileNamesDictionary(stubURL: getStubURL())
+        }
+        let nestedUnder: Nested? = isNewPM ? .paymentMethodData : nil
+        if description == "PaymentIntent" || description == "SetupIntent" { // intent-first
+            verifyClientAttributionMetadataInStubs(testName: testName, stubURL: stubURL, endpoint: .confirm, nestedUnder: nestedUnder)
+        } else if description.contains("Deferred") {
+            if description.contains("client side confirmation") {
+                if description.contains("confirmation token") { // deferred csc with ct
+                    verifyClientAttributionMetadataInStubs(testName: testName, stubURL: stubURL, endpoint: .confirmationTokens, nestedUnder: nestedUnder)
+                    verifyClientAttributionMetadataInStubs(testName: testName, stubURL: stubURL, endpoint: .confirm)
+                } else { // deferred csc
+                    if isNewPM {
+                        verifyClientAttributionMetadataInStubs(testName: testName, stubURL: stubURL, endpoint: .paymentMethods)
+                    }
+                    verifyClientAttributionMetadataInStubs(testName: testName, stubURL: stubURL, endpoint: .confirm)
+                }
+            }
+            if description.contains("server side confirmation") {
+                if description.contains("confirmation token") { // deferred ssc with ct
+                    verifyClientAttributionMetadataInStubs(testName: testName, stubURL: stubURL, endpoint: .confirmationTokens, nestedUnder: nestedUnder)
+                } else { // deferred ssc
+                    if isNewPM {
+                        verifyClientAttributionMetadataInStubs(testName: testName, stubURL: stubURL, endpoint: .paymentMethods)
+                    }
+                }
+            }
+        }
+    }
+
+    /// Verifies that client_attribution_metadata appears in recorded network stubs with expected values
+    func verifyClientAttributionMetadataInStubs(
+        testName: String,
+        stubURL: URL,
+        endpoint: Endpoint,
+        nestedUnder: Nested? = nil
+    ) {
+        guard let fileNames = fileNamesDictionary[endpoint],
+              let fileName = fileNames.first
+        else {
+            XCTFail("❌ Could not find the next .tail file to check for \(endpoint.rawValue)")
+            return
+        }
+        fileNamesDictionary[endpoint]?.remove(fileName)
+        let filePath = stubURL.appendingPathComponent(fileName)
+
+        guard let fileContents = try? String(contentsOf: filePath, encoding: .utf8) else {
+            XCTFail("❌ Could not read file: \(fileName)")
+            return
+        }
+
+        // Find the X-Stripe-Mock-Request header line
+        let lines = fileContents.components(separatedBy: .newlines)
+        guard let mockRequestLine = lines.first(where: { $0.hasPrefix("X-Stripe-Mock-Request:") }) else {
+            XCTFail("❌ Could not find X-Stripe-Mock-Request: \(fileName)")
+            return
+        }
+
+        // Extract the request parameters
+        let requestParams = mockRequestLine.replacingOccurrences(of: "X-Stripe-Mock-Request: ", with: "")
+
+        // Check for client_attribution_metadata parameters
+        let hasCAM = requestParams.contains("client_attribution_metadata")
+
+        if hasCAM {
+            // Verify expected values are present
+            XCTAssertTrue(
+                requestParams.contains("client_attribution_metadata\\[merchant_integration_source]=elements"),
+                "❌ Missing or incorrect merchant_integration_source in \(fileName)"
+            )
+            XCTAssertTrue(
+                requestParams.contains("client_attribution_metadata\\[merchant_integration_subtype]=mobile"),
+                "❌ Missing or incorrect merchant_integration_subtype in \(fileName)"
+            )
+
+            // Verify other required fields exist (with regex patterns for dynamic values)
+            XCTAssertTrue(
+                requestParams.contains("client_attribution_metadata\\[client_session_id]="),
+                "❌ Missing client_session_id in \(fileName)"
+            )
+            XCTAssertTrue(
+                requestParams.contains("client_attribution_metadata\\[elements_session_config_id]="),
+                "❌ Missing elements_session_config_id in \(fileName)"
+            )
+            XCTAssertTrue(
+                requestParams.contains("client_attribution_metadata\\[merchant_integration_version]="),
+                "❌ Missing merchant_integration_version in \(fileName)"
+            )
+
+            if let nestedString = nestedUnder?.rawValue {
+                // Verify expected values are present
+                XCTAssertTrue(
+                    requestParams.contains("\(nestedString)\\[client_attribution_metadata]\\[merchant_integration_source]=elements"),
+                    "❌ Missing or incorrect merchant_integration_source in \(fileName)"
+                )
+                XCTAssertTrue(
+                    requestParams.contains("\(nestedString)\\[client_attribution_metadata]\\[merchant_integration_subtype]=mobile"),
+                    "❌ Missing or incorrect merchant_integration_subtype in \(fileName)"
+                )
+
+                // Verify other required fields exist (with regex patterns for dynamic values)
+                XCTAssertTrue(
+                    requestParams.contains("\(nestedString)\\[client_attribution_metadata]\\[client_session_id]="),
+                    "❌ Missing client_session_id in \(fileName)"
+                )
+                XCTAssertTrue(
+                    requestParams.contains("\(nestedString)\\[client_attribution_metadata]\\[elements_session_config_id]="),
+                    "❌ Missing elements_session_config_id in \(fileName)"
+                )
+                XCTAssertTrue(
+                    requestParams.contains("\(nestedString)\\[client_attribution_metadata]\\[merchant_integration_version]="),
+                    "❌ Missing merchant_integration_version in \(fileName)"
+                )
+            }
+
+            print("✅ Verified client_attribution_metadata in \(fileName)")
+        }
+    }
+    
+    func buildFileNamesDictionary(stubURL: URL) {
+        // Find all .tail files for this test
+        guard let enumerator = fileManager.enumerator(atPath: stubURL.path) else {
+            XCTFail("❌ Could not enumerate files at path: \(stubURL.path)")
+            return
+        }
+
+        
+        // Collect and sort fileNames alphabetically
+        for case let fileName as String in enumerator {
+            for endpoint in Endpoint.allCases {
+                if fileName.hasSuffix("\(endpoint.rawValue).tail") {
+                    var fileNames = fileNamesDictionary[endpoint] ?? []
+                    fileNames.append(fileName)
+                    fileNames.sort() // Sort alphabetically
+                    fileNamesDictionary[endpoint] = fileNames
+                }
+            }
+        }
+    }
+
+    func getStubURL() -> URL {
+        let testName = self.name
+        // The test name comes in format like "-[PaymentSheetGDPRConfirmFlowTests testAllowRedisplay_PI_IntentFirst]"
+        // We need to extract just the test method name and remove underscores
+        var testMethodName = testName.components(separatedBy: " ").last?
+            .trimmingCharacters(in: CharacterSet(charactersIn: "[]")) ?? testName
+
+        // Remove underscores to match directory naming convention
+        testMethodName = testMethodName.replacingOccurrences(of: "_", with: "")
+
+        // Construct the path to the recorded network traffic directory
+        let testClass = "PaymentSheetLPMConfirmFlowTests"
+
+        // The stubs are stored in the source tree relative to the repository root
+        let currentFile = #file
+        let currentDir = URL(fileURLWithPath: currentFile).deletingLastPathComponent()
+
+        // Navigate from test file to stripe-ios root, then to StripePayments/StripePaymentsTestUtils/Resources
+        let baseURL = currentDir
+            .deletingLastPathComponent() // up from PaymentSheet/
+            .deletingLastPathComponent() // up from StripePaymentSheetTests/
+            .deletingLastPathComponent() // up from StripePaymentSheet/ -> now at stripe-ios/
+            .appendingPathComponent("StripePayments")
+            .appendingPathComponent("StripePaymentsTestUtils")
+            .appendingPathComponent("Resources")
+            .appendingPathComponent("recorded_network_traffic")
+            .appendingPathComponent(testClass)
+            .appendingPathComponent(testMethodName)
+        return baseURL
+    }
+
 }
 
 extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
