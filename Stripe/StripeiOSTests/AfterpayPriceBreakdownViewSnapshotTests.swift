@@ -56,4 +56,12 @@ class AfterpayPriceBreakdownViewSnapshotTests: STPSnapshotTestCase {
 
         STPSnapshotVerifyView(containingView)
     }
+
+    func testCustomAppearance() {
+        var appearance = PaymentSheet.Appearance()
+        appearance.colors.text = UIColor.red
+        appearance.colors.icon = UIColor.purple
+        appearance.font.base = UIFont(name: "AmericanTypewriter", size: 20)!
+        let priceBreakdownView = AfterpayPriceBreakdownView(currency: "usd", appearance: appearance)
+    }
 }

@@ -19,7 +19,8 @@ class SupplementalFunctions {
         switch args {
         case .handleCheckScanSubmitted(let value):
             if let fn = self.handleCheckScanSubmitted {
-                return .handleCheckScanSubmitted(try await fn(value))
+                try await fn(value)
+                return .handleCheckScanSubmitted
             }
         }
 
@@ -71,18 +72,21 @@ enum SupplementalFunctionArgs: Equatable {
 }
 
 enum SupplementalFunctionReturnValue: Encodable {
-    case handleCheckScanSubmitted(HandleCheckScanSubmittedReturnValue)
+    case handleCheckScanSubmitted
 
     func encode(to encoder: Encoder) throws {
+        // For future cases with associated values do:
+        // try value.encode(to: encoder)
         switch self {
-        case .handleCheckScanSubmitted(let value):
-            try value.encode(to: encoder)
+        case .handleCheckScanSubmitted:
+            // No data
+            break
         }
     }
 }
 
 @_spi(DashboardOnly)
-public typealias HandleCheckScanSubmittedFn = ((HandleCheckScanSubmittedArgs) async throws -> (HandleCheckScanSubmittedReturnValue))
+public typealias HandleCheckScanSubmittedFn = (HandleCheckScanSubmittedArgs) async throws -> Void
 
 @_spi(DashboardOnly)
 public struct HandleCheckScanSubmittedArgs: Decodable, Equatable {
@@ -91,9 +95,4 @@ public struct HandleCheckScanSubmittedArgs: Decodable, Equatable {
     public init(checkScanToken: String) {
         self.checkScanToken = checkScanToken
     }
-}
-
-@_spi(DashboardOnly)
-public struct HandleCheckScanSubmittedReturnValue: Encodable, Equatable {
-    public init() {}
 }

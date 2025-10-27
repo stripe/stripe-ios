@@ -173,7 +173,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             }
         }
 
-        Task {
+        Task { @MainActor in
             do {
                 // Create the confirmation token
                 let confirmationToken = try await context.apiClient.createConfirmationToken(with: confirmationTokenParams,
@@ -181,21 +181,14 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                                                                                             additionalPaymentUserAgentValues: PaymentSheet.makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
 
                 // Call the confirmation token handler
-                await MainActor.run {
-                    confirmationTokenConfirmHandler(confirmationToken) { result in
-                        switch result {
-                        case .success(let clientSecret):
-                            // Handle manual confirmation
-                            guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
-                                completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
-                                return
-                            }
-                            completion(clientSecret, nil)
-                        case .failure(let error):
-                            completion(nil, error)
-                        }
-                    }
+                let clientSecret = try await confirmationTokenConfirmHandler(confirmationToken)
+
+                // Handle manual confirmation
+                guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                    completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+                    return
                 }
+                completion(clientSecret, nil)
             } catch {
                 completion(nil, error)
             }
