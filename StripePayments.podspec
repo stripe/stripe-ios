@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '24.24.4'
+  s.version                        = '24.25.0'
 
   s.summary                        = 'Bindings for the Stripe Payments API.'
   s.license                        = { type: 'MIT', file: 'LICENSE' }
