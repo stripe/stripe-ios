@@ -25,6 +25,7 @@ final class LinkSecureCookieStore: LinkCookieStore {
         let query = queryForKey(key, additionalParams: [
             kSecValueData as String: data,
             kSecAttrSynchronizable as String: allowSync ? kCFBooleanTrue as Any : kCFBooleanFalse as Any,
+            kSecAttrAccessible as String: allowSync ? kSecAttrAccessibleWhenUnlocked : kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
         ])
 
         delete(key: key)
