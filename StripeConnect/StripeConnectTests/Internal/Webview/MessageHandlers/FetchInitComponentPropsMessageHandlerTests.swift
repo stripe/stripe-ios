@@ -48,9 +48,7 @@ class FetchInitComponentPropsMessageHandlerTests: ScriptWebTestBase {
             enum CodingKeys: CodingKey {}
         }
 
-        let supplementalFunctions: SupplementalFunctions = .init(handleCheckScanSubmitted: { _ in
-            return HandleCheckScanSubmittedReturnValue()
-        })
+        let supplementalFunctions: SupplementalFunctions = .init(handleCheckScanSubmitted: { _ in })
         var registeredSupplementalFunctions: SupplementalFunctions?
 
         webView.addMessageReplyHandler(messageHandler: FetchInitComponentPropsMessageHandler {
