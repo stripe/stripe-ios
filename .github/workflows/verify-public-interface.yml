@@ -39,13 +39,13 @@ jobs:
             echo "diff_result.txt not found, skipping." 
           fi
           
-      - uses: peter-evans/find-comment@v1
+      - uses: davidme-stripe/find-comment@v1
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Public API changes detected
 
-      - uses: peter-evans/create-or-update-comment@v1
+      - uses: davidme-stripe/create-or-update-comment@v1
         id: create-update-comment
         if: env.diff != ''
         with:

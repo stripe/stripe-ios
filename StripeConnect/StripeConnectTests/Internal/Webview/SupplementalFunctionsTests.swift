@@ -3,16 +3,12 @@ import XCTest
 
 final class SupplementalFunctionsTests: XCTestCase {
     func testCallSucceeds() async throws {
-        let handleCheckScanSubmitted: HandleCheckScanSubmittedFn = { _ in HandleCheckScanSubmittedReturnValue() }
+        let handleCheckScanSubmitted: HandleCheckScanSubmittedFn = { _ in }
         let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: handleCheckScanSubmitted)
 
         let result = try await supplementalFunctions.call(.handleCheckScanSubmitted(.init(checkScanToken: "testToken")))
 
-        if case .handleCheckScanSubmitted(let value) = result {
-            XCTAssertEqual(value, HandleCheckScanSubmittedReturnValue())
-        } else {
-            XCTFail("Unexpected result")
-        }
+        XCTAssertEqual(result, SupplementalFunctionReturnValue.handleCheckScanSubmitted)
     }
 
     func testCallNotRegistered() async throws {
@@ -38,7 +34,7 @@ final class SupplementalFunctionsTests: XCTestCase {
             }
         }
 
-        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { _ in .init() })
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { _ in })
         let props = Props(testField: 1, supplementalFunctions: supplementalFunctions)
         let json = String(data: try JSONEncoder().encode(props), encoding: .utf8)
 
@@ -81,10 +77,17 @@ final class SupplementalFunctionsTests: XCTestCase {
                              "Expected a singleton array for handleCheckScanSubmitted, but got length 2")
     }
 
+    // This test case should be updated when there's a function with non-empty return
     func testEncodeReturnValue() throws {
-        let data = try JSONEncoder().encode(SupplementalFunctionReturnValue.handleCheckScanSubmitted(.init()))
+        // Need a wrapper to demonstrate the encoding because .handleCheckScanSubmitted has
+        // no associated value so the encoder complains that nothing was encoded
+        struct Wrapper: Encodable {
+            let value: SupplementalFunctionReturnValue
+        }
+
+        let data = try JSONEncoder().encode(Wrapper(value: .handleCheckScanSubmitted))
         let json = String(data: data, encoding: .utf8)
 
-        XCTAssertEqual(json, "{}")
+        XCTAssertEqual(json, "{\"value\":{}}")
     }
 }
