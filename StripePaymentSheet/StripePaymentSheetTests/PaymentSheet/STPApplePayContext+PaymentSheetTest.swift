@@ -13,7 +13,7 @@ import XCTest
 
 final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     let dummyDeferredConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in /* no-op */ }
-    let dummyConfirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { _, _ in /* no-op */ }
+    let dummyConfirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { _ in return "" }
     let applePayConfiguration = PaymentSheet.ApplePayConfiguration(merchantId: "merchant_id", merchantCountryCode: "GB")
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
