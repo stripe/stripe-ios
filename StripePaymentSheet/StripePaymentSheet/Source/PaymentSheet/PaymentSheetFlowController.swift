@@ -292,7 +292,7 @@ extension PaymentSheet {
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsViewState: self.walletButtonsViewState)
-            self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: configuration.enablePassiveCaptcha, elementsSession:  loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+            self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: configuration.enablePassiveCaptcha, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
             self.viewController.confirmationChallenge = self.confirmationChallenge
             self.viewController.flowControllerDelegate = self
             updatePaymentOption()
