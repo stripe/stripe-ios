@@ -39,6 +39,7 @@ extension PaymentMethodMessagingElement {
     }
 
     // Initialize element from API response
+    // Uses this logic tree: https://trailhead.corp.stripe.com/docs/payment-method-messaging/pmme-platform/elements-mobile
     convenience init?(apiResponse: APIResponse, appearance: Appearance) async throws {
         // no content case
         guard let firstPaymentPlan = apiResponse.paymentPlanGroups.first else {
