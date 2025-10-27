@@ -56,7 +56,19 @@ extension STPAPIClient {
     /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
     func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> KYCDataCollectionResponse {
-        try await postKycInfo(info: info, linkAccountInfo: linkAccountInfo, isRefresh: false)
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/kyc_data_collection"
+        let requestObject = KYCDataCollectionRequest(
+            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
+            kycInfo: info
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Updates the KYC info for the current Link user on the backend.
