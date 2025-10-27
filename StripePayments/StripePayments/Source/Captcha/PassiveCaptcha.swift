@@ -138,11 +138,12 @@ import Foundation
                     throw PassiveCaptchaError.timeout
                 }
                 defer {
-                    tokenTask?.cancel() // TaskGroups can't return until all child tasks have completed, so we need to cancel the tokenTask and handle cancellation to complete as quickly as possible
+                    // ⚠️ TaskGroups can't return until all child tasks have completed, so we need to cancel remaining tasks and handle cancellation to complete as quickly as possible
+                    tokenTask?.cancel()
+                    group.cancelAll()
                 }
                 // Wait for first completion
                 let result = try await group.next()
-                group.cancelAll()
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
                 return result
             }
