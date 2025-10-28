@@ -10,5 +10,5 @@
 * [Changed] Replaces the `ApplePayContextDelegate.didCreatePaymentMethod` method with an async version.
 
 ### Payments
-* [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from both PaymentIntent.swift and `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
+* [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
 
