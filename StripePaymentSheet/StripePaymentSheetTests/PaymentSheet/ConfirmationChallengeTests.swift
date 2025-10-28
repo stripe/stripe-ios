@@ -9,8 +9,8 @@ import Foundation
 
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePayments
+@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePaymentsObjcTestUtils
 import XCTest
 
@@ -54,7 +54,7 @@ class ConfirmationChallengeTests: XCTestCase {
         window = nil
         super.tearDown()
     }
-    
+
     // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
     let siteKey: String = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
 
@@ -68,7 +68,7 @@ class ConfirmationChallengeTests: XCTestCase {
                                             "elements_enable_passive_captcha": true
                                           ],
                                           "passive_captcha": ["site_key": siteKey],
-                                          
+
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
@@ -82,7 +82,7 @@ class ConfirmationChallengeTests: XCTestCase {
                                           "flags": [
                                             "elements_mobile_attest_on_intent_confirmation": true,
                                           ],
-                                          
+
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
@@ -98,7 +98,7 @@ class ConfirmationChallengeTests: XCTestCase {
                                             "elements_mobile_attest_on_intent_confirmation": true,
                                           ],
                                           "passive_captcha": ["site_key": siteKey],
-                                          
+
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
