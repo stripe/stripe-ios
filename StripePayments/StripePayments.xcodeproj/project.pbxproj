@@ -223,7 +223,6 @@
 		BA5F60D575E6973BAA44EB4D /* STPPaymentMethodThreeDSecureUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF9D5F617E73723DDB03F6F /* STPPaymentMethodThreeDSecureUsage.swift */; };
 		BBC2EEFCD179683318E96CF0 /* NSString+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A038F1551529DED40E01B5 /* NSString+Stripe.swift */; };
 		BDE125EECCFD1E99CA93B887 /* ConnectionsSDKAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608FCBD2D31DAC997AD6933 /* ConnectionsSDKAvailability.swift */; };
-		C1CC9D5BB7236FE08EAB168C /* STPiDEALBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01EC9E9A14F44151D977435E /* STPiDEALBank.swift */; };
 		C0B54A6D4B079A65F7DA6772 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F568A9F42118EF13A5537D3 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift */; };
 		C204A7736E6DE2D953B7931D /* STPFixtures.h in Headers */ = {isa = PBXBuildFile; fileRef = 99950EB2B1753E531D97CE3C /* STPFixtures.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C20F8A272C0D8869FDF376BB /* STPPaymentMethodUPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBD496FE1C28C32185C60BF /* STPPaymentMethodUPI.swift */; };
