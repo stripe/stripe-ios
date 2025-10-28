@@ -10,7 +10,7 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
-@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@_spi(STP) import StripePayments
 
 typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void)
 

@@ -205,11 +205,6 @@ extension LinkInlineSignupElementSnapshotTests {
             )
             completion(.success(response))
         }
-
-        func hasEmailLoggedOut(email: String) -> Bool {
-            // TODO(porter): Determine if we want to implement this in tests
-            return false
-        }
     }
 
     func makeSUT(

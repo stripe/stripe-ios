@@ -1534,7 +1534,7 @@ extension STPAPIClient {
     ///   - ephemeralKeySecret: The ephemeral key secret to use for authentication if working with customer-scoped objects.
     ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: The created ConfirmationToken object.
-    @_spi(ConfirmationTokensPublicPreview) public func createConfirmationToken(
+   @_spi(STP) public func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
         ephemeralKeySecret: String? = nil,
         additionalPaymentUserAgentValues: [String] = []

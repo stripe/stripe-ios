@@ -63,26 +63,20 @@ protocol LinkAccountServiceProtocol {
 final class LinkAccountService: LinkAccountServiceProtocol {
 
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
     let sessionID: String
     let customerID: String?
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
     let merchantLogoUrl: URL?
 
-    /// The default cookie store used by new instances of the service.
-    static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
-
     convenience init(
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = defaultCookieStore,
         elementsSession: STPElementsSession
     ) {
         let shouldPassCustomerIdToLookup = elementsSession.linkSettings?.linkEnableDisplayableDefaultValuesInECE == true
 
         self.init(
             apiClient: apiClient,
-            cookieStore: cookieStore,
             useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
             canSyncAttestationState: elementsSession.linkSettings?.attestationStateSyncEnabled ?? false,
             sessionID: elementsSession.sessionID,
@@ -94,7 +88,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
 
     init(
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = defaultCookieStore,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         sessionID: String,
@@ -103,7 +96,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         merchantLogoUrl: URL?
     ) {
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
         self.sessionID = sessionID
@@ -218,18 +210,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         }
     }
 
-    func hasEmailLoggedOut(email: String) -> Bool {
-        guard let hashedEmail = email.lowercased().sha256 else {
-            return false
-        }
-
-        return cookieStore.read(key: .lastLogoutEmail) == hashedEmail
-    }
-
-    func getLastSignUpEmail() -> String? {
-        return cookieStore.read(key: .lastSignupEmail)
-    }
-
     /// Looks up an account by Link Auth Intent ID.
     ///
     /// - Parameters:
@@ -246,7 +226,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             sessionID: sessionID,
             customerID: customerID,
             with: apiClient,
-            cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface
