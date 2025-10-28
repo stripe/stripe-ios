@@ -5,6 +5,8 @@
 //  Created by George Birch on 10/27/25.
 //
 
+import Foundation
+
 extension PaymentMethodMessagingElement {
     /// Displayable data of an initialized Payment Method Messaging Element.
     /// For use by PaymentMethodMessagingElement.View.
