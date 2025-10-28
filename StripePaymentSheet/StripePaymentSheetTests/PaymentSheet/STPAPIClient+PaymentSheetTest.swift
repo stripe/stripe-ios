@@ -11,7 +11,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP)@_spi(CustomerSessionBetaAccess)@_spi(CustomPaymentMethodsBeta)@_spi(SharedPaymentToken) import StripePaymentSheet
+@testable@_spi(STP)@_spi(CustomPaymentMethodsBeta)@_spi(SharedPaymentToken) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPAPIClient_PaymentSheetTest: XCTestCase {

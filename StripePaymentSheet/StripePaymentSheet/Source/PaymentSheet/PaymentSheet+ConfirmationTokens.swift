@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@_spi(STP) import StripePayments
 
 extension PaymentSheet {
     static func handleDeferredIntentConfirmation_confirmationToken(
@@ -90,6 +90,7 @@ extension PaymentSheet {
                         paymentIntentParams.confirmationToken = confirmationToken.stripeId
                         paymentIntentParams.returnURL = configuration.returnURL
                         paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
+                        paymentIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
@@ -117,6 +118,7 @@ extension PaymentSheet {
                         setupIntentParams.confirmationToken = confirmationToken.stripeId
                         setupIntentParams.returnURL = configuration.returnURL
                         setupIntentParams.radarOptions = savedPaymentMethodRadarOptions
+                        setupIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,

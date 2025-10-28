@@ -309,6 +309,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws {
         do {
             try await linkController.lookupLinkAuthToken(linkAuthTokenClientSecret)
+            let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
+            await cryptoCustomerState.setCustomerId(customerId)
             analyticsClient.log(.linkUserAuthenticationWithTokenCompleted)
         } catch {
             analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
@@ -619,12 +621,11 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
     public func applePayContext(
         _ context: STPApplePayContext,
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
-        paymentInformation: PKPayment,
-        completion: @escaping STPIntentClientSecretCompletionBlock
-    ) {
+        paymentInformation: PKPayment
+    ) async throws -> String {
         selectedPaymentSource = .applePay(paymentMethod)
 
-        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+        return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
     }
 
     public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Swift.Error?) {

@@ -94,7 +94,7 @@ struct MobilePaymentElementComponent: Equatable, Hashable {
 }
 
 /// Features on CustomerSessions when the paymentSheet component is enabled:
-/// https://docs.corp.stripe.com/api/customer_sessions/object#customer_session_object-components-mobile_payment_element-features
+/// https://docs.stripe.com/api/customer_sessions/object#customer_session_object-components-mobile_payment_element-features
 struct MobilePaymentElementComponentFeature: Equatable, Hashable {
     let paymentMethodSave: Bool
     let paymentMethodRemove: STPPaymentMethodRemove

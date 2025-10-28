@@ -6,7 +6,7 @@
 //
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@testable@_spi(STP) import StripePayments
 import XCTest
 
 class STPPaymentMethodPreviewTest: XCTestCase {
