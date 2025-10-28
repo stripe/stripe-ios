@@ -72,7 +72,6 @@ struct LinkPMDisplayDetails {
 
     // Dependencies
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
 
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
@@ -138,7 +137,6 @@ struct LinkPMDisplayDetails {
         publishableKey: String?,
         displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?,
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
@@ -149,7 +147,6 @@ struct LinkPMDisplayDetails {
         self.publishableKey = publishableKey
         self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
         self.requestSurface = requestSurface
@@ -539,15 +536,6 @@ struct LinkPMDisplayDetails {
         session.logout(with: apiClient, requestSurface: requestSurface) { _ in
             // We don't need to do anything if this fails, the key will expire automatically.
         }
-    }
-
-    func markEmailAsLoggedOut() {
-        guard let hashedEmail = email.lowercased().sha256 else {
-            stpAssertionFailure()
-            return
-        }
-
-        cookieStore.write(key: .lastLogoutEmail, value: hashedEmail)
     }
 }
 
