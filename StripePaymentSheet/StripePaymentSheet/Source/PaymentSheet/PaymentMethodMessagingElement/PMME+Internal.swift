@@ -21,12 +21,12 @@ enum PaymentMethodMessagingElementError: Error, LocalizedError {
 }
 
 extension PaymentMethodMessagingElement {
-    
+
     enum Mode: Equatable {
         case singlePartner(logo: LogoSet)
         case multiPartner(logos: [LogoSet])
     }
-    
+
     // A set of logo assets for light and dark mode.
     // ex: appearance.style = .automatic -> logoSet.light = light asset, logoSet.dark = dark asset
     //     appearance.style = .alwaysDark -> logoSet.light = dark asset, logoSet.dark = dark asset
