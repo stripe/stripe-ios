@@ -8,7 +8,7 @@
 #if !os(visionOS)
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
