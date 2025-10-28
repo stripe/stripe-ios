@@ -9,15 +9,16 @@
 
 actor ConfirmationChallenge {
     private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    private var hcaptchaToken: String?
     private var attestationConfirmationChallenge: AttestationConfirmationChallenge?
-    private var assertion: StripeAttest.Assertion?
+    private var challengeTokens: ChallengeTokens = (nil, nil)
 
     private var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
 
     enum Error: Swift.Error {
         case timeout
     }
+
+    typealias ChallengeTokens = (hcaptchaToken: String?, assertion: StripeAttest.Assertion?)
 
     public init(enablePassiveCaptcha: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
         if enablePassiveCaptcha, let passiveCaptchaData = elementsSession.passiveCaptchaData {
@@ -32,26 +33,32 @@ actor ConfirmationChallenge {
         self.timeout = timeout
     }
 
-    public func fetchTokensWithTimeout() async -> (String?, StripeAttest.Assertion?) {
+    public func fetchTokensWithTimeout() async -> ChallengeTokens {
         let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
         let siteKey = await passiveCaptchaChallenge?.passiveCaptchaData.siteKey
         do {
-            return try await withThrowingTaskGroup(of: (String?, StripeAttest.Assertion?).self) { group in
+            return try await withThrowingTaskGroup(of: ChallengeTokens.self) { group in
                 let isReady = await passiveCaptchaChallenge?.hasFetchedToken
+                var numberOfChallenges = 0
                 // Add hcaptcha task
-                group.addTask {
-                    guard let passiveCaptchaChallenge = await self.passiveCaptchaChallenge else {
-                        return (nil, nil)
+                if let passiveCaptchaChallenge {
+                    numberOfChallenges += 1
+                    group.addTask {
+                        let hcaptchaToken = try await passiveCaptchaChallenge.fetchToken()
+                        await self.challengeTokens.hcaptchaToken = hcaptchaToken
+                        return await self.challengeTokens
                     }
-                    return try await (passiveCaptchaChallenge.fetchToken(), nil)
                 }
                 // Add attestation task
-                group.addTask {
-                    guard let attestationConfirmationChallenge = await self.attestationConfirmationChallenge else {
-                        return (nil, nil)
+                // TODO: handle cancellation
+                if let attestationConfirmationChallenge {
+                    numberOfChallenges += 1
+                    group.addTask {
+                        let assertion = await attestationConfirmationChallenge.fetchAssertion()
+                        await self.challengeTokens.assertion = assertion
+                        return await self.challengeTokens
                     }
-                    return await (nil, attestationConfirmationChallenge.fetchAssertion())
                 }
                 // Add timeout task
                 group.addTask {
@@ -61,51 +68,36 @@ actor ConfirmationChallenge {
                 defer {
                     // ⚠️ TaskGroups can't return until all child tasks have completed, so we need to cancel remaining tasks and handle cancellation to complete as quickly as possible
                     Task {
-                        await passiveCaptchaChallenge?.tokenTask?.cancel()
+                        await passiveCaptchaChallenge?.cancel()
                     }
                     group.cancelAll()
                 }
-                // Wait for first two completions
-                let token1 = try await group.next()
-                logAttach(result: token1, isReady: isReady, duration: Date().timeIntervalSince(startTime))
-                let token2 = try await group.next()
-                logAttach(result: token2, isReady: isReady, duration: Date().timeIntervalSince(startTime))
-                return makeResult(token1: token1, token2: token2)
+                // Wait for challenge completions
+                for _ in 0..<numberOfChallenges {
+                    let token = try await group.next()
+                    logIfNecessary(result: token, siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
+                }
+                return challengeTokens
             }
         } catch {
-            if hcaptchaToken == nil, let siteKey {
+            if passiveCaptchaChallenge != nil, challengeTokens.hcaptchaToken == nil, let siteKey {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
             }
-            if assertion == nil {
+            if attestationConfirmationChallenge != nil, challengeTokens.assertion == nil {
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationError(error: error, duration: Date().timeIntervalSince(startTime))
             }
-            return (hcaptchaToken, assertion)
+            return challengeTokens
         }
     }
 
-    public func complete() {
-        Task {
-            await attestationConfirmationChallenge?.complete()
+    public func complete() async {
+        await attestationConfirmationChallenge?.complete()
+    }
+
+    private func logIfNecessary(result: ChallengeTokens?, siteKey: String?, isReady: Bool?, duration: TimeInterval) {
+        if let _ = result?.hcaptchaToken, result?.assertion == nil, let siteKey, let isReady {
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: duration)
         }
     }
 
-    func makeResult(token1: (String?, StripeAttest.Assertion?)?, token2: (String?, StripeAttest.Assertion?)?) -> (String?, StripeAttest.Assertion?) {
-        return (token1?.0 ?? token2?.0, token1?.1 ?? token2?.1)
-    }
-
-    func logAttach(result: (String?, StripeAttest.Assertion?)?, isReady: Bool?, duration: TimeInterval) {
-        guard let result else { return }
-        if let hcaptchaToken = result.0 {
-            self.hcaptchaToken = hcaptchaToken
-            Task {
-                let siteKey = await passiveCaptchaChallenge?.passiveCaptchaData.siteKey
-                guard let siteKey, let isReady else { return }
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: duration)
-            }
-        }
-        if let assertion = result.1 {
-            self.assertion = assertion
-            STPAnalyticsClient.sharedClient.logAttestationConfirmationAttach()
-        }
-    }
 }

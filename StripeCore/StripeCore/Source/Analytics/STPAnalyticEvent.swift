@@ -316,14 +316,13 @@ import Foundation
     case passiveCaptchaAttach = "elements.captcha.passive.attach"
 
     // MARK: - Attestation on Confirmation
-    case attestationConfirmationInit = "elements.attestation.confirmation.init"
-    case attestationConfirmationInitSucceeded = "elements.attestation.confirmation.init_succeeded"
-    case attestationConfirmationInitFailed = "elements.attestation.confirmation.init_failed"
+    case attestationConfirmationPrepare = "elements.attestation.confirmation.prepare"
+    case attestationConfirmationPrepareSucceeded = "elements.attestation.confirmation.prepare_succeeded"
+    case attestationConfirmationPrepareFailed = "elements.attestation.confirmation.prepare_failed"
     case attestationConfirmationRequestToken = "elements.attestation.confirmation.request_token"
     case attestationConfirmationRequestTokenSucceeded = "elements.attestation.confirmation.request_token_succeeded"
     case attestationConfirmationRequestTokenFailed = "elements.attestation.confirmation.request_token_failed"
     case attestationConfirmationError = "elements.attestation.confirmation.error"
-    case attestationConfirmationAttach = "elements.attestation.confirmation.attach"
 
     // MARK: - STPApplePayContext
     case applePayContextStarted = "stripeios.applepaycontext.confirm.started"

@@ -340,6 +340,7 @@
 		A30E2EC92E9E958B00E982DB /* STPClientAttributionMetadata+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30E2EC82E9E958B00E982DB /* STPClientAttributionMetadata+PaymentSheet.swift */; };
 		A30E31432EABEFBE00E982DB /* AttestationConfirmationChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30E31422EABEFBE00E982DB /* AttestationConfirmationChallenge.swift */; };
 		A30E31452EAFDDDC00E982DB /* ConfirmationChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30E31442EAFDDDC00E982DB /* ConfirmationChallenge.swift */; };
+		A30E31472EB0067E00E982DB /* ConfirmationChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30E31462EB0067E00E982DB /* ConfirmationChallengeTests.swift */; };
 		A36949C52CE7D72300739E5D /* UpdatePaymentMethodViewController+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36949C42CE7D72300739E5D /* UpdatePaymentMethodViewController+Configuration.swift */; };
 		A3B2F2B22CEE689C00C0E88C /* TextFieldElement+USBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B2F2B12CEE689C00C0E88C /* TextFieldElement+USBankAccount.swift */; };
 		A3B2F2B42CEE882D00C0E88C /* SavedPaymentMethodFormFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B2F2B32CEE882D00C0E88C /* SavedPaymentMethodFormFactory.swift */; };
@@ -876,6 +877,7 @@
 		A30E2EC82E9E958B00E982DB /* STPClientAttributionMetadata+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPClientAttributionMetadata+PaymentSheet.swift"; sourceTree = "<group>"; };
 		A30E31422EABEFBE00E982DB /* AttestationConfirmationChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttestationConfirmationChallenge.swift; sourceTree = "<group>"; };
 		A30E31442EAFDDDC00E982DB /* ConfirmationChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationChallenge.swift; sourceTree = "<group>"; };
+		A30E31462EB0067E00E982DB /* ConfirmationChallengeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationChallengeTests.swift; sourceTree = "<group>"; };
 		A36949C42CE7D72300739E5D /* UpdatePaymentMethodViewController+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpdatePaymentMethodViewController+Configuration.swift"; sourceTree = "<group>"; };
 		A39F7EBA2E9E3CE55E7AADC9 /* STPFixtures+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPFixtures+PaymentSheet.swift"; sourceTree = "<group>"; };
 		A3B2F2B12CEE689C00C0E88C /* TextFieldElement+USBankAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+USBankAccount.swift"; sourceTree = "<group>"; };
@@ -2034,6 +2036,7 @@
 				BE92D55DA4B4D449734B2917 /* BacsDDMandateViewSnapshotTests.swift */,
 				CBF7BE532D11BF5300A4C172 /* BankAccountInfoViewSnapshotTests.swift */,
 				61C87E1C2CB81F9B001B7DA9 /* CardBrandFilterTests.swift */,
+				A30E31462EB0067E00E982DB /* ConfirmationChallengeTests.swift */,
 				0C53358C028E528F0FC626A2 /* CustomerSheet */,
 				989C2E3E03E42DA64A2FAE0D /* CustomerSheetSnapshotTests.swift */,
 				B6BCD6562E6B99B400BEE06E /* CVCReconfirmationViewControllerSnapshotTest.swift */,
@@ -2371,6 +2374,7 @@
 				E5C7667A08EA85C0FF12523D /* AddPaymentMethodViewControllerSnapshotTests.swift in Sources */,
 				B63B2CF12BF8313D003810F3 /* VerticalPaymentMethodListViewControllerTest.swift in Sources */,
 				61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */,
+				A30E31472EB0067E00E982DB /* ConfirmationChallengeTests.swift in Sources */,
 				31443D5B2DD55F540022AF1A /* WalletButtonsViewSnapshotTests.swift in Sources */,
 				8180BC3615767F896E2F9355 /* AddressViewControllerSnapshotTests.swift in Sources */,
 				31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */,

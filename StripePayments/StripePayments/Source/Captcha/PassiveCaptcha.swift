@@ -45,9 +45,8 @@ import Foundation
     }
 
     public let passiveCaptchaData: PassiveCaptchaData
-    public var tokenTask: Task<String, Error>?
+    private var tokenTask: Task<String, Error>?
     public var hasFetchedToken = false
-    private let hcaptchaFactory: HCaptchaFactory
 
     var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
 
@@ -56,12 +55,7 @@ import Foundation
     }
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
-        self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
-    }
-
-    init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
         self.passiveCaptchaData = passiveCaptchaData
-        self.hcaptchaFactory = hcaptchaFactory
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
@@ -70,11 +64,14 @@ import Foundation
             return try await tokenTask.value
         }
 
-        let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, rqdata = passiveCaptchaData.rqdata, hcaptchaFactory, weak self] () -> String in
+        let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, rqdata = passiveCaptchaData.rqdata, weak self] () -> String in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             let startTime = Date()
             do {
-                let hcaptcha = try hcaptchaFactory.create(siteKey: siteKey, rqdata: rqdata)
+                let hcaptcha = try HCaptcha(apiKey: siteKey,
+                                            passiveApiKey: true,
+                                            rqdata: rqdata,
+                                            host: "stripecdn.com")
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let result = try await withTaskCancellationHandler {
                     try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
@@ -117,24 +114,14 @@ import Foundation
         return try await tokenTask.value
     }
 
+    public func cancel() {
+        self.tokenTask?.cancel()
+    }
+
     private func setValidationComplete() {
         hasFetchedToken = true
     }
 
-}
-
-// Protocol for creating HCaptcha instances
-protocol HCaptchaFactory {
-    func create(siteKey: String, rqdata: String?) throws -> HCaptcha
-}
-
-struct PassiveHCaptchaFactory: HCaptchaFactory {
-    func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
-        return try HCaptcha(apiKey: siteKey,
-                            passiveApiKey: true,
-                            rqdata: rqdata,
-                            host: "stripecdn.com")
-    }
 }
 
 // All duration analytics are in milliseconds

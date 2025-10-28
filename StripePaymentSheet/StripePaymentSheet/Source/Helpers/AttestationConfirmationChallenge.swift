@@ -13,14 +13,14 @@ actor AttestationConfirmationChallenge {
 
     public init(stripeAttest: StripeAttest) {
         self.stripeAttest = stripeAttest
-        STPAnalyticsClient.sharedClient.logAttestationConfirmationInit()
+        STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepare()
         let startTime = Date()
         Task { // Intentionally not blocking loading/initialization!
             let didAttest = await stripeAttest.prepareAttestation()
             if didAttest {
-                STPAnalyticsClient.sharedClient.logAttestationConfirmationInitSucceeded(duration: Date().timeIntervalSince(startTime))
+                STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareSucceeded(duration: Date().timeIntervalSince(startTime))
             } else {
-                STPAnalyticsClient.sharedClient.logAttestationConfirmationInitFailed(duration: Date().timeIntervalSince(startTime))
+                STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareFailed(duration: Date().timeIntervalSince(startTime))
             }
         }
     }
@@ -45,21 +45,21 @@ actor AttestationConfirmationChallenge {
 
 // All duration analytics are in milliseconds
 extension STPAnalyticsClient {
-    func logAttestationConfirmationInit() {
+    func logAttestationConfirmationPrepare() {
         log(
-            analytic: GenericAnalytic(event: .attestationConfirmationInit, params: [:])
+            analytic: GenericAnalytic(event: .attestationConfirmationPrepare, params: [:])
         )
     }
 
-    func logAttestationConfirmationInitSucceeded(duration: TimeInterval) {
+    func logAttestationConfirmationPrepareSucceeded(duration: TimeInterval) {
         log(
-            analytic: GenericAnalytic(event: .attestationConfirmationInitSucceeded, params: ["duration": duration * 1000])
+            analytic: GenericAnalytic(event: .attestationConfirmationPrepareSucceeded, params: ["duration": duration * 1000])
         )
     }
 
-    func logAttestationConfirmationInitFailed(duration: TimeInterval) {
+    func logAttestationConfirmationPrepareFailed(duration: TimeInterval) {
         log(
-            analytic: GenericAnalytic(event: .attestationConfirmationInitFailed, params: ["duration": duration * 1000])
+            analytic: GenericAnalytic(event: .attestationConfirmationPrepareFailed, params: ["duration": duration * 1000])
         )
     }
 
@@ -84,12 +84,6 @@ extension STPAnalyticsClient {
     func logAttestationConfirmationError(error: Error, duration: TimeInterval) {
         log(
             analytic: ErrorAnalytic(event: .attestationConfirmationError, error: error, additionalNonPIIParams: ["duration": duration * 1000])
-        )
-    }
-
-    func logAttestationConfirmationAttach() {
-        log(
-            analytic: GenericAnalytic(event: .attestationConfirmationAttach, params: [:])
         )
     }
 }
