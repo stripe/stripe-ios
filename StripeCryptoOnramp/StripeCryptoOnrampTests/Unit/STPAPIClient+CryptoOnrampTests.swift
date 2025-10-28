@@ -258,6 +258,18 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
     }
 
+    func testRetrieveKycInfoThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveKycInfo(linkAccountInfo: noSecretLinkAccountInfo))
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveKycInfo(linkAccountInfo: unverifiedLinkAccountInfo))
+    }
+
     func testStartIdentityVerificationSuccess() async throws {
         let mockResponseData = try JSONEncoder().encode(Constant.startIdentityVerificationMockResponseObject)
 
