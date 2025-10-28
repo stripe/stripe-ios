@@ -17,7 +17,7 @@ public struct KycInfo: Equatable {
     /// ```
     /// DateOfBirth(day: 31, month: 3, year: 1975)
     /// ```
-    public struct DateOfBirth: Encodable, Equatable {
+    public struct DateOfBirth: Codable, Equatable {
 
         /// The day of birth.
         public let day: Int

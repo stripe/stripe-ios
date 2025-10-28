@@ -10,7 +10,7 @@
 import Stripe
 import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 
 class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
