@@ -28,14 +28,15 @@ extension LinkPaymentMethodPicker {
                     bankIconView.isHidden = true
                     cardBrandView.isHidden = false
                     primaryLabel.text = paymentMethod?.paymentSheetLabel
-                    secondaryLabel.text = nil
-                    secondaryLabel.isHidden = true
+                    let hasDisplayName = card.displayName(with: paymentMethod?.nickname) != nil
+                    secondaryLabel.text = hasDisplayName ? card.secondaryName : nil
+                    secondaryLabel.isHidden = !hasDisplayName
                 case .bankAccount(let bankAccount):
-                    bankIconView.image = PaymentSheetImageLibrary.bankIcon(for: bankAccount.iconCode)
+                    bankIconView.image = makeBankIcon(for: bankAccount.iconCode)
                     cardBrandView.isHidden = true
                     bankIconView.isHidden = false
-                    primaryLabel.text = bankAccount.name
-                    secondaryLabel.text = paymentMethod?.paymentSheetLabel
+                    primaryLabel.text = bankAccount.displayName(with: paymentMethod?.nickname)
+                    secondaryLabel.text = "•••• \(bankAccount.last4)"
                     secondaryLabel.isHidden = false
                 case .none, .unparsable:
                     cardBrandView.isHidden = true
@@ -59,14 +60,14 @@ extension LinkPaymentMethodPicker {
             let label = UILabel()
             label.adjustsFontForContentSizeCategory = true
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized, maximumPointSize: Constants.maxFontSize)
-            label.textColor = .linkPrimaryText
+            label.textColor = .linkTextPrimary
             return label
         }()
 
         private let secondaryLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .caption, maximumPointSize: Constants.maxFontSize)
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextTertiary
             return label
         }()
 
@@ -79,9 +80,14 @@ extension LinkPaymentMethodPicker {
             view.addSubview(cardBrandView)
 
             let cardBrandSize = cardBrandView.size(for: Constants.iconSize)
+            let width = max(Constants.iconSize.width, cardBrandSize.width)
+            let height = max(Constants.iconSize.height, cardBrandSize.height)
+
+            // Use the largest value in { width | height } to determine the size of the bounding square.
+            let squareSize = max(width, height)
             NSLayoutConstraint.activate([
-                view.widthAnchor.constraint(equalToConstant: max(Constants.iconSize.width, cardBrandSize.width)),
-                view.heightAnchor.constraint(equalToConstant: max(Constants.iconSize.height, cardBrandSize.height)),
+                view.widthAnchor.constraint(equalToConstant: squareSize),
+                view.heightAnchor.constraint(equalToConstant: squareSize),
 
                 bankIconView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
                 bankIconView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor),
@@ -132,6 +138,58 @@ extension LinkPaymentMethodPicker {
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
+
+        private func makeBankIcon(for bankName: String?) -> UIImage {
+            if let institutionIcon = PaymentSheetImageLibrary.bankInstitutionIcon(for: bankName) {
+                return institutionIcon
+            }
+            return createGenericBankIcon()
+        }
+
+        private func createGenericBankIcon() -> UIImage {
+            let icon = PaymentSheetImageLibrary.linkBankIcon()
+            let iconColor: UIColor = .linkIconPrimary
+            let backgroundColor: UIColor = .linkSurfaceTertiary
+
+            let iconSize: CGSize = .init(width: 16, height: 16)
+            let backgroundSize: CGSize = .init(width: 24, height: 24)
+            let cornerRadius: CGFloat = 3.0
+
+            let renderer = UIGraphicsImageRenderer(size: backgroundSize)
+            return renderer.image { _ in
+                let rect = CGRect(origin: .zero, size: backgroundSize)
+                let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+
+                backgroundColor.setFill()
+                path.fill()
+
+                let iconRect = CGRect(
+                    x: (backgroundSize.width - iconSize.width) / 2,
+                    y: (backgroundSize.height - iconSize.height) / 2,
+                    width: iconSize.width,
+                    height: iconSize.height
+                )
+                icon.withTintColor(iconColor).draw(in: iconRect)
+            }
+        }
+
+        private func refreshBankIconIfNeeded() {
+            guard case .bankAccount(let bankAccount) = paymentMethod?.details else {
+                return
+            }
+            bankIconView.image = makeBankIcon(for: bankAccount.iconCode)
+        }
+
+        // UIImages need to be manually updated when the system theme changes.
+        #if !os(visionOS)
+        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
+                return
+            }
+            refreshBankIconIfNeeded()
+        }
+        #endif
     }
 
 }

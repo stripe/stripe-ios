@@ -1,7 +1,6 @@
 # Stripe iOS SDK
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![License](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
 
@@ -28,7 +27,7 @@ Table of contents
    * [Card scanning](#Card-scanning)
    * [Contributing](#Contributing)
    * [Migrating](#Migrating-from-older-versions)
-   * [Code Stye](#Code-style)
+   * [Code Style](#Code-style)
    * [Licenses](#Licenses)
 
 <!--te-->
@@ -85,7 +84,7 @@ For help with Apple's App Privacy Details form in App Store Connect, visit [Stri
 
 ## Releases
 
-We support Cocoapods, Carthage, and Swift Package Manager.
+We support Cocoapods and Swift Package Manager.
 
 If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the required frameworks.
 
@@ -141,9 +140,8 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 
 ### Running tests
 
-1. Install Carthage 0.37 or later (if you have homebrew installed, `brew install carthage`)
-2. From the root of the repo, run `bundle install && bundle exec fastlane stripeios_tests`. This will install the test dependencies and run the tests.
-3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`.
+1. From the root of the repo, run `bundle install && bundle exec fastlane stripeios_tests`. This will install the test dependencies and run the tests.
+2. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`.
 
 To re-record snapshot tests, use the `bundle exec ruby ci_scripts/snapshots.rb --record`.
 

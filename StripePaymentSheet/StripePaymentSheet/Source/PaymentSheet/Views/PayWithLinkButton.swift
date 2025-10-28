@@ -33,7 +33,8 @@ final class PayWithLinkButton: UIControl {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
-        let isLoggedIn: Bool
+        let sessionState: PaymentSheetLinkAccount.SessionState
+        let consumerSessionClientSecret: String?
     }
 
     /// Link account of the current user.
@@ -386,31 +387,31 @@ private extension PayWithLinkButton {
     func foregroundColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
-            return UIColor.linkPrimaryButtonForeground.withAlphaComponent(0.8)
+            return UIColor.linkContentOnPrimaryButton.withAlphaComponent(0.8)
         default:
-            return UIColor.linkPrimaryButtonForeground
+            return UIColor.linkContentOnPrimaryButton
         }
     }
 
     func backgroundColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
-            return UIColor.linkBrand.darken(by: 0.2)
+            return UIColor.linkIconBrand.darken(by: 0.2)
         case .disabled:
-            return UIColor.linkBrand.withAlphaComponent(0.5)
+            return UIColor.linkIconBrand.withAlphaComponent(0.5)
         default:
-            return UIColor.linkBrand
+            return UIColor.linkIconBrand
         }
     }
 
     func separatorColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
-            return UIColor.linkBrand400.darken(by: 0.2)
+            return UIColor.linkSeparatorOnPrimaryButton.darken(by: 0.2)
         case .disabled:
-            return UIColor.linkBrand400.withAlphaComponent(0.5)
+            return UIColor.linkSeparatorOnPrimaryButton.withAlphaComponent(0.5)
         default:
-            return UIColor.linkBrand400
+            return UIColor.linkSeparatorOnPrimaryButton
         }
     }
 
@@ -469,7 +470,8 @@ private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDi
         email: email,
         redactedPhoneNumber: nil,
         isRegistered: isRegistered,
-        isLoggedIn: false
+        sessionState: .verified,
+        consumerSessionClientSecret: nil
     )
 }
 

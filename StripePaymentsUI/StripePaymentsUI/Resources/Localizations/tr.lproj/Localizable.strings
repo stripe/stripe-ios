@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ Kartı";
+
+"%1$@ Credit" = "%1$@ Kredisi";
+
+"%1$@ Debit" = "%1$@ Borcu";
+
+"%1$@ Prepaid" = "%1$@ Ön Ödemeli";
+
 "%1$@ account ending in %2$@" = "%2$@ ile biten %1$@ hesabınız";
 
 "%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Banka Hesabı";
 
 "Billing address" = "Fatura adresi";
+
+"Billing details" = "Faturalama ayrıntıları";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Kartınızı taramak için Ayarlar'da kamera erişimine izin verin.";
 
-"Your ZIP is invalid." = "Posta kodunuz geçersiz.";
-
 "Your card has expired." = "Kartınızın süresi dolmuş.";
 
 "Your card number is incomplete." = "Kart numaranız eksik.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Kartınızın güvenlik kodu eksik.";
 
 "Your card's security code is invalid." = "Kartınızın güvenlik kodu geçersiz.";
-
-"Your postal code is invalid." = "Posta kodunuz geçersiz.";
 
 "card number" = "kart numarası";
 

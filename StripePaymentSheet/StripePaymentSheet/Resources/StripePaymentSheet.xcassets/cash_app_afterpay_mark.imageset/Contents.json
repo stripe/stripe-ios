@@ -1,0 +1,22 @@
+{
+  "images" : [
+    {
+      "filename" : "cash-app-afterpay-black-mark.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "cash-app-afterpay-white-mark.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

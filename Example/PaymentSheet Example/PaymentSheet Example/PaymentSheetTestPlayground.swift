@@ -13,9 +13,14 @@ struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
     @State var showingQRSheet = false
+    @State private var isViewReady = false
 
-    init(settings: PaymentSheetTestPlaygroundSettings) {
-        _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
+    init() {
+        _playgroundController = StateObject(wrappedValue: PlaygroundController())
+    }
+
+    init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
+        _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings, appearance: appearance))
     }
 
     @ViewBuilder
@@ -36,11 +41,13 @@ struct PaymentSheetTestPlayground: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
         }
+        SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SettingView(setting: linkEnabledModeBinding)
             }
             SettingView(setting: $playgroundController.settings.linkPassthroughMode)
+            SettingView(setting: $playgroundController.settings.linkDisplay)
         }
         SettingView(setting: $playgroundController.settings.userOverrideCountry)
         SettingView(setting: $playgroundController.settings.externalPaymentMethods)
@@ -53,14 +60,35 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
         SettingView(setting: $playgroundController.settings.requireCVCRecollection)
         SettingView(setting: $playgroundController.settings.autoreload)
+        AttestationResetButtonView()
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
         SettingView(setting: $playgroundController.settings.instantDebitsIncentives)
+        SettingView(setting: $playgroundController.settings.fcLiteEnabled)
+        SettingView(setting: $playgroundController.settings.opensCardScannerAutomatically)
+        SettingView(setting: $playgroundController.settings.termsDisplay)
     }
 
     var body: some View {
-        VStack {
-            ScrollView {
+        if !isViewReady {
+            return AnyView(
                 VStack {
+                    ProgressView()
+                    Text("Loading playground...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        isViewReady = true
+                    }
+                }
+            )
+        }
+
+        return AnyView(VStack {
+            ScrollView {
+                LazyVStack {
                     Group {
                         HStack {
                             if ProcessInfo.processInfo.environment["UITesting"] != nil {
@@ -99,7 +127,9 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
                         HStack {
-                            SettingPickerView(setting: $playgroundController.settings.amount)
+                            SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
+                                return amount.customDisplayName(currency: playgroundController.settings.currency)
+                            })
                             SettingPickerView(setting: $playgroundController.settings.currency)
                         }
                         SettingPickerView(setting: merchantCountryBinding)
@@ -107,6 +137,21 @@ struct PaymentSheetTestPlayground: View {
                         if playgroundController.settings.apmsEnabled == .off {
                             TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
                                 .autocapitalization(.none)
+                        }
+                    }
+                    Group {
+                        VStack {
+                            HStack {
+                                Text("Payment Method Options")
+                                    .font(.subheadline)
+                                Spacer()
+                                Button {
+                                    playgroundController.paymentMethodOptionsSetupFutureUsageSettingsTapped()
+                                } label: {
+                                    Text("SetupFutureUsage")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                            }
                         }
                     }
                     Group {
@@ -155,6 +200,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectEmail)
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
+                        SettingPickerView(setting: $playgroundController.settings.allowedCountries)
                     }
 
                     if playgroundController.settings.uiStyle == .embedded {
@@ -167,6 +213,7 @@ struct PaymentSheetTestPlayground: View {
                             }
                             SettingView(setting: $playgroundController.settings.formSheetAction)
                             SettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText)
+                            SettingView(setting: $playgroundController.settings.rowSelectionBehavior)
                         }
                     }
 
@@ -175,8 +222,9 @@ struct PaymentSheetTestPlayground: View {
             Spacer()
             Divider()
             PaymentSheetButtons()
-                .environmentObject(playgroundController)
-        }.animationUnlessTesting()
+        }
+        .environmentObject(playgroundController)
+        .animationUnlessTesting())
     }
 
     var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
@@ -557,6 +605,23 @@ struct BillingDetailsView: View {
     }
 }
 
+struct AttestationResetButtonView: View {
+    @State private var presentingAlert = false
+    @EnvironmentObject var playgroundController: PlaygroundController
+
+    var body: some View {
+        if #available(iOS 15.0, *) {
+            Button {
+                playgroundController.didTapResetAttestation()
+                presentingAlert = true
+            } label: {
+                Text("Reset attestation")
+            }.buttonStyle(.bordered)
+                .alert("Attestation key has been reset", isPresented: $presentingAlert, actions: {})
+        }
+    }
+}
+
 struct SettingView<S: PickerEnum>: View {
     var setting: Binding<S>
 
@@ -575,14 +640,20 @@ struct SettingView<S: PickerEnum>: View {
 struct SettingPickerView<S: PickerEnum>: View {
     var setting: Binding<S>
     var disabledSettings: [S] = []
+    var customDisplayLabel: String?
+    var customDisplayName: ((S) -> String)?
 
     var body: some View {
         HStack {
-            Text(S.enumName).font(.subheadline)
+            Text(customDisplayLabel ?? S.enumName).font(.subheadline)
             Spacer()
             Picker(S.enumName, selection: setting) {
                 ForEach(S.allCases.filter({ !disabledSettings.contains($0) }), id: \.self) { t in
-                    Text(t.displayName)
+                    if let customDisplayName {
+                        Text(customDisplayName(t))
+                    } else {
+                        Text(t.displayName)
+                    }
                 }
             }.layoutPriority(0.8)
         }
@@ -592,6 +663,6 @@ struct SettingPickerView<S: PickerEnum>: View {
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentSheetTestPlayground(settings: .defaultValues())
+        PaymentSheetTestPlayground()
     }
 }

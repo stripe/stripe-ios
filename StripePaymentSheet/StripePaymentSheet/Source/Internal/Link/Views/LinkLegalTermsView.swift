@@ -67,7 +67,7 @@ final class LinkLegalTermsView: UIView {
         textView.isEditable = false
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
-        textView.textColor = .linkSecondaryText
+        textView.textColor = .linkTextTertiary
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self
@@ -95,8 +95,8 @@ final class LinkLegalTermsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func formattedLegalText() -> NSAttributedString {
-        let string: String = {
+    private func formattedLegalText() -> NSAttributedString? {
+        let string: String? = {
             if isStandalone {
                 return STPLocalizedString(
                     "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
@@ -109,6 +109,11 @@ final class LinkLegalTermsView: UIView {
                     "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
+            case .checkboxWithDefaultOptIn:
+                return STPLocalizedString(
+                    "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
             case .textFieldsOnlyEmailFirst:
                 return STPLocalizedString(
                     "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
@@ -119,18 +124,41 @@ final class LinkLegalTermsView: UIView {
                     "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
+            case .signupOptIn:
+                stpAssertionFailure("LinkLegalTermsView should not be available in signup opt-in mode")
+                return nil
             }
         }()
+
+        guard let string else {
+            return nil
+        }
+
+        let leadingIcon: NSTextAttachment? = {
+            guard mode == .checkboxWithDefaultOptIn else {
+                return nil
+            }
+            return LinkUI.inlineLogo(
+                withScale: 1.3,
+                forFont: LinkUI.font(forTextStyle: .caption)
+            )
+        }()
+
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(
             fromRelativeHeight: Constants.lineHeight,
             textStyle: .caption
         )
-
         formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: formattedString.extent)
 
-        return formattedString
+        let result = NSMutableAttributedString(string: "")
+        if let leadingIcon {
+            result.append(NSAttributedString(attachment: leadingIcon))
+            result.append(NSAttributedString(string: " • "))
+        }
+        result.append(formattedString)
+        return result
     }
 
 }
@@ -140,7 +168,7 @@ extension LinkLegalTermsView: UITextViewDelegate {
         case linkLegalTermsViewUITextViewDelegate
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,

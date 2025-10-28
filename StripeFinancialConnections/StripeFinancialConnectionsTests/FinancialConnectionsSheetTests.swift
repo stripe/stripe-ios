@@ -20,7 +20,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockClientSecret = "las_123345"
     private let mockAnalyticsClient = MockAnalyticsClient()
-    private let mockApiClient = FinancialConnectionsAPIClient(
+    private let mockApiClient = FinancialConnectionsAsyncAPIClient(
         apiClient: APIStubbedTestCase.stubbedAPIClient()
     )
 
@@ -67,7 +67,10 @@ class FinancialConnectionsSheetTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
+    @MainActor
     func testAsyncPresentCompletion() async {
+        let expectation = XCTestExpectation(description: "Sheet completion")
+
         let sheet = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: mockClientSecret,
             returnURL: nil,
@@ -75,7 +78,16 @@ class FinancialConnectionsSheetTests: XCTestCase {
             analyticsClient: mockAnalyticsClient
         )
 
-        async let result = sheet.present(from: mockViewController)
+        Task {
+            let result = await sheet.present(from: mockViewController)
+
+            guard case .canceled = result else {
+                XCTFail("Unexpected result: \(result)")
+                return
+            }
+
+            expectation.fulfill()
+        }
 
         // Mock that financialConnections is completed
         let host = HostController(
@@ -99,10 +111,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
             )
         }
 
-        guard case .canceled = await result else {
-            XCTFail("Unexpected result: \(await result)")
-            return
-        }
+        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
     func testAnalytics() {

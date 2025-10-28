@@ -20,7 +20,7 @@ class TextFieldElementAccountFactoryTest: XCTestCase {
     func testBSBConfiguration_empty() {
         let bsb = TextFieldElement.Account.BSBConfiguration(defaultValue: nil)
 
-        bsb.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty))
+        bsb.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty(localizedDescription: "")))
     }
 
     func testBSBConfiguration_incomplete() {
@@ -48,7 +48,7 @@ class TextFieldElementAccountFactoryTest: XCTestCase {
     func testAUBECSAccountNumberConfiguration_empty() {
         let bsb = TextFieldElement.Account.AUBECSAccountNumberConfiguration(defaultValue: nil)
 
-        bsb.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty))
+        bsb.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty(localizedDescription: "")))
     }
 
     func testAUBECSAccountNumberConfiguration_incomplete() {

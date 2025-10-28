@@ -18,10 +18,20 @@ struct LinkAccountSessionManifest: Decodable {
     let successURL: URL
     let cancelURL: URL
 
+    private let accountholderToken: String?
     private let product: String
+    private let manualEntryUsesMicrodeposits: Bool
 
     var isInstantDebits: Bool {
         product == "instant_debits"
+    }
+
+    var hasAccountholderToken: Bool {
+        accountholderToken != nil
+    }
+
+    var bankAccountIsInstantlyVerified: Bool {
+        !manualEntryUsesMicrodeposits
     }
 
     enum CodingKeys: String, CodingKey {
@@ -29,6 +39,8 @@ struct LinkAccountSessionManifest: Decodable {
         case hostedAuthURL = "hosted_auth_url"
         case successURL = "success_url"
         case cancelURL = "cancel_url"
+        case accountholderToken = "accountholder_token"
         case product
+        case manualEntryUsesMicrodeposits = "manual_entry_uses_microdeposits"
     }
 }

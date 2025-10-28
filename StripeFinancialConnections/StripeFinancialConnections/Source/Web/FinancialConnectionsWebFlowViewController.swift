@@ -82,7 +82,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
             action: #selector(didTapClose)
         )
         item.tintColor = FinancialConnectionsAppearance.Colors.icon
-        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
+        item.applyFinancialConnectionsCloseButtonEdgeInsets()
         return item
     }()
 
@@ -155,18 +155,25 @@ extension FinancialConnectionsWebFlowViewController {
         additionalQueryParameters: String? = nil
     ) {
         guard authSessionManager == nil else { return }
+        guard let hostedAuthUrlString = manifest.hostedAuthUrl, let hostedAuthUrl = URL(string: hostedAuthUrlString) else {
+            let error = FinancialConnectionsSheetError.unknown(debugDescription: "NULL or malformed `hostedAuthUrl`")
+            notifyDelegateOfFailure(error: error)
+            return
+        }
+
         loadingView.showLoading(true)
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
-        let additionalQueryParameters = Self.buildEncodedUrlParameters(
-            startingAdditionalParameters: additionalQueryParameters,
+
+        let updatedHostedAuthUrl = HostedAuthUrlBuilder.build(
+            baseHostedAuthUrl: hostedAuthUrl,
             isInstantDebits: manifest.isProductInstantDebits,
-            linkMode: elementsSessionContext?.linkMode,
-            prefillDetails: prefillDetailsOverride ?? elementsSessionContext?.prefillDetails,
-            billingDetails: elementsSessionContext?.billingDetails,
-            incentiveEligibilitySession: elementsSessionContext?.incentiveEligibilitySession
+            hasExistingAccountholderToken: manifest.accountholderToken != nil,
+            elementsSessionContext: elementsSessionContext,
+            prefillDetailsOverride: prefillDetailsOverride,
+            additionalQueryParameters: additionalQueryParameters
         )
         authSessionManager?
-            .start(additionalQueryParameters: additionalQueryParameters)
+            .start(hostedAuthUrl: updatedHostedAuthUrl)
             .observe(using: { [weak self] (result) in
                 guard let self = self else { return }
                 self.loadingView.showLoading(false)
@@ -180,6 +187,8 @@ extension FinancialConnectionsWebFlowViewController {
                                 linkAccountSessionId: manifest.id
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
+                        } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
+                            self.notifyDelegateOfSuccess(result: .linkedAccount(id: linkedAccountId))
                         } else {
                             self.notifyDelegateOfFailure(
                                 error: FinancialConnectionsSheetError.unknown(
@@ -459,90 +468,5 @@ private extension FinancialConnectionsWebFlowViewController {
             return startPollingParam
         }
         return startPollingParam + "&\(fragment)"
-    }
-}
-
-extension FinancialConnectionsWebFlowViewController {
-    static func buildEncodedUrlParameters(
-        startingAdditionalParameters: String?,
-        isInstantDebits: Bool,
-        linkMode: LinkMode?,
-        prefillDetails: PrefillData?,
-        billingDetails: ElementsSessionContext.BillingDetails?,
-        incentiveEligibilitySession: ElementsSessionContext.IntentID?
-    ) -> String? {
-        var parameters: [String] = []
-
-        if let startingAdditionalParameters, startingAdditionalParameters.isEmpty == false {
-            parameters.append(startingAdditionalParameters)
-        }
-
-        if isInstantDebits {
-            parameters.append("return_payment_method=true")
-            parameters.append("expand_payment_method=true")
-
-            if let incentiveEligibilitySession {
-                parameters.append("instantDebitsIncentive=true")
-                parameters.append("incentiveEligibilitySession=\(incentiveEligibilitySession.id)")
-            }
-
-            if let linkMode {
-                parameters.append("link_mode=\(linkMode.rawValue)")
-            }
-
-            if let billingDetails = billingDetails {
-                if let name = billingDetails.name, !name.isEmpty {
-                    parameters.append("billingDetails[name]=\(name)")
-                }
-                if let email = billingDetails.email, !email.isEmpty {
-                    parameters.append("billingDetails[email]=\(email)")
-                }
-                if let phone = billingDetails.phone, !phone.isEmpty {
-                    parameters.append("billingDetails[phone]=\(phone)")
-                }
-                if let address = billingDetails.address {
-                    if let city = address.city, !city.isEmpty {
-                        parameters.append("billingDetails[address][city]=\(city)")
-                    }
-                    if let country = address.country, !country.isEmpty {
-                        parameters.append("billingDetails[address][country]=\(country)")
-                    }
-                    if let line1 = address.line1, !line1.isEmpty {
-                        parameters.append("billingDetails[address][line1]=\(line1)")
-                    }
-                    if let line2 = address.line2, !line2.isEmpty {
-                        parameters.append("billingDetails[address][line2]=\(line2)")
-                    }
-                    if let postalCode = address.postalCode, !postalCode.isEmpty {
-                        parameters.append("billingDetails[address][postal_code]=\(postalCode)")
-                    }
-                    if let state = address.state, !state.isEmpty {
-                        parameters.append("billingDetails[address][state]=\(state)")
-                    }
-                }
-            }
-        }
-
-        if let prefillDetails = prefillDetails {
-            if let email = prefillDetails.email, !email.isEmpty {
-                parameters.append("email=\(email)")
-            }
-            if let phoneNumber = prefillDetails.phone, !phoneNumber.isEmpty {
-                parameters.append("linkMobilePhone=\(phoneNumber)")
-            }
-            if let countryCode = prefillDetails.countryCode, !countryCode.isEmpty {
-                parameters.append("linkMobilePhoneCountry=\(countryCode)")
-            }
-        }
-
-        parameters.append("launched_by=ios_sdk")
-
-        // Join all values with an &, and URL encode.
-        // We encode these parameters since they will be appended to the auth flow URL.
-        guard let result = parameters.joined(separator: "&").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
-            return nil
-        }
-        // Start the result with a & if it is not empty and doesn't already start with one.
-        return result.isEmpty ? nil : result.hasPrefix("&") ? result : "&" + result
     }
 }

@@ -27,7 +27,19 @@ import UIKit
     @objc public static let sharedClient = STPAnalyticsClient()
     /// When this class logs a payload in an XCTestCase, it's added to `_testLogHistory` instead of being sent over the network.
     /// This is a hack - ideally, we inject a different analytics client in our tests. This is an escape hatch until we can make that (significant) refactor
-    public var _testLogHistory: [[String: Any]] = []
+    private var _testLogHistoryStorage: [[String: Any]] = []
+    public var _testLogHistory: [[String: Any]] {
+        get {
+            objc_sync_enter(self)
+            defer { objc_sync_exit(self) }
+            return _testLogHistoryStorage
+        }
+        set {
+            objc_sync_enter(self)
+            _testLogHistoryStorage = newValue
+            objc_sync_exit(self)
+        }
+    }
     public weak var delegate: STPAnalyticsClientDelegate?
 
     @objc public var productUsage: Set<String> = Set()
@@ -74,7 +86,7 @@ import UIKit
         #endif
     }
 
-    static var isUnitOrUITest: Bool {
+    public static var isUnitOrUITest: Bool {
         return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
     }
 
@@ -117,6 +129,11 @@ import UIKit
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
+        // Unexpected errors should never happen; make sure we fail loudly in our own tests and test apps
+        if analytic.event.rawValue.starts(with: "unexpected_error") {
+            stpAssertionFailure(payload.debugDescription)
+        }
+
         if let translatedEvent = analyticsEventTranslator.translate(analytic.event, payload: payload) {
             notificationCenter.post(name: translatedEvent.notificationName,
                                     object: translatedEvent.event)
@@ -124,7 +141,9 @@ import UIKit
 
         // If in testing, don't log analytic, instead append payload to log history
         guard !STPAnalyticsClient.isUnitOrUITest else {
-            _testLogHistory.append(payload)
+            objc_sync_enter(self)
+            _testLogHistoryStorage.append(payload)
+            objc_sync_exit(self)
             return
         }
 
@@ -156,6 +175,7 @@ extension STPAnalyticsClient {
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
         payload["session_id"] = AnalyticsHelper.shared.sessionID
+        payload["timestamp"] = Date().timeIntervalSince1970
         if STPAnalyticsClient.isSimulatorOrTest {
             payload["is_development"] = true
         }

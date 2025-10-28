@@ -15,7 +15,7 @@ import Foundation
 
     init(config: PaymentSheetFormFactoryConfig) {
         switch config {
-        case .paymentSheet:
+        case .paymentElement:
             self = .paymentSheet
         case .customerSheet:
             self = .customerSheet

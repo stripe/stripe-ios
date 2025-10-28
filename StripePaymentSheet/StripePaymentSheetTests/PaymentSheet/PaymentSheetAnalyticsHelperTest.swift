@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @_spi(STP)@testable import StripeCoreTestUtils
 @_spi(STP)@testable import StripePayments
-@testable@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta)@_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) @_spi(SharedPaymentToken) import StripePaymentSheet
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 
@@ -56,7 +56,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         // test
-        let payload = client.payload(from: analytic, apiClient: apiClient)
+        var payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
         var expectedPayload: [String: Any] = ([
@@ -68,6 +68,9 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         ] as [String: Any])
         // Add common payload
         expectedPayload.merge(client.commonPayload(apiClient)) { a, _ in a }
+        // Extract and separately validate timestamp, since that will always be different
+        XCTAssertNotNil(payload.removeValue(forKey: "timestamp"))
+        XCTAssertNotNil(expectedPayload.removeValue(forKey: "timestamp"))
         XCTAssertTrue((payload as NSDictionary).isEqual(to: expectedPayload))
     }
 
@@ -102,7 +105,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(isApplePayEnabled, lastEvent.additionalParams[jsonDict: "mpe_config"]?["apple_pay_config"] as? Bool)
             XCTAssertEqual(isCustomerProvided, lastEvent.additionalParams[jsonDict: "mpe_config"]?["customer"] as? Bool)
             switch integrationShape {
-            case .complete, .flowController:
+            case .complete, .flowController, .linkController:
                 XCTAssertEqual("automatic", lastEvent.additionalParams[jsonDict: "mpe_config"]?["payment_method_layout"] as? String)
             case .embedded:
                 XCTAssertEqual("continue", lastEvent.additionalParams[jsonDict: "mpe_config"]?["form_sheet_action"] as? String)
@@ -183,11 +186,12 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                     "email": "sam@stripe.com",
                 ] as [String: Any],
             ] as [AnyHashable: Any]
+            let elementsSession: STPElementsSession = ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON])
             // Load started -> succeeded
             sut.logLoadStarted()
             sut.logLoadSucceeded(
                 intent: ._testValue(),
-                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+                elementsSession: elementsSession,
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
                 orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
             )
@@ -204,7 +208,138 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["integration_shape"] as? String, shapeString)
             XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
+            XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "LITE")
+            XCTAssertEqual(loadSucceededPayload["elements_session_config_id"] as? String, elementsSession.configID)
         }
+    }
+
+    func testLogSFU() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+
+        // Reset the analytics client for each iteration
+        analyticsClient._testLogHistory.removeAll()
+
+        let testCardJSON = [
+            "id": "pm_123card",
+            "type": "card",
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+                "fingerprint": "B8XXs2y2JsVBtB9f",
+                "networks": ["available": ["visa"]],
+                "exp_month": "01",
+                "exp_year": "2040",
+            ],
+        ] as [AnyHashable: Any]
+        let testUSBankAccountJSON = [
+            "id": "pm_123bank",
+            "type": "us_bank_account",
+            "us_bank_account": [
+                "account_holder_type": "individual",
+                "account_type": "checking",
+                "bank_name": "STRIPE TEST BANK",
+                "fingerprint": "ickfX9sbxIyAlbuh",
+                "last4": "6789",
+                "networks": [
+                  "preferred": "ach",
+                  "supported": [
+                    "ach",
+                  ],
+                ] as [String: Any],
+                "routing_number": "110000000",
+            ] as [String: Any],
+            "billing_details": [
+                "name": "Sam Stripe",
+                "email": "sam@stripe.com",
+            ] as [String: Any],
+        ] as [AnyHashable: Any]
+        // Load started -> succeeded
+        sut.logLoadStarted()
+        sut.logLoadSucceeded(
+            intent: ._testPaymentIntent(
+                paymentMethodTypes: [.card],
+                setupFutureUsage: .offSession,
+                paymentMethodOptionsSetupFutureUsage: [.card: "none"]
+            ),
+            elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+            defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+        )
+        // PI with SFU and PMO SFU
+        var loadSucceededPayload = analyticsClient._testLogHistory[1]
+        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+        XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "off_session")
+        XCTAssertEqual(loadSucceededPayload["payment_method_options_setup_future_usage"] as? Bool, true)
+        analyticsClient._testLogHistory.removeAll()
+
+        // Load started -> succeeded
+        sut.logLoadStarted()
+        sut.logLoadSucceeded(
+            intent: ._testPaymentIntent(
+                paymentMethodTypes: [.card],
+                setupFutureUsage: .onSession
+            ),
+            elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+            defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+        )
+        // PI with SFU and no PMO SFU
+        loadSucceededPayload = analyticsClient._testLogHistory[1]
+        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+        XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "on_session")
+        XCTAssertEqual(loadSucceededPayload["payment_method_options_setup_future_usage"] as? Bool, false)
+        analyticsClient._testLogHistory.removeAll()
+
+        // Load started -> succeeded
+        sut.logLoadStarted()
+        sut.logLoadSucceeded(
+            intent: ._testDeferredIntent(
+                paymentMethodTypes: [.card],
+                setupFutureUsage: .offSession,
+                paymentMethodOptionsSetupFutureUsage: [.card: .onSession, .USBankAccount: .offSession]
+            ),
+            elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+            defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+        )
+        // Deferred PI with SFU and PMO SFU
+        loadSucceededPayload = analyticsClient._testLogHistory[1]
+        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+        XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "off_session")
+        XCTAssertEqual(loadSucceededPayload["payment_method_options_setup_future_usage"] as? Bool, true)
+        analyticsClient._testLogHistory.removeAll()
+
+        // Load started -> succeeded
+        sut.logLoadStarted()
+        sut.logLoadSucceeded(
+            intent: ._testDeferredIntent(
+                paymentMethodTypes: [.card],
+                setupFutureUsage: .onSession
+            ),
+            elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+            defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+        )
+        // Deferred PI with SFU and no PMO SFU
+        loadSucceededPayload = analyticsClient._testLogHistory[1]
+        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+        XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "on_session")
+        XCTAssertEqual(loadSucceededPayload["payment_method_options_setup_future_usage"] as? Bool, false)
+        analyticsClient._testLogHistory.removeAll()
+
+        // Load started -> succeeded
+        sut.logLoadStarted()
+        sut.logLoadSucceeded(
+            intent: ._testSetupIntent(),
+            elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+            defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+        )
+        // SI
+        loadSucceededPayload = analyticsClient._testLogHistory[1]
+        XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
+        XCTAssertNil(loadSucceededPayload["setup_future_usage"])
+        XCTAssertNil(loadSucceededPayload["payment_method_options_setup_future_usage"])
     }
 
     func testLogShow() {
@@ -219,6 +354,14 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_sheet_savedpm_show")
         flowControllerSUT.logShow(showingSavedPMList: false)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_sheet_newpm_show")
+    }
+
+    func testLogRenderLPMs() {
+        let paymentSheetHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        paymentSheetHelper.logRenderLPMs(visibleLPMs: ["card", "paypal", "alma", "p24"], hiddenLPMs: ["eps"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_lpms_render")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["visible_lpms"] as? [String], ["card", "paypal", "alma", "p24"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["hidden_lpms"] as? [String], ["eps"])
     }
 
     func testLogSavedPMScreenOptionSelected() {
@@ -325,8 +468,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
         ]
 
-        let cpms: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType] = [.init(id: "cpmt_123"), .init(id: "cpmt_789")]
-        let cpmConfig = PaymentSheet.CustomPaymentMethodConfiguration(customPaymentMethodTypes: cpms) { _, _ in
+        let cpms: [PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod] = [.init(id: "cpmt_123"), .init(id: "cpmt_789")]
+        let cpmConfig = PaymentSheet.CustomPaymentMethodConfiguration(customPaymentMethods: cpms) { _, _ in
             return .canceled
         }
 
@@ -398,6 +541,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertLessThan(analyticsClient._testLogHistory.last!["duration"] as! Double, 1.0)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "link")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["link_context"] as? String, "wallet")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["fc_sdk_availability"] as? String, "LITE")
     }
 
     func testLogPaymentLinkContextWithLinkedBank() {
@@ -485,6 +629,69 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertNil(analyticsClient._testLogHistory.last!["error_code"])
     }
 
+    func testAnalyticsIntentConfigurationParameters() {
+        let sut = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient
+        )
+        sut.logLoadStarted() // To get the load timer working
+
+        // Test case 1: Regular PaymentIntent (no intentConfig)
+        // Should set is_decoupled = false, is_spt = false
+        analyticsClient._testLogHistory.removeAll()
+        let regularIntent = Intent._testValue()
+        sut.logLoadSucceeded(
+            intent: regularIntent,
+            elementsSession: ._testValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)]
+        )
+
+        let regularEvent = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(regularEvent["is_decoupled"] as? Bool, false, "Regular PaymentIntent should have is_decoupled = false")
+        XCTAssertEqual(regularEvent["is_spt"] as? Bool, false, "Regular PaymentIntent should have is_spt = false")
+
+        // Test case 2: Deferred intent without preparePaymentMethodHandler
+        // Should set is_decoupled = true, is_spt = false
+        analyticsClient._testLogHistory.removeAll()
+        let deferredIntentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd")) { _, _, _ in }
+        let deferredIntent = Intent.deferredIntent(intentConfig: deferredIntentConfig)
+        sut.logLoadSucceeded(
+            intent: deferredIntent,
+            elementsSession: ._testValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)]
+        )
+
+        let deferredEvent = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(deferredEvent["is_decoupled"] as? Bool, true, "Deferred intent should have is_decoupled = true")
+        XCTAssertEqual(deferredEvent["is_spt"] as? Bool, false, "Deferred intent without preparePaymentMethodHandler should have is_spt = false")
+
+        // Test case 3: Deferred intent with preparePaymentMethodHandler (SPT)
+        // Should set is_decoupled = true, is_spt = true
+        analyticsClient._testLogHistory.removeAll()
+        let sptIntentConfig = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "usd"),
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "stripe", externalId: "test", businessName: "Till's Pills"),
+            paymentMethodTypes: ["card"],
+            preparePaymentMethodHandler: { _, _ in
+                // Empty handler for test
+            }
+        )
+        let sptIntent = Intent.deferredIntent(intentConfig: sptIntentConfig)
+        sut.logLoadSucceeded(
+            intent: sptIntent,
+            elementsSession: ._testValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)]
+        )
+
+        let sptEvent = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(sptEvent["is_decoupled"] as? Bool, true, "SPT intent should have is_decoupled = true")
+        XCTAssertEqual(sptEvent["is_spt"] as? Bool, true, "SPT intent with preparePaymentMethodHandler should have is_spt = true")
+    }
+
     // MARK: - Helpers
 
     func makeConfig(
@@ -493,7 +700,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
     ) -> PaymentElementConfiguration {
         switch integrationShape {
-        case .flowController, .complete:
+        case .flowController, .complete, .linkController:
             var config = PaymentSheet.Configuration()
             config.applePay = applePay
             config.customer = customer

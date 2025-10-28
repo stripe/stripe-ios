@@ -6,9 +6,13 @@
 
 "App Settings" = "App-Einstellungen";
 
-"Back identity card photo successfully uploaded" = "Das Foto der Rückseite des Ausweisdokuments wurde erfolgreich hochgeladen.";
+"Back %@ photo successfully uploaded" = "Foto der Rückseite Ihres %@ erfolgreich hochgeladen";
 
-"Back of identity card" = "Rückseite des Personalausweises";
+"Back identity document photo successfully uploaded" = "Foto der Rückseite Ihres Ausweisdokuments erfolgreich hochgeladen";
+
+"Back of %@" = "Rückseite Ihres %@";
+
+"Back of driver's license or government-issued photo ID" = "Rückseite des Führerscheins oder des amtlichen Lichtbildausweises";
 
 "Back of identity document" = "Rückseite des Ausweisdokuments";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Details sind nicht erkennbar";
 
+"Flip your %@ over to the other side" = "Drehen Sie Ihr %@ auf die andere Seite";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Führerschein oder amtlichen Lichtbildausweis auf die andere Seite umdrehen";
+
 "Flip your identity card over to the other side" = "Drehen Sie Ihr Ausweisdokument um";
 
-"Front identity card photo successfully uploaded" = "Das Foto der Vorderseite des Ausweisdokuments wurde erfolgreich hochgeladen.";
+"Front %@ photo successfully uploaded" = "Foto der Vorderseite Ihres %@ erfolgreich hochgeladen";
 
-"Front of identity card" = "Vorderseite des Personalausweises";
+"Front identity document photo successfully uploaded" = "Foto der Vorderseite Ihres Ausweisdokuments erfolgreich hochgeladen";
+
+"Front of %@" = "Vorderseite Ihres %@";
+
+"Front of driver's license or government-issued photo ID" = "Vorderseite des Führerscheins oder amtlicher Lichtbildausweis";
+
+"Front of driver's license or passport" = "Vorderseite des Führerscheins oder Reisepasses";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Vorderseite des Führerscheins, Reisepasses oder amtlichen Lichtbildausweises";
 
 "Front of identity document" = "Vorderseite des Ausweisdokuments";
+
+"Front of passport or government-issued photo ID" = "Vorderseite des Reisepasses oder amtlichen Lichtbildausweises";
 
 "Get ready to scan your photo ID" = "Machen Sie sich zum Scannen Ihres Lichtbildausweises bereit";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Fotobibliothek";
 
-"Please upload images of the front and back of your identity card" = "Bitte laden Sie Bilder der Vorder- und Rückseite Ihres Personalausweises hoch";
+"Please upload images of the front and back of your %@" = "Bitte laden Sie Bilder von der Vorder- und Rückseite Ihres %@ hoch";
+
+"Please upload images of the front and back of your identity document" = "Bitte laden Sie Bilder der Vorder- und Rückseite Ihre Ausweisdokuments hoch";
+
+"Position your %@ in the center of the frame" = "Positionieren Sie Ihren %@ in der Mitte des Ausschnitts";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Positionieren Sie Ihren Führerschein oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
+
+"Position your driver's license or passport in the center of the frame" = "Positionieren Sie Ihren Führerschein oder Reisepass in der Mitte des Rahmens";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Positionieren Sie Ihren Führerschein, Reisepass oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
 
 "Position your face in the center of the frame." = "Platzieren Sie Ihr Gesicht genau in der Mitte des Rahmens.";
 
-"Position your identity card in the center of the frame" = "Platzieren Sie Ihr Ausweisdokument genau in der Mitte des Rahmens.";
+"Position your identity document in the center of the frame" = "Platzieren Sie Ihr Ausweisdokument genau in der Mitte des Rahmens";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Positionieren Sie Ihren Reisepass oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
 
 "Retake Photos" = "Foto erneut aufnehmen";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Wählen Sie einen Ort zum Hochladen der Vorderseite Ihres Ausweisdokuments aus";
 
-"Select back identity card photo" = "Foto der Rückseite des Ausweisdokuments auswählen";
+"Select back %@ photo" = "Wählen Sie Foto der Rückseite Ihres %@ aus";
 
-"Select front identity card photo" = "Foto der Vorderseite des Ausweisdokuments auswählen";
+"Select back identity document photo" = "Wählen Sie das Foto der Rückseite Ihres Ausweisdokuments aus";
+
+"Select front %@ photo" = "Wählen Sie Foto der Vorderseite Ihres %@ aus";
+
+"Select front identity document photo" = "Wählen Sie das Foto der Vorderseite Ihres Ausweisdokuments aus";
 
 "Selfie" = "Selfie";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Foto hochladen";
 
+"Upload your %@" = "Laden Sie Ihr %@ hoch";
+
 "Upload your photo ID" = "Lichtbildausweis hochladen";
 
-"Uploading back identity card photo" = "Foto der Rückseite des Ausweisdokuments wird hochgeladen";
+"Uploading back %@ photo" = "Hochladen des Fotos der Rückseite Ihres %@";
 
-"Uploading front identity card photo" = "Foto der Vorderseite des Ausweisdokuments wird hochgeladen";
+"Uploading back identity document photo" = "Hochladen des Fotos der Rückseite Ihres Ausweisdokuments";
+
+"Uploading front %@ photo" = "Hochladen des Fotos der Vorderseite Ihres %@";
+
+"Uploading front identity document photo" = "Hochladen des Fotos der Vorderseite Ihres Ausweisdokuments";
 
 "Verify your identity" = "Identität verifizieren";
 

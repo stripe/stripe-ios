@@ -72,6 +72,16 @@ import Foundation
 
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @_spi(STP) public static let stripeRequestIDKey = "com.stripe.lib:StripeRequestIDKey"
+
+    /// Returns a localized user-facing message for a given error code.
+    /// This method can be used to display an appropriate error message to the user.
+    /// - Parameter errorCode: The error code string from Stripe API (e.g., "incorrect_number", "card_declined")
+    /// - Parameter declineCode: The decline code string from Stripe API (e.g., "insufficient_funds", "card_velocity_exceeded")
+    /// - Returns: A localized error message, or nil if the error code is not recognized
+    @objc public static func localizedUserMessage(forErrorCode errorCode: String,
+                                                  declineCode: String? = nil) -> String? {
+        return NSError.Utils.localizedMessage(fromAPIErrorCode: errorCode, declineCode: declineCode)
+    }
 }
 
 extension NSError {
@@ -111,8 +121,8 @@ extension NSError {
             declineCode: String? = nil
         ) -> String? {
             return
-                (apiErrorCodeToMessage[errorCode]
-                ?? declineCode.flatMap { apiErrorCodeToMessage[$0] })
+                (declineCode.flatMap { apiErrorCodeToMessage[$0] }
+                ?? apiErrorCodeToMessage[errorCode])
         }
 
         @_spi(STP) public static func cardErrorCode(
@@ -144,21 +154,26 @@ extension NSError {
         stripeErrorMessage: String?,
         errorParam: String?,
         declineCode: Any?,
+        intent: [String: Any]?,
         httpResponse: HTTPURLResponse?
     ) -> NSError? {
-        var code = 0
+        var userInfo = [AnyHashable: Any]()
 
-        var userInfo: [AnyHashable: Any] = [
-            NSLocalizedDescriptionKey: self.stp_unexpectedErrorMessage(),
-        ]
+        // stripeErrorCodeKey
         userInfo[STPError.stripeErrorCodeKey] = stripeErrorCode ?? ""
+
+        // stripeErrorTypeKey
         userInfo[STPError.stripeErrorTypeKey] = errorType ?? ""
-        if let errorParam = errorParam {
+
+        // errorParameterKey
+        if let errorParam {
             userInfo[STPError.errorParameterKey] = URLEncoder.convertToCamelCase(
                 snakeCase: errorParam
             )
         }
-        if let stripeErrorMessage = stripeErrorMessage {
+
+        // errorMessageKey, hintKey
+        if let stripeErrorMessage {
             userInfo[STPError.errorMessageKey] = stripeErrorMessage
             userInfo[STPError.hintKey] = ServerErrorMapper.mobileErrorMessage(
                 from: stripeErrorMessage,
@@ -168,51 +183,48 @@ extension NSError {
             userInfo[STPError.errorMessageKey] =
                 "Could not interpret the error response that was returned from Stripe."
         }
-        if errorType == "api_error" {
-            code = STPErrorCode.apiError.rawValue
-        } else {
-            if errorType == "invalid_request_error" {
-                switch httpResponse?.statusCode {
-                case 401:
-                    code = STPErrorCode.authenticationError.rawValue
-                default:
-                    code = STPErrorCode.invalidRequestError.rawValue
-                }
-            } else if errorType == "card_error" {
-                code = STPErrorCode.cardError.rawValue
-                // see https://stripe.com/docs/api/errors#errors-message
-                userInfo[NSLocalizedDescriptionKey] = stripeErrorMessage
-            } else {
-                code = STPErrorCode.apiError.rawValue
-            }
 
-            if let stripeErrorCode = stripeErrorCode, !stripeErrorCode.isEmpty {
-                if let cardErrorCode = Utils.cardErrorCode(fromAPIErrorCode: stripeErrorCode) {
-                    if cardErrorCode == STPCardErrorCode.cardDeclined,
-                        let decline_code = declineCode
-                    {
-                        userInfo[STPError.stripeDeclineCodeKey] = decline_code
-                    }
-                    userInfo[STPError.cardErrorCodeKey] = cardErrorCode.rawValue
-                }
-
-                // If the server didn't send an error message, use a local one.
-                if stripeErrorMessage == nil {
-                    let localizedMessage = Utils.localizedMessage(
-                        fromAPIErrorCode: stripeErrorCode,
-                        declineCode: declineCode as? String
-                    )
-
-                    if let localizedMessage = localizedMessage {
-                        userInfo[NSLocalizedDescriptionKey] = localizedMessage
-                    }
-                }
+        // stripeDeclineCodeKey, cardErrorCodeKey
+        if errorType != "api_error", let stripeErrorCode, let cardErrorCode = Utils.cardErrorCode(fromAPIErrorCode: stripeErrorCode) {
+            userInfo[STPError.cardErrorCodeKey] = cardErrorCode.rawValue
+            if cardErrorCode == STPCardErrorCode.cardDeclined, let declineCode {
+                userInfo[STPError.stripeDeclineCodeKey] = declineCode
             }
         }
 
-        // Add the Stripe request id if it exists
+        // localized description
+        userInfo[NSLocalizedDescriptionKey] = if errorType == "card_error", let stripeErrorMessage {
+            // see https://stripe.com/docs/api/errors#errors-message
+            stripeErrorMessage
+        } else if let localizedMessage = Utils.localizedMessage(fromAPIErrorCode: stripeErrorCode ?? "", declineCode: declineCode as? String) {
+            localizedMessage
+        } else {
+            stp_unexpectedErrorMessage()
+        }
+
+        // stripeRequestIDKey
         if let requestId = httpResponse?.value(forHTTPHeaderField: "request-id") {
             userInfo[STPError.stripeRequestIDKey] = requestId
+        }
+
+        // intent
+        if let intent = intent,
+           let type = intent["object"] as? String {
+            userInfo[type] = intent
+        }
+
+        // code
+        let code = switch errorType {
+        case "invalid_request_error":
+            if case 401 = httpResponse?.statusCode {
+                STPErrorCode.authenticationError.rawValue
+            } else {
+                STPErrorCode.invalidRequestError.rawValue
+            }
+        case "card_error":
+            STPErrorCode.cardError.rawValue
+        default: // including "api_error"
+            STPErrorCode.apiError.rawValue
         }
 
         return NSError(
@@ -237,6 +249,15 @@ extension NSError {
         let stripeErrorMessage = errorDictionary["message"] as? String
         let stripeErrorCode = errorDictionary["code"] as? String
         let declineCode = errorDictionary["decline_code"]
+        let intent: [String: Any]? = {
+            if let paymentIntent = errorDictionary["payment_intent"] as? [String: Any] {
+                return paymentIntent
+            }
+            if let setupIntent = errorDictionary["setup_intent"] as? [String: Any] {
+                return setupIntent
+            }
+            return nil
+        }()
 
         return stp_error(
             errorType: errorType,
@@ -244,6 +265,7 @@ extension NSError {
             stripeErrorMessage: stripeErrorMessage,
             errorParam: errorParam,
             declineCode: declineCode,
+            intent: intent,
             httpResponse: httpResponse
         )
     }
