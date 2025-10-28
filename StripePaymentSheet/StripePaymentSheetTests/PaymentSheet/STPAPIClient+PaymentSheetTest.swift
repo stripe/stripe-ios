@@ -254,7 +254,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 2000, currency: "USD"),
             paymentMethodTypes: ["card"],
-            confirmHandler: { _, _ in return ""}
+            confirmHandler: { _, _ in return "" }
         )
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(

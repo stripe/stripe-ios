@@ -532,7 +532,7 @@ class PlaygroundController: ObservableObject {
     ) async -> PaymentSheetResult {
         return await self.handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails)
     }
-    
+
     @MainActor
     func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult {
         print("Customer is attempting to complete payment with \(type). Their billing details: \(billingDetails)")
@@ -553,7 +553,7 @@ class PlaygroundController: ObservableObject {
                 assertionFailure("Unable to find top most view controller")
                 return
             }
-            
+
             topMostVC.present(alert, animated: true)
         }
     }
