@@ -16,6 +16,9 @@ struct KYCDataCollectionRequest: Encodable {
     /// KYC information required for crypto operations.
     let kycInfo: KycInfo
 
+    /// The calendar to use to convert the user’s date of birth (`KycInfo.dateOfBirth`) to components compatible with the API.
+    let calendar: Calendar
+
     // MARK: - Encodable
 
     enum CodingKeys: String, CodingKey {
