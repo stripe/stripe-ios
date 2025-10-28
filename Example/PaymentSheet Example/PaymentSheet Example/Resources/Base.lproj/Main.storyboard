@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kSk-Ih-EmG">
-                                <rect key="frame" x="8" y="394" width="398" height="166.5"/>
+                                <rect key="frame" x="8" y="394" width="398" height="180"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Examples" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b2f-ni-mEr" userLabel="Examples">
                                         <rect key="frame" x="162.5" y="0.0" width="73.5" height="0.0"/>
@@ -90,8 +90,16 @@
                                             <segue destination="jqF-43-4W3" kind="show" id="I4Q-i5-Ogf"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="NEW-LINK-BTN" userLabel="LinkStandaloneComponent">
+                                        <rect key="frame" x="89" y="108" width="220" height="0.0"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Link Standalone Component"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showLinkStandaloneComponent:" id="NEW-LINK-SEGUE"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ZXq-dE-S2O" userLabel="EmbeddedPaymentElement">
-                                        <rect key="frame" x="104" y="108" width="190" height="0.0"/>
+                                        <rect key="frame" x="104" y="120" width="190" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="EmbeddedPaymentElement"/>
                                         <connections>
@@ -99,21 +107,29 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ExN-w7-ZQf" userLabel="EmbeddedPaymentElement (SwiftUI)">
-                                        <rect key="frame" x="72" y="120" width="254" height="0.0"/>
+                                        <rect key="frame" x="72" y="132" width="254" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="EmbeddedPaymentElement (SwiftUI)"/>
                                         <connections>
                                             <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showSwiftUIEmbedded:" id="FpB-aG-WQh"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="8uB-H8-3cZ" userLabel="WalletButtonsView (SwiftUI)">
+                                        <rect key="frame" x="102.5" y="144" width="193" height="0.0"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="WalletButtonsView (SwiftUI)"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showWalletButtonsView:" id="1R2-aV-eWO"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test Playgrounds" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5HP-ay-2IP" userLabel="Test playgrounds">
-                                        <rect key="frame" x="133.5" y="132" width="131" height="0.0"/>
+                                        <rect key="frame" x="133.5" y="156" width="131" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="or6-aq-0to">
-                                        <rect key="frame" x="84.5" y="144" width="229" height="0.0"/>
+                                        <rect key="frame" x="84.5" y="168" width="229" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="CustomerSheet (test playground)"/>
                                         <connections>
@@ -121,7 +137,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ynH-6g-uwR">
-                                        <rect key="frame" x="88" y="156" width="222" height="10.5"/>
+                                        <rect key="frame" x="88" y="180" width="222" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet (test playground)"/>
                                         <connections>
@@ -152,7 +168,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="R4a-Xk-VIc" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="J5c-Jd-I6G">
-                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="96" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -167,13 +183,13 @@
         <!--Checkout (Complete)-->
         <scene sceneID="fm7-ai-ZPG">
             <objects>
-                <viewController id="ViG-Ud-ejY" userLabel="Checkout (Complete)" customClass="ExampleCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ViG-Ud-ejY" userLabel="Checkout (Complete)" customClass="ExampleCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HhX-SV-zhW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="uGe-f3-L0f">
-                                <rect key="frame" x="20" y="112" width="374" height="545.5"/>
+                                <rect key="frame" x="20" y="160" width="374" height="545.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your cart" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DgE-aS-jOe">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="26.5"/>
@@ -460,13 +476,13 @@
         <!--Checkout (Custom)-->
         <scene sceneID="QR4-jL-qym">
             <objects>
-                <viewController id="My4-RU-qnC" userLabel="Checkout (Custom)" customClass="ExampleCustomCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCustomCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="My4-RU-qnC" userLabel="Checkout (Custom)" customClass="ExampleCustomCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0zh-P5-QSM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Cwu-4O-ebm">
-                                <rect key="frame" x="20" y="112" width="374" height="615.5"/>
+                                <rect key="frame" x="20" y="160" width="374" height="615.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your cart" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7AO-8y-orQ">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="26.5"/>
@@ -817,13 +833,13 @@
         <!--PaymentSheet.FlowController (Deferred)-->
         <scene sceneID="ejG-PH-rfd">
             <objects>
-                <viewController id="Gh7-vw-dR9" userLabel="PaymentSheet.FlowController (Deferred)" customClass="ExampleCustomDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCustomDeferredCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Gh7-vw-dR9" userLabel="PaymentSheet.FlowController (Deferred)" customClass="ExampleCustomDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vbN-l1-Fy9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="mr3-z9-EDE">
-                                <rect key="frame" x="20" y="112" width="374" height="638.5"/>
+                                <rect key="frame" x="20" y="160" width="374" height="638.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="32D-09-UHJ">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="26.5"/>
@@ -1201,13 +1217,13 @@
         <!--PaymentSheet (Deferred)-->
         <scene sceneID="mO0-22-dTC">
             <objects>
-                <viewController id="Rd2-MU-RV5" userLabel="PaymentSheet (Deferred)" customClass="ExampleDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleDeferredCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Rd2-MU-RV5" userLabel="PaymentSheet (Deferred)" customClass="ExampleDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HA4-PB-bqH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="lj2-Un-smr">
-                                <rect key="frame" x="20" y="112" width="374" height="568.5"/>
+                                <rect key="frame" x="20" y="160" width="374" height="568.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your cart" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fbM-40-zo9">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="26.5"/>
@@ -1543,13 +1559,13 @@
         <!--Checkout (Custom)-->
         <scene sceneID="r8R-dv-x3u">
             <objects>
-                <viewController id="jqF-43-4W3" userLabel="Checkout (Custom)" customClass="ExampleLinkPaymentCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleLinkPaymentCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jqF-43-4W3" userLabel="Checkout (Custom)" customClass="ExampleLinkPaymentCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vNl-rj-Cqk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="oL1-pO-vWD">
-                                <rect key="frame" x="20" y="112" width="374" height="620"/>
+                                <rect key="frame" x="20" y="160" width="374" height="620"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="0wk-wc-Q0C">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="31"/>
@@ -1917,13 +1933,13 @@
         <!--Embedded Example-->
         <scene sceneID="sBF-Wb-BlW">
             <objects>
-                <viewController id="Y7b-Za-B0P" userLabel="Embedded Example" customClass="ExampleEmbeddedElementCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleEmbeddedElementCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y7b-Za-B0P" userLabel="Embedded Example" customClass="ExampleEmbeddedElementCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VQB-C7-GPu">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="LKX-dc-2Dj">
-                                <rect key="frame" x="20" y="112" width="374" height="673.5"/>
+                                <rect key="frame" x="20" y="160" width="374" height="673.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="tav-0l-Zgd">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="26.5"/>
@@ -2302,7 +2318,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="FpB-aG-WQh"/>
+        <segue reference="1R2-aV-eWO"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="labelColor">

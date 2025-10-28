@@ -10,6 +10,7 @@ import Combine
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) @_spi(v25) import StripeFinancialConnections
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
@@ -238,18 +239,6 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
-    var useAsyncAPIClient: Binding<Bool> {
-        Binding(
-            get: {
-                self.playgroundConfiguration.useAsyncAPIClient
-            },
-            set: {
-                self.playgroundConfiguration.useAsyncAPIClient = $0
-                self.objectWillChange.send()
-            }
-        )
-    }
-
     var style: Binding<PlaygroundConfiguration.Style> {
         Binding(
             get: {
@@ -288,9 +277,12 @@ final class PlaygroundViewModel: ObservableObject {
     }
 
     func didSelectShow() {
+        let useFCLite = playgroundConfiguration.sdkType == .fcLite
+        FinancialConnectionsSDKAvailability.localFcLiteOverride = useFCLite
+
         switch playgroundConfiguration.integrationType {
         case .standalone:
-            if playgroundConfiguration.sdkType == .fcLite {
+            if useFCLite {
                 setupFcLite()
             } else {
                 setupStandalone()
@@ -363,7 +355,6 @@ final class PlaygroundViewModel: ObservableObject {
                     useCase: self.playgroundConfiguration.useCase,
                     stripeAccount: self.playgroundConfiguration.merchant.stripeAccount,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
-                    useAsyncApiClient: self.playgroundConfiguration.useAsyncAPIClient,
                     style: self.playgroundConfiguration.style,
                     onEvent: { event in
                         if self.liveEvents.wrappedValue == true {
@@ -615,7 +606,7 @@ private func SetupPlayground(
         assertionFailure("test@test.com will not work with livemode, it will return rate limit exceeded")
     }
 
-    let baseURL = "https://financial-connections-playground-ios.glitch.me"
+    let baseURL = "https://ios-financial-connections-playground.stripedemos.com"
     let endpoint = "/setup_playground"
     let url = URL(string: baseURL + endpoint)!
 
@@ -668,7 +659,6 @@ private func PresentFinancialConnectionsSheet(
     useCase: PlaygroundConfiguration.UseCase,
     stripeAccount: String?,
     setupPlaygroundResponseJSON: [String: String],
-    useAsyncApiClient: Bool,
     style: PlaygroundConfiguration.Style,
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (HostControllerResult) -> Void
@@ -751,7 +741,7 @@ private func CreatePaymentIntent(
     configuration: [String: Any],
     completion: @escaping (Result<CreatePaymentIntentResponse, PaymentSheetError>) -> Void
 ) {
-    let baseURL = "https://financial-connections-playground-ios.glitch.me"
+    let baseURL = "https://ios-financial-connections-playground.stripedemos.com"
     let endpoint = "/create_payment_intent"
     let url = URL(string: baseURL + endpoint)!
 

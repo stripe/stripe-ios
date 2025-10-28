@@ -26,6 +26,7 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
     var emailField: XCUIElement { app.textFields["Email"] }
     var phoneField: XCUIElement { app.textFields["Phone number"] }
     var billingAddressField: XCUIElement { app.staticTexts["Billing address"] }
+    var billingDetailsField: XCUIElement { app.staticTexts["Billing details"] }
     var countryField: XCUIElement { app.textFields["Country or region"] }
     var line1Field: XCUIElement { app.textFields["Address line 1"] }
     var line2Field: XCUIElement { app.textFields["Address line 2"] }
@@ -71,7 +72,6 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         card.tap()
 
         XCTAssertTrue(cardInfoField.waitForExistence(timeout: 10.0))
-        XCTAssertTrue(contactInfoField.exists)
         XCTAssertEqual(emailField.value as? String, "foo@bar.com")
         XCTAssertEqual(phoneField.value as? String, "(310) 555-1234")
         XCTAssertEqual(nameOnCardField.value as? String, "Jane Doe")
@@ -184,6 +184,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
+        settings.linkEnabledMode = .native
         settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on
@@ -206,6 +207,8 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         saveAddressButton.tap()
 
         checkoutButton.tap()
+
+        app.buttons["LinkVerificationCloseButton"].waitForExistenceAndTap()
 
         let cell = try XCTUnwrap(scroll(
             collectionView: app.collectionViews.firstMatch,
@@ -240,6 +243,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
+        settings.linkEnabledMode = .native
         settings.linkPassthroughMode = .passthrough
         settings.defaultBillingAddress =  .on
         settings.attachDefaults =  .on

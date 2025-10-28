@@ -17,7 +17,7 @@ extension ConsumerSession {
             // errorMessage can be used internally to differentiate between
             // a not found because of an unrecognized email or a not found
             // due to an invalid cookie
-            case notFound(errorMessage: String)
+            case notFound(errorMessage: String, suggestedEmail: String?)
 
             /// Lookup call was not provided an email and no cookies stored
             case noAvailableLookupParams
@@ -44,6 +44,7 @@ extension ConsumerSession {
         private enum CodingKeys: String, CodingKey {
             case exists
             case errorMessage
+            case suggestedEmail
         }
 
         convenience init(from decoder: Decoder) throws {
@@ -56,7 +57,8 @@ extension ConsumerSession {
                 responseType = .found(consumerSession: session)
             } else {
                 let errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage) ?? NSError.stp_unexpectedErrorMessage()
-                responseType = .notFound(errorMessage: errorMessage)
+                let suggestedEmail = try container.decodeIfPresent(String.self, forKey: .suggestedEmail)
+                responseType = .notFound(errorMessage: errorMessage, suggestedEmail: suggestedEmail)
             }
             self.init(responseType)
         }

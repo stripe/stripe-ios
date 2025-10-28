@@ -167,10 +167,9 @@ class StripeErrorTest: XCTestCase {
         let error = NSError.stp_error(fromStripeResponse: response)!
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.invalidRequestError.rawValue)
-        // Error type is not `card_error`, so `NSLocalizedDescription` will be a generic error.
         XCTAssertEqual(
             error.userInfo[NSLocalizedDescriptionKey] as! String,
-            NSError.stp_unexpectedErrorMessage()
+            NSError.stp_cardErrorInvalidNumberUserMessage()
         )
         XCTAssertEqual(
             error.userInfo[STPError.cardErrorCodeKey] as! String,
@@ -269,5 +268,25 @@ class StripeErrorTest: XCTestCase {
             error.userInfo[STPError.stripeRequestIDKey] as? String,
             "req_123"
         )
+    }
+
+    func testStpErrorCodeExtension() {
+        let modernAPIError = StripeError.apiError(StripeAPIError(
+            type: .invalidRequestError, code: "test_code", message: "Test message",
+            param: nil
+        ))
+        XCTAssertEqual(modernAPIError._stp_error_code, "test_code")
+
+        let response = [
+            "error": [
+                "type": "card_error",
+                "code": "card_declined",
+            ],
+        ]
+        let legacyError = NSError.stp_error(fromStripeResponse: response)!
+        XCTAssertEqual(legacyError._stp_error_code, "card_declined")
+
+        let genericError = NSError(domain: "test", code: 1, userInfo: nil)
+        XCTAssertNil(genericError._stp_error_code)
     }
 }

@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Tambah";
 
 "Add US bank account" = "Tambah akaun bank AS";
@@ -18,8 +16,6 @@
 
 "Add your payment information" = "Tambah maklumat pembayaran anda";
 
-"Agree and continue" = "Setuju dan teruskan";
-
 "Approve payment" = "Luluskan pembayaran";
 
 "Are you sure you want to remove this card?" = "Anda pasti ingin mengalih keluar kad ini?";
@@ -34,9 +30,11 @@
 
 "Bank account details cannot be changed." = "Butiran akaun bank tidak boleh diubah.";
 
-"Buy now or pay later with <img/>" = "Beli sekarang atau bayar kemudian dengan <img/>";
+"Buy now or pay later with  <img/>" = "Beli sekarang atau bayar kemudian dengan <img/>";
 
 "Buy now or pay later with Afterpay" = "Beli sekarang atau bayar kemudian dengan Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Beli sekarang atau bayar kemudian dengan Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Beli sekarang atau bayar kemudian dengan Clearpay";
 
@@ -58,11 +56,19 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda bagi pembelian masa hadapan dengan %@ dan <link>Link</link> menurut <terms>terma</terms> Dan <privacy>privasi</privacy> Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda untuk pembelian masa hadapan dengan %@.";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Dengan meneruskan, anda membenarkan %@ untuk mendebitkan Baki Satispay anda secara automatik dan berulang mengikut pembelian atau pelan langganan anda.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Dengan memberikan butiran akaun bank anda dan mengesahkan pembayaran ini, anda bersetuju dengan Permintaan Debit Terus ini dan <terms>perjanjian perkhidmatan Permintaan Debit Terus</terms>, serta memberikan kuasa kepada Stripe Payments Australia Pty Ltd ACN 160 180 343 ID Pengguna Debit Terus bernombor 507156 (“Stripe”) untuk mendebitkan akaun anda melalui Sistem Penjelasan Elektronik Pukal (Bulk Electronic Clearing System, BECS) bagi pihak %@ (\"Peniaga\") untuk sebarang amaun yang dikomunikasikan kepada anda secara berasingan oleh Peniaga. Anda memperakui bahawa anda merupakan sama ada pemegang akaun atau penandatangan yang dibenarkan bagi akaun yang tersenarai di atas.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nombor telefon dan e-mel, anda bersetuju untuk mencipta akaun Link, tertakluk pada <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Dengan memberikan butiran akaun bank anda dan mengesahkan pembayaran ini, anda bersetuju dengan Permintaan Debit Terus ini dan <terms>perjanjian perkhidmatan Permintaan Debit Terus</terms>, serta membenarkan Stripe Payments Australia Pty Ltd ACN 160 180 343, ID Pengguna Debit Terus nombor 507156 (“Stripe”), untuk mendebitkan akaun anda melalui Sistem Penyelesaian Elektronik Pukal (BECS) bagi pihak %@ (“Peniaga”) bagi sebarang amaun yang dimaklumkan secara berasingan kepada anda oleh Peniaga. Anda mengesahkan bahawa anda ialah pemilik akaun atau penandatangan yang diberi kuasa bagi akaun yang disenaraikan di atas.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Dengan memberikan maklumat kad anda, anda membenarkan %@ mengecaj kad anda bagi pembayaran masa hadapan menurut terma mereka.";
 
@@ -74,6 +80,10 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %1$@ dan %2$@, anda bersetuju untuk menyimpan maklumat anda dengan %3$@ bagi pembelian masa hadapan, serta bersetuju untuk membenarkan pembayaran dibuat menurut <terms>terma ini</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %@ anda bersetuju untuk mengizinkan pembayaran mengikut <terms>terma-terma ini</terms>.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
@@ -81,8 +91,6 @@
 "Card details cannot be changed." = "Butiran kad tidak boleh diubah.";
 
 "Change" = "Ubah";
-
-"Change email" = "Ubah e-mel";
 
 "Choose a payment method" = "Pilih kaedah pembayaran";
 
@@ -94,6 +102,8 @@
 
 "Confirm it's you" = "Sahkan andalah orangnya";
 
+"Confirm payment details" = "Sahkan butiran pembayaran";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank anda dalam %@ untuk menyelesaikan pembelian.";
@@ -102,21 +112,29 @@
 
 "Contact information" = "Maklumat hubungan";
 
+"Continue another way" = "Teruskan dengan cara lain";
+
+"Create an account with Link for faster checkout across the web" = "Buat akaun dengan Link untuk proses bayar dan keluar lebih pantas di seluruh web";
+
+"Debit or credit card" = "Kad debit atau kredit";
+
 "Default" = "Tetapan Asal";
 
 "Default payment method" = "Kaedah pembayaran tetapan asal";
+
+"Did you mean %@? %@." = "Adakah anda maksudkan %1$@? %2$@.";
 
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
-"Enter the code sent to %@ to use your saved information." = "Masukkan kod yang dihantar ke %@ untuk menggunakan maklumat anda yang tersimpan.";
+"Enter the code sent to %@." = "Masukkan kod yang dihantar ke %s.";
 
 "FPX Bank" = "Bank untuk FPX";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Proses bayar dan keluar dengan sekali klik yang cepat dan selamat";
+"Failed to connect" = "Gagal disambungkan";
 
-"For security, please re-enter your card’s security code." = "Bagi tujuan keselamatan, sila masukkan semula kod keselamatan kad anda.";
+"Fast, secure checkout" = "Proses bayar dan keluar yang pantas dan selamat";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran untuk kali pertama dengan bank anda. <terms>Lihat terma</terms>";
 
@@ -126,11 +144,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Log masuk atau daftar";
+
 "Log out of Link" = "Log keluar dari Link";
 
 "Manage SEPA debit" = "Urus debit SEPA";
 
 "Manage US bank account" = "Urus akaun bank AS";
+
+"Manage bank account" = "Urus akaun bank";
 
 "Manage card" = "Urus kad";
 
@@ -150,7 +172,7 @@
 
 "No %@ promo" = "Tiada promo %@";
 
-"Not %@?" = "Bukan %@?";
+"Not you?" = "Bukan anda?";
 
 "Only card brand can be changed." = "Hanya jenama kad boleh diubah.";
 
@@ -171,6 +193,8 @@
 "Pay another way" = "Bayar dengan cara lain";
 
 "Pay faster at %@ and thousands of businesses." = "Bayar dengan lebih cepat di %@ dan beribu-ribu perniagaan.";
+
+"Pay faster everywhere Link is accepted." = "Bayar dengan lebih pantas di mana-mana sahaja Link diterima.";
 
 "Pay over time with %@" = "Bayar dari semasa ke semasa dengan %@";
 
@@ -212,6 +236,8 @@
 
 "Save for future payments" = "Simpan untuk pembayaran masa hadapan";
 
+"Save my info for faster checkout with Link" = "Simpan maklumat saya untuk proses bayar dan keluar yang lebih cepat dengan Link";
+
 "Save payment details to %@ for future purchases" = "Simpan butiran pembayaran di %@ untuk pembelian yang akan datang";
 
 "Save this account for future %@ payments" = "Simpan akaun ini untuk pembayaran %@ masa hadapan";
@@ -219,8 +245,6 @@
 "Save your bank account in just a few steps." = "Simpan akaun bank anda dengan hanya beberapa langkah.";
 
 "Save your info for secure 1-click checkout with Link" = "Simpan maklumat anda untuk proses bayar dan keluar dengan sekali klik yang selamat dengan Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Simpan maklumat pembayaran anda dengan Link, serta bayar dan keluar dengan sekali klik secara selamat di laman yang disokong oleh Link.";
 
 "Saved" = "Disimpan";
 
@@ -242,7 +266,7 @@
 
 "Simple, secure one-click payments" = "Pembayaran dengan sekali klik yang mudah dan selamat";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Ada sesuatu yang tidak kena ketika memautkan akaun anda.\nSila cuba lagi kemudian.";
+"Something went wrong when linking your account.\nPlease try again later." = "Masalah telah berlaku semasa menghubungkan akaun anda.\nSila cuba lagi kemudian.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan proses menyimpan akaun bank anda dengan %@.";
 
@@ -254,15 +278,15 @@
 
 "The IBAN you entered is incomplete." = "IBAN yang anda masukkan tidak lengkap.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang anda masukkan tidak sah, \"%@\" bukanlah kod negara yang disokong.";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang anda masukkan tidak sah, “%@” bukan kod negara yang disokong.";
 
 "The provided verification code has expired." = "Kod penentusahan yang diberikan telah tamat tempoh.";
 
 "The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Kad ini telah tamat tempoh. Kemas kinikan maklumat kad anda atau pilih kaedah pembayaran yang lain.";
-
 "This is your default" = "Ini tetapan asal anda";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Kaedah pembayaran ini akan dialih keluar tetapi akan kekal tersedia untuk langganan %@.";
 
 "Too many attempts. Please try again in a few minutes." = "Terlalu banyak percubaan. Sila cuba lagi dalam beberapa minit.";
 
@@ -272,9 +296,11 @@
 
 "Update payment method" = "Kemas kinikan kaedah pembayaran";
 
-"Use your saved info to check out faster" = "Gunakan maklumat anda yang tersimpan untuk keluar dan bayar dengan lebih cepat";
+"Use billing address for shipping" = "Gunakan alamat pengebilan untuk penghantaran";
 
 "View more" = "Lihat lebih banyak";
+
+"Yes, update" = "Ya, kemas kini";
 
 "Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
 

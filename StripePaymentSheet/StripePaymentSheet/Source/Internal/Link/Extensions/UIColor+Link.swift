@@ -5,160 +5,127 @@
 //  Created by Ramon Torres on 11/1/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
-
-import UIKit
-
 @_spi(STP) import StripeUICore
+import UIKit
 
 // MARK: - Custom colors
 
 extension UIColor {
 
-    /// Brand color for Link.
-    ///
-    /// Use it as accent color for controls and activity indicators.
-    static var linkBrand: UIColor {
-        UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0)
-    }
+    // MARK: - Semantic Colors
 
-    /// Darker version of the brand color.
-    ///
-    /// Use it as accent color on small UI elements or text links.
-    static let linkBrandDark: UIColor = UIColor(red: 0.020, green: 0.659, blue: 0.498, alpha: 1.0)
+    // Surface colors
+    static let linkSurfacePrimary: UIColor = dynamic(light: neutral0, dark: neutral900)
+    static let linkSurfaceSecondary: UIColor = dynamic(light: neutral100, dark: neutral800)
+    static let linkSurfaceTertiary: UIColor = dynamic(light: neutral200, dark: neutral700)
 
-    /// Main background color.
-    static let linkBackground: UIColor = .dynamic(
-        light: .white,
-        dark: UIColor(red: 0.11, green: 0.11, blue: 0.118, alpha: 1)
-    )
+    // Border colors
+    static let linkBorderDefault: UIColor = dynamic(light: neutral300, dark: neutral900)
+    static let linkBorderSelected: UIColor = dynamic(light: neutral900, dark: brand200)
 
-    /// Level 400 variant of Link brand color.
-    ///
-    /// Use for separator bars over the Link brand color.
-    static var linkBrand400: UIColor {
-        UIColor(red: 0.0, green: 0.64, blue: 0.33, alpha: 1.0)
-    }
+    // Button colors
+    static let linkButtonBrand: UIColor = brand200
 
-    /// Level 500 variant of Link brand color
-    ///
-    /// Use for text buttons.
-    static var linkBrand500: UIColor {
-        UIColor(red: 0, green: 0.52, blue: 0.27, alpha: 1)
-    }
+    // Text colors
+    static let linkTextPrimary: UIColor = dynamic(light: neutral900, dark: neutral0)
+    static let linkTextSecondary: UIColor = dynamic(light: neutral700, dark: neutral300)
+    static let linkTextTertiary: UIColor = neutral500
+    static let linkTextBrand: UIColor = dynamic(light: brand600, dark: brand200)
+    static let linkTextCritical: UIColor = critical600
 
-    /// Color of the Link logo in the navigation bar.
-    static let linkNavLogo: UIColor = .dynamic(
-        light: UIColor(red: 0.114, green: 0.224, blue: 0.267, alpha: 1.0),
-        dark: .white
-    )
+    // Icon colors
+    static let linkIconPrimary: UIColor = dynamic(light: neutral900, dark: neutral100)
+    static let linkIconTertiary: UIColor = neutral500
+    static let linkIconBrand: UIColor = brand200
+    static let linkIconCritical: UIColor = critical500
 
-    /// Tint color of the nav. Affects the color of nav buttons.
-    static let linkNavTint: UIColor = .dynamic(
-        light: UIColor(red: 0.188, green: 0.192, blue: 0.239, alpha: 1.0),
-        dark: UIColor(red: 0.922, green: 0.922, blue: 0.961, alpha: 0.6)
-    )
+    /**
+     * Workaround:
+     *
+     * - The new Link theme primary button uses white on dark mode and dark on light mode
+     * - But we're still using Link green theming for buttons, regardless of dark mode
+     * - This means that the fixed button color is not consistent with variable text / divider colors,
+     *   so we need to keep them fixed until we migrate to the updated primary color styling.
+     */
+    /// Content color on primary button
+    static let linkContentOnPrimaryButton: UIColor = UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0)
+    /// Separator color on primary button
+    static let linkSeparatorOnPrimaryButton: UIColor = brand400
+    /// Foreground color in the outlined Link hint message view
+    static let linkOutlinedHintMessageForeground: UIColor = .dynamic(light: neutral700, dark: neutral500)
+    /// Border color around the outlined Link hint message view
+    static let linkOutlinedHintMessageBorder: UIColor = .dynamic(light: neutral300, dark: neutral500)
 
-    /// Color for borders and dividers.
-    static let linkSeparator: UIColor = .dynamic(
-        light: UIColor(red: 0.878, green: 0.902, blue: 0.922, alpha: 1),
-        dark: UIColor(red: 0.471, green: 0.471, blue: 0.502, alpha: 0.36)
-    )
+    /**
+     * Workaround:
+     *
+     * Border color doesn't look great for radio buttons on dark mode. We give it a clearer
+     * color here.
+     *
+     */
+    static let linkRadioButtonUnselectedColor: UIColor = .dynamic(light: linkBorderDefault, dark: neutral700)
 
-    /// Border color for custom controls. Currently an alias of `linkSeparator`.
-    static let linkControlBorder: UIColor = .linkSeparator
+    /**
+     * Workaround:
+     *
+     * Tertiary text color doesn't look great on this badge in dark mode. We give it a lighter color here.
+     *
+     */
+    static let linkBadgeNeutralForegroundColor: UIColor = dynamic(light: linkTextTertiary, dark: neutral400)
 
-    /// Background color for custom controls.
-    static let linkControlBackground: UIColor = .dynamic(
-        light: .white,
-        dark: UIColor(red: 0.17, green: 0.17, blue: 0.19, alpha: 1)
-    )
+    /**
+     * Workaround:
+     *
+     * We use a custom background color for toasts, and a white foreground color.
+     *
+     */
+    static let linkToastForeground: UIColor = neutral0
+    static let linkToastBackground: UIColor = brand900
 
-    /// Background color to be used when a custom control is highlighted.
-    static let linkControlHighlight: UIColor = .dynamic(
-        light: UIColor(red: 0.95, green: 0.95, blue: 0.96, alpha: 1),
-        dark: UIColor(white: 1, alpha: 0.07)
-    )
-
-    /// A very subtle color to be used on placeholder content of a control.
-    ///
-    /// - Note: Only recommended for shapes/non-text content due to very low contrast ratio with `linkControlBackground`.
-    static let linkControlLightPlaceholder: UIColor = .dynamic(
-        light: UIColor(red: 0.922, green: 0.933, blue: 0.945, alpha: 1.0),
-        dark: UIColor(red: 0.471, green: 0.471, blue: 0.502, alpha: 0.36)
-    )
-
-    /// Background color of the toast component.
-    static let linkToastBackground: UIColor = UIColor(red: 0.19, green: 0.19, blue: 0.24, alpha: 1.0)
-
-    /// Foreground color of the toast component.
-    static let linkToastForeground: UIColor = .white
-
-    /// Foreground color of the primary button.
-    static var linkPrimaryButtonForeground: UIColor {
-        UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0)
-    }
-
-    /// Foreground color of the secondary button.
-    static let linkSecondaryButtonForeground: UIColor = .dynamic(
-        light: UIColor(red: 0.114, green: 0.224, blue: 0.267, alpha: 1.0),
-        dark: UIColor(red: 0.020, green: 0.659, blue: 0.498, alpha: 1.0)
-    )
-
-    /// Background color of the secondary button/
-    static let linkSecondaryButtonBackground: UIColor = .dynamic(
-        light: UIColor(red: 0.965, green: 0.973, blue: 0.980, alpha: 1.0),
-        dark: UIColor(red: 0.455, green: 0.455, blue: 0.502, alpha: 0.18)
-    )
-
-    /// Background color of a neutral badge or notice.
-    static let linkNeutralBackground: UIColor = .dynamic(
-        light: UIColor(red: 0.96, green: 0.97, blue: 0.98, alpha: 1.0),
-        dark: UIColor(white: 1, alpha: 0.1)
-    )
-
-    /// Foreground color of a neutral badge or notice.
-    static let linkNeutralForeground: UIColor = .dynamic(
-        light: UIColor(red: 0.416, green: 0.451, blue: 0.514, alpha: 1),
-        dark: UIColor(red: 0.922, green: 0.922, blue: 0.961, alpha: 0.6)
-    )
-
-    /// Background color of an error badge or notice.
-    static let linkDangerBackground: UIColor = .dynamic(
-        light: UIColor(red: 1.0, green: 0.906, blue: 0.949, alpha: 1.0),
-        dark: UIColor(red: 0.996, green: 0.529, blue: 0.631, alpha: 0.1)
-    )
-
-    /// Foreground color of an error badge or notice.
-    static let linkDangerForeground: UIColor = .dynamic(
-        light: UIColor(red: 1.0, green: 0.184, blue: 0.298, alpha: 1.0),
-        dark: UIColor(red: 1.0, green: 0.184, blue: 0.298, alpha: 1.0)
-    )
+    static let linkExpressCheckoutButtonDivider: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.12)
+    static let linkExpressCheckoutButtonForeground: UIColor = UIColor(red: 13/255, green: 13/255, blue: 13/255, alpha: 1)
+    static let linkExpressCheckoutButtonBackground: UIColor = .white
 }
 
-// MARK: - Text color
+private extension UIColor {
 
-extension UIColor {
+    // MARK: - Raw Colors
+    /**
+     * Workaround:
+     *
+     * When migrating from RGB to their equivalent HEX colors, there were some very minor differences with the
+     * new HEX colors. We decided to keep the original RGB colors for some of the more widely-used Link colors
+     * (i.e. those used in `PayWithLinkButton`).
+     */
 
-    static let linkPrimaryText: UIColor = .dynamic(
-        light: UIColor(red: 0.188, green: 0.192, blue: 0.239, alpha: 1.0),
-        dark: .white
-    )
-
-    static let linkSecondaryText: UIColor = .dynamic(
-        light: UIColor(red: 0.416, green: 0.451, blue: 0.514, alpha: 1.0),
-        dark: UIColor(red: 0.922, green: 0.922, blue: 0.961, alpha: 0.6)
-    )
-
-    static let linkTertiaryText: UIColor = .dynamic(
-        light: UIColor(red: 0.639, green: 0.675, blue: 0.729, alpha: 1.0),
-        dark: UIColor(white: 1.0, alpha: 0.38)
-    )
-
+    static let neutral900: UIColor = UIColor(red: 0.11, green: 0.11, blue: 0.118, alpha: 1.0) // #171717
+    static let neutral800: UIColor = UIColor(hex: 0x262626)
+    static let neutral700: UIColor = UIColor(hex: 0x404040)
+    static let neutral500: UIColor = UIColor(hex: 0x707070)
+    static let neutral400: UIColor = UIColor(hex: 0xA3A3A3)
+    static let neutral300: UIColor = UIColor(hex: 0xD4D4D4)
+    static let neutral200: UIColor = UIColor(hex: 0xE5E5E5)
+    static let neutral100: UIColor = UIColor(hex: 0xF5F5F5)
+    static let neutral0: UIColor = UIColor(hex: 0xFFFFFF)
+    static let brand900: UIColor = UIColor(hex: 0x30303D)
+    static let brand600: UIColor = UIColor(hex: 0x006635)
+    static let brand400: UIColor = UIColor(red: 0, green: 0.64, blue: 0.33, alpha: 1.0) // #00A355
+    static let brand200: UIColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
+    static let critical600: UIColor = UIColor(hex: 0xC0123C)
+    static let critical500: UIColor = UIColor(hex: 0xE61947)
 }
 
 // MARK: - Utils
 
 extension UIColor {
+
+    /// Helper to initialize UIColor with a hex value
+    convenience init(hex: UInt) {
+        let red = CGFloat((hex >> 16) & 0xFF) / 255.0
+        let green = CGFloat((hex >> 8) & 0xFF) / 255.0
+        let blue = CGFloat(hex & 0xFF) / 255.0
+        self.init(red: red, green: green, blue: blue, alpha: 1.0)
+    }
 
     /// Returns the version of the current color that offers the highest contrast when
     /// compared against the given background color and traits.
@@ -171,33 +138,37 @@ extension UIColor {
         forBackgroundColor backgroundColor: UIColor,
         traitCollection: UITraitCollection = .current
     ) -> UIColor {
-        #if canImport(CompositorServices)
-        let resolvedLightModeColor = resolvedColor(with: traitCollection.modifyingTraits({ mutableTraits in
-            mutableTraits.userInterfaceStyle = .light
-        }))
-        let resolvedDarkModeColor = resolvedColor(with: traitCollection.modifyingTraits({ mutableTraits in
-            mutableTraits.userInterfaceStyle = .dark
-        }))
+        #if os(visionOS)
+        let resolvedLightModeColor = resolvedColor(
+            with: traitCollection.modifyingTraits({ mutableTraits in
+                mutableTraits.userInterfaceStyle = .light
+            })
+        )
+        let resolvedDarkModeColor = resolvedColor(
+            with: traitCollection.modifyingTraits({ mutableTraits in
+                mutableTraits.userInterfaceStyle = .dark
+            })
+        )
         #else
-        let resolvedLightModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
-            traitCollection,
-            UITraitCollection(userInterfaceStyle: .light),
-        ]))
-
-        let resolvedDarkModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
-            traitCollection,
-            UITraitCollection(userInterfaceStyle: .dark),
-        ]))
+        let resolvedLightModeColor = resolvedColor(
+            with: UITraitCollection(traitsFrom: [
+                traitCollection,
+                UITraitCollection(userInterfaceStyle: .light),
+            ])
+        )
+        let resolvedDarkModeColor = resolvedColor(
+            with: UITraitCollection(traitsFrom: [
+                traitCollection,
+                UITraitCollection(userInterfaceStyle: .dark),
+            ])
+        )
         #endif
 
         let resolvedBackgroundColor = backgroundColor.resolvedColor(with: traitCollection)
-
         let contrastToLightMode = resolvedBackgroundColor.contrastRatio(to: resolvedLightModeColor)
         let contrastToDarkMode = resolvedBackgroundColor.contrastRatio(to: resolvedDarkModeColor)
-
         return contrastToLightMode > contrastToDarkMode
             ? resolvedLightModeColor
             : resolvedDarkModeColor
     }
-
 }

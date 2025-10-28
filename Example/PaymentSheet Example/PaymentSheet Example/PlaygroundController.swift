@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(UpdatePaymentMethodBeta) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(ConfirmationTokensPublicPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -58,9 +58,9 @@ class PlaygroundController: ObservableObject {
                     return request
                 },
                 authorizationResultHandler: { result, completion in
-                    //                  Hardcoded order details:
-                    //                  In a real app, you should fetch these details from your service and call the completion() block on
-                    //                  the main queue.
+                    // Hardcoded order details:
+                    // In a real app, you should fetch these details from your service and call the completion() block on
+                    // the main queue.
                     result.orderDetails = PKPaymentOrderDetails(
                         orderTypeIdentifier: "com.myapp.order",
                         orderIdentifier: "ABC123-AAAA-1111",
@@ -75,6 +75,55 @@ class PlaygroundController: ObservableObject {
                 buttonType: buttonType,
                 customHandlers: customHandlers)
         }
+
+        if #available(iOS 16.0, *), settings.applePayEnabled == .onWithShipping {
+            let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
+                paymentRequestHandler: { request in
+                    request.shippingMethods = self.shippingMethods()
+                    request.requiredShippingContactFields = [.name, .postalAddress]
+                    return request
+                },
+                authorizationResultHandler: { result, completion in
+                    // Hardcoded order details:
+                    // In a real app, you should fetch these details from your service and call the completion() block on
+                    // the main queue.
+                    result.orderDetails = PKPaymentOrderDetails(
+                        orderTypeIdentifier: "com.myapp.order",
+                        orderIdentifier: "ABC123-AAAA-1111",
+                        webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
+                        authenticationToken: "abc123")
+                    completion(result)
+                },
+                shippingMethodUpdateHandler: { shippingMethod, completion in
+                    // Get tax rate from somewhere (either stored from last contact update or default)
+                    let (taxName, taxRate) = self.currentTaxRate ?? ("Sales Tax (5%)", 0.05)  // Default 5%
+                    let summaryItems = self.createSummaryItems(shippingMethod: shippingMethod,
+                                                               taxRate: taxRate,
+                                                               taxName: taxName)
+                    let update = PKPaymentRequestShippingMethodUpdate(paymentSummaryItems: summaryItems)
+                    completion(update)
+                },
+                shippingContactUpdateHandler: { contact, completion in
+                    let (taxName, taxRate) = self.determineTaxRate(contact: contact)
+                    self.currentTaxRate = (taxName, taxRate)
+
+                    let availableShippingMethods = self.shippingMethods()
+                    let defaultShippingMethod = availableShippingMethods.first!
+
+                    let summaryItems = self.createSummaryItems(shippingMethod: defaultShippingMethod,
+                                                               taxRate: taxRate,
+                                                               taxName: taxName)
+                    let update = PKPaymentRequestShippingContactUpdate(errors: nil,
+                                                                       paymentSummaryItems: summaryItems,
+                                                                       shippingMethods: availableShippingMethods)
+                    completion(update)
+                })
+            return PaymentSheet.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.umbrella.test",
+                merchantCountryCode: "US",
+                buttonType: buttonType,
+                customHandlers: customHandlers)
+        }
 #endif
         if settings.applePayEnabled == .on  {
             return PaymentSheet.ApplePayConfiguration(
@@ -83,6 +132,16 @@ class PlaygroundController: ObservableObject {
                 buttonType: buttonType)
         } else {
             return nil
+        }
+    }
+    private var currentTaxRate: (String, Double)?
+
+    var linkConfiguration: PaymentSheet.LinkConfiguration {
+        switch settings.linkDisplay {
+        case .automatic:
+            PaymentSheet.LinkConfiguration(display: .automatic)
+        case .never:
+            PaymentSheet.LinkConfiguration(display: .never)
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
@@ -115,6 +174,7 @@ class PlaygroundController: ObservableObject {
         }
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
+        configuration.link = linkConfiguration
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
         if settings.userOverrideCountry != .off {
@@ -151,6 +211,10 @@ class PlaygroundController: ObservableObject {
             configuration.allowsDelayedPaymentMethods = true
         }
 
+        if settings.enablePassiveCaptcha == .on {
+            configuration.enablePassiveCaptcha = true
+        }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -164,6 +228,7 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = settings.allowedCountries.countries
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
 
@@ -185,8 +250,6 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
-
         switch settings.style {
         case .automatic:
             configuration.style = .automatic
@@ -195,6 +258,9 @@ class PlaygroundController: ObservableObject {
         case .alwaysDark:
             configuration.style = .alwaysDark
         }
+
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
 
@@ -214,6 +280,11 @@ class PlaygroundController: ObservableObject {
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
+        configuration.rowSelectionBehavior = settings.rowSelectionBehavior == .default ? .default : .immediateAction { [weak self] in
+            print("immediateAction callback triggered")
+            self?.embeddedPlaygroundViewController?.dismiss(animated: true)
+            self?.embeddedPlaygroundViewController?.updatePaymentOptionView()
+        }
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         configuration.customPaymentMethodConfiguration = customPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
@@ -260,6 +331,10 @@ class PlaygroundController: ObservableObject {
             configuration.allowsDelayedPaymentMethods = true
         }
 
+        if settings.enablePassiveCaptcha == .on {
+            configuration.enablePassiveCaptcha = true
+        }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -273,6 +348,7 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.email = .init(rawValue: settings.collectEmail.rawValue)!
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = settings.allowedCountries.countries
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
 
@@ -285,7 +361,8 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.termsDisplay = cardTermsDisplay
 
         return configuration
     }
@@ -305,6 +382,17 @@ class PlaygroundController: ObservableObject {
                 phone: "5555555555"
             )
             configuration.allowedCountries = ["US", "CA", "MX", "GB"]
+            configuration.billingAddress = .init(
+                address: .init(
+                    city: "New York",
+                    country: "US",
+                    line1: "123 Main Street",
+                    postalCode: "10001",
+                    state: "New York"
+                ),
+                name: "John Smith",
+                phone: "5551234567"
+            )
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
         return configuration
@@ -316,38 +404,76 @@ class PlaygroundController: ObservableObject {
         if settings.apmsEnabled == .off {
             paymentMethodTypes = self.paymentMethodTypes
         }
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] pm, billingDetails in
-            try await withCheckedThrowingContinuation { continuation in
-                self?.confirmHandler(pm, billingDetails) { result in
-                    continuation.resume(with: result)
+
+        // Use confirmation token handler for CT integration types
+        if settings.integrationType == .deferred_csc_ct || settings.integrationType == .deferred_ssc_ct {
+            let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] confirmationToken in
+                guard let self = self else {
+                    throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
+                }
+                return try await self.confirmationTokenConfirmHandler(confirmationToken)
+            }
+
+            switch settings.mode {
+            case .payment:
+                return PaymentSheet.IntentConfiguration(
+                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
+                    paymentMethodTypes: paymentMethodTypes,
+                    paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
+                    confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
+                    requireCVCRecollection: settings.requireCVCRecollection == .on
+                )
+            case .paymentWithSetup:
+                return PaymentSheet.IntentConfiguration(
+                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
+                    paymentMethodTypes: paymentMethodTypes,
+                    paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
+                    confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
+                    requireCVCRecollection: settings.requireCVCRecollection == .on
+                )
+            case .setup:
+                return PaymentSheet.IntentConfiguration(
+                    mode: .setup(currency: settings.currency.rawValue, setupFutureUsage: .offSession),
+                    paymentMethodTypes: paymentMethodTypes,
+                    paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
+                    confirmationTokenConfirmHandler: confirmationTokenConfirmHandler
+                )
+            }
+        } else {
+            // Use payment method confirmation handler for non-CT integration types
+            let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] pm, billingDetails in
+                try await withCheckedThrowingContinuation { continuation in
+                    self?.confirmHandler(pm, billingDetails) { result in
+                        continuation.resume(with: result)
+                    }
                 }
             }
-        }
 
-        switch settings.mode {
-        case .payment:
-            return PaymentSheet.IntentConfiguration(
-                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil),
-                paymentMethodTypes: paymentMethodTypes,
-                paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler,
-                requireCVCRecollection: settings.requireCVCRecollection == .on
-            )
-        case .paymentWithSetup:
-            return PaymentSheet.IntentConfiguration(
-                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession),
-                paymentMethodTypes: paymentMethodTypes,
-                paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler,
-                requireCVCRecollection: settings.requireCVCRecollection == .on
-            )
-        case .setup:
-            return PaymentSheet.IntentConfiguration(
-                mode: .setup(currency: settings.currency.rawValue, setupFutureUsage: .offSession),
-                paymentMethodTypes: paymentMethodTypes,
-                paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler
-            )
+            switch settings.mode {
+            case .payment:
+                return PaymentSheet.IntentConfiguration(
+                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
+                    paymentMethodTypes: paymentMethodTypes,
+                    paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
+                    confirmHandler: confirmHandler,
+                    requireCVCRecollection: settings.requireCVCRecollection == .on
+                )
+            case .paymentWithSetup:
+                return PaymentSheet.IntentConfiguration(
+                    mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
+                    paymentMethodTypes: paymentMethodTypes,
+                    paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
+                    confirmHandler: confirmHandler,
+                    requireCVCRecollection: settings.requireCVCRecollection == .on
+                )
+            case .setup:
+                return PaymentSheet.IntentConfiguration(
+                    mode: .setup(currency: settings.currency.rawValue, setupFutureUsage: .offSession),
+                    paymentMethodTypes: paymentMethodTypes,
+                    paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
+                    confirmHandler: confirmHandler
+                )
+            }
         }
     }
 
@@ -375,24 +501,38 @@ class PlaygroundController: ObservableObject {
     }
 
     var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration? {
+        // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
+        var customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
+                                                                                                            subtitle: "Pay with BufoPay")
         switch settings.customPaymentMethods {
         case .on:
-            // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
-            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
-                                                                                                                subcopy: "Pay with BufoPay")
-            return .init(customPaymentMethodTypes: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
+            return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
+        case .onWithBDCC:
+            customPaymentMethodType.disableBillingDetailCollection = false
+            return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
         case .off:
             return nil
         }
     }
 
+    var cardTermsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] {
+        switch settings.termsDisplay {
+        case .unset:
+            return [:]
+        case .automatic:
+            return [.card: .automatic]
+        case .never:
+            return [.card: .never]
+        }
+    }
+
     func handleCustomPaymentMethod(
-        _ customPaymentMethodType: PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType,
+        _ customPaymentMethodType: PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod,
         _ billingDetails: STPPaymentMethodBillingDetails
     ) async -> PaymentSheetResult {
         return await self.handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails)
     }
-
+    
     @MainActor
     func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult {
         print("Customer is attempting to complete payment with \(type). Their billing details: \(billingDetails)")
@@ -409,11 +549,12 @@ class PlaygroundController: ObservableObject {
                 let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
                 continuation.resume(returning: .failed(error: exampleError))
             })
-            if self.settings.uiStyle == .paymentSheet || self.settings.uiStyle == .embedded {
-                self.rootViewController.presentedViewController?.present(alert, animated: true)
-            } else {
-                self.rootViewController.present(alert, animated: true)
+            guard let topMostVC = UIViewController.topMostViewController() else {
+                assertionFailure("Unable to find top most view controller")
+                return
             }
+            
+            topMostVC.present(alert, animated: true)
         }
     }
 
@@ -452,7 +593,22 @@ class PlaygroundController: ObservableObject {
 
     private var subscribers: Set<AnyCancellable> = []
 
-    init(settings: PaymentSheetTestPlaygroundSettings) {
+    convenience init() {
+        self.init(settings: .defaultValues(), appearance: .default)
+
+        Task.detached {
+            let settings = Self.settingsFromDefaults() ?? .defaultValues()
+            let appearance = Self.appearanceFromDefaults() ?? .default
+
+            await MainActor.run {
+                self.settings = settings
+                self.appearance = appearance
+                self.loadLastSavedCustomer()
+            }
+        }
+    }
+
+    init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
         // Enable experimental payment methods.
         //        PaymentSheet.supportedPaymentMethods += [.link]
 
@@ -464,27 +620,31 @@ class PlaygroundController: ObservableObject {
             UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
         }
         self.settings = settings
+        self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
 
-        $settings.removeDuplicates().sink { newValue in
+        $settings.removeDuplicates().sink { [weak self] newValue in
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
-                    self.load()
+                    self?.load()
                 }
             }
             if newValue.shakeAmbiguousViews == .on {
-                self.ambiguousViewTimer?.invalidate()
-                self.ambiguousViewTimer = .scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { _ in
-                    self.checkForAmbiguousViews()
+                self?.ambiguousViewTimer?.invalidate()
+                self?.ambiguousViewTimer = .scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { _ in
+                    self?.checkForAmbiguousViews()
                 })
             } else {
-                self.ambiguousViewTimer?.invalidate()
+                self?.ambiguousViewTimer?.invalidate()
             }
 
             // Hack to enable incentives in Instant Debits
             let enableInstantDebitsIncentives = newValue.instantDebitsIncentives == .on
             UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
+
+            let enableFcLite = newValue.fcLiteEnabled == .on
+            FinancialConnectionsSDKAvailability.localFcLiteOverride = enableFcLite
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -509,7 +669,7 @@ class PlaygroundController: ObservableObject {
             case .setup:
                 mc = PaymentSheet(setupIntentClientSecret: self.clientSecret!, configuration: configuration)
             }
-        case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
+        case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc, .deferred_csc_ct, .deferred_ssc_ct:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         }
 
@@ -535,6 +695,12 @@ class PlaygroundController: ObservableObject {
         self.appearance = PaymentSheet.Appearance.default
     }
 
+    func didTapResetAttestation() {
+        Task {
+            await StripeAttest(apiClient: .shared).resetKey()
+        }
+    }
+
     func appearanceButtonTapped() {
         if #available(iOS 14.0, *) {
             let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
@@ -550,6 +716,14 @@ class PlaygroundController: ObservableObject {
             rootViewController.present(alert, animated: true, completion: nil)
         }
     }
+    func paymentMethodOptionsSetupFutureUsageSettingsTapped() {
+        let vc = UIHostingController(rootView: PaymentMethodOptionsSetupFutureUsagePlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+            self.settings = updatedSettings
+            self.rootViewController.dismiss(animated: true, completion: nil)
+            self.load(reinitializeControllers: true)
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
+    }
     func customerSessionSettingsTapped() {
         let vc = UIHostingController(rootView: CustomerSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
             self.settings = updatedSettings
@@ -562,6 +736,15 @@ class PlaygroundController: ObservableObject {
     // Completion
 
     func onOptionsCompletion() {
+        if let shippingDetails = self.paymentSheetFlowController?.paymentOption?.shippingDetails {
+            self.addressViewController = .init(
+                configuration: .init(
+                    defaultValues: shippingDetails,
+                    additionalFields: .init(phone: .optional)
+                ),
+                delegate: self
+            )
+        }
         // Tell our observer to refresh
         objectWillChange.send()
     }
@@ -665,12 +848,14 @@ extension PlaygroundController {
             "link_mode": settings.linkEnabledMode.rawValue,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            "is_confirmation_token": settings.integrationType == .deferred_csc_ct || settings.integrationType == .deferred_ssc_ct,
             "customer_session_component_name": "mobile_payment_element",
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
             "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
             "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
             "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
             "customer_session_payment_method_set_as_default": settings.paymentMethodSetAsDefault.rawValue,
+            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if settingsToLoad.apmsEnabled == .off, let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
@@ -685,7 +870,6 @@ extension PlaygroundController {
         if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
             body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
         }
-
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, discard this result
             if settingsToLoad != self.settings {
@@ -779,7 +963,7 @@ extension PlaygroundController {
                             )
                         }
 
-                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
+                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp, .deferred_csc_ct, .deferred_ssc_ct:
                         PaymentSheet.FlowController.create(
                             intentConfiguration: self.intentConfig,
                             configuration: self.configuration,
@@ -865,19 +1049,65 @@ extension PlaygroundController {
             return
         case .deferred_mc, .deferred_ssc:
             break
+        case .deferred_csc_ct, .deferred_ssc_ct:
+            assertionFailure("Confirmation token integration types should use confirmationTokenConfirmHandler, not confirmHandler")
         case .normal:
             assertionFailure()
         }
 
-        let body = [
+        confirmHandlerInternal(
+            paymentMethodId: paymentMethod.stripeId,
+            shouldSavePaymentMethod: shouldSavePaymentMethod,
+            confirmationTokenId: nil,
+            intentCreationCallback: intentCreationCallback
+        )
+    }
+
+    func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken) async throws -> String {
+        switch settings.integrationType {
+        case .deferred_csc_ct:
+            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second simulate creating an intent
+            return self.clientSecret!
+        case .deferred_ssc_ct:
+            break
+        default:
+            throw NSError(domain: "PlaygroundController.confirmationTokenConfirmHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unhandled integration type"])
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            confirmHandlerInternal(
+                paymentMethodId: nil,
+                shouldSavePaymentMethod: nil,
+                confirmationTokenId: confirmationToken.stripeId,
+                intentCreationCallback: { result in
+                    continuation.resume(with: result)
+                }
+            )
+        }
+    }
+
+    // Internal helper that handles both payment method and confirmation token flows
+    private func confirmHandlerInternal(
+        paymentMethodId: String?,
+        shouldSavePaymentMethod: Bool?,
+        confirmationTokenId: String?,
+        intentCreationCallback: @escaping (Result<String, Error>) -> Void
+    ) {
+        var body = [
             "client_secret": clientSecret!,
-            "payment_method_id": paymentMethod.stripeId,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
-            "should_save_payment_method": shouldSavePaymentMethod,
             "mode": intentConfig.mode.requestBody,
             "link_mode": settings.linkEnabledMode.rawValue,
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
+
+        // Add either payment method info or confirmation token info
+        if let confirmationTokenId {
+            body["confirmation_token_id"] = confirmationTokenId
+        } else if let paymentMethodId, let shouldSavePaymentMethod {
+            body["payment_method_id"] = paymentMethodId
+            body["should_save_payment_method"] = shouldSavePaymentMethod
+        }
 
         makeRequest(with: PaymentSheetTestPlaygroundSettings.confirmEndpoint, body: body, completionHandler: { data, response, error in
             guard
@@ -885,9 +1115,7 @@ extension PlaygroundController {
                 let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
-                if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(data: data, encoding: .utf8)!
+                if let data, (response as? HTTPURLResponse)?.statusCode == 400, let errorMessage = String(data: data, encoding: .utf8) {
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
@@ -933,8 +1161,8 @@ extension PlaygroundController: STPAnalyticsClientDelegate {
 
 extension PlaygroundController {
     func serializeSettingsToNSUserDefaults() {
-        let data = try! JSONEncoder().encode(settings)
-        UserDefaults.standard.set(data, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
+        let settingsData = try! JSONEncoder().encode(settings)
+        UserDefaults.standard.set(settingsData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
 
         if let customerId {
             let customerIdData = try! JSONEncoder().encode(customerId)
@@ -942,6 +1170,10 @@ extension PlaygroundController {
         } else {
             UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
         }
+
+        // save appearance setting
+        let appearanceData = try! JSONEncoder().encode(appearance)
+        UserDefaults.standard.set(appearanceData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
     }
 
     static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
@@ -951,6 +1183,18 @@ extension PlaygroundController {
             } catch {
                 print("Unable to deserialize saved settings")
                 UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
+            }
+        }
+        return nil
+    }
+
+    static func appearanceFromDefaults() -> PaymentSheet.Appearance? {
+        if let appearanceData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey) as? Data {
+            do {
+                return try JSONDecoder().decode(PaymentSheet.Appearance.self, from: appearanceData)
+            } catch {
+                print("Unable to deserialize appearance: \(error)")
+                UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
             }
         }
         return nil
@@ -968,6 +1212,7 @@ extension PlaygroundController {
             self.customerId = nil
         }
     }
+
     static func resetCustomer() {
         UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
     }

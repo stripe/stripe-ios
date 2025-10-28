@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 10/4/24.
 //
 
-@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@testable import StripePaymentSheet
 import XCTest
 
 @MainActor
@@ -87,6 +87,71 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         XCTAssertEqual(mockDelegate.calls, [.didTapPaymentMethodRow])
         XCTAssertEqual(embeddedView.selectedRowButton?.type, .new(paymentMethodType: .stripe(.payPal)), "PayPal should still be the current selection")
     }
+
+    func testEmbeddedPaymentMethodsView_delegateTest_shouldAlwaysSetMandateTextEvenIfHidden() {
+        let mockMandateProvider = MockMandateProvider { paymentMethodType in
+            switch paymentMethodType {
+            case .stripe(.cashApp):
+                let s = String(repeating: "This is a long mandate text. ", count: 20)
+                return NSAttributedString(string: s)
+            case .stripe(.payPal):
+                let s = String(repeating: "This is a long mandate text. ", count: 10)
+                return NSAttributedString(string: s)
+            case .stripe(.amazonPay):
+                let s = String(repeating: "This is a long mandate text. ", count: 3)
+                return NSAttributedString(string: s)
+            default:
+                return nil
+            }
+        }
+
+        let mockDelegate = MockEmbeddedPaymentMethodsViewDelegate()
+
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.klarna), .stripe(.payPal)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: mockMandateProvider,
+            shouldShowMandate: false
+        )
+        embeddedView.delegate = mockDelegate
+        embeddedView.autosizeHeight(width: 300)
+
+        // 1) Cash App
+        let cashBtn = embeddedView.getRowButton(accessibilityIdentifier: "Cash App Pay")
+        embeddedView.didTap(rowButton: cashBtn)
+        XCTAssertEqual(mockDelegate.calls, [.didUpdateSelection, .didTapPaymentMethodRow])
+        let expectedCash = String(repeating: "This is a long mandate text. ", count: 20)
+        XCTAssertEqual(embeddedView.mandateText?.string, expectedCash)
+        XCTAssertTrue(embeddedView.mandateText?.string.count == expectedCash.count)
+        mockDelegate.calls = []
+
+        // 2) Klarna (no mandate provider → nil)
+        let klarnaBtn = embeddedView.getRowButton(accessibilityIdentifier: "Klarna")
+        embeddedView.didTap(rowButton: klarnaBtn)
+        XCTAssertEqual(mockDelegate.calls, [.didUpdateSelection, .didTapPaymentMethodRow])
+        XCTAssertNil(embeddedView.mandateText)  // Klarna mandate provider returns nil
+        mockDelegate.calls = []
+
+        // 3) PayPal
+        let paypalBtn = embeddedView.getRowButton(accessibilityIdentifier: "PayPal")
+        embeddedView.didTap(rowButton: paypalBtn)
+        XCTAssertEqual(mockDelegate.calls, [.didUpdateSelection, .didTapPaymentMethodRow])
+        let expectedPayPal = String(repeating: "This is a long mandate text. ", count: 10)
+        XCTAssertEqual(embeddedView.mandateText?.string, expectedPayPal)
+        mockDelegate.calls = []
+
+        // 4) Tap PayPal again (same selection)
+        embeddedView.didTap(rowButton: paypalBtn)
+        XCTAssertEqual(mockDelegate.calls, [.didTapPaymentMethodRow])
+        // still the same text
+        XCTAssertEqual(embeddedView.mandateText?.string, expectedPayPal)
+    }
+
 }
 
 private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsViewDelegate {

@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview)@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -18,6 +18,8 @@ struct AppearancePlaygroundView: View {
         _appearance = State<PaymentSheet.Appearance>.init(initialValue: appearance)
         self.doneAction = doneAction
     }
+    static let fonts = ["System Default", "AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
+    let systemDefaultFontName = "System Default"
 
     var body: some View {
         let primaryColorBinding = Binding(
@@ -81,8 +83,14 @@ struct AppearancePlaygroundView: View {
         )
 
         let cornerRadiusBinding = Binding(
-            get: { self.appearance.cornerRadius },
-            set: { self.appearance.cornerRadius = $0 }
+            // Note: -1 is a sentinel value for nil
+            get: { self.appearance.cornerRadius ?? -1 },
+            set: { self.appearance.cornerRadius = $0 < 0 ? nil : $0 }
+        )
+
+        let sheetCornerRadiusBinding = Binding(
+            get: { self.appearance.sheetCornerRadius },
+            set: { self.appearance.sheetCornerRadius = $0 }
         )
 
         let borderWidthBinding = Binding(
@@ -91,8 +99,9 @@ struct AppearancePlaygroundView: View {
         )
 
         let selectedBorderWidthBinding = Binding(
-            get: { appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5 },
-            set: { self.appearance.selectedBorderWidth = $0 }
+            // Note: -0.5 is a sentinel value for nil
+            get: { appearance.selectedBorderWidth ?? -0.5 },
+            set: { self.appearance.selectedBorderWidth = $0 < 0 ? nil : $0 }
         )
 
         let componentShadowColorBinding = Binding(
@@ -120,14 +129,79 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.shadow.radius = $0 }
         )
 
+        let formInsetsTopBinding = Binding(
+            get: { self.appearance.formInsets.top },
+            set: { self.appearance.formInsets.top = $0 }
+        )
+
+        let formInsetsLeftBinding = Binding(
+            get: { self.appearance.formInsets.leading },
+            set: { self.appearance.formInsets.leading = $0 }
+        )
+
+        let formInsetsBottomBinding = Binding(
+            get: { self.appearance.formInsets.bottom },
+            set: { self.appearance.formInsets.bottom = $0 }
+        )
+
+        let formInsetsRightBinding = Binding(
+            get: { self.appearance.formInsets.trailing },
+            set: { self.appearance.formInsets.trailing = $0 }
+        )
+
+        let textFieldInsetsTopBinding = Binding(
+            get: { self.appearance.textFieldInsets.top },
+            set: { self.appearance.textFieldInsets.top = $0 }
+        )
+
+        let textFieldInsetsLeftBinding = Binding(
+            get: { self.appearance.textFieldInsets.leading },
+            set: { self.appearance.textFieldInsets.leading = $0 }
+        )
+
+        let textFieldInsetsBottomBinding = Binding(
+            get: { self.appearance.textFieldInsets.bottom },
+            set: { self.appearance.textFieldInsets.bottom = $0 }
+        )
+
+        let textFieldInsetsRightBinding = Binding(
+            get: { self.appearance.textFieldInsets.trailing },
+            set: { self.appearance.textFieldInsets.trailing = $0 }
+        )
+
         let sizeScaleFactorBinding = Binding(
             get: { self.appearance.font.sizeScaleFactor },
             set: { self.appearance.font.sizeScaleFactor = $0 }
         )
 
         let regularFontBinding = Binding(
-            get: { self.appearance.font.base.fontDescriptor.postscriptName },
-            set: { self.appearance.font.base = UIFont(name: $0, size: 12.0)! }
+            get: {
+                let name = self.appearance.font.base.fontDescriptor.postscriptName
+                return name == PaymentSheet.Appearance.default.font.base.fontDescriptor.postscriptName ? systemDefaultFontName : name
+            },
+            set: {
+                if $0 == systemDefaultFontName {
+                    self.appearance.font.base = PaymentSheet.Appearance.default.font.base
+                } else {
+                    self.appearance.font.base = UIFont(name: $0, size: 20.0)!
+                }
+            }
+        )
+
+        // MARK: Custom font bindings
+
+        let customHeadlineFontBinding = Binding(
+            get: {
+                let name = self.appearance.font.base.fontDescriptor.postscriptName
+                return name == PaymentSheet.Appearance.default.font.base.fontDescriptor.postscriptName ? systemDefaultFontName : name
+            },
+            set: {
+                if $0 == systemDefaultFontName {
+                    self.appearance.font.custom.headline = nil
+                } else {
+                    self.appearance.font.custom.headline = UIFont(name: $0, size: 20.0)!
+                }
+            }
         )
 
         // MARK: Primary button bindings
@@ -168,7 +242,8 @@ struct AppearancePlaygroundView: View {
         )
 
         let primaryButtonCornerRadiusBinding = Binding(
-            get: { self.appearance.primaryButton.cornerRadius ?? appearance.cornerRadius },
+            // Note: -1 is a sentinel value for nil
+            get: { self.appearance.primaryButton.cornerRadius ?? appearance.cornerRadius ?? -1 },
             set: { self.appearance.primaryButton.cornerRadius = $0 }
         )
 
@@ -178,8 +253,10 @@ struct AppearancePlaygroundView: View {
         )
 
         let primaryButtonFontBinding = Binding(
-            get: { self.appearance.primaryButton.font?.fontDescriptor.postscriptName ?? UIFont.systemFont(ofSize: 16, weight: .medium).fontDescriptor.postscriptName },
-            set: { self.appearance.primaryButton.font = UIFont(name: $0, size: 16.0)! }
+            get: { self.appearance.primaryButton.font?.fontDescriptor.postscriptName ?? systemDefaultFontName },
+            set: {
+                self.appearance.primaryButton.font = $0 == systemDefaultFontName ? nil : UIFont(name: $0, size: 16.0)!
+            }
         )
 
         let primaryButtonShadowColorBinding = Binding(
@@ -222,53 +299,10 @@ struct AppearancePlaygroundView: View {
             }
         )
 
-        let embeddedPaymentElementFlatSeparatorColorBinding = Binding(
-            get: { Color(self.appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder) },
-            set: {
-                if self.appearance.embeddedPaymentElement.row.flat.separatorColor == nil {
-                    self.appearance.embeddedPaymentElement.row.flat.separatorColor = appearance.colors.componentBorder
-                } else {
-                    self.appearance.embeddedPaymentElement.row.flat.separatorColor = UIColor($0)
-                }
-            }
+        let primaryButtonHeightBinding = Binding(
+            get: { self.appearance.primaryButton.height },
+            set: { self.appearance.primaryButton.height = $0 }
         )
-
-        let embeddedPaymentElementFlatRadioColorSelected = Binding(
-            get: { Color(self.appearance.embeddedPaymentElement.row.flat.radio.selectedColor ?? appearance.colors.primary) },
-            set: {
-                self.appearance.embeddedPaymentElement.row.flat.radio.selectedColor = UIColor($0)
-            }
-        )
-
-        let embeddedPaymentElementFlatRadioColorUnselected = Binding(
-            get: { Color(self.appearance.embeddedPaymentElement.row.flat.radio.unselectedColor ?? appearance.colors.componentBorder) },
-            set: {
-                self.appearance.embeddedPaymentElement.row.flat.radio.unselectedColor = UIColor($0)
-            }
-        )
-
-        let embeddedPaymentElementFlatLeftSeparatorInset = Binding(
-            get: { self.appearance.embeddedPaymentElement.row.flat.separatorInsets?.left ?? 0 },
-            set: {
-                let prevInsets = self.appearance.embeddedPaymentElement.row.flat.separatorInsets ?? .zero
-                self.appearance.embeddedPaymentElement.row.flat.separatorInsets = UIEdgeInsets(top: 0, left: $0, bottom: 0, right: prevInsets.right)
-            }
-        )
-
-        let embeddedPaymentElementFlatRightSeparatorInset = Binding(
-            get: { self.appearance.embeddedPaymentElement.row.flat.separatorInsets?.right ?? 0 },
-            set: {
-                let prevInsets = self.appearance.embeddedPaymentElement.row.flat.separatorInsets ?? .zero
-                self.appearance.embeddedPaymentElement.row.flat.separatorInsets = UIEdgeInsets(top: 0, left: prevInsets.left, bottom: 0, right: $0)
-            }
-        )
-        
-        let embeddedPaymentElementCheckmarkColorBinding = Binding(
-            get: { Color(self.appearance.embeddedPaymentElement.row.flat.checkmark.color ?? self.appearance.colors.primary) },
-            set: { self.appearance.embeddedPaymentElement.row.flat.checkmark.color = UIColor($0) }
-        )
-
-        let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
 
         NavigationView {
             List {
@@ -292,9 +326,32 @@ struct AppearancePlaygroundView: View {
                 }
 
                 Section(header: Text("Miscellaneous")) {
-                    Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
+                    let cornerRadiusLabel: String = {
+                        if let cornerRadius = appearance.cornerRadius {
+                            String(format: "cornerRadius: %.0f", cornerRadius)
+                        } else {
+                            "cornerRadius: nil"
+                        }
+                    }()
+                    Stepper(cornerRadiusLabel, value: cornerRadiusBinding, in: -1...30)
+                    Stepper(String(format: "sheetCornerRadius: %.0f", appearance.sheetCornerRadius), value: sheetCornerRadiusBinding, in: 0...30)
                     Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
-                    Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: selectedBorderWidthBinding, in: 0.0...2.0, step: 0.5)
+                    let selectedBorderWidthLabel: String = {
+                        if let selectedBorderWidth = appearance.selectedBorderWidth {
+                            String(format: "selectedBorderWidth: %.0f", selectedBorderWidth)
+                        } else {
+                            "selectedBorderWidth: nil"
+                        }
+                    }()
+                    Stepper(selectedBorderWidthLabel, value: selectedBorderWidthBinding, in: -0.5...2.0, step: 0.5)
+                    Stepper(String(format: "sectionSpacing: %.1f", appearance.sectionSpacing), value: $appearance.sectionSpacing, in: 0...50, step: 1.0)
+                    Stepper(String(format: "sectionSpacing: %.1f", appearance.sectionSpacing), value: $appearance.sectionSpacing, in: 0...50, step: 1.0)
+                    Stepper(String(format: "verticalModeRowPadding: %.1f", appearance.verticalModeRowPadding), value: $appearance.verticalModeRowPadding, in: 0...20, step: 0.5)
+                    Picker("Icon Style", selection: $appearance.iconStyle) {
+                        ForEach(PaymentSheet.Appearance.IconStyle.allCases, id: \.self) {
+                            Text(String(describing: $0))
+                        }
+                    }
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
@@ -314,6 +371,28 @@ struct AppearancePlaygroundView: View {
                             Slider(value: componentShadowRadiusBinding, in: 0...10, step: 0.5)
                         }
                     }
+                    VStack {
+                        Text("formInsets")
+                        Stepper("top: \(Int(appearance.formInsets.top))",
+                                value: formInsetsTopBinding, in: 0...100)
+                        Stepper("left: \(Int(appearance.formInsets.leading))",
+                                value: formInsetsLeftBinding, in: 0...100)
+                        Stepper("bottom: \(Int(appearance.formInsets.bottom))",
+                                value: formInsetsBottomBinding, in: 0...100)
+                        Stepper("right: \(Int(appearance.formInsets.trailing))",
+                                value: formInsetsRightBinding, in: 0...100)
+                    }
+                    VStack {
+                        Text("textFieldInsets")
+                        Stepper("top: \(Int(appearance.textFieldInsets.top))",
+                                value: textFieldInsetsTopBinding, in: 0...50)
+                        Stepper("left: \(Int(appearance.textFieldInsets.leading))",
+                                value: textFieldInsetsLeftBinding, in: 0...50)
+                        Stepper("bottom: \(Int(appearance.textFieldInsets.bottom))",
+                                value: textFieldInsetsBottomBinding, in: 0...50)
+                        Stepper("right: \(Int(appearance.textFieldInsets.trailing))",
+                                value: textFieldInsetsRightBinding, in: 0...50)
+                    }
                 }
                 Section(header: Text("Fonts")) {
                     VStack {
@@ -321,9 +400,27 @@ struct AppearancePlaygroundView: View {
                         Slider(value: sizeScaleFactorBinding, in: 0...2, step: 0.05)
                     }
                     Picker("Regular", selection: regularFontBinding) {
-                        ForEach(regularFonts, id: \.self) {
-                            Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                        ForEach(Self.fonts, id: \.self) {
+                            if $0 == systemDefaultFontName {
+                                Text($0)
+                            } else {
+                                Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                            }
                         }
+                    }
+
+                    DisclosureGroup {
+                        Picker("headline", selection: customHeadlineFontBinding) {
+                            ForEach(Self.fonts, id: \.self) { font in
+                                if font == systemDefaultFontName {
+                                    Text(font)
+                                } else {
+                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
+                                }
+                            }
+                        }
+                    } label: {
+                        Text("Custom Fonts")
                     }
                 }
 
@@ -337,11 +434,21 @@ struct AppearancePlaygroundView: View {
                         ColorPicker("textColor", selection: primaryButtonTextColorBinding)
                         ColorPicker("borderColor", selection: primaryButtonBorderColorBinding)
                         Stepper("borderWidth: \(Int(appearance.primaryButton.borderWidth))", value: primaryButtonCornerBorderWidth, in: 0...30)
-                        Stepper("cornerRadius: \(Int(appearance.primaryButton.cornerRadius ?? appearance.cornerRadius))",
-                                value: primaryButtonCornerRadiusBinding, in: 0...30)
+                        let cornerRadiusLabel: String = {
+                            if let cornerRadius = appearance.primaryButton.cornerRadius {
+                                String(format: "cornerRadius: %.0f", cornerRadius)
+                            } else {
+                                "cornerRadius: nil"
+                            }
+                        }()
+                        Stepper(cornerRadiusLabel, value: primaryButtonCornerRadiusBinding, in: -1...30)
                         Picker("Font", selection: primaryButtonFontBinding) {
-                            ForEach(regularFonts, id: \.self) {
-                                Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                            ForEach(Self.fonts, id: \.self) { font in
+                                if font == systemDefaultFontName {
+                                    Text(font)
+                                } else {
+                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
+                                }
                             }
                         }
                         VStack {
@@ -363,71 +470,48 @@ struct AppearancePlaygroundView: View {
                                 Slider(value: primaryButtonShadowRadiusBinding, in: 0...10, step: 0.5)
                             }
                         }
+                        HStack {
+                            Text(String(format: "height: \(appearance.primaryButton.height)"))
+                            Slider(value: primaryButtonHeightBinding, in: 20...100, step: 1)
+                        }
                     } label: {
                         Text("Primary Button")
                     }
                 }
 
                 Section(header: Text("EmbeddedPaymentElement")) {
-                    DisclosureGroup {
-                        DisclosureGroup {
-                            Picker("Style", selection: $appearance.embeddedPaymentElement.row.style) {
-                                ForEach(PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.allCases, id: \.self) {
-                                    Text(String(describing: $0))
-                                }
-                            }
-                            
-                            Stepper("additionalInsets: \(Int(appearance.embeddedPaymentElement.row.additionalInsets))",
-                                    value: $appearance.embeddedPaymentElement.row.additionalInsets, in: 0...40)
-
-                            DisclosureGroup {
-                                Stepper("separatorThickness: \(Int(appearance.embeddedPaymentElement.row.flat.separatorThickness))",
-                                        value: $appearance.embeddedPaymentElement.row.flat.separatorThickness, in: 0...10)
-                                ColorPicker("separatorColor", selection: embeddedPaymentElementFlatSeparatorColorBinding)
-                                Stepper("leftSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.left ?? 0))",
-                                        value: embeddedPaymentElementFlatLeftSeparatorInset, in: -40...40)
-                                Stepper("rightSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.right ?? 0))",
-                                        value: embeddedPaymentElementFlatRightSeparatorInset, in: -40...40)
-                                Toggle("topSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled)
-                                Toggle("bottomSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
-
-                                DisclosureGroup {
-                                    ColorPicker("selectedColor", selection: embeddedPaymentElementFlatRadioColorSelected)
-                                    ColorPicker("unselectedColor", selection: embeddedPaymentElementFlatRadioColorUnselected)
-                                } label: {
-                                    Text("Radio")
-                                }
-
-                            } label: {
-                                Text("FlatWithRadio")
-                            }
-
-                            DisclosureGroup {
-                                Stepper("Spacing: \(Int(appearance.embeddedPaymentElement.row.floating.spacing))",
-                                        value: $appearance.embeddedPaymentElement.row.floating.spacing, in: 0...40)
-
-                            } label: {
-                                Text("FloatingButton")
-                            }
-                            DisclosureGroup {
-                                ColorPicker("checkmarkColor", selection: embeddedPaymentElementCheckmarkColorBinding)
-                            } label: {
-                                Text("FlatWithCheckmark")
-                            }
-                        } label: {
-                            Text("Row")
-                        }
-
-                    } label: {
-                        Text("EmbeddedPaymentElement")
-                    }
+                    AppearancePlaygroundView_EmbeddedPaymentElement(appearance: $appearance)
                 }
 
+                if #available(iOS 26.0, *) {
+                    Section(header: Text("iOS 26 Liquid Glass")) {
+                        Picker("Navigation bar style", selection: $appearance.navigationBarStyle) {
+                            ForEach([PaymentSheet.Appearance.NavigationBarStyle.plain, PaymentSheet.Appearance.NavigationBarStyle.glass], id: \.self) {
+                                Text(String(describing: $0))
+                            }
+                        }
+                        Button {
+                            appearance.applyLiquidGlass()
+                            doneAction(appearance)
+                        } label: {
+                            Text("Apply Liquid Glass🥃")
+                        }
+                        Button {
+                            resetLinkUI()
+                            appearance = PaymentSheet.Appearance()
+                            appearance.applyLiquidGlass()
+                            doneAction(appearance)
+                        } label: {
+                            Text("♼ Reset Appearance, apply Liquid Glass 🥃")
+                        }
+                    }
+                }
                 Button {
+                    resetLinkUI()
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {
-                    Text("Reset Appearance")
+                    Text("♼ Reset Appearance")
                 }
 
             }.navigationTitle("Appearance")

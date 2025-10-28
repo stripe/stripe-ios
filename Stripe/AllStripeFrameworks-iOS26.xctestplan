@@ -1,0 +1,309 @@
+{
+  "configurations": [
+    {
+      "id": "7F02C2E0-51C2-4525-BF7A-06D22C6E514A",
+      "name": "Configuration 1",
+      "options": {
+      }
+    }
+  ],
+  "defaultOptions": {
+    "environmentVariableEntries": [
+      {
+        "key": "FB_REFERENCE_IMAGE_DIR",
+        "value": "$(SOURCE_ROOT)/../Tests/ReferenceImages"
+      }
+    ],
+    "targetForVariableExpansion": {
+      "containerPath": "container:Stripe/Stripe.xcodeproj",
+      "identifier": "ADF894AA8F6022D9BED17346",
+      "name": "StripeiOS"
+    }
+  },
+  "testTargets": [
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripeIdentity/StripeIdentity.xcodeproj",
+        "identifier": "5883CCEAA4C73E1DB1F0D3A5",
+        "name": "StripeIdentityTests"
+      }
+    },
+    {
+      "selectedTests": [
+        "BankAccountInfoViewSnapshotTests/test_eligibleForPromo()",
+        "BankAccountInfoViewSnapshotTests/test_eligibleForPromo_longName()",
+        "BankAccountInfoViewSnapshotTests/test_ineligibleForPromo()",
+        "BankAccountInfoViewSnapshotTests/test_noPromoBadge()",
+        "CVCReconfirmationViewControllerSnapshotTest/testCVCRecollectionScreen()",
+        "FormElementSnapshotTest/testDefaultTheme()",
+        "LinkHintMessageViewSnapshotTests/testLongMessageWithWrapping()",
+        "LinkHintMessageViewSnapshotTests/testLongMessageWithWrappingErrorStyle()",
+        "LinkHintMessageViewSnapshotTests/testNormalLengthMessage()",
+        "LinkHintMessageViewSnapshotTests/testNormalLengthMessageErrorStyle()",
+        "LinkHintMessageViewSnapshotTests/testOutlinedStyle()",
+        "LinkNavigationBarSnapshotTests/testBackStyleThenTruncatingTitle()",
+        "LinkNavigationBarSnapshotTests/testCloseStyleThenTruncatingTitle()",
+        "LinkNavigationBarSnapshotTests/testDefault()",
+        "LinkNavigationBarSnapshotTests/testLongTitle()",
+        "LinkNavigationBarSnapshotTests/testLongTitleCloseStyle()",
+        "LinkNavigationBarSnapshotTests/testTitle()",
+        "LinkNavigationBarSnapshotTests/testTitleCloseStyle()",
+        "LinkNavigationBarSnapshotTests/testTruncatingTitle()",
+        "LinkNavigationBarSnapshotTests/testTruncatingTitleCloseStyle()",
+        "LinkPaymentMethodFormElementSnapshotTests/testBillingDetailsUpdate()",
+        "LinkPaymentMethodFormElementSnapshotTests/testBillingDetailsUpdateForBankAccount()",
+        "LinkPaymentMethodFormElementSnapshotTests/testBillingDetailsUpdateWithFullBillingDetails()",
+        "LinkPaymentMethodFormElementSnapshotTests/testBillingDetailsUpdateWithPartialBillingDetails()",
+        "LinkPaymentMethodFormElementSnapshotTests/testCoBrandedCard()",
+        "LinkPaymentMethodFormElementSnapshotTests/testDefault()",
+        "LinkPaymentMethodFormElementSnapshotTests/testNonDefault()",
+        "LinkPaymentMethodPickerSnapshotTests/testEmpty()",
+        "LinkPaymentMethodPickerSnapshotTests/testExpanded()",
+        "LinkPaymentMethodPickerSnapshotTests/testFirstOptionUnsupported()",
+        "LinkPaymentMethodPickerSnapshotTests/testLongEmail()",
+        "LinkPaymentMethodPickerSnapshotTests/testLongerEmail()",
+        "LinkPaymentMethodPickerSnapshotTests/testNormal()",
+        "LinkPaymentMethodPickerSnapshotTests/testUnsupportedBankAccount()",
+        "LinkPaymentMethodPickerSnapshotTests/testUnsupportedSelectedNotCollapsed()",
+        "LinkSignUpViewControllerSnapshotTests/testEmptyView()",
+        "LinkSignUpViewControllerSnapshotTests/testWithEmail()",
+        "PayWithLinkNewPaymentViewControllerSnapshotTests/testIsAddingFirstPaymentMethod()",
+        "PayWithLinkNewPaymentViewControllerSnapshotTests/testIsNotAddingFirstPaymentMethod()",
+        "PaymentMethodTypeCollectionViewCellSnapshotTests/test_withPromoBadge()",
+        "PaymentMethodTypeCollectionViewCellSnapshotTests/test_withPromoBadge_customAppearance()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testDirectToCardScan()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testNewScreen_customCTA()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testSavedScreen_SEPA_debit()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testSavedScreen_card()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testSavedScreen_customCTA()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testSavedScreen_us_bank_account()",
+        "SavedPaymentOptionsViewControllerSnapshotTests/test_all_saved_pms_and_apple_pay_and_link()",
+        "SavedPaymentOptionsViewControllerSnapshotTests/test_all_saved_pms_and_apple_pay_and_link_custom_appearance()",
+        "SavedPaymentOptionsViewControllerSnapshotTests/test_all_saved_pms_and_apple_pay_and_link_dark()",
+        "SavedPaymentOptionsViewControllerSnapshotTests/test_all_saved_pms_and_apple_pay_and_link_default_badge()",
+        "SavedPaymentOptionsViewControllerSnapshotTests/test_cvc_recollection()",
+        "SavedPaymentOptionsViewControllerSnapshotTests/test_cvc_recollection_dark()",
+        "SectionElementSnapshotTest/testDisabledState()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerAppearance()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerCanUpdateAppearance()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerCanUpdateExpiredCard()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerCanUpdateLightMode()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerCanUpdateSetAsDefaultCard()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerDarkMode()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerDefaultCard()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerDefaultUSBankAccount()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerExpiredCard()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLightMode()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLightMode_BillingAuto_wCBC()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLightMode_BillingAuto_woCBC()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLightMode_BillingFull_wCBC()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLightMode_BillingFull_woCBC()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLightMode_blockedBrands()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLightMode_supressAddress_wCBC()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLink_darkMode()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerLink_lightMode()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerRemoveOnlyCard()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerSEPADebitAppearance()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerSEPADebitDarkMode()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerSEPADebitLightMode()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerSetAsDefaultCard()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerSetAsDefaultSEPADebit()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerSetAsDefaultUSBankAccount()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerUSBankAccountAppearance()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerUSBankAccountDarkMode()",
+        "UpdatePaymentMethodViewControllerSnapshotTests/test_UpdatePaymentMethodViewControllerUSBankAccountLightMode()",
+        "VerticalPaymentMethodListViewControllerSnapshotTest/testAppearance()",
+        "VerticalPaymentMethodListViewControllerSnapshotTest/testNoSavedPM_noApplePayLink()",
+        "VerticalPaymentMethodListViewControllerSnapshotTest/testReturningLinkConsumer()",
+        "VerticalPaymentMethodListViewControllerSnapshotTest/testSavedCard_ApplePayLink()",
+        "VerticalPaymentMethodListViewControllerSnapshotTest/testSavedCard_noApplePayLink()",
+        "VerticalPaymentMethodListViewControllerSnapshotTest/testUnknownLinkConsumer()",
+        "VerticalSavedPaymentMethodsViewControllerSnapshotTests/test_Embedded_VerticalSavedPaymentMethodsViewControllerSnapshotTestsAppearance()",
+        "VerticalSavedPaymentMethodsViewControllerSnapshotTests/test_Embedded_VerticalSavedPaymentMethodsViewControllerSnapshotTestsLightMode()",
+        "VerticalSavedPaymentMethodsViewControllerSnapshotTests/test_Embedded_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode()",
+        "VerticalSavedPaymentMethodsViewControllerSnapshotTests/test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsAppearance()",
+        "VerticalSavedPaymentMethodsViewControllerSnapshotTests/test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsLightMode()",
+        "VerticalSavedPaymentMethodsViewControllerSnapshotTests/test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode()",
+        "VerticalSavedPaymentMethodsViewControllerSnapshotTests/test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDefaultBadge()",
+        "WalletViewControllerSnapshotTests/testAlternativeCTA()",
+        "WalletViewControllerSnapshotTests/testDefault()",
+        "WalletViewControllerSnapshotTests/testWithApplePay()",
+        "WalletViewControllerSnapshotTests/testWithCvcRecollection()",
+        "WalletViewControllerSnapshotTests/testWithError()",
+        "WalletViewControllerSnapshotTests/testWithExpiryDateRecollection()",
+        "WalletViewControllerSnapshotTests/testWithMandate()"
+      ],
+      "target": {
+        "containerPath": "container:StripePaymentSheet/StripePaymentSheet.xcodeproj",
+        "identifier": "9A93AB1D98A0A1EC6ADEA65D",
+        "name": "StripePaymentSheetTests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:Stripe3DS2/Stripe3DS2.xcodeproj",
+        "identifier": "F2D50FA32F27498F56CD08DD",
+        "name": "Stripe3DS2Tests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:Stripe3DS2/Stripe3DS2.xcodeproj",
+        "identifier": "7DA168BC86CE957505FA091B",
+        "name": "Stripe3DS2DemoUITests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripeConnect/StripeConnect.xcodeproj",
+        "identifier": "41D17A492C5A73A7007C6EE6",
+        "name": "StripeConnectTests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripePaymentsUI/StripePaymentsUI.xcodeproj",
+        "identifier": "CFDEE20ADA9F0099259938AF",
+        "name": "StripePaymentsUITests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripeApplePay/StripeApplePay.xcodeproj",
+        "identifier": "ACAFA21CF224F80EFAEFDC2F",
+        "name": "StripeApplePayTests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripeCardScan/StripeCardScan.xcodeproj",
+        "identifier": "DCC6FFCFBE0B51B33F4CBB26",
+        "name": "StripeCardScanTests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripeCore/StripeCore.xcodeproj",
+        "identifier": "03B50F59824D1D18AA073D57",
+        "name": "StripeCoreTests"
+      }
+    },
+    {
+      "selectedTests": [
+        "AutoCompleteViewControllerSnapshotTests/testAutoCompleteViewController()",
+        "AutoCompleteViewControllerSnapshotTests/testAutoCompleteViewController_appearance()",
+        "AutoCompleteViewControllerSnapshotTests/testAutoCompleteViewController_darkMode()",
+        "ConfirmButtonSnapshotTests/testConfirmButton()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonBackgroundColor()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonCustomFont()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonCustomFontScales()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonDefaultDisabledColor()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonDefaultSuccessColor()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonDisabledColor()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonDisabledColorWhenSetBackgroundColorAndNoSetDisabledColor()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonDisabledColorWhenSetDisabledBackgroundAndPrimaryColors()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonDisabledColorWhenSetPrimaryColorAndNoSetBackgroundColorOrDisabledColor()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonInLinkUI()",
+        "ConfirmButtonSnapshotTests/testConfirmButtonSuccessColor()",
+        "ConfirmButtonTests/testBuyButtonShouldAutomaticallyAdjustItsForegroundColor()",
+        "LinkInlineSignupElementSnapshotTests/testDefaultOptIn_fully_preFilled()",
+        "LinkInlineSignupElementSnapshotTests/testDefaultOptIn_fully_preFilled_longEmail()",
+        "LinkInlineSignupElementSnapshotTests/testDefaultOptIn_partially_preFilled()",
+        "LinkInlineSignupElementSnapshotTests/testDefaultState()",
+        "LinkInlineSignupElementSnapshotTests/testDefaultState_textFieldsOnly()",
+        "LinkInlineSignupElementSnapshotTests/testExpandedState()",
+        "LinkInlineSignupElementSnapshotTests/testExpandedState_nonUS()",
+        "LinkInlineSignupElementSnapshotTests/testExpandedState_nonUS_preFilled()",
+        "LinkInlineSignupElementSnapshotTests/testExpandedState_nonUS_preFilled_textFieldsOnly()",
+        "LinkInlineSignupElementSnapshotTests/testExpandedState_nonUS_textFieldsOnly()",
+        "LinkInlineSignupElementSnapshotTests/testExpandedState_textFieldsOnly()",
+        "LinkInlineSignupElementSnapshotTests/testSignupOptInFeatureEnabled_unchecked()",
+        "RemoveButtonSnapshotTests/testRemoveButton()",
+        "RemoveButtonSnapshotTests/testRemoveButtonCustomFontScales()",
+        "RemoveButtonSnapshotTests/testRemoveButtonCustomSheetBackgroundAndDanger()",
+        "RemoveButtonSnapshotTests/testRemoveButtonCustomZeroCornerRadius()",
+        "WalletHeaderViewSnapshotTests/testAdaptiveElements()",
+        "WalletHeaderViewSnapshotTests/testAdaptiveElementsWithCustomApplePayCta()",
+        "WalletHeaderViewSnapshotTests/testAllButtons()",
+        "WalletHeaderViewSnapshotTests/testAllButtonsSetupIntent()",
+        "WalletHeaderViewSnapshotTests/testAllButtonsWithCustomApplePayCta()",
+        "WalletHeaderViewSnapshotTests/testApplePayButton()",
+        "WalletHeaderViewSnapshotTests/testApplePayButtonWithCustomCta()",
+        "WalletHeaderViewSnapshotTests/testCustomCornerRadius()",
+        "WalletHeaderViewSnapshotTests/testCustomFont()",
+        "WalletHeaderViewSnapshotTests/testCustomFontScales()",
+        "WalletHeaderViewSnapshotTests/testLinkButton()"
+      ],
+      "target": {
+        "containerPath": "container:Stripe/Stripe.xcodeproj",
+        "identifier": "8BE23AD5D9A3D939AF46F31E",
+        "name": "StripeiOSTests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripePayments/StripePayments.xcodeproj",
+        "identifier": "82D53FD79169DC5CBF54660A",
+        "name": "StripePaymentsTests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripeUICore/StripeUICore.xcodeproj",
+        "identifier": "A4B3F8AEF10396425E1A79D0",
+        "name": "StripeUICoreTests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripeCameraCore/StripeCameraCore.xcodeproj",
+        "identifier": "F3DED9AB60FDAB786A737384",
+        "name": "StripeCameraCoreTests"
+      }
+    },
+    {
+      "selectedTests": [
+
+      ],
+      "target": {
+        "containerPath": "container:StripeFinancialConnections/StripeFinancialConnections.xcodeproj",
+        "identifier": "DF72D31B68363878FC1604CF",
+        "name": "StripeFinancialConnectionsTests"
+      }
+    }
+  ],
+  "version": 1
+}

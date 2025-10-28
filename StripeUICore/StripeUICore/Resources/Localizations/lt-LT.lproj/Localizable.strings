@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (pasirenkamas)";
 
 "(not accepted)" = "(nepriimama)";
@@ -37,8 +39,6 @@
 "Country or region" = "Šalis arba regionas";
 
 "County" = "Apygarda";
-
-"Date is empty." = "Data neužpildyta.";
 
 "Department" = "Skyrius";
 
@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Pasirinkite kortelės prekės ženklą (neprivaloma)";
 
+"Selection is empty." = "Nieko nepasirinkta.";
+
 "Sort code" = "Identifikacinis kodas";
 
 "State" = "Valstija";
@@ -132,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Jūsų BLIK kodas netinkamas.";
 
-"Your ZIP is incomplete." = "Neišsamus jūsų pašto kodas.";
+"Your ZIP code is incomplete." = "Jūsų pašto kodas yra nepilnas.";
+
+"Your ZIP code is invalid." = "Jūsų pašto kodas netinkamas.";
 
 "Your email is invalid." = "Jūsų el. paštas yra neteisingas.";
 
 "Your payment information will not be saved." = "Jūsų mokėjimo informacija nebus įrašyta.";
 
 "Your postal code is incomplete." = "Pašto kodas neišsamus.";
+
+"Your postal code is invalid." = "Jūsų pašto kodas yra netinkamas.";
 
 "ZIP" = "Pašto kodas";

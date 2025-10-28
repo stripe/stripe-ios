@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@Kártya";
+
+"%1$@ Credit" = "%1$@Hitel";
+
+"%1$@ Debit" = "%1$@Betéti";
+
+"%1$@ Prepaid" = "%1$@Előre fizetett";
+
 "%1$@ account ending in %2$@" = "%2$@ végződésű számla %1$@";
 
 "%1$@ ending in %2$@" = "%1$@ végződése %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Bankszámla";
 
 "Billing address" = "Számlázási cím";
+
+"Billing details" = "Számlázási adatok";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
 
-"Your ZIP is invalid." = "A ZIP érvénytelen.";
-
 "Your card has expired." = "A kártyája lejárt.";
 
 "Your card number is incomplete." = "A kártyaszám hiányos.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "A kártya biztonsági kódja hiányos.";
 
 "Your card's security code is invalid." = "A kártya biztonsági kódja érvénytelen.";
-
-"Your postal code is invalid." = "Az irányítószám érvénytelen.";
 
 "card number" = "kártyaszám";
 

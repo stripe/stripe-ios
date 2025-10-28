@@ -16,6 +16,7 @@
     }
   },
   "card_installments_enabled": false,
+  "config_id": "123",
   "custom_payment_method_data": null,
   "customer": {
     "customer_session": {
@@ -83,6 +84,7 @@
   },
   "external_payment_method_data": null,
   "flags": {
+      "elements_enable_link_spm": true
   },
   "google_pay_preference": "enabled",
   "klarna_express_config": {

@@ -62,6 +62,7 @@ class ExternalPaymentOptionTests: XCTestCase {
         XCTAssertNil(paymentOption?.displaySubtext)
         XCTAssertEqual(paymentOption?.lightImageUrl, mockLightImageURL)
         XCTAssertEqual(paymentOption?.darkImageUrl, mockDarkImageURL)
+        XCTAssertFalse(paymentOption?.disableBillingDetailCollection ?? true)
 
         // Test confirm handler works
         _ = await paymentOption?.confirm(billingDetails: mockBillingDetails)
@@ -72,16 +73,16 @@ class ExternalPaymentOptionTests: XCTestCase {
         let mockCustomPaymentMethod = createMockCustomPaymentMethod()
         let expectation = self.expectation(description: "Custom confirm handler called")
 
-        let mockCustomType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(
+        let mockCustomType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(
             id: "cpmt_1234",
-            subcopy: "Fast and secure checkout"
+            subtitle: "Fast and secure checkout"
         )
 
         let mockConfiguration = PaymentSheet.CustomPaymentMethodConfiguration(
-            customPaymentMethodTypes: [mockCustomType],
+            customPaymentMethods: [mockCustomType],
             customPaymentMethodConfirmHandler: { cpmType, billingDetails in
                 XCTAssertEqual(cpmType.id, "cpmt_1234")
-                XCTAssertEqual(cpmType.subcopy, "Fast and secure checkout")
+                XCTAssertEqual(cpmType.subtitle, "Fast and secure checkout")
                 XCTAssertEqual(billingDetails, self.mockBillingDetails)
                 expectation.fulfill()
                 return .completed
@@ -96,6 +97,7 @@ class ExternalPaymentOptionTests: XCTestCase {
         XCTAssertEqual(paymentOption?.displaySubtext, "Fast and secure checkout")
         XCTAssertEqual(paymentOption?.lightImageUrl, mockLightImageURL)
         XCTAssertNil(paymentOption?.darkImageUrl)
+        XCTAssertTrue(paymentOption?.disableBillingDetailCollection ?? false)
 
         // Test confirm handler works
         _ = await paymentOption?.confirm(billingDetails: mockBillingDetails)
@@ -108,13 +110,13 @@ class ExternalPaymentOptionTests: XCTestCase {
         let mockCustomPaymentMethod = createMockCustomPaymentMethod()
         let confirmExpectation = self.expectation(description: "Custom confirm handler called")
 
-        let mockCustomType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethodType(
+        let mockCustomType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(
             id: "cpmt_1234",
-            subcopy: "Fast and secure checkout"
+            subtitle: "Fast and secure checkout"
         )
 
         let mockConfiguration = PaymentSheet.CustomPaymentMethodConfiguration(
-            customPaymentMethodTypes: [mockCustomType],
+            customPaymentMethods: [mockCustomType],
             customPaymentMethodConfirmHandler: { customType, billingDetails in
                 XCTAssertEqual(customType.id, "cpmt_1234")
                 XCTAssertEqual(billingDetails, self.mockBillingDetails)

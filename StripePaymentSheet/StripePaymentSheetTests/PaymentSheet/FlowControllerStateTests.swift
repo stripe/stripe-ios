@@ -46,6 +46,10 @@ class StubAPMVCDelegate: AddPaymentMethodViewControllerDelegate {
         self.expectation = expectation
     }
 
+    func getWalletHeaders() -> [String] {
+        return []
+    }
+
     func didUpdate(_ viewController: StripePaymentSheet.AddPaymentMethodViewController) {
         expectation.fulfill()
     }

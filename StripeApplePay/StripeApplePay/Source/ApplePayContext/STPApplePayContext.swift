@@ -98,14 +98,24 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
 /// - seealso: ApplePayExampleViewController for an example
 @objc(STPApplePayContext)
 public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDelegate {
-    enum Error: Swift.Error {
-        case invalidFinalState
+    enum Error: Swift.Error, CustomDebugStringConvertible {
+        case confirmationFailure
+        case invalidIntentState(status: String)
+        var debugDescription: String {
+            switch self {
+            case .confirmationFailure:
+                return "STPApplePayContext failed to confirm the Intent."
+            case let .invalidIntentState(status: status):
+                return "STPApplePayContext received a PaymentIntent or SetupIntent with an unexpected status: \(status)."
+            }
+        }
     }
     /// A special string that can be passed in place of a intent client secret to force showing success and return a PaymentState of `success`.
     /// - Note: ⚠️ If provided, the SDK performs no action to complete the payment or setup - it doesn't confirm a PaymentIntent or SetupIntent or handle next actions.
     ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful. 
     @_spi(STP) public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
 
+    internal var analyticsClient: STPAnalyticsClient = .sharedClient
     /// Initializes this class.
     /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
     /// @note If using Swift, using ApplePayContextDelegate is recommended over STPApplePayContextDelegate.
@@ -128,22 +138,33 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }()
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantIdentifier` on your payment request.")
-        guard
-            canMakePayments,
-            !paymentRequest.merchantIdentifier.isEmpty,
-            // PKPaymentAuthorizationController's docs incorrectly state:
-            // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
-            // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
-            PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil
-        else {
+
+        // 1. Check if the device or user account supports Apple Pay
+        guard canMakePayments else {
+            print("STPApplePayContext init failed: Device or account is not configured for Apple Pay, or unsupported networks are used.")
             return nil
         }
-        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
 
+        // 2. Check if merchantIdentifier is non-empty
+        guard !paymentRequest.merchantIdentifier.isEmpty else {
+            print("STPApplePayContext init failed: The `merchantIdentifier` on `PKPaymentRequest` is empty.")
+            return nil
+        }
+
+        // 3. Check if creating a payment authorization view controller is possible
+        // PKPaymentAuthorizationController's docs incorrectly state:
+        // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
+        // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
+        guard PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil else {
+            print("STPApplePayContext init failed: `PKPaymentAuthorizationViewController` returned nil. The payment request might be invalid.")
+            return nil
+        }
+
+        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         self.delegate = delegate
 
         super.init()
-        authorizationController?.delegate = self
+        authorizationController.delegate = self
     }
 
     private var presentationWindow: UIWindow?
@@ -177,7 +198,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @objc(presentApplePayFromWindow:completion:)
     public func presentApplePay(from window: UIWindow?, completion: STPVoidBlock? = nil) {
         presentationWindow = window
-        guard !didPresentApplePay, let applePayController = self.authorizationController else {
+        guard !didPresentApplePay, !didFinish else {
             assert(
                 false,
                 "This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay."
@@ -185,17 +206,20 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             return
         }
         didPresentApplePay = true
+        self.startTime = Date()
+        let startedAnalytic = Analytic(event: .applePayContextStarted)
+        analyticsClient.log(analytic: startedAnalytic, apiClient: apiClient)
 
         // This instance (and the associated Objective-C bridge object, if any) must live so
         // that the apple pay sheet is dismissed; until then, the app is effectively frozen.
         objc_setAssociatedObject(
-            applePayController,
+            authorizationController,
             UnsafeRawPointer(&kApplePayContextAssociatedObjectKey),
             self,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
 
-        applePayController.present { (_) in
+        authorizationController.present { (_) in
             DispatchQueue.main.async {
                 completion?()
             }
@@ -229,12 +253,22 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// - Note: You must create a new instance of ApplePayContext after using this method.
     @objc(dismissWithCompletion:)
     public func dismiss(completion: STPVoidBlock? = nil) {
-        guard didPresentApplePay else {
+        guard didPresentApplePay, !didFinish else {
             return
         }
-        authorizationController?.dismiss {
-            stpDispatchToMainThreadIfNecessary {
+        authorizationController.dismiss {
+            stpDispatchToMainThreadIfNecessary { [self] in
                 completion?()
+                let finishedAnalytic = Analytic(
+                    event: .applePayContextFinished,
+                    intentID: intentID,
+                    status: .userCancellation,
+                    duration: startTime.map {
+                        Date().timeIntervalSince($0)
+                    },
+                    error: error
+                )
+                self.analyticsClient.log(analytic: finishedAnalytic, apiClient: apiClient)
                 self._end()
             }
         }
@@ -246,8 +280,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// ApplePayContext passes this to the /confirm endpoint for PaymentIntents if it did not collect shipping details itself.
     /// :nodoc:
     @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
-    private weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
-    @objc var authorizationController: PKPaymentAuthorizationController?
+    weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
+    @objc var authorizationController: PKPaymentAuthorizationController
     @_spi(STP) public var returnUrl: String?
 
     @_spi(STP) @frozen public enum ConfirmType {
@@ -258,12 +292,19 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
+    /// Contains metadata with identifiers for the session and information about the integration
+    @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
     // Internal state
+    private var startTime: Date?
+    private var intentID: String?
     private var paymentState: PaymentState = .notStarted
     private var error: Swift.Error?
     /// YES if the flow cancelled or timed out.  This toggles which delegate method (didFinish or didAuthorize) calls our didComplete delegate method
     private var didCancelOrTimeoutWhilePending = false
     private var didPresentApplePay = false
+    /// Whether or not we fully completed the flow - if didFinish is `true`, that means `_end()` was called and this class is unusable.
+    var didFinish = false
 
     /// :nodoc:
     @objc public override func responds(to aSelector: Selector!) -> Bool {
@@ -340,16 +381,15 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     func _end() {
-        if let authorizationController = authorizationController {
-            objc_setAssociatedObject(
-                authorizationController,
-                UnsafeRawPointer(&kApplePayContextAssociatedObjectKey),
-                nil,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
-        }
-        authorizationController = nil
+        objc_setAssociatedObject(
+            authorizationController,
+            UnsafeRawPointer(&kApplePayContextAssociatedObjectKey),
+            nil,
+            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+        )
         delegate = nil
+        authorizationController.delegate = nil
+        didFinish = true
     }
 
     func _shippingDetails(from payment: PKPayment) -> StripeAPI.ShippingDetails? {
@@ -517,87 +557,73 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         with payment: PKPayment,
         completion: @escaping (PKPaymentAuthorizationStatus, Swift.Error?) -> Void
     ) {
-        // Helper to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
-        let handleFinalState: ((PaymentState, Swift.Error?) -> Void) = { state, error in
-            switch state {
-            case .error:
-                self.paymentState = .error
-                self.error = error
-                if self.didCancelOrTimeoutWhilePending {
-                    self.authorizationController?.dismiss {
-                        DispatchQueue.main.async {
-                            self.callDidCompleteDelegate(status: .error, error: self.error)
-                            self._end()
-                        }
+        // Helpers to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
+        // Helper 1: Handle failure
+        func handleFailure(error: Swift.Error?) {
+            self.error = error ?? NSError.stp_genericErrorOccurredError()
+            self.paymentState = .error
+            if self.didCancelOrTimeoutWhilePending {
+                self.authorizationController.dismiss {
+                    DispatchQueue.main.async {
+                        self.callDidCompleteDelegate(status: .error, error: self.error)
+                        self._end()
                     }
-                } else {
-                    completion(PKPaymentAuthorizationStatus.failure, error)
                 }
-                return
-            case .success:
-                self.paymentState = .success
-                if self.didCancelOrTimeoutWhilePending {
-                    self.authorizationController?.dismiss {
-                        DispatchQueue.main.async {
-                            self.callDidCompleteDelegate(status: .success, error: nil)
-                            self._end()
-                        }
+            } else {
+                completion(PKPaymentAuthorizationStatus.failure, error)
+            }
+        }
+        // Helper 2: Handle success
+        func handleSuccess() {
+            self.paymentState = .success
+            if self.didCancelOrTimeoutWhilePending {
+                self.authorizationController.dismiss {
+                    DispatchQueue.main.async {
+                        self.callDidCompleteDelegate(status: .success, error: nil)
+                        self._end()
                     }
-                } else {
-                    completion(PKPaymentAuthorizationStatus.success, nil)
                 }
-                return
-            case .pending, .notStarted:
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                  error: Error.invalidFinalState)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                stpAssertionFailure("Invalid final state")
-                return
+            } else {
+                completion(PKPaymentAuthorizationStatus.success, nil)
             }
         }
 
         // 1. Create PaymentMethod
-        StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment) { result in
-            guard let paymentMethod = try? result.get(), self.authorizationController != nil else {
-                if case .failure(let error) = result {
-                    handleFinalState(.error, error)
-                } else {
-                    handleFinalState(.error, nil)
-                }
+        StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment, clientAttributionMetadata: clientAttributionMetadata) { result in
+            guard !self.didFinish else {
+               return // The user canceled mid-payment - just abort
+            }
+            guard case .success(let paymentMethod) = result else {
+                handleFailure(error: result.error)
                 return
             }
 
-            let paymentMethodCompletion: STPIntentClientSecretCompletionBlock = {
-                clientSecret,
-                intentCreationError in
-                guard let clientSecret = clientSecret, intentCreationError == nil,
-                    self.authorizationController != nil
-                else {
-                    handleFinalState(.error, intentCreationError)
+            let paymentMethodCompletion: STPIntentClientSecretCompletionBlock = { clientSecret, intentCreationError in
+                guard !self.didFinish else {
+                   return // The user canceled mid-payment - just abort
+                }
+                guard let clientSecret, intentCreationError == nil else {
+                    handleFailure(error: intentCreationError)
                     return
                 }
 
                 guard clientSecret != STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     self.confirmType = STPApplePayContext.ConfirmType.none
-                    handleFinalState(.success, nil)
+                    handleSuccess()
                     return
                 }
 
                 if StripeAPI.SetupIntentConfirmParams.isClientSecretValid(clientSecret) {
                     // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
-                    StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
-                    {
-                        result in
-                        guard let setupIntent = try? result.get(),
-                            self.authorizationController != nil
-                        else {
-                            if case .failure(let error) = result {
-                                handleFinalState(.error, error)
-                            } else {
-                                handleFinalState(.error, nil)
-                            }
+                    StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret) { result in
+                        guard !self.didFinish else {
+                           return // The user canceled mid-payment - just abort
+                        }
+                        guard case .success(let setupIntent) = result else {
+                            handleFailure(error: result.error)
                             return
                         }
+                        self.intentID = setupIntent.id
 
                         switch setupIntent.status {
                         case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
@@ -610,37 +636,28 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                             confirmParams.paymentMethod = paymentMethod.id
                             confirmParams.useStripeSdk = true
                             confirmParams.returnUrl = self.returnUrl
+                            confirmParams.clientAttributionMetadata = self.clientAttributionMetadata
 
                             StripeAPI.SetupIntent.confirm(
                                 apiClient: self.apiClient,
                                 params: confirmParams
-                            ) {
-                                result in
-                                guard let setupIntent = try? result.get(),
-                                    self.authorizationController != nil,
-                                    setupIntent.status == .succeeded
-                                else {
-                                    if case .failure(let error) = result {
-                                        handleFinalState(.error, error)
-                                    } else {
-                                        handleFinalState(.error, nil)
-                                    }
+                            ) { result in
+                                guard case .success(let setupIntent) = result else {
+                                    handleFailure(error: result.error)
                                     return
                                 }
-
-                                handleFinalState(.success, nil)
+                                guard setupIntent.status == .succeeded else {
+                                    // TODO: (MOBILESDK-467) Grab the actual error from the SetupIntent
+                                    handleFailure(error: Error.confirmationFailure)
+                                    return
+                                }
+                                handleSuccess()
                             }
                         case .succeeded:
                             self.confirmType = .server
-                            handleFinalState(.success, nil)
-                        case .canceled, .processing, .unknown, .unparsable, .none:
-                            handleFinalState(
-                                .error,
-                                Self.makeUnknownError(
-                                    message:
-                                        "The SetupIntent is in an unexpected state: \(setupIntent.status!)"
-                                )
-                            )
+                            handleSuccess()
+                        case .canceled, .processing, .unknown, .unparsable:
+                            handleFailure(error: Error.invalidIntentState(status: setupIntent.status.rawValue))
                         }
                     }
                 } else {
@@ -650,16 +667,14 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                         apiClient: self.apiClient,
                         clientSecret: paymentIntentClientSecret
                     ) { result in
-                        guard let paymentIntent = try? result.get(),
-                            self.authorizationController != nil
-                        else {
-                            if case .failure(let error) = result {
-                                handleFinalState(.error, error)
-                            } else {
-                                handleFinalState(.error, nil)
-                            }
+                        guard !self.didFinish else {
+                           return // The user canceled mid-payment - just abort
+                        }
+                        guard case .success(let paymentIntent) = result else {
+                            handleFailure(error: result.error)
                             return
                         }
+                        self.intentID = paymentIntent.id
 
                         if paymentIntent.confirmationMethod == .automatic
                             && (paymentIntent.status == .requiresPaymentMethod
@@ -678,6 +693,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                             if paymentIntent.shipping != self._shippingDetails(from: payment) {
                                 paymentIntentParams.shipping = self._shippingDetails(from: payment)
                             }
+                            paymentIntentParams.clientAttributionMetadata = self.clientAttributionMetadata
 
                             self.paymentState = .pending  // After this point, we can't cancel
 
@@ -685,32 +701,25 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                             StripeAPI.PaymentIntent.confirm(
                                 apiClient: self.apiClient,
                                 params: paymentIntentParams
-                            ) {
-                                result in
-                                guard let postConfirmPI = try? result.get(),
-                                    postConfirmPI.status == .succeeded
-                                        || postConfirmPI.status == .requiresCapture
-                                else {
-                                    if case .failure(let error) = result {
-                                        handleFinalState(.error, error)
-                                    } else {
-                                        handleFinalState(.error, nil)
-                                    }
+                            ) { result in
+                                guard case .success(let postConfirmPI) = result else {
+                                    handleFailure(error: result.error)
                                     return
                                 }
-                                handleFinalState(.success, nil)
+                                guard postConfirmPI.status == .succeeded || postConfirmPI.status == .requiresCapture else {
+                                    // TODO: (MOBILESDK-467) Grab the actual error from the PaymentIntent
+                                    handleFailure(error: Error.confirmationFailure)
+                                    return
+                                }
+                                handleSuccess()
                             }
                         } else if paymentIntent.status == .succeeded
                             || paymentIntent.status == .requiresCapture
                         {
                             self.confirmType = .server
-                            handleFinalState(.success, nil)
+                            handleSuccess()
                         } else {
-                            let unknownError = Self.makeUnknownError(
-                                message:
-                                    "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client."
-                            )
-                            handleFinalState(.error, unknownError)
+                            handleFailure(error: Error.invalidIntentState(status: paymentIntent.status.rawValue))
                         }
                     }
                 }
@@ -748,6 +757,16 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     func callDidCompleteDelegate(status: PaymentStatus, error: Swift.Error?) {
+        let finishedAnalytic = Analytic(
+            event: .applePayContextFinished,
+            intentID: self.intentID,
+            status: status,
+            duration: startTime.map {
+                Date().timeIntervalSince($0)
+            },
+            error: error
+        )
+        analyticsClient.log(analytic: finishedAnalytic, apiClient: apiClient)
         if let delegate = self.delegate {
             if let delegate = delegate as? ApplePayContextDelegate {
                 delegate.applePayContext(self, didCompleteWith: status, error: error)
@@ -812,20 +831,41 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 }
 
-/// :nodoc:
-class ModernApplePayContext: STPAnalyticsProtocol {
-    @_spi(STP) public static var stp_analyticsIdentifier: String {
-        return "ModernApplePayContext"
+extension STPApplePayContext {
+    struct Analytic: StripeCore.Analytic {
+        internal init(event: STPAnalyticEvent, intentID: String? = nil, status: STPApplePayContext.PaymentStatus? = nil, duration: TimeInterval? = nil, error: Swift.Error? = nil) {
+            self.event = event
+            self.intentID = intentID
+            self.status = status
+            self.duration = duration
+            self.error = error
+        }
+
+        let event: StripeCore.STPAnalyticEvent
+        let intentID: String?
+        let status: PaymentStatus?
+        let duration: TimeInterval?
+        let error: Swift.Error?
+
+        var params: [String: Any] {
+            var params: [String: Any] = error?.serializeForV1Analytics() ?? [:]
+            params["intent_id"] = intentID
+            let statusString: String? = {
+                switch status {
+                case .error: return "error"
+                case .success: return "success"
+                case .userCancellation: return "user_cancellation"
+                case .none: return nil
+                }
+            }()
+            params["status"] = statusString
+            params["duration"] = duration
+            return params
+        }
     }
 }
 
 private var kSTPApplePayContextAssociatedObjectKey = 0
-enum STPPaymentState: Int {
-    case notStarted
-    case pending
-    case error
-    case success
-}
 
 private class _stpinternal_STPApplePayContextLegacyHelper: NSObject {
     @objc class func performDidCreatePaymentMethod(

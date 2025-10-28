@@ -7,41 +7,50 @@
 
 import Foundation
 import StripeCoreTestUtils
+@_spi(STP) import StripeUICore
 import UIKit
 
 @testable@_spi(STP) import StripePaymentSheet
 
+// @iOS26
 class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
-    
+
     func test_withPromoBadge() {
-        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
+        let appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible()
+        let height = appearance.cornerRadius == nil ? PaymentMethodTypeCollectionView.liquidGlassCornerCellHeight : PaymentMethodTypeCollectionView.defaultCornerCellHeight
+
+        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell(frame: CGRect(x: 0, y: 0, width: 120, height: height))
         cell.paymentMethodType = .instantDebits
         cell.promoBadgeText = "$5"
-        verify(cell)
+        cell.appearance = appearance
+        verify(cell, height: height)
     }
-    
+
     func test_withPromoBadge_customAppearance() {
         var appearance = PaymentSheet.Appearance()
         appearance.cornerRadius = 2
         appearance.primaryButton.successTextColor = .black
         appearance.primaryButton.successBackgroundColor = .red
-        
-        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
+
+        let height = appearance.cornerRadius == nil ? PaymentMethodTypeCollectionView.liquidGlassCornerCellHeight : PaymentMethodTypeCollectionView.defaultCornerCellHeight
+
+        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell(frame: CGRect(x: 0, y: 0, width: 120, height: height))
         cell.paymentMethodType = .instantDebits
         cell.appearance = appearance
         cell.promoBadgeText = "$5"
-        verify(cell)
+        verify(cell, height: height)
     }
-    
+
     func verify(
         _ cell: UICollectionViewCell,
+        height: CGFloat,
         identifier: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         let view = CellWrapperView(
             cell: cell,
-            size: CGSize(width: 120, height: PaymentMethodTypeCollectionView.cellHeight)
+            size: CGSize(width: 120, height: height)
         )
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
@@ -53,7 +62,7 @@ private class CellWrapperView: UIView {
         cell.frame = self.bounds
         addSubview(cell)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

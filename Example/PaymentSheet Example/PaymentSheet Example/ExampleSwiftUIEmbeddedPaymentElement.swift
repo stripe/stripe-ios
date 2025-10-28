@@ -6,7 +6,7 @@
 //
 // This is an example integration using Embedded Payment Element in SwiftUI
 
-@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+import StripePaymentSheet
 import SwiftUI
 
 // MARK: - BackendViewModel
@@ -17,7 +17,7 @@ class BackendViewModel: ObservableObject {
         let ephemeralKey: String
     }
 
-    private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
+    private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.stripedemos.com"
     private lazy var checkoutUrl = URL(string: baseUrl + "/checkout")!
     private lazy var confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
     private lazy var computeTotalsUrl = URL(string: baseUrl + "/compute_totals")!

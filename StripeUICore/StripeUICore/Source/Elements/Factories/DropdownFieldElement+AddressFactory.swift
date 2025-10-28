@@ -27,7 +27,7 @@ import Foundation
             let dropdownItems: [DropdownItem] = countryCodes.map {
                 let flagEmoji = String.countryFlagEmoji(for: $0) ?? ""              // 🇺🇸
                 let countryName = locale.localizedString(forRegionCode: $0) ?? $0   // United States
-                #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
+                #if targetEnvironment(macCatalyst) || canImport(visionOS)
                 // When using UIMenu with a keyboard, type-ahead search is based on the string name.
                 // This doesn't work if we prepend an emoji, so leave that out on macOS.
                 let pickerDisplayName = countryName

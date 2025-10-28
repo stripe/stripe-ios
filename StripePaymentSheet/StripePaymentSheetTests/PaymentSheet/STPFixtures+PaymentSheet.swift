@@ -7,8 +7,9 @@
 
 import Foundation
 @_spi(STP) @testable import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
@@ -21,6 +22,9 @@ public extension PaymentSheet.Configuration {
         configuration.allowsPaymentMethodsRequiringShippingAddress = true
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
+        }
+        if #available(iOS 26.0, *) {
+            configuration.appearance.applyLiquidGlassIfPossible()
         }
         return configuration
     }
@@ -40,36 +44,63 @@ public extension EmbeddedPaymentElement.Configuration {
     }
 }
 
+public extension PaymentSheet.Appearance {
+    mutating func applyLiquidGlassIfPossible() {
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            self.applyLiquidGlass()
+        }
+        #endif
+    }
+    func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
+        var copy = self
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            copy.applyLiquidGlass()
+        }
+        #endif
+        return copy
+    }
+}
+
 extension STPElementsSession {
     static func _testValue(
         orderedPaymentMethodTypes: [STPPaymentMethodType] = [.card],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType] = [],
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
+        merchantLogoUrl: URL? = nil,
         linkSettings: LinkSettings? = nil,
+        experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
         paymentMethodSpecs: [[AnyHashable: Any]]? = nil,
         cardBrandChoice: STPCardBrandChoice? = nil,
         isApplePayEnabled: Bool = true,
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
+        passiveCaptchaData: PassiveCaptchaData? = nil,
         customer: ElementsCustomer? = nil,
         isBackupInstance: Bool = false
     ) -> STPElementsSession {
         return .init(
             allResponseFields: [:],
             sessionID: "test_123",
+            configID: "test_config",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
+            orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
+            merchantLogoUrl: merchantLogoUrl,
             linkSettings: linkSettings,
+            experimentsData: experimentsData,
             flags: flags,
             paymentMethodSpecs: paymentMethodSpecs,
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
+            passiveCaptchaData: passiveCaptchaData,
             customer: customer
         )
     }
@@ -105,7 +136,8 @@ extension STPElementsSession {
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
         linkSuppress2FA: Bool? = nil,
-        hasLinkConsumerIncentive: Bool = false
+        hasLinkConsumerIncentive: Bool = false,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -174,17 +206,21 @@ extension STPElementsSession {
             json[jsonDict: "link_settings"]!["link_mobile_disable_signup"] = disableLinkSignup
         }
 
+        json[jsonDict: "link_settings"]!["link_supported_payment_methods_onboarding_enabled"] = linkSupportedPaymentMethodsOnboardingEnabled
+
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
 
     static func _testValue(
         intent: Intent,
+        isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
-        allowsSetAsDefaultPM: Bool = false
+        allowsSetAsDefaultPM: Bool = false,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
             switch intent {
@@ -214,10 +250,12 @@ extension STPElementsSession {
         return STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
+            isLinkPassthroughModeEnabled: isLinkPassthroughModeEnabled,
             linkMode: linkMode,
             linkFundingSources: linkFundingSources,
             defaultPaymentMethod: defaultPaymentMethod,
-            paymentMethods: paymentMethods
+            paymentMethods: paymentMethods,
+            linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled
         )
     }
 }
@@ -226,10 +264,11 @@ extension Intent {
     static func _testPaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
+        paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: String]? = nil,
         currency: String = "usd"
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, paymentMethodOptionsSetupFutureUsage: paymentMethodOptionsSetupFutureUsage, currency: currency)
         return .paymentIntent(paymentIntent)
     }
 
@@ -245,8 +284,12 @@ extension Intent {
         return .setupIntent(setupIntent)
     }
 
-    static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType], setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil) -> Intent {
-        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage), confirmHandler: { _, _ in return "" }))
+    static func _testDeferredIntent(
+        paymentMethodTypes: [STPPaymentMethodType],
+        setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil,
+        paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]? = nil
+    ) -> Intent {
+        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
 }
 
@@ -375,11 +418,37 @@ extension STPPaymentMethod {
             ] as [String: Any],
         ])!
     }
+
+    static func _testLink(displayName: String? = nil) -> STPPaymentMethod {
+        let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "type": "link",
+            "sepa_debit": [
+                "last4": "1234",
+            ],
+            "billing_details": [
+                "name": "Sam Stripe",
+                "email": "sam@stripe.com",
+            ] as [String: Any],
+        ])!
+        paymentMethod.linkPaymentDetails = .card(
+            LinkPaymentDetails.Card(
+                id: "csmr_123",
+                displayName: displayName,
+                expMonth: 12,
+                expYear: 2030,
+                last4: "4242",
+                brand: .visa
+            )
+        )
+        return paymentMethod
+    }
 }
 
 extension PaymentSheet.Appearance {
     static var _testMSPaintTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
+        appearance.applyLiquidGlassIfPossible()
 
         // Customize the font
         var font = PaymentSheet.Appearance.Font()
@@ -388,12 +457,14 @@ extension PaymentSheet.Appearance {
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
+        appearance.sheetCornerRadius = 16.0
         appearance.shadow = PaymentSheet.Appearance.Shadow(
             color: .orange,
             opacity: 0.5,
             offset: CGSize(width: 0, height: 2),
             radius: 4
         )
+        appearance.formInsets = NSDirectionalEdgeInsets(top: 30, leading: 50, bottom: 70, trailing: 10)
 
         // Customize the colors
         var colors = PaymentSheet.Appearance.Colors()
@@ -409,8 +480,14 @@ extension PaymentSheet.Appearance {
         colors.icon = .green
         colors.danger = .purple
 
+        // Customize the primary button
+        var primaryButton = PaymentSheet.Appearance.PrimaryButton()
+        primaryButton.height = 50
+        primaryButton.cornerRadius = 8
+
         appearance.font = font
         appearance.colors = colors
+        appearance.primaryButton = primaryButton
 
         return appearance
     }
@@ -433,8 +510,18 @@ extension PaymentSheetLoader.LoadResult {
 }
 
 extension PaymentSheetAnalyticsHelper {
-    static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
-        return .init(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+    static func _testValue(
+        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape = .complete,
+        configuration: PaymentSheet.Configuration = .init(),
+        analyticsClient: STPAnalyticsClient = STPTestingAnalyticsClient(),
+        analyticsClientV2: AnalyticsClientV2Protocol = MockAnalyticsClientV2()
+    ) -> Self {
+        return .init(
+            integrationShape: integrationShape,
+            configuration: configuration,
+            analyticsClient: analyticsClient,
+            analyticsClientV2: analyticsClientV2
+        )
     }
 }
 

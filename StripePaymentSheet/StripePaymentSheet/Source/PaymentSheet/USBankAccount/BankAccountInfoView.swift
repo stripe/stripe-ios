@@ -19,7 +19,7 @@ class BankAccountInfoView: UIView {
     struct Constants {
         static let spacing: CGFloat = 12
     }
-    
+
     private let appearance: PaymentSheet.Appearance
     private let incentive: PaymentMethodIncentive?
 
@@ -71,7 +71,7 @@ class BankAccountInfoView: UIView {
         imageView.tintColor = .systemGray2
         return imageView
     }()
-    
+
     private lazy var promoBadgeView: PromoBadgeView? = {
         guard let incentive else {
             return nil
@@ -130,12 +130,13 @@ class BankAccountInfoView: UIView {
         NSLayoutConstraint.activate([
             bankIconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             bankIconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.spacing),
-            
+
             contentStackView.leadingAnchor.constraint(equalTo: bankIconImageView.trailingAnchor, constant: Constants.spacing),
             contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
             contentStackView.trailingAnchor.constraint(lessThanOrEqualTo: xIconTappableArea.leadingAnchor),
             contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
-            
+            contentStackView.heightAnchor.constraint(equalTo: accountInfoStackView.heightAnchor),
+
             xIconTappableArea.trailingAnchor.constraint(equalTo: trailingAnchor),
             xIconTappableArea.widthAnchor.constraint(equalToConstant: 44.0),
             xIconTappableArea.topAnchor.constraint(equalTo: topAnchor),
@@ -160,13 +161,13 @@ class BankAccountInfoView: UIView {
 
     func setBankName(text: String) {
         self.bankNameLabel.text = text
-        bankIconImageView.image = PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: text))
+        bankIconImageView.image = PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: text), iconStyle: appearance.iconStyle)
     }
 
     func setLastFourOfBank(text: String) {
         self.bankAccountNumberLabel.text = text
     }
-    
+
     func setIncentiveEligible(_ eligible: Bool) {
         promoBadgeView?.setEligible(eligible)
     }

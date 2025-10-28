@@ -18,7 +18,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         case noPaymentOptionOnBuyButtonTap
     }
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        if isLinkWalletButtonSelected {
+        if let linkConfirmOption {
+            return .link(option: linkConfirmOption)
+        } else if isLinkWalletButtonSelected {
             return .link(option: .wallet)
         } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
             // If we're showing the list, use its selection:
@@ -56,6 +58,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
     // Edge-case, only set to true when Link is selected via wallet in flow controller
     var isLinkWalletButtonSelected: Bool = false
+    var linkConfirmOption: PaymentSheet.LinkConfirmOption?
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? {
@@ -76,9 +79,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
+    let walletButtonsShownExternally: Bool
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
-    private var savedPaymentMethods: [STPPaymentMethod]
+    private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private var previousPaymentOption: PaymentOption?
@@ -107,6 +111,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
+    var passiveCaptchaChallenge: StripePayments.PassiveCaptchaChallenge?
+
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
@@ -129,10 +135,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
+            },
+            didTapWhenDisabled: { [weak self] in
+                self?.didTapPrimaryButtonWhenDisabled()
             }
         )
     }()
@@ -150,6 +158,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         loadResult: PaymentSheetLoader.LoadResult,
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -164,15 +173,45 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.isFlowController = isFlowController
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = loadResult.paymentMethodTypes
-        self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController
+        self.walletButtonsShownExternally = walletButtonsViewState.isVisible
+        self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && Self.walletButtonsViewAllowsExpressType(.applePay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
-        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && shouldShowApplePayInList
+        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
 
         regenerateUI()
+
+        if case let .link(linkConfirmOption) = previousPaymentOption {
+            self.linkConfirmOption = linkConfirmOption
+        }
+
         // Only use the previous customer input for the first form shown
         self.previousPaymentOption = nil
+    }
+
+    static func walletButtonsViewAllowsExpressType(_ expressType: PaymentSheet.WalletButtonsVisibility.ExpressType, walletButtonsViewState: PaymentSheet.WalletButtonsViewState, configuration: PaymentSheet.Configuration) -> Bool {
+        if !configuration.willUseWalletButtonsView {
+            // Wallet buttons view isn't around, so allow any types
+            return true
+        }
+        if let config = configuration.walletButtonsVisibility.paymentElement[expressType] {
+            if config == .always {
+                return true
+            }
+            if config == .never {
+                return false
+            }
+        }
+        switch expressType {
+        case .applePay:
+            return !walletButtonsViewState.showApplePay
+        case .link:
+            return !walletButtonsViewState.showLink
+        case .shopPay:
+            stpAssertionFailure()
+            return false // not yet implemented
+        }
     }
 
     /// Regenerates the main content - either the PM list or the PM form and updates all UI elements (pay button, error, mandate)
@@ -193,9 +232,30 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             // Otherwise, we're using the list
             let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
             self.paymentMethodListViewController = paymentMethodListViewController
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption,
-               paymentMethodTypes.contains(confirmParams.paymentMethodType),
-               shouldDisplayForm(for: confirmParams.paymentMethodType)
+
+            let confirmParams: IntentConfirmParams? = {
+                guard let paymentOption = previousPaymentOption else {
+                    return nil
+                }
+                switch paymentOption {
+                case .saved(_, let confirmParams):
+                    if let confirmParams {
+                        return confirmParams
+                    } else {
+                        return nil
+                    }
+                case .new(let confirmParams):
+                    return confirmParams
+                case .link(let confirmOption):
+                    return confirmOption.signupConfirmParams
+                case .applePay, .external:
+                    return nil
+                }
+            }()
+
+            if let confirmParams,
+                paymentMethodTypes.contains(confirmParams.paymentMethodType),
+                shouldDisplayForm(for: confirmParams.paymentMethodType)
             {
                 // If the previous customer input was for a PM form and it collects user input, display the form on top of the list
                 let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
@@ -246,22 +306,18 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
             return selectedPaymentOption == nil ? .disabled : .enabled
         }()
-        let style: ConfirmButton.Style = {
-            // If the button invokes Apple Pay, it must be styled as the Apple Pay button
-            if case .applePay = selectedPaymentOption, !isFlowController {
-                return .applePay
-            }
-            return .stripe
-        }()
+        if case .applePay = selectedPaymentOption, !isFlowController {
+            stpAssertionFailure("Apple Pay should be handled by the wallet button, not the primary button")
+        }
         primaryButton.update(
             state: state,
-            style: style,
             callToAction: callToAction,
             animated: true
         )
     }
 
     func updateMandate(animated: Bool = true) {
+        let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
@@ -271,6 +327,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
+            let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
+            if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
+                self.primaryButtonTopAnchorConstraint.isActive = false
+                self.primaryButtonTopAnchorConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hasLabelInStackView ? -20 : -32)
+                self.primaryButtonTopAnchorConstraint.isActive = true
+            }
         }
     }
 
@@ -324,12 +386,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
         // If there's no previous paymentMethodListViewController:
         // 1. Default to the customer's default if it will be displayed
+        //    But don't treat it as a potential default if WalletButtonsView is in use
         func willDisplay(customerDefault: CustomerPaymentOption) -> Bool {
             switch customerDefault {
             case .applePay:
-                return isFlowController && shouldShowApplePayInList
+                return isFlowController && shouldShowApplePayInList && !configuration.willUseWalletButtonsView
             case .link:
-                return isFlowController && shouldShowLinkInList
+                return isFlowController && shouldShowLinkInList && !configuration.willUseWalletButtonsView
             case .stripeId(let stripeId):
                 guard let savedSelection = savedPaymentMethods.first else {
                     return false
@@ -352,8 +415,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        // 2. Default to Apple Pay
-        if shouldShowApplePayInList {
+        // 2. Default to Apple Pay if WalletButtonsView is not in use
+        if shouldShowApplePayInList && !configuration.willUseWalletButtonsView {
             return .applePay
         }
 
@@ -375,18 +438,25 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
-        let initialSelection = selection ?? calculateInitialSelection()
+        var initialSelection = selection ?? calculateInitialSelection()
+        // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option.
+        if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
+            (
+                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always) ||
+                initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {
+            initialSelection = nil
+        }
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
             savedPaymentMethodsCount: savedPaymentMethods.count,
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
+            allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet
         )
         return VerticalPaymentMethodListViewController(
             initialSelection: initialSelection,
-            savedPaymentMethod: savedPaymentMethods.first,
+            savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: shouldShowApplePayInList,
             shouldShowLink: shouldShowLinkInList,
@@ -402,10 +472,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makeWalletHeaderView() -> UIView? {
         var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList {
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList && !walletButtonsShownExternally {
             walletOptions.insert(.applePay)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList {
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList && !walletButtonsShownExternally {
             walletOptions.insert(.link)
         }
         guard !walletOptions.isEmpty else {
@@ -424,6 +494,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         fatalError("init(coder:) has not been implemented")
     }
 
+    var primaryButtonTopAnchorConstraint: NSLayoutConstraint!
     // MARK: - UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -437,7 +508,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stackView.addArrangedSubview(view)
         }
         stackView.spacing = 20
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.sendSubviewToBack(mandateView)
@@ -446,16 +517,52 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
+        primaryButtonTopAnchorConstraint = stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: mandateView.attributedText == nil && errorLabel.text == nil ? -32 : -20)
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            primaryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: PaymentSheetUI.defaultSheetMargins.leading),
-            primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -PaymentSheetUI.defaultSheetMargins.trailing),
+            primaryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: configuration.appearance.formInsets.leading),
+            primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
 
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -32),
-            primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+            primaryButtonTopAnchorConstraint,
+            primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
+    }
+
+    private var canPresentLinkOnPrimaryButton: Bool {
+        // Presenting Link as the primary action should only happen when selecting Link
+        // as the payment method (i.e. LinkConfirmOptions == .wallet) from the FlowController.
+        guard elementsSession.enableFlowControllerRUX(for: configuration) else {
+            return false
+        }
+        guard case .link(.wallet) = selectedPaymentOption else {
+            return false
+        }
+        return isFlowController
+    }
+
+    private var canPresentLinkOnWalletButton: Bool {
+        guard elementsSession.enableFlowControllerRUX(for: configuration) else {
+            return false
+        }
+        return isFlowController
+    }
+
+    private func presentLinkInFlowController() {
+        presentNativeLink(
+            selectedPaymentDetailsID: nil,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            callback: { [weak self] confirmOption, _ in
+                guard let self else { return }
+                self.linkConfirmOption = confirmOption
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        )
     }
 
     var didSendLogShow: Bool = false
@@ -470,7 +577,22 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        logRenderLPMs()
         isLinkWalletButtonSelected = false
+        linkConfirmOption = nil
+    }
+
+    private func logRenderLPMs() {
+        // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
+        var visibleLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }
+        // Add wallet LPMs
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
+            visibleLPMs.append(RowButtonType.applePay.analyticsIdentifier)
+        }
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+            visibleLPMs.append(RowButtonType.link.analyticsIdentifier)
+        }
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: [])
     }
 
     // MARK: - PaymentSheetViewControllerProtocol
@@ -522,7 +644,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
 
@@ -546,7 +668,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
@@ -556,6 +678,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 }
             }
         }
+    }
+
+    func clearSelection() {
+        paymentMethodListViewController?.clearSelection()
+        updatePrimaryButton()
     }
 
     @objc func didTapPrimaryButton() {
@@ -575,6 +702,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
+
+        if canPresentLinkOnPrimaryButton {
+            presentLinkInFlowController()
+            return
+        }
 
         // If FlowController, simply close the sheet
         if isFlowController {
@@ -603,6 +735,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         pay(with: selectedPaymentOption)
     }
 
+    @objc func didTapPrimaryButtonWhenDisabled() {
+        // When the disabled button is tapped, show validation errors on all form fields
+#if !os(visionOS)
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+        if let paymentMethodFormViewController {
+            paymentMethodFormViewController.form.showAllValidationErrors()
+        }
+    }
+
     @objc func presentManageScreen() {
         error = nil
         // Special case, only 1 card remaining, skip showing the list and show update view controller
@@ -614,11 +756,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
-                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet(configuration),
+                                                                               canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
-            let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+            let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
+                removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
+                merchantName: configuration.merchantDisplayName)
+            let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
                                                                          isTestMode: configuration.apiClient.isTestmode,
                                                                          configuration: updateConfig)
             updateViewController.delegate = self
@@ -705,7 +851,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     func didTapPaymentMethod(_ selection: RowButtonType) {
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
         error = nil
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
         switch selection {
@@ -729,7 +875,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     func didTapSavedPaymentMethodAccessoryButton() {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
         presentManageScreen()
@@ -739,6 +885,17 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         let previousCustomerInput: IntentConfirmParams? = {
             if case let .new(confirmParams: confirmParams) = previousPaymentOption {
                 return confirmParams
+            } else if case let .saved(_, confirmParams) = previousPaymentOption {
+                return confirmParams
+            } else if case let .link(confirmOption) = previousPaymentOption {
+                return confirmOption.signupConfirmParams
+            } else {
+                return nil
+            }
+        }()
+        let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = {
+            if case let .link(confirmOption) = previousPaymentOption {
+                return confirmOption.signupAction
             } else {
                 return nil
             }
@@ -765,6 +922,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                             paymentMethodType: paymentMethodType,
                             shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                             appearance: configuration.appearance,
+                            currency: intent.currency,
                             incentive: displayedIncentive
                         ),
                     ])
@@ -780,6 +938,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                     // Special case: use "New Card" instead of "Card" if the displayed saved PM is a card
                     shouldUseNewCardHeader: savedPaymentMethods.first?.type == .card,
                     appearance: configuration.appearance,
+                    currency: intent.currency,
                     incentive: displayedIncentive
                 )
             }
@@ -793,7 +952,9 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: configuration,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
-            delegate: self
+            isLinkUI: false,
+            delegate: self,
+            previousLinkInlineSignupAction: previousLinkInlineSignupAction
         )
     }
 
@@ -806,7 +967,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
         return PaymentSheetFormFactory(
             intent: intent,
             elementsSession: elementsSession,
-            configuration: .paymentSheet(configuration),
+            configuration: .paymentElement(configuration),
             paymentMethod: paymentMethodType,
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,
@@ -962,9 +1123,13 @@ extension PaymentSheetVerticalViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
         guard !isFlowController else {
-            // If flow controller, note that the button was tapped and dismiss
-            isLinkWalletButtonSelected = true
-            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            if canPresentLinkOnWalletButton {
+                presentLinkInFlowController()
+            } else {
+                // If flow controller, note that the button was tapped and dismiss
+                isLinkWalletButtonSelected = true
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
             return
         }
 

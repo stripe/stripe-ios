@@ -24,7 +24,6 @@ extension STPAPIClient {
     ) {
         let tokenType = STPAnalyticsClient.tokenType(fromParameters: parameters)
         STPAnalyticsClient.sharedClient.logTokenCreationAttempt(
-            with: _stored_configuration,
             tokenType: tokenType
         )
         let preparedParameters = Self.paramsAddingPaymentUserAgent(parameters)
@@ -259,7 +258,6 @@ extension STPAPIClient {
     ) {
         let sourceType = STPSource.string(from: sourceParams.type)
         STPAnalyticsClient.sharedClient.logSourceCreationAttempt(
-            with: _stored_configuration,
             sourceType: sourceType
         )
         sourceParams.redirectMerchantName = Bundle.stp_applicationName() ?? ""
@@ -411,6 +409,17 @@ extension STPAPIClient {
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
+        retrievePaymentIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
+    }
+
+    // Internal helper to pass timeout
+    @objc(retrievePaymentIntentWithClientSecret:expand:timeout:completion:)
+    @_spi(STP) public func retrievePaymentIntent(
+        withClientSecret secret: String,
+        expand: [String]?,
+        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        completion: @escaping STPPaymentIntentCompletionBlock
+    ) {
         let endpoint: String = paymentIntentEndpoint(from: secret)
         var parameters: [String: Any] = [:]
 
@@ -422,11 +431,28 @@ extension STPAPIClient {
             parameters["expand"] = expand
         }
 
+        let timeoutInterval: TimeInterval? = {
+            guard let timeout else { return nil }
+            return TimeInterval(timeout.doubleValue)
+        }()
+
         APIRequest<STPPaymentIntent>.getWith(
             self,
             endpoint: endpoint,
-            parameters: parameters
+            parameters: parameters,
+            timeout: timeoutInterval
         ) { paymentIntent, _, error in
+            // If using a scoped client secret, inject the client secret here
+            let paymentIntent = {
+                if let paymentIntent = paymentIntent, paymentIntent.isRedacted {
+                    // If the payment intent was retrieved successfully, we need to
+                    // inject the client secret into the payment intent object.
+                    var responseFields = paymentIntent.allResponseFields
+                    responseFields["client_secret"] = secret
+                    return STPPaymentIntent.decodedObject(fromAPIResponse: responseFields)
+                }
+                return paymentIntent
+            }()
             completion(paymentIntent, error)
         }
     }
@@ -523,7 +549,6 @@ extension STPAPIClient {
             paymentIntentParams.paymentMethodParams?.rawTypeString
             ?? paymentIntentParams.sourceParams?.rawTypeString
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
-            with: _stored_configuration,
             paymentMethodType: type,
             apiClient: self
         )
@@ -537,6 +562,7 @@ extension STPAPIClient {
             params[SourceDataHash] = sourceParamsDict
         }
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
@@ -629,6 +655,18 @@ extension STPAPIClient {
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
 
+        retrieveSetupIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
+    }
+
+    // Internal helper to pass timeout to URL request
+    @objc
+    func retrieveSetupIntent(
+        withClientSecret secret: String,
+        expand: [String]?,
+        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        completion: @escaping STPSetupIntentCompletionBlock
+    ) {
+
         let endpoint = setupIntentEndpoint(from: secret)
         var parameters: [String: Any] = [:]
         if !publishableKeyIsUserKey {
@@ -640,10 +678,16 @@ extension STPAPIClient {
             parameters["expand"] = expand
         }
 
+        let timeoutInterval: TimeInterval? = {
+            guard let timeout else { return nil }
+            return TimeInterval(timeout.doubleValue)
+        }()
+
         APIRequest<STPSetupIntent>.getWith(
             self,
             endpoint: endpoint,
-            parameters: parameters
+            parameters: parameters,
+            timeout: timeoutInterval
         ) { setupIntent, _, error in
             completion(setupIntent, error)
         }
@@ -706,8 +750,7 @@ extension STPAPIClient {
         )
 
         STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
-            with: _stored_configuration,
-            paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString,
+                        paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString,
             apiClient: self
         )
 
@@ -719,6 +762,7 @@ extension STPAPIClient {
             params[SourceDataHash] = sourceParamsDict
         }
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
@@ -803,25 +847,33 @@ extension STPAPIClient {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
-        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
+        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], overridePublishableKey: nil, completion: completion)
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    /// - Parameter overridePublishableKey: Optional publishable key to use for this request instead of the default key.
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         additionalPaymentUserAgentValues: [String] = [],
+        overridePublishableKey: String? = nil,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
-            with: _stored_configuration,
             paymentMethodType: paymentMethodParams.rawTypeString,
             apiClient: self
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
+        STPTelemetryClient.shared.addTelemetryFields(toParams: &parameters)
+
+        let additionalHeaders = overridePublishableKey != nil
+            ? authorizationHeader(using: overridePublishableKey)
+            : [:]
+
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
+            additionalHeaders: additionalHeaders,
             parameters: parameters
         ) { paymentMethod, _, error in
             completion(paymentMethod, error)
@@ -831,19 +883,42 @@ extension STPAPIClient {
     /// Creates a PaymentMethod object with the provided params object.
     /// - seealso: https://stripe.com/docs/api/payment_methods/create
     /// - Parameters:
-    ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
-    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    ///   - paymentMethodParams: The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: the returned PaymentMethod object.
     public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
-        return try await withCheckedThrowingContinuation({ continuation in
-            createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
+        return try await createPaymentMethod(
+            with: paymentMethodParams,
+            additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
+            overridePublishableKey: nil
+        )
+    }
+
+    /// Creates a PaymentMethod object with the provided params object and optional override publishable key.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/create
+    /// - Parameters:
+    ///   - paymentMethodParams: The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    ///   - overridePublishableKey: Optional publishable key to use for this request instead of the default key.
+    /// - Returns: the returned PaymentMethod object.
+    @_spi(STP) public func createPaymentMethod(
+        with paymentMethodParams: STPPaymentMethodParams,
+        additionalPaymentUserAgentValues: [String] = [],
+        overridePublishableKey: String? = nil
+    ) async throws -> STPPaymentMethod {
+        return try await withCheckedThrowingContinuation { continuation in
+            createPaymentMethod(
+                with: paymentMethodParams,
+                additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
+                overridePublishableKey: overridePublishableKey
+            ) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {
                     continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 }
             }
-        })
+        }
     }
 
     /// Updates a PaymentMethod object with the provided params object.
@@ -919,7 +994,7 @@ extension STPAPIClient {
         )
 
         var params = [
-            "app": String(decoding: appData ?? Data(), as: UTF8.self),
+            "app": String(data: appData ?? Data(), encoding: .utf8) ?? "",
             "source": sourceID,
         ]
         if let returnURLString = returnURLString {
@@ -1448,12 +1523,72 @@ extension STPAPIClient {
     }
 }
 
+// MARK: Confirmation Tokens
+
+/// STPAPIClient extensions for working with ConfirmationToken objects.
+extension STPAPIClient {
+    /// Creates a ConfirmationToken object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create
+    /// - Parameters:
+    ///   - confirmationTokenParams:  The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
+    ///   - ephemeralKeySecret: The ephemeral key secret to use for authentication if working with customer-scoped objects.
+    ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    /// - Returns: The created ConfirmationToken object.
+    @_spi(ConfirmationTokensPublicPreview) public func createConfirmationToken(
+        with confirmationTokenParams: STPConfirmationTokenParams,
+        ephemeralKeySecret: String? = nil,
+        additionalPaymentUserAgentValues: [String] = []
+    ) async throws -> STPConfirmationToken {
+        return try await withCheckedThrowingContinuation { continuation in
+            createConfirmationToken(
+                with: confirmationTokenParams,
+                ephemeralKeySecret: ephemeralKeySecret,
+                additionalPaymentUserAgentValues: additionalPaymentUserAgentValues
+            ) { confirmationToken, error in
+                guard let confirmationToken = confirmationToken else {
+                    continuation.resume(throwing: error ?? NSError.stp_genericConnectionError())
+                    return
+                }
+                continuation.resume(returning: confirmationToken)
+            }
+        }
+    }
+
+    func createConfirmationToken(
+        with confirmationTokenParams: STPConfirmationTokenParams,
+        ephemeralKeySecret: String? = nil,
+        additionalPaymentUserAgentValues: [String] = [],
+        completion: @escaping STPConfirmationTokenCompletionBlock
+    ) {
+        STPAnalyticsClient.sharedClient.logConfirmationTokenCreationAttempt()
+        var parameters = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
+        if var paymentMethodParamsDict = parameters[PaymentMethodDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict, additionalValues: additionalPaymentUserAgentValues)
+            parameters[PaymentMethodDataHash] = paymentMethodParamsDict
+        }
+        let additionalHeaders = ephemeralKeySecret != nil
+            ? authorizationHeader(using: ephemeralKeySecret!)
+            : [:]
+
+        APIRequest<STPConfirmationToken>.post(
+            with: self,
+            endpoint: APIEndpointConfirmationTokens,
+            additionalHeaders: additionalHeaders,
+            parameters: parameters
+        ) { confirmationToken, _, error in
+            completion(confirmationToken, error)
+        }
+    }
+}
+
 private let APIEndpointToken = "tokens"
 private let APIEndpointSources = "sources"
 @_spi(STP) public let APIEndpointCustomers = "customers"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 @_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointConfirmationTokens = "confirmation_tokens"
 private let APIEndpointElementsCustomers = "elements/customers"
 private let APIEndpointElementsPaymentMethods = "elements/payment_methods"
 private let APIEndpoint3DS2 = "3ds2"

@@ -31,7 +31,7 @@ class SectionElementTest: XCTestCase {
             }
         }
 
-        func shouldDisplay(isUserEditing: Bool) -> Bool {
+        func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
             switch self {
             case .undisplayableError:
                 return false

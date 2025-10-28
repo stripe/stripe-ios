@@ -30,23 +30,80 @@ public extension PaymentSheet {
 
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
-        public var cornerRadius: CGFloat = 6.0
+        /// - Note: When `nil`, the behavior depends:
+        ///     - iOS 26+ and `UIDesignRequiresCompatibility = NO`: Various `UICornerConfiguration` values are used to match Liquid Glass.
+        ///     - Pre-iOS 26: A 6.0 corner radius is applied.
+        ///
+        /// The default value is 6.0
+        public var cornerRadius: CGFloat? = defaultCornerRadius
 
         /// The border used for inputs and tabs in PaymentSheet
+        /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
         public var borderWidth: CGFloat = 1.0
 
         /// The border width used for selected buttons and tabs in PaymentSheet
         /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-        @_spi(EmbeddedPaymentElementPrivateBeta) public var selectedBorderWidth: CGFloat?
+        public var selectedBorderWidth: CGFloat?
 
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
 
         /// Describes the appearance of the Embedded Mobile Payment Element
-        @_spi(EmbeddedPaymentElementPrivateBeta) public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
+        public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
+
+        /// The corner radius used for Mobile Payment Element sheets
+        /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var sheetCornerRadius: CGFloat = 12.0
+
+        /// The insets used for all input fields (e.g. textfields, dropdowns) in PaymentSheet.
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var textFieldInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 11)
+
+        /// Describes the padding used for all forms
+        public var formInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 40, trailing: 20)
+
+        /// Controls the vertical spacing between distinct sections in the form (e.g., between payment fields and billing address).
+        /// - Note: This spacing is applied between different conceptual sections of the form, not between individual input fields within a section.
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var sectionSpacing: CGFloat = 12.0
+
+        /// The visual style for icons displayed in PaymentSheet
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var iconStyle: IconStyle = .filled
+
+        /// The vertical padding for floating payment method rows in vertical (non-embedded) mode
+        /// - Note: Increasing this value increases the height of each floating payment method row
+        /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var verticalModeRowPadding: CGFloat = 4.0 {
+            didSet {
+                guard verticalModeRowPadding >= 0.0 else {
+                    assertionFailure("verticalModeRowPadding must be a non-negative value")
+                    verticalModeRowPadding = 0.0
+                    return
+                }
+            }
+        }
+
+        /// Describes the style of navigation bar style
+        public var navigationBarStyle: NavigationBarStyle = .plain
+
+        /// Internal variable to determine if applyLiquidGlass() was called. Strictly intended for analytics.
+        internal var didCallApplyLiquidGlass: Bool = false
+
+        // MARK: NavigationBar
+        /// Describes navigation bar styles
+        public enum NavigationBarStyle {
+            case plain
+
+            @available(iOS 26, *)
+            @available(visionOS, unavailable)
+            case glass
+        }
 
         // MARK: Fonts
 
@@ -71,6 +128,21 @@ public extension PaymentSheet {
             /// The font family of this font is used throughout PaymentSheet. PaymentSheet uses this font at multiple weights (e.g., regular, medium, semibold) if they exist.
             /// - Note: The size and weight of the font is ignored. To adjust font sizes, see `sizeScaleFactor`.
             public var base: UIFont = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .regular)
+
+            /// Custom font configuration for specific text styles
+            /// - Note: When set, these fonts override the default font calculations for their respective text styles
+            @_spi(AppearanceAPIAdditionsPreview) public var custom: Custom = Custom()
+
+            /// Describes custom fonts for specific text styles in PaymentSheet
+            @_spi(AppearanceAPIAdditionsPreview) public struct Custom: Equatable {
+
+                /// Creates a `PaymentSheet.Appearance.Font.Custom` with default values
+                @_spi(AppearanceAPIAdditionsPreview) public init() {}
+
+                /// The font used for headlines (e.g., "Add your payment information")
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                @_spi(AppearanceAPIAdditionsPreview) public var headline: UIFont?
+            }
         }
 
         // MARK: Colors
@@ -82,14 +154,14 @@ public extension PaymentSheet {
             public init() {}
 
             /// The primary color used throughout PaymentSheet
-            #if canImport(CompositorServices)
+            #if os(visionOS)
             public var primary: UIColor = .label
             #else
             public var primary: UIColor = .systemBlue
             #endif
 
             /// The color used for the background of PaymentSheet
-            #if canImport(CompositorServices)
+            #if os(visionOS)
             public var background: UIColor = .clear
             #else
             public var background: UIColor = .systemBackground
@@ -104,7 +176,7 @@ public extension PaymentSheet {
 
             /// The border color used for selected buttons and tabs in PaymentSheet
             /// - Note: If `nil`, defaults to  `appearance.colors.primary`
-            @_spi(EmbeddedPaymentElementPrivateBeta) public var selectedComponentBorder: UIColor?
+            public var selectedComponentBorder: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
             public var componentDivider: UIColor = .systemGray3
@@ -181,7 +253,7 @@ public extension PaymentSheet {
 
             /// The background color of the primary button
             /// - Note: If `nil`, `appearance.colors.primary` will be used as the primary button background color
-            #if canImport(CompositorServices)
+            #if os(visionOS)
             public var backgroundColor: UIColor? = .systemBlue
             #else
             public var backgroundColor: UIColor?
@@ -229,13 +301,50 @@ public extension PaymentSheet {
             /// The shadow of the primary button
             /// - Note: If `nil`, `appearance.shadow` will be used as the primary button shadow
             public var shadow: Shadow?
+
+            /// The height of the primary button
+            public var height: CGFloat = 44 {
+                willSet {
+                    if newValue <= 0.0 {
+                        assertionFailure("height must be a value greater than zero")
+                    }
+                }
+            }
         }
     }
 }
 
-@_spi(EmbeddedPaymentElementPrivateBeta) public extension PaymentSheet.Appearance {
+public extension PaymentSheet.Appearance {
+    /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS 26 Liquid Glass.
+    /// - Note: This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
+    @available(iOS 26.0, *)
+    @available(visionOS, unavailable)
+    mutating func applyLiquidGlass() {
+        guard LiquidGlassDetector.meetsCompilerRequirements else {
+             assertionFailure("applyLiquidGlass() requires Xcode 26.")
+             return
+         }
+         guard !LiquidGlassDetector.hasOptedOut else {
+             assertionFailure("applyLiquidGlass() requires UIDesignRequiresCompatibility = NO")
+             return
+         }
+        borderWidth = 0.0
+        verticalModeRowPadding = 8.0
+        sheetCornerRadius = 34.0
+        textFieldInsets = .insets(top: 8, leading: 15, bottom: 8, trailing: 15)
+        colors.background = UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
+                                            dark: UIColor(hex: 0x1C1C1E))
+        shadow = .disabled
+        formInsets = .insets(leading: 16, bottom: 40, trailing: 16)
+        navigationBarStyle = .glass
+        cornerRadius = nil
+        didCallApplyLiquidGlass = true
+    }
+}
+
+public extension PaymentSheet.Appearance {
     /// Describes the appearance of the Embedded Mobile Payment Element
-    @_spi(EmbeddedPaymentElementPrivateBeta) struct EmbeddedPaymentElement: Equatable {
+    struct EmbeddedPaymentElement: Equatable {
 
         /// Creates a `PaymentSheet.Appearance.EmbeddedPaymentElement` with default values
         public init() {}
@@ -253,6 +362,9 @@ public extension PaymentSheet {
                 case floatingButton
                 /// A flat style with a checkmark
                 case flatWithCheckmark
+                /// A flat style with a chevron
+                /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
+                case flatWithDisclosure
             }
 
             /// The display style of the row
@@ -261,6 +373,18 @@ public extension PaymentSheet {
             /// Additional vertical insets applied to a payment method row
             /// - Note: Increasing this value increases the height of each row
             public var additionalInsets: CGFloat = 6.0
+
+            /// The font of the title in a payment method row e.g. "New card"
+            /// - Note: If `nil`, uses a default font based on `appearance.font`
+            public var titleFont: UIFont?
+
+            /// The font of the subtitle in a payment method row e.g. "Buy now or pay later with Klarna"
+            /// - Note: If `nil`, uses a default font based on `appearance.font`
+            public var subtitleFont: UIFont?
+
+            /// Controls the padding around the payment method icon.
+            /// - Note: The top and bottom margins are ignored; use `additionalInsets` to control the height of the row.
+            public var paymentMethodIconLayoutMargins: NSDirectionalEdgeInsets = .init(top: 0, leading: 12, bottom: 0, trailing: 12)
 
             /// Appearance settings for the flat style
             public var flat: Flat = Flat()
@@ -278,7 +402,7 @@ public extension PaymentSheet {
                 public var separatorColor: UIColor?
 
                 /// The insets of the separator line between rows
-                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for style of `floatingButton`.
+                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for styles of `flatWithCheckmark` and `flatWithDisclosure`.
                 public var separatorInsets: UIEdgeInsets?
 
                 /// Determines if the top separator is visible at the top of the Embedded Mobile Payment Element
@@ -292,6 +416,9 @@ public extension PaymentSheet {
 
                 /// Appearance settings for the checkmark
                 public var checkmark: Checkmark = Checkmark()
+
+                /// Appearance settings for the disclosure (by default, a chevron)
+                public var disclosure: Disclosure = Disclosure()
 
                 /// Describes the appearance of the radio button
                 public struct Radio: Equatable {
@@ -310,6 +437,18 @@ public extension PaymentSheet {
                     /// - Note: If `nil`, defaults to `appearance.color.primaryColor`
                     public var color: UIColor?
                 }
+
+                /// Describes the appearance of the disclosure (by default, a chevron)
+                /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
+                public struct Disclosure: Equatable {
+                    /// The color of the default chevron icon
+                    public var color: UIColor = .systemGray
+
+                    /// The image displayed on the right of the row.
+                    /// - Note: If `nil` (the default), a chevron is displayed.
+                    @_spi(CustomEmbeddedDisclosureImagePreview)
+                    public var disclosureImage: UIImage?
+                }
             }
 
             /// Describes the appearance of the floating button style payment method row
@@ -318,5 +457,14 @@ public extension PaymentSheet {
                 public var spacing: CGFloat = 12.0
             }
         }
+    }
+
+    /// Defines the visual style of icons in PaymentSheet
+    @_spi(AppearanceAPIAdditionsPreview)
+    enum IconStyle: CaseIterable {
+        /// Display icons with a filled appearance
+        case filled
+        /// Display icons with an outlined appearance
+        case outlined
     }
 }

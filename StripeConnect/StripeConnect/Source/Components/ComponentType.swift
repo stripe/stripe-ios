@@ -12,9 +12,12 @@ enum ComponentType: String, Encodable {
     case accountManagement = "account-management"
     /// Displays the balance summary, the payout schedule, and a list of payouts for the connected account
     case payouts
+    /// Displays a list of payments for the connected account
+    case payments
     /// The onboarding flow for the account.
     case onboarding = "account-onboarding"
     /// Show details of a given payment and allow users to manage disputes and perform refunds.
     case paymentDetails = "payment-details"
     case notificationBanner = "notification-banner"
+    case checkScanning = "check-scanning"
 }

@@ -153,6 +153,9 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
+                if self.configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
+                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
+                }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {
@@ -178,15 +181,19 @@ public class PaymentSheet {
                     self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                 }
                 if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
-                    let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+                    let verificationController = LinkVerificationController(
+                        mode: .inlineLogin,
+                        linkAccount: linkAccount,
+                        configuration: self.configuration
+                    )
+
                     verificationController.present(from: self.bottomSheetViewController) { result in
                         switch result {
                         case .completed:
-                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false) {
-                                // To prevent a flash of PaymentSheet content, don't present it until after the LinkController presentation animation has completed
+                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
                                 presentPaymentSheet()
-                            }
-                        case .canceled:
+                            })
+                        case .canceled, .switchAccount:
                             presentPaymentSheet()
                         case .failed:
                             // Error is logged within LinkVerificationViewController
@@ -250,8 +257,7 @@ public class PaymentSheet {
     lazy var loadingViewController = LoadingViewController(
         delegate: self,
         appearance: configuration.appearance,
-        isTestMode: configuration.apiClient.isTestmode,
-        loadingViewHeight: 244
+        isTestMode: configuration.apiClient.isTestmode
     )
 
     /// The STPPaymentHandler instance
@@ -275,6 +281,8 @@ public class PaymentSheet {
     }()
 
     let analyticsHelper: PaymentSheetAnalyticsHelper
+
+    var passiveCaptchaChallenge: PassiveCaptchaChallenge?
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -294,6 +302,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 paymentOption: paymentOption,
                 paymentHandler: self.paymentHandler,
                 integrationShape: .complete,
+                passiveCaptchaChallenge: self.passiveCaptchaChallenge,
                 analyticsHelper: self.analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 if case let .failed(error) = result {
@@ -327,7 +336,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
                         presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
-                                                                  appearance: self.configuration.appearance)
+                                                                       appearance: self.configuration.appearance)
                     }
                     completion(result, deferredIntentConfirmationType)
                 }
@@ -352,14 +361,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
         if useNativeLink {
-            self.presentPayWithNativeLinkController(
-                from: paymentSheetViewController,
-                intent: paymentSheetViewController.intent,
-                elementsSession: paymentSheetViewController.elementsSession,
-                shouldOfferApplePay: false,
-                shouldFinishOnClose: false,
-                completion: nil
-            )
+            presentPayWithNativeLinkController(from: paymentSheetViewController, intent: paymentSheetViewController.intent, elementsSession: paymentSheetViewController.elementsSession, shouldOfferApplePay: false, shouldFinishOnClose: false)
         } else {
             self.presentPayWithLinkController(
                 from: paymentSheetViewController,

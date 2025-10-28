@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @testable import StripePayments
-@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable import StripeUICore
 import SwiftUI
