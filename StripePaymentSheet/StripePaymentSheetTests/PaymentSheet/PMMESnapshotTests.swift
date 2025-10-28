@@ -83,7 +83,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
         let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
-    
+
     func testSinglePartnerMode_LogoAtFront() {
         let viewData = makeViewData(
             mode: .singlePartner(logo: makeLogoSet()),
