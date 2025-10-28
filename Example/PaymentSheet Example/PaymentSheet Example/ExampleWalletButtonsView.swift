@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) @_spi(SharedPaymentToken) import StripePayments
-@_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(STP) @_spi(SharedPaymentToken) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
 struct ShopPayTestingOptions {

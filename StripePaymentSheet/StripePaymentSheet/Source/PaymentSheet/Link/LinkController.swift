@@ -573,7 +573,6 @@ import UIKit
             publishableKey: linkAccount.publishableKey,
             displayablePaymentDetails: linkAccount.displayablePaymentDetails,
             apiClient: linkAccount.apiClient,
-            cookieStore: linkAccount.cookieStore,
             useMobileEndpoints: linkAccount.useMobileEndpoints,
             canSyncAttestationState: linkAccount.canSyncAttestationState,
             requestSurface: linkAccount.requestSurface

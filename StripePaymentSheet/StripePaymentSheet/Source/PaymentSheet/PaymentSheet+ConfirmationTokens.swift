@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@_spi(STP) import StripePayments
 
 extension PaymentSheet {
     static func handleDeferredIntentConfirmation_confirmationToken(

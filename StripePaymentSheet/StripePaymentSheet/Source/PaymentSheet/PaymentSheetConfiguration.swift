@@ -320,7 +320,6 @@ extension PaymentSheet {
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret
-        @_spi(CustomerSessionBetaAccess)
         public init(id: String, customerSessionClientSecret: String) {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)

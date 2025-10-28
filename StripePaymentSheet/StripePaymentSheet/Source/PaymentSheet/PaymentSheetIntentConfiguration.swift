@@ -7,7 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(ConfirmationTokensPublicPreview) import StripePayments
+import StripePayments
 
 public extension PaymentSheet {
     /// Contains information needed to render PaymentSheet
@@ -45,7 +45,7 @@ public extension PaymentSheet {
         /// - Returns: The `client_secret` of the PaymentIntent or SetupIntent created by your server.
         /// - Throws: An error if one occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         /// - SeeAlso: [Confirmation Tokens documentation](https://stripe.com/docs/api/confirmation_tokens) for more information about how confirmation tokens work.
-        @_spi(ConfirmationTokensPublicPreview) public typealias ConfirmationTokenConfirmHandler = @MainActor (
+        public typealias ConfirmationTokenConfirmHandler = @MainActor (
             _ confirmationToken: STPConfirmationToken
         ) async throws -> String
 
@@ -132,12 +132,12 @@ public extension PaymentSheet {
         ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
         ///   - confirmationTokenConfirmHandler: A handler called with a confirmation token when the user taps the primary button. Use this for a more secure and streamlined payment flow.
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
-        @_spi(ConfirmationTokensPublicPreview) public init(mode: Mode,
-                                                           paymentMethodTypes: [String]? = nil,
-                                                           onBehalfOf: String? = nil,
-                                                           paymentMethodConfigurationId: String? = nil,
-                                                           confirmationTokenConfirmHandler: @escaping ConfirmationTokenConfirmHandler,
-                                                           requireCVCRecollection: Bool = false) {
+        public init(mode: Mode,
+                    paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    paymentMethodConfigurationId: String? = nil,
+                    confirmationTokenConfirmHandler: @escaping ConfirmationTokenConfirmHandler,
+                    requireCVCRecollection: Bool = false) {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
             self.onBehalfOf = onBehalfOf
@@ -168,7 +168,7 @@ public extension PaymentSheet {
         /// Called when the customer confirms payment using confirmation tokens.
         /// See the documentation for `ConfirmationTokenConfirmHandler` for more details.
         /// - Note: Use this instead of `confirmHandler` when you want to use confirmation tokens for a more secure and streamlined payment flow.
-        @_spi(ConfirmationTokensPublicPreview) public var confirmationTokenConfirmHandler: ConfirmationTokenConfirmHandler?
+        public var confirmationTokenConfirmHandler: ConfirmationTokenConfirmHandler?
 
         /// Replacement for confirmHandler in sharedPaymentTokenSession flows. Not publicly available.
         var preparePaymentMethodHandler: PreparePaymentMethodHandler?
