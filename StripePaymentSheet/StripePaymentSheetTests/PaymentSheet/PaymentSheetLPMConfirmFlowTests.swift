@@ -9,7 +9,7 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(ConfirmationTokensPublicPreview) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import SwiftUI

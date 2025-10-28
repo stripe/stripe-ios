@@ -7,7 +7,7 @@
 
 @testable import StripeApplePay
 @_spi(STP) import StripeCore
-@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(ConfirmationTokensPublicPreview) import StripePaymentSheet
+@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 

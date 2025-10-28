@@ -173,7 +173,7 @@ extension STPPaymentMethod {
             ],
         ]
     }
-    
+
     static var usBankAccountJson: [String: Any] {
         return [
             "id": "pm_123",
