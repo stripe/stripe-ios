@@ -456,6 +456,7 @@
 				it,
 				"fr-CA",
 				"pt-BR",
+				"zh-Hant",
 			);
 			mainGroup = 0B42927B2E1EC57600012FB8;
 			minimizedProjectReferenceProxies = 1;

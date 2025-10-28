@@ -619,12 +619,11 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
     public func applePayContext(
         _ context: STPApplePayContext,
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
-        paymentInformation: PKPayment,
-        completion: @escaping STPIntentClientSecretCompletionBlock
-    ) {
+        paymentInformation: PKPayment
+    ) async throws -> String {
         selectedPaymentSource = .applePay(paymentMethod)
 
-        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+        return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
     }
 
     public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Swift.Error?) {

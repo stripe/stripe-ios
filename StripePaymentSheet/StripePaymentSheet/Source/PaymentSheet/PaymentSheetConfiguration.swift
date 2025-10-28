@@ -390,18 +390,16 @@ extension PaymentSheet {
             /// In your implementation, you can configure the PKPaymentAuthorizationResult to add custom fields, such as `orderDetails`.
             /// See https://developer.apple.com/documentation/passkit/pkpaymentauthorizationresult for all configuration options.
             /// - Parameter $0: The PKPaymentAuthorizationResult created by PaymentSheet.
-            /// - Parameter $1: A completion handler. You must call this handler with the PKPaymentAuthorizationResult on the main queue
-            /// after applying your modifications.
+            /// - Returns: An updated authorization result.
             /// For example:
             /// ```
-            /// .authorizationResultHandler = { result, completion in
+            /// .authorizationResultHandler = { result in
             ///     result.orderDetails = PKPaymentOrderDetails(/* ... */)
-            ///     completion(result)
+            ///     return result
             /// }
             /// ```
-            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            public let authorizationResultHandler:
-            ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+            public let authorizationResultHandler: AuthorizationResultHandler?
+            public typealias AuthorizationResultHandler = (_ result: PKPaymentAuthorizationResult) async -> PKPaymentAuthorizationResult
 
             /// Optionally get shipping method updates if you've configured shipping method options
             /// This closure will be called each time a user selects a new shipping option
@@ -438,9 +436,7 @@ extension PaymentSheet {
             /// Initializes the ApplePayConfiguration Handlers.
             public init(
                 paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
-                authorizationResultHandler: (
-                    (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
-                )? = nil
+                authorizationResultHandler: AuthorizationResultHandler? = nil
             ) {
                 self.paymentRequestHandler = paymentRequestHandler
                 self.authorizationResultHandler = authorizationResultHandler
@@ -451,9 +447,7 @@ extension PaymentSheet {
             /// Initializes the ApplePayConfiguration w/ ShippingMethod & ShippingContact update handlers
             @_spi(STP) public init(
                 paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
-                authorizationResultHandler: (
-                    (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
-                )? = nil,
+                authorizationResultHandler: AuthorizationResultHandler? = nil,
                 shippingMethodUpdateHandler: (
                     (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
                 )? = nil,
