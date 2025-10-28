@@ -260,7 +260,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
 
         do {
-            let response = try await apiClient.refreshKycInfo(info: Constant.validKycRefreshInfo, linkAccountInfo: Constant.validLinkAccountInfo)
+            let response = try await apiClient.refreshKycInfo(
+                info: Constant.validKycRefreshInfo,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
             XCTAssertTrue(response.allResponseFields.isEmpty)
         } catch {
             XCTFail("Expected a success response but got an error: \(error).")
@@ -273,11 +276,21 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.refreshKycInfo(info: Constant.validKycRefreshInfo, linkAccountInfo: noSecretLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.refreshKycInfo(
+                info: Constant.validKycRefreshInfo,
+                linkAccountInfo: noSecretLinkAccountInfo
+            )
+        )
 
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.refreshKycInfo(info: Constant.validKycRefreshInfo, linkAccountInfo: unverifiedLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.refreshKycInfo(
+                info: Constant.validKycRefreshInfo,
+                linkAccountInfo: unverifiedLinkAccountInfo
+            )
+        )
     }
 
     func testRetrieveKycInfoSuccess() async throws {

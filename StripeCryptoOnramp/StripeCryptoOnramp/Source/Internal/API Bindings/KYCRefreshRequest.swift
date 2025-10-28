@@ -49,4 +49,3 @@ struct KYCRefreshRequest: Encodable {
         try container.encodeIfPresent(kycInfo.address.country, forKey: .country)
     }
 }
-
