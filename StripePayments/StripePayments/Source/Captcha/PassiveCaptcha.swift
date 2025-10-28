@@ -40,19 +40,9 @@ import Foundation
 }
 
 @_spi(STP) public actor PassiveCaptchaChallenge {
-    enum PassiveCaptchaError: Error {
-        case timeout
-    }
-
     public let passiveCaptchaData: PassiveCaptchaData
     private var tokenTask: Task<String, Error>?
     public var hasFetchedToken = false
-
-    var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
-
-    func setTimeout(timeout: TimeInterval) {
-        self.timeout = timeout
-    }
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
         self.passiveCaptchaData = passiveCaptchaData

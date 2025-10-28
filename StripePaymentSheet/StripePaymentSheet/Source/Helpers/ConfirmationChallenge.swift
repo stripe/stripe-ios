@@ -55,7 +55,6 @@ actor ConfirmationChallenge {
                     }
                 }
                 // Add attestation task
-                // TODO: handle cancellation
                 if let attestationConfirmationChallenge {
                     numberOfChallenges += 1
                     group.addTask {
@@ -73,6 +72,7 @@ actor ConfirmationChallenge {
                     // ⚠️ TaskGroups can't return until all child tasks have completed, so we need to cancel remaining tasks and handle cancellation to complete as quickly as possible
                     Task {
                         await passiveCaptchaChallenge?.cancel()
+                        await attestationConfirmationChallenge?.cancel()
                     }
                     group.cancelAll()
                 }
@@ -100,7 +100,7 @@ actor ConfirmationChallenge {
     }
 
     private func logIfNecessary(result: ChallengeTokens?, siteKey: String?, isReady: Bool?, duration: TimeInterval) {
-        if let _ = result?.hcaptchaToken, result?.assertion == nil, let siteKey, let isReady {
+        if result?.hcaptchaToken != nil, result?.assertion == nil, let siteKey, let isReady {
             STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: duration)
         }
     }

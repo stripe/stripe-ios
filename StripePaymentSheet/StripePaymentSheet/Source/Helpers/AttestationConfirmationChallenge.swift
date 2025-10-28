@@ -10,6 +10,7 @@
 actor AttestationConfirmationChallenge {
     private let stripeAttest: StripeAttest
     private var assertionHandle: StripeAttest.AssertionHandle?
+    private var assertionTask: Task<StripeAttest.Assertion?, Never>?
 
     public init(stripeAttest: StripeAttest) {
         self.stripeAttest = stripeAttest
@@ -25,21 +26,33 @@ actor AttestationConfirmationChallenge {
         }
     }
 
+    // TODO: handle cancellation
     public func fetchAssertion() async -> StripeAttest.Assertion? {
-        STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestToken()
-        let startTime = Date()
-        do {
-            assertionHandle = try await stripeAttest.assert(canSyncState: false)
-            STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
-        } catch {
-            assertionHandle = nil
-            STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenFailed(duration: Date().timeIntervalSince(startTime))
+        if let assertionTask {
+            return await assertionTask.value
         }
-        return assertionHandle?.assertion
+        let assertionTask = Task<StripeAttest.Assertion?, Never> {
+            STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestToken()
+            let startTime = Date()
+            do {
+                assertionHandle = try await stripeAttest.assert(canSyncState: false)
+                STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
+            } catch {
+                assertionHandle = nil
+                STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenFailed(duration: Date().timeIntervalSince(startTime))
+            }
+            return assertionHandle?.assertion
+        }
+        self.assertionTask = assertionTask
+        return await assertionTask.value
     }
 
     public func complete() {
         assertionHandle?.complete()
+    }
+
+    public func cancel() {
+        assertionTask?.cancel()
     }
 }
 
