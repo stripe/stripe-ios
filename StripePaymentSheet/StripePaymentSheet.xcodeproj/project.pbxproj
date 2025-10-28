@@ -1319,6 +1319,8 @@
 				6A663AB17CD17C68D7329B6B /* ViewControllers */,
 				9F9FEA0AE875EE2B104F0599 /* Views */,
 				31005B562DD3E1CC00639F13 /* WalletButtonsView */,
+				A30E31422EABEFBE00E982DB /* AttestationConfirmationChallenge.swift */,
+				A30E31442EAFDDDC00E982DB /* ConfirmationChallenge.swift */,
 			);
 			path = PaymentSheet;
 			sourceTree = "<group>";
@@ -1580,8 +1582,6 @@
 				6103F2BB2BE45990002D67F8 /* SavedPaymentMethodManager.swift */,
 				49909A2B2D8B0C860031EC33 /* URL+Extensions.swift */,
 				A30E2EC82E9E958B00E982DB /* STPClientAttributionMetadata+PaymentSheet.swift */,
-				A30E31422EABEFBE00E982DB /* AttestationConfirmationChallenge.swift */,
-				A30E31442EAFDDDC00E982DB /* ConfirmationChallenge.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
