@@ -38,6 +38,10 @@ final class LinkVerificationView: UIView {
 
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
+    private let appearance: LinkAppearance?
+    private let allowLogoutInDialog: Bool
+    private let consentViewModel: LinkConsentViewModel?
+
     var sendingCode: Bool = false {
         didSet {
             resendCodeButton.isLoading = sendingCode
@@ -62,7 +66,7 @@ final class LinkVerificationView: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = LinkUI.font(forTextStyle: .title)
-        label.textColor = .linkPrimaryText
+        label.textColor = .linkTextPrimary
         label.text = mode.headingText
         label.adjustsFontForContentSizeCategory = true
         return label
@@ -73,15 +77,26 @@ final class LinkVerificationView: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = mode.bodyFont
-        label.textColor = .linkSecondaryText
+        label.textColor = .linkTextSecondary
         label.text = mode.bodyText(redactedPhoneNumber: linkAccount.redactedPhoneNumber ?? "")
         label.adjustsFontForContentSizeCategory = true
         return label
     }()
 
     private(set) lazy var codeField: OneTimeCodeTextField = {
-        let codeField = OneTimeCodeTextField(configuration: .init(numberOfDigits: 6),
-                                             theme: LinkUI.appearance.asElementsTheme)
+        let codeField = OneTimeCodeTextField(
+            configuration: .init(
+                numberOfDigits: 6,
+                enableDigitGrouping: false,
+                font: LinkUI.font(forTextStyle: .title).bold,
+                itemCornerRadius: LinkUI.oneTimeCodeTextFieldCornerRadius,
+                itemHeight: 56,
+                itemFocusRingThickness: LinkUI.borderWidth,
+                itemFocusBackgroundColor: LinkUI.appearance.colors.background
+            ),
+            theme: LinkUI.appearance.asElementsTheme
+        )
+        codeField.tintColor = appearance?.colors?.selectedBorder ?? LinkUI.appearance.colors.selectedComponentBorder
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField
     }()
@@ -104,10 +119,11 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkBordered(), title: STPLocalizedString(
+        let button = Button(configuration: .linkPlain(foregroundColor: appearance?.colors?.primary ?? .linkTextBrand), title: STPLocalizedString(
             "Resend code",
             "Label for a button that re-sends the a login code when tapped"
         ))
+        button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
         return button
     }()
@@ -118,9 +134,33 @@ final class LinkVerificationView: UIView {
         return logoutView
     }()
 
-    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
+    private lazy var consentDisclaimerLabel: UILabel? = {
+        guard case .inline(let inlineConsent) = consentViewModel else {
+            return nil
+        }
+
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.font = LinkUI.font(forTextStyle: .caption)
+        label.textColor = .linkTextTertiary
+        label.text = inlineConsent.disclaimer
+        label.adjustsFontForContentSizeCategory = true
+        return label
+    }()
+
+    required init(
+        mode: Mode,
+        linkAccount: PaymentSheetLinkAccountInfoProtocol,
+        appearance: LinkAppearance? = nil,
+        allowLogoutInDialog: Bool,
+        consentViewModel: LinkConsentViewModel? = nil
+    ) {
         self.mode = mode
         self.linkAccount = linkAccount
+        self.appearance = appearance
+        self.allowLogoutInDialog = allowLogoutInDialog
+        self.consentViewModel = consentViewModel
         super.init(frame: .zero)
         setupUI()
     }
@@ -160,21 +200,37 @@ private extension LinkVerificationView {
     var arrangedSubViews: [UIView] {
         switch mode {
         case .modal, .inlineLogin:
-            return [
+            var views = [
                 header,
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
                 resendCodeButton,
             ]
+
+            if let consentDisclaimerLabel = consentDisclaimerLabel {
+                views.append(consentDisclaimerLabel)
+            }
+
+            if allowLogoutInDialog {
+                views.append(logoutView)
+            }
+
+            return views
         case .embedded:
-            return [
+            var views = [
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
-                logoutView,
                 resendCodeButton,
             ]
+
+            if let consentDisclaimerLabel = consentDisclaimerLabel {
+                views.append(consentDisclaimerLabel)
+            }
+
+            views.append(logoutView)
+            return views
         }
     }
 
@@ -190,7 +246,13 @@ private extension LinkVerificationView {
         // Spacing
         stackView.setCustomSpacing(Constants.edgeMargin, after: header)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
-        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: codeFieldContainer)
+        stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: codeFieldContainer)
+        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: resendCodeButton)
+
+        // Add spacing after consent disclaimer if present
+        if let consentDisclaimerLabel = consentDisclaimerLabel {
+            stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: consentDisclaimerLabel)
+        }
 
         addSubview(stackView)
 
@@ -231,32 +293,24 @@ extension LinkVerificationView.Mode {
     }
 
     var headingText: String {
-        switch self {
-        case .modal:
-            return STPLocalizedString(
-                "Use your saved info to check out faster",
-                "Two factor authentication screen heading"
-            )
-        case .inlineLogin, .embedded:
-            return STPLocalizedString(
-                "Confirm it's you",
-                "Two factor authentication screen heading"
-            )
-        }
+        return STPLocalizedString(
+            "Confirm it's you",
+            "Two factor authentication screen heading"
+        )
     }
 
     var bodyFont: UIFont {
         switch self {
-        case .modal, .inlineLogin:
+        case .modal:
             return LinkUI.font(forTextStyle: .detail)
-        case .embedded:
+        case .inlineLogin, .embedded:
             return LinkUI.font(forTextStyle: .body)
         }
     }
 
     func bodyText(redactedPhoneNumber: String) -> String {
         let format = STPLocalizedString(
-            "Enter the code sent to %@ to use your saved information.",
+            "Enter the code sent to %@.",
             "Instructs the user to enter the code sent to their phone number in order to login to Link"
         )
         return String(format: format, redactedPhoneNumber)

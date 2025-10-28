@@ -15,4 +15,4 @@ Content-Length: 149
 x-content-type-options: nosniff
 x-frame-options: SAMEORIGIN
 
-{"ephemeral_key_secret":"ek_test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLEpRVlVUbWd6NFZOT285WTRlN2ZLenI5QjBrMjA0NUo_00X1AtSyUz","customer":"cus_OtOGvD0ZVacBoj"}
+{"ephemeral_key_secret":"ek_test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLENDd01ob3hZNzB1TUM0amk4bm8ybkYyMVA5d2RmVzQ_006dvDUixy","customer":"cus_OtOGvD0ZVacBoj"}

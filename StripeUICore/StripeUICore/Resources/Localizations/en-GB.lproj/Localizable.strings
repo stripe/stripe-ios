@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (optional)";
 
 "(not accepted)" = "(not accepted)";
@@ -37,8 +39,6 @@
 "Country or region" = "Country or region";
 
 "County" = "County";
-
-"Date is empty." = "Date is empty.";
 
 "Department" = "Department";
 
@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Select card brand (optional)";
 
+"Selection is empty." = "Selection is empty.";
+
 "Sort code" = "Sort code";
 
 "State" = "State";
@@ -132,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Your BLIK code is invalid.";
 
-"Your ZIP is incomplete." = "Your ZIP is incomplete.";
+"Your ZIP code is incomplete." = "Your postcode is incomplete.";
+
+"Your ZIP code is invalid." = "Your postcode is invalid.";
 
 "Your email is invalid." = "Your email is invalid.";
 
 "Your payment information will not be saved." = "Your payment information will not be saved.";
 
 "Your postal code is incomplete." = "Your postcode is incomplete.";
+
+"Your postal code is invalid." = "Your postcode is invalid.";
 
 "ZIP" = "ZIP";

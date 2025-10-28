@@ -81,8 +81,12 @@ extension CustomerSheet {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
-        /// Flag used to stage the development of updating payment method
-        @_spi(UpdatePaymentMethodBeta) public var updatePaymentMethodEnabled: Bool = false
+        /// By default, the card form will provide a button to open the card scanner.
+        /// If true, the card form will instead initialize with the card scanner already open.
+        public var opensCardScannerAutomatically: Bool = false
+
+        /// If true, an invisible challenge will be performed for human verification
+        @_spi(STP) public var enablePassiveCaptcha: Bool = false
 
         public init () {
         }

@@ -8,46 +8,49 @@
 import AuthenticationServices
 import UIKit
 // `@preconcurrency` suppresses Sendable-related warnings from WebKit.
+@_spi(STP) import StripeCore
 @preconcurrency import WebKit
 
 class FCLiteAuthFlowViewController: UIViewController {
     enum WebFlowResult {
+        enum CancellationType {
+            case cancelledWithinWebview
+            case cancelledOutsideWebView
+        }
+
         case success(returnUrl: URL)
-        case cancelled
+        case cancelled(CancellationType)
         case failure(Error)
     }
 
     private let manifest: LinkAccountSessionManifest
+    private let elementsSessionContext: ElementsSessionContext?
     private let returnUrl: URL?
+    private let onLoad: () -> Void
     private let completion: ((WebFlowResult) -> Void)
 
     private var webAuthenticationSession: ASWebAuthenticationSession?
     private var webView: WKWebView!
 
-    private var progressObservation: NSKeyValueObservation?
-    private let progressBar = UIProgressView(progressViewStyle: .bar)
-
-    static func hostedAuthUrl(from manifest: LinkAccountSessionManifest) -> URL {
-        guard manifest.isInstantDebits else {
-            return manifest.hostedAuthURL
-        }
-
-        let additionalParameters: [String] = [
-            "return_payment_method=true",
-            "expand_payment_method=true",
-        ]
-        let urlString = manifest.hostedAuthURL.absoluteString
-        let joinedParameters = additionalParameters.joined(separator: "&")
-        let updatedUrlString = urlString + (urlString.hasSuffix("&") ? "" : "&") + joinedParameters
-        return URL(string: updatedUrlString) ?? manifest.hostedAuthURL
+    private var hostedAuthUrl: URL {
+        HostedAuthUrlBuilder.build(
+            baseHostedAuthUrl: manifest.hostedAuthURL,
+            isInstantDebits: manifest.isInstantDebits,
+            hasExistingAccountholderToken: manifest.hasAccountholderToken,
+            elementsSessionContext: elementsSessionContext
+        )
     }
 
     init(
         manifest: LinkAccountSessionManifest,
+        elementsSessionContext: ElementsSessionContext?,
         returnUrl: URL?,
+        onLoad: @escaping () -> Void,
         completion: @escaping ((WebFlowResult) -> Void)
     ) {
+        self.onLoad = onLoad
         self.manifest = manifest
+        self.elementsSessionContext = elementsSessionContext
         self.returnUrl = returnUrl
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
@@ -60,21 +63,24 @@ class FCLiteAuthFlowViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupProgressBar()
         setupWebView()
     }
 
     private func setupWebView() {
         webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
         webView.uiDelegate = self
+        webView.isHidden = true
         webView.navigationDelegate = self
 
-        observeWebviewLoadingProgress()
+        #if DEBUG
+        // Allow the web view to be inspected for debug builds on 16.4+
+        if #available(iOS 16.4, *) {
+            webView.isInspectable = true
+        }
+        #endif
 
-        let hostedAuthUrl = Self.hostedAuthUrl(from: manifest)
         let request = URLRequest(url: hostedAuthUrl)
         webView.load(request)
-
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
         NSLayoutConstraint.activate([
@@ -85,47 +91,9 @@ class FCLiteAuthFlowViewController: UIViewController {
         ])
     }
 
-    // MARK: Progress bar
-    private func setupProgressBar() {
-        let color = manifest.isInstantDebits ? FCLiteColor.link : FCLiteColor.stripe
-        progressBar.translatesAutoresizingMaskIntoConstraints = false
-        progressBar.trackTintColor = .lightGray
-        progressBar.progressTintColor = color
-        progressBar.progress = 0.0
-    }
-
-    private func showProgressBar() {
-        guard progressBar.superview == nil else { return }
-        view.addSubview(progressBar)
-        NSLayoutConstraint.activate([
-            progressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            progressBar.heightAnchor.constraint(equalToConstant: 2.0),
-        ])
-    }
-
-    private func hideProgressBar() {
-        UIView.animate(withDuration: 0.3, delay: 0.3, options: .curveEaseOut, animations: {
-            self.progressBar.alpha = 0.0
-        }, completion: { _ in
-            self.progressBar.removeFromSuperview()
-        })
-    }
-
-    private func observeWebviewLoadingProgress() {
-        progressObservation = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, _ in
-            guard let self else { return }
-
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                let progress = Float(self.webView.estimatedProgress)
-                self.progressBar.progress = progress
-                if progress >= 1.0 {
-                    self.hideProgressBar()
-                }
-            }
-        }
+    private func didFinishLoad() {
+        onLoad()
+        webView.isHidden = false
     }
 }
 
@@ -147,18 +115,23 @@ extension FCLiteAuthFlowViewController: WKNavigationDelegate {
             completion(.success(returnUrl: url))
         } else if url.matchesSchemeHostAndPath(of: manifest.cancelURL) {
             decisionHandler(.cancel)
-            completion(.cancelled)
+            completion(.cancelled(.cancelledWithinWebview))
         } else {
             decisionHandler(.allow)
         }
     }
 
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        showProgressBar()
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        didFinishLoad()
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        hideProgressBar()
+        didFinishLoad()
+        completion(.failure(error))
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: any Error) {
+        didFinishLoad()
         completion(.failure(error))
     }
 }

@@ -18,6 +18,7 @@ class FCLiteContainerViewController: UIViewController {
     private var errorView: ErrorView?
 
     private var manifest: LinkAccountSessionManifest?
+    private let elementsSessionContext: ElementsSessionContext?
 
     private var isInstantDebits: Bool {
         manifest?.isInstantDebits == true
@@ -27,11 +28,13 @@ class FCLiteContainerViewController: UIViewController {
         clientSecret: String,
         returnUrl: URL?,
         apiClient: FCLiteAPIClient,
+        elementsSessionContext: ElementsSessionContext?,
         completion: @escaping ((FinancialConnectionsSDKResult) -> Void)
     ) {
         self.clientSecret = clientSecret
         self.returnUrl = returnUrl
         self.apiClient = apiClient
+        self.elementsSessionContext = elementsSessionContext
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
@@ -54,10 +57,11 @@ class FCLiteContainerViewController: UIViewController {
 
     private func setupSpinner() {
         spinner.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(spinner)
+        guard let navigation = self.navigationController else { return }
+        navigation.view.addSubview(spinner)
         NSLayoutConstraint.activate([
-            spinner.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            spinner.centerXAnchor.constraint(equalTo: navigation.view.safeAreaLayoutGuide.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: navigation.view.safeAreaLayoutGuide.centerYAnchor),
         ])
     }
 
@@ -76,33 +80,37 @@ class FCLiteContainerViewController: UIViewController {
         } catch {
             showError()
         }
-
-        DispatchQueue.main.async {
-            self.spinner.stopAnimating()
-        }
     }
 
     private func completeFlow(result: FCLiteAuthFlowViewController.WebFlowResult) async {
         switch result {
         case .success(let returnUrl):
             if isInstantDebits {
-                createInstantDebitsLinkedBankAndComplete(from: returnUrl)
+                if let linkedBank = createInstantDebitsLinkedBank(from: returnUrl) {
+                    completion(.completed(.instantDebits(linkedBank)))
+                } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
+                    completion(.completed(.linkedAccount(id: linkedAccountId)))
+                } else {
+                    completion(.failed(error: FCLiteError.linkedBankUnavailable))
+                }
             } else {
                 await fetchSessionAndComplete()
             }
-        case .cancelled:
+        case .cancelled(let cancellationType):
             if isInstantDebits {
                 completion(.cancelled)
             } else {
                 // Even if a user cancelled, we check if they've connected an account.
-                await fetchSessionAndComplete(userCancelled: true)
+                await fetchSessionAndComplete(cancellationType: cancellationType)
             }
         case .failure(let error):
             completion(.failed(error: error))
         }
     }
 
-    private func fetchSessionAndComplete(userCancelled: Bool = false) async {
+    private func fetchSessionAndComplete(
+        cancellationType: FCLiteAuthFlowViewController.WebFlowResult.CancellationType? = nil
+    ) async {
         DispatchQueue.main.async {
             // Pop back to root to show a loading spinner.
             self.navigationController?.popToRootViewController(animated: false)
@@ -110,8 +118,17 @@ class FCLiteContainerViewController: UIViewController {
         }
 
         do {
-            let session = try await apiClient.sessionReceipt(clientSecret: clientSecret)
-            if session.paymentAccount == nil, userCancelled {
+            let session: FinancialConnectionsSession
+            if cancellationType == .cancelledOutsideWebView {
+                // If the user cancelled outside the webview (i.e. swipe to dismiss),
+                // we should complete the session ourselves.
+                session = try await apiClient.complete(clientSecret: clientSecret)
+            } else {
+                // Otherwise, the session has been completed on the web side.
+                session = try await apiClient.sessionReceipt(clientSecret: clientSecret)
+            }
+
+            if session.paymentAccount == nil, cancellationType != nil {
                 completion(.cancelled)
                 return
             }
@@ -124,16 +141,18 @@ class FCLiteContainerViewController: UIViewController {
         } catch {
             completion(.failed(error: error))
         }
-
-        DispatchQueue.main.async {
-            self.spinner.stopAnimating()
-        }
     }
 
     private func showWebView(for manifest: LinkAccountSessionManifest) {
         let authFlowVC = FCLiteAuthFlowViewController(
             manifest: manifest,
+            elementsSessionContext: elementsSessionContext,
             returnUrl: returnUrl,
+            onLoad: {
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                }
+            },
             completion: { [weak self] result in
                 guard let self else { return }
                 Task {
@@ -198,12 +217,12 @@ class FCLiteContainerViewController: UIViewController {
         }
     }
 
-    private func createInstantDebitsLinkedBankAndComplete(from url: URL) {
+    private func createInstantDebitsLinkedBank(from url: URL) -> InstantDebitsLinkedBank? {
         guard let paymentMethod = url.extractLinkBankPaymentMethod() else {
-            completion(.failed(error: FCLiteError.linkedBankUnavailable))
-            return
+            return nil
         }
-        let linkedBank = InstantDebitsLinkedBank(
+
+        return InstantDebitsLinkedBank(
             paymentMethod: paymentMethod,
             bankName: url.extractValue(forKey: "bank_name")?
                 .replacingOccurrences(of: "+", with: " "),
@@ -212,7 +231,6 @@ class FCLiteContainerViewController: UIViewController {
             incentiveEligible: url.extractValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false,
             linkAccountSessionId: manifest?.id
         )
-        completion(.completed(.instantDebits(linkedBank)))
     }
 
     private func setNavigationBar(isHidden: Bool) {
@@ -226,7 +244,7 @@ class FCLiteContainerViewController: UIViewController {
 
     @objc private func closeButtonTapped() {
         Task {
-            await self.completeFlow(result: .cancelled)
+            await self.completeFlow(result: .cancelled(.cancelledOutsideWebView))
         }
     }
 }
@@ -244,7 +262,7 @@ extension FCLiteContainerViewController: UIAdaptivePresentationControllerDelegat
     private func showDismissConfirmation(presentedBy viewController: UIViewController) {
         let alertController = UIAlertController(
             title: "Are you sure you want to exit?",
-            message: "You haven't finished linking you bank account and all progress will be lost.",
+            message: "You haven't finished linking your bank account and all progress will be lost.",
             preferredStyle: .alert
         )
 
@@ -259,7 +277,7 @@ extension FCLiteContainerViewController: UIAdaptivePresentationControllerDelegat
             handler: { [weak self] _ in
                 guard let self = self else { return }
                 Task {
-                    await self.completeFlow(result: .cancelled)
+                    await self.completeFlow(result: .cancelled(.cancelledOutsideWebView))
                 }
             }
         ))

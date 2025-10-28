@@ -22,7 +22,7 @@ import XCTest
 class STPPaymentHandlerRefreshTests: XCTestCase {
 
     func testPaymentIntentShouldHitRefreshEndpoint() {
-        let shouldRefresh: [STPPaymentMethodType] = [.cashApp]
+        let shouldRefresh: [STPPaymentMethodType] = [.cashApp, .klarna]
 
         for paymentMethodType in STPPaymentMethodType.allCases {
             let paymentMethodDict: [AnyHashable: Any] = [
@@ -51,7 +51,7 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
     }
 
     func testSetupIntentShouldHitRefreshEndpoint() {
-        let shouldRefresh: [STPPaymentMethodType] = [.cashApp]
+        let shouldRefresh: [STPPaymentMethodType] = [.cashApp, .klarna]
 
         for paymentMethodType in STPPaymentMethodType.allCases {
             let paymentMethodDict: [AnyHashable: Any] = [
@@ -100,6 +100,7 @@ class STPAPIClientMock: STPAPIClient {
     override func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
+        timeout: NSNumber?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         retrievePaymentIntentCalled = true
@@ -108,6 +109,7 @@ class STPAPIClientMock: STPAPIClient {
     override func retrieveSetupIntent(
         withClientSecret secret: String,
         expand: [String]?,
+        timeout: NSNumber?,
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
         retrieveSetupIntentCalled = true

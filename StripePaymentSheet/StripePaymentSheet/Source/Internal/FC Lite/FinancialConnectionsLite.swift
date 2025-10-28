@@ -17,8 +17,11 @@ import UIKit
     /// If not provided, all bank authentication sessions will happen in a secure browser within this app.
     let returnUrl: URL?
 
-    /// The API Client instance used to make requests to Stripe.
-    let apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
+    /// Any additional Elements context useful for the Financial Connections SDK.
+    @_spi(STP) public var elementsSessionContext: ElementsSessionContext?
+
+    /// A existing consumer, if avaialble.
+    @_spi(STP) public var existingConsumer: FinancialConnectionsConsumer?
 
     private var navigationController: UINavigationController?
     private var wrapperViewController: FCLiteModalPresentationWrapper?
@@ -50,10 +53,14 @@ import UIKit
         Self.activeInstance = self
         self.completionHandler = completion
 
+        var apiClient: FCLiteAPIClient = FCLiteAPIClient(backingAPIClient: .shared)
+        apiClient.consumerPublishableKey = existingConsumer?.publishableKey
+
         let containerVC = FCLiteContainerViewController(
             clientSecret: clientSecret,
             returnUrl: returnUrl,
             apiClient: apiClient,
+            elementsSessionContext: elementsSessionContext,
             completion: { [weak self] result in
                 guard let self else { return }
                 self.handleFlowCompletion(result: result)

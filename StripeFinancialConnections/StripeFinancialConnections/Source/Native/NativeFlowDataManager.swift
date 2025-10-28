@@ -43,7 +43,8 @@ protocol NativeFlowDataManager: AnyObject {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails>
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
@@ -103,14 +104,22 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var customSuccessPaneSubCaption: String?
     var pendingRelinkAuthorization: String?
 
+    // Note: These properties maintain their last non-nil value. Once set to a value,
+    // these properties can only be changed to another non-nil value.
+    // They also propagate their new values to the API client.
     var consumerSession: ConsumerSessionData? {
         didSet {
+            if consumerSession == nil && oldValue != nil {
+                consumerSession = oldValue
+            }
             apiClient.consumerSession = consumerSession
         }
     }
-
     var consumerPublishableKey: String? {
         didSet {
+            if consumerPublishableKey == nil && oldValue != nil {
+                consumerPublishableKey = oldValue
+            }
             apiClient.consumerPublishableKey = consumerPublishableKey
         }
     }
@@ -141,6 +150,9 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.authSession = manifest.activeAuthSession
         // If the server returns active institution use that, otherwise resort to initial institution.
         self.institution = manifest.activeInstitution ?? manifest.initialInstitution
+        // Use consumer properties from the API client, if available.
+        self.consumerSession = apiClient.consumerSession
+        self.consumerPublishableKey = apiClient.consumerPublishableKey
         didUpdateManifest()
     }
 
@@ -148,13 +160,15 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails> {
         apiClient.paymentDetails(
             consumerSessionClientSecret: consumerSessionClientSecret,
             bankAccountId: bankAccountId,
             billingAddress: billingAddress,
-            billingEmail: billingEmail
+            billingEmail: billingEmail,
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 

@@ -572,7 +572,6 @@
 		D03B98D5861739833B197D8F /* STDSChallengeParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeParameters.h; sourceTree = "<group>"; };
 		D122FAE093BC4F649CC6E7AB /* STDSDebuggerChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSDebuggerChecker.h; sourceTree = "<group>"; };
 		D24777EE9931075405F370DB /* STDSChallengeInformationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeInformationView.m; sourceTree = "<group>"; };
-		D3F5A6D5A680F008C00A2D69 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		D7A9D36FEF7E97CF735D82B8 /* Stripe3DS2DemoUITests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2DemoUITests-Release.xcconfig"; sourceTree = "<group>"; };
 		D827473D1858B2BED85BDFA1 /* STDSACSNetworkingManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSACSNetworkingManager.h; sourceTree = "<group>"; };
 		D8B7EE0F935EF44EB2EF7D45 /* amex.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = amex.der; sourceTree = "<group>"; };
@@ -1254,7 +1253,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -1535,7 +1533,6 @@
 				18D88DE3E34106F934015BF9 /* mt */,
 				6B487D8DD39DAC17042A3F04 /* nb */,
 				83BDD516620860DC08B36B96 /* nl */,
-				D3F5A6D5A680F008C00A2D69 /* nn-NO */,
 				FE1DE9D978E6E682CB094128 /* pl-PL */,
 				6690476C1BEA59C37576FB36 /* pt-BR */,
 				BC3EE020DC9358FF56389BBE /* pt-PT */,

@@ -14,33 +14,85 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+// @iOS26
 class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
+
+    override func setUp() {
+
+        super.setUp()
+
+        if #available(iOS 26, *) {
+            var configuration = PaymentSheet.Configuration()
+            configuration.appearance.applyLiquidGlass()
+            LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+        }
+
+    }
+
+    // MARK: Back Style
 
     func testDefault() {
         let sut = makeSUT()
         verify(sut)
 
-        sut.showBackButton = true
-        verify(sut, identifier: "BackButton")
+        let backSut = makeSUT()
+        backSut.setStyle(.back(showAdditionalButton: false))
+        verify(backSut, identifier: "BackButton")
     }
 
-    func testWithEmailAddress() {
-        let sut = makeSUT()
-        sut.linkAccount = makeAccountStub(email: "user@example.com")
+    func testTitle() {
+        let sut = makeSUT(title: "Test title")
+        sut.setStyle(.back(showAdditionalButton: false))
         verify(sut)
-
-        sut.showBackButton = true
-        verify(sut, identifier: "BackButton")
     }
 
-    func testWithLongEmailAddress() {
-        let sut = makeSUT()
-        sut.linkAccount = makeAccountStub(email: "a.very.very.long.customer.name@example.com")
+    func testLongTitle() {
+        let sut = makeSUT(title: "Test title that is pretty long")
+        sut.setStyle(.back(showAdditionalButton: false))
         verify(sut)
-
-        sut.showBackButton = true
-        verify(sut, identifier: "BackButton")
     }
+
+    func testTruncatingTitle() {
+        let sut = makeSUT(title: "Test title that is pretty long and should wrap")
+        sut.setStyle(.back(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testBackStyleThenTruncatingTitle() {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        sut.setStyle(.back(showAdditionalButton: false))
+        sut.title = "Test title that is pretty long and should wrap"
+        verify(sut)
+    }
+
+    // MARK: Close Style
+
+    func testTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testLongTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title that is pretty long")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testTruncatingTitleCloseStyle() {
+        let sut = makeSUT(title: "Test title that is pretty long and should wrap")
+        sut.setStyle(.close(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testCloseStyleThenTruncatingTitle() {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        sut.setStyle(.close(showAdditionalButton: false))
+        sut.title = "Test title that is pretty long and should wrap"
+        verify(sut)
+    }
+
+    // MARK: Utilities
 
     func verify(
         _ sut: UIView,
@@ -65,19 +117,23 @@ extension LinkNavigationBarSnapshotTests {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
-        let isLoggedIn: Bool
+        let sessionState: PaymentSheetLinkAccount.SessionState
+        let consumerSessionClientSecret: String?
     }
 
-    fileprivate func makeAccountStub(email: String) -> LinkAccountStub {
+    fileprivate func makeAccountStub() -> LinkAccountStub {
         return LinkAccountStub(
-            email: email,
+            email: "test@example.com",
             redactedPhoneNumber: "+1********55",
             isRegistered: true,
-            isLoggedIn: true
+            sessionState: .verified,
+            consumerSessionClientSecret: nil
         )
     }
 
-    fileprivate func makeSUT() -> LinkNavigationBar {
-        return LinkNavigationBar()
+    fileprivate func makeSUT(title: String? = nil) -> LinkSheetNavigationBar {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        sut.title = title
+        return sut
     }
 }

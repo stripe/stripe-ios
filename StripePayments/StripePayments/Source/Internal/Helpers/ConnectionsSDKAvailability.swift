@@ -8,13 +8,37 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-import SwiftUI
 import UIKit
 
 @_spi(STP) public struct FinancialConnectionsSDKAvailability {
     static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? =
         NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
         as? FinancialConnectionsSDKInterface.Type
+
+    static let FinancialConnectionsLiteImplementation: FinancialConnectionsSDKInterface.Type? =
+        NSClassFromString("StripePaymentSheet.FCLiteImplementation")
+        as? FinancialConnectionsSDKInterface.Type
+
+    @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
+    @_spi(STP) public static var localFcLiteOverride: Bool = false
+    @_spi(STP) public static var remoteFcLiteOverride: Bool = false
+
+    private static var FCLiteClassIfEnabled: FinancialConnectionsSDKInterface.Type? {
+        guard !fcLiteKillswitchEnabled else {
+            return nil
+        }
+        return Self.FinancialConnectionsLiteImplementation
+    }
+
+    @_spi(STP) public static let analyticsValue: String = {
+        if FinancialConnectionsSDKClass != nil {
+            return "FULL"
+        } else if FCLiteClassIfEnabled != nil {
+            return "LITE"
+        } else {
+            return "NONE"
+        }
+    }()
 
     static let isUnitTest: Bool = {
         #if targetEnvironment(simulator)
@@ -34,6 +58,7 @@ import UIKit
 
     // Return true for unit tests, the value of `FinancialConnectionsSDKAvailable` for UI tests,
     // and whether or not the Financial Connections SDK is available otherwise.
+    // Falls back on FC Lite availability.
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
         if isUnitTest {
             return true
@@ -41,17 +66,22 @@ import UIKit
             let financialConnectionsSDKAvailable = ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
             return financialConnectionsSDKAvailable
         } else {
-            return FinancialConnectionsSDKClass != nil
+            return (FinancialConnectionsSDKClass != nil || FCLiteClassIfEnabled != nil)
         }
     }
 
-    static func financialConnections() -> FinancialConnectionsSDKInterface? {
+    @_spi(STP) public static func financialConnections() -> FinancialConnectionsSDKInterface? {
         let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
         if isUnitTest || (isUITest && financialConnectionsStubbedResult) {
             return StubbedConnectionsSDKInterface()
         }
 
-        guard let klass = FinancialConnectionsSDKClass else {
+        let fcLiteOverrideEnabled = localFcLiteOverride || remoteFcLiteOverride
+        let klass: FinancialConnectionsSDKInterface.Type? = fcLiteOverrideEnabled
+            ? (FCLiteClassIfEnabled ?? FinancialConnectionsSDKClass)
+            : (FinancialConnectionsSDKClass ?? FCLiteClassIfEnabled) // Default
+
+        guard let klass else {
             return nil
         }
 
@@ -64,6 +94,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,

@@ -25,12 +25,6 @@ class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
     private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)
 
-    lazy var transparentMaskView: UIView = {
-        let view = UIView()
-        view.backgroundColor = viewModel.theme.colors.componentBackground.translucentMaskColor
-        return view
-    }()
-
     var text: String {
         return textField.text ?? ""
     }
@@ -48,8 +42,27 @@ class TextFieldView: UIView {
 
     // MARK: - Views
 
-    private(set) lazy var textField: UITextField = {
-        let textField = UITextField()
+    // A text field that remembers if it wanted to become the first responder, but failed to do so.
+    // We'll track this for the very specific situation where we're trying to swap out a text field for a replacement
+    // immediately after the user tapped this one.
+    class STPTextFieldThatRemembersWantingToBecomeFirstResponder: UITextField {
+        private(set) var wantedToBecomeFirstResponder = false
+
+        override func becomeFirstResponder() -> Bool {
+            if canBecomeFirstResponder {
+                wantedToBecomeFirstResponder = true
+            }
+            let didBecomeFirstResponder = super.becomeFirstResponder()
+            if didBecomeFirstResponder {
+                // It succeeded, so now it can forget!
+                wantedToBecomeFirstResponder = false
+            }
+            return didBecomeFirstResponder
+        }
+    }
+
+    private(set) lazy var textField: STPTextFieldThatRemembersWantingToBecomeFirstResponder = {
+        let textField = STPTextFieldThatRemembersWantingToBecomeFirstResponder()
         textField.delegate = self
         textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         textField.autocorrectionType = .no
@@ -88,7 +101,7 @@ class TextFieldView: UIView {
             } else if let accessoryView = accessoryView {
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
-                hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
+                hStack.updateTrailingAnchor(constant: -viewModel.theme.textFieldInsets.trailing)
             }
         }
     }
@@ -148,7 +161,7 @@ class TextFieldView: UIView {
 
     fileprivate func installConstraints() {
         if viewModel.editConfiguration == .readOnly {
-            addAndPinSubview(transparentMaskView)
+            backgroundColor = viewModel.theme.colors.readonlyComponentBackground
         }
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
@@ -162,7 +175,7 @@ class TextFieldView: UIView {
                                                                        for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
-        addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
+        addAndPinSubview(hStack, insets: viewModel.theme.textFieldInsets)
     }
 
     @objc private func clearText() {
@@ -213,7 +226,7 @@ class TextFieldView: UIView {
         textField.textContentType = viewModel.keyboardProperties.textContentType
         if viewModel.keyboardProperties.type != textField.keyboardType {
             textField.keyboardType = viewModel.keyboardProperties.type
-#if !canImport(CompositorServices)
+#if !os(visionOS)
             textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
 #endif
             textField.reloadInputViews()
@@ -221,7 +234,7 @@ class TextFieldView: UIView {
 
         // Update text and border color
         if case .invalid(let error) = viewModel.validationState,
-           error.shouldDisplay(isUserEditing: textField.isEditing) {
+           error.shouldDisplay(isUserEditing: textField.isEditing, displayEmptyFields: viewModel.displayEmptyFields) {
             layer.borderColor = viewModel.theme.colors.danger.cgColor
             textField.textColor = viewModel.theme.colors.danger
             errorIconView.alpha = 1
@@ -245,10 +258,9 @@ class TextFieldView: UIView {
         layoutIfNeeded()
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        self.transparentMaskView.backgroundColor = viewModel.theme.colors.componentBackground.translucentMaskColor
         updateUI(with: viewModel)
     }
 #endif

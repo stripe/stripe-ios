@@ -144,23 +144,6 @@ struct FinancialConnectionsFont {
         return .create(font: font, lineHeight: lineHeight, appleTextStyle: appleTextStyle)
     }
 
-    enum CodeToken {
-        /// 16 size / 24 line height / 600 weight
-        case largeEmphasized
-    }
-    static func code(_ token: CodeToken) -> FinancialConnectionsFont {
-        let font: UIFont
-        let lineHeight: CGFloat
-        let appleTextStyle: UIFont.TextStyle
-        switch token {
-        case .largeEmphasized:
-            font = UIFont.monospacedSystemFont(ofSize: 16, weight: .semibold)
-            lineHeight = 24
-            appleTextStyle = .body
-        }
-        return .create(font: font, lineHeight: lineHeight, appleTextStyle: appleTextStyle)
-    }
-
     private static func create(font: UIFont, lineHeight: CGFloat, appleTextStyle: UIFont.TextStyle) -> FinancialConnectionsFont {
         let scaledFont = scaleFont(font, appleTextStyle: appleTextStyle)
         return FinancialConnectionsFont(

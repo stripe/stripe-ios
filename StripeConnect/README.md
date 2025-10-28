@@ -2,10 +2,6 @@
 
 Use Connect embedded components to add connected account dashboard functionality to your app. The Stripe Connect iOS SDK and supporting API allow you to grant your users access to Stripe products directly in your dashboard.
 
-> **Private preview**
->
-> Access to the StripeConnect iOS SDK is currently invite only and is limited to only certain connected account types. To request an invitation and get the latest information on supported account types, see our [iOS integration guide](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios).
-
 ## Table of contents
 <!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
 <!--ts-->
@@ -20,10 +16,11 @@ Use Connect embedded components to add connected account dashboard functionality
 
 ## Supported components
 
-The following Connect embedded components are supported in the iOS SDK:
+The following Connect embedded component is supported in the iOS SDK:
 
 * [**Account onboarding**](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios): Show a localized onboarding form that validates data.
-* [**Payouts**](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios): Show payout information and allow your users to perform payouts.
+* [**Payments**](https://docs.stripe.com/connect/supported-embedded-components/payments?platform=ios): Shows payments and allows users to view payment details and manage disputes.
+* [**Payouts**](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios): Shows payouts and allows your users to perform payouts.
 
 ## Requirements
 

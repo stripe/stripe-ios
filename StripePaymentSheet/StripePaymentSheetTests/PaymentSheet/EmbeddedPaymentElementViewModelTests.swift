@@ -7,10 +7,9 @@
 
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
+@_spi(STP) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
-
-@_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @testable import StripePaymentSheet
 
 @MainActor
 class EmbeddedPaymentElementViewModelTest: XCTestCase {
@@ -129,7 +128,7 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
 
         // The update should fail due to invalid config
         let result = await viewModel.update(intentConfiguration: brokenPaymentIntentConfig)
-        guard case .failed(_) = result else {
+        guard case .failed = result else {
             return XCTFail("Expected .failed with broken config.")
         }
     }
@@ -292,24 +291,5 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
             (error as! PaymentSheetError).debugDescription,
             PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent.debugDescription
         )
-    }
-}
-
-// MARK: - Helpers
-
-private extension XCTestCase {
-    /// Helper to await an async throwing call and assert it throws an error.
-    func XCTAssertThrowsErrorAsync(
-        _ expression: @autoclosure @escaping () async throws -> Void,
-        _ message: @autoclosure () -> String = "",
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) async {
-        do {
-            try await expression()
-            XCTFail("Expected error to be thrown. " + message(), file: file, line: line)
-        } catch {
-            // Pass
-        }
     }
 }

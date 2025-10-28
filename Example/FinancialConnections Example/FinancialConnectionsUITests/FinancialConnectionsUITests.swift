@@ -252,7 +252,7 @@ final class FinancialConnectionsUITests: XCTestCase {
             .buttons
             .containing(NSPredicate(format: "label CONTAINS 'Agree'"))
             .firstMatch
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // glitch app can take time to load
+        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0))  // backend app can take time to load
         consentAgreeButton.tap()
 
         // find + tap an institution; we add extra institutions in case
@@ -402,7 +402,7 @@ final class FinancialConnectionsUITests: XCTestCase {
             .otherElements
             .containing(NSPredicate(format: "value CONTAINS 'auth.stripe.com'"))
             .firstMatch
-        XCTAssertTrue(authFlowWebViewUrl.waitForExistence(timeout: 120.0)) // glitch app can take time to load
+        XCTAssertTrue(authFlowWebViewUrl.waitForExistence(timeout: 120.0)) // backend app can take time to load
 
         app.fc_secureWebViewCancelButton.tap()
 

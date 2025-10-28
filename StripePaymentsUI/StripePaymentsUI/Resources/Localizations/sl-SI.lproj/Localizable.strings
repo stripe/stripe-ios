@@ -1,3 +1,11 @@
+"%1$@ Card" = "Kartica %1$@";
+
+"%1$@ Credit" = "Kreditna kartica %1$@";
+
+"%1$@ Debit" = "Debetna kartica %1$@";
+
+"%1$@ Prepaid" = "Predplačniška kartica %1$@";
+
 "%1$@ account ending in %2$@" = "Račun za %1$@, ki se konča s števkami %2$@";
 
 "%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Bančni račun";
 
 "Billing address" = "Naslov plačnika računa";
+
+"Billing details" = "Podrobnosti za izstavljanje računov";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
 
-"Your ZIP is invalid." = "Vaša poštna številka ni veljavna.";
-
 "Your card has expired." = "Vaša kartica je potekla.";
 
 "Your card number is incomplete." = "Številka vaše kartice ni popolna.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Varnostna koda vaše kartice ni popolna.";
 
 "Your card's security code is invalid." = "Varnostna koda vaše kartice ni veljavna.";
-
-"Your postal code is invalid." = "Vaša poštna številka ni veljavna.";
 
 "card number" = "številka kartice";
 

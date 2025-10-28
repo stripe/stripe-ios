@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@-kort";
+
+"%1$@ Credit" = "%1$@ -kreditt";
+
+"%1$@ Debit" = "%1$@ -debet";
+
+"%1$@ Prepaid" = "%1$@ -forhåndsbetalt";
+
 "%1$@ account ending in %2$@" = "%1$@-konto som slutter på %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ som slutter på %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Bankkonto";
 
 "Billing address" = "Fakturaadresse";
+
+"Billing details" = "Faktureringsopplysninger";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Gi tilgang til kamera i Innstillinger for å skanne kortet.";
 
-"Your ZIP is invalid." = "ZIP er ugyldig.";
-
 "Your card has expired." = "Kortet ditt er utløpt.";
 
 "Your card number is incomplete." = "Kortnummeret er ufullstendig.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Kortets sikkerhetskode er ufullstendig.";
 
 "Your card's security code is invalid." = "Kortets sikkerhetskode er ugyldig.";
-
-"Your postal code is invalid." = "Postnummeret er ugyldig.";
 
 "card number" = "kortnummer";
 
