@@ -189,7 +189,7 @@ class CustomerSheetTests: APIStubbedTestCase {
             return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
         } response: { _ in
             sleep(timeGreaterThanTimeoutIntervalForRequest)
-            let data = "{}".data(using: .utf8)!
+            let data = Data("{}".utf8)
             return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
         }
 
