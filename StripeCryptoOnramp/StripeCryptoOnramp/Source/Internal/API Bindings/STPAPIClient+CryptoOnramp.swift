@@ -52,11 +52,10 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - info: The collected customer information.
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    ///   - calendar: The calendar to use to convert the user’s date of birth (`KycInfo.dateOfBirth`) to components compatible with the API. Defaults to `calendar.current`.
     /// - Returns: A response object containing the user’s identifier.
     /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
-    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol, calendar: Calendar = .current) async throws -> KYCDataCollectionResponse {
+    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> KYCDataCollectionResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -66,8 +65,7 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/kyc_data_collection"
         let requestObject = KYCDataCollectionRequest(
             credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
-            kycInfo: info,
-            calendar: calendar
+            kycInfo: info
         )
 
         return try await post(resource: endpoint, object: requestObject)
