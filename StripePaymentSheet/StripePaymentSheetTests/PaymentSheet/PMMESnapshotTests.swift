@@ -5,8 +5,8 @@
 //  Created by George Birch on 10/27/25.
 //
 
-import StripeCoreTestUtils
 @_spi(STP)@testable import StripeCore
+import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 import UIKit
@@ -120,7 +120,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             mode: .multiPartner(logos: [
                 makeLogoSet(),
                 makeLogoSet(color: .systemGreen),
-                makeLogoSet(color: .systemPurple)
+                makeLogoSet(color: .systemPurple),
             ]),
             promotion: "Flexible payment options available",
             style: .alwaysLight
@@ -134,7 +134,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             mode: .multiPartner(logos: [
                 makeLogoSet(),
                 makeLogoSet(color: .systemGreen),
-                makeLogoSet(color: .systemPurple)
+                makeLogoSet(color: .systemPurple),
             ]),
             promotion: "Flexible payment options available",
             style: .alwaysDark
@@ -260,7 +260,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             let label = "LOGO"
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: UIFont.boldSystemFont(ofSize: 10),
-                .foregroundColor: UIColor.white
+                .foregroundColor: UIColor.white,
             ]
             let textSize = label.size(withAttributes: attributes)
             let textRect = CGRect(
@@ -292,7 +292,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
         NSLayoutConstraint.activate([
             view.leadingAnchor.constraint(equalTo: containerVC.view.leadingAnchor),
             view.trailingAnchor.constraint(equalTo: containerVC.view.trailingAnchor),
-            view.topAnchor.constraint(equalTo: containerVC.view.topAnchor)
+            view.topAnchor.constraint(equalTo: containerVC.view.topAnchor),
         ])
 
         // Force layout pass
