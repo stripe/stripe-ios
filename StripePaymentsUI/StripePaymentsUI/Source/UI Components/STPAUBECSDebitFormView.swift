@@ -514,20 +514,6 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         }
     }
 
-    // MARK: - UITextViewDelegate
-    /// :nodoc:
-#if !canImport(CompositorServices)
-    @objc
-    public func textView(
-        _ textView: UITextView,
-        shouldInteractWith URL: URL,
-        in characterRange: NSRange,
-        interaction: UITextItemInteraction
-    ) -> Bool {
-        return true
-    }
-#endif
-
     // MARK: - STPFormTextFieldContainer (Overrides)
     /// :nodoc:
     @objc public override var formFont: UIFont {

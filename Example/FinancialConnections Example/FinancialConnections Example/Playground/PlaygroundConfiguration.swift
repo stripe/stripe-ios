@@ -187,7 +187,7 @@ final class PlaygroundConfiguration {
             self.stripeAccount = stripeAccount
         }
 
-        // The id's should use underscore as "-" is not supported in Glitch
+        // The id's should use underscore as "-" is not supported in our backend
         enum CustomId: String {
             case `default` = "default"
             case networking = "networking"
@@ -483,23 +483,6 @@ final class PlaygroundConfiguration {
 
     // MARK: - Experimental
 
-    private static let useAsyncAPIClientKey = "use_async_api_client"
-    var useAsyncAPIClient: Bool {
-        get {
-            if let useAsyncAPIClient = configurationStore[Self.useAsyncAPIClientKey] as? Bool {
-                return useAsyncAPIClient
-            } else {
-                return true
-            }
-        }
-        set {
-            // Save to configuration string
-            configurationStore[Self.useAsyncAPIClientKey] = newValue
-            // Save to experiment store
-            ExperimentStore.shared.useAsyncAPIClient = newValue
-        }
-    }
-
     enum Style: String, CaseIterable, Identifiable, Hashable {
         case automatic = "automatic"
         case alwaysLight = "always_light"
@@ -639,12 +622,6 @@ final class PlaygroundConfiguration {
             self.liveEvents = liveEvents
         } else {
             self.liveEvents = false
-        }
-
-        if let useAsyncAPIClient = dictionary[Self.useAsyncAPIClientKey] as? Bool {
-            self.useAsyncAPIClient = useAsyncAPIClient
-        } else {
-            self.useAsyncAPIClient = true
         }
 
         if let styleString = dictionary[Self.styleKey] as? String,

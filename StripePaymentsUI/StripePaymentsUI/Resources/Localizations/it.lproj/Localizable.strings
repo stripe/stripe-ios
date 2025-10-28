@@ -1,3 +1,11 @@
+"%1$@ Card" = "Carta %1$@";
+
+"%1$@ Credit" = "Carta di credito %1$@";
+
+"%1$@ Debit" = "Carta di debito %1$@";
+
+"%1$@ Prepaid" = "Carta prepagata %1$@";
+
 "%1$@ account ending in %2$@" = "Conto %1$@ che termina con %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ che termina con %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Conto bancario";
 
 "Billing address" = "Indirizzo di fatturazione";
+
+"Billing details" = "Dati di fatturazione";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Per scansionare la carta, concedi l'accesso alla fotocamera in Impostazioni.";
 
-"Your ZIP is invalid." = "Il CAP non è valido.";
-
 "Your card has expired." = "La tua carta è scaduta.";
 
 "Your card number is incomplete." = "Il numero della carta è incompleto.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Il codice di sicurezza della carta è incompleto.";
 
 "Your card's security code is invalid." = "Il codice di sicurezza della carta non è valido.";
-
-"Your postal code is invalid." = "Il codice postale non è valido.";
 
 "card number" = "numero carta";
 

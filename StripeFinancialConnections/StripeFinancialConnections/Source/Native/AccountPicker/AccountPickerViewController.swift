@@ -259,7 +259,7 @@ final class AccountPickerViewController: UIViewController {
     private func showNoEligibleAccountsErrorView(numberOfIneligibleAccounts: Int, error: Error) {
         let errorView = AccountPickerNoAccountEligibleErrorView(
             institution: self.dataSource.institution,
-            bussinessName: self.businessName,
+            businessName: self.businessName,
             institutionSkipAccountSelection: self.dataSource.authSession.institutionSkipAccountSelection
                 ?? false,
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,

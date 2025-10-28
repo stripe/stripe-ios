@@ -12,7 +12,7 @@ import Foundation
 import XCTest
 #if !os(visionOS)
 class PayWithLinkViewControllerTests: XCTestCase {
-    var paymentSheet: PaymentSheet!
+    var paymentSheet: PayWithNativeLinkController!
 
     @MainActor
     func testBailsToWebFlowWhenAttestationFails() async {
@@ -24,7 +24,6 @@ class PayWithLinkViewControllerTests: XCTestCase {
         let mockStripeAttest = StripeAttest(appAttestService: mockAttestService, appAttestBackend: mockAttestBackend, apiClient: apiClient)
         apiClient.stripeAttest = mockStripeAttest
         config.apiClient = apiClient
-        self.paymentSheet = PaymentSheet(paymentIntentClientSecret: "pi_secret_123", configuration: config)
 
         // Always fail attestation, forcing us back to the web flow
         await mockAttestService.setShouldFailKeygenWithError(NSError(domain: "test", code: 1))
@@ -44,10 +43,20 @@ class PayWithLinkViewControllerTests: XCTestCase {
         window.rootViewController = hostVC
         window.makeKeyAndVisible()
 
+        let payWithNativeLinkController = PayWithNativeLinkController(
+            mode: .full,
+            intent: ._testValue(),
+            elementsSession: ._testValue(intent: ._testValue()),
+            configuration: config,
+            analyticsHelper: ._testValue()
+        )
+
         // Now make the fake PayWithLinkViewController and present it
-        let vc = PayWithLinkViewController(intent: ._testValue(), elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
+        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, canSkipWalletAfterVerification: false, analyticsHelper: ._testValue())
         vc.payWithLinkDelegate = paymentSheet
         hostVC.present(vc, animated: true, completion: {})
+
+        payWithNativeLinkController.presentAsBottomSheet(from: vc, shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { _, _, _ in })
 
         // Wait a bit: Attestation should be attempted, but immediately fail.
         await fulfillment(of: [exp], timeout: 2.0)

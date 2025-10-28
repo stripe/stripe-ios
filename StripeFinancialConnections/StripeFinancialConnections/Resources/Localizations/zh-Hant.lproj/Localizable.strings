@@ -1,2 +1,2 @@
-/* Error message that displays when we're unable to connect to the server. */
-"Failed to connect" = "連接失敗";
+/* label for iDEAL-bank selection picker */
+"Select bank" = "選擇銀行";

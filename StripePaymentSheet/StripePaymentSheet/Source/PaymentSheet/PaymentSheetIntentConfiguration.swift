@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
+@_spi(ConfirmationTokensPublicPreview) import StripePayments
 
 public extension PaymentSheet {
     /// Contains information needed to render PaymentSheet
@@ -34,6 +36,39 @@ public extension PaymentSheet {
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
+        /// Called when the customer confirms payment using confirmation tokens.
+        /// Your implementation should follow the [guide](https://stripe.com/docs/payments/finalize-payments-on-the-server) to create (and optionally confirm) a PaymentIntent or SetupIntent on your server and return its client secret.
+        /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
+        /// - Note: When confirming the PaymentIntent or SetupIntent on your server, use the confirmation token ID (`confirmationToken.stripeId`) as the `confirmation_token` parameter.
+        /// - Parameters:
+        ///   - confirmationToken: The `STPConfirmationToken` representing the customer's payment details and any additional information collected during checkout (e.g., billing details, shipping address).
+        /// - Returns: The `client_secret` of the PaymentIntent or SetupIntent created by your server.
+        /// - Throws: An error if one occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
+        /// - SeeAlso: [Confirmation Tokens documentation](https://stripe.com/docs/api/confirmation_tokens) for more information about how confirmation tokens work.
+        @_spi(ConfirmationTokensPublicPreview) public typealias ConfirmationTokenConfirmHandler = @MainActor (
+            _ confirmationToken: STPConfirmationToken
+        ) async throws -> String
+
+        /// Called when the payment is confirmed in a shared payment token session.
+        /// Returns `paymentMethod` and `shippingAddress` info, which can be passed to the backend for confirmation.
+        @_spi(SharedPaymentToken) public typealias PreparePaymentMethodHandler = (
+            _ paymentMethod: STPPaymentMethod,
+            _ shippingAddress: STPAddress?
+        ) -> Void
+
+        /// Seller details for facilitated payment sessions
+        @_spi(SharedPaymentToken) public struct SellerDetails {
+            public let networkId: String
+            public let externalId: String
+            public let businessName: String
+
+            public init(networkId: String, externalId: String, businessName: String) {
+                self.networkId = networkId
+                self.externalId = externalId
+                self.businessName = businessName
+            }
+        }
+
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
@@ -54,6 +89,69 @@ public extension PaymentSheet {
             self.paymentMethodConfigurationId = paymentMethodConfigurationId
             self.confirmHandler = confirmHandler
             self.requireCVCRecollection = requireCVCRecollection
+            self.sellerDetails = nil
+            validate()
+        }
+
+        /// Creates a `PaymentSheet.IntentConfiguration` for a shared payment token session
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - sellerDetails: Seller details for the shared payment token session
+        ///   - paymentMethodTypes: The payment method types for the intent
+        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
+        ///   - preparePaymentMethodHandler: A handler called with payment and shipping when the user taps the primary button (e.g. the "Pay" or "Continue" button).
+        ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        @_spi(SharedPaymentToken) public init(sharedPaymentTokenSessionWithMode mode: Mode,
+                                              sellerDetails: SellerDetails?,
+                                              paymentMethodTypes: [String]? = nil,
+                                              onBehalfOf: String? = nil,
+                                              paymentMethodConfigurationId: String? = nil,
+                                              preparePaymentMethodHandler: @escaping PreparePaymentMethodHandler,
+                                              requireCVCRecollection: Bool = false) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfigurationId = paymentMethodConfigurationId
+            self.preparePaymentMethodHandler = preparePaymentMethodHandler
+            self.requireCVCRecollection = requireCVCRecollection
+            self.sellerDetails = sellerDetails
+            self.confirmHandler = { _, _, callback in
+                // fail immediately, this should never be called
+                stpAssertionFailure("sharedPaymentTokenSessionWithMode call the preparePaymentMethodHandler, not the confirmHandler")
+                let error = PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Shared Payment Token session error. Please file an issue at https://github.com/stripe/stripe-ios.")
+                callback(.failure(error))
+            }
+            validate()
+        }
+
+        /// Creates a `PaymentSheet.IntentConfiguration` with a confirmation token handler
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - paymentMethodTypes: The payment method types for the intent
+        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
+        ///   - confirmationTokenConfirmHandler: A handler called with a confirmation token when the user taps the primary button. Use this for a more secure and streamlined payment flow.
+        ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        @_spi(ConfirmationTokensPublicPreview) public init(mode: Mode,
+                                                           paymentMethodTypes: [String]? = nil,
+                                                           onBehalfOf: String? = nil,
+                                                           paymentMethodConfigurationId: String? = nil,
+                                                           confirmationTokenConfirmHandler: @escaping ConfirmationTokenConfirmHandler,
+                                                           requireCVCRecollection: Bool = false) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfigurationId = paymentMethodConfigurationId
+            self.confirmationTokenConfirmHandler = confirmationTokenConfirmHandler
+            self.requireCVCRecollection = requireCVCRecollection
+            self.sellerDetails = nil
+            self.confirmHandler = { _, _, callback in
+                // fail immediately, this should never be called
+                stpAssertionFailure("Confirmation token configuration should use confirmationTokenConfirmHandler, not confirmHandler")
+                let error = PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Confirmation Token error. Please file an issue at https://github.com/stripe/stripe-ios.")
+                callback(.failure(error))
+            }
             validate()
         }
 
@@ -67,7 +165,15 @@ public extension PaymentSheet {
 
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.
-        public var confirmHandler: ConfirmHandler
+        public var confirmHandler: ConfirmHandler?
+
+        /// Called when the customer confirms payment using confirmation tokens.
+        /// See the documentation for `ConfirmationTokenConfirmHandler` for more details.
+        /// - Note: Use this instead of `confirmHandler` when you want to use confirmation tokens for a more secure and streamlined payment flow.
+        @_spi(ConfirmationTokensPublicPreview) public var confirmationTokenConfirmHandler: ConfirmationTokenConfirmHandler?
+
+        /// Replacement for confirmHandler in sharedPaymentTokenSession flows. Not publicly available.
+        var preparePaymentMethodHandler: PreparePaymentMethodHandler?
 
         /// The account (if any) for which the funds of the intent are intended.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of
@@ -81,6 +187,9 @@ public extension PaymentSheet {
         ///  - Seealso: https://docs.stripe.com/payments/accept-a-payment-deferred?platform=ios&type=payment#ios-cvc-recollection
         ///  - Note: Server-side confirmation is not supported.
         public var requireCVCRecollection: Bool
+
+        /// Seller details for facilitated payment sessions
+        @_spi(SharedPaymentToken) public var sellerDetails: SellerDetails?
 
         /// Controls when the funds will be captured. 
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
@@ -105,10 +214,23 @@ public extension PaymentSheet {
 
             /// Use this if you intend to only reuse the payment method when your customer is present in your checkout flow.
             case onSession = "on_session"
+
+            /// Use this if you do not intend to reuse this payment method and want to override the top-level `setup_future_usage` value for this payment method.
+            /// - Note: This value is only valid when used to set `PaymentMethodOptions.setupFutureUsageValues`.
+            @_spi(PaymentMethodOptionsSetupFutureUsagePreview) case none = "none"
         }
 
         /// Additional information about the payment or setup
         public enum Mode {
+            /// Payment method options
+            public struct PaymentMethodOptions {
+                var setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]?
+
+                @_spi(PaymentMethodOptionsSetupFutureUsagePreview) public init(setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil) {
+                    self.setupFutureUsageValues = setupFutureUsageValues
+                }
+            }
+
             /// Use this if your integration creates a PaymentIntent
             case payment(
                 /// Amount intended to be collected in the smallest currency unit (e.g. 100 cents to charge $1.00). Shown in Apple Pay, Buy now pay later UIs, the Pay button, and influences available payment methods.
@@ -121,7 +243,11 @@ public extension PaymentSheet {
                 /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-setup_future_usage
                 setupFutureUsage: SetupFutureUsage? = nil,
                 /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
-                captureMethod: CaptureMethod = .automatic
+                captureMethod: CaptureMethod = .automatic,
+                /// Additional payment method options params
+                /// - Seealso: https://docs.stripe.com/api/payment_intents/create#create_payment_intent-payment_method_options
+                paymentMethodOptions: PaymentMethodOptions? = nil
+
             )
             /// Use this if your integration creates a SetupIntent
             case setup(
@@ -163,12 +289,13 @@ public extension PaymentSheet {
             }
             // TODO
             self.requireCVCRecollection = false
+            self.sellerDetails = nil
         }
 
         @discardableResult
         func validate() -> Error? {
             let errorMessage: String
-            if case .payment(let amount, _, _, _) = mode, amount <= 0 {
+            if case .payment(let amount, _, _, _, _) = mode, amount <= 0 {
                 errorMessage = "The amount in `PaymentSheet.IntentConfiguration` must be non-zero! See https://docs.stripe.com/api/payment_intents/create#create_payment_intent-amount"
                 return PaymentSheetError.intentConfigurationValidationFailed(message: errorMessage)
             }

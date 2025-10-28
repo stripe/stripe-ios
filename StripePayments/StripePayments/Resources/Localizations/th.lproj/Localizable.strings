@@ -1,0 +1,63 @@
+"AU Direct Debit" = "การหักบัญชีอัตโนมัติในออสเตรเลีย";
+
+"Affirm" = "Affirm";
+
+"Afterpay" = "Afterpay";
+
+"Alipay" = "Alipay";
+
+"BLIK" = "BLIK";
+
+"Bacs Direct Debit" = "การหักบัญชีอัตโนมัติแบบ Bacs";
+
+"Bancontact" = "Bancontact";
+
+"Boleto" = "Boleto";
+
+"Card" = "บัตร";
+
+"Cash App Pay" = "Cash App Pay";
+
+"Clearpay" = "Clearpay";
+
+"EPS" = "EPS";
+
+"FPX" = "FPX";
+
+"GrabPay" = "GrabPay";
+
+"Klarna" = "Klarna";
+
+"Konbini" = "Konbini";
+
+"Link" = "Link";
+
+"NetBanking" = "ธนาคารออนไลน์";
+
+"OXXO" = "OXXO";
+
+"PayPal" = "PayPal";
+
+"Przelewy24" = "Przelewy24";
+
+"SEPA Debit" = "การหักบัญชีอัตโนมัติแบบ SEPA";
+
+"Sofort" = "Sofort";
+
+"Swish" = "Swish";
+
+"Timed out authenticating your payment method -- try again" = "หมดเวลาตรวจสอบสิทธิ์วิธีการชำระเงินแล้ว โปรดลองอีกครั้ง";
+
+"UPI" = "UPI";
+
+"US bank account" = "บัญชีธนาคารในสหรัฐอเมริกา";
+
+"Unknown" = "ไม่รู้จัก";
+
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "เราตรวจสอบสิทธิ์วิธีการชำระเงินของคุณไม่ได้ โปรดเลือกวิธีการชำระเงินอื่นแล้วลองอีกครั้ง";
+
+"WeChat Pay" = "WeChat Pay";
+
+"giropay" = "giropay";
+
+"iDEAL" = "iDEAL";

@@ -31,7 +31,10 @@ final class FormHeaderView: UIView {
             // Don't show an image on the form header for card and US bank account
             return nil
         default:
-            return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, contrastMatchingColor: appearance.colors.componentText)
+            return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType,
+                                              contrastMatchingColor: appearance.colors.componentText,
+                                              currency: currency,
+                                              iconStyle: appearance.iconStyle)
         }
     }()
 
@@ -64,17 +67,20 @@ final class FormHeaderView: UIView {
     private let paymentMethodType: PaymentSheet.PaymentMethodType
     private let shouldUseNewCardHeader: Bool // true if the customer has a saved payment method that is type card
     private let appearance: PaymentSheet.Appearance
+    private let currency: String?
     private var incentive: PaymentMethodIncentive?
 
     init(
         paymentMethodType: PaymentSheet.PaymentMethodType,
         shouldUseNewCardHeader: Bool,
         appearance: PaymentSheet.Appearance,
+        currency: String?,
         incentive: PaymentMethodIncentive?
     ) {
         self.paymentMethodType = paymentMethodType
         self.shouldUseNewCardHeader = shouldUseNewCardHeader
         self.appearance = appearance
+        self.currency = currency
         self.incentive = incentive
         self.promoBadgeView = Self.makePromoBadge(for: incentive, with: appearance)
         super.init(frame: .zero)

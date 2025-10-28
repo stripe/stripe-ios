@@ -12,6 +12,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
+    func getWalletHeaders() -> [String]
     func didUpdate(_ viewController: AddPaymentMethodViewController)
     func updateErrorLabel(for: Error?)
 }
@@ -54,15 +55,17 @@ class AddPaymentMethodViewController: UIViewController {
     private let configuration: PaymentElementConfiguration
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let linkAppearance: LinkAppearance?
+    private let isLinkUI: Bool
     var previousCustomerInput: IntentConfirmParams?
 
-    private var paymentMethodFormElement: PaymentMethodElement {
+    var paymentMethodFormElement: PaymentMethodElement {
         paymentMethodFormViewController.form
     }
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, delegate: self)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -72,6 +75,7 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
+            currency: intent.currency,
             incentive: elementsSession.incentive,
             delegate: self
         )
@@ -79,7 +83,14 @@ class AddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .bottom)
-        view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        // if the carousel is hidden, then we have a singular card form that needs to apply top padding
+        // otherwise, the superview will handle the top padding
+        let isCarouselHidden = paymentMethodTypes == [.stripe(.card)]
+        view.directionalLayoutMargins = .insets(
+            top: isCarouselHidden ? configuration.appearance.formInsets.top : 0,
+            leading: configuration.appearance.formInsets.leading,
+            trailing: configuration.appearance.formInsets.trailing
+        )
         return view
     }()
 
@@ -96,7 +107,9 @@ class AddPaymentMethodViewController: UIViewController {
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         formCache: PaymentMethodFormCache,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: AddPaymentMethodViewControllerDelegate? = nil
+        isLinkUI: Bool = false,
+        delegate: AddPaymentMethodViewControllerDelegate? = nil,
+        linkAppearance: LinkAppearance? = nil
     ) {
         if paymentMethodTypes.isEmpty {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
@@ -112,6 +125,8 @@ class AddPaymentMethodViewController: UIViewController {
         self.delegate = delegate
         self.formCache = formCache
         self.analyticsHelper = analyticsHelper
+        self.isLinkUI = isLinkUI
+        self.linkAppearance = linkAppearance
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -138,7 +153,24 @@ class AddPaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        logRenderLPMs()
         delegate?.didUpdate(self)
+    }
+
+    private func logRenderLPMs() {
+        // These are the cells that are visible without scrolling in the horizontal carousel
+        let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
+        var visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
+        // If there are no cells in the carousel and one payment method type, it's because the form is expanded
+        if visibleLPMCells.isEmpty, paymentMethodTypes.count == 1, let paymentMethodType = paymentMethodTypes.first {
+            visibleLPMs.append(paymentMethodType.identifier)
+        }
+        // Add wallet LPMs
+        let walletLPMs: [String] = delegate?.getWalletHeaders() ?? []
+        visibleLPMs.append(contentsOf: walletLPMs)
+        // These LPMs are not visible without without scrolling in the horizontal carousel
+        let hiddenLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visibleLPMs.contains($0) }
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
     }
 
     // MARK: - Private
@@ -159,7 +191,9 @@ class AddPaymentMethodViewController: UIViewController {
                 configuration: configuration,
                 headerView: nil,
                 analyticsHelper: analyticsHelper,
-                delegate: self
+                isLinkUI: isLinkUI,
+                delegate: self,
+                linkAppearance: linkAppearance
             )
         }
         updateUI()
@@ -181,7 +215,7 @@ class AddPaymentMethodViewController: UIViewController {
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
-#if !canImport(CompositorServices)
+#if !os(visionOS)
             UISelectionFeedbackGenerator().selectionChanged()
 #endif
         updateFormElement()
@@ -194,7 +228,7 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 extension AddPaymentMethodViewController: PaymentMethodFormViewControllerDelegate {
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         delegate?.didUpdate(self)
-        
+
         if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
             let incentive = instantDebitsFormElement.displayableIncentive
             paymentMethodTypesView.setIncentive(incentive)

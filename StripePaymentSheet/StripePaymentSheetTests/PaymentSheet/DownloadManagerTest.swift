@@ -239,6 +239,41 @@ class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertEqual(self.validURL.absoluteString, firstAnalytic["url"] as? String)
     }
 
+    func testAsyncThrowsAPISuccess() async throws {
+        stub(condition: { request in
+            return request.url?.path.contains("/validImage.png") ?? false
+        }) { _ in
+            return HTTPStubsResponse(data: self.validImageData(), statusCode: 200, headers: nil)
+        }
+
+        do {
+            let image = try await rm.downloadImage(url: validURL)
+            XCTAssertEqual(image.size, self.validImageSize)
+        } catch {
+            throw error
+        }
+    }
+
+    func testAsyncThrowsAPIFailure() async throws {
+        stub(condition: { request in
+            return request.url == self.validURL
+        }) { _ in
+            return HTTPStubsResponse(error: NSError(domain: NSURLErrorDomain, code: NSURLErrorFileDoesNotExist))
+        }
+
+        await XCTAssertThrowsErrorAsync(_ = try await self.rm.downloadImage(url: self.validURL))
+
+        // Wait a beat for the error analytic to get sent.
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        // Perform the same checks as `testBadNetworkResponse()`.
+        let firstAnalytic = try XCTUnwrap(analyticsClient._testLogHistory.first)
+        XCTAssertEqual("stripepaymentsheet.downloadmanager.error", firstAnalytic["event"] as? String)
+        XCTAssertEqual("-1100", firstAnalytic["error_code"] as? String)
+        XCTAssertEqual(NSURLErrorDomain, firstAnalytic["error_type"] as? String)
+        XCTAssertEqual(self.validURL.absoluteString, firstAnalytic["url"] as? String)
+    }
+
     // MARK: - Helper functions
     private func validImageData() -> Data {
         return generateUIImage(size: validImageSize).pngData()!

@@ -112,6 +112,7 @@
 		01F8FDBA6B57108EB1A80833 /* StripePaymentsUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripePaymentsUI.h; sourceTree = "<group>"; };
 		037A7BAE734C79C1C7816C65 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		09478FB2F62490A3E4C30710 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		140589492DC855D000DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		15AF4C8964BDCA3C18A231BA /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1749604BB65B36B31E575B1B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18F4E10018F5B614315EC505 /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -181,7 +182,6 @@
 		99B7197CAA08FDC5562111CD /* STPLabeledMultiFormTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLabeledMultiFormTextFieldView.swift; sourceTree = "<group>"; };
 		9CD57121330F3FBCBAABF1DF /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9DF21390D64C22A10A1AF95F /* STPPaymentCardTextFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentCardTextFieldSnapshotTests.swift; sourceTree = "<group>"; };
-		A0F1784A9E3B6E48528F0EE5 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A3C70161894781F319309A10 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A41D5DF2BA2C038B826B222F /* STPCountryPickerInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCountryPickerInputField.swift; sourceTree = "<group>"; };
 		A76CFF33486AECE0E7FC99EC /* STPInputTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPInputTextField.swift; sourceTree = "<group>"; };
@@ -615,7 +615,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -630,6 +629,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = BE7250EEEC959E5598AFB9FA;
 			packageReferences = (
@@ -783,7 +783,6 @@
 				A3C70161894781F319309A10 /* mt */,
 				5B79A953FFD647CFC46A7C81 /* nb */,
 				C155C768EEED523F37B214ED /* nl */,
-				A0F1784A9E3B6E48528F0EE5 /* nn-NO */,
 				15AF4C8964BDCA3C18A231BA /* pl-PL */,
 				84C8D448EAEA46CBF984F258 /* pt-BR */,
 				500CBFBF3B9888148350E834 /* pt-PT */,
@@ -798,6 +797,7 @@
 				29B0AD21FF2C4E8B326DBF98 /* zh-Hans */,
 				7678EF919ADE594434B5296C /* zh-Hant */,
 				7A914C7345F934E7DFE6F88C /* zh-HK */,
+				140589492DC855D000DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

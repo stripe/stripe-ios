@@ -5,7 +5,7 @@
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 
 import AVFoundation
 import Foundation
@@ -313,6 +313,8 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                     == .valid
                 {
                     addDetectedNumber(possibleNumber)
+                } else if let sanitizedExpiration = STPStringUtils.sanitizedExpirationDateFromOCRString(recognizedText.string) {
+                    handlePossibleExpirationDate(sanitizedExpiration)
                 } else if possibleNumber.count >= 4 && possibleNumber.count <= 6
                     && STPStringUtils.stringMayContainExpirationDate(recognizedText.string)
                 {
@@ -321,20 +323,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                         from: recognizedText.string)
                     let sanitizedExpiration = STPCardValidator.sanitizedNumericString(
                         for: expirationString ?? "")
-                    let month = (sanitizedExpiration as NSString).substring(to: 2)
-                    let year = (sanitizedExpiration as NSString).substring(from: 2)
-
-                    // Ignore expiration dates 10+ years in the future, as they're likely to be incorrect recognitions
-                    let calendar = Calendar(identifier: .gregorian)
-                    let presentYear = calendar.component(.year, from: Date())
-                    let maxYear = (presentYear % 100) + 10
-
-                    if STPCardValidator.validationState(forExpirationYear: year, inMonth: month)
-                        == .valid
-                        && Int(year) ?? 0 < maxYear
-                    {
-                        addDetectedExpiration(sanitizedExpiration)
-                    }
+                    handlePossibleExpirationDate(sanitizedExpiration)
                 }
             }
         }
@@ -367,6 +356,23 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             {
                 addDetectedNumber(potentialAmexString)
             }
+        }
+    }
+
+    private func handlePossibleExpirationDate(_ sanitizedExpiration: String) {
+        let month = (sanitizedExpiration as NSString).substring(to: 2)
+        let year = (sanitizedExpiration as NSString).substring(from: 2)
+
+        // Ignore expiration dates 10+ years in the future, as they're likely to be incorrect recognitions
+        let calendar = Calendar(identifier: .gregorian)
+        let presentYear = calendar.component(.year, from: Date())
+        let maxYear = (presentYear % 100) + 10
+
+        if STPCardValidator.validationState(forExpirationYear: year, inMonth: month)
+            == .valid
+            && Int(year) ?? 0 < maxYear
+        {
+            addDetectedExpiration(sanitizedExpiration)
         }
     }
 
@@ -471,10 +477,11 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             } else {
                 STPAnalyticsClient.sharedClient.logCardScanSucceeded(withDuration: duration ?? 0.0)
             }
-            self.feedbackGenerator = nil
-
-            self.cameraView?.captureSession = nil
             self.delegate?.cardScanner(self, didFinishWith: params, error: error)
+            self.feedbackGenerator = nil
+            DispatchQueue.main.async {
+                self.cameraView?.captureSession = nil
+            }
         })
     }
 

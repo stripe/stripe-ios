@@ -83,7 +83,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 
     init(
         configuration: PaymentSheetFormFactoryConfig,
-        titleElement: StaticElement,
+        subtitleElement: SubtitleElement,
         nameElement: PaymentMethodElementWrapper<TextFieldElement>?,
         emailElement: PaymentMethodElementWrapper<TextFieldElement>?,
         phoneElement: PaymentMethodElementWrapper<PhoneNumberElement>?,
@@ -91,6 +91,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         saveCheckboxElement: PaymentMethodElementWrapper<CheckboxElement>?,
         defaultCheckboxElement: Element?,
         savingAccount: BoolReference,
+        isSettingUp: Bool,
         merchantName: String,
         initialLinkedBank: FinancialConnectionsLinkedBank?,
         appearance: PaymentSheet.Appearance = .default
@@ -125,7 +126,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         self.savingAccount = savingAccount
         self.theme = theme
         let allElements: [Element?] = [
-            titleElement,
+            subtitleElement,
             nameElement,
             emailElement,
             phoneElement,
@@ -143,7 +144,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
             guard let self = self else {
                 return
             }
-            self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value, configuration: configuration, theme: theme)
+            self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value || isSettingUp, configuration: configuration, theme: theme)
             self.delegate?.didUpdate(element: self)
         }
         updateLinkedBankUI(animated: false)
@@ -182,7 +183,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         var mandateText = isSaving ? String(format: Self.SaveAccountMandateText, merchantName) : String.Localized.bank_continue_mandate_text
         if case .customerSheet = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy_CustomerSheet, merchantName) + "\n" + mandateText
-        } else if case .paymentSheet = configuration, !linkedBank.instantlyVerified {
+        } else if case .paymentElement = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
         let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)

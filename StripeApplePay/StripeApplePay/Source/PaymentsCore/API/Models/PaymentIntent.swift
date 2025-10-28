@@ -120,11 +120,22 @@ extension StripeAPI.PaymentIntent {
     /// - Parameter clientSecret: The `client_secret` from the PaymentIntent
     internal static func id(fromClientSecret clientSecret: String) -> String? {
         // see parseClientSecret from stripe-js-v3
-        let components = clientSecret.components(separatedBy: "_secret_")
-        if components.count >= 2 && components[0].hasPrefix("pi_") {
-            return components[0]
-        } else {
-            return nil
+        // Handle both regular secrets (pi_xxx_secret_yyy) and scoped secrets (pi_xxx_scoped_secret_yyy)
+        let secretComponents = clientSecret.components(separatedBy: "_secret_")
+        if secretComponents.count >= 2 && secretComponents[0].hasPrefix("pi_") && !secretComponents[1].isEmpty {
+            // Check if it's a scoped secret
+            if secretComponents[0].hasSuffix("_scoped") {
+                // Remove the "_scoped" suffix to get the actual PaymentIntent ID
+                let idWithScoped = secretComponents[0]
+                let idComponents = idWithScoped.components(separatedBy: "_scoped")
+                if idComponents.count >= 1 {
+                    return idComponents[0]
+                }
+            } else {
+                // Regular secret format
+                return secretComponents[0]
+            }
         }
+        return nil
     }
 }

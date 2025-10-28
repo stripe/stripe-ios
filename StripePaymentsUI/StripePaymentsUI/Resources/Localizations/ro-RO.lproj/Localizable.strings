@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ Card";
+
+"%1$@ Credit" = "%1$@ Credit";
+
+"%1$@ Debit" = "%1$@ Debit";
+
+"%1$@ Prepaid" = "%1$@ Preplătit";
+
 "%1$@ account ending in %2$@" = "Contul la %1$@ care se termină în %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ se termină în %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Cont bancar";
 
 "Billing address" = "Adresă de facturare";
+
+"Billing details" = "Detalii de facturare";
 
 "CVC" = "Cod CVC";
 
@@ -40,27 +50,23 @@
 
 "To scan your card, allow camera access in Settings." = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
 
-"Your ZIP is invalid." = "Codul dvs. poștal nu este valid.";
-
 "Your card has expired." = "Cardul dvs. a expirat.";
 
 "Your card number is incomplete." = "Numărul cardului dvs. nu este complet.";
 
 "Your card number is invalid." = "Numărul cardului dvs. nu este valid.";
 
-"Your card's expiration date is incomplete." = "Data de expirare a cardului dvs. nu este completă.";
+"Your card's expiration date is incomplete." = "Data de expirare a cardului nu este completă.";
 
 "Your card's expiration date is invalid." = "Data de expirare a cardului dvs. nu este validă.";
 
-"Your card's expiration month is invalid." = "Luna de expirare a cardului dvs. nu este validă.";
+"Your card's expiration month is invalid." = "Luna de expirare a cardului nu este validă.";
 
-"Your card's expiration year is invalid." = "Anul de expirare al cardului dvs. nu este valid.";
+"Your card's expiration year is invalid." = "Anul de expirare al cardului nu este valid.";
 
 "Your card's security code is incomplete." = "Codul de securitate al cardului dvs. nu este complet.";
 
 "Your card's security code is invalid." = "Codul de securitate al cardului dvs. nu este valid.";
-
-"Your postal code is invalid." = "Codul dvs. poștal nu este valid.";
 
 "card number" = "număr card";
 

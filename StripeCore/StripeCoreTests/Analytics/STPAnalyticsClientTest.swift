@@ -41,6 +41,23 @@ class STPAnalyticsClientTest: XCTestCase {
         XCTAssertEqual("pk_foo", payload["publishable_key"] as? String)
     }
 
+    func testCommonPayloadIncludesTimestamp() {
+        let analyticsClient = STPAnalyticsClient()
+        let beforeTimestamp = Date().timeIntervalSince1970
+        let payload = analyticsClient.commonPayload(STPAPIClient(publishableKey: "pk_test_foo"))
+        let afterTimestamp = Date().timeIntervalSince1970
+
+        // Verify timestamp is a valid TimeInterval (Double)
+        guard let timestamp = payload["timestamp"] as? TimeInterval else {
+            XCTFail("timestamp should be a TimeInterval")
+            return
+        }
+
+        // Verify timestamp is reasonable (within the test execution window)
+        XCTAssertGreaterThanOrEqual(timestamp, beforeTimestamp)
+        XCTAssertLessThanOrEqual(timestamp, afterTimestamp)
+    }
+
     func testLogShouldRespectAPIClient() {
         STPAPIClient.shared.publishableKey = "pk_shared"
         let apiClient = STPAPIClient(publishableKey: "pk_not_shared")

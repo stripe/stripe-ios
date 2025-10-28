@@ -26,9 +26,24 @@ final class LinkInlineSignupView: UIView {
         return viewModel.configuration.appearance.asElementsTheme
     }
 
+    private var isUsingLiquidGlass: Bool {
+        theme.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp
+    }
+
+    private var combinedEmailNameSectionTheme: ElementsAppearance {
+        var themeCopy = theme
+        themeCopy.borderWidth = viewModel.combinedEmailNameSectionBorderWidth
+        if isUsingLiquidGlass && viewModel.mode == .checkbox {
+            // Use a smaller corner radius than the container
+            themeCopy.cornerRadius = LinkUI.nestedInlineSignupSectionCornerRadius
+        }
+        return themeCopy
+    }
+
     let borderColor: UIColor
 
     private(set) lazy var checkboxElement = CheckboxElement(
+        mode: viewModel.mode,
         merchantName: viewModel.configuration.merchantDisplayName,
         appearance: viewModel.configuration.appearance,
         borderColor: borderColor
@@ -37,7 +52,7 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var emailElement: LinkEmailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
                                        isOptional: viewModel.isEmailOptional,
-                                       showLogo: viewModel.mode != .textFieldsOnlyPhoneFirst,
+                                       showLogo: viewModel.showLogoInEmailField,
                                        theme: theme)
         element.indicatorTintColor = theme.colors.primary
         return element
@@ -52,12 +67,12 @@ final class LinkInlineSignupView: UIView {
         // Don't allow a default phone number in textFieldsOnly mode.
         // Otherwise, we'd imply consumer consent when it hasn't occurred.
         switch viewModel.mode {
-        case .checkbox:
+        case .checkbox, .checkboxWithDefaultOptIn, .signupOptIn:
             return PhoneNumberElement(
                 defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
                 defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone,
                 theme: theme
-        )
+            )
         case .textFieldsOnlyEmailFirst:
             return PhoneNumberElement(isOptional: viewModel.isPhoneNumberOptional, theme: theme)
         case .textFieldsOnlyPhoneFirst:
@@ -79,10 +94,14 @@ final class LinkInlineSignupView: UIView {
         return phoneNumberElement
     }()
 
-    private(set) lazy var legalTermsElement: StaticElement = {
+    private(set) lazy var legalTermsElement: StaticElement? = {
+        guard viewModel.mode != .signupOptIn else {
+            return nil
+        }
         let legalView = LinkLegalTermsView(textAlignment: .left,
                                            mode: viewModel.mode,
                                            delegate: self)
+
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
         legalView.tintColor = theme.colors.primary
@@ -92,24 +111,71 @@ final class LinkInlineSignupView: UIView {
         )
     }()
 
+    private lazy var combinedEmailNameSectionElements: [Element] = {
+        switch viewModel.mode {
+        case .checkbox, .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst:
+            return [emailSection, phoneNumberSection, nameElement]
+        case .textFieldsOnlyPhoneFirst:
+            return [phoneNumberSection, emailSection, nameElement]
+        case .signupOptIn:
+            return []
+        }
+    }()
+
     private lazy var combinedEmailNameSection: Element = {
-        return SectionElement(elements: [emailSection, phoneNumberSection, nameElement], theme: theme)
+        return SectionElement(
+            elements: combinedEmailNameSectionElements,
+            theme: combinedEmailNameSectionTheme
+        )
+    }()
+
+    private lazy var defaultOptInElement: Element? = {
+        guard let email = viewModel.emailAddress, let number = viewModel.configuration.defaultBillingDetails.phone else {
+            return nil
+        }
+
+        let phoneNumber = PhoneNumber.fromE164(number) ?? PhoneNumber(number: number, countryCode: viewModel.configuration.defaultBillingDetails.address.country)
+
+        guard let phoneNumber else {
+            return nil
+        }
+
+        let defaultOptInView = LinkDefaultOptInView(
+            email: email,
+            phoneNumber: phoneNumber,
+            theme: theme
+        )
+        defaultOptInView.delegate = self
+
+        let defaultOptInElement = StaticElement(view: defaultOptInView)
+        return SectionElement(elements: [defaultOptInElement], theme: theme)
     }()
 
     private lazy var formElement: FormElement = {
         var elements: [Element] = []
-        if viewModel.mode == .textFieldsOnlyPhoneFirst {
-            elements.insert(contentsOf: [phoneNumberSection, emailSection, nameSection], at: 0)
-        } else if viewModel.mode == .textFieldsOnlyEmailFirst {
-            elements.insert(contentsOf: [emailSection, phoneNumberSection, nameSection], at: 0)
-        } else if viewModel.mode == .checkbox {
-            elements.insert(contentsOf: [checkboxElement], at: 0)
-            elements.insert(contentsOf: [combinedEmailNameSection], at: 1)
+
+        switch viewModel.mode {
+        case .checkbox:
+            elements.append(contentsOf: [checkboxElement, combinedEmailNameSection])
+        case .checkboxWithDefaultOptIn:
+            elements.append(contentsOf: [checkboxElement, defaultOptInElement, combinedEmailNameSection].compactMap { $0 })
+        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+            elements.append(combinedEmailNameSection)
+        case .signupOptIn:
+            elements.append(checkboxElement)
         }
 
-        let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
-        let formElement = FormElement(elements: elements, style: style, theme: theme)
-        let containerFormElement = FormElement(elements: [formElement, legalTermsElement], theme: theme, customSpacing: [(formElement, ElementsUI.formSpacing - 4.0)])
+        let formElement = FormElement(
+            elements: elements,
+            style: .plain,
+            theme: theme
+        )
+        let visibleElements: [Element?] = [formElement, legalTermsElement]
+        let containerFormElement = FormElement(
+            elements: visibleElements.compactMap { $0 },
+            theme: theme,
+            customSpacing: [(formElement, ElementsUI.formSpacing - 4.0)]
+        )
         return containerFormElement
     }()
 
@@ -177,13 +243,24 @@ final class LinkInlineSignupView: UIView {
         if viewModel.mode == .checkbox {
             formElement.toggleChild(combinedEmailNameSection, show: viewModel.shouldShowEmailField, animated: animated)
         }
+        if viewModel.mode == .checkboxWithDefaultOptIn {
+            if let defaultOptInElement {
+                formElement.toggleChild(defaultOptInElement, show: viewModel.shouldShowDefaultOptInView, animated: animated)
+            }
+            formElement.toggleChild(combinedEmailNameSection, show: viewModel.shouldShowEmailField, animated: animated)
+        }
+        if viewModel.mode == .textFieldsOnlyEmailFirst || viewModel.mode == .textFieldsOnlyPhoneFirst {
+            formElement.toggleChild(combinedEmailNameSection, show: true, animated: animated)
+        }
         formElement.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
         formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
         formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
-        formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        if let legalTermsElement {
+            formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        }
 
         switch viewModel.mode {
-        case .checkbox:
+        case .checkbox, .checkboxWithDefaultOptIn, .signupOptIn:
             // 2-way binding
             checkboxElement.isChecked = viewModel.saveCheckboxChecked
         case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
@@ -193,17 +270,24 @@ final class LinkInlineSignupView: UIView {
     }
 
     private func updateAppearance() {
-        backgroundColor = viewModel.configuration.appearance.colors.background
-        layer.cornerRadius = viewModel.configuration.appearance.cornerRadius
+        backgroundColor = viewModel.containerBackground
+
+        if let containerCornerRadius = viewModel.containerCornerRadius {
+            layer.cornerRadius = containerCornerRadius
+        } else {
+            ios26_applyDefaultCornerConfiguration()
+        }
+
         // If the borders are hidden give Link a default 1.0 border that contrasts with the background color
-        if viewModel.configuration.appearance.borderWidth == 0.0 ||
-            viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0 {
+        let hasInvisibleBorder = viewModel.configuration.appearance.borderWidth == 0.0 ||
+            viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0
+        if viewModel.bordered && hasInvisibleBorder {
             layer.borderWidth = 1.0
             layer.borderColor = borderColor.cgColor
         }
     }
 
-    #if !canImport(CompositorServices)
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateAppearance()
@@ -226,7 +310,7 @@ extension LinkInlineSignupView: ElementDelegate {
     func didUpdate(element: Element) {
         if element === checkboxElement {
             viewModel.saveCheckboxChecked = checkboxElement.isChecked
-            if checkboxElement.isChecked {
+            if checkboxElement.isChecked && viewModel.mode != .signupOptIn {
                 focusOnEmptyRequiredField()
             } else {
                 endEditing(true)
@@ -265,12 +349,20 @@ extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {
 
 }
 
+extension LinkInlineSignupView: LinkDefaultOptInViewDelegate {
+
+    func linkDefaultOptInViewDidSelectChange(_ view: LinkDefaultOptInView) {
+        viewModel.didAskToChangeSignupData = true
+        updateUI(animated: true)
+    }
+}
+
 extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
     func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
         let safariVC = SFSafariViewController(url: url)
 
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         safariVC.dismissButtonStyle = .close
         safariVC.preferredControlTintColor = window?.tintColor ?? viewModel.configuration.appearance.colors.primary
         #endif
@@ -292,11 +384,29 @@ extension LinkInlineSignupView: EventHandler {
             switch event {
             case .shouldDisableUserInteraction:
                 self.checkboxElement.setUserInteraction(isUserInteractionEnabled: false)
+                self.defaultOptInElement?.setUserInteraction(isUserInteractionEnabled: false)
             case .shouldEnableUserInteraction:
                 self.checkboxElement.setUserInteraction(isUserInteractionEnabled: true)
+                self.defaultOptInElement?.setUserInteraction(isUserInteractionEnabled: true)
             default:
                 break
             }
+        }
+
+        if case .viewDidAppear = event {
+            viewModel.logInlineSignupShown()
+        }
+
+    }
+}
+
+private extension Element {
+    func setUserInteraction(isUserInteractionEnabled: Bool) {
+        view.isUserInteractionEnabled = false
+        if isUserInteractionEnabled {
+            view.alpha = 1.0
+        } else {
+            view.alpha = 0.6
         }
     }
 }

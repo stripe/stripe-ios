@@ -68,7 +68,7 @@ extension XCUIApplication {
 
     var fc_nativeConsentAgreeButton: XCUIElement {
         let consentAgreeButton = buttons["consent_agree_button"]
-        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0), "Failed to open Consent pane - \(#function) waiting failed")  // glitch app can take time to lload
+        XCTAssertTrue(consentAgreeButton.waitForExistence(timeout: 120.0), "Failed to open Consent pane - \(#function) waiting failed")  // backend app can take time to load
         return consentAgreeButton
     }
 

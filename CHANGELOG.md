@@ -1,3 +1,219 @@
+## 24.25.0 2025-10-27
+### PaymentSheet
+* [Fixed] Blocked emoji input in text fields.
+
+### CustomerSheet
+* [Added] Added support for `onBehalfOf` to CustomerSheet.IntentConfiguration. This parameter makes CustomerSheet use a connected account to determine the payment method that users see and whether CardBrandChoice is enabled. For more information, see the [SetupIntent docs](https://docs.stripe.com/api/setup_intents/object#setup_intent_object-on_behalf_of).
+
+## 24.24.4 2025-10-20
+### PaymentSheet
+* [Fixed] Fixed a bug with `FlowController` and `EmbeddedPaymentElement` in dark mode where `paymentOption.image` could be a blank icon for Alma, Billie, Multibanco, Paynow, Promptpay, Satispay, and Sunbit
+
+## 24.24.3 2025-10-13
+### PaymentSheet
+* [Fixed] Fixed a bug where the keyboard done button was not tappable on devices < iOS 26 when compiled with Xcode 26.
+* [Fixed] Fixed minor styling issues with Link UI on < iOS 26 when compiled with Xcode 26.
+
+## 24.24.2 2025-10-06
+
+### PaymentSheet
+* [Improved] Improved CVC recollection UI in Link
+
+### General
+* [Improved] Added automatic retry on network errors when fetching payment intents for improved resilience
+
+## 24.24.1 2025-09-29
+
+### Connect
+* [Fixed] Renamed `PrivateBetaConnect` to `PreviewConnect`.
+
+### PaymentSheet
+* [Fixed] Fixed a navigation bar shadow bug when `appearance.navigationBarStyle` is `glass` (iOS 26.1 fixed the underlying API). 
+
+## 24.24.0 2025-09-22
+
+### Connect
+* [Added] Payments and Payouts embedded components are available to use in public preview.
+
+### PaymentSheet
+* [Added] Added `Appearance.applyLiquidGlass()`, a convenience method that changes the values of various properties on the `Appearance` object used by PaymentSheet, PaymentSheet.FlowController, EmbeddedPaymentElement, CustomerSheet, and AddressViewController to match Liquid Glass when building with Xcode 26 or later and running on iOS 26. This includes `appearance.cornerRadius`, `appearance.borderWidth`, `appearance.navigationBarStyle`, `colors.background`, `navigationBarStyle`, and others. This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
+
+| <img src="https://github.com/user-attachments/assets/0d9d333e-41e0-43d0-816b-675916d19d0b" /> | <img src="https://github.com/user-attachments/assets/d043fe5d-65de-4901-be08-21945a2657c1" /> |
+| ------ | ------ |
+
+* [Added] Appearance.navigationBarStyle. Setting to `.glass` will change the sheet navigation bar to a glassy appearance when building with Xcode 26 or later and running on iOS 26. Calling `Appearance.applyLiquidGlass()` will set this value to `.glass`.
+* [Changed] `appearance.cornerRadius` is now nullable. Below iOS 26, When `nil`, the corner radius is 6.0 (ie unchanged from the current default). On iOS 26+, multiple rounder corner configurations are used to match Liquid Glass design.
+* [Fixed] Improved the cancellation UX when paying with Amazon Pay, Revolut Pay, P24, Twint, Swish, and 3DS2 card.
+
+## 24.23.3 2025-09-17
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
+## 24.23.2 2025-09-16
+
+### PaymentSheet
+* [Fixed] Fixed an issue with the Liquid Glass keyboard toolbar where tapping on the sheet immediately above the keyboard didn't have an effect.
+
+## 24.23.1 2025-09-08
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
+## 24.23.0 2025-09-02
+
+### CustomerSheet
+* [Added] `opensCardScannerAutomatically` configuration
+
+### PaymentSheet
+* [Added] `opensCardScannerAutomatically` configuration
+* [Fixed] Setting `appearance.borderWidth = 0` previously caused the thickness of divider lines between input fields to also be 0, causing them to disappear. They now have a minimum thickness of 0.5.
+
+### EmbeddedPaymentElement
+* [Added] `opensCardScannerAutomatically` configuration
+
+## 24.22.0 2025-08-27
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
+## 24.21.2 2025-08-27
+
+### PaymentSheet
+* [Changed] Updated translations for Link signup opt-in copy
+
+## 24.21.1 2025-08-26
+
+### PaymentSheet
+* [Changed] Updated copy for Link signup opt-in UI
+
+## 24.21.0 2025-08-25
+
+### CustomerSheet
+* [Fixed] Fixed Dynamic Actor Isolation crash in SwiftUI when using completion handlers with Swift 6 or Dynamic Actor Isolation feature flag enabled. Thanks @BrentMifsud! ([#5269](https://github.com/stripe/stripe-ios/issues/5269))
+
+### PaymentSheet
+* [Added] Added new `presentPaymentOptions` APIs for UIKit and SwiftUI with a `didCancel` bool in the completion handler, making it possible to differentiate between a user closing FlowController and selecting a payment option. ([#5202](https://github.com/stripe/stripe-ios/pull/5202))
+* [Added] Added a new `allowedCountries` API to PaymentSheetConfiguration, enabling users to only allow billing addresses in certain countries.
+* [Fixed] Fixed Dynamic Actor Isolation crash in SwiftUI when using completion handlers with Swift 6 or Dynamic Actor Isolation feature flag enabled. Thanks @BrentMifsud! ([#5269](https://github.com/stripe/stripe-ios/issues/5269))
+* [Changed] The form will now highlight incomplete fields when the user taps a disabled "Confirm" button.
+* [Added] `STPError.localizedUserMessage(forErrorCode:)` will translates common Stripe API error codes to localized strings.
+
+## 24.20.0 2025-08-11
+
+### StripeApplePay
+* [Fixed] Issue when deserializing intent when line1 is null
+
+### PaymentSheet
+* [Fixed] Fixed an issue that caused EmbeddedPaymentElement to log broken layout constraints.
+* [Fixed] The Apple Pay logo in `PaymentOptionDisplayData` no longer contains additional padding, bringing it in line with other payment method logos.
+* [Changed] When phone number or email address collection is enabled, these fields will now appear in the billing details section instead of appearing above the card field.
+* [Added] Added `termsDisplay` in PaymentSheet.Configuration to control when legal agreements are displayed
+
+### EmbeddedPaymentElement
+* [Changed] When using `EmbeddedPaymentElement.Configuration.FormSheetAction.confirm`, the completion block is now called with a `canceled` result if the user closes the form sheet without completing the transaction.
+* [Added] You no longer need to set the backend PaymentIntent setup_future_usage or payment_method_options setup_future_usage values to match the client's IntentConfiguration; the client will automatically configure this for you.
+
+## 24.19.0 2025-08-04
+
+### PaymentSheet
+* [Fixed] Updated default spacing of form elements in PaymentSheet.
+* [Added] EmbeddedPaymentElement now shows mandates in a form sheet when `rowSelectionBehavior` is `immediateAction` and `embeddedViewDisplaysMandateText` is `true`. Previously, this configuration was an error.
+
+## 24.18.1 2025-07-29
+* [Fixed] Improved Klarna payments when using Universal Links.
+
+## 24.18.0 2025-07-28
+
+* [Added] Postal code validation for Canada and UK addresses
+
+### PaymentSheet
+* [Added] Added `Appearance.EmbeddedPaymentElement.Row.subtitleFont` to customize the font of EmbeddedPaymentElement payment method row subtitles.
+
+## 24.17.0 2025-07-21
+
+### PaymentSheet
+* [Fixed] EmbeddedPaymentElement now errors when `configuration.rowSelectionBehavior` is `.immediateAction` and `configuration.embeddedViewDisplaysMandateText` is `true` to ensure integrations display legal mandate text to the customer.
+* [Deprecated] Carthage is no longer officially supported. We will continue to publish binaries to the GitHub releases page for Carthage, but we will no longer test using the Carthage CLI tool.
+* [Added] Added `Appearance.EmbeddedPaymentElement.Row.paymentMethodIconLayoutMargins` to customize the spacing around payment method icons in EmbeddedPaymentElement payment method rows.
+* [Added] Added `Appearance.EmbeddedPaymentElement.Row.titleFont` to customize the font of EmbeddedPaymentElement payment method row titles.
+* [Changed] Renamed `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithChevron` to `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithDisclosure` and added an experimental `disclosureImage` property to customize the chevron icon displayed in EmbeddedPaymentElement payment method rows when the row style is flatWithDisclosure.
+* [Fixed] `EmbeddedPaymentElementDelegate` `didUpdateHeight` now accommodates cases where the embedded view can't change height until after `didUpdateHeight` is called, like inside a UITableViewCell.
+* [Fixed] Apple Pay now properly collects phone number and email address when marked as required in `PaymentSheet.Configuration.billingDetailsCollectionConfiguration`.
+
+### AddressElement
+* [Added] SwiftUI support for AddressElement.
+* [Changed] `AddressViewController` now notifies its delegate when the sheet is dismissed, whether by tapping the **Close** button or swiping down, so `AddressElement` always returns the current address.
+
+### General
+* [Removed] Removed nn-NO (Norwegian Nynorsk) localization. Norwegian users can continue using nb (Norwegian Bokmål) localization.
+
+## 24.16.2 2025-07-07
+
+### PaymentSheet
+* [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
+* [Fixed] Form error text not respecting Appearance API font settings
+
+## 24.16.1 2025-06-23
+
+### PaymentSheet
+* [Fixed] A race condition when updating the `paymentOption` on `PaymentSheet.FlowController`.
+
+## 24.16.0 2025-06-16
+
+### PaymentSheet
+* [Fixed] A bug where the EmbeddedPaymentElement failed to display forms when tapped in SwiftUI.
+* [Changed] `paymentOption` on `PaymentSheet.FlowController` is now annotated with `@Published` for better ergonomics in SwiftUI.
+* [Added] A new `flatWithChevron` Embedded Payment Element row style.
+
+## 24.15.0 2025-06-02
+
+### Connect
+* [CHANGED] Removed `PrivateBetaConnect` annotation and all usages. [Connect SDK](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios) is now GA.
+
+### PaymentSheet
+* [Added] The ability to customize the height of the primary button with `PaymentSheetAppearance.primaryButton.height`.
+* [Added] The ability to customize form insets with `PaymentSheetAppearance.formInsets`.
+
+## 24.14.0 2025-05-19
+### PaymentSheet
+* [Added] Support for payment method options setup future usage in public preview.
+
+## 24.13.1 2025-05-05
+### PaymentSheet
+* [Fixed] Updated the "TEST MODE" badge to say "TEST", due to the upcoming release of [Sandboxes](https://docs.stripe.com/sandboxes).
+* [Added] Added support for Thai language.
+
+## 24.13.0 2025-05-05
+### PaymentSheet
+* [Added] Embedded Payment Element is now generally available. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/embedded).
+
+## 24.12.1 2025-04-30
+### Identity
+* [Fixed] Fixed an issue where identity verification may fail due to stale model cache.
+
+## 24.12.0 2025-04-21
+### PaymentSheet
+* [Added] Bank payments are now available in the PaymentSheet without requiring a dependency on `StripeFinancialConnections`.
+* [Added] Ability to update saved cards when using CustomerSessions (private preview)
+* [Added] Added payment method options setup future usage to deferred API.
+
+## 24.11.1 2025-04-14
+### PaymentSheet
+* [Added] Added support for PayNow and PromptPay to Embedded Payment Element (private preview).
+* [Fixed] Fixed theming issues in the native Link experience (private preview).
+
+## 24.11.0 2025-04-07
+### PaymentSheet
+* [Added] Added `rowSelectionBehavior` API to Embedded Payment Element (private preview).
+* [Changed] The native Link experience (private preview) is now available as a payment method even if you collect billing details via `billingDetailsCollectionConfiguration`.
+* [Changed] Updated Afterpay branding in the US to be Cash App Afterpay.
+
+## 24.10.0 2025-03-31
+### PaymentSheet
+* [Added] Added `LinkConfiguration` to allow control over Link in PaymentSheet.
+* [Fixed] Improved reliability of expiration date detection when scanning cards.
+
 ## 24.9.0 2025-03-24
 ### Connect (Private Preview)
 * [Fixed] Fixed an issue where Account Onboarding exit events were not being properly emitted.
@@ -27,6 +243,9 @@
 
 ### Financial Connections
 * [Added] The `StripeFinancialConnections` SDK now supports dark mode, and will automatically adapt to the device's theme. [Learn more](https://docs.stripe.com/financial-connections/other-data-powered-products?platform=ios#connections-customize-ios) about configuring appearance settings.
+
+### CustomerSheet
+* [Added] `sepa_debit` PaymentMethod is now available in CustomerSheet
 
 ## 24.5.0 2025-02-10
 ### CardScan
@@ -1018,7 +1237,7 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 * Adds support for CVC recollection in PaymentIntent confirm [#1473](https://github.com/stripe/stripe-ios/pull/1473)
 * Fixes a race condition when setting `defaultPaymentMethod` on `STPPaymentOptionsViewController` [#1476](https://github.com/stripe/stripe-ios/pull/1476)
 
-## 18.3.0 2019-12-3
+## 18.3.0 2019-12-03
 * STPAddCardViewControllerDelegate methods previously removed in v16.0.0 are now marked as deprecated, to help migrating users [#1439](https://github.com/stripe/stripe-ios/pull/1439)
 * Fixes an issue where canceling 3DS authentication could leave PaymentIntents in an inaccurate `requires_action` state [#1443](https://github.com/stripe/stripe-ios/pull/1443)
 * Fixes text color for large titles [#1446](https://github.com/stripe/stripe-ios/pull/1446)
@@ -1133,7 +1352,7 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 * Updates sample apps to use `PaymentIntents` and `PaymentMethods` where available. [#1159](https://github.com/stripe/stripe-ios/pull/1159)
 * Changes `STPPaymentMethodCardParams` `expMonth` and `expYear` property types to `NSNumber *` to fix a bug using Apple Pay. [#1161](https://github.com/stripe/stripe-ios/pull/1161)
 
-## 15.0.0 2019-3-19
+## 15.0.0 2019-03-19
 * Renames all former references to 'PaymentMethod' to 'PaymentOption'. See [MIGRATING.md](/MIGRATING.md) for more details. [#1139](https://github.com/stripe/stripe-ios/pull/1139)
   * Renames `STPPaymentMethod` to `STPPaymentOption`
   * Renames `STPPaymentMethodType` to `STPPaymentOptionType`
@@ -1488,10 +1707,10 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 ## 2.0.1 2014-09-18
 * Fix some small bugs related to ApplePay and iOS8
 
-## 2.0 2014-09-09
+## 2.0.0 2014-09-09
 * Add support for native payments via Pay
 
-## 1.2 2014-08-21
+## 1.2.0 2014-08-21
 * Removed PaymentKit as a dependency. If you'd like to use it, you may still do so by including it separately.
 * Removed STPView. PaymentKit provides a near-identical version of this functionality if you need to migrate.
 * Improve example project

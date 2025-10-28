@@ -12,7 +12,13 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol LinkPaymentMethodPickerDelegate: AnyObject {
-    func paymentMethodPickerDidChange(_ picker: LinkPaymentMethodPicker)
+
+    func paymentMethodPicker(_ picker: LinkPaymentMethodPicker, didSelectIndex index: Int)
+
+    func paymentMethodPicker(
+        _ picker: LinkPaymentMethodPicker,
+        menuActionsForItemAt index: Int
+    ) -> [PayWithLinkViewController.WalletViewController.Action]
 
     func paymentMethodPicker(
         _ picker: LinkPaymentMethodPicker,
@@ -20,10 +26,19 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
         sourceRect: CGRect
     )
 
-    func paymentDetailsPickerDidTapOnAddPayment(_ picker: LinkPaymentMethodPicker)
+    func paymentDetailsPickerDidTapOnAddPayment(
+        _ picker: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    )
+
+    func didTapOnAccountMenuItem(
+        _ picker: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    )
 }
 
 protocol LinkPaymentMethodPickerDataSource: AnyObject {
+    var accountEmail: String { get }
 
     /// Returns the total number of payment methods.
     /// - Returns: Payment method count
@@ -36,26 +51,31 @@ protocol LinkPaymentMethodPickerDataSource: AnyObject {
         paymentMethodAt index: Int
     ) -> ConsumerPaymentDetails
 
+    func isPaymentMethodSupported(_ paymentMethod: ConsumerPaymentDetails?) -> Bool
+
+    var selectedIndex: Int { get }
 }
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkPaymentMethodPicker)
 final class LinkPaymentMethodPicker: UIView {
     weak var delegate: LinkPaymentMethodPickerDelegate?
-    weak var dataSource: LinkPaymentMethodPickerDataSource?
-
-    var selectedIndex: Int = 0 {
+    weak var dataSource: LinkPaymentMethodPickerDataSource? {
         didSet {
-            updateHeaderView()
+            emailView.accountEmail = dataSource?.accountEmail
         }
     }
 
-    var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases) {
-        didSet {
-            // TODO(tillh-stripe) Update this as soon as adding bank accounts is supported
-            addPaymentMethodButton.isHidden = !supportedPaymentMethodTypes.contains(.card)
-        }
+    var selectedIndex: Int {
+        dataSource?.selectedIndex ?? 0
     }
+
+    var collapsable: Bool {
+        guard let dataSource else { return false }
+        return selectedPaymentMethod.map { dataSource.isPaymentMethodSupported($0) } ?? false
+    }
+
+    var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases)
 
     var selectedPaymentMethod: ConsumerPaymentDetails? {
         let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0
@@ -67,10 +87,48 @@ final class LinkPaymentMethodPicker: UIView {
         return dataSource?.paymentPicker(self, paymentMethodAt: selectedIndex)
     }
 
+    var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration? {
+        didSet {
+            reloadData()
+        }
+    }
+
+    var billingDetails: PaymentSheet.BillingDetails? {
+        didSet {
+            reloadData()
+        }
+    }
+
+    var linkAppearance: LinkAppearance? {
+        didSet {
+            updateTintColors()
+        }
+    }
+
+    /// Calculates the maximum width required for the header labels.
+    static let widthForHeaderLabels: CGFloat = {
+        let font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        func sizeOf(string: String) -> CGSize {
+            (string as NSString).size(withAttributes: [.font: font])
+        }
+
+        // LinkPaymentMethodPicker.EmailView.emailLabel
+        let emailLabel = String.Localized.email
+        let emailLabelSize = sizeOf(string: emailLabel)
+
+        // LinkPaymentMethodPicker.Header.payWithLabel
+        let paymentLabel = Header.Strings.payment
+        let paymentLabelSize = sizeOf(string: paymentLabel)
+
+        return max(emailLabelSize.width, paymentLabelSize.width)
+    }()
+
     private var needsDataReload: Bool = true
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
+            emailView,
+            separatorView,
             headerView,
             listView,
         ])
@@ -81,6 +139,8 @@ final class LinkPaymentMethodPicker: UIView {
         return stackView
     }()
 
+    private let emailView: EmailView
+    private let separatorView = LinkSeparatorView()
     private let headerView = Header()
 
     private lazy var listView: UIStackView = {
@@ -89,7 +149,6 @@ final class LinkPaymentMethodPicker: UIView {
         ])
 
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
         stackView.clipsToBounds = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -102,7 +161,8 @@ final class LinkPaymentMethodPicker: UIView {
 
     private let addPaymentMethodButton = AddButton()
 
-    override init(frame: CGRect) {
+    init(linkConfiguration: LinkConfiguration? = nil) {
+        self.emailView = EmailView(linkConfiguration: linkConfiguration)
         super.init(frame: .zero)
         addAndPinSubview(stackView)
         setup()
@@ -116,13 +176,15 @@ final class LinkPaymentMethodPicker: UIView {
         clipsToBounds = true
         accessibilityIdentifier = "Stripe.Link.PaymentMethodPicker"
 
-        layer.cornerRadius = 16
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.linkControlBorder.cgColor
-        tintColor = .linkBrand
-        backgroundColor = .linkControlBackground
+        if let cornerRadius = LinkUI.appearance.cornerRadius {
+            layer.cornerRadius = cornerRadius
+        } else {
+            ios26_applyDefaultCornerConfiguration()
+        }
 
-        addPaymentMethodButton.tintColor = .linkBrand500
+        layer.borderColor = UIColor.linkBorderDefault.cgColor
+        updateTintColors()
+        backgroundColor = .linkSurfaceSecondary
 
         headerView.addTarget(self, action: #selector(onHeaderTapped(_:)), for: .touchUpInside)
         headerView.layer.zPosition = 1
@@ -131,6 +193,7 @@ final class LinkPaymentMethodPicker: UIView {
         listView.layer.zPosition = 0
 
         addPaymentMethodButton.addTarget(self, action: #selector(onAddPaymentButtonTapped(_:)), for: .touchUpInside)
+        emailView.menuButton.addTarget(self, action: #selector(didTapOnAccountMenuItem), for: .touchUpInside)
     }
 
     override func layoutSubviews() {
@@ -141,12 +204,12 @@ final class LinkPaymentMethodPicker: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = UIColor.linkControlBorder.cgColor
+        layer.borderColor = UIColor.linkBorderDefault.cgColor
     }
 #endif
 
     func setExpanded(_ expanded: Bool, animated: Bool) {
-        headerView.isExpanded = expanded
+        headerView.isExpanded = collapsable ? expanded : true
 
         // Prevent double header animation
         if headerView.isExpanded {
@@ -157,22 +220,25 @@ final class LinkPaymentMethodPicker: UIView {
             headerView.layoutIfNeeded()
         }
 
+        guard let listViewIndex = stackView.arrangedSubviews.firstIndex(of: listView) else { return }
         if headerView.isExpanded {
-            stackView.showArrangedSubview(at: 1, animated: animated)
+            stackView.showArrangedSubview(at: listViewIndex, animated: animated)
         } else {
-            stackView.hideArrangedSubview(at: 1, animated: animated)
+            stackView.hideArrangedSubview(at: listViewIndex, animated: animated)
         }
     }
 
-    private func updateHeaderView() {
-        headerView.selectedPaymentMethod = selectedPaymentMethod
+    private func updateTintColors() {
+        let linkAppearancePrimaryColor = linkAppearance?.colors?.primary
+        tintColor = linkAppearancePrimaryColor ?? .linkIconBrand
+        addPaymentMethodButton.tintColor = linkAppearancePrimaryColor ?? .linkTextBrand
     }
-
 }
 
 private extension LinkPaymentMethodPicker {
 
     @objc func onHeaderTapped(_ sender: Header) {
+        guard collapsable || !sender.isExpanded else { return }
         setExpanded(!sender.isExpanded, animated: true)
 #if !os(visionOS)
         impactFeedbackGenerator.impactOccurred()
@@ -180,7 +246,13 @@ private extension LinkPaymentMethodPicker {
     }
 
     @objc func onAddPaymentButtonTapped(_ sender: AddButton) {
-        delegate?.paymentDetailsPickerDidTapOnAddPayment(self)
+        let sourceRect = sender.convert(sender.bounds, to: self)
+        delegate?.paymentDetailsPickerDidTapOnAddPayment(self, sourceRect: sourceRect)
+    }
+
+    @objc func didTapOnAccountMenuItem(_ sender: UIButton) {
+        let sourceRect = sender.convert(sender.bounds, to: self)
+        delegate?.didTapOnAccountMenuItem(self, sourceRect: sourceRect)
     }
 
 }
@@ -220,7 +292,7 @@ extension LinkPaymentMethodPicker {
 
         cell.paymentMethod = paymentMethod
         cell.isSelected = selectedIndex == index
-        cell.isSupported = supportedPaymentMethodTypes.contains(paymentMethod.type)
+        cell.isSupported = dataSource.isPaymentMethodSupported(paymentMethod)
     }
 
     func showLoader(at index: Int) {
@@ -241,8 +313,8 @@ extension LinkPaymentMethodPicker {
         cell.isLoading = false
     }
 
-    func setAddPaymentMethodButtonEnabled(_ enabled: Bool) {
-        addPaymentMethodButton.isEnabled = enabled
+    func setAddButtonIsLoading(_ isLoading: Bool) {
+        addPaymentMethodButton.isLoading = isLoading
     }
 
     private func reloadDataIfNeeded() {
@@ -266,9 +338,124 @@ extension LinkPaymentMethodPicker {
             subview.layer.zPosition = CGFloat(-index)
         }
 
-        headerView.selectedPaymentMethod = selectedPaymentMethod
+        headerView.setSelectedPaymentMethod(selectedPaymentMethod: selectedPaymentMethod, supported: dataSource?.isPaymentMethodSupported(selectedPaymentMethod) ?? false)
     }
 
+}
+
+extension ConsumerPaymentDetails {
+
+    /// Returns whether the `ConsumerPaymentDetails` contains all the billing details fields requested by the provided `billingDetailsConfig`.
+    /// We use the `consumerSession` to populate any missing fields from the Link account.
+    func supports(
+        _ billingDetailsConfig: PaymentSheet.BillingDetailsCollectionConfiguration,
+        in consumerSession: ConsumerSession?
+    ) -> Bool {
+        if billingDetailsConfig.name == .always && billingAddress?.name == nil {
+            // No name available, so that needs to be collected
+            return false
+        }
+
+        if billingDetailsConfig.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
+            // No or incomplete address available, so that needs to be collected
+            return false
+        }
+
+        if billingDetailsConfig.phone == .always && consumerSession?.unredactedPhoneNumber == nil {
+            // No phone number available in the account, so that needs to be collected
+            return false
+        }
+
+        // We don't need to check email, because we're guaranteed to have the account email
+
+        return true
+    }
+
+    /// Creates a new `ConsumerPaymentDetails` with any missing fields populated by the provided `billingDetails`. The required fields
+    /// are determined by the provided `billingDetailsConfig`.
+    func update(
+        with billingDetails: PaymentSheet.BillingDetails,
+        basedOn billingDetailsConfig: PaymentSheet.BillingDetailsCollectionConfiguration
+    ) -> ConsumerPaymentDetails {
+        var billingEmailAddress = self.billingEmailAddress
+        var billingAddress = self.billingAddress
+
+        if billingDetailsConfig.address == .full && (billingAddress == nil || billingAddress?.isIncomplete == true) {
+            // No address available, so we add any default provided by the merchant if it's compatible
+            if billingAddress?.canBeOverridden(with: billingDetails.address) == true {
+                billingAddress = BillingAddress(from: billingDetails)
+            }
+        }
+
+        if billingDetailsConfig.name == .always && billingAddress?.name == nil {
+            // No name available, so we add any default provided by the merchant
+            billingAddress = billingAddress?.withName(billingDetails.name) ?? BillingAddress(name: billingDetails.name)
+        }
+
+        if billingDetailsConfig.email == .always && billingEmailAddress == nil {
+            // No email available, so we add any default provided by the merchant
+            billingEmailAddress = billingDetails.email
+        }
+
+        return .init(
+            stripeID: stripeID,
+            details: details,
+            billingAddress: billingAddress,
+            billingEmailAddress: billingEmailAddress,
+            nickname: nickname,
+            isDefault: isDefault
+        )
+    }
+}
+
+private extension BillingAddress {
+    var isIncomplete: Bool {
+        return line1 == nil || city == nil || postalCode == nil || countryCode == nil
+    }
+
+    init(from billingDetails: PaymentSheet.BillingDetails) {
+        self.init(
+            line1: billingDetails.address.line1,
+            line2: billingDetails.address.line2,
+            city: billingDetails.address.city,
+            state: billingDetails.address.state,
+            postalCode: billingDetails.address.postalCode,
+            countryCode: billingDetails.address.country
+        )
+    }
+
+    func canBeOverridden(with address: PaymentSheet.Address) -> Bool {
+        return postalCode == address.postalCode && countryCode == address.country
+    }
+
+    func update(with billingDetails: PaymentSheet.BillingDetails) -> BillingAddress {
+        return .init(
+            line1: line1 ?? billingDetails.address.line1,
+            line2: line2 ?? billingDetails.address.line2,
+            city: city ?? billingDetails.address.city,
+            state: state ?? billingDetails.address.state,
+            postalCode: postalCode ?? billingDetails.address.postalCode,
+            countryCode: countryCode ?? billingDetails.address.country
+        )
+    }
+
+    func withName(_ name: String?) -> BillingAddress {
+        return .init(
+            name: name,
+            line1: line1,
+            line2: line2,
+            city: city,
+            state: state,
+            postalCode: postalCode,
+            countryCode: countryCode
+        )
+    }
+}
+
+private extension PaymentSheet.Address {
+    var isIncomplete: Bool {
+        return line1 == nil || city == nil || postalCode == nil || country == nil
+    }
 }
 
 extension LinkPaymentMethodPicker {
@@ -281,17 +468,8 @@ extension LinkPaymentMethodPicker {
         isUserInteractionEnabled = false
 
         listView.removeArrangedSubview(at: index, animated: true) {
-            let count = self.dataSource?.numberOfPaymentMethods(in: self) ?? 0
-
-            if index < self.selectedIndex {
-                self.selectedIndex = max(self.selectedIndex - 1, 0)
-            }
-
-            self.selectedIndex = max(min(self.selectedIndex, count - 1), 0)
-
-            self.reloadData()
-            self.delegate?.paymentMethodPickerDidChange(self)
             self.isUserInteractionEnabled = true
+            self.reloadData()
         }
     }
 
@@ -302,18 +480,12 @@ extension LinkPaymentMethodPicker {
 extension LinkPaymentMethodPicker: LinkPaymentMethodPickerCellDelegate {
 
     func savedPaymentPickerCellDidSelect(_ savedCardView: Cell) {
-        if let newIndex = index(for: savedCardView) {
-            let oldIndex = selectedIndex
-            selectedIndex = newIndex
-
-            reloadCell(at: oldIndex)
-            reloadCell(at: newIndex)
-
+        if let newIndex = index(for: savedCardView), savedCardView.isSupported {
 #if !os(visionOS)
             selectionFeedbackGenerator.selectionChanged()
 #endif
 
-            delegate?.paymentMethodPickerDidChange(self)
+            delegate?.paymentMethodPicker(self, didSelectIndex: newIndex)
         }
     }
 
@@ -328,4 +500,8 @@ extension LinkPaymentMethodPicker: LinkPaymentMethodPickerCellDelegate {
         delegate?.paymentMethodPicker(self, showMenuForItemAt: index, sourceRect: sourceRect)
     }
 
+    func savedPaymentPickerCellMenuActions(for cell: Cell) -> [PayWithLinkViewController.WalletViewController.Action]? {
+        guard let index = index(for: cell) else { return nil }
+        return delegate?.paymentMethodPicker(self, menuActionsForItemAt: index)
+    }
 }

@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Pievienot";
 
 "Add US bank account" = "Pievienot ASV bankas kontu";
@@ -18,8 +16,6 @@
 
 "Add your payment information" = "Pievienot maksājuma informāciju";
 
-"Agree and continue" = "Piekrist un turpināt";
-
 "Approve payment" = "Apstiprināt maksājumu";
 
 "Are you sure you want to remove this card?" = "Vai tiešām vēlaties noņemt šo karti?";
@@ -34,9 +30,11 @@
 
 "Bank account details cannot be changed." = "Bankas konta informāciju nevar mainīt.";
 
-"Buy now or pay later with <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
+"Buy now or pay later with  <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
 
 "Buy now or pay later with Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Pērciet tagad vai maksājiet vēlāk ar Clearpay";
 
@@ -58,11 +56,19 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Turpinot jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %@ un <link>Saite</link> saskaņā ar saites <terms>noteikumiem</terms> un <privacy>privātumu</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Turpinot jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %@.";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Turpinot jūs pilnvarojat %@ automātiski un regulāri iekasēt maksājumus no jūsu Satispay konta atlikuma saskaņā ar jūsu pirkuma vai abonementa plānu.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Sniedzot savu bankas konta informāciju un apstiprinot šo maksājumu, jūs piekrītat šim tiešā debeta pieprasījumam un <terms>tiešā debeta pieprasīšanas pakalpojumu sniegšanas līgumam</terms>, kā arī pilnvarojat uzņēmumu Stripe Payments Australia Pty Ltd ACN 160 180 343, tiešā debeta lietotāja ID numurs 507156 (turpmāk – \"Stripe\") izmantot lielapjoma elektronisko klīringa sistēmu (BECS), lai uzņēmuma %@ (turpmāk – \"Tirgotājs\") vārdā debitētu jūsu kontu par jebkādām summām, par kurām Tirgotājs jums ir atsevišķi ziņojis. Jūs apliecināt, ka esat vai nu iepriekš minētā konta turētājs, vai tā pilnvarota persona ar paraksta tiesībām.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot tālruņa numuru un e-pastu, jūs piekrītat izveidot Link kontu atbilstoši Link <terms>noteikumiem</terms> un <privacy>Konfidencialitātes politikai</privacy>.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Sniedzot savu bankas konta informāciju un apstiprinot šo maksājumu, jūs piekrītat šim Tiešā debeta pieprasījumam un <terms>Tiešā debeta pieprasīšanas pakalpojumu sniegšanas līgumam</terms>, kā arī pilnvarojat uzņēmumu Stripe Payments Australia Pty Ltd ACN 160 180 343, tiešā debeta lietotāja ID numurs 507156 (tālāk – “Stripe”), izmantot lielapjoma elektronisko klīringa sistēmu (BECS), lai uzņēmuma %@ (tālāk – “Tirgotājs”) vārdā no jūsu konta iekasētu jebkādas summas, par kurām Tirgotājs jūs ir atsevišķi informējis. Jūs apliecināt, ka esat vai nu iepriekš minētā konta turētājs, vai pilnvarota persona ar paraksta tiesībām.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Norādot savas kartes informāciju, jūs atļaujat uzņēmumam %@ saskaņā ar viņu noteikumiem iekasēt no jūsu kartes turpmākus maksājumus.";
 
@@ -74,6 +80,10 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Saglabājot savu bankas kontu %@, jūs piekrītat apstiprināt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Iesniedzot pasūtījumu %1$@ un %2$@, jūs piekrītat saglabāt savu informāciju %3$@ nākamajiem pirkumiem un piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Iesniedzot savu pasūtījumu %@, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "Atcelt vai maksāt citā veidā";
@@ -81,8 +91,6 @@
 "Card details cannot be changed." = "Kartes informāciju nevar mainīt.";
 
 "Change" = "Mainīt";
-
-"Change email" = "Mainīt e-pastu";
 
 "Choose a payment method" = "Izvēlēties maksājuma veidu";
 
@@ -94,6 +102,8 @@
 
 "Confirm it's you" = "Apstipriniet, ka tas esat jūs";
 
+"Confirm payment details" = "Apstiprināt maksājuma informāciju";
+
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas vai maksājumu lietotnē %@, lai pabeigtu maksājumu.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas lietotnē %@, lai pabeigtu maksājumu.";
@@ -102,21 +112,29 @@
 
 "Contact information" = "Kontaktinformācija";
 
+"Continue another way" = "Turpināt ar citu veidu";
+
+"Create an account with Link for faster checkout across the web" = "Izveidojiet kontu Link, lai varētu ātrāk veikt apmaksu visā tīmeklī";
+
+"Debit or credit card" = "Debetkarte vai kredītkarte";
+
 "Default" = "Noklusējuma";
 
 "Default payment method" = "Noklusējuma maksājuma veids";
+
+"Did you mean %@? %@." = "Vai jūs domājāt %1$@? %2$@.";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
-"Enter the code sent to %@ to use your saved information." = "Ievadiet kodu, kas tika nosūtīts uz %@, lai izmantotu jūsu saglabāto informāciju.";
+"Enter the code sent to %@." = "Ievadiet kodu, kas nosūtīts uz %s.";
 
 "FPX Bank" = "FPX banka";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Ātra, droša 1 klikšķa norēķināšanās";
+"Failed to connect" = "Neizdevās izveidot savienojumu";
 
-"For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
+"Fast, secure checkout" = "Ātra un droša norēķināšanās";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saņemiet %@ atmaksu, maksājot pirmo reizi ar savu banku. <terms>Skatīt noteikumus</terms>";
 
@@ -126,11 +144,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Pieteikties vai reģistrēties";
+
 "Log out of Link" = "Izrakstīties no Link";
 
 "Manage SEPA debit" = "Pārvaldīt SEPA debetu";
 
 "Manage US bank account" = "Pārvaldīt ASV bankas kontu";
+
+"Manage bank account" = "Pārvaldīt bankas kontu";
 
 "Manage card" = "Pārvaldīt karti";
 
@@ -150,7 +172,7 @@
 
 "No %@ promo" = "Bez %@ reklāmas";
 
-"Not %@?" = "Ne %@?";
+"Not you?" = "Tas neesat jūs?";
 
 "Only card brand can be changed." = "Var mainīt tikai kartes zīmolu.";
 
@@ -171,6 +193,8 @@
 "Pay another way" = "Maksāt citā veidā";
 
 "Pay faster at %@ and thousands of businesses." = "Maksājiet ātrāk %@ un tūkstošiem citos uzņēmumos.";
+
+"Pay faster everywhere Link is accepted." = "Maksājiet ātrāk visur, kur tiek pieņemta saite.";
 
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
 
@@ -212,6 +236,8 @@
 
 "Save for future payments" = "Saglabāt nākotnes maksājumiem";
 
+"Save my info for faster checkout with Link" = "Saglabāt manu informāciju, lai varētu norēķināties ar Link";
+
 "Save payment details to %@ for future purchases" = "Saglabāt maksājuma informāciju %@ turpmākiem pirkumiem";
 
 "Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
@@ -219,8 +245,6 @@
 "Save your bank account in just a few steps." = "Saglabājiet savu bankas kontu, izpildot tikai dažus soļus.";
 
 "Save your info for secure 1-click checkout with Link" = "Saglabāt jūsu informāciju, lai nodrošinātu norēķināšanos Link ar 1 klikšķi";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Saglabājiet savu maksājuma informāciju ar Link un droši norēķinieties ar 1 klikšķi Link atbalstītās lapas.";
 
 "Saved" = "Saglabāts";
 
@@ -242,7 +266,7 @@
 
 "Simple, secure one-click payments" = "Vienkārši, droši 1 klikšķa maksājumi";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Savienojot jūsu kontu, radās problēma.\nLūdzu, vēlāk mēģiniet vēlreiz.";
+"Something went wrong when linking your account.\nPlease try again later." = "Savienojot jūsu kontu, radās problēma.\nMēģiniet vēlreiz vēlāk.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe uz jūsu kontu 1–2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt bankas konta saglabāšanu ar %@.";
 
@@ -254,15 +278,15 @@
 
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, \"%@\" nav atbalstīts valsts kods.";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ievadītais IBAN nav derīgs, “%@” nav atbalstīts valsts kods.";
 
 "The provided verification code has expired." = "Norādītajam verifikācijas kodam ir beidzies derīguma termiņš.";
 
 "The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Šai kartei ir beidzies derīguma termiņš. Atjauniniet savu kartes informāciju vai izmantojiet citu maksājuma veidu.";
-
 "This is your default" = "Tas ir jūsu noklusējums";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Šis maksājuma veids tiks noņemts, bet joprojām būs pieejams %@ abonementiem.";
 
 "Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
 
@@ -272,9 +296,11 @@
 
 "Update payment method" = "Atjaunināt maksājuma veidu";
 
-"Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
+"Use billing address for shipping" = "Piegādei izmantot norēķinu adresi";
 
 "View more" = "Skatīt vairāk";
+
+"Yes, update" = "Jā, atjaunināt";
 
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 

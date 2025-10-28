@@ -82,6 +82,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
+        let paymentMethodRemoveIsPartial: Bool
         let paymentMethodUpdate: Bool
         let paymentMethodSyncDefault: Bool
         let isTestMode: Bool
@@ -225,9 +226,9 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
         let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
-            leading: PaymentSheetUI.defaultMargins.leading,
+            leading: appearance.formInsets.leading,
             bottom: 0,
-            trailing: PaymentSheetUI.defaultMargins.trailing
+            trailing: appearance.formInsets.trailing
         )
         view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view
@@ -409,6 +410,9 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         -> Bool
     {
         guard !self.collectionView.isRemovingPaymentMethods else {
+            if let cell = collectionView.cellForItem(at: indexPath) as? SavedPaymentMethodCollectionView.PaymentOptionCell, cell.isEditable {
+                paymentOptionCellDidSelectEdit(cell)
+            }
             return false
         }
         let viewModel = viewModels[indexPath.item]
@@ -449,51 +453,54 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: configuration.paymentMethodUpdate,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
-        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+        let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
+            removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+            paymentMethodRemoveIsPartial: configuration.paymentMethodRemoveIsPartial,
+            merchantName: savedPaymentMethodsConfiguration.merchantDisplayName)
+        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
                                                        isTestMode: configuration.isTestMode,
                                                        configuration: updateConfig)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
 
-    private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod) {
+    private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod, completion: @escaping () -> Void) {
+        guard let delegate = self.delegate else {
+            completion()
+            return
+        }
+        let viewModel = self.viewModels[indexPath.row]
         Task {
-            guard let delegate = self.delegate else {
-                return
-            }
-            let viewModel = self.viewModels[indexPath.row]
-            let didRemove = await delegate.attemptRemove(viewController: self,
-                                                         paymentMethodSelection: viewModel,
-                                                         originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod)
-            guard didRemove else {
-                return
-            }
+            // Optimistically remove card
+            _ = await delegate.attemptRemove(viewController: self,
+                                            paymentMethodSelection: viewModel,
+                                            originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod)
+        }
+        self.viewModels.remove(at: indexPath.row)
 
-            self.viewModels.remove(at: indexPath.row)
-            // the deletion needs to be in a performBatchUpdates so we make sure it is completed
-            // before potentially leaving edit mode (which triggers a reload that may collide with
-            // this deletion)
-            self.collectionView.performBatchUpdates {
-                self.collectionView.deleteItems(at: [indexPath])
-            } completion: { _ in
-                self.savedPaymentMethods.removeAll(where: {
-                    $0.stripeId == paymentMethod.stripeId
-                })
+        // the deletion needs to be in a performBatchUpdates so we make sure it is completed
+        // before potentially leaving edit mode (which triggers a reload that may collide with
+        // this deletion)
+        self.collectionView.performBatchUpdates {
+            self.collectionView.deleteItems(at: [indexPath])
+        } completion: { _ in
+            self.savedPaymentMethods.removeAll(where: {
+                $0.stripeId == paymentMethod.stripeId
+            })
 
-                if let index = self.selectedViewModelIndex {
-                    if indexPath.row == index {
-                        self.selectedViewModelIndex = nil
-                    } else if indexPath.row < index {
-                        self.selectedViewModelIndex = index - 1
-                    }
+            if let index = self.selectedViewModelIndex {
+                if indexPath.row == index {
+                    self.selectedViewModelIndex = nil
+                } else if indexPath.row < index {
+                    self.selectedViewModelIndex = index - 1
                 }
-
-                self.delegate?.didRemove(
-                    viewController: self,
-                    paymentMethodSelection: viewModel,
-                    originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
-                )
             }
+            completion()
+            self.delegate?.didRemove(
+                viewController: self,
+                paymentMethodSelection: viewModel,
+                originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
+            )
         }
     }
 }
@@ -558,8 +565,9 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMeth
             return
         }
 
-        removePaymentMethod(indexPath: IndexPath(row: row, section: 0), paymentMethod: paymentMethod)
-        _ = viewController.bottomSheetController?.popContentViewController()
+        self.removePaymentMethod(indexPath: IndexPath(row: row, section: 0), paymentMethod: paymentMethod) {
+            _ = viewController.bottomSheetController?.popContentViewController()
+        }
     }
 
     func shouldCloseSheet(_: UpdatePaymentMethodViewController) {

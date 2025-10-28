@@ -1,0 +1,94 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1Rq5PIFY0qyl6XeWSyUYePJ6\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=hM9G5kkdA1Oujmqs15X4n9SoqaaUKcGbRax-CCHJbAPBhPsCdL0_4ZXaKIB39FntHirVXe260rEdAxKw
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_hEn8vCvgtRYhJP
+Content-Length: 1601
+Vary: Origin
+Date: Tue, 29 Jul 2025 04:44:57 GMT
+original-request: req_hEn8vCvgtRYhJP
+stripe-version: 2020-08-27
+idempotency-key: 09b29011-9022-4661-9d68-9b437685062b
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=seti_1Rq5PIFY0qyl6XeWSyUYePJ6_secret_Slce4D8e6L5Ct2GdfQRFrbvkw30eeaJ&expand\[0]=payment_method&payment_method=pm_1Rq5PHFY0qyl6XeWusUvsrVC&set_as_default_payment_method=true&use_stripe_sdk=true
+
+{
+  "id" : "seti_1Rq5PIFY0qyl6XeWSyUYePJ6",
+  "description" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1Rq5PHFY0qyl6XeWusUvsrVC",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "card" : {
+      "regulated_status" : "unregulated",
+      "last4" : "4242",
+      "funding" : "credit",
+      "generated_from" : null,
+      "networks" : {
+        "available" : [
+          "visa"
+        ],
+        "preferred" : null
+      },
+      "brand" : "visa",
+      "checks" : {
+        "address_postal_code_check" : null,
+        "cvc_check" : null,
+        "address_line1_check" : null
+      },
+      "three_d_secure_usage" : {
+        "supported" : true
+      },
+      "wallet" : null,
+      "display_brand" : "visa",
+      "exp_month" : 1,
+      "exp_year" : 2040,
+      "country" : "US"
+    },
+    "livemode" : false,
+    "created" : 1753764296,
+    "allow_redisplay" : "unspecified",
+    "type" : "card",
+    "customer" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "card"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1753764296,
+  "client_secret" : "seti_1Rq5PIFY0qyl6XeWSyUYePJ6_secret_Slce4D8e6L5Ct2GdfQRFrbvkw30eeaJ",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}

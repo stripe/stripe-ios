@@ -7,10 +7,9 @@
 
 import Foundation
 import SafariServices
-@_spi(DashboardOnly) @_spi(PrivateBetaConnect) @testable import StripeConnect
+@_spi(DashboardOnly) @_spi(STP) @testable import StripeConnect
 @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeFinancialConnections
-@_spi(STP) import StripeUICore
 import WebKit
 import XCTest
 
@@ -51,6 +50,40 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     }
 
     @MainActor
+    func testFetchAppInfo() async throws {
+        let message = FetchAppInfoMessageHandler.Reply(applicationId: "com.test.app")
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"),
+                                                      bundleIdProvider: { "com.test.app" })
+
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchAppInfo",
+                                                         json: "{}",
+                                                         expectedResponse: message)
+    }
+
+    @MainActor
+    func testFetchAppInfoWithNilAppId() async throws {
+        let message = FetchAppInfoMessageHandler.Reply(applicationId: "")
+        let componentManager = componentManagerAssertingOnFetch()
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .payouts,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"),
+                                                      bundleIdProvider: { nil })
+
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchAppInfo",
+                                                         json: "{}",
+                                                         expectedResponse: message)
+    }
+
+    @MainActor
     func testUpdateAppearance() async throws {
         let componentManager = componentManagerAssertingOnFetch()
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
@@ -62,8 +95,8 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.spacingUnit = 5
         let expectation = try webVC.webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(
-            locale: "fr-FR",
-            appearance: .init(appearance: appearance, traitCollection: UITraitCollection()))
+                                                                                                                locale: "fr-FR",
+                                                                                                                appearance: .init(appearance: appearance, traitCollection: UITraitCollection()))
         ))
         componentManager.update(appearance: appearance)
 
@@ -110,6 +143,31 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                          json: "{}",
                                                          expectedResponse: "{}")
+    }
+
+    @MainActor
+    func testFetchInitComponentPropsWithFunction() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        struct Props: HasSupplementalFunctions {
+            let supplementalFunctions: SupplementalFunctions
+
+            enum CodingKeys: CodingKey {}
+        }
+
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { _ in })
+
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .checkScanning,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
+
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                         json: "{}",
+                                                         expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
     }
 
     @MainActor
@@ -189,8 +247,130 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
         try await webVC.webView.evaluateOnLoaderStart(elementTagName: "payouts")
 
-        // Loading indicator should stop
+        // Wait for the animation state to settle after the async operation
+        try await Task.sleep(nanoseconds: 100_000_000) // 100ms
         XCTAssertFalse(webVC.activityIndicator.isAnimating)
+    }
+
+    @MainActor
+    func testDispatchSupplementalFunction() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        struct Props: HasSupplementalFunctions {
+            let supplementalFunctions: SupplementalFunctions
+
+            enum CodingKeys: CodingKey {}
+        }
+
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: {payload in
+            XCTAssertEqual(payload.checkScanToken, "testToken")
+        })
+
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .checkScanning,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
+
+        // This step is required to register the supplemental functions within the controller
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                         json: "{}",
+                                                         expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: SupplementalFunctionCompletedSender(payload: .init(
+                functionName: .handleCheckScanSubmitted,
+                invocationId: "testInvocation",
+                result: .success(.handleCheckScanSubmitted)
+            ))
+        )
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    @MainActor
+    func testDispatchSupplementalFunction_notRegistered() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        struct Props: HasSupplementalFunctions {
+            let supplementalFunctions: SupplementalFunctions
+
+            enum CodingKeys: CodingKey {}
+        }
+
+        let supplementalFunctions = SupplementalFunctions()
+
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .checkScanning,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
+
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                         json: "{}",
+                                                         expectedResponse: "{}")
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: SupplementalFunctionCompletedSender(payload: .init(
+                functionName: .handleCheckScanSubmitted,
+                invocationId: "testInvocation",
+                result: .error("No supplemental function registered for handleCheckScanSubmitted")
+            ))
+        )
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
+    }
+
+    @MainActor
+    func testDispatchSupplementalFunction_callError() async throws {
+        let componentManager = componentManagerAssertingOnFetch()
+
+        struct Props: HasSupplementalFunctions {
+            let supplementalFunctions: SupplementalFunctions
+
+            enum CodingKeys: CodingKey {}
+        }
+
+        enum CustomError: Error {
+            case err(String)
+        }
+
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: {_ in
+            throw CustomError.err("test error")
+        })
+
+        let webVC = ConnectComponentWebViewController(componentManager: componentManager,
+                                                      componentType: .checkScanning,
+                                                      loadContent: false,
+                                                      analyticsClientFactory: MockComponentAnalyticsClient.init,
+                                                      fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
+                                                      didFailLoadWithError: { _ in },
+                                                      webLocale: Locale(identifier: "fr_FR"))
+
+        // This step is required to register the supplemental functions within the controller
+        try await webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                         json: "{}",
+                                                         expectedResponse: "{\"setHandleCheckScanSubmitted\":true}")
+
+        try await webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted, invocationId: "testInvocation", args: "[{\"checkScanToken\":\"testToken\"}]")
+
+        let expectation = try webVC.webView.expectationForMessageReceived(
+            sender: SupplementalFunctionCompletedSender(payload: .init(
+                functionName: .handleCheckScanSubmitted,
+                invocationId: "testInvocation",
+                result: .error("Error calling supplemental function")
+            ))
+        )
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 
     // MARK: - Errors
@@ -464,7 +644,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertEqual(event.metadata.url, "https://stripe.com")
     }
 
-   // MARK: - Process Termination
+    // MARK: - Process Termination
 
     @MainActor
     func testProcessTermination() async throws {
@@ -485,7 +665,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertEqual(loggedError.code, 1)
     }
 
-   // MARK: - openFinancialConnections
+    // MARK: - openFinancialConnections
 
     func testOpenFinancialConnections_success() throws {
         let componentManager = componentManagerAssertingOnFetch()
@@ -602,9 +782,9 @@ private extension ConnectComponentWebViewControllerTests {
                                  appearance: appearance,
                                  fonts: fonts,
                                  fetchClientSecret: {
-            XCTFail("Client secret should not be retrieved in this test")
-            return ""
-        })
+                                    XCTFail("Client secret should not be retrieved in this test")
+                                    return ""
+                                 })
     }
 }
 

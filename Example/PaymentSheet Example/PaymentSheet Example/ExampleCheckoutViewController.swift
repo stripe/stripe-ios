@@ -13,7 +13,8 @@ import UIKit
 class ExampleCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
     var paymentSheet: PaymentSheet?
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
+    // View and fork the backend code  here: https://codesandbox.io/p/devbox/gvs8t4
+    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.stripedemos.com/checkout")!  // An example backend endpoint
 
     override func viewDidLoad() {
         super.viewDidLoad()

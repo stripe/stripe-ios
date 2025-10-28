@@ -19,7 +19,7 @@ import UIKit
     /// Sign an assertion.
     /// Will create and attest a new device key if needed.
     /// Returns an AssertionHandle, which must be called after the network request completes (with success or failure) in order to unblock future assertions.
-    @_spi(STP) public func assert() async throws -> AssertionHandle {
+    @_spi(STP) public func assert(canSyncState: Bool) async throws -> AssertionHandle {
         // Make sure we only process one assertion at a time, until the latest
         if assertionInProgress {
             try await withCheckedThrowingContinuation { continuation in
@@ -29,7 +29,7 @@ import UIKit
         assertionInProgress = true
 
         do {
-            let assertion = try await _assert()
+            let assertion = try await _assert(canSyncState: canSyncState)
             let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
             if let apiClient {
                 STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
@@ -140,10 +140,12 @@ import UIKit
     enum SettingsKeys: String {
         /// The ID of the attestation key stored in the keychain.
         case keyID = "STPAttestKeyID"
-        /// The last date we generated an attestation key, used for rate limiting.
-        case lastAttestedDate = "STPAttestKeyLastAttestedDate"
         /// Whether the current keyID key has been attested successfully.
         case successfullyAttested = "STPAttestKeySuccessfullyAttested"
+        /// The number of key generation attempts made today.
+        case dailyAttemptCount = "STPAttestKeyDailyAttemptCount"
+        /// The date of the first key generation attempt today.
+        case firstAttemptToday = "STPAttestKeyFirstAttemptToday"
     }
 
     private var storedKeyID: String? {
@@ -164,12 +166,21 @@ import UIKit
         }
     }
 
-    private var lastAttestedDate: Date? {
+    private var dailyAttemptCount: Int {
         get {
-            UserDefaults.standard.object(forKey: defaultsKeyForSetting(.lastAttestedDate)) as? Date
+            UserDefaults.standard.integer(forKey: defaultsKeyForSetting(.dailyAttemptCount))
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.lastAttestedDate))
+            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.dailyAttemptCount))
+        }
+    }
+
+    private var firstAttemptToday: Date? {
+        get {
+            UserDefaults.standard.object(forKey: defaultsKeyForSetting(.firstAttemptToday)) as? Date
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.firstAttemptToday))
         }
     }
 
@@ -198,12 +209,12 @@ import UIKit
     /// The API client to use for network requests
     weak var apiClient: STPAPIClient?
 
-    /// The minimum time between key generation attempts.
+    /// The maximum number of key generation attempts allowed per day.
     /// This is a safeguard against generating keys too often, as each key generation
     /// permanently increases a counter for the device/app pair.
     /// We expect each device/app pair to generate one key *ever*.
     /// If this rate limit is being hit, something is wrong.
-    private static let minDurationBetweenKeyGenerationAttempts: TimeInterval = 60 * 60 * 24 // 24 hours
+    private static let maxKeyGenerationAttemptsPerDay: Int = 3
 
     /// Attest the current device key. Only perform this once per device key.
     /// You should not call this directly, it'll be called automatically during assert.
@@ -237,7 +248,7 @@ import UIKit
     private var assertionInProgress: Bool = false
     private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
 
-    func _assert() async throws -> Assertion {
+    func _assert(canSyncState: Bool, isRetry: Bool = false) async throws -> Assertion {
         let keyId = try await self.getOrCreateKeyID()
 
         if !successfullyAttested {
@@ -247,12 +258,29 @@ import UIKit
 
         let challenge = try await getChallenge()
 
-        // If the backend claims that attestation is required, but we already have an attested key,
-        // something has gone wrong.
-        if challenge.initial_attestation_required {
-            // Reset the key, we'll try again next time:
-            resetKey()
-            throw AttestationError.shouldAttestButKeyIsAlreadyAttested
+        // State alignment: sync client state with server
+        if canSyncState && !challenge.initial_attestation_required && !successfullyAttested {
+            // Server has attestation but client doesn't know - update client
+            successfullyAttested = true
+            let event = GenericAnalytic(event: .stateMismatchNotAttestedLocally, params: [:])
+            if let apiClient {
+                STPAnalyticsClient.sharedClient.log(analytic: event, apiClient: apiClient)
+            }
+        } else if challenge.initial_attestation_required && successfullyAttested {
+            // Server needs attestation but client thinks it's done - reset client and retry
+            if isRetry || !canSyncState {
+                // We already tried once - something is wrong
+                resetKey()
+                throw AttestationError.shouldAttestButKeyIsAlreadyAttested
+            } else {
+                // Reset and retry
+                resetKey()
+                let event = GenericAnalytic(event: .stateMismatchNotAttestedRemotely, params: [:])
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: event, apiClient: apiClient)
+                }
+                return try await _assert(canSyncState: canSyncState, isRetry: true)
+            }
         }
 
         let deviceId = try await getDeviceID()
@@ -264,10 +292,26 @@ import UIKit
 
     func _attest() async throws {
         // It's dangerous to attest, as it increments a permanent counter for the device.
-        // First, make sure the last time we called this is more than 24 hours away from now.
-        // (Either in the future or the past, who knows what people are doing with their clocks)
-        if let lastGenerated = lastAttestedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
-            throw AttestationError.attestationRateLimitExceeded
+        // Check if we've reached the daily limit of attempts.
+        let now = Date()
+        let calendar = Calendar.current
+
+        // Check if this is a new day compared to the first attempt today
+        if let firstAttempt = firstAttemptToday {
+            if calendar.isDate(now, inSameDayAs: firstAttempt) {
+                // Same day - check if we've exceeded the limit
+                if dailyAttemptCount >= Self.maxKeyGenerationAttemptsPerDay {
+                    throw AttestationError.attestationRateLimitExceeded
+                }
+            } else {
+                // New day - reset counters
+                dailyAttemptCount = 0
+                firstAttemptToday = now
+            }
+        } else {
+            // First attempt ever - initialize
+            firstAttemptToday = now
+            dailyAttemptCount = 0
         }
 
         let keyId = try await self.getOrCreateKeyID()
@@ -294,7 +338,7 @@ import UIKit
                 // Being more relaxed about this also helps with users switching between
                 // a developer-signed app (which may be in the development attest environment)
                 // and a TestFlight/App Store/Enterprise app (which is always in the production attest environment)
-                lastAttestedDate = Date()
+                dailyAttemptCount += 1
             }
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
             // Store the successful attestation

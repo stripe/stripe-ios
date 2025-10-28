@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleSwiftUICustomPaymentFlow: View {
@@ -16,29 +16,11 @@ struct ExampleSwiftUICustomPaymentFlow: View {
     var body: some View {
         VStack {
             if let paymentSheetFlowController = model.paymentSheetFlowController {
-                PaymentSheet.FlowController.PaymentOptionsButton(
-                    paymentSheetFlowController: paymentSheetFlowController,
-                    onSheetDismissed: model.onOptionsCompletion
-                ) {
-                    ExamplePaymentOptionView(
-                        paymentOptionDisplayData: paymentSheetFlowController.paymentOption)
-                }
-                Button(action: {
-                    // If you need to update the PaymentIntent's amount, you should do it here and
-                    // set the `isConfirmingPayment` binding after your update completes.
-                    isConfirmingPayment = true
-                }) {
-                    if isConfirmingPayment {
-                        ExampleLoadingView()
-                    } else {
-                        ExamplePaymentButtonView()
-                    }
-                }.paymentConfirmationSheet(
-                    isConfirming: $isConfirmingPayment,
-                    paymentSheetFlowController: paymentSheetFlowController,
+                FlowControllerView(
+                    flowController: paymentSheetFlowController,
+                    isConfirmingPayment: $isConfirmingPayment,
                     onCompletion: model.onCompletion
                 )
-                .disabled(paymentSheetFlowController.paymentOption == nil || isConfirmingPayment)
             } else {
                 ExampleLoadingView()
             }
@@ -47,11 +29,51 @@ struct ExampleSwiftUICustomPaymentFlow: View {
             }
         }.onAppear { model.preparePaymentSheet() }
     }
+}
 
+struct FlowControllerView: View {
+    @ObservedObject var flowController: PaymentSheet.FlowController
+    @Binding var isConfirmingPayment: Bool
+    let onCompletion: (PaymentSheetResult) -> Void
+
+    var body: some View {
+        PaymentSheet.FlowController.PaymentOptionsButton(
+            paymentSheetFlowController: flowController,
+            onSheetDismissed: {}
+        ) {
+            ExamplePaymentOptionView(
+                paymentOptionDisplayData: flowController.paymentOption)
+        }
+        Button(action: {
+            // If you need to update the PaymentIntent's amount, you should do it here and
+            // set the `isConfirmingPayment` binding after your update completes.
+            isConfirmingPayment = true
+        }) {
+            if isConfirmingPayment {
+                ExampleLoadingView()
+            } else {
+                ExamplePaymentButtonView()
+            }
+        }.paymentConfirmationSheet(
+            isConfirming: $isConfirmingPayment,
+            paymentSheetFlowController: flowController,
+            onCompletion: onCompletion
+        )
+        .disabled(flowController.paymentOption == nil || isConfirmingPayment)
+        if let paymentOption = flowController.paymentOption {
+            VStack {
+                Text("Payment option label: \(paymentOption.label)")
+                Text("Payment option labels.label: \(paymentOption.labels.label)")
+                if let sublabel = paymentOption.labels.sublabel {
+                    Text("Payment option labels.sublabel: \(sublabel)")
+                }
+            }
+        }
+    }
 }
 
 class MyCustomBackendModel: ObservableObject {
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
+    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.stripedemos.com/checkout")!  // An example backend endpoint
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
 
@@ -103,11 +125,6 @@ class MyCustomBackendModel: ObservableObject {
                 }
             })
         task.resume()
-    }
-
-    func onOptionsCompletion() {
-        // Tell our observer to refresh
-        objectWillChange.send()
     }
 
     func onCompletion(result: PaymentSheetResult) {
