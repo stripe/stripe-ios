@@ -610,8 +610,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
         if case .new(let confirmParams) = paymentOption  {
             Task {
-                let (hcaptchaToken, assertion) = await self.confirmationChallenge?.fetchTokensWithTimeout() ?? (nil, nil)
-                confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
+                confirmParams.paymentMethodParams.radarOptions = await self.confirmationChallenge?.makeRadarOptions()
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
                     Task { await self.confirmationChallenge?.complete() }
                     if let error = error {

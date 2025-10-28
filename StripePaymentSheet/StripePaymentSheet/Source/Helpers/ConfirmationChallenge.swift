@@ -29,11 +29,15 @@ actor ConfirmationChallenge {
         }
     }
 
-    func setTimeout(timeout: TimeInterval) {
-        self.timeout = timeout
+    public func makeRadarOptions() async -> STPRadarOptions {
+        if challengeTokens.hcaptchaToken != nil || challengeTokens.assertion != nil {
+            return STPRadarOptions(hcaptchaToken: challengeTokens.hcaptchaToken, assertion: challengeTokens.assertion)
+        }
+        let (hcaptchaToken, assertion) = await fetchTokensWithTimeout()
+        return STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
     }
 
-    public func fetchTokensWithTimeout() async -> ChallengeTokens {
+    func fetchTokensWithTimeout() async -> ChallengeTokens {
         let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
         let siteKey = await passiveCaptchaChallenge?.passiveCaptchaData.siteKey
@@ -90,6 +94,7 @@ actor ConfirmationChallenge {
         }
     }
 
+    // must be called after completing the signed request
     public func complete() async {
         await attestationConfirmationChallenge?.complete()
     }
@@ -98,6 +103,10 @@ actor ConfirmationChallenge {
         if let _ = result?.hcaptchaToken, result?.assertion == nil, let siteKey, let isReady {
             STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: duration)
         }
+    }
+
+    func setTimeout(timeout: TimeInterval) {
+        self.timeout = timeout
     }
 
 }

@@ -58,9 +58,8 @@ extension CustomerSheet {
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
             Task {
-                let (hcaptchaToken, assertion) = await confirmationChallenge?.fetchTokensWithTimeout() ?? (nil, nil)
                 confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
-                confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
+                confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions()
                 confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID)
                 let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
