@@ -193,13 +193,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        guard let fixedGMTCalendar = Calendar.makeFixedTimeZoneCalendar(hoursFromGMT: 0) else {
-            XCTFail("Failed to create a fixed-timezone calendar.")
-            return
-        }
 
         do {
-            let response = try await apiClient.collectKycInfo(info: Constant.validKycInfo, linkAccountInfo: Constant.validLinkAccountInfo, calendar: fixedGMTCalendar)
+            let response = try await apiClient.collectKycInfo(info: Constant.validKycInfo, linkAccountInfo: Constant.validLinkAccountInfo)
             XCTAssertEqual(response.personId, "person_1A2BcD345EFg6HiJ")
             XCTAssertEqual(response.firstName, "John")
             XCTAssertEqual(response.lastName, "Smith")
@@ -493,17 +489,5 @@ private extension String {
             guard splitPair.count == 2 else { return }
             result[splitPair[0]] = splitPair[1]
         }
-    }
-}
-
-private extension Calendar {
-    static func makeFixedTimeZoneCalendar(hoursFromGMT: Int) -> Calendar? {
-        guard let timeZone = TimeZone(secondsFromGMT: hoursFromGMT * 3600) else {
-            return nil
-        }
-
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = timeZone
-        return calendar
     }
 }
