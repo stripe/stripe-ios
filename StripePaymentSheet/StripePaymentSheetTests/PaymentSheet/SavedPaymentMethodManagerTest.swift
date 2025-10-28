@@ -9,7 +9,7 @@ import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
-@_spi(STP)@_spi(CustomerSessionBetaAccess)@testable import StripePaymentSheet
+@_spi(STP)@testable import StripePaymentSheet
 import XCTest
 
 final class SavedPaymentMethodManagerTests: XCTestCase {

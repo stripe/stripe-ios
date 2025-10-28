@@ -8,7 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(CustomerSessionBetaAccess) @_spi(STP) import StripePayments
+@_spi(STP) import StripePayments
 
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
