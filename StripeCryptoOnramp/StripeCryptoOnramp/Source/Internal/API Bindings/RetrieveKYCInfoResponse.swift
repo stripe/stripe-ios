@@ -13,19 +13,21 @@ struct RetrieveKYCInfoResponse: Decodable {
     /// The KYC info retrieved from the API.
     let kycInfo: KYCRefreshInfo
 
+    /// Creates a new instance of `RetrieveKYCInfoResponse`.
+    /// - Parameter kycInfo: The `KYCRefreshInfo` instance containing the user’s information.
+    init(kycInfo: KYCRefreshInfo) {
+        self.kycInfo = kycInfo
+    }
+
     // MARK: - Decodable
 
     private enum CodingKeys: String, CodingKey {
-        case firstName = "first_name"
-        case lastName = "last_name"
+        case firstName
+        case lastName
         case dob
         case address
         case idNumberLast4 = "id_number_last4"
-        case idType = "id_type"
-    }
-
-    private enum AddressKeys: String, CodingKey {
-        case line1, line2, city, state, zip, country
+        case idType
     }
 
     init(from decoder: any Decoder) throws {
@@ -35,16 +37,7 @@ struct RetrieveKYCInfoResponse: Decodable {
         let dateOfBirth = try container.decode(KycInfo.DateOfBirth.self, forKey: .dob)
         let idNumberLast4 = try container.decode(String.self, forKey: .idNumberLast4)
         let idType = try container.decode(IdType.self, forKey: .idType)
-        let addressContainer = try container.nestedContainer(keyedBy: AddressKeys.self, forKey: .address)
-
-        let address = Address(
-            city: try addressContainer.decode(String.self, forKey: .city),
-            country: try addressContainer.decode(String.self, forKey: .country),
-            line1: try addressContainer.decode(String.self, forKey: .line1),
-            line2: try addressContainer.decodeIfPresent(String.self, forKey: .line2),
-            postalCode: try addressContainer.decode(String.self, forKey: .zip),
-            state: try addressContainer.decode(String.self, forKey: .state)
-        )
+        let address = try container.decode(Address.self, forKey: .address)
 
         kycInfo = KYCRefreshInfo(
             firstName: firstName,

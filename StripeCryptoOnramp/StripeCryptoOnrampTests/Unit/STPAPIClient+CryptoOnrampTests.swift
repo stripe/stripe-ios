@@ -60,6 +60,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             residenceCountry: "US"
         )
 
+        // /v1/crypto/internal/kyc_data_retrieve
+        static let retrieveKYCInfoAPIPath = "/v1/crypto/internal/kyc_data_retrieve"
+
         // /v1/crypto/internal/start_identity_verification
         static let startIdentityVerificationAPIPath = "/v1/crypto/internal/start_identity_verification"
         static let startIdentityVerificationMockResponseObject = StartIdentityVerificationResponse(
@@ -206,6 +209,53 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(_ = try await apiClient.collectKycInfo(info: Constant.validKycInfo, linkAccountInfo: unverifiedLinkAccountInfo))
+    }
+
+    func testRetrieveKycInfoSuccess() async throws {
+        let mockResponseData = try RetrieveKYCInfoResponseMock.retrieveKYCInfoResponse_200.data()
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.retrieveKYCInfoAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.retrieveKycInfo(linkAccountInfo: Constant.validLinkAccountInfo)
+            let kycInfo = response.kycInfo
+            XCTAssertEqual(kycInfo.firstName, "John")
+            XCTAssertEqual(kycInfo.lastName, "Smith")
+
+            let dateOfBirth = kycInfo.dateOfBirth
+            XCTAssertEqual(dateOfBirth.day, 31)
+            XCTAssertEqual(dateOfBirth.month, 3)
+            XCTAssertEqual(dateOfBirth.year, 1975)
+
+            let address = kycInfo.address
+            XCTAssertEqual(address.line1, "123 Fake Street")
+            XCTAssertEqual(address.line2, "APT 2")
+            XCTAssertEqual(address.city, "Brooklyn")
+            XCTAssertEqual(address.state, "New York")
+            XCTAssertEqual(address.postalCode, "11201")
+            XCTAssertEqual(address.country, "US")
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
     }
 
     func testStartIdentityVerificationSuccess() async throws {
