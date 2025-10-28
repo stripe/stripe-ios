@@ -50,8 +50,7 @@ actor ConfirmationChallenge {
                     numberOfChallenges += 1
                     group.addTask {
                         let hcaptchaToken = try await passiveCaptchaChallenge.fetchToken()
-                        await self.challengeTokens.hcaptchaToken = hcaptchaToken
-                        return await self.challengeTokens
+                        return await (hcaptchaToken, self.challengeTokens.assertion)
                     }
                 }
                 // Add attestation task
@@ -59,8 +58,7 @@ actor ConfirmationChallenge {
                     numberOfChallenges += 1
                     group.addTask {
                         let assertion = await attestationConfirmationChallenge.fetchAssertion()
-                        await self.challengeTokens.assertion = assertion
-                        return await self.challengeTokens
+                        return await (self.challengeTokens.hcaptchaToken, assertion)
                     }
                 }
                 // Add timeout task
@@ -79,6 +77,8 @@ actor ConfirmationChallenge {
                 // Wait for challenge completions
                 for _ in 0..<numberOfChallenges {
                     let token = try await group.next()
+                    self.challengeTokens.hcaptchaToken = token?.hcaptchaToken ?? self.challengeTokens.hcaptchaToken
+                    self.challengeTokens.assertion = token?.assertion ?? self.challengeTokens.assertion
                     logIfNecessary(result: token, siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
                 }
                 return challengeTokens
