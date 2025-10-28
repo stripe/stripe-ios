@@ -59,6 +59,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
     func testSinglePartnerMode_CustomFont() {
         var appearance = PaymentMethodMessagingElement.Appearance()
         appearance.font = .boldSystemFont(ofSize: 20)
+        appearance.textColor = .red
 
         let viewData = makeViewData(
             mode: .singlePartner(logo: makeLogoSet()),
@@ -82,7 +83,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
         let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
-
+    
     func testSinglePartnerMode_LogoAtFront() {
         let viewData = makeViewData(
             mode: .singlePartner(logo: makeLogoSet()),

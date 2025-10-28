@@ -118,7 +118,7 @@ class PMMEUIView: UIStackView {
             return NSMutableAttributedString.bnplPromoString(
                 font: appearance.scaledFont,
                 textColor: appearance.textColor,
-                infoIconColor: appearance.infoIconColor,
+                infoIconColor: appearance.infoIconColor ?? appearance.textColor,
                 template: promotion,
                 substitution: ("{partner}", traitCollection.isDarkMode ? logoSet.dark : logoSet.light)
             )
@@ -126,7 +126,7 @@ class PMMEUIView: UIStackView {
             return NSMutableAttributedString.bnplPromoString(
                 font: appearance.scaledFont,
                 textColor: appearance.textColor,
-                infoIconColor: appearance.infoIconColor,
+                infoIconColor: appearance.infoIconColor ?? appearance.textColor,
                 template: promotion,
                 substitution: nil
             )
