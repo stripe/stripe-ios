@@ -25,6 +25,8 @@ import UIKit
     var shouldFailAssertionWithError: Error?
     var shouldFailAttestationWithError: Error?
     var attestationUsingDevelopmentEnvironment: Bool = false
+    var generateAssertionDelay: TimeInterval = 0
+    var attestKeyDelay: TimeInterval = 0
 
     func setShouldFailKeygenWithError(_ error: Error?) async {
         shouldFailKeygenWithError = error
@@ -40,6 +42,10 @@ import UIKit
 
     func setAttestationUsingDevelopmentEnvironment(_ value: Bool) async {
         attestationUsingDevelopmentEnvironment = value
+    }
+
+    func setGenerateAssertionDelay(_ delay: TimeInterval) async {
+        generateAssertionDelay = delay
     }
 
     var keys: [String: FakeKey] = [:]
@@ -59,6 +65,9 @@ import UIKit
     }
 
     @_spi(STP) public func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data {
+        if generateAssertionDelay > 0 {
+            try await Task.sleep(nanoseconds: UInt64(generateAssertionDelay * 1_000_000_000))
+        }
         guard var key = keys[keyId] else {
             // Throw the same error that the real service would throw
             throw NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)

@@ -88,6 +88,9 @@ extension CustomerSheet {
         /// If true, an invisible challenge will be performed for human verification
         @_spi(STP) public var enablePassiveCaptcha: Bool = false
 
+        /// If true, the device will be attested and requests will be signed on confirmation
+        @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
+
         public init () {
         }
     }

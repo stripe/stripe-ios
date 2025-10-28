@@ -5,6 +5,7 @@
 //  Created by Joyce Qin on 10/24/25.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 
 actor AttestationConfirmationChallenge {
@@ -26,7 +27,6 @@ actor AttestationConfirmationChallenge {
         }
     }
 
-    // TODO: handle cancellation
     public func fetchAssertion() async -> StripeAttest.Assertion? {
         if let assertionTask {
             return await assertionTask.value
@@ -35,7 +35,13 @@ actor AttestationConfirmationChallenge {
             STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestToken()
             let startTime = Date()
             do {
-                assertionHandle = try await stripeAttest.assert(canSyncState: false)
+                assertionHandle = try await withTaskCancellationHandler {
+                    try await stripeAttest.assert(canSyncState: false)
+                } onCancel: {
+                    Task {
+                        await stripeAttest.cancel()
+                    }
+                }
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
             } catch {
                 assertionHandle = nil

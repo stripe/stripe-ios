@@ -168,7 +168,7 @@ public class CustomerSheet {
         customerSheetDataSource.loadPaymentMethodInfo { result in
             switch result {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
-                self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: self.configuration.enablePassiveCaptcha, elementsSession: elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+                self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: self.configuration.enablePassiveCaptcha, enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
                 let paymentMethodRemoveIsPartial = customerSheetDataSource.paymentMethodRemoveIsPartial(elementsSession: elementsSession)

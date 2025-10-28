@@ -20,11 +20,11 @@ actor ConfirmationChallenge {
 
     typealias ChallengeTokens = (hcaptchaToken: String?, assertion: StripeAttest.Assertion?)
 
-    public init(enablePassiveCaptcha: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
+    public init(enablePassiveCaptcha: Bool, enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
         if enablePassiveCaptcha, let passiveCaptchaData = elementsSession.passiveCaptchaData {
            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
         }
-        if elementsSession.shouldAttestOnConfirmation {
+        if enableAttestation, elementsSession.shouldAttestOnConfirmation {
             self.attestationConfirmationChallenge = AttestationConfirmationChallenge(stripeAttest: stripeAttest)
         }
     }

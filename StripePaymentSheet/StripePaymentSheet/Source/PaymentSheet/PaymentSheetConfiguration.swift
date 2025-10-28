@@ -234,6 +234,9 @@ extension PaymentSheet {
         /// If true, an invisible challenge will be performed for human verification
         @_spi(STP) public var enablePassiveCaptcha: Bool = false
 
+        /// If true, the device will be attested and requests will be signed on confirmation
+        @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
+
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
 

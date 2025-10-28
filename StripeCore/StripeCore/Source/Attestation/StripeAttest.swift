@@ -27,28 +27,36 @@ import UIKit
             }
         }
         assertionInProgress = true
-
-        do {
-            let assertion = try await _assert(canSyncState: canSyncState)
-            let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
-            if let apiClient {
-                STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
-            }
-            return AssertionHandle(assertion: assertion, stripeAttest: self)
-        } catch {
-            let errorAnalytic = ErrorAnalytic(event: .assertionFailed, error: error)
-            if let apiClient {
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
-            }
-            if apiClient?.isTestmode ?? false {
-                // In testmode, we can provide a test assertion even if the real assertion fails
-                return await AssertionHandle(assertion: testmodeAssertion(), stripeAttest: self)
-            } else {
-                // Clean up the continuation, as we're not returning it as an AssertionHandle
+        let task = Task<AssertionHandle, Error> {
+            do {
+                let assertion = try await _assert(canSyncState: canSyncState)
+                let successAnalytic = GenericAnalytic(event: .assertionSucceeded, params: [:])
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: successAnalytic, apiClient: apiClient)
+                }
+                return AssertionHandle(assertion: assertion, stripeAttest: self)
+            } catch is CancellationError {
+                // Clean up the queue on cancellation
                 assertionCompleted()
-                throw error
+                throw CancellationError()
+            } catch {
+                let errorAnalytic = ErrorAnalytic(event: .assertionFailed, error: error)
+                if let apiClient {
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
+                }
+                if apiClient?.isTestmode ?? false {
+                    // In testmode, we can provide a test assertion even if the real assertion fails
+                    return await AssertionHandle(assertion: testmodeAssertion(), stripeAttest: self)
+                } else {
+                    // Clean up the continuation, as we're not returning it as an AssertionHandle
+                    assertionCompleted()
+                    throw error
+                }
             }
         }
+        assertionTask = task
+        defer { assertionTask = nil } // Clear the task after it's done
+        return try await task.value
     }
 
     /// Determines if the current device is able to sign requests.
@@ -244,19 +252,25 @@ import UIKit
         }
     }
     private var attestationTask: Task<Void, Error>?
+    private var assertionTask: Task<AssertionHandle, Error>?
 
     private var assertionInProgress: Bool = false
     private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
 
     func _assert(canSyncState: Bool, isRetry: Bool = false) async throws -> Assertion {
+        try Task.checkCancellation()
+
         let keyId = try await self.getOrCreateKeyID()
+        try Task.checkCancellation()
 
         if !successfullyAttested {
             // We haven't attested yet, so do that first.
             try await self.attest()
+            try Task.checkCancellation()
         }
 
         let challenge = try await getChallenge()
+        try Task.checkCancellation()
 
         // State alignment: sync client state with server
         if canSyncState && !challenge.initial_attestation_required && !successfullyAttested {
@@ -284,13 +298,19 @@ import UIKit
         }
 
         let deviceId = try await getDeviceID()
+        try Task.checkCancellation()
+
         let appId = try getAppID()
 
         let assertion = try await generateAssertion(keyId: keyId, challenge: challenge.challenge)
+        try Task.checkCancellation()
+
         return Assertion(assertionData: assertion, deviceID: deviceId, appID: appId, keyID: keyId)
     }
 
     func _attest() async throws {
+        try Task.checkCancellation()
+
         // It's dangerous to attest, as it increments a permanent counter for the device.
         // Check if we've reached the daily limit of attempts.
         let now = Date()
@@ -315,7 +335,11 @@ import UIKit
         }
 
         let keyId = try await self.getOrCreateKeyID()
+        try Task.checkCancellation()
+
         let challenge = try await getChallenge()
+        try Task.checkCancellation()
+
         // If the backend claims that attestation isn't required, we should not attempt it.
         guard challenge.initial_attestation_required else {
             // And reset the key, as something has gone wrong.
@@ -329,10 +353,14 @@ import UIKit
         let hash = Data(SHA256.hash(data: challengeData))
 
         let deviceId = try await getDeviceID()
+        try Task.checkCancellation()
+
         let appId = try getAppID()
 
         do {
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
+            try Task.checkCancellation()
+
             if !appAttestService.attestationDataIsDevelopmentEnvironment(attestation) {
                 // We only need to limit attestations in production.
                 // Being more relaxed about this also helps with users switching between
@@ -341,6 +369,8 @@ import UIKit
                 dailyAttemptCount += 1
             }
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
+            try Task.checkCancellation()
+
             // Store the successful attestation
             successfullyAttested = true
         } catch {
@@ -442,6 +472,11 @@ import UIKit
             // For other errors, we'll want to retry attestation later with the same key.
             throw error
         }
+    }
+
+    public func cancel() {
+        attestationTask?.cancel()
+        assertionTask?.cancel()
     }
 
     // MARK: Assertion concurrency
