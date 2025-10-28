@@ -186,7 +186,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                 if let data = data,
                    (response as? HTTPURLResponse)?.statusCode == 400 {
                     // read the error message
-                    let errorMessage = String(decoding: data, as: UTF8.self)
+                    let errorMessage = String(data: data, encoding: .utf8) ?? "unknown error"
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
                     intentCreationCallback(.failure(error ?? ConfirmHandlerError.unknown))
