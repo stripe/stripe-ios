@@ -20,10 +20,10 @@ struct KYCRefreshRequest: Encodable {
 
     enum CodingKeys: String, CodingKey {
         case credentials
-        case firstName = "first_name"
-        case lastName = "last_name"
+        case firstName
+        case lastName
         case idNumberLast4 = "id_number_last4"
-        case idType = "id_type"
+        case idType
         case line1
         case line2
         case city

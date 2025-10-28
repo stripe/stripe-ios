@@ -35,8 +35,8 @@ struct RetrieveKYCInfoResponse: Decodable {
         let firstName = try container.decode(String.self, forKey: .firstName)
         let lastName = try container.decodeIfPresent(String.self, forKey: .lastName)
         let dateOfBirth = try container.decode(KycInfo.DateOfBirth.self, forKey: .dob)
-        let idNumberLast4 = try container.decode(String.self, forKey: .idNumberLast4)
-        let idType = try container.decode(IdType.self, forKey: .idType)
+        let idNumberLast4 = try container.decodeIfPresent(String.self, forKey: .idNumberLast4)
+        let idType = try container.decodeIfPresent(IdType.self, forKey: .idType)
         let address = try container.decode(Address.self, forKey: .address)
 
         kycInfo = KYCRefreshInfo(
