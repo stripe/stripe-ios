@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 
 @testable import StripeCryptoOnramp
@@ -21,4 +22,12 @@ enum RetrieveKYCInfoResponseMock: String, MockData {
     typealias ResponseType = RetrieveKYCInfoResponse
 
     case retrieveKYCInfoResponse_200 = "RetrieveKYCInfoResponse_200"
+}
+
+enum RefreshKYCInfoResponseMock: String, MockData {
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    typealias ResponseType = EmptyResponse
+
+    case refreshKYCInfoResponse_200 = "RefreshKYCInfoResponse_200"
 }

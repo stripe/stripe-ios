@@ -63,6 +63,17 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         // /v1/crypto/internal/kyc_data_retrieve
         static let retrieveKYCInfoAPIPath = "/v1/crypto/internal/kyc_data_retrieve"
 
+        // /v1/crypto/internal/refresh_consumer_person
+        static let refreshKYCInfoAPIPath = "/v1/crypto/internal/refresh_consumer_person"
+        static let validKycRefreshInfo = KYCRefreshInfo(
+            firstName: validKycInfo.firstName,
+            lastName: validKycInfo.lastName,
+            dateOfBirth: validKycInfo.dateOfBirth,
+            address: validKycInfo.address,
+            idNumberLast4: String(validKycInfo.idNumber.suffix(4)),
+            idType: .socialSecurityNumber
+        )
+
         // /v1/crypto/internal/start_identity_verification
         static let startIdentityVerificationAPIPath = "/v1/crypto/internal/start_identity_verification"
         static let startIdentityVerificationMockResponseObject = StartIdentityVerificationResponse(
@@ -209,6 +220,64 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(_ = try await apiClient.collectKycInfo(info: Constant.validKycInfo, linkAccountInfo: unverifiedLinkAccountInfo))
+    }
+
+    func testRefreshKycInfoSuccess() async throws {
+        let mockResponseData = try RefreshKYCInfoResponseMock.refreshKYCInfoResponse_200.data()
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.refreshKYCInfoAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 14)
+            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(parameters["first_name"], "John")
+            XCTAssertEqual(parameters["last_name"], "Smith")
+            XCTAssertEqual(parameters["id_number_last4"], "6789")
+            XCTAssertEqual(parameters["id_type"], "social_security_number")
+            XCTAssertEqual(parameters["line1"], "123%20Fake%20Street")
+            XCTAssertEqual(parameters["line2"], "APT%202")
+            XCTAssertEqual(parameters["city"], "Brooklyn")
+            XCTAssertEqual(parameters["state"], "New%20York")
+            XCTAssertEqual(parameters["zip"], "11201")
+            XCTAssertEqual(parameters["country"], "US")
+            XCTAssertEqual(parameters["dob[day]"], "31")
+            XCTAssertEqual(parameters["dob[month]"], "3")
+            XCTAssertEqual(parameters["dob[year]"], "1975")
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.refreshKycInfo(info: Constant.validKycRefreshInfo, linkAccountInfo: Constant.validLinkAccountInfo)
+            XCTAssertTrue(response.allResponseFields.isEmpty)
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+
+    }
+
+    func testRefreshKycInfoThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.refreshKycInfo(info: Constant.validKycRefreshInfo, linkAccountInfo: noSecretLinkAccountInfo))
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.refreshKycInfo(info: Constant.validKycRefreshInfo, linkAccountInfo: unverifiedLinkAccountInfo))
     }
 
     func testRetrieveKycInfoSuccess() async throws {

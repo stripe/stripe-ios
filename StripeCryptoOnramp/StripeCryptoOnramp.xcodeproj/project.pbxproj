@@ -21,6 +21,7 @@
 		0B53153B2EB017E000ADFE65 /* KYCRefreshInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B53153A2EB017E000ADFE65 /* KYCRefreshInfo.swift */; };
 		0B53153F2EB1102700ADFE65 /* RetrieveKYCInfoResponse_200.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B53153E2EB1100900ADFE65 /* RetrieveKYCInfoResponse_200.json */; };
 		0B5315432EB110F600ADFE65 /* CryptoOnrampMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5315422EB110F000ADFE65 /* CryptoOnrampMockData.swift */; };
+		0B5315472EB1260100ADFE65 /* RefreshKYCInfoResponse_200.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B5315462EB1260100ADFE65 /* RefreshKYCInfoResponse_200.json */; };
 		0B63C98A2E4CEE04005D8BD2 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B63C9892E4CEE04005D8BD2 /* Stripe.framework */; };
 		0B63C98E2E4CF8CD005D8BD2 /* ApplePayPaymentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B63C98D2E4CF8C1005D8BD2 /* ApplePayPaymentStatus.swift */; };
 		0B649EDE2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B649EDD2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift */; };
@@ -110,6 +111,7 @@
 		0B53153A2EB017E000ADFE65 /* KYCRefreshInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KYCRefreshInfo.swift; sourceTree = "<group>"; };
 		0B53153E2EB1100900ADFE65 /* RetrieveKYCInfoResponse_200.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = RetrieveKYCInfoResponse_200.json; sourceTree = "<group>"; };
 		0B5315422EB110F000ADFE65 /* CryptoOnrampMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoOnrampMockData.swift; sourceTree = "<group>"; };
+		0B5315462EB1260100ADFE65 /* RefreshKYCInfoResponse_200.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = RefreshKYCInfoResponse_200.json; sourceTree = "<group>"; };
 		0B63C9892E4CEE04005D8BD2 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B63C98D2E4CF8C1005D8BD2 /* ApplePayPaymentStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePayPaymentStatus.swift; sourceTree = "<group>"; };
 		0B649EDD2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartIdentityVerificationRequest.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 		0B53153D2EB1100300ADFE65 /* JSON */ = {
 			isa = PBXGroup;
 			children = (
+				0B5315462EB1260100ADFE65 /* RefreshKYCInfoResponse_200.json */,
 				0B53153E2EB1100900ADFE65 /* RetrieveKYCInfoResponse_200.json */,
 			);
 			path = JSON;
@@ -528,6 +531,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B53153F2EB1102700ADFE65 /* RetrieveKYCInfoResponse_200.json in Resources */,
+				0B5315472EB1260100ADFE65 /* RefreshKYCInfoResponse_200.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
