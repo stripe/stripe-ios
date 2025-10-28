@@ -666,7 +666,7 @@ extension STPAPIClient {
             switch type {
             case .sms:
                 return "SMS"
-            case .unparsable, .signup, .email:
+            case .unparsable, .signup, .email, .linkAuthToken:
                 assertionFailure("We don't support any verification except sms")
                 return ""
             }
