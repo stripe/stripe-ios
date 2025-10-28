@@ -4,6 +4,7 @@
 
 ### PaymentSheet
 * [Changed] Replaces `PaymentSheet.ApplePayConfiguration.Handlers` completion-block based `authorizationResultHandler` with an async equivalent.
+* [Removed] Removed `PaymentSheet.reset()` in favor of `PaymentSheet.resetCustomer()`.
 * [Changed] CustomerSessions is now generally available.
 * [Changed] ConfirmationTokens is now generally available.
 
