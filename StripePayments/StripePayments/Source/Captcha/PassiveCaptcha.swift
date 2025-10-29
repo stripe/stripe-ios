@@ -49,7 +49,7 @@ import Foundation
     private var tokenTask: Task<String, Error>?
     private var hasFetchedToken = false
 
-    var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
+    private var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
 
     func setTimeout(timeout: TimeInterval) {
         self.timeout = timeout
@@ -122,40 +122,30 @@ import Foundation
     }
 
     public func fetchTokenWithTimeout() async -> String? {
-        let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
         let siteKey = passiveCaptchaData.siteKey
-        do {
-            return try await withThrowingTaskGroup(of: String.self) { group in
-                let isReady = hasFetchedToken
-                // Add hcaptcha task
-                group.addTask {
-                    return try await self.fetchToken()
-                }
-                // Add timeout task
-                group.addTask {
-                    try await Task.sleep(nanoseconds: timeoutNs)
-                    throw PassiveCaptchaError.timeout
-                }
-                defer {
-                    // ⚠️ TaskGroups can't return until all child tasks have completed, so we need to cancel remaining tasks and handle cancellation to complete as quickly as possible
-                    tokenTask?.cancel()
-                    group.cancelAll()
-                }
-                // Wait for first completion
-                let result = try await group.next()
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
-                return result
-            }
-        } catch {
-            // Only log if PassiveCaptchaError. Other errors should already be logged
-            if error is PassiveCaptchaError {
+        let isReady = hasFetchedToken
+        let passiveCaptchaOperation = AsyncOperation<String> {
+            return try await self.fetchToken()
+        } onCancel: {
+            self.cancel()
+        }
+        let passiveCaptchaResult = await withTimeout(timeout: timeout, passiveCaptchaOperation)
+        switch passiveCaptchaResult {
+        case .success(let token):
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
+            return token
+        case .failure(let error):
+            if error is TimeoutError {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
             }
             return nil
         }
     }
 
+    public func cancel() {
+        tokenTask?.cancel()
+    }
 }
 
 // Protocol for creating HCaptcha instances
