@@ -902,7 +902,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedViewBigCustomIcon, identifier: "big_error_icon")
 
         // Custom svg
-        let image = UIImage(named: "afterpay_icon_info", in: Bundle(for: PaymentSheet.self), with: nil)
+        let image = UIImage(named: "icon_edit_outlined", in: Bundle(for: PaymentSheet.self), with: nil)
         appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage = image
         let embeddedViewSmallCustomIcon = EmbeddedPaymentMethodsView(
             savedPaymentMethod: ._testCard(),
@@ -1414,7 +1414,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 }
 
 extension PaymentSheetLinkAccount {
-    static func _testValue(email: String, isRegistered: Bool = true) -> PaymentSheetLinkAccount {
+    static func _testValue(
+        email: String,
+        isRegistered: Bool = true,
+        displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails? = nil
+    ) -> PaymentSheetLinkAccount {
         var session: ConsumerSession?
         if isRegistered {
             session = ConsumerSession(
@@ -1426,14 +1430,17 @@ extension PaymentSheetLinkAccount {
                 verificationSessions: [
                     .init(type: .sms, state: .verified)
                 ],
-                supportedPaymentDetailsTypes: [.card]
+                supportedPaymentDetailsTypes: [.card],
+                mobileFallbackWebviewParams: nil
             )
         }
         return .init(
             email: email,
             session: session,
             publishableKey: "pk_123",
-            useMobileEndpoints: true
+            displayablePaymentDetails: displayablePaymentDetails,
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }

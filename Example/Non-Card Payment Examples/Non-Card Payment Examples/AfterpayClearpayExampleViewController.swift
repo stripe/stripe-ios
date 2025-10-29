@@ -22,7 +22,7 @@ class AfterpayClearpayExampleViewController: UIViewController {
 
     // UI
     lazy var activityIndicatorView = {
-        return UIActivityIndicatorView(style: .gray)
+        return UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
     }()
     lazy var payButton: UIButton = {
         let button = UIButton(type: .roundedRect)
@@ -98,8 +98,8 @@ extension AfterpayClearpayExampleViewController {
                 paymentIntentParams.returnURL = "payments-example://safepay/"
                 paymentIntentParams.shipping = shippingDetails
 
-                STPPaymentHandler.shared().confirmPayment(
-                    withParams: paymentIntentParams, authenticationContext: self
+                STPPaymentHandler.shared().confirmPaymentIntent(
+                    params: paymentIntentParams, authenticationContext: self
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:

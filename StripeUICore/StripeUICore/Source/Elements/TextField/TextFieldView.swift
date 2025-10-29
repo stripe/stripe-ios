@@ -25,12 +25,6 @@ class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
     private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)
 
-    lazy var transparentMaskView: UIView = {
-        let view = UIView()
-        view.backgroundColor = viewModel.theme.colors.componentBackground.translucentMaskColor
-        return view
-    }()
-
     var text: String {
         return textField.text ?? ""
     }
@@ -167,7 +161,7 @@ class TextFieldView: UIView {
 
     fileprivate func installConstraints() {
         if viewModel.editConfiguration == .readOnly {
-            addAndPinSubview(transparentMaskView)
+            backgroundColor = viewModel.theme.colors.readonlyComponentBackground
         }
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
@@ -240,7 +234,7 @@ class TextFieldView: UIView {
 
         // Update text and border color
         if case .invalid(let error) = viewModel.validationState,
-           error.shouldDisplay(isUserEditing: textField.isEditing) {
+           error.shouldDisplay(isUserEditing: textField.isEditing, displayEmptyFields: viewModel.displayEmptyFields) {
             layer.borderColor = viewModel.theme.colors.danger.cgColor
             textField.textColor = viewModel.theme.colors.danger
             errorIconView.alpha = 1
@@ -267,7 +261,6 @@ class TextFieldView: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        self.transparentMaskView.backgroundColor = viewModel.theme.colors.componentBackground.translucentMaskColor
         updateUI(with: viewModel)
     }
 #endif

@@ -23,6 +23,9 @@ public extension PaymentSheet.Configuration {
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
+        if #available(iOS 26.0, *) {
+            configuration.appearance.applyLiquidGlassIfPossible()
+        }
         return configuration
     }
 }
@@ -41,12 +44,32 @@ public extension EmbeddedPaymentElement.Configuration {
     }
 }
 
+public extension PaymentSheet.Appearance {
+    mutating func applyLiquidGlassIfPossible() {
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            self.applyLiquidGlass()
+        }
+        #endif
+    }
+    func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
+        var copy = self
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            copy.applyLiquidGlass()
+        }
+        #endif
+        return copy
+    }
+}
+
 extension STPElementsSession {
     static func _testValue(
         orderedPaymentMethodTypes: [STPPaymentMethodType] = [.card],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType] = [],
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
+        merchantLogoUrl: URL? = nil,
         linkSettings: LinkSettings? = nil,
         experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
@@ -55,17 +78,20 @@ extension STPElementsSession {
         isApplePayEnabled: Bool = true,
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
+        passiveCaptchaData: PassiveCaptchaData? = nil,
         customer: ElementsCustomer? = nil,
         isBackupInstance: Bool = false
     ) -> STPElementsSession {
         return .init(
             allResponseFields: [:],
             sessionID: "test_123",
+            configID: "test_config",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
             orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
+            merchantLogoUrl: merchantLogoUrl,
             linkSettings: linkSettings,
             experimentsData: experimentsData,
             flags: flags,
@@ -74,6 +100,7 @@ extension STPElementsSession {
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
+            passiveCaptchaData: passiveCaptchaData,
             customer: customer
         )
     }
@@ -109,7 +136,8 @@ extension STPElementsSession {
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
         linkSuppress2FA: Bool? = nil,
-        hasLinkConsumerIncentive: Bool = false
+        hasLinkConsumerIncentive: Bool = false,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -178,6 +206,8 @@ extension STPElementsSession {
             json[jsonDict: "link_settings"]!["link_mobile_disable_signup"] = disableLinkSignup
         }
 
+        json[jsonDict: "link_settings"]!["link_supported_payment_methods_onboarding_enabled"] = linkSupportedPaymentMethodsOnboardingEnabled
+
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
@@ -189,7 +219,8 @@ extension STPElementsSession {
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
-        allowsSetAsDefaultPM: Bool = false
+        allowsSetAsDefaultPM: Bool = false,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
             switch intent {
@@ -223,7 +254,8 @@ extension STPElementsSession {
             linkMode: linkMode,
             linkFundingSources: linkFundingSources,
             defaultPaymentMethod: defaultPaymentMethod,
-            paymentMethods: paymentMethods
+            paymentMethods: paymentMethods,
+            linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled
         )
     }
 }
@@ -257,7 +289,7 @@ extension Intent {
         setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil,
         paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]? = nil
     ) -> Intent {
-        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _, _ in }))
+        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
 }
 
@@ -416,6 +448,7 @@ extension STPPaymentMethod {
 extension PaymentSheet.Appearance {
     static var _testMSPaintTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
+        appearance.applyLiquidGlassIfPossible()
 
         // Customize the font
         var font = PaymentSheet.Appearance.Font()
@@ -462,7 +495,7 @@ extension PaymentSheet.Appearance {
 
 extension PaymentSheetLoader.LoadResult {
     static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes
         )

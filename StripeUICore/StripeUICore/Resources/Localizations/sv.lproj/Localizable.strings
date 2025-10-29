@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valfritt)";
 
 "(not accepted)" = "(accepteras inte)";
@@ -37,8 +39,6 @@
 "Country or region" = "Land eller region";
 
 "County" = "Landskap";
-
-"Date is empty." = "Datumfältet är tomt.";
 
 "Department" = "Departement";
 
@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Din BLIK-kod är ogiltig.";
 
-"Your ZIP is incomplete." = "Ditt postnummer är ofullständigt.";
+"Your ZIP code is incomplete." = "Ditt postnummer är ofullständigt.";
+
+"Your ZIP code is invalid." = "Ditt postnummer är ogiltigt.";
 
 "Your email is invalid." = "Din e-postadress är ogiltig.";
 
 "Your payment information will not be saved." = "Din betalningsinformation kommer inte att sparas.";
 
 "Your postal code is incomplete." = "Ditt postnummer är ofullständigt.";
+
+"Your postal code is invalid." = "Ditt postnummer är ogiltigt.";
 
 "ZIP" = "Postkod";

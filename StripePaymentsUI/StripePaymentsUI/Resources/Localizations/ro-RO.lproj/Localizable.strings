@@ -22,6 +22,8 @@
 
 "Billing address" = "Adresă de facturare";
 
+"Billing details" = "Detalii de facturare";
+
 "CVC" = "Cod CVC";
 
 "Card information" = "Informații privind cardul";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
 
-"Your ZIP is invalid." = "Codul dvs. poștal nu este valid.";
-
 "Your card has expired." = "Cardul dvs. a expirat.";
 
 "Your card number is incomplete." = "Numărul cardului dvs. nu este complet.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Codul de securitate al cardului dvs. nu este complet.";
 
 "Your card's security code is invalid." = "Codul de securitate al cardului dvs. nu este valid.";
-
-"Your postal code is invalid." = "Codul dvs. poștal nu este valid.";
 
 "card number" = "număr card";
 

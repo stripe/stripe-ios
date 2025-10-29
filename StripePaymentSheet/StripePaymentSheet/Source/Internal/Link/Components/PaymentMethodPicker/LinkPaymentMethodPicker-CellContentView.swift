@@ -35,8 +35,8 @@ extension LinkPaymentMethodPicker {
                     bankIconView.image = makeBankIcon(for: bankAccount.iconCode)
                     cardBrandView.isHidden = true
                     bankIconView.isHidden = false
-                    primaryLabel.text = bankAccount.name
-                    secondaryLabel.text = paymentMethod?.paymentSheetLabel
+                    primaryLabel.text = bankAccount.displayName(with: paymentMethod?.nickname)
+                    secondaryLabel.text = "•••• \(bankAccount.last4)"
                     secondaryLabel.isHidden = false
                 case .none, .unparsable:
                     cardBrandView.isHidden = true

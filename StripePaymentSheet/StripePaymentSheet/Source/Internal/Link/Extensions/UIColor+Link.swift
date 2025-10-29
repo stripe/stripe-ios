@@ -32,7 +32,6 @@ extension UIColor {
     static let linkTextTertiary: UIColor = neutral500
     static let linkTextBrand: UIColor = dynamic(light: brand600, dark: brand200)
     static let linkTextCritical: UIColor = critical600
-    static let linkTextOnPrimary: UIColor = neutral900
 
     // Icon colors
     static let linkIconPrimary: UIColor = dynamic(light: neutral900, dark: neutral100)
@@ -52,6 +51,10 @@ extension UIColor {
     static let linkContentOnPrimaryButton: UIColor = UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0)
     /// Separator color on primary button
     static let linkSeparatorOnPrimaryButton: UIColor = brand400
+    /// Foreground color in the outlined Link hint message view
+    static let linkOutlinedHintMessageForeground: UIColor = .dynamic(light: neutral700, dark: neutral500)
+    /// Border color around the outlined Link hint message view
+    static let linkOutlinedHintMessageBorder: UIColor = .dynamic(light: neutral300, dark: neutral500)
 
     /**
      * Workaround:
@@ -78,7 +81,12 @@ extension UIColor {
      */
     static let linkToastForeground: UIColor = neutral0
     static let linkToastBackground: UIColor = brand900
+
+    static let linkExpressCheckoutButtonDivider: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.12)
+    static let linkExpressCheckoutButtonForeground: UIColor = UIColor(red: 13/255, green: 13/255, blue: 13/255, alpha: 1)
+    static let linkExpressCheckoutButtonBackground: UIColor = .white
 }
+
 private extension UIColor {
 
     // MARK: - Raw Colors

@@ -33,8 +33,10 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             for: nil,
             emailSource: .customerEmail,
             sessionID: "abc123",
+            customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             doNotLogConsumerFunnelEvent: false
         ) {
             result in
@@ -66,8 +68,10 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             for: "mobile-payments-sdk-ci+a-consumer@stripe.com",
             emailSource: .customerEmail,
             sessionID: "abc123",
+            customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             doNotLogConsumerFunnelEvent: false
         ) { result in
             switch result {
@@ -98,8 +102,10 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             for: "mobile-payments-sdk-ci+not-a-consumer+\(UUID())@stripe.com",
             emailSource: .customerEmail,
             sessionID: "abc123",
+            customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             doNotLogConsumerFunnelEvent: false
         ) { result in
             switch result {
@@ -137,6 +143,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             countryCode: "US",
             consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             with: apiClient
         ) { result in
             switch result {
@@ -186,17 +193,16 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
         let useDetailsAfterLogoutExpectation = self.expectation(description: "try using payment details after logout")
         consumerSession.createPaymentDetails(
             paymentMethodParams: paymentMethodParams,
-            with: apiClient,
-            consumerAccountPublishableKey: sessionWithKey?.publishableKey
+            with: apiClient
         ) { result in
             switch result {
             case .success:
                 // If this succeeds, log out...
-                consumerSession.logout(with: self.apiClient, consumerAccountPublishableKey: sessionWithKey?.publishableKey) { logoutResult in
+                consumerSession.logout(with: self.apiClient) { logoutResult in
                     switch logoutResult {
                     case .success:
                         // Try to use the session again, it shouldn't work
-                        consumerSession.createPaymentDetails(paymentMethodParams: paymentMethodParams, with: self.apiClient, consumerAccountPublishableKey: sessionWithKey?.publishableKey) { loggedOutAuthenticatedActionResult in
+                        consumerSession.createPaymentDetails(paymentMethodParams: paymentMethodParams, with: self.apiClient) { loggedOutAuthenticatedActionResult in
                             switch loggedOutAuthenticatedActionResult {
                             case .success:
                                 XCTFail("Logout failed to invalidate token")
@@ -241,6 +247,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             countryCode: "US",
             consentAction: PaymentSheetLinkAccount.ConsentAction.checkbox_v0.rawValue,
             useMobileEndpoints: false,
+            canSyncAttestationState: false,
             with: apiClient
         ) { result in
             switch result {
@@ -288,8 +295,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
         let createExpectation = self.expectation(description: "create payment details")
         consumerSession.createPaymentDetails(
             paymentMethodParams: paymentMethodParams,
-            with: apiClient,
-            consumerAccountPublishableKey: sessionWithKey?.publishableKey
+            with: apiClient
         ) { result in
             switch result {
             case .success:

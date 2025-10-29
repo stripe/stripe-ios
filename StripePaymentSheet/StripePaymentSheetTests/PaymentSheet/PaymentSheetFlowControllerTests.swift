@@ -9,6 +9,7 @@
 @testable @_spi(STP) import StripePayments
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripeUICore
 import XCTest
 
 class PaymentSheetFlowControllerTests: XCTestCase {
@@ -38,7 +39,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             details: .bankAccount(bankAccount: .init(
                 iconCode: nil,
                 name: "STRIPE TEST BANK",
-                last4: "6789"
+                last4: "6789",
+                country: "COUNTRY_US"
             )),
             billingAddress: nil,
             billingEmailAddress: nil,
@@ -52,9 +54,22 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             email: "user@example.com",
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
+            displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
+    }
+
+    override func setUp() {
+        super.setUp()
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
     }
 
     // MARK: - PaymentOptionDisplayData Labels Tests
@@ -173,8 +188,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         let configuration = PaymentSheet.ExternalPaymentMethodConfiguration(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { _, _, completion in
-                completion(.completed)
+            externalPaymentMethodConfirmHandler: { _, _ in
+                return .completed
             }
         )
 
@@ -274,6 +289,50 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for Link with bank account payment details - should show "Link" as label and formatted details as sublabel
         XCTAssertEqual(displayData.labels.label, "Link")
         // The sublabel should show the bank account details
-        XCTAssertEqual(displayData.labels.sublabel, "STRIPE TEST BANK •••• 6789")
+        XCTAssertEqual(displayData.labels.sublabel, "My Checking")
+    }
+
+    // MARK: - Enhanced Completion Block Tests
+
+    func testPresentPaymentOptions_EnhancedCompletion_BothMethodsExist() {
+        // Given a FlowController with mocked dependencies
+        let configuration = PaymentSheet.Configuration()
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let elementsSession = STPElementsSession._testCardValue()
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)])
+
+        let flowController = PaymentSheet.FlowController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+
+        let mockViewController = UIViewController()
+
+        // Test enhanced presentPaymentOptions method with didCancel parameter
+        let enhancedExpectation = expectation(description: "Enhanced completion called")
+        flowController.presentPaymentOptions(from: mockViewController) { didCancel in
+            // Verify didCancel is a boolean parameter that can be accessed
+            XCTAssertTrue(didCancel == true || didCancel == false, "didCancel should be a boolean value")
+            enhancedExpectation.fulfill()
+        }
+
+        // Trigger the delegate method directly to simulate dismissal
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: true)
+
+        // Wait for enhanced callback
+        wait(for: [enhancedExpectation], timeout: 2.0)
+
+        // Test legacy presentPaymentOptions method without didCancel parameter
+        let legacyExpectation = expectation(description: "Legacy completion called")
+        flowController.presentPaymentOptions(from: mockViewController) {
+            legacyExpectation.fulfill()
+        }
+
+        // Trigger the delegate method directly to simulate dismissal
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
+
+        // Wait for legacy callback
+        wait(for: [legacyExpectation], timeout: 2.0)
     }
 }

@@ -99,6 +99,12 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    var linkAppearance: LinkAppearance? {
+        didSet {
+            updateTintColors()
+        }
+    }
+
     /// Calculates the maximum width required for the header labels.
     static let widthForHeaderLabels: CGFloat = {
         let font = LinkUI.font(forTextStyle: .bodyEmphasized)
@@ -133,7 +139,7 @@ final class LinkPaymentMethodPicker: UIView {
         return stackView
     }()
 
-    private let emailView = EmailView()
+    private let emailView: EmailView
     private let separatorView = LinkSeparatorView()
     private let headerView = Header()
 
@@ -143,7 +149,6 @@ final class LinkPaymentMethodPicker: UIView {
         ])
 
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
         stackView.clipsToBounds = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -156,7 +161,8 @@ final class LinkPaymentMethodPicker: UIView {
 
     private let addPaymentMethodButton = AddButton()
 
-    override init(frame: CGRect) {
+    init(linkConfiguration: LinkConfiguration? = nil) {
+        self.emailView = EmailView(linkConfiguration: linkConfiguration)
         super.init(frame: .zero)
         addAndPinSubview(stackView)
         setup()
@@ -170,12 +176,15 @@ final class LinkPaymentMethodPicker: UIView {
         clipsToBounds = true
         accessibilityIdentifier = "Stripe.Link.PaymentMethodPicker"
 
-        layer.cornerRadius = 16
-        layer.borderColor = UIColor.linkBorderDefault.cgColor
-        tintColor = .linkIconBrand
-        backgroundColor = .linkSurfaceSecondary
+        if let cornerRadius = LinkUI.appearance.cornerRadius {
+            layer.cornerRadius = cornerRadius
+        } else {
+            ios26_applyDefaultCornerConfiguration()
+        }
 
-        addPaymentMethodButton.tintColor = .linkTextBrand
+        layer.borderColor = UIColor.linkBorderDefault.cgColor
+        updateTintColors()
+        backgroundColor = .linkSurfaceSecondary
 
         headerView.addTarget(self, action: #selector(onHeaderTapped(_:)), for: .touchUpInside)
         headerView.layer.zPosition = 1
@@ -218,6 +227,12 @@ final class LinkPaymentMethodPicker: UIView {
             stackView.hideArrangedSubview(at: listViewIndex, animated: animated)
         }
     }
+
+    private func updateTintColors() {
+        let linkAppearancePrimaryColor = linkAppearance?.colors?.primary
+        tintColor = linkAppearancePrimaryColor ?? .linkIconBrand
+        addPaymentMethodButton.tintColor = linkAppearancePrimaryColor ?? .linkTextBrand
+    }
 }
 
 private extension LinkPaymentMethodPicker {
@@ -235,7 +250,7 @@ private extension LinkPaymentMethodPicker {
         delegate?.paymentDetailsPickerDidTapOnAddPayment(self, sourceRect: sourceRect)
     }
 
-    @objc func didTapOnAccountMenuItem(_ sender: AddButton) {
+    @objc func didTapOnAccountMenuItem(_ sender: UIButton) {
         let sourceRect = sender.convert(sender.bounds, to: self)
         delegate?.didTapOnAccountMenuItem(self, sourceRect: sourceRect)
     }

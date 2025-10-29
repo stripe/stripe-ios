@@ -22,6 +22,8 @@
 
 "Billing address" = "Indirizz tal-kont";
 
+"Billing details" = "Dettalji tal-ħruġ tal-fatturi";
+
 "CVC" = "CVC";
 
 "Card information" = "L-informazzjoni tal-karta";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Biex tiskennja l-karta tiegħek, agħti l-aċċess għall-kamera mill-Għażliet.";
 
-"Your ZIP is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
-
 "Your card has expired." = "Il-karta tiegħek skadiet.";
 
 "Your card number is incomplete." = "In-numru tal-karta tiegħek mhux komplut.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux komplut.";
 
 "Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb.";
-
-"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
 
 "card number" = "in-numru tal-karta";
 

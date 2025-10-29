@@ -37,6 +37,7 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
             XCTAssertNil(params.mandateData)
             XCTAssertNil(params.paymentMethodOptions)
             XCTAssertNil(params.shipping)
+            XCTAssertNil(params.confirmationToken)
         }
     }
 
@@ -161,6 +162,7 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
             address: STPPaymentIntentShippingDetailsAddressParams(line1: ""),
             name: ""
         )
+        params.confirmationToken = "ctoken_test_123"
 
         let paramsCopy = params.copy() as! STPPaymentIntentConfirmParams
         XCTAssertEqual(params.clientSecret, paramsCopy.clientSecret)
@@ -181,7 +183,28 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
             params.additionalAPIParameters as NSDictionary,
             paramsCopy.additionalAPIParameters as NSDictionary
         )
+        XCTAssertEqual(params.confirmationToken, paramsCopy.confirmationToken)
 
+    }
+
+    func testConfirmationTokenProperty() {
+        let params = STPPaymentIntentParams()
+
+        XCTAssertNil(params.confirmationToken)
+
+        params.confirmationToken = "ctoken_test_123"
+        XCTAssertEqual(params.confirmationToken, "ctoken_test_123")
+
+        params.confirmationToken = ""
+        XCTAssertEqual(params.confirmationToken, "")
+
+        params.confirmationToken = nil
+        XCTAssertNil(params.confirmationToken)
+    }
+
+    func testFormFieldMappingIncludesConfirmationToken() {
+        let mapping = STPPaymentIntentParams.propertyNamesToFormFieldNamesMapping()
+        XCTAssertEqual(mapping[NSStringFromSelector(#selector(getter: STPPaymentIntentParams.confirmationToken))], "confirmation_token")
     }
 
     func testClientSecretValidation() {

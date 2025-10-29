@@ -51,6 +51,8 @@ import Foundation
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let billingDetails: BillingDetails?
     @_spi(STP) public let eligibleForIncentive: Bool
+    @_spi(STP) public let allowRedisplay: String?
+    @_spi(STP) public let clientAttributionMetadata: STPClientAttributionMetadata?
 
     @_spi(STP) public var billingAddress: BillingAddress? {
         BillingAddress(from: billingDetails)
@@ -70,7 +72,9 @@ import Foundation
         intentId: IntentID? = nil,
         linkMode: LinkMode? = nil,
         billingDetails: BillingDetails? = nil,
-        eligibleForIncentive: Bool = false
+        eligibleForIncentive: Bool = false,
+        allowRedisplay: String? = nil,
+        clientAttributionMetadata: STPClientAttributionMetadata? = nil
     ) {
         self.amount = amount
         self.currency = currency
@@ -79,6 +83,8 @@ import Foundation
         self.linkMode = linkMode
         self.billingDetails = billingDetails
         self.eligibleForIncentive = eligibleForIncentive
+        self.allowRedisplay = allowRedisplay
+        self.clientAttributionMetadata = clientAttributionMetadata
     }
 }
 

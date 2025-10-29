@@ -6,72 +6,39 @@
 import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView: View {
-
-    private struct Constants {
-        static let bottomPadding: CGFloat = 15.0
+    private var destinationsBySection: [Section: [NavigationDestination]] {
+        NavigationDestination.destinationsBySection
     }
-    @State private var selectedDestination: NavigationDestination?
 
     var body: some View {
-        NavigationView  {
-            VStack {
-                Spacer()
-                Text("Examples")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .padding(.bottom, Constants.bottomPadding)
-                destinationLink(for: .paymentSheet)
-                destinationLink(for: .paymentSheet_deferred)
-                destinationLink(for: .paymentSheet_flowController)
-                destinationLink(for: .paymentSheet_flowController_deferred)
-                destinationLink(for: .paymentSheet_swiftUI)
-                destinationLink(for: .paymentSheet_flowController_swiftUI)
-
-                destinationLink(for: .customerSheet_swiftUI)
-                destinationLink(for: .linkPaymentController)
-                destinationLink(for: .linkStandaloneComponent)
-                destinationLink(for: .embeddedPaymentElement)
-                destinationLink(for: .embeddedPaymentElement_swiftUI)
-                destinationLink(for: .walletButtonsView_swiftUI)
-                destinationLink(for: .addressCollection_swiftUI)
-
-                Text("Test Playgrounds")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .padding(.bottom, Constants.bottomPadding)
-                destinationLink(for: .customerSheet_playground)
-                destinationLink(for: .paymentSheet_playground)
-                Spacer()
+        NavigationView {
+            Form {
+                ForEach(Section.allCases, id: \.self) { section in
+                    SwiftUI.Section(section.rawValue) {
+                        ForEach(destinationsBySection[section] ?? [], id: \.self) { destination in
+                            NavigationLink(
+                                destination: destinationView(for: destination)
+                            ) {
+                                Text(destination.displayTitle)
+                            }
+                            .accessibility(identifier: destination.displayTitle)
+                        }
+                    }
+                }
             }
         }
+        .navigationTitle("Examples")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
-    @ViewBuilder
-    func destinationLink(for destination: NavigationDestination) -> some View {
-        ZStack(alignment: .leading) {
-            PressableTextLink(
-                text: destination.displayTitle,
-                bottomPadding: Constants.bottomPadding,
-                destination: destination,
-                selection: $selectedDestination
-            )
-            .accessibility(identifier: destination.displayTitle)
-            .zIndex(1)
-
-            // Hidden NavigationLink to handle the actual navigation
-            NavigationLink(
-                destination: destinationView(for: destination),
-                tag: destination,
-                selection: $selectedDestination
-            ) { EmptyView() }
-                .opacity(0)
-                .frame(width: 0, height: 0)
-        }
+    enum Section: String, CaseIterable {
+        case testPlaygrounds = "Test Playgrounds"
+        case examples = "Examples"
     }
 
-    enum NavigationDestination: Hashable {
+    enum NavigationDestination: Hashable, CaseIterable {
         case paymentSheet
         case paymentSheet_deferred
         case paymentSheet_flowController
@@ -81,14 +48,49 @@ struct PaymentSheetExampleAppRootView: View {
 
         case customerSheet_swiftUI
         case linkPaymentController
-        case linkStandaloneComponent
+        case linkController
+        case linkStandaloneDemo
         case embeddedPaymentElement
         case embeddedPaymentElement_swiftUI
         case walletButtonsView_swiftUI
         case addressCollection_swiftUI
 
-        case customerSheet_playground
         case paymentSheet_playground
+        case customerSheet_playground
+
+        static var destinationsBySection: [Section: [NavigationDestination]] {
+            var result: [Section: [NavigationDestination]] = [:]
+
+            for section in Section.allCases {
+                result[section] = []
+            }
+
+            for destination in allCases {
+                switch destination {
+                case .paymentSheet,
+                     .paymentSheet_deferred,
+                     .paymentSheet_flowController,
+                     .paymentSheet_flowController_deferred,
+                     .paymentSheet_swiftUI,
+                     .paymentSheet_flowController_swiftUI,
+                     .customerSheet_swiftUI,
+                     .linkPaymentController,
+                     .linkController,
+                     .linkStandaloneDemo,
+                     .embeddedPaymentElement,
+                     .embeddedPaymentElement_swiftUI,
+                     .walletButtonsView_swiftUI,
+                     .addressCollection_swiftUI:
+                    result[.examples]?.append(destination)
+                case .paymentSheet_playground,
+                     .customerSheet_playground:
+                    result[.testPlaygrounds]?.append(destination)
+                }
+            }
+
+            return result
+        }
+
         var displayTitle: String {
             switch self {
             case .paymentSheet:
@@ -108,8 +110,10 @@ struct PaymentSheetExampleAppRootView: View {
                 return "CustomerSheet (SwiftUI)"
             case .linkPaymentController:
                 return "LinkPaymentController"
-            case .linkStandaloneComponent:
-                return "Link Standalone Component"
+            case .linkController:
+                return "LinkController (SwiftUI)"
+            case .linkStandaloneDemo:
+                return "Link Standalone Demo"
             case .embeddedPaymentElement:
                 return "EmbeddedPaymentElement"
             case .embeddedPaymentElement_swiftUI:
@@ -149,7 +153,14 @@ struct PaymentSheetExampleAppRootView: View {
 
         case .linkPaymentController:
             StoryboardSceneView<ExampleLinkPaymentCheckoutViewController>(sceneIdentifier: "ExampleLinkPaymentCheckoutViewController")
-        case .linkStandaloneComponent:
+        case .linkController:
+            if #available(iOS 16.0, *) {
+                ExampleLinkControllerView()
+            } else {
+                Text("Sorry, only available on >= iOS 16.0")
+                    .font(.title2)
+            }
+        case .linkStandaloneDemo:
             if #available(iOS 16.0, *) {
                 ExampleLinkStandaloneComponent()
             } else {
@@ -160,12 +171,7 @@ struct PaymentSheetExampleAppRootView: View {
             StoryboardSceneView<ExampleEmbeddedElementCheckoutViewController>(sceneIdentifier: "ExampleEmbeddedElementCheckoutViewController")
 
         case .embeddedPaymentElement_swiftUI:
-            if #available(iOS 15.0, *) {
-                MyEmbeddedCheckoutView()
-            } else {
-                Text("Sorry, only available on >= iOS 15.0")
-                    .font(.title2)
-            }
+            MyEmbeddedCheckoutView()
         case .walletButtonsView_swiftUI:
             ExampleWalletButtonsContainerView()
         case .addressCollection_swiftUI:
@@ -178,68 +184,11 @@ struct PaymentSheetExampleAppRootView: View {
 
         // Playgrounds
         case .customerSheet_playground:
-            if #available(iOS 15.0, *) {
-                CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues())
-            } else {
-                Text("Sorry, only available on >= iOS 15.0")
-                    .font(.title2)
-            }
+            CustomerSheetTestPlayground()
         case .paymentSheet_playground:
-            if #available(iOS 15.0, *) {
-                PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PaymentSheet.Appearance.default)
-            } else {
-                Text("Sorry, only available on >= iOS 15.0")
-                    .font(.title2)
-            }
+            PaymentSheetTestPlayground()
         case .none:
             EmptyView()
-        }
-    }
-
-    struct PressableTextLink: View {
-        let text: String
-        let bottomPadding: CGFloat
-        let destination: NavigationDestination
-        @Binding var selection: NavigationDestination?
-
-        @GestureState private var isPressed = false
-        @State private var isTouchInside = false
-
-        var body: some View {
-            GeometryReader { geometry in
-                HStack {
-                    Spacer()
-                    Text(text)
-                        .foregroundColor(isPressed && isTouchInside ? .blue.opacity(0.6) : .blue)
-                        .padding(.bottom, bottomPadding)
-                        .contentShape(Rectangle())
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .updating($isPressed) { _, state, _ in
-                                    state = true
-                                }
-                                .onChanged { value in
-                                    // Check if touch is within bounds
-                                    let isInBounds = geometry.frame(in: .local).contains(value.location)
-                                    withAnimation(.easeOut(duration: 0.05)) {
-                                        isTouchInside = isInBounds
-                                    }
-                                }
-                                .onEnded { value in
-                                    // Only navigate if finger was inside when lifted
-                                    let isInBounds = geometry.frame(in: .local).contains(value.location)
-                                    if isInBounds {
-                                        selection = destination
-                                    }
-                                    isTouchInside = false
-                                }
-                        )
-                        .animation(.easeOut(duration: 0.05), value: isPressed)
-                    Spacer()
-                }
-            }
-            // Provide a reasonable size
-            .frame(height: 20 + bottomPadding) // Adjust based on your text size
         }
     }
 }

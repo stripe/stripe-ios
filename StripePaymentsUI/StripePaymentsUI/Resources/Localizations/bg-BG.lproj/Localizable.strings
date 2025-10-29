@@ -22,6 +22,8 @@
 
 "Billing address" = "Адрес за фактуриране";
 
+"Billing details" = "Данни за фактуриране";
+
 "CVC" = "CVC";
 
 "Card information" = "Информация за картата";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "За да сканирате картата си, разрешете достъп до камерата в Настройки.";
 
-"Your ZIP is invalid." = "Вашият ZIP код е невалиден.";
-
 "Your card has expired." = "Вашата карта е изтекла.";
 
 "Your card number is incomplete." = "Номерът на Вашата карта е непълен.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Кодът за сигурност на Вашата карта е непълен.";
 
 "Your card's security code is invalid." = "Кодът за сигурност на Вашата карта е невалиден.";
-
-"Your postal code is invalid." = "Вашият пощенски код е невалиден.";
 
 "card number" = "номер на картата";
 

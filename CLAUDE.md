@@ -36,11 +36,6 @@ To verify the simulator is properly configured, run:
 source <(./ci_scripts/setup_simulator.sh) && echo "✅ Simulator configured: $DEVICE_ID_FROM_USER_SETTINGS"
 ```
 
-## Adding new files
-If you create a new file, it MUST be added to the `.xcodeproj`. There is no reasonable way to do this on your own, you MUST ask the user to add the file manually before continuing.
-
-Ask the user to add the file to the `.xcodeproj`. Once they've completed this task, you can continue making progress.
-
 ## Build Commands
 
 ### Core Testing Commands
@@ -70,6 +65,10 @@ xcodebuild test -scheme StripePaymentSheet -workspace Stripe.xcworkspace -destin
 ### Recorded network tests
 - **Record network tests**: Use `AllStripeFrameworks-NetworkRecordMode` scheme (will fail while recording) and a specific test case
 - **Run network tests**: Use `AllStripeFrameworks` scheme to verify recorded network tests
+
+### UI Tests
+- **Run UI tests**: Use `PaymentSheet Example` scheme with target `PaymentSheetUITest`
+- **Run specific UI test class**: `-only-testing:PaymentSheetUITest/YourTestClassName`
 
 ## Code Quality
 
@@ -110,7 +109,7 @@ The Stripe iOS SDK is organized as a multi-module framework with clear dependenc
 
 ### Key Workspaces and Projects
 - **Main workspace**: `Stripe.xcworkspace` - Contains all modules and examples
-- **Individual projects**: Each module has its own `.xcodeproj` for focused development
+- **Individual projects**: Each module has its own `.xcodeproj`
 - **Test configurations**: Located in `BuildConfigurations/` directories
 
 ### Package Manager Support

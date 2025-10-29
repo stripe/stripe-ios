@@ -224,12 +224,23 @@ class ECEViewController: UIViewController {
         webView?.removeFromSuperview()
         webView = nil
     }
+
+    /// Validates that the message comes from the expected Stripe origin
+    private func isValidMessageOrigin(_ message: WKScriptMessage) -> Bool {
+        // Only allow messages from pay.stripe.com
+        return message.frameInfo.securityOrigin.host == "pay.stripe.com"
+    }
 }
 
 // MARK: - WKScriptMessageHandler
 @available(iOS 16.0, *)
 extension ECEViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        // Validate message origin for security
+        guard isValidMessageOrigin(message) else {
+            return
+        }
+
         let messageBody = message.body
 
         switch message.name {
@@ -245,6 +256,7 @@ extension ECEViewController: WKScriptMessageHandler {
             }
 
         case "consoleLog":
+            #if DEBUG
             if let logDict = messageBody as? [String: Any],
                let level = logDict["level"] as? String,
                let logMessage = logDict["message"] as? String {
@@ -259,6 +271,10 @@ extension ECEViewController: WKScriptMessageHandler {
                     }
                 }
             }
+            #else
+            // Don't log in release mode, this could contain sensitive info
+            break
+            #endif
 
         default:
             log("🔍 Unknown message type '\(message.name)': \(messageBody)")
@@ -318,6 +334,12 @@ struct BridgeError: LocalizedError {
 @available(iOS 16.0, *)
 extension ECEViewController: WKScriptMessageHandlerWithReply {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
+        // Validate message origin for security
+        guard isValidMessageOrigin(message) else {
+            replyHandler(nil, "Invalid message origin")
+            return
+        }
+
         Task {
             do {
                 let response = try await handleMessage(message: message)

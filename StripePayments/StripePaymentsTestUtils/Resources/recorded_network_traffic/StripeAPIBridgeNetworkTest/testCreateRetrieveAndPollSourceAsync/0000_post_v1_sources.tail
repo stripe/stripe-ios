@@ -1,0 +1,67 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/sources$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=wJrIy9SGymPIlS2gYItiUpCoMcNKdGzjkigXSuN7MD0VphYUQqGlHjW7C4pE4aIiyjoCQDtCQCsL-v4f
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_VlFXweZJSep69f
+Content-Length: 926
+Vary: Origin
+Date: Tue, 14 Oct 2025 21:30:13 GMT
+original-request: req_VlFXweZJSep69f
+stripe-version: 2020-08-27
+idempotency-key: dcfb3a1c-fd02-49d0-8331-c458a29dfe1a
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=42&card\[number]=4242424242424242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
+
+{
+  "id" : "src_1SIFnMFY0qyl6XeW1rVmfavH",
+  "livemode" : false,
+  "amount" : null,
+  "owner" : {
+    "address" : null,
+    "phone" : null,
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : null,
+    "name" : null
+  },
+  "usage" : "reusable",
+  "statement_descriptor" : null,
+  "type" : "card",
+  "object" : "source",
+  "card" : {
+    "last4" : "4242",
+    "dynamic_last4" : null,
+    "funding" : "credit",
+    "brand" : "Visa",
+    "exp_month" : 12,
+    "exp_year" : 2042,
+    "address_zip_check" : null,
+    "cvc_check" : "unchecked",
+    "tokenization_method" : null,
+    "address_line1_check" : null,
+    "country" : "US",
+    "name" : null,
+    "three_d_secure" : "optional"
+  },
+  "allow_redisplay" : "unspecified",
+  "created" : 1760477412,
+  "client_secret" : "src_client_secret_PBKKP4L5ktclET9WlG2mC68N",
+  "flow" : "none",
+  "currency" : null,
+  "status" : "chargeable"
+}

@@ -22,6 +22,8 @@
 
 "Billing address" = "Rechnungsadresse";
 
+"Billing details" = "Abrechnungsdetails";
+
 "CVC" = "CVC";
 
 "Card information" = "Kartendaten";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Um die Karte scannen zu können, müssen Sie unter „Einstellungen“ den Kamerazugriff erlauben.";
 
-"Your ZIP is invalid." = "Postleitzahl ist ungültig.";
-
 "Your card has expired." = "Ihre Karte ist abgelaufen.";
 
 "Your card number is incomplete." = "Kartennummer ist unvollständig.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Sicherheitscode der Karte ist unvollständig.";
 
 "Your card's security code is invalid." = "Sicherheitscode der Karte ist ungültig.";
-
-"Your postal code is invalid." = "Postleitzahl ist ungültig";
 
 "card number" = "Kartennummer";
 

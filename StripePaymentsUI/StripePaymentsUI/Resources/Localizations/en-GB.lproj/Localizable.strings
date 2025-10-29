@@ -22,6 +22,8 @@
 
 "Billing address" = "Billing address";
 
+"Billing details" = "Billing details";
+
 "CVC" = "CVC";
 
 "Card information" = "Card information";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
-"Your ZIP is invalid." = "Your ZIP is invalid.";
-
 "Your card has expired." = "Your card has expired.";
 
 "Your card number is incomplete." = "Your card number is incomplete.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Your card's security code is incomplete.";
 
 "Your card's security code is invalid." = "Your card's security code is invalid.";
-
-"Your postal code is invalid." = "Your postcode is invalid.";
 
 "card number" = "card number";
 

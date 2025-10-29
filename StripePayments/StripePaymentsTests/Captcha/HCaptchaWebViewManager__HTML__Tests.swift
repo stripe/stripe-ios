@@ -27,14 +27,17 @@ class HCaptchaWebViewManager__HTML__Tests: XCTestCase {
         try super.tearDownWithError()
     }
 
-    func test__Size_Is_Mapped_Into_HTML() {
-        let manager = HCaptchaWebViewManager(html: "size: ${size}", size: .compact)
+    func test__Size_Is_Mapped_Into_HTML() throws {
+        let config = try HCaptchaConfig(html: "size: ${size}", size: .compact)
+        let manager = HCaptchaWebViewManager(config: config)
         waitForWebViewContent(manager: manager)
         XCTAssertEqual(webViewContent, "size: compact")
     }
 
-    func test__Orientation_Is_Mapped_Into_HTML() {
-        let manager = HCaptchaWebViewManager(html: "orientation: ${orientation}", orientation: .portrait)
+    func test__Orientation_Is_Mapped_Into_HTML() throws {
+        let config = try HCaptchaConfig(html: "orientation: ${orientation}",
+                                        orientation: .portrait)
+        let manager = HCaptchaWebViewManager(config: config)
         waitForWebViewContent(manager: manager)
         XCTAssertEqual(webViewContent, "orientation: portrait")
     }

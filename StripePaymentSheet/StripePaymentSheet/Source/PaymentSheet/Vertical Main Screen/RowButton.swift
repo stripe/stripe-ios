@@ -412,7 +412,11 @@ extension RowButton {
 
     static func makeRowButtonSublabel(text: String?, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {
         let sublabel = UILabel()
-        sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+        if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.subtitleFont {
+            sublabel.font = customFont
+        } else {
+            sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+        }
         sublabel.numberOfLines = 1
         sublabel.adjustsFontSizeToFitWidth = true
         sublabel.adjustsFontForContentSizeCategory = true
@@ -517,9 +521,7 @@ extension RowButton {
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
-        // Apple Pay logo has built-in padding and ends up looking too small; compensate with insets
-        let applePayLogo = Image.apple_pay_mark.makeImage().withAlignmentRectInsets(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
-        let imageView = UIImageView(image: applePayLogo)
+        let imageView = UIImageView(image: Image.apple_pay_mark.makeImage())
         imageView.contentMode = .scaleAspectFit
         return RowButton.create(appearance: appearance, type: .applePay, imageView: imageView, text: String.Localized.apple_pay, isEmbedded: isEmbedded, didTap: didTap)
     }
@@ -527,7 +529,11 @@ extension RowButton {
     static func makeForLink(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, isEmbedded: isEmbedded, didTap: didTap)
+        var subtext = String.Localized.link_subtitle_text
+        if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
+            subtext = linkAccount.email
+        }
+        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: subtext, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link
         return button
     }

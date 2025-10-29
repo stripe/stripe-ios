@@ -114,6 +114,11 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Country: \(country)"].exists)
     }
 
+    private func scrollDown() {
+        let verySlowVelocity: XCUIGestureVelocity = XCUIGestureVelocity(300)
+        app.swipeUp(velocity: verySlowVelocity)
+    }
+
     /// Helper function to navigate to address collection for shipping
     private func navigateToShippingAddress() {
         let shippingButton = app.buttons["Address"]
@@ -124,8 +129,14 @@ class PaymentSheet_AddressTests: XCTestCase {
     /// Helper function to navigate to SwiftUI AddressElement
     private func navigateToSwiftUIAddressElement() {
         app.launch()
-        XCTAssertTrue(app.staticTexts["AddressElement (SwiftUI)"].waitForExistenceAndTap())
+        let addressButton = app.staticTexts["AddressElement (SwiftUI)"]
+        if !addressButton.exists {
+            scrollDown()
+        }
+
+        XCTAssertTrue(addressButton.waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Collect Address"].waitForExistenceAndTap())
+
     }
 
     /// Helper function to verify save address button state and tap if enabled
@@ -412,16 +423,13 @@ NZ
         app.buttons["Close"].tap()
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
-        app.toolbars.buttons["Done"].tap()
-        app.textFields["Province"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Ontario")
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇾 Uruguay")
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save address"].tap()
 
         // ...should update PaymentSheet.FlowController
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Uruguay")
 
         // If you change the billing address, however...
         let updatedBillingAddressPostalCode = "12345"
@@ -445,7 +453,7 @@ NZ
 
         // ...should not affect your billing address...
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Uruguay")
         XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
 
         // ...until 'Billing address is same as shipping' checkbox is selected again

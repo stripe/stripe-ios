@@ -122,26 +122,79 @@ import UIKit
             let defaultValue: String?
             let isOptional: Bool
             public var disallowedCharacters: CharacterSet {
-                return countryCode == "US" ? .decimalDigits.inverted : .newlines
+                switch countryCode {
+                case "US": .decimalDigits.inverted
+                case "GB": .alphanumerics.inverted
+                default: .newlines
+                }
+            }
+            private var regex: NSRegularExpression? {
+                do {
+                    return switch countryCode {
+                    case "CA": try NSRegularExpression(pattern: "[a-zA-Z]\\d[a-zA-Z][\\s-]?\\d[a-zA-Z]\\d")
+                    case "GB": try NSRegularExpression(pattern: "^[A-Za-z][A-Za-z0-9]*(?: [A-Za-z0-9]*)?$")
+                    case "US": try NSRegularExpression(pattern: "\\d+")
+                    default: try NSRegularExpression(pattern: ".*")
+                    }
+                } catch {
+                    assertionFailure("Invalid regex pattern for postal code: \(error)")
+                    return nil
+                }
+            }
+            private var minLength: Int {
+                switch countryCode {
+                case "CA": 6 // allow for no space or dash in the middle
+                case "GB": 5
+                case "US": 5
+                default: 1
+                }
+            }
+            private var genericError: Error {
+                if countryCode == "US" {
+                    Error.invalid(localizedDescription: String.Localized.your_zip_is_invalid)
+                } else {
+                    Error.invalid(localizedDescription: String.Localized.your_postal_code_is_invalid)
+                }
             }
 
             func maxLength(for text: String) -> Int {
-                return countryCode == "US" ? 5 : .max
+                switch countryCode {
+                case "CA": 7 // allow for space or dash in the middle
+                case "GB": 7
+                case "US": 5
+                default: .max
+                }
             }
 
             func validate(text: String, isOptional: Bool) -> ValidationState {
+                // validate non-empty
                 if text.isEmpty {
-                    return isOptional ? .valid : .invalid(Error.empty)
+                    return isOptional ? .valid : .invalid(Error.empty(localizedDescription: countryCode == "US" ? String.Localized.your_zip_is_incomplete : String.Localized.your_postal_code_is_incomplete))
                 }
-                if countryCode == "US", text.count < maxLength(for: text) {
-                    return .invalid(Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete))
+                // validate long enough
+                if text.count < minLength {
+                    if countryCode == "US" {
+                        return .invalid(Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete))
+                    } else {
+                        return .invalid(Error.incomplete(localizedDescription: String.Localized.your_postal_code_is_incomplete))
+                    }
+                }
+                // validate short enough
+                if text.count > maxLength(for: text) {
+                    return .invalid(genericError)
+                }
+                // validate pattern
+                if let regex, regex.matches(in: text, range: NSRange(location: 0, length: text.utf16.count)).isEmpty {
+                    return .invalid(genericError)
                 }
                 return .valid
             }
 
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+                // CA and GB use alphanmeric. US uses numeric only
                 return .init(type: countryCode == "US" ? .numberPad : .default, textContentType: .postalCode, autocapitalization: .allCharacters)
             }
+
         }
     }
 }

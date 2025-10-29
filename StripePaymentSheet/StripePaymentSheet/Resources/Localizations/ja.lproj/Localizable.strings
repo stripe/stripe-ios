@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ 追加";
 
 "Add US bank account" = "アメリカの銀行口座を追加";
@@ -17,8 +15,6 @@
 "Add new payment method" = "新たな支払い方法を追加";
 
 "Add your payment information" = "支払い情報を追加";
-
-"Agree and continue" = "同意して続行";
 
 "Approve payment" = "支払いを承認する";
 
@@ -60,6 +56,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "続行することで、今後の購入のために情報を保存することに同意したことになります <link>Link</link> リンク<terms>規約</terms>および<privacy>プライバシー</privacy>に従うことになります。";
+
+"By continuing, you agree to save your information for future purchases with %@." = "続行することで、あなたは、%@ での今後の購入のために情報を保存することに同意したことになります。";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "続行すると、%@ が購入またはサブスクリプションプランに従って、定期的に Satispay Balance から自動的に引き落とすことを許可します。";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
@@ -79,6 +79,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号を入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "ご注文を %1$@ および %2$@ に送信することにより、お客様は今後の購入のためにお客様の情報を %3$@ に保存することに同意し、<terms>本規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ に注文を送信することにより、<terms>これらの規約</terms> に従って決済を承認することに同意したものとみなされます。";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -110,25 +114,27 @@
 
 "Continue another way" = "別の方法で続行";
 
+"Create an account with Link for faster checkout across the web" = "Link でアカウントを作成すると、ウェブ上で決済を迅速化できます";
+
 "Debit or credit card" = "デビットカードまたはクレジットカード";
 
 "Default" = "デフォルト";
 
 "Default payment method" = "デフォルトの決済手段";
 
+"Did you mean %@? %@." = "%1$@ のことですか？ %2$@。";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "住所を手動で入力";
 
-"Enter the code sent to %@ to use your saved information." = "保存されている情報を使用するには、%@ に送信されたコードを入力してください。";
+"Enter the code sent to %@." = "%s に送信されたコードを入力してください。";
 
 "FPX Bank" = "FPX 銀行";
 
 "Failed to connect" = "接続できませんでした";
 
-"Fast, secure, 1⁠-⁠click checkout" = "スピーディーで安全なワンクリック決済";
-
-"For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
+"Fast, secure checkout" = "迅速で安全な決済";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "ご利用の銀行での初回支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
 
@@ -188,6 +194,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@ やその他多数のサイトで、すばやく支払うことができます。";
 
+"Pay faster everywhere Link is accepted." = "Link に対応している店舗でスピーディーに支払うことができます。";
+
 "Pay over time with %@" = "%@ で時間をかけて支払う";
 
 "Pay over time with Affirm" = "Affirm で分割払い";
@@ -238,8 +246,6 @@
 
 "Save your info for secure 1-click checkout with Link" = "Link を使用して安全なワンクリック決済の情報を保存する";
 
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "支払い情報を Link に保存すると、Link に対応したサイトで安全にワンクリックで決済することができます。";
-
 "Saved" = "保存済み";
 
 "Select card" = "カードを選択する";
@@ -278,9 +284,9 @@
 
 "The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
 
-"This card has expired. Update your card info or choose a different payment method." = "このカードは有効期限が切れています。カード情報を更新するか、別の決済手段を選択してください。";
-
 "This is your default" = "これはデフォルトです";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "この決済手段は削除されますが、%@ のサブスクリプションでは引き続き使用できます。";
 
 "Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
 
@@ -292,9 +298,9 @@
 
 "Use billing address for shipping" = "請求先住所を配送先として使用";
 
-"Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
-
 "View more" = "さらに表示";
+
+"Yes, update" = "はい、更新します";
 
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 

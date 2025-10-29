@@ -23,12 +23,14 @@ import UIKit
         @_spi(STP) public static let empty = AddressDetails()
         public var name: String?
         public var phone: String?
+        public var email: String?
         public var address: Address
 
         /// Initializes an Address
-        public init(name: String? = nil, phone: String? = nil, address: Address = .init()) {
+        public init(name: String? = nil, phone: String? = nil, email: String? = nil, address: Address = .init()) {
             self.name = name
             self.phone = phone
+            self.email = email
             self.address = address
         }
 
@@ -83,10 +85,12 @@ import UIKit
         public init(
             name: FieldConfiguration = .disabled,
             phone: FieldConfiguration = .disabled,
+            email: FieldConfiguration = .disabled,
             billingSameAsShippingCheckbox: FieldConfiguration = .disabled
         ) {
             self.name = name
             self.phone = phone
+            self.email = email
             self.billingSameAsShippingCheckbox = billingSameAsShippingCheckbox
         }
 
@@ -97,6 +101,7 @@ import UIKit
 
         public let name: FieldConfiguration
         public let phone: FieldConfiguration
+        public let email: FieldConfiguration
         public let billingSameAsShippingCheckbox: FieldConfiguration
     }
 
@@ -114,6 +119,7 @@ import UIKit
     let addressSection: SectionElement
     public let name: TextFieldElement?
     public let phone: PhoneNumberElement?
+    public let email: TextFieldElement?
     public let country: DropdownFieldElement
     public private(set) var autoCompleteLine: DummyAddressLine?
     public private(set) var line1: TextFieldElement?
@@ -145,7 +151,7 @@ import UIKit
     }
     public var addressDetails: AddressDetails {
         let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.rawData)
-        return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
+        return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), email: email?.text, address: address)
     }
 
     public let countryCodes: [String]
@@ -214,6 +220,13 @@ import UIKit
                     locale: locale,
                     theme: theme
                 )
+            } else {
+                return nil
+            }
+        }()
+        self.email = {
+            if case .enabled(let isOptional) = additionalFields.email {
+                return TextFieldElement.makeEmail(defaultValue: defaults.email, isOptional: isOptional, theme: theme)
             } else {
                 return nil
             }
@@ -367,8 +380,9 @@ import UIKit
             initialElements.append(country)
         }
         initialElements.append(autoCompleteLine)
+        let emailElement: [Element?] = [email]
         let phoneElement: [Element?] = [phone]
-        addressSection.elements = (initialElements + addressFields + phoneElement).compactMap { $0 }
+        addressSection.elements = (emailElement + phoneElement + initialElements + addressFields).compactMap { $0 }
     }
 
     /// Returns `true` iff all **displayed** address fields match the given `address`, treating `nil` and "" as equal.
@@ -461,11 +475,13 @@ extension AddressSectionElement: ElementDelegate {
     init(
         billingAddress: BillingAddress,
         phone: String?,
-        name: String? = nil
+        name: String? = nil,
+        email: String? = nil
     ) {
         self.init(
             name: name ?? billingAddress.name,
             phone: phone,
+            email: email,
             address: Address(
                 city: billingAddress.city,
                 country: billingAddress.countryCode,

@@ -98,12 +98,12 @@ extension TextFieldElement {
             case invalidLuhn
             case disallowedBrand(brand: STPCardBrand)
 
-            func shouldDisplay(isUserEditing: Bool) -> Bool {
+            func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
                 switch self {
                 case .empty:
-                    return false
+                    return displayEmptyFields
                 case .incomplete, .invalidLuhn:
-                    return !isUserEditing
+                    return !isUserEditing || displayEmptyFields
                 case .invalidBrand, .disallowedBrand:
                     return true
                 }
@@ -112,7 +112,7 @@ extension TextFieldElement {
             var localizedDescription: String {
                 switch self {
                 case .empty:
-                    return ""
+                    return String.Localized.your_card_number_is_incomplete
                 case .incomplete:
                     return String.Localized.your_card_number_is_incomplete
                 case .invalidBrand, .invalidLuhn:
@@ -215,7 +215,7 @@ extension TextFieldElement {
         }
         func validate(text: String, isOptional: Bool) -> ValidationState {
             if text.isEmpty {
-                return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
+                return isOptional ? .valid : .invalid(TextFieldElement.Error.empty(localizedDescription: String.Localized.your_cards_security_code_is_incomplete))
             }
 
             if text.count < STPCardValidator.minCVCLength() {
@@ -283,10 +283,10 @@ extension TextFieldElement {
             case invalidMonth
             case invalid
 
-            public func shouldDisplay(isUserEditing: Bool) -> Bool {
+            public func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
                 switch self {
-                case .empty:                    return false
-                case .incomplete:               return !isUserEditing
+                case .empty:                    return displayEmptyFields
+                case .incomplete:               return !isUserEditing || displayEmptyFields
                 case .expired, .invalidMonth, .invalid:   return true
                 }
             }
@@ -294,7 +294,7 @@ extension TextFieldElement {
             public var localizedDescription: String {
                 switch self {
                 case .empty:
-                    return ""
+                    return String.Localized.your_cards_expiration_date_is_incomplete
                 case .incomplete:
                     return String.Localized.your_cards_expiration_date_is_incomplete
                 case .expired:
@@ -314,7 +314,7 @@ extension TextFieldElement {
 
             switch text.count {
             case 0:
-                return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
+                return isOptional ? .valid : .invalid(TextFieldElement.Error.empty(localizedDescription: String.Localized.your_cards_expiration_date_is_incomplete))
             case 1:
                 return .invalid(Error.incomplete)
             case 2, 3:
@@ -383,7 +383,7 @@ extension TextFieldElement {
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
             stpAssert(!editConfiguration.isEditable, "Validation assumes that the field is read-only")
-            return !lastFour.isEmpty ? .valid : .invalid(Error.empty)
+            return !lastFour.isEmpty ? .valid : .invalid(Error.empty(localizedDescription: ""))
         }
     }
 }

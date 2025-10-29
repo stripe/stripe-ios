@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (volitelné)";
 
 "(not accepted)" = "(nepřijímá se)";
@@ -37,8 +39,6 @@
 "Country or region" = "Země nebo region";
 
 "County" = "Okres";
-
-"Date is empty." = "Datum je prázdné.";
 
 "Department" = "Oddělení";
 
@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Váš kód BLIK je neplatný.";
 
-"Your ZIP is incomplete." = "PSČ je neúplné.";
+"Your ZIP code is incomplete." = "Vaše PSČ není úplné.";
+
+"Your ZIP code is invalid." = "Vaše PSČ je neplatné.";
 
 "Your email is invalid." = "Váš e-mail je neplatný.";
 
 "Your payment information will not be saved." = "Vaše platební údaje nebudou uloženy.";
 
 "Your postal code is incomplete." = "Vaše poštovní směrovací číslo je neúplné.";
+
+"Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
 
 "ZIP" = "PSČ";

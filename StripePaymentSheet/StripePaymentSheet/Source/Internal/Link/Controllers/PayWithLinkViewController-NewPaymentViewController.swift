@@ -24,14 +24,17 @@ extension PayWithLinkViewController {
         let linkAccount: PaymentSheetLinkAccount
         let isAddingFirstPaymentMethod: Bool
 
-        private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
+        private lazy var errorView: LinkHintMessageView = {
+            LinkHintMessageView(message: nil, style: .error)
         }()
 
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.callToAction,
+            showProcessingLabel: context.showProcessingLabel,
             // Use a compact button if we are also displaying the Apple Pay button.
-            compact: shouldShowApplePayButton
+            compact: shouldShowApplePayButton,
+            linkAppearance: context.linkAppearance,
+            didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
             self?.confirm()
         }
@@ -50,6 +53,18 @@ extension PayWithLinkViewController {
             return button
         }()
 
+        private lazy var cancelButton: Button? = {
+            guard linkAccount.isInSignupFlow && context.launchedFromFlowController else {
+                return nil
+            }
+            let button = Button(
+                configuration: .linkPlain(),
+                title: context.secondaryButtonLabel
+            )
+            button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+            return button
+        }()
+
         private lazy var buttonContainer: UIStackView = {
             let vStack = UIStackView(arrangedSubviews: [confirmButton])
             vStack.axis = .vertical
@@ -58,6 +73,10 @@ extension PayWithLinkViewController {
             if shouldShowApplePayButton {
                 vStack.addArrangedSubview(separator)
                 vStack.addArrangedSubview(applePayButton)
+            }
+
+            if let cancelButton {
+                vStack.addArrangedSubview(cancelButton)
             }
 
             return vStack
@@ -71,7 +90,9 @@ extension PayWithLinkViewController {
                 paymentMethodTypes: [.stripe(.card)],
                 formCache: .init(), // We don't want to share a form cache with the containing PaymentSheet
                 analyticsHelper: context.analyticsHelper,
-                delegate: self
+                isLinkUI: true,
+                delegate: self,
+                linkAppearance: context.linkAppearance
             )
         }()
 
@@ -79,6 +100,14 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
+
+            // AddPaymentMethodViewController uses textSecondary for the mandate, but Link uses linkTextTertiary
+            configuration.appearance.colors.textSecondary = .linkTextTertiary
+
+            if let primaryColorOverride = context.linkAppearance?.colors?.primary {
+                configuration.appearance.colors.primary = primaryColorOverride
+            }
+
             configuration.cardBrandAcceptance = context.elementsSession.linkCardBrandFilteringEnabled ? configuration.cardBrandAcceptance : .all
 
             let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
@@ -121,29 +150,28 @@ extension PayWithLinkViewController {
             view.backgroundColor = .linkSurfacePrimary
 
             addPaymentMethodVC.view.backgroundColor = .clear
-            errorLabel.isHidden = true
+            errorView.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
                 addPaymentMethodVC.view,
-                errorLabel,
+                errorView,
                 buttonContainer,
             ])
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
             stackView.isLayoutMarginsRelativeArrangement = true
-            stackView.directionalLayoutMargins = LinkUI.contentMargins
+            stackView.directionalLayoutMargins = .insets(top: LinkUI.contentMargins.top, bottom: LinkUI.contentMargins.bottom)
             stackView.alignment = .center
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
-            contentView.addAndPinSubviewToSafeArea(stackView)
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.appearance.formInsets.bottom))
 
             NSLayoutConstraint.activate([
-                errorLabel.leadingAnchor.constraint(
+                errorView.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
                     constant: preferredContentMargins.leading),
-                errorLabel.trailingAnchor.constraint(
+                errorView.trailingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -preferredContentMargins.trailing),
 
@@ -159,6 +187,19 @@ extension PayWithLinkViewController {
             ])
 
             didUpdate(addPaymentMethodVC)
+            stackView.setNeedsLayout()
+            stackView.layoutIfNeeded()
+
+        }
+
+        private func didTapWhenDisabled() {
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
+
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+            addPaymentMethodVC.paymentMethodFormElement.showAllValidationErrors()
         }
 
         func confirm() {
@@ -184,7 +225,12 @@ extension PayWithLinkViewController {
             confirmButton.update(state: .processing)
             coordinator?.allowSheetDismissal(false)
 
-            linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] result in
+            confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+
+            linkAccount.createPaymentDetails(
+                with: confirmParams.paymentMethodParams,
+                isDefault: isAddingFirstPaymentMethod
+            ) { [weak self] result in
                 guard let self = self else {
                     return
                 }
@@ -266,15 +312,20 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorLabel.text = error?.nonGenericDescription
+            errorView.text = error?.nonGenericDescription
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                self.errorLabel.setHiddenIfNecessary(error == nil)
+                self.errorView.setHiddenIfNecessary(error == nil)
             }
         }
 
         @objc
         func applePayButtonTapped(_ sender: PKPaymentButton) {
             coordinator?.confirmWithApplePay()
+        }
+
+        @objc
+        func cancelButtonTapped() {
+            coordinator?.cancel(shouldReturnToPaymentSheet: true)
         }
     }
 }
@@ -286,7 +337,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         if viewController.selectedPaymentMethodType == .instantDebits {
-            confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: .instantDebits))
+            confirmButton.update(state: .enabled, callToAction: .add(paymentMethodType: .instantDebits))
         } else {
             confirmButton.update(
                 state: viewController.paymentOption != nil ? .enabled : .disabled,

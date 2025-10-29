@@ -73,6 +73,14 @@ final class LinkSignUpViewModel: NSObject {
         }
     }
 
+    private(set) var suggestedEmail: String? {
+        didSet {
+            if suggestedEmail != oldValue {
+                notifyUpdate()
+            }
+        }
+    }
+
     var requiresNameCollection: Bool {
         return country != "US"
     }
@@ -107,10 +115,7 @@ final class LinkSignUpViewModel: NSObject {
 
     var signUpButtonTitle: String {
         shouldShowPhoneNumberField
-            ? STPLocalizedString(
-                "Agree and continue",
-                "Title for a button that when tapped creates a Link account for the user."
-            )
+            ? String.Localized.continue
             : STPLocalizedString(
                 "Log in or sign up",
                 "Title for a button that indicates a user can log in or sign up."
@@ -152,6 +157,7 @@ final class LinkSignUpViewModel: NSObject {
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
+        self.suggestedEmail = linkAccount?.suggestedEmail
         self.legalName = legalName
         self.country = country
         super.init()
@@ -169,6 +175,7 @@ final class LinkSignUpViewModel: NSObject {
         linkAccount.signUp(
             with: phoneNumber,
             legalName: requiresNameCollection ? legalName : nil,
+            countryCode: nil,
             consentAction: .clicked_button_mobile_v1
         ) { [weak self] result in
             switch result {
@@ -188,6 +195,7 @@ private extension LinkSignUpViewModel {
     func onEmailUpdate() {
         linkAccount = nil
         errorMessage = nil
+        suggestedEmail = nil
 
         guard let emailAddress = emailAddress else {
             accountLookupDebouncer.cancel()
@@ -201,7 +209,8 @@ private extension LinkSignUpViewModel {
             self?.accountService.lookupAccount(
                 withEmail: emailAddress,
                 emailSource: .userAction,
-                doNotLogConsumerFunnelEvent: false
+                doNotLogConsumerFunnelEvent: false,
+                requestSurface: .default
             ) { result in
                 guard let self = self else { return }
 
@@ -217,6 +226,7 @@ private extension LinkSignUpViewModel {
                 switch result {
                 case .success(let account):
                     self.linkAccount = account
+                    self.suggestedEmail = account?.suggestedEmail
                     self.delegate?.viewModel(self, didLookupAccount: account)
                 case .failure(let error):
                     self.linkAccount = nil

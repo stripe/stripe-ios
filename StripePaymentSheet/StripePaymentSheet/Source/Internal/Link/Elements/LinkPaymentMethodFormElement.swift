@@ -29,7 +29,7 @@ final class LinkPaymentMethodFormElement: Element {
     let collectsUserInput: Bool = true
 
     struct Params {
-        let expiryDate: CardExpiryDate
+        let expiryDate: CardExpiryDate?
         let cvc: String?
         let billingDetails: STPPaymentMethodBillingDetails
         let setAsDefault: Bool
@@ -47,15 +47,28 @@ final class LinkPaymentMethodFormElement: Element {
     }
 
     let paymentMethod: ConsumerPaymentDetails
-    let useCVCPlaceholder: Bool
+    let isBillingDetailsUpdateFlow: Bool
+    private let linkAppearance: LinkAppearance?
 
     let configuration: PaymentElementConfiguration
 
-    let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
+    private lazy var theme: ElementsAppearance = {
+        var theme = LinkUI.appearance.asElementsTheme
+
+        if let primaryColor = linkAppearance?.colors?.primary {
+            theme.colors.primary = primaryColor
+        }
+
+        return theme
+    }()
 
     var params: Params? {
-        guard validationState.isValid,
-              let expiryDate = CardExpiryDate(expiryDateElement.text) else {
+        guard validationState.isValid else {
+            return nil
+        }
+
+        let expiryDate = CardExpiryDate(expiryDateElement.text)
+        if paymentMethod.type == .card && expiryDate == nil {
             return nil
         }
 
@@ -63,9 +76,7 @@ final class LinkPaymentMethodFormElement: Element {
         // This matches the object that was returned by CardDetailsEditView, but won't work
         // with `collectionMode: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.name = billingAddressSection?.name?.text ?? nameElement?.text
-        billingDetails.email = emailElement?.text
-        billingDetails.phone = phoneElement?.phoneNumber?.string(as: .e164)
+        billingDetails.name = billingAddressSection?.name?.text ?? nameOnCardElement?.text
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
         billingDetails.nonnil_address.line1 = billingAddressSection?.line1?.text
         billingDetails.nonnil_address.line2 = billingAddressSection?.line2?.text
@@ -73,11 +84,18 @@ final class LinkPaymentMethodFormElement: Element {
         billingDetails.nonnil_address.state = billingAddressSection?.state?.rawData
         billingDetails.nonnil_address.postalCode = billingAddressSection?.postalCode?.text
 
+        if let phone = billingAddressSection?.phone?.phoneNumber?.string(as: .e164) {
+            billingDetails.phone = phone
+        }
+        if let email = billingAddressSection?.email?.text {
+            billingDetails.email = email
+        }
+
         let preferredNetwork = cardBrandDropdownElement?.element.selectedItem.rawData
 
         return Params(
             expiryDate: expiryDate,
-            cvc: useCVCPlaceholder ? nil : cvcElement.text,
+            cvc: isBillingDetailsUpdateFlow ? nil : cvcElement.text,
             billingDetails: billingDetails,
             setAsDefault: checkboxElement.checkboxButton.isSelected,
             preferredNetwork: preferredNetwork
@@ -92,40 +110,14 @@ final class LinkPaymentMethodFormElement: Element {
         return !isCard && collectsName
     }
 
-    private lazy var emailElement: TextFieldElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.email == .always else { return nil }
-
-        return TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email, theme: theme)
-    }()
-
-    private lazy var phoneElement: PhoneNumberElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.phone == .always else { return nil }
-        return PhoneNumberElement(
-            defaultCountryCode: configuration.defaultBillingDetails.address.country,
-            defaultPhoneNumber: configuration.defaultBillingDetails.phone,
-            theme: theme
-        )
-    }()
-
-    private lazy var contactInformationSection: SectionElement? = {
-        let elements = ([emailElement, phoneElement] as [Element?]).compactMap { $0 }
-
-        guard elements.isEmpty == false else { return nil }
-
-        return SectionElement(
-            title: elements.count > 1 ? .Localized.contact_information : nil,
-            elements: elements,
-            theme: theme
-        )
-    }()
-
-    private lazy var nameElement: TextFieldElement? = {
+    private lazy var nameOnCardElement: TextFieldElement? = {
         guard configuration.billingDetailsCollectionConfiguration.name == .always else { return nil }
 
         return TextFieldElement.makeName(
             label: STPLocalizedString("Name on card", "Label for name on card field"),
-            defaultValue: paymentMethod.billingAddress?.name,
-            theme: theme)
+            defaultValue: paymentMethod.billingAddress?.name ?? configuration.defaultBillingDetails.name,
+            theme: theme
+        )
     }()
 
     private lazy var cardBrandDropdownElement: PaymentMethodElementWrapper<DropdownFieldElement>? = {
@@ -174,7 +166,7 @@ final class LinkPaymentMethodFormElement: Element {
     }()
 
     private lazy var cvcElement: TextFieldElement = {
-        let configuration: TextFieldElementConfiguration = if useCVCPlaceholder {
+        let configuration: TextFieldElementConfiguration = if isBillingDetailsUpdateFlow {
             TextFieldElement.CensoredCVCConfiguration(
                 brand: paymentMethod.cardDetails?.stpBrand ?? .unknown
             )
@@ -201,7 +193,7 @@ final class LinkPaymentMethodFormElement: Element {
     )
 
     private lazy var formElement: FormElement = {
-        var elements: [Element?] = [contactInformationSection]
+        var elements: [Element?] = []
 
         if paymentMethod.type == .card {
             elements.append(cardSection)
@@ -222,7 +214,7 @@ final class LinkPaymentMethodFormElement: Element {
 
     private lazy var cardSection: SectionElement = {
         let allElements: [Element?] = [
-            nameElement,
+            nameOnCardElement,
             panElement, SectionElement.HiddenElement(cardBrandDropdownElement),
             SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
         ]
@@ -236,20 +228,44 @@ final class LinkPaymentMethodFormElement: Element {
     }()
 
     private lazy var billingAddressSection: AddressSectionElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
+        let collectPhone = configuration.billingDetailsCollectionConfiguration.phone == .always && isBillingDetailsUpdateFlow
+        let collectEmail = configuration.billingDetailsCollectionConfiguration.email == .always
+        let collectAddress = configuration.billingDetailsCollectionConfiguration.address != .never || paymentMethod.type == .card
+
+        guard collectPhone || collectEmail || collectAddress else {
+            return nil
+        }
+
+        let phone: String? = if collectPhone {
+            configuration.defaultBillingDetails.phone
+        } else {
+            nil
+        }
+
+        let email: String? = if collectEmail {
+            paymentMethod.billingEmailAddress ?? configuration.defaultBillingDetails.email
+        } else {
+            nil
+        }
+
+        let name = paymentMethod.billingAddress?.name ?? configuration.defaultBillingDetails.name
 
         let defaultBillingAddress = AddressSectionElement.AddressDetails(
             billingAddress: paymentMethod.billingAddress ?? .init(),
-            phone: nil,
-            name: paymentMethod.billingAddress?.name
+            phone: phone,
+            name: name,
+            email: email
         )
 
         let additionalFields = AddressSectionElement.AdditionalFields(
-            name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled
+            name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled,
+            phone: collectPhone ? .enabled(isOptional: false) : .disabled,
+            email: collectEmail ? .enabled(isOptional: false) : .disabled
         )
 
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
+            countries: isBillingDetailsUpdateFlow ? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray : nil,
             defaults: defaultBillingAddress,
             collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
                 ? .all()
@@ -259,10 +275,11 @@ final class LinkPaymentMethodFormElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, useCVCPlaceholder: Bool) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool, linkAppearance: LinkAppearance? = nil) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
-        self.useCVCPlaceholder = useCVCPlaceholder
+        self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
+        self.linkAppearance = linkAppearance
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
             self.expiryDateElement.setText(expiryDate.displayString)
@@ -273,6 +290,9 @@ final class LinkPaymentMethodFormElement: Element {
         self.checkboxElement.checkboxButton.isHidden = true
     }
 
+    func showAllValidationErrors() {
+        formElement.showAllValidationErrors()
+    }
 }
 
 extension LinkPaymentMethodFormElement: ElementDelegate {

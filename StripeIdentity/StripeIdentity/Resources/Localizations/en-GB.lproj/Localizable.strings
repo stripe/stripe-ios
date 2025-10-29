@@ -6,9 +6,13 @@
 
 "App Settings" = "App Settings";
 
-"Back identity card photo successfully uploaded" = "Back identity card photo successfully uploaded";
+"Back %@ photo successfully uploaded" = "Back %@ photo successfully uploaded";
 
-"Back of identity card" = "Back of identity card";
+"Back identity document photo successfully uploaded" = "Back identity document photo successfully uploaded";
+
+"Back of %@" = "Back of %@";
+
+"Back of driver's license or government-issued photo ID" = "Back of driving licence or government-issued photo ID";
 
 "Back of identity document" = "Back of identity document";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Details not visible";
 
+"Flip your %@ over to the other side" = "Flip your %@ over to the other side";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Flip your driving licence or government-issued photo ID over to the other side";
+
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
-"Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
+"Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
 
-"Front of identity card" = "Front of identity card";
+"Front identity document photo successfully uploaded" = "Front identity document photo successfully uploaded";
+
+"Front of %@" = "Front of %@";
+
+"Front of driver's license or government-issued photo ID" = "Front of driving licence or government-issued photo ID";
+
+"Front of driver's license or passport" = "Front of driving licence or passport";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Front of driving licence, passport or government-issued photo ID";
 
 "Front of identity document" = "Front of identity document";
+
+"Front of passport or government-issued photo ID" = "Front of passport or government-issued photo ID";
 
 "Get ready to scan your photo ID" = "Get ready to scan your photo ID";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Photo Library";
 
-"Please upload images of the front and back of your identity card" = "Please upload images of the front and back of your identity card";
+"Please upload images of the front and back of your %@" = "Please upload images of the front and back of your %@";
+
+"Please upload images of the front and back of your identity document" = "Please upload images of the front and back of your identity document";
+
+"Position your %@ in the center of the frame" = "Position your %@ in the centre of the frame";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Position your driving licence or government-issued photo ID in the centre of the frame";
+
+"Position your driver's license or passport in the center of the frame" = "Position your driving licence or passport in the centre of the frame";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Position your driving licence, passport or government-issued photo ID in the centre of the frame";
 
 "Position your face in the center of the frame." = "Position your face in the centre of the frame.";
 
-"Position your identity card in the center of the frame" = "Position your identity card in the centre of the frame";
+"Position your identity document in the center of the frame" = "Position your identity document in the centre of the frame";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Position your passport or government-issued photo ID in the centre of the frame";
 
 "Retake Photos" = "Retake Photos";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Select a location to upload the front of your identity document from";
 
-"Select back identity card photo" = "Select back identity card photo";
+"Select back %@ photo" = "Select back %@ photo";
 
-"Select front identity card photo" = "Select front identity card photo";
+"Select back identity document photo" = "Select back identity document photo";
+
+"Select front %@ photo" = "Select front %@ photo";
+
+"Select front identity document photo" = "Select front identity document photo";
 
 "Selfie" = "Selfie";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Upload a Photo";
 
+"Upload your %@" = "Upload your %@";
+
 "Upload your photo ID" = "Upload your photo ID";
 
-"Uploading back identity card photo" = "Uploading back identity card photo";
+"Uploading back %@ photo" = "Uploading back %@ photo";
 
-"Uploading front identity card photo" = "Uploading front identity card photo";
+"Uploading back identity document photo" = "Uploading back identity document photo";
+
+"Uploading front %@ photo" = "Uploading front %@ photo";
+
+"Uploading front identity document photo" = "Uploading front identity document photo";
 
 "Verify your identity" = "Verify your identity";
 

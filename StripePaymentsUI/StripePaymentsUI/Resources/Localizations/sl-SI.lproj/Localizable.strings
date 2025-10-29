@@ -22,6 +22,8 @@
 
 "Billing address" = "Naslov plačnika računa";
 
+"Billing details" = "Podrobnosti za izstavljanje računov";
+
 "CVC" = "CVC";
 
 "Card information" = "Podatki o kartici";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
 
-"Your ZIP is invalid." = "Vaša poštna številka ni veljavna.";
-
 "Your card has expired." = "Vaša kartica je potekla.";
 
 "Your card number is incomplete." = "Številka vaše kartice ni popolna.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Varnostna koda vaše kartice ni popolna.";
 
 "Your card's security code is invalid." = "Varnostna koda vaše kartice ni veljavna.";
-
-"Your postal code is invalid." = "Vaša poštna številka ni veljavna.";
 
 "card number" = "številka kartice";
 

@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (オプション)";
 
 "(not accepted)" = "(受け付けられません)";
@@ -37,8 +39,6 @@
 "Country or region" = "国または地域";
 
 "County" = "群";
-
-"Date is empty." = "カートは空です。";
 
 "Department" = "県";
 
@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "BLIK コードが無効です。";
 
-"Your ZIP is incomplete." = "郵便番号の入力に不備があります。";
+"Your ZIP code is incomplete." = "郵便番号が不完全です。";
+
+"Your ZIP code is invalid." = "あなたの郵便番号は無効です。";
 
 "Your email is invalid." = "メールアドレスが無効です。";
 
 "Your payment information will not be saved." = "支払い情報は保存されません。";
 
 "Your postal code is incomplete." = "郵便番号の入力に不備があります。";
+
+"Your postal code is invalid." = "郵便番号が無効です";
 
 "ZIP" = "郵便番号";

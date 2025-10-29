@@ -22,6 +22,8 @@
 
 "Billing address" = "账单地址";
 
+"Billing details" = "账单详情";
+
 "CVC" = "安全码";
 
 "Card information" = "银行卡信息";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "要扫描您的银行卡，在“设置”中启用照相机。";
 
-"Your ZIP is invalid." = "您的邮编无效。";
-
 "Your card has expired." = "您的银行卡已过期。";
 
 "Your card number is incomplete." = "您的银行卡号不完整。";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "您的银行卡的安全码不完整。";
 
 "Your card's security code is invalid." = "您的银行卡的安全码无效。";
-
-"Your postal code is invalid." = "您的邮编无效。";
 
 "card number" = "卡号";
 

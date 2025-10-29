@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (ระบุหรือไม่ก็ได้)";
 
 "(not accepted)" = "(ไม่รองรับ)";
@@ -37,8 +39,6 @@
 "Country or region" = "ประเทศหรือภูมิภาค";
 
 "County" = "เคาน์ตี";
-
-"Date is empty." = "วันที่ว่างอยู่";
 
 "Department" = "แผนก";
 
@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "รหัส BLIK ไม่ถูกต้อง";
 
-"Your ZIP is incomplete." = "รหัสไปรษณีย์ไม่ครบถ้วน";
+"Your ZIP code is incomplete." = "รหัสไปรษณีย์ของคุณไม่สมบูรณ์";
+
+"Your ZIP code is invalid." = "รหัสไปรษณีย์ของคุณไม่ถูกต้อง";
 
 "Your email is invalid." = "อีเมลไม่ถูกต้อง";
 
 "Your payment information will not be saved." = "ข้อมูลการชำระเงินของคุณจะไม่ได้รับการบันทึก";
 
 "Your postal code is incomplete." = "รหัสไปรษณีย์ไม่ครบถ้วน";
+
+"Your postal code is invalid." = "รหัสไปรษณีย์ไม่ถูกต้อง";
 
 "ZIP" = "รหัสไปรษณีย์";

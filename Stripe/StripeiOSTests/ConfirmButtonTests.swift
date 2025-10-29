@@ -16,6 +16,7 @@ import XCTest
 
 class ConfirmButtonTests: XCTestCase {
 
+    // @iOS26
     func testBuyButtonShouldAutomaticallyAdjustItsForegroundColor() {
         let testCases: [(background: UIColor, foreground: UIColor)] = [
             // Dark backgrounds
@@ -58,7 +59,6 @@ class ConfirmButtonTests: XCTestCase {
 
     func testUpdateShouldCallTheCompletionBlock() {
         let sut = ConfirmButton(
-            style: .stripe,
             callToAction: .pay(amount: 1000, currency: "usd"),
             didTap: {}
         )
@@ -74,7 +74,6 @@ class ConfirmButtonTests: XCTestCase {
 
     func testUpdateShouldCallTheCompletionBlockWhenAnimated() {
         let sut = ConfirmButton(
-            style: .stripe,
             callToAction: .pay(amount: 1000, currency: "usd"),
             didTap: {}
         )

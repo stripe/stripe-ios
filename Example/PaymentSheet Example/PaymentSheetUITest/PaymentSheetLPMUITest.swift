@@ -57,10 +57,10 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
             XCTFail()
             return
         }
-        cashApp.tap()
+        cashApp.waitForExistenceAndTap()
 
         // Attempt payment
-        payButton.tap()
+        payButton.waitForExistenceAndTap()
 
         // Close the webview, to simulate cancel
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 15)
@@ -182,7 +182,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.otherElements.matching(identifier: "mandatetextview").element.waitForExistence(timeout: 1))
         // Tapping out should cancel the payment
-        app.tap()
+        app.buttons["UIButton.Close"].tap()
         XCTAssertTrue(app.staticTexts["Payment canceled."].waitForExistence(timeout: 10.0))
         // Tapping confirm again and hitting continue should confirm the payment
         app.buttons["Confirm"].tap()

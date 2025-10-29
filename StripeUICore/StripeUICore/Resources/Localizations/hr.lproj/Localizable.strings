@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (neobavezno)";
 
 "(not accepted)" = "(nije prihvaćena)";
@@ -37,8 +39,6 @@
 "Country or region" = "Zemlja ili regija";
 
 "County" = "Grofovija";
-
-"Date is empty." = "Datum je prazan.";
 
 "Department" = "Administrativna jedinica";
 
@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Vaš BLIK kod je nevažeći.";
 
-"Your ZIP is incomplete." = "Vaš ZIP broj nije kompletan.";
+"Your ZIP code is incomplete." = "Vaš poštanski broj nepotpun je.";
+
+"Your ZIP code is invalid." = "Vaš poštanski broj nije valjan.";
 
 "Your email is invalid." = "Vaš e-mail je neispravan.";
 
 "Your payment information will not be saved." = "Vaši podaci o plaćanju neće biti spremljeni.";
 
 "Your postal code is incomplete." = "Vaš poštanski broj nije kompletan.";
+
+"Your postal code is invalid." = "Vaš poštanski broj nije valjan.";
 
 "ZIP" = "ZIP";

@@ -22,6 +22,11 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testModalWithLogout() {
+        let sut = makeSUT(mode: .modal, allowLogoutInDialog: true)
+        verify(sut)
+    }
+
     func testModalWithErrorMessage() {
         let sut = makeSUT(mode: .modal)
         sut.errorMessage = "The provided verification code has expired."
@@ -44,6 +49,18 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testCustomColors() {
+        let appearance = LinkAppearance(
+            colors: .init(
+                primary: .systemTeal,
+                selectedBorder: .red
+            )
+        )
+        let sut = makeSUT(mode: .modal, appearance: appearance)
+        sut.codeField.value = "1234"
+        verify(sut)
+    }
+
     func verify(
         _ view: LinkVerificationView,
         identifier: String? = nil,
@@ -62,16 +79,22 @@ extension LinkVerificationViewSnapshotTests {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
+        let sessionState: PaymentSheetLinkAccount.SessionState
+        let consumerSessionClientSecret: String?
     }
 
-    func makeSUT(mode: LinkVerificationView.Mode) -> LinkVerificationView {
+    func makeSUT(mode: LinkVerificationView.Mode, appearance: LinkAppearance? = nil, allowLogoutInDialog: Bool = false) -> LinkVerificationView {
         let sut = LinkVerificationView(
             mode: mode,
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
                 redactedPhoneNumber: "(•••) ••• ••55",
-                isRegistered: true
-            )
+                isRegistered: true,
+                sessionState: .verified,
+                consumerSessionClientSecret: nil
+            ),
+            appearance: appearance,
+            allowLogoutInDialog: allowLogoutInDialog
         )
 
         sut.tintColor = .linkIconBrand

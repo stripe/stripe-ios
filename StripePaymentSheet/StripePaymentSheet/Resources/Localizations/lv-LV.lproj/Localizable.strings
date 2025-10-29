@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Pievienot";
 
 "Add US bank account" = "Pievienot ASV bankas kontu";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Pievienot jaunu maksājuma veidu";
 
 "Add your payment information" = "Pievienot maksājuma informāciju";
-
-"Agree and continue" = "Piekrist un turpināt";
 
 "Approve payment" = "Apstiprināt maksājumu";
 
@@ -60,6 +56,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Turpinot jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %@ un <link>Saite</link> saskaņā ar saites <terms>noteikumiem</terms> un <privacy>privātumu</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Turpinot jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Turpinot jūs pilnvarojat %@ automātiski un regulāri iekasēt maksājumus no jūsu Satispay konta atlikuma saskaņā ar jūsu pirkuma vai abonementa plānu.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
@@ -79,6 +79,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu tālruņa numuru, es piekrītu izveidot Link kontu un saglabāt savu maksājuma informāciju Link, ievērojot Link <terms>noteikumus</terms> un <privacy>Konfidencialitātes politiku</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Saglabājot savu bankas kontu %@, jūs piekrītat apstiprināt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Iesniedzot pasūtījumu %1$@ un %2$@, jūs piekrītat saglabāt savu informāciju %3$@ nākamajiem pirkumiem un piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Iesniedzot savu pasūtījumu %@, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -110,25 +114,27 @@
 
 "Continue another way" = "Turpināt ar citu veidu";
 
+"Create an account with Link for faster checkout across the web" = "Izveidojiet kontu Link, lai varētu ātrāk veikt apmaksu visā tīmeklī";
+
 "Debit or credit card" = "Debetkarte vai kredītkarte";
 
 "Default" = "Noklusējuma";
 
 "Default payment method" = "Noklusējuma maksājuma veids";
 
+"Did you mean %@? %@." = "Vai jūs domājāt %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
-"Enter the code sent to %@ to use your saved information." = "Ievadiet kodu, kas tika nosūtīts uz %@, lai izmantotu jūsu saglabāto informāciju.";
+"Enter the code sent to %@." = "Ievadiet kodu, kas nosūtīts uz %s.";
 
 "FPX Bank" = "FPX banka";
 
 "Failed to connect" = "Neizdevās izveidot savienojumu";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Ātra, droša 1 klikšķa norēķināšanās";
-
-"For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
+"Fast, secure checkout" = "Ātra un droša norēķināšanās";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saņemiet %@ atmaksu, maksājot pirmo reizi ar savu banku. <terms>Skatīt noteikumus</terms>";
 
@@ -188,6 +194,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Maksājiet ātrāk %@ un tūkstošiem citos uzņēmumos.";
 
+"Pay faster everywhere Link is accepted." = "Maksājiet ātrāk visur, kur tiek pieņemta saite.";
+
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
 
 "Pay over time with Affirm" = "Maksājiet pakāpeniski ar Affirm";
@@ -238,8 +246,6 @@
 
 "Save your info for secure 1-click checkout with Link" = "Saglabāt jūsu informāciju, lai nodrošinātu norēķināšanos Link ar 1 klikšķi";
 
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Saglabājiet savu maksājuma informāciju ar Link un droši norēķinieties ar 1 klikšķi Link atbalstītās lapas.";
-
 "Saved" = "Saglabāts";
 
 "Select card" = "Atlasīt karti";
@@ -278,9 +284,9 @@
 
 "The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Šai kartei ir beidzies derīguma termiņš. Atjauniniet savu kartes informāciju vai izmantojiet citu maksājuma veidu.";
-
 "This is your default" = "Tas ir jūsu noklusējums";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Šis maksājuma veids tiks noņemts, bet joprojām būs pieejams %@ abonementiem.";
 
 "Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
 
@@ -292,9 +298,9 @@
 
 "Use billing address for shipping" = "Piegādei izmantot norēķinu adresi";
 
-"Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
-
 "View more" = "Skatīt vairāk";
+
+"Yes, update" = "Jā, atjaunināt";
 
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 

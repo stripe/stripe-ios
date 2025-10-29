@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (optioneel)";
 
 "(not accepted)" = "(niet geaccepteerd)";
@@ -37,8 +39,6 @@
 "Country or region" = "Land of regio";
 
 "County" = "Graafschap";
-
-"Date is empty." = "Datum is leeg.";
 
 "Department" = "Departement";
 
@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Je BLIK-code is ongeldig.";
 
-"Your ZIP is incomplete." = "Je ZIP is onvolledig.";
+"Your ZIP code is incomplete." = "Uw postcode is incompleet.";
+
+"Your ZIP code is invalid." = "Uw postcode is ongeldig.";
 
 "Your email is invalid." = "Je e-mailadres is ongeldig.";
 
 "Your payment information will not be saved." = "Je betaalgegevens worden niet opgeslagen.";
 
 "Your postal code is incomplete." = "Je postcode is onvolledig.";
+
+"Your postal code is invalid." = "Je postcode is ongeldig.";
 
 "ZIP" = "Postcode";

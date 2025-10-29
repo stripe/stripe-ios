@@ -1,6 +1,7 @@
 {
   "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
+  "config_id": "123",
   "customer": {
     "customer_session": {
       "id": "cuss_1PK3MvL654321654",

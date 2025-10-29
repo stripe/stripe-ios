@@ -7,12 +7,13 @@
 
 @testable import StripeApplePay
 @_spi(STP) import StripeCore
-@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
 final class STPApplePayContext_PaymentSheetTest: XCTestCase {
-    let dummyDeferredConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in /* no-op */ }
+    let dummyDeferredConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in return "" /* no-op */ }
+    let dummyConfirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { _ in return "" }
     let applePayConfiguration = PaymentSheet.ApplePayConfiguration(merchantId: "merchant_id", merchantCountryCode: "GB")
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
@@ -239,6 +240,156 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertFalse(sut.requiredBillingContactFields.contains(.phoneNumber))
         XCTAssertFalse(sut.requiredShippingContactFields.contains(.emailAddress))
         XCTAssertTrue(sut.requiredShippingContactFields.contains(.phoneNumber))
+    }
+
+    func testCreatePaymentRequest_label_normalIntent() {
+        var configuration = configuration
+        configuration.merchantDisplayName = "Merchant Name"
+        let intent = Intent._testValue()
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Merchant Name")
+    }
+
+    func testCreatePaymentRequest_label_deferredIntentWithoutSellerDetails() {
+        var configuration = configuration
+        configuration.merchantDisplayName = "Merchant Name"
+        let deferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .payment(amount: 2345, currency: "USD"),
+                confirmHandler: dummyDeferredConfirmHandler
+            )
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: deferredIntent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Merchant Name")
+    }
+
+    func testCreatePaymentRequest_label_sptDeferredIntentWithoutSellerDetails() {
+        var configuration = configuration
+        configuration.merchantDisplayName = "Merchant Name"
+        let deferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                sharedPaymentTokenSessionWithMode: .payment(amount: 2345, currency: "USD"),
+                sellerDetails: nil,
+                preparePaymentMethodHandler: { _, _ in /* no-op */ }
+            )
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: deferredIntent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Merchant Name")
+    }
+
+    func testCreatePaymentRequest_label_sptDeferredIntentWithSellerDetails() {
+        var configuration = configuration
+        configuration.merchantDisplayName = "Merchant Name"
+        let deferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                sharedPaymentTokenSessionWithMode: .payment(amount: 2345, currency: "USD"),
+                sellerDetails: .init(
+                    networkId: "networkID",
+                    externalId: "externalID",
+                    businessName: "Something different from the merchant name"
+                ),
+                preparePaymentMethodHandler: { _, _ in /* no-op */ }
+            )
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: deferredIntent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Something different from the merchant name")
+    }
+
+    // MARK: - ConfirmationToken Tests
+
+    func testCreatePaymentRequest_ConfirmationTokenDeferred() {
+        // Test that confirmation token deferred intents create proper payment requests
+        let confirmationTokenDeferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .payment(amount: 2345, currency: "USD"),
+                confirmationTokenConfirmHandler: dummyConfirmationTokenConfirmHandler
+            )
+        )
+
+        let sut = STPApplePayContext.createPaymentRequest(intent: confirmationTokenDeferredIntent, configuration: configuration, applePay: applePayConfiguration)
+
+        // Should create identical payment request as regular deferred intent
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
+        XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+        XCTAssertEqual(sut.currencyCode, "USD")
+        XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+        XCTAssertEqual(sut.countryCode, "GB")
+    }
+
+    func testCreatePaymentRequest_ConfirmationTokenSetup() {
+        // Test that confirmation token setup intents work
+        let confirmationTokenSetupIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .setup(currency: "USD"),
+                confirmationTokenConfirmHandler: dummyConfirmationTokenConfirmHandler
+            )
+        )
+
+        let sut = STPApplePayContext.createPaymentRequest(intent: confirmationTokenSetupIntent, configuration: configuration, applePay: applePayConfiguration)
+
+        // Should create setup intent payment request
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, .zero)
+        XCTAssertEqual(sut.paymentSummaryItems[0].type, .pending)
+        XCTAssertEqual(sut.currencyCode, "USD")
+        XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+        XCTAssertEqual(sut.countryCode, "GB")
+    }
+
+    func testCreatePaymentRequest_ConfirmationTokenWithSetupFutureUsage() {
+        // Test that confirmation token deferred intents with setup future usage work
+        let confirmationTokenDeferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession),
+                confirmationTokenConfirmHandler: dummyConfirmationTokenConfirmHandler
+            )
+        )
+
+        let sut = STPApplePayContext.createPaymentRequest(intent: confirmationTokenDeferredIntent, configuration: configuration, applePay: applePayConfiguration)
+
+        // Should create payment request with setup future usage
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
+        XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+        XCTAssertEqual(sut.currencyCode, "USD")
+        XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+        XCTAssertEqual(sut.countryCode, "GB")
+#if compiler(>=5.9)
+        if #available(macOS 14.0, iOS 17.0, *) {
+            XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
+        }
+#endif
+    }
+
+    func testCreatePaymentRequest_ConfirmationTokenWithPMOSetupFutureUsage() {
+        // Test that confirmation token deferred intents with PMO setup future usage work
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+
+        let confirmationTokenDeferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .payment(
+                    amount: 2345,
+                    currency: "USD",
+                    paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(
+                        setupFutureUsageValues: [.card: .offSession]
+                    )
+                ),
+                confirmationTokenConfirmHandler: dummyConfirmationTokenConfirmHandler
+            )
+        )
+
+        let sut = STPApplePayContext.createPaymentRequest(intent: confirmationTokenDeferredIntent, configuration: config, applePay: applePayConfiguration)
+
+        // Should create payment request with PMO setup future usage
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
+        XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+        XCTAssertEqual(sut.currencyCode, "USD")
+        XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+        XCTAssertEqual(sut.countryCode, "GB")
+#if compiler(>=5.9)
+        if #available(macOS 14.0, iOS 17.0, *) {
+            XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
+        }
+#endif
     }
 }
 

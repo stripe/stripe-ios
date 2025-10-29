@@ -25,7 +25,7 @@ for framework_name in GetFrameworks.framework_names("./modules.yaml")
   processed_lines = module_diff.lines.map do |line|
     if line.include?('public')
       # Remove everything before 'public', including any leading characters
-      line.sub(/^.*?(public)/, '- \1')
+      line.sub(/^(.*?)(public)/, '\1\2')  # Keep the original prefix
     else
       # Keep the line as is
       line

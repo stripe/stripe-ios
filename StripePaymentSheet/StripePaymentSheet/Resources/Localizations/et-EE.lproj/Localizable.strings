@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ lisa";
 
 "Add US bank account" = "Lisa Ameerika Ühendriikide pangakonto";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Lisage uus makseviis";
 
 "Add your payment information" = "Lisage makseteave";
-
-"Agree and continue" = "Nõustu ja jätka";
 
 "Approve payment" = "Kinnitage makse";
 
@@ -60,6 +56,12 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Jätkates nõustute salvestama oma andmed tulevaste ostude jaoks %@ ja <link>Link</link> vastavalt Linki <terms>tingimustele</terms> ja <privacy>privaatsusele</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Jätkates nõustute salvestama oma teabe tulevaste ostude jaoks %@.";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Jätkates annate loa, et %@ debiteerib regulaarselt teie Satispay Balance'i kontot vastavalt teie ostule või tellimusplaanile.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jätkamisel volitate %1$@ debiteerima teie Cash Appi kontot selle makse ja tulevaste maksete eest vastavalt ettevõtte %2$@ tingimustele, kuni see volitus tühistatakse. Saate seda igal ajal oma Cash rakenduse seadetes muuta.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
@@ -77,6 +79,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Oma telefoninumbri esitamisega nõustute looma Linki konto ja salvestama oma makseteabe Linki, mille suhtes kehtivad Linki <terms>tingimused</terms> ja <privacy>privaatsuseeskirjad</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvestades oma pangakonto %@, nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Esitades oma tellimuse %1$@ ja %2$@, nõustute salvestama oma andmed %3$@-ga tulevaste ostude jaoks ja nõustute autoriseerima makseid vastavalt <terms>nendele tingimustele</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Esitades oma tellimuse aadressile %@, nõustute autoriseerima makseid vastavalt <terms>nendele tingimustele</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -108,25 +114,27 @@
 
 "Continue another way" = "Jätka muul viisil";
 
+"Create an account with Link for faster checkout across the web" = "Looge Linki konto, et veebis kiiremini maksta";
+
 "Debit or credit card" = "Deebet- või krediitkaart";
 
 "Default" = "Vaikimisi";
 
 "Default payment method" = "Vaikemakseviis";
 
+"Did you mean %@? %@." = "Kas te pidasite silmas %1$@? %2$@.";
+
 "EPS Bank" = "EPS pank";
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
-"Enter the code sent to %@ to use your saved information." = "Oma salvestatud teabe kasutamiseks sisestage telefoninumbrile %@ saadetud kood.";
+"Enter the code sent to %@." = "Sisestage kood, mis saadeti numbrile %s.";
 
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "Ühendamine ebaõnnestus";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Kiire, turvaline ühe klõpsuga makse lõpuleviimine";
-
-"For security, please re-enter your card’s security code." = "Turvalisuse huvides sisestage palun uuesti oma kaardi turvakood.";
+"Fast, secure checkout" = "Kiire ja turvaline kassa";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saate %@ tagasi, kui maksate esimest korda oma panga kaudu. <terms>Vaata tingimusi</terms>";
 
@@ -186,6 +194,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Makske kiiremini kaupleja %@ lehel ja tuhandetel teistel saitidel.";
 
+"Pay faster everywhere Link is accepted." = "Makske kiiremini kõikjal, kus Link on aktsepteeritud.";
+
 "Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
 
 "Pay over time with Affirm" = "Maksa Affirmi järelmaksuga";
@@ -236,8 +246,6 @@
 
 "Save your info for secure 1-click checkout with Link" = "Salvesta oma teave, et võimaldada turvaline ühe klõpsuga makse lõpuleviimine Linkiga";
 
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Salvestage oma makseteave Linki ja võimaldage Linki toetusega saitidel turvaline ühe klõpsuga makse lõpuleviimine.";
-
 "Saved" = "Salvestatud";
 
 "Select card" = "Vali kaart";
@@ -276,9 +284,9 @@
 
 "The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
 
-"This card has expired. Update your card info or choose a different payment method." = "See kaart on aegunud. Ajakohastage oma kaarditeavet või kasutage muud makseviisi.";
-
 "This is your default" = "See on teie vaikimisi makseviis";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "See makseviis eemaldatakse, kuid jääb %@ kordustellimuste jaoks saadavale.";
 
 "Too many attempts. Please try again in a few minutes." = "Liiga palju katseid. Proovige paari minuti pärast uuesti.";
 
@@ -290,9 +298,9 @@
 
 "Use billing address for shipping" = "Kasutage saatmiseks arveldusaadressi";
 
-"Use your saved info to check out faster" = "Kasutage oma salvestatud teavet kiiremaks makse lõpuleviimiseks";
-
 "View more" = "Kuva rohkem";
+
+"Yes, update" = "Jah, uuenda";
 
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
 

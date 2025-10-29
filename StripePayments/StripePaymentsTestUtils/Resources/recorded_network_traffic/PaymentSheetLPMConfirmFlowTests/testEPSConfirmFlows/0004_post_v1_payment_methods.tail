@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=1ahRlR6O91b_b6hr1rqJIP8cpofy0kVDl_kB1dlsp1VwbvwxuZ96ddVQJUw35tx9b9Ik-tA5H36I3yAs
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mqqY4sBIymPmOu9Hn7PLCdmCE1FfAgdPtx8Bgur6stvjiKfpAW4cNMz97RlQ59e81kx9pTyBZWUGjPBT
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_kcMvseLNyOx5sm
+request-id: req_4E9v09qm06XkdF
 Content-Length: 510
 Vary: Origin
-Date: Thu, 10 Jul 2025 03:20:31 GMT
-original-request: req_kcMvseLNyOx5sm
+Date: Tue, 07 Oct 2025 19:08:43 GMT
+original-request: req_4E9v09qm06XkdF
 stripe-version: 2020-08-27
-idempotency-key: 2ee22b53-da66-44f3-b1c5-d51b7a43b9db
+idempotency-key: e02486bd-741f-4f20-a00f-e4b1991af464
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bname%5D=John%20Doe&eps%5Bbank%5D=arzte_und_apotheker_bank&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=eps
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bname%5D=John%20Doe&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&eps%5Bbank%5D=arzte_und_apotheker_bank&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=eps
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RjB2BFY0qyl6XeWJWUYyP6c",
+  "id" : "pm_1SFgFbFY0qyl6XeW1qvj9J5Z",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bname%5D=Joh
     "bank" : "arzte_und_apotheker_bank"
   },
   "livemode" : false,
-  "created" : 1752117631,
+  "created" : 1759864123,
   "allow_redisplay" : "unspecified",
   "type" : "eps",
   "customer" : null

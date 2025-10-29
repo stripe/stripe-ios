@@ -7,7 +7,7 @@
 import StripePaymentsTestUtils
 
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(SharedPaymentToken) import StripePaymentSheet
+@testable @_spi(STP) @_spi(SharedPaymentToken) import StripePaymentSheet
 import WebKit
 import XCTest
 

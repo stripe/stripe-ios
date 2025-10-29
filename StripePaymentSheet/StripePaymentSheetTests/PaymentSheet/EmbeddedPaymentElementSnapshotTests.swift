@@ -29,11 +29,13 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return config
     }()
-    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) { _, _, _ in
+    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) { _, _ in
         // These tests don't confirm, so this is unused
+        return ""
     }
-    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "us_bank_account"]) { _, _, _ in
+    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "us_bank_account"]) { _, _ in
         // These tests don't confirm, so this is unused
+        return ""
     }
 
     override func setUp() async throws {
@@ -82,7 +84,7 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         await _testShowsChangeButton(rowStyle: .flatWithCheckmark)
     }
 
-    func testShowsChangeButton_flatChevron() async throws {
+    func testShowsChangeButton_flatDisclosure() async throws {
         await _testShowsChangeButton(rowStyle: .flatWithDisclosure)
     }
 

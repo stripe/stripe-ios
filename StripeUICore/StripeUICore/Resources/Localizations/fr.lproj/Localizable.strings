@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (facultatif)";
 
 "(not accepted)" = "(non accepté)";
@@ -37,8 +39,6 @@
 "Country or region" = "Pays ou région";
 
 "County" = "Département";
-
-"Date is empty." = "Le champ date est vide.";
 
 "Department" = "Département";
 
@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Votre code BLIK n'est pas valide.";
 
-"Your ZIP is incomplete." = "Votre code postal est incomplet.";
+"Your ZIP code is incomplete." = "Votre code postal est incomplet.";
+
+"Your ZIP code is invalid." = "Votre code postal n'est pas valide.";
 
 "Your email is invalid." = "Votre adresse e-mail n'est pas valide.";
 
 "Your payment information will not be saved." = "Vos informations de paiement ne seront pas enregistrées.";
 
 "Your postal code is incomplete." = "Votre code postal est incomplet.";
+
+"Your postal code is invalid." = "Votre code postal n'est pas valide.";
 
 "ZIP" = "ZIP";
