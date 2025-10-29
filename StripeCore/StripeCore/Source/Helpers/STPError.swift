@@ -71,7 +71,10 @@ import Foundation
     @objc public static let stripeDeclineCodeKey = "com.stripe.lib:DeclineCodeKey"
 
     /// The Stripe API request ID, if available. Looks like `req_123`.
-    @_spi(STP) public static let stripeRequestIDKey = "com.stripe.lib:StripeRequestIDKey"
+    @objc public static let stripeRequestIDKey = "com.stripe.lib:StripeRequestIDKey"
+
+    /// The HTTP status code of the failed request as an Int e.g. 400.
+    @objc public static let httpStatusCodeKey = "com.stripe.lib:HTTPStatusCodeKey"
 
     /// Returns a localized user-facing message for a given error code.
     /// This method can be used to display an appropriate error message to the user.
@@ -138,7 +141,8 @@ extension NSError {
     @_spi(STP) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
         switch modernStripeError {
         case .apiError(let stripeAPIError):
-            return stp_error(fromStripeResponse: ["error": stripeAPIError.allResponseFields])
+            // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-3965 We're dropping some info in this conversion w/o http response
+            return stp_error(fromStripeResponse: ["error": stripeAPIError.allResponseFields], httpResponse: nil)
         case .invalidRequest:
             return NSError(
                 domain: STPError.stripeDomain,
@@ -156,7 +160,7 @@ extension NSError {
         declineCode: Any?,
         intent: [String: Any]?,
         httpResponse: HTTPURLResponse?
-    ) -> NSError? {
+    ) -> NSError {
         var userInfo = [AnyHashable: Any]()
 
         // stripeErrorCodeKey
@@ -179,9 +183,6 @@ extension NSError {
                 from: stripeErrorMessage,
                 httpResponse: httpResponse
             )
-        } else {
-            userInfo[STPError.errorMessageKey] =
-                "Could not interpret the error response that was returned from Stripe."
         }
 
         // stripeDeclineCodeKey, cardErrorCodeKey
@@ -205,6 +206,11 @@ extension NSError {
         // stripeRequestIDKey
         if let requestId = httpResponse?.value(forHTTPHeaderField: "request-id") {
             userInfo[STPError.stripeRequestIDKey] = requestId
+        }
+
+        // httpStatusCodeKey
+        if let httpResponse {
+            userInfo[STPError.httpStatusCodeKey] = httpResponse.statusCode
         }
 
         // intent
@@ -234,26 +240,28 @@ extension NSError {
         )
     }
 
+    /// Creates an NSError object from a given Stripe API response.
+    /// - Parameter jsonDictionary: The body of the response.
+    /// - Parameter httpResponse: The HTTP URL response containing headers, the status code, etc.
+    /// - Returns: An NSError object with the error information from the JSON response.
+    @objc
     @_spi(STP) public static func stp_error(
         fromStripeResponse jsonDictionary: [AnyHashable: Any]?,
         httpResponse: HTTPURLResponse?
-    ) -> NSError? {
+    ) -> NSError {
         // TODO: Refactor. A lot of this can be replaced by a lookup/decision table. Check Android implementation for cues.
-        guard let dict = (jsonDictionary as NSDictionary?),
-            let errorDictionary = dict["error"] as? NSDictionary
-        else {
-            return nil
-        }
-        let errorType = errorDictionary["type"] as? String
-        let errorParam = errorDictionary["param"] as? String
-        let stripeErrorMessage = errorDictionary["message"] as? String
-        let stripeErrorCode = errorDictionary["code"] as? String
-        let declineCode = errorDictionary["decline_code"]
+        let dict = jsonDictionary as NSDictionary?
+        let errorDictionary = dict?["error"] as? NSDictionary
+        let errorType = errorDictionary?["type"] as? String
+        let errorParam = errorDictionary?["param"] as? String
+        let stripeErrorMessage = errorDictionary?["message"] as? String
+        let stripeErrorCode = errorDictionary?["code"] as? String
+        let declineCode = errorDictionary?["decline_code"]
         let intent: [String: Any]? = {
-            if let paymentIntent = errorDictionary["payment_intent"] as? [String: Any] {
+            if let paymentIntent = errorDictionary?["payment_intent"] as? [String: Any] {
                 return paymentIntent
             }
-            if let setupIntent = errorDictionary["setup_intent"] as? [String: Any] {
+            if let setupIntent = errorDictionary?["setup_intent"] as? [String: Any] {
                 return setupIntent
             }
             return nil
