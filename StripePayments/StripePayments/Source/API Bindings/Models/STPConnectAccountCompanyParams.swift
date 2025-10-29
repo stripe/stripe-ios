@@ -26,14 +26,17 @@ public class STPConnectAccountCompanyParams: NSObject {
     /// This value is not automatically set to true after creating directors, so it needs to be updated to indicate all directors have been provided.
     @objc(directorsProvided)
     public var directorsProvided_objc: NSNumber? {
-        get { NSNumber(value: directorsProvided) }
-        set { directorsProvided = newValue?.boolValue ?? false }
+        get {
+            guard let directorsProvided else { return nil }
+            return NSNumber(value: directorsProvided)
+        }
+        set { directorsProvided = newValue?.boolValue }
     }
 
     /// Whether the company’s directors have been provided.
     /// Set this Boolean to true after creating all the company’s directors with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.director requirement.
     /// This value is not automatically set to true after creating directors, so it needs to be updated to indicate all directors have been provided.
-    public var directorsProvided: Bool = false
+    public var directorsProvided: Bool?
 
     /// The company’s legal name.
     @objc public var name: String?
@@ -48,13 +51,16 @@ public class STPConnectAccountCompanyParams: NSObject {
     /// Set this Boolean to true after creating all the company’s owners with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.owner requirement.
     @objc(ownersProvided)
     public var ownersProvided_objc: NSNumber? {
-        get { NSNumber(value: ownersProvided) }
-        set { ownersProvided = newValue?.boolValue ?? false }
+        get {
+            guard let ownersProvided else { return nil }
+            return NSNumber(value: ownersProvided)
+        }
+        set { ownersProvided = newValue?.boolValue }
     }
 
     /// Whether the company’s owners have been provided.
     /// Set this Boolean to true after creating all the company’s owners with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.owner requirement.
-    public var ownersProvided: Bool = false
+    public var ownersProvided: Bool?
 
     /// The company’s phone number (used for verification).
     @objc public var phone: String?

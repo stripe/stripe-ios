@@ -27,13 +27,16 @@ public class STPConnectAccountParams: NSObject {
     /// the user accepted them.
     @objc(tosShownAndAccepted)
     public var tosShownAndAccepted_objc: NSNumber? {
-        get { return NSNumber(value: tosShownAndAccepted) }
-        set { tosShownAndAccepted = newValue?.boolValue ?? false }
+        get {
+            guard let tosShownAndAccepted else { return nil }
+            return NSNumber(value: tosShownAndAccepted)
+        }
+        set { tosShownAndAccepted = newValue?.boolValue }
     }
 
     /// Boolean indicating that the Terms Of Service were shown to the user &
     /// the user accepted them.
-    public var tosShownAndAccepted: Bool
+    public var tosShownAndAccepted: Bool?
 
     /// The business type.
     @objc public var businessType: STPConnectAccountBusinessType
