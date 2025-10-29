@@ -52,7 +52,7 @@ extension PaymentMethodMessagingElement {
 
             // invalid response scenario
             guard let infoUrl = firstPaymentPlan.content.learnMore?.url else {
-                Self.logAPIError(apiClient: configuration.apiClient)
+                // TODO(gbirch) add error analytics
                 throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
             }
             guard let logo = try await Self.getIconSet(
@@ -62,7 +62,7 @@ extension PaymentMethodMessagingElement {
                 // This should never happen, but if it does we log an error and attempt to fall back to a multi-partner style
                 //      (so that we can use the promotion text, which doesn't require a logo, instead of inline) without logos
                 stpAssertionFailure("No images returned by API")
-                Self.logAPIError(apiClient: configuration.apiClient)
+                // TODO(gbirch) add error analytics
                 if let topLevelPromotion = apiResponse.content.promotion?.message {
                     self.init(
                         mode: .multiPartner(logos: []),
@@ -103,7 +103,7 @@ extension PaymentMethodMessagingElement {
 
             // invalid response scenario
             guard let infoUrl = apiResponse.content.learnMore?.url else {
-                Self.logAPIError(apiClient: configuration.apiClient)
+                // TODO(gbirch) add error analytics
                 throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
             }
 
@@ -173,12 +173,6 @@ extension PaymentMethodMessagingElement {
             //    from [IconSet?] to [IconSet]
             return icons.compactMap { $0 }
         }
-    }
-
-    private static func logAPIError(apiClient: STPAPIClient) {
-        let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
-        let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error)
-        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
     }
 }
 
