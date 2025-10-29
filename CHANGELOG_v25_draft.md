@@ -25,5 +25,9 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Changed] Replaces the `ApplePayContextDelegate.didCreatePaymentMethod` method with an async version.
 
 ### Payments
+* [Changed] `STPPaymentIntent.paymentMethodTypes` and `STPSetupIntent.paymentMethodTypes` now return `[STPPaymentMethodType]` instead of `[NSNumber]`. Objective-C callers can use the `paymentMethodTypes_objc` property to access the legacy `[NSNumber]` representation.
+* [Changed] `STPPaymentIntentParams.savePaymentMethod` now uses `Bool?` instead of `NSNumber?` for better Swift ergonomics. Objective-C callers can continue using the `savePaymentMethod_objc` property which returns `NSNumber?`.
+* [Changed] `STPSetupIntentConfirmParams.useStripeSDK` now uses `Bool?` instead of `NSNumber?` for better Swift ergonomics. Objective-C callers can continue using the `useStripeSDK_objc` property which returns `NSNumber?`.
 * [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
+* [Removed] Removed deprecated `STPPaymentIntentParams.saveSourceToCustomer` property. Use `savePaymentMethod` instead.
 
