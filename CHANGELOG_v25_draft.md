@@ -7,6 +7,9 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 ### Financial Connections
 * [Added] Added an async versions of `present(from:)` and `presentForToken(from:)`.
 
+### Payments
+* [Changed] Renamed STPPaymentHandler's `confirm` and `handleNextAction` methods and added async versions.
+
 ### PaymentSheet
 * [Added] Added async versions of all completion-block-based PaymentSheet and PaymentSheet.FlowController methods.
 * [Changed] Replaces `ExternalPaymentMethodConfirmHandler` with an async equivalent.
