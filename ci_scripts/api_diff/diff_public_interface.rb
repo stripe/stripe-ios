@@ -1,8 +1,29 @@
 require 'open3'
+require 'tempfile'
 require_relative 'get_frameworks'
+require_relative 'sort_swift_interface'
+
+def sort_interface(input_path)
+  # Create a temporary file for sorted output
+  temp_file = Tempfile.new(['sorted_interface', '.swiftinterface'])
+
+  # Read and sort the interface
+  content = File.read(input_path)
+  sorter = SwiftInterfaceSorter.new(content)
+  sorted_content = sorter.sort
+
+  # Write sorted content to temp file
+  File.write(temp_file.path, sorted_content)
+
+  temp_file
+end
 
 def diff(old_path, new_path)
-  stdout, _stderr, _status = Open3.capture3("diff", "-u", old_path, new_path)
+  # Sort both interface files before diffing
+  sorted_old = sort_interface(old_path)
+  sorted_new = sort_interface(new_path)
+
+  stdout, _stderr, _status = Open3.capture3("diff", "-u", sorted_old.path, sorted_new.path)
 
   diff_string = stdout.lines.map do |line|
     case line[0..1]
@@ -11,6 +32,12 @@ def diff(old_path, new_path)
     else nil
     end
   end.compact.join("\n")
+
+  # Clean up temp files
+  sorted_old.close
+  sorted_old.unlink
+  sorted_new.close
+  sorted_new.unlink
 
   return diff_string
 end
