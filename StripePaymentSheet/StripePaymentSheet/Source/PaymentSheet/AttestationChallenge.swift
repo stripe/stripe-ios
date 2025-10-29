@@ -18,12 +18,6 @@ actor AttestationChallenge {
     private let attestationTask: Task<Void, Error>
     private var assertionTask: Task<StripeAttest.Assertion?, Never>?
 
-    var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
-
-    func setTimeout(timeout: TimeInterval) {
-        self.timeout = timeout
-    }
-
     public init(stripeAttest: StripeAttest) {
         self.stripeAttest = stripeAttest
         STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepare()
@@ -78,7 +72,7 @@ actor AttestationChallenge {
         return await assertionTask.value
     }
 
-    public func fetchAssertionWithTimeout() async -> StripeAttest.Assertion? {
+    public func fetchAssertionWithTimeout(_ timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6) async -> StripeAttest.Assertion? {
         let timeoutNs = UInt64(timeout) * 1_000_000_000
         return await withTaskGroup(of: StripeAttest.Assertion?.self) { group in
             // Add assertion task

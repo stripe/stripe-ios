@@ -30,10 +30,9 @@ class PassiveCaptchaTests: XCTestCase {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
-        await passiveCaptchaChallenge.setTimeout(timeout: 6)
         // wait to make sure that the token will be ready by the time we call fetchToken
         try await Task.sleep(nanoseconds: 6_000_000_000)
-        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
+        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout(6)
         XCTAssertNotNil(hcaptchaToken)
         let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
         XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success", "elements.captcha.passive.attach"])
@@ -48,8 +47,7 @@ class PassiveCaptchaTests: XCTestCase {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: TestDelayHCaptchaFactory())
-        await passiveCaptchaChallenge.setTimeout(timeout: 1)
-        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
+        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout(1)
         // should return nil due to timeout
         XCTAssertNil(hcaptchaToken)
         let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.error" })
@@ -62,9 +60,8 @@ class PassiveCaptchaTests: XCTestCase {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
-        await passiveCaptchaChallenge.setTimeout(timeout: 30)
         let startTime = Date()
-        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
+        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout(30)
         // didn't time out because it finished early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
         XCTAssertNotNil(hcaptchaToken)
