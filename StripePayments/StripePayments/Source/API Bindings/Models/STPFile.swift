@@ -35,7 +35,7 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
     /// The token for this file.
     @objc public private(set) var fileId: String
     /// The date this file was created.
-    @objc public private(set) var created: Date = Date(timeIntervalSince1970: TimeInterval(0))
+    @objc public private(set) var created: Date
     /// The purpose of this file. This can be either an identifing document or an evidence dispute.
     /// - seealso: https://stripe.com/docs/file-upload
     @objc public private(set) var purpose: STPFilePurpose = .unknown
