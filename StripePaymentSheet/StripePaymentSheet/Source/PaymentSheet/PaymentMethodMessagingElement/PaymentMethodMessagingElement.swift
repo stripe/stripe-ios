@@ -70,4 +70,18 @@ public class PaymentMethodMessagingElement {
         /// Describes the visual appearance of the PaymentMethodMessaingElement.
         public var appearance: PaymentMethodMessagingElement.Appearance = PaymentMethodMessagingElement.Appearance()
     }
+
+    // MARK: - Internal
+
+    let mode: Mode
+    let infoUrl: URL
+    let promotion: String
+    let appearance: Appearance
+
+    init(mode: Mode, infoUrl: URL, promotion: String, appearance: PaymentMethodMessagingElement.Appearance) {
+        self.mode = mode
+        self.infoUrl = infoUrl
+        self.promotion = promotion
+        self.appearance = appearance
+    }
 }
