@@ -20,7 +20,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             initialSelection: .saved(
                 paymentMethod: savedPaymentMethod
             ),
-            savedPaymentMethod: savedPaymentMethod,
+            savedPaymentMethods: [savedPaymentMethod],
             paymentMethodTypes: [.stripe(.card)],
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -58,11 +58,64 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         XCTAssertTrue(applePayRowButton.isSelected)
     }
 
+    func testSavedCardCopy() {
+        let savedPaymentMethods = [
+            STPPaymentMethod._testSEPA(),
+            STPPaymentMethod._testCard(),
+        ]
+        // Given a list view with a saved card...
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: .saved(
+                paymentMethod: savedPaymentMethods.first!
+            ),
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: [.stripe(.card)],
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            incentive: nil,
+            delegate: self
+        )
+
+        // The card button should say "New card"
+        XCTAssert(sut.rowButtons.contains { $0.accessibilityIdentifier == "New card" })
+    }
+
+    func testNoSavedCardCopy() {
+        let savedPaymentMethods = [
+            STPPaymentMethod._testSEPA(),
+        ]
+        // Given a list view without a saved card...
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: .saved(
+                paymentMethod: savedPaymentMethods.first!
+            ),
+            savedPaymentMethods: savedPaymentMethods,
+            paymentMethodTypes: [.stripe(.card)],
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            incentive: nil,
+            delegate: self
+        )
+
+        // The card button should say "Card"
+        XCTAssert(sut.rowButtons.contains { $0.accessibilityIdentifier == "Card" })
+    }
+
     func testApplePayAndLinkOrdering() {
         // If cards are available, Apple Pay / Link appear after it
         let sut = VerticalPaymentMethodListViewController(
             initialSelection: nil,
-            savedPaymentMethod: nil,
+            savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.SEPADebit), .stripe(.card)],
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -79,7 +132,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         // If cards only, Apple Pay / Link appear after it
         let sut_cards_only = VerticalPaymentMethodListViewController(
             initialSelection: nil,
-            savedPaymentMethod: nil,
+            savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
             shouldShowApplePay: true,
             shouldShowLink: true,
@@ -96,7 +149,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         // Without cards, Apple Pay / Link appear first
         let sut_no_cards = VerticalPaymentMethodListViewController(
             initialSelection: nil,
-            savedPaymentMethod: nil,
+            savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.SEPADebit)],
             shouldShowApplePay: true,
             shouldShowLink: true,

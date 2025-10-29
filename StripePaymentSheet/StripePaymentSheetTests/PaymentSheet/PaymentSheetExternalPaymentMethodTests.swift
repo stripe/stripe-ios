@@ -7,7 +7,7 @@
 
 import XCTest
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 
 @MainActor
@@ -21,15 +21,16 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         let e2 = expectation(description: "External PM confirm handler called")
 
         var configuration = PaymentSheet.Configuration()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, _, completion in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, _ in
             XCTAssertEqual(externalPaymentMethodType, "external_paypal")
             e2.fulfill()
             XCTAssertTrue(Thread.isMainThread)
-            completion(.completed)
+            return .completed
         })
 
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
+            return ""
         }))
 
         // Make the form
@@ -61,7 +62,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
     func testExternalFormBillingDetails() async throws {
         let externalConfirmHandlerCalled = expectation(description: "External PM confirm handler called")
         var configuration = PaymentSheet.Configuration()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails, completion in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails in
             XCTAssertEqual(externalPaymentMethodType, "external_paypal")
             // (2) ...and billing details collected in the form should be passed to the merchant's confirm handler
             XCTAssertEqual(billingDetails.name, "Jane Doe")
@@ -69,32 +70,47 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             XCTAssertEqual(billingDetails.address?.line1, "354 Oyster Point Blvd")
             XCTAssertEqual(billingDetails.address?.line2, "Apt 123")
             XCTAssertEqual(billingDetails.address?.city, "South San Francisco")
-            XCTAssertEqual(billingDetails.address?.state, "AL")
-            XCTAssertEqual(billingDetails.address?.postalCode, "12345")
+            XCTAssertEqual(billingDetails.address?.state, "CA")
+            XCTAssertEqual(billingDetails.address?.postalCode, "94080")
             XCTAssertEqual(billingDetails.address?.country, "US")
             externalConfirmHandlerCalled.fulfill()
-            completion(.completed)
+            return .completed
         })
-        // Configuring PaymentSheet to collect full billing details...
+        // Configuring PaymentSheet to collect full billing details with default values...
         configuration.billingDetailsCollectionConfiguration.name = .always
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                line2: "Apt 123",
+                postalCode: "94080",
+                state: "CA"
+            ),
+            email: "foo@bar.com",
+            name: "Jane Doe",
+            phone: "+15551234567"
+        )
+
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
+            return ""
         }))
 
-        // (1) ...should result in the external payment method form showing billing detail fields...
+        // (1) ...should result in the external payment method form showing billing detail fields pre-populated with default values...
         let paymentMethodForm = makeForm(intent: intent, configuration: configuration)
-        paymentMethodForm.getTextFieldElement("Full name")?.setText("Jane Doe") ?? XCTFail()
-        paymentMethodForm.getTextFieldElement("Email")?.setText("foo@bar.com") ?? XCTFail()
-        paymentMethodForm.getPhoneNumberElement()?.textFieldElement.setText("5551234567") ?? XCTFail()
+        XCTAssertEqual(paymentMethodForm.getTextFieldElement("Full name")?.text, "Jane Doe")
+        XCTAssertEqual(paymentMethodForm.getTextFieldElement("Email")?.text, "foo@bar.com")
+        XCTAssertEqual(paymentMethodForm.getPhoneNumberElement()?.phoneNumber?.string(as: .e164), "+15551234567")
         XCTAssertNotNil(paymentMethodForm.getDropdownFieldElement("Country or region"))
-        paymentMethodForm.getTextFieldElement("Address line 1")?.setText("354 Oyster Point Blvd") ?? XCTFail()
-        paymentMethodForm.getTextFieldElement("Address line 2")?.setText("Apt 123") ?? XCTFail()
-        paymentMethodForm.getTextFieldElement("City")?.setText("South San Francisco") ?? XCTFail()
+        XCTAssertEqual(paymentMethodForm.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
+        XCTAssertEqual(paymentMethodForm.getTextFieldElement("Address line 2")?.text, "Apt 123")
+        XCTAssertEqual(paymentMethodForm.getTextFieldElement("City")?.text, "South San Francisco")
         XCTAssertNotNil(paymentMethodForm.getDropdownFieldElement("State"))
-        paymentMethodForm.getTextFieldElement("ZIP")?.setText("12345") ?? XCTFail()
+        XCTAssertEqual(paymentMethodForm.getTextFieldElement("ZIP")?.text, "94080")
 
         // Simulate customer tapping "Buy" - generate params from the form and confirm payment
         guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .external(._testPayPalValue(configuration.externalPaymentMethodConfiguration!)))) else {
@@ -118,12 +134,13 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         func _confirm(with merchantReturnedResult: PaymentSheetResult) {
             let e = expectation(description: "External PM confirm handler called")
             var configuration = PaymentSheet.Configuration()
-            configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
+            configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
                 // The merchant's returned result should be passed back in `PaymentSheet.confirm`
-                completion(merchantReturnedResult)
+                return merchantReturnedResult
             })
-            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
                 XCTFail("Intent confirm handler shouldn't be called")
+                return ""
             }))
             PaymentSheet.confirm(
                 configuration: configuration,

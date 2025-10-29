@@ -47,8 +47,14 @@ extension StripeAPI.VerificationPageDataFace {
                 TwoDecimalFloat(double: $0)
             },
             bestCameraLensModel: bestFrameExifMetadata?.lensModel,
-            bestExposureDuration: capturedImages.bestMiddle.scannerOutput.cameraProperties.map {
-                Int($0.exposureDuration.seconds * 1000)
+            bestExposureDuration: capturedImages.bestMiddle.scannerOutput.cameraProperties.flatMap { properties in
+                let exposureDuration = properties.exposureDuration
+
+                if exposureDuration.isNumeric {
+                    return Int(properties.exposureDuration.seconds * 1000)
+                }
+
+                return nil
             },
             bestExposureIso: capturedImages.bestMiddle.scannerOutput.cameraProperties.map {
                 TwoDecimalFloat($0.exposureISO)

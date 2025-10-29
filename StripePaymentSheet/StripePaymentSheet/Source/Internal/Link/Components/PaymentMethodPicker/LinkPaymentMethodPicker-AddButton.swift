@@ -13,11 +13,6 @@ import UIKit
 extension LinkPaymentMethodPicker {
 
     final class AddButton: UIControl {
-        struct Constants {
-            static let iconSize: CGSize = .init(width: 24, height: 24)
-        }
-
-        private let iconView: UIImageView = UIImageView(image: Image.icon_add_bordered.makeImage(template: false))
 
         private lazy var textLabel: UILabel = {
             let label = UILabel()
@@ -26,8 +21,23 @@ extension LinkPaymentMethodPicker {
             label.textColor = tintColor
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
             label.adjustsFontForContentSizeCategory = true
+            label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
+
+        private lazy var activityIndicator: ActivityIndicator = {
+            let indicator = ActivityIndicator(size: .medium)
+            // Lower the alpha since it will only be shown when the button is disabled.
+            indicator.alpha = 0.5
+            indicator.translatesAutoresizingMaskIntoConstraints = false
+            return indicator
+        }()
+
+        var isLoading: Bool = false {
+            didSet {
+                update()
+            }
+        }
 
         override var isHighlighted: Bool {
             didSet {
@@ -65,32 +75,40 @@ extension LinkPaymentMethodPicker {
         }
 
         private func setupUI() {
-            let stackView = UIStackView(arrangedSubviews: [iconView, textLabel])
-            stackView.spacing = Cell.Constants.contentSpacing
-            stackView.alignment = .center
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-
-            addSubview(stackView)
+            addSubview(textLabel)
+            addSubview(activityIndicator)
 
             NSLayoutConstraint.activate([
-                iconView.widthAnchor.constraint(equalToConstant: Constants.iconSize.width),
-                iconView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height),
-                stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-                stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-                stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+                textLabel.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+                textLabel.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+                textLabel.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+                textLabel.trailingAnchor.constraint(lessThanOrEqualTo: activityIndicator.leadingAnchor, constant: -LinkUI.smallContentSpacing),
+
+                activityIndicator.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+                activityIndicator.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             ])
+
+            if LinkUI.useLiquidGlass {
+                NSLayoutConstraint.activate([
+                    heightAnchor.constraint(greaterThanOrEqualToConstant: LinkUI.minimumItemHeightForLiquidGlass),
+                ])
+            }
         }
 
         private func update() {
-            if isHighlighted {
-                iconView.alpha = 0.7
-                textLabel.alpha = 0.7
-                backgroundColor = .linkControlHighlight
-            } else {
-                iconView.alpha = 1
-                textLabel.alpha = 1
+            if isLoading {
+                activityIndicator.startAnimating()
+                textLabel.alpha = 0.5
                 backgroundColor = .clear
+            } else {
+                activityIndicator.stopAnimating()
+                if isHighlighted {
+                    textLabel.alpha = 0.7
+                    backgroundColor = .linkSurfaceTertiary
+                } else {
+                    textLabel.alpha = 1
+                    backgroundColor = .clear
+                }
             }
         }
 

@@ -256,7 +256,7 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
                 redactedFormattedPhoneNumber: "(•••) ••• ••55",
                 verificationSessions: []
             ),
-            apiClient: FinancialConnectionsAPIClient(apiClient: .shared),
+            apiClient: FinancialConnectionsAsyncAPIClient(apiClient: .shared),
             analyticsClient: FinancialConnectionsAnalyticsClient()
         ))
     }

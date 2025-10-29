@@ -25,6 +25,9 @@ class AutoCompleteViewController: UIViewController {
     let configuration: AddressViewController.Configuration
     let initialLine1Text: String?
     let addressSpecProvider: AddressSpecProvider
+    /// Vertical offset for the view controller content. Negative values move content up, positive values move content down.
+    let verticalOffset: CGFloat
+
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
@@ -58,7 +61,7 @@ class AutoCompleteViewController: UIViewController {
     }()
     lazy var formStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [formView])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
 
@@ -68,7 +71,7 @@ class AutoCompleteViewController: UIViewController {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         tableView.keyboardDismissMode = .onDrag
         #endif
         tableView.backgroundColor = configuration.appearance.colors.background
@@ -112,13 +115,15 @@ class AutoCompleteViewController: UIViewController {
     required init(
         configuration: AddressViewController.Configuration,
         initialLine1Text: String?,
-        addressSpecProvider: AddressSpecProvider = .shared
+        addressSpecProvider: AddressSpecProvider = .shared,
+        verticalOffset: CGFloat = 0
     ) {
         self.configuration = configuration
         self.initialLine1Text = initialLine1Text
         self.addressSpecProvider = addressSpecProvider
+        self.verticalOffset = verticalOffset
         super.init(nibName: nil, bundle: nil)
-        if let initialLine1Text = initialLine1Text {
+        if let initialLine1Text = initialLine1Text, !initialLine1Text.isEmpty {
             self.addressSearchCompleter.queryFragment = initialLine1Text
         }
     }
@@ -133,26 +138,53 @@ class AutoCompleteViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
 
-        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButton])
+        let buttonContainer = UIView()
+        buttonContainer.addAndPinSubview(manualEntryButton, insets: NSDirectionalEdgeInsets(top: 0, leading: configuration.appearance.formInsets.leading, bottom: 8, trailing: configuration.appearance.formInsets.trailing))
+        buttonContainer.addSubview(manualEntryButton)
+        manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
         stackView.setCustomSpacing(0, after: separatorView)
-        stackView.setCustomSpacing(0, after: tableView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
+        view.addSubview(buttonContainer)
+
+        buttonContainer.translatesAutoresizingMaskIntoConstraints = false
 
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
             stackViewBottomConstraint,
 
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: verticalOffset),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
+
+            buttonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            buttonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            buttonContainer.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+
             manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
         ])
 
+        // Set up proper content inset for table view after layout
+        view.layoutIfNeeded()
+        updateTableViewInsets()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateTableViewInsets()
+    }
+
+    private func updateTableViewInsets() {
+        // Add bottom content inset to tableview to account for floating button
+        let buttonHeight = manualEntryButton.frame.height + 16
+        tableView.contentInset.bottom = buttonHeight
+        tableView.verticalScrollIndicatorInsets.bottom = buttonHeight
     }
 
     private func registerForKeyboardNotifications() {
@@ -205,7 +237,9 @@ class AutoCompleteViewController: UIViewController {
 // MARK: ElementDelegate
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
-        addressSearchCompleter.queryFragment = autoCompleteLine.text
+        if !autoCompleteLine.text.isEmpty {
+            addressSearchCompleter.queryFragment = autoCompleteLine.text
+        }
     }
 
     func continueToNextField(element: Element) {
@@ -258,6 +292,11 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                                                                             appearance: configuration.appearance,
                                                                             isSubtitle: true)
         cell.indentationWidth = 5 // hardcoded value to align with searchbar textfield
+
+        cell.contentView.directionalLayoutMargins = .insets(
+            leading: configuration.appearance.formInsets.leading - 5, // adjust for the indentation
+            trailing: configuration.appearance.formInsets.trailing)
+        cell.contentView.preservesSuperviewLayoutMargins = false
 
         return cell
     }

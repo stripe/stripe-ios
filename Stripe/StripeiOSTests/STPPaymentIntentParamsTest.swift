@@ -36,6 +36,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
             XCTAssertNil(params.mandateData)
             XCTAssertNil(params.paymentMethodOptions)
             XCTAssertNil(params.shipping)
+            XCTAssertNil(params.confirmationToken)
         }
     }
 
@@ -147,6 +148,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
             address: STPPaymentIntentShippingDetailsAddressParams(line1: ""),
             name: ""
         )
+        params.confirmationToken = "ctoken_test_123"
 
         let paramsCopy = params.copy() as! STPPaymentIntentParams
         XCTAssertEqual(params.clientSecret, paramsCopy.clientSecret)
@@ -167,7 +169,28 @@ class STPPaymentIntentParamsTest: XCTestCase {
             params.additionalAPIParameters as NSDictionary,
             paramsCopy.additionalAPIParameters as NSDictionary
         )
+        XCTAssertEqual(params.confirmationToken, paramsCopy.confirmationToken)
 
+    }
+
+    func testConfirmationTokenProperty() {
+        let params = STPPaymentIntentParams()
+
+        XCTAssertNil(params.confirmationToken)
+
+        params.confirmationToken = "ctoken_test_123"
+        XCTAssertEqual(params.confirmationToken, "ctoken_test_123")
+
+        params.confirmationToken = ""
+        XCTAssertEqual(params.confirmationToken, "")
+
+        params.confirmationToken = nil
+        XCTAssertNil(params.confirmationToken)
+    }
+
+    func testFormFieldMappingIncludesConfirmationToken() {
+        let mapping = STPPaymentIntentParams.propertyNamesToFormFieldNamesMapping()
+        XCTAssertEqual(mapping[NSStringFromSelector(#selector(getter: STPPaymentIntentParams.confirmationToken))], "confirmation_token")
     }
 
     func testClientSecretValidation() {
@@ -199,6 +222,22 @@ class STPPaymentIntentParamsTest: XCTestCase {
                 "pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA"
             ),
             "'pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA' is a valid client secret."
+        )
+
+        // Test valid scoped client secrets
+        XCTAssertTrue(
+            STPPaymentIntentParams.isClientSecretValid("pi_3RddVUHh8VvNDQ8j1CFgLC0y_scoped_secret_JouqJt9ahCKgh6B9r6"),
+            "'pi_3RddVUHh8VvNDQ8j1CFgLC0y_scoped_secret_JouqJt9ahCKgh6B9r6' is a valid scoped client secret."
+        )
+        XCTAssertTrue(
+            STPPaymentIntentParams.isClientSecretValid("pi_1CkiBMLENEVhOs7YMtUehLau_scoped_secret_s4O8SDh7s6spSmHDw1VaYPGZA"),
+            "'pi_1CkiBMLENEVhOs7YMtUehLau_scoped_secret_s4O8SDh7s6spSmHDw1VaYPGZA' is a valid scoped client secret."
+        )
+
+        // Test invalid scoped client secrets
+        XCTAssertFalse(
+            STPPaymentIntentParams.isClientSecretValid("pi_12345_scoped_secret_"),
+            "'pi_12345_scoped_secret_' is not a valid client secret."
         )
     }
 }

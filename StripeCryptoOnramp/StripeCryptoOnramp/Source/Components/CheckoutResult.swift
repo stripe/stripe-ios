@@ -1,0 +1,19 @@
+//
+//  CheckoutResult.swift
+//  StripeCryptoOnramp
+//
+//  Created by Michael Liberatore on 8/18/25.
+//
+
+import Foundation
+
+/// The result of a call to `CryptoOnrampCoordinator.performCheckout()`.
+@_spi(STP)
+public enum CheckoutResult {
+
+    /// The checkout was completed successfully.
+    case completed
+
+    /// The checkout was canceled by the user.
+    case canceled
+}

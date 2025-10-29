@@ -5,14 +5,16 @@
 //  Created by Yuki Tokuhiro on 3/22/23.
 //
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
 
+// ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
+// iOS26
 final class AddPaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()

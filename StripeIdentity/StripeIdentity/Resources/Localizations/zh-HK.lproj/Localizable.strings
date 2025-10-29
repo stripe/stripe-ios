@@ -6,9 +6,13 @@
 
 "App Settings" = "應用設定";
 
-"Back identity card photo successfully uploaded" = "身份證背面照片已成功上載";
+"Back %@ photo successfully uploaded" = "%@背面照片已成功上載";
 
-"Back of identity card" = "身份證背面";
+"Back identity document photo successfully uploaded" = "身份證明文件背面照片上載成功";
+
+"Back of %@" = "%@背面";
+
+"Back of driver's license or government-issued photo ID" = "駕照或政府核發附有照片的身分證背面";
 
 "Back of identity document" = "身份證件背面";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "細節不可見";
 
+"Flip your %@ over to the other side" = "將%@翻到另一面";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "將您的駕照或政府核發附有照片的身分證翻到另一面";
+
 "Flip your identity card over to the other side" = "將身份證翻到另一面";
 
-"Front identity card photo successfully uploaded" = "身份證正面照片已成功上載";
+"Front %@ photo successfully uploaded" = "%@正面照片已成功上載";
 
-"Front of identity card" = "身份證正面";
+"Front identity document photo successfully uploaded" = "身份證明文件正面照片上載成功";
+
+"Front of %@" = "%@正面";
+
+"Front of driver's license or government-issued photo ID" = "駕照或政府核發附有照片的身分證正面";
+
+"Front of driver's license or passport" = "駕照或護照正面";
+
+"Front of driver's license, passport, or government-issued photo ID" = "駕照、護照或政府核發附有照片的身分證正面";
 
 "Front of identity document" = "身份證件背面";
+
+"Front of passport or government-issued photo ID" = "護照或政府核發附有照片的身分證正面";
 
 "Get ready to scan your photo ID" = "準備好掃描您帶照片的身份證件";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "照片庫";
 
-"Please upload images of the front and back of your identity card" = "請上載您的身份證正反面的照片";
+"Please upload images of the front and back of your %@" = "請上載%@的正面和背面圖像";
+
+"Please upload images of the front and back of your identity document" = "請上載身份證明文件正面及背面的圖像";
+
+"Position your %@ in the center of the frame" = "將%@置於畫面中央";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "將您的駕照或政府核發附有照片的身分證放在相框中央";
+
+"Position your driver's license or passport in the center of the frame" = "將駕照或護照放在相框中央";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "將您的駕照、護照或政府核發附有照片的身分證放在相框中央";
 
 "Position your face in the center of the frame." = "將臉放在畫面正中間。";
 
-"Position your identity card in the center of the frame" = "將身份證放在畫面正中間";
+"Position your identity document in the center of the frame" = "將身份證明文件置於畫面中央";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "將您的護照或政府核發附有照片的身分證放在相框中央";
 
 "Retake Photos" = "重新拍照";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "選擇一個位置，從那裡您上載您的身份證的正面";
 
-"Select back identity card photo" = "選擇身份證背面照片";
+"Select back %@ photo" = "選擇%@背面照片";
 
-"Select front identity card photo" = "選擇身份證正面照片";
+"Select back identity document photo" = "選擇身份證明文件背面照片";
+
+"Select front %@ photo" = "選擇%@正面照片";
+
+"Select front identity document photo" = "選擇身份證明文件正面照片";
 
 "Selfie" = "自拍照";
 
@@ -114,7 +148,7 @@
 
 "Take Photo" = "拍照";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "尚未保存您的身份證件的照片。想要離開嗎？";
+"The images of your identity document have not been saved. Do you want to leave?" = "尚未儲存您的身份證件的照片。想要離開嗎？";
 
 "There was an error accessing the camera." = "訪問相機時發生了錯誤。";
 
@@ -124,17 +158,23 @@
 
 "Unable to establish a connection." = "無法建立連接。";
 
-"Unsaved changes" = "未保存的更改";
+"Unsaved changes" = "未儲存的更改";
 
 "Upload" = "上載";
 
 "Upload a Photo" = "上載一張照片";
 
+"Upload your %@" = "上載%@";
+
 "Upload your photo ID" = "上載您帶照片的身份證件";
 
-"Uploading back identity card photo" = "正在上載身份證背面照片";
+"Uploading back %@ photo" = "上載%@背面照片";
 
-"Uploading front identity card photo" = "正在上載身份證正面照片";
+"Uploading back identity document photo" = "上載身份證明文件背面照片";
+
+"Uploading front %@ photo" = "上載%@正面照片";
+
+"Uploading front identity document photo" = "上載身份證明文件正面照片";
 
 "Verify your identity" = "驗證您的身份";
 
@@ -146,7 +186,7 @@
 
 "You can either try again or upload an image from your device." = "您可以重試或從設備上載一張照片。";
 
-"Your selfie images have not been saved. Do you want to leave?" = "尚未保存您的自拍照。想要離開嗎？";
+"Your selfie images have not been saved. Do you want to leave?" = "尚未儲存您的自拍照。想要離開嗎？";
 
 "driver's license" = "駕駛執照";
 

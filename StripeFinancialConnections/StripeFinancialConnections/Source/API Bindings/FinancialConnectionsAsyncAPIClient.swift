@@ -13,15 +13,35 @@ final class FinancialConnectionsAsyncAPIClient {
         case cannotCastToDictionary
     }
 
-    private enum PollingError: Error {
+    enum PollingError: Error {
         case maxRetriesReached
+    }
+
+    enum EmailSource: String {
+        case userAction = "user_action"
+        case customerObject = "customer_object"
     }
 
     let backingAPIClient: STPAPIClient
 
     var isLinkWithStripe: Bool = false
-    var consumerPublishableKey: String?
-    var consumerSession: ConsumerSessionData?
+
+    // Note: These properties maintain their last non-nil value. Once set to a value,
+    // these properties can only be changed to another non-nil value.
+    var consumerPublishableKey: String? {
+        didSet {
+            if consumerPublishableKey == nil && oldValue != nil {
+                consumerPublishableKey = oldValue
+            }
+        }
+    }
+    var consumerSession: ConsumerSessionData? {
+        didSet {
+            if consumerSession == nil && oldValue != nil {
+                consumerSession = oldValue
+            }
+        }
+    }
 
     private lazy var logger = FinancialConnectionsAPIClientLogger()
 
@@ -77,7 +97,7 @@ final class FinancialConnectionsAsyncAPIClient {
     ) async -> [String: Any] {
         do {
             let attest = backingAPIClient.stripeAttest
-            let handle = try await attest.assert()
+            let handle = try await attest.assert(canSyncState: false)
             logger.log(.attestationRequestTokenSucceeded(api), pane: pane)
             let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
             return newParameters
@@ -90,7 +110,7 @@ final class FinancialConnectionsAsyncAPIClient {
 
     /// Passthrough to `STPAPIClient.get` which uses the `consumerPublishableKey` whenever it should be used.
     private func get<T: Decodable>(
-        endpoint: APIEndpoint,
+        endpoint: FinancialConnectionsAPIEndpoint,
         parameters: [String: Any]
     ) async throws -> T {
         try await withCheckedThrowingContinuation { continuation in
@@ -115,7 +135,7 @@ final class FinancialConnectionsAsyncAPIClient {
 
     /// Passthrough to `STPAPIClient.post` which uses the `consumerPublishableKey` whenever it should be used.
     private func post<T: Decodable>(
-        endpoint: APIEndpoint,
+        endpoint: FinancialConnectionsAPIEndpoint,
         parameters: [String: Any]
     ) async throws -> T {
         try await withCheckedThrowingContinuation { continuation in
@@ -142,10 +162,14 @@ final class FinancialConnectionsAsyncAPIClient {
         initialPollDelay: TimeInterval = 1.75,
         maxNumberOfRetries: Int = 180,
         retryInterval: TimeInterval = 0.25,
+        // Inject the sleep action to avoid sleeping in unit tests.
+        sleepAction: @escaping (UInt64) async throws -> Void = {
+            try await Task.sleep(nanoseconds: $0)
+        },
         apiCall: @escaping () async throws -> T
     ) async throws -> T {
         // Wait for the initial poll delay
-        try await Task.sleep(nanoseconds: UInt64(initialPollDelay * 1_000_000_000))
+        try await sleepAction(UInt64(initialPollDelay * 1_000_000_000))
 
         for attempt in 0..<maxNumberOfRetries {
             do {
@@ -155,7 +179,7 @@ final class FinancialConnectionsAsyncAPIClient {
                     throw PollingError.maxRetriesReached
                 }
                 // Wait for the retry interval before the next attempt
-                try await Task.sleep(nanoseconds: UInt64(retryInterval * 1_000_000_000))
+                try await sleepAction(UInt64(retryInterval * 1_000_000_000))
             }
         }
 
@@ -187,200 +211,7 @@ final class FinancialConnectionsAsyncAPIClient {
     }
 }
 
-protocol FinancialConnectionsAsyncAPI {
-    func synchronize(
-        clientSecret: String,
-        returnURL: String?,
-        initialSynchronize: Bool
-    ) async throws -> FinancialConnectionsSynchronize
-
-    func fetchFinancialConnectionsAccounts(
-        clientSecret: String,
-        startingAfterAccountId: String?
-    ) async throws -> StripeAPI.FinancialConnectionsSession.AccountList
-
-    func fetchFinancialConnectionsSession(clientSecret: String) async throws -> StripeAPI.FinancialConnectionsSession
-
-    func markConsentAcquired(clientSecret: String) async throws -> FinancialConnectionsSessionManifest
-
-    func fetchFeaturedInstitutions(clientSecret: String) async throws -> FinancialConnectionsInstitutionList
-
-    func fetchInstitutions(clientSecret: String, query: String) async throws -> FinancialConnectionsInstitutionSearchResultResource
-
-    func createAuthSession(clientSecret: String, institutionId: String) async throws -> FinancialConnectionsAuthSession
-
-    func cancelAuthSession(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsAuthSession
-
-    func selectInstitution(clientSecret: String, institutionId: String) async throws -> FinancialConnectionsSelectInstitution
-
-    func retrieveAuthSession(
-        clientSecret: String,
-        authSessionId: String
-    ) async throws -> FinancialConnectionsAuthSession
-
-    func retrieveAuthSessionPolling(
-        clientSecret: String,
-        authSessionId: String
-    ) async throws -> FinancialConnectionsAuthSession
-
-    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) async throws -> FinancialConnectionsMixedOAuthParams
-
-    func authorizeAuthSession(
-        clientSecret: String,
-        authSessionId: String,
-        publicToken: String?
-    ) async throws -> FinancialConnectionsAuthSession
-
-    func fetchAuthSessionAccounts(
-        clientSecret: String,
-        authSessionId: String,
-        initialPollDelay: TimeInterval
-    ) async throws -> FinancialConnectionsAuthSessionAccounts
-
-    func selectAuthSessionAccounts(
-        clientSecret: String,
-        authSessionId: String,
-        selectedAccountIds: [String]
-    ) async throws -> FinancialConnectionsAuthSessionAccounts
-
-    func markLinkingMoreAccounts(clientSecret: String) async throws -> FinancialConnectionsSessionManifest
-
-    func completeFinancialConnectionsSession(
-        clientSecret: String,
-        terminalError: String?
-    ) async throws -> StripeAPI.FinancialConnectionsSession
-
-    func attachBankAccountToLinkAccountSession(
-        clientSecret: String,
-        accountNumber: String,
-        routingNumber: String,
-        consumerSessionClientSecret: String?
-    ) async throws -> FinancialConnectionsPaymentAccountResource
-
-    func attachLinkedAccountIdToLinkAccountSession(
-        clientSecret: String,
-        linkedAccountId: String,
-        consumerSessionClientSecret: String?
-    ) async throws -> FinancialConnectionsPaymentAccountResource
-
-    func recordAuthSessionEvent(
-        clientSecret: String,
-        authSessionId: String,
-        eventNamespace: String,
-        eventName: String
-    ) async throws -> EmptyResponse
-
-    // MARK: - Networking
-
-    func saveAccountsToNetworkAndLink(
-        shouldPollAccounts: Bool,
-        selectedAccounts: [FinancialConnectionsPartnerAccount]?,
-        emailAddress: String?,
-        phoneNumber: String?,
-        country: String?,
-        consumerSessionClientSecret: String?,
-        clientSecret: String,
-        isRelink: Bool
-    ) async throws -> (
-        manifest: FinancialConnectionsSessionManifest,
-        customSuccessPaneMessage: String?
-    )
-
-    func disableNetworking(
-        disabledReason: String?,
-        clientSuggestedNextPaneOnDisableNetworking: String?,
-        clientSecret: String
-    ) async throws -> FinancialConnectionsSessionManifest
-
-    func fetchNetworkedAccounts(
-        clientSecret: String,
-        consumerSessionClientSecret: String
-    ) async throws -> FinancialConnectionsNetworkedAccountsResponse
-
-    func selectNetworkedAccounts(
-        selectedAccountIds: [String],
-        clientSecret: String,
-        consumerSessionClientSecret: String,
-        consentAcquired: Bool?
-    ) async throws -> ShareNetworkedAccountsResponse
-
-    func markLinkStepUpAuthenticationVerified(
-        clientSecret: String
-    ) async throws -> FinancialConnectionsSessionManifest
-
-    func consumerSessionLookup(
-        emailAddress: String,
-        clientSecret: String,
-        sessionId: String,
-        emailSource: FinancialConnectionsAPIClient.EmailSource,
-        useMobileEndpoints: Bool,
-        pane: FinancialConnectionsSessionManifest.NextPane
-    ) async throws -> LookupConsumerSessionResponse
-
-    // MARK: - Link API's
-
-    func consumerSessionStartVerification(
-        otpType: String,
-        customEmailType: String?,
-        connectionsMerchantName: String?,
-        consumerSessionClientSecret: String
-    ) async throws -> ConsumerSessionResponse
-
-    func consumerSessionConfirmVerification(
-        otpCode: String,
-        otpType: String,
-        consumerSessionClientSecret: String
-    ) async throws -> ConsumerSessionResponse
-
-    func markLinkVerified(
-        clientSecret: String
-    ) async throws -> FinancialConnectionsSessionManifest
-
-    func linkAccountSignUp(
-        emailAddress: String,
-        phoneNumber: String,
-        country: String,
-        amount: Int?,
-        currency: String?,
-        incentiveEligibilitySession: ElementsSessionContext.IntentID?,
-        useMobileEndpoints: Bool,
-        pane: FinancialConnectionsSessionManifest.NextPane
-    ) async throws -> LinkSignUpResponse
-
-    func attachLinkConsumerToLinkAccountSession(
-        linkAccountSession: String,
-        consumerSessionClientSecret: String
-    ) async throws -> AttachLinkConsumerToLinkAccountSessionResponse
-
-    func paymentDetails(
-        consumerSessionClientSecret: String,
-        bankAccountId: String,
-        billingAddress: BillingAddress?,
-        billingEmail: String?
-    ) async throws -> FinancialConnectionsPaymentDetails
-
-    func sharePaymentDetails(
-        consumerSessionClientSecret: String,
-        paymentDetailsId: String,
-        expectedPaymentMethodType: String,
-        billingEmail: String?,
-        billingPhone: String?
-    ) async throws -> FinancialConnectionsSharePaymentDetails
-
-    func paymentMethods(
-        consumerSessionClientSecret: String,
-        paymentDetailsId: String,
-        billingDetails: ElementsSessionContext.BillingDetails?
-    ) async throws -> LinkBankPaymentMethod
-
-    func updateAvailableIncentives(
-        consumerSessionClientSecret: String,
-        sessionID: String,
-        paymentDetailsID: String
-    ) async throws -> AvailableIncentives
-}
-
-extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
+extension FinancialConnectionsAsyncAPIClient {
     func synchronize(
         clientSecret: String,
         returnURL: String?,
@@ -893,7 +724,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         emailAddress: String,
         clientSecret: String,
         sessionId: String,
-        emailSource: FinancialConnectionsAPIClient.EmailSource,
+        emailSource: FinancialConnectionsAsyncAPIClient.EmailSource,
         useMobileEndpoints: Bool,
         pane: FinancialConnectionsSessionManifest.NextPane
     ) async throws -> LookupConsumerSessionResponse {
@@ -1039,7 +870,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) async throws -> FinancialConnectionsPaymentDetails {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -1061,6 +893,10 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             parameters["billing_email_address"] = billingEmail.lowercased()
         }
 
+        if let clientAttributionMetadata {
+            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+        }
+
         return try await post(endpoint: .paymentDetails, parameters: parameters)
     }
 
@@ -1069,7 +905,9 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         paymentDetailsId: String,
         expectedPaymentMethodType: String,
         billingEmail: String?,
-        billingPhone: String?
+        billingPhone: String?,
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) async throws -> FinancialConnectionsSharePaymentDetails {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -1089,6 +927,14 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             parameters["billing_phone"] = billingPhone
         }
 
+        if let allowRedisplay {
+            parameters["allow_redisplay"] = allowRedisplay
+        }
+
+        if let clientAttributionMetadata {
+            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+        }
+
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
         return try await post(endpoint: .sharePaymentDetails, parameters: parametersWithFraudDetection)
     }
@@ -1096,7 +942,9 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        billingDetails: ElementsSessionContext.BillingDetails?
+        billingDetails: ElementsSessionContext.BillingDetails?,
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) async throws -> LinkBankPaymentMethod {
         var parameters: [String: Any] = [
             "link": [
@@ -1111,6 +959,14 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
         if let billingDetails {
             let encodedBillingAddress = try Self.encodeAsParameters(billingDetails)
             parameters["billing_details"] = encodedBillingAddress
+        }
+
+        if let allowRedisplay {
+            parameters["allow_redisplay"] = allowRedisplay
+        }
+
+        if let clientAttributionMetadata {
+            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
         }
 
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
@@ -1131,75 +987,5 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAsyncAPI {
             "payment_details_id": paymentDetailsID,
         ]
         return try await post(endpoint: .availableIncentives, parameters: parameters)
-    }
-}
-
-enum APIEndpoint: String {
-    // Link Account Sessions
-    case listAccounts = "link_account_sessions/list_accounts"
-    case attachPaymentAccount = "link_account_sessions/attach_payment_account"
-    case sessionReceipt = "link_account_sessions/session_receipt"
-    case consentAcquired = "link_account_sessions/consent_acquired"
-    case linkMoreAccounts = "link_account_sessions/link_more_accounts"
-    case complete = "link_account_sessions/complete"
-    case selectInstitution = "link_account_sessions/institution_selected"
-
-    // Connections
-    case synchronize = "financial_connections/sessions/synchronize"
-    case featuredInstitutions = "connections/featured_institutions"
-    case searchInstitutions = "connections/institutions"
-    case authSessions = "connections/auth_sessions"
-    case authSessionsCancel = "connections/auth_sessions/cancel"
-    case authSessionsRetrieve = "connections/auth_sessions/retrieve"
-    case authSessionsOAuthResults = "connections/auth_sessions/oauth_results"
-    case authSessionsAuthorized = "connections/auth_sessions/authorized"
-    case authSessionsAccounts = "connections/auth_sessions/accounts"
-    case authSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
-    case authSessionsEvents = "connections/auth_sessions/events"
-    case authSessionsRepair = "connections/repair_sessions/generate_url"
-
-    // Networking
-    case disableNetworking = "link_account_sessions/disable_networking"
-    case linkStepUpAuthenticationVerified = "link_account_sessions/link_step_up_authentication_verified"
-    case linkVerified = "link_account_sessions/link_verified"
-    case networkedAccounts = "link_account_sessions/networked_accounts"
-    case saveAccountsToLink = "link_account_sessions/save_accounts_to_link"
-    case shareNetworkedAccount = "link_account_sessions/share_networked_account"
-    case consumerSessions = "connections/link_account_sessions/consumer_sessions"
-    case pollAccountNumbers = "link_account_sessions/poll_account_numbers"
-
-    // Instant Debits
-    case startVerification = "consumers/sessions/start_verification"
-    case confirmVerification = "consumers/sessions/confirm_verification"
-    case linkAccountsSignUp = "consumers/accounts/sign_up"
-    case attachLinkConsumerToLinkAccountSession = "consumers/attach_link_consumer_to_link_account_session"
-    case paymentDetails = "consumers/payment_details"
-    case sharePaymentDetails = "consumers/payment_details/share"
-    case paymentMethods = "payment_methods"
-    case availableIncentives = "consumers/incentives/update_available"
-
-    // Verified
-    case mobileConsumerSessionLookup = "consumers/mobile/sessions/lookup"
-    case mobileLinkAccountSignup = "consumers/mobile/sign_up"
-
-    /// As a rule of thumb, `shouldUseConsumerPublishableKey` should be `true` for requests that happen after the user is verified.
-    /// However, there are some exceptions to this rules (such as the create payment method request).
-    var shouldUseConsumerPublishableKey: Bool {
-        switch self {
-        case .attachPaymentAccount, .linkMoreAccounts, .complete, .synchronize,
-             .featuredInstitutions, .searchInstitutions, .authSessions,
-             .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
-             .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
-             .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
-             .authSessionsRepair:
-            return true
-        case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
-             .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
-             .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
-             .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
-             .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup,
-             .availableIncentives, .selectInstitution:
-            return false
-        }
     }
 }

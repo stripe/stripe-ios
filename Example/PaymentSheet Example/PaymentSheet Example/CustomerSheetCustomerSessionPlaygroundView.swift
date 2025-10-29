@@ -24,7 +24,6 @@ struct CustomerSheetCustomerSessionPlaygroundView: View {
                 VStack {
                     SettingPickerView(setting: $viewModel.paymentMethodRemove)
                     SettingPickerView(setting: $viewModel.paymentMethodRemoveLast)
-                    SettingPickerView(setting: $viewModel.paymentMethodUpdate)
                     SettingPickerView(setting: $viewModel.paymentMethodAllowRedisplayFilters)
                     SettingPickerView(setting: $viewModel.paymentMethodSyncDefault)
                 }

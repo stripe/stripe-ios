@@ -50,6 +50,17 @@ class MyApplePayBackendModel: NSObject, ObservableObject, STPApplePayContextDele
 
   func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: STPPaymentMethod, paymentInformation: PKPayment, completion: @escaping STPIntentClientSecretCompletionBlock) {
     // When the Apple Pay sheet is confirmed, create a PaymentIntent on your backend from the provided PKPayment information.
+    // Ensure publishable key is loaded before proceeding
+    if STPAPIClient.shared.publishableKey == nil {
+      BackendModel.shared.loadPublishableKey { _ in
+        self.fetchPaymentIntentForApplePay(completion: completion)
+      }
+    } else {
+      fetchPaymentIntentForApplePay(completion: completion)
+    }
+  }
+
+  private func fetchPaymentIntentForApplePay(completion: @escaping STPIntentClientSecretCompletionBlock) {
     BackendModel.shared.fetchPaymentIntent(integrationMethod: .card) { pip in
       if let clientSecret = pip?.clientSecret {
         // Call the completion block with the PaymentIntent's client secret.

@@ -12,7 +12,6 @@
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
-@_spi(EmbeddedPaymentElementPrivateBeta)
 @MainActor
 public final class EmbeddedPaymentElement {
 
@@ -45,7 +44,8 @@ public final class EmbeddedPaymentElement {
         public let paymentMethodType: String
         /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
         public let mandateText: NSAttributedString?
-
+        /// The shipping details associated with the current customer.
+        @_spi(STP) public let shippingDetails: AddressViewController.Configuration.DefaultAddressDetails?
     }
 
     /// Contains information about the customer's selected payment option.
@@ -54,7 +54,7 @@ public final class EmbeddedPaymentElement {
         guard let _paymentOption else {
             return nil
         }
-        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText)
+        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
     }
 
     /// An asynchronous failable initializer
@@ -67,6 +67,8 @@ public final class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
+        try validateRowSelectionConfiguration(configuration: configuration)
+
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
@@ -82,6 +84,7 @@ public final class EmbeddedPaymentElement {
             loadResult: loadResult,
             analyticsHelper: analyticsHelper
         )
+        embeddedPaymentElement.clearPaymentOptionIfNeeded()
         return embeddedPaymentElement
     }
 
@@ -216,6 +219,9 @@ public final class EmbeddedPaymentElement {
                 self.latestUpdateContext?.status = .canceled
             }
         }
+        if case .succeeded = updateResult {
+            clearPaymentOptionIfNeeded()
+        }
         embeddedPaymentMethodsView.isUserInteractionEnabled = true
         analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
         return updateResult
@@ -236,8 +242,12 @@ public final class EmbeddedPaymentElement {
             assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
             return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
-        let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
-        return await _confirm(paymentOption: paymentOption, authContext: authContext).result
+        let authContext = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: configuration.appearance)
+        let confirmResult = await _confirm(paymentOption: paymentOption, authContext: authContext).result
+        if confirmResult.isCanceledOrFailed {
+            clearPaymentOptionIfNeeded()
+        }
+        return confirmResult
     }
 
     /// Sets the currently selected payment option to `nil`.
@@ -346,6 +356,8 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
+    internal var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+
     internal init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
@@ -363,6 +375,9 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
+        if configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
+            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
+        }
     }
 }
 
@@ -437,7 +452,7 @@ extension EmbeddedPaymentElement {
 
 // MARK: - Typealiases
 
-@_spi(EmbeddedPaymentElementPrivateBeta) public typealias EmbeddedPaymentElementResult = PaymentSheetResult
+public typealias EmbeddedPaymentElementResult = PaymentSheetResult
 extension EmbeddedPaymentElement {
     public typealias IntentConfiguration = PaymentSheet.IntentConfiguration
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
@@ -449,7 +464,7 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
-    public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
+    @_spi(CustomPaymentMethodsBeta) public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
 }
 
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData

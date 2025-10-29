@@ -97,10 +97,8 @@
 		716E781755DB1AF3EF9DE21C /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Main.strings"; sourceTree = "<group>"; };
 		7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82CC3FD2515C7D0FFA0E203A /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Main.strings"; sourceTree = "<group>"; };
-		84201B7AC62DEF12818B31E5 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Main.strings"; sourceTree = "<group>"; };
 		855336F0A6E78BBA8C605997 /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Main.strings"; sourceTree = "<group>"; };
 		8855C143532FA4462901D0DA /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Main.strings"; sourceTree = "<group>"; };
-		8B896FF481A0377BA1F496A9 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		8C63F54C394C8C15221D6040 /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Main.strings"; sourceTree = "<group>"; };
 		95D12600371E992A73D8A992 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Main.strings; sourceTree = "<group>"; };
 		9624F26CEFF23D8AE0F22562 /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -305,7 +303,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -393,7 +390,6 @@
 				BC41A29D89A46D88DCA6FFCC /* mt */,
 				D803541844D30485F40252F8 /* nb */,
 				AEF1E1B9F87B967111DE66BD /* nl */,
-				84201B7AC62DEF12818B31E5 /* nn-NO */,
 				1F67EC50205CBE44B0ADE35D /* pl-PL */,
 				C0970DF49C0FC4916DBC9517 /* pt-BR */,
 				3C82D927BE8D376619DE278D /* pt-PT */,
@@ -441,7 +437,6 @@
 				F2C0F7A6A4A8A7F6684EA931 /* mt */,
 				C23AE354486268FB6D9EEB5C /* nb */,
 				BD7771EEEB47D8B3FB649AD0 /* nl */,
-				8B896FF481A0377BA1F496A9 /* nn-NO */,
 				28B451D944115A83EA0BDB0B /* pl-PL */,
 				45B96C1EA69FFDC88FA5EA5A /* pt-BR */,
 				E244114F042A7FEC075C0DC8 /* pt-PT */,

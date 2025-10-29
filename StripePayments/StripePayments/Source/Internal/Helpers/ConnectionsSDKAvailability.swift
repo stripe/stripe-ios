@@ -20,16 +20,25 @@ import UIKit
         as? FinancialConnectionsSDKInterface.Type
 
     @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
-    @_spi(STP) public static var shouldPreferFCLite: Bool = false
-    // Remove this when ready to release FC Lite:
-    @_spi(STP) public static var fcLiteFeatureEnabled: Bool = false
+    @_spi(STP) public static var localFcLiteOverride: Bool = false
+    @_spi(STP) public static var remoteFcLiteOverride: Bool = false
 
     private static var FCLiteClassIfEnabled: FinancialConnectionsSDKInterface.Type? {
-        guard fcLiteFeatureEnabled, !fcLiteKillswitchEnabled else {
+        guard !fcLiteKillswitchEnabled else {
             return nil
         }
         return Self.FinancialConnectionsLiteImplementation
     }
+
+    @_spi(STP) public static let analyticsValue: String = {
+        if FinancialConnectionsSDKClass != nil {
+            return "FULL"
+        } else if FCLiteClassIfEnabled != nil {
+            return "LITE"
+        } else {
+            return "NONE"
+        }
+    }()
 
     static let isUnitTest: Bool = {
         #if targetEnvironment(simulator)
@@ -61,13 +70,14 @@ import UIKit
         }
     }
 
-    static func financialConnections() -> FinancialConnectionsSDKInterface? {
+    @_spi(STP) public static func financialConnections() -> FinancialConnectionsSDKInterface? {
         let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
         if isUnitTest || (isUITest && financialConnectionsStubbedResult) {
             return StubbedConnectionsSDKInterface()
         }
 
-        let klass: FinancialConnectionsSDKInterface.Type? = shouldPreferFCLite
+        let fcLiteOverrideEnabled = localFcLiteOverride || remoteFcLiteOverride
+        let klass: FinancialConnectionsSDKInterface.Type? = fcLiteOverrideEnabled
             ? (FCLiteClassIfEnabled ?? FinancialConnectionsSDKClass)
             : (FinancialConnectionsSDKClass ?? FCLiteClassIfEnabled) // Default
 
@@ -84,6 +94,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,

@@ -28,8 +28,23 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
 
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+    /// :nodoc:
+    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+
     /// Initializes an empty STPMandateCustomerAcceptanceParams.
     @objc public required override init() {
+        super.init()
+    }
+
+    /// Internal initializer for decoded objects
+    internal init(
+        type: STPMandateCustomerAcceptanceType,
+        onlineParams: STPMandateOnlineParams?,
+        allResponseFields: [AnyHashable: Any]
+    ) {
+        self.type = type
+        self.onlineParams = onlineParams
+        self.allResponseFields = allResponseFields
         super.init()
     }
 
@@ -66,5 +81,39 @@ public class STPMandateCustomerAcceptanceParams: NSObject, STPFormEncodable {
     @objc
     public class func rootObjectName() -> String? {
         return "customer_acceptance"
+    }
+}
+
+extension STPMandateCustomerAcceptanceParams: STPAPIResponseDecodable {
+    @objc
+    @_spi(STP) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+        guard let response = response else {
+            return nil
+        }
+        let dict = response.stp_dictionaryByRemovingNulls()
+
+        guard let typeString = dict.stp_string(forKey: "type") else {
+            return nil
+        }
+
+        let type: STPMandateCustomerAcceptanceType
+        switch typeString {
+        case "online":
+            type = .online
+        case "offline":
+            type = .offline
+        default:
+            return nil
+        }
+
+        let onlineParams = STPMandateOnlineParams.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "online")
+        )
+
+        return STPMandateCustomerAcceptanceParams(
+            type: type,
+            onlineParams: onlineParams,
+            allResponseFields: response
+        ) as? Self
     }
 }

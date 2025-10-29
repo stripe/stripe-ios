@@ -125,7 +125,7 @@ extension PaymentSheetFormFactory {
         case .affirm_header:
             return SubtitleElement(view: AffirmCopyLabel(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
         case .klarna_header:
-            return makeKlarnaCopyLabel()
+            return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
         case .klarna_country(let spec):
             return makeKlarnaCountry(apiPath: spec.apiPath?["v1"])!
         case .au_becs_bsb_number(let spec):
@@ -163,11 +163,11 @@ extension PaymentSheetFormFactory {
             return configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         case .billingAddress:
             return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(countries: nil)
+                ? makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
                 : nil
         case .billingAddressWithoutCountry:
             return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(collectionMode: .noCountry, countries: nil)
+                ? makeBillingAddressSection(collectionMode: .noCountry, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
                 : nil
         case .unknown: return nil
         }

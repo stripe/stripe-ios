@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An object representing parameters used to confirm a PaymentIntent object.
 /// A PaymentIntent must have a PaymentMethod or Source associated in order to successfully confirm it.
@@ -142,12 +143,10 @@ public class STPPaymentIntentParams: NSObject {
             if let _mandateData = _mandateData {
                 return _mandateData
             }
-            switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
-                return .makeWithInferredValues()
-            default: break
+            guard let paymentMethodType = paymentMethodType else {
+                return nil
             }
-            return nil
+            return Self.mandateDataIfRequired(for: paymentMethodType)
         }
         set {
             _mandateData = newValue
@@ -158,8 +157,17 @@ public class STPPaymentIntentParams: NSObject {
     /// - seealso: STPConfirmPaymentMethodOptions
     @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
+    /// Radar options that may contain HCaptcha token
+    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
+
     /// Shipping information.
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
+
+    /// Contains metadata with identifiers for the session and information about the integration
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
+    /// ID of an existing ConfirmationToken to use for this PaymentIntent confirmation.
+    @objc @_spi(STP) public var confirmationToken: String?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
@@ -204,6 +212,12 @@ public class STPPaymentIntentParams: NSObject {
             "mandateData = \(String(describing: mandateData))",
             // PaymentMethodOptions
             "paymentMethodOptions = @\(String(describing: paymentMethodOptions))",
+            // RadarOptions
+            "radarOptions = @\(String(describing: radarOptions))",
+            // ClientAttributionMetadata
+            "clientAttributionMetadata = @\(String(describing: clientAttributionMetadata))",
+            // ConfirmationToken
+            "confirmationToken = \(String(describing: confirmationToken))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters)",
         ]
@@ -212,7 +226,7 @@ public class STPPaymentIntentParams: NSObject {
     }
 
     static internal let isClientSecretValidRegex: NSRegularExpression? = try? NSRegularExpression(
-        pattern: "^pi_[^_]+_secret_[^_]+$",
+        pattern: "^pi_[^_]+_(scoped_)?secret_[^_]+$",
         options: []
     )
 
@@ -256,6 +270,9 @@ extension STPPaymentIntentParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
             NSStringFromSelector(#selector(getter: shipping)): "shipping",
+            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
+            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
+            NSStringFromSelector(#selector(getter: confirmationToken)): "confirmation_token",
         ]
     }
 }
@@ -282,9 +299,24 @@ extension STPPaymentIntentParams: NSCopying {
         copy.mandateData = mandateData
         copy.paymentMethodOptions = paymentMethodOptions
         copy.shipping = shipping
+        copy.radarOptions = radarOptions
+        copy.clientAttributionMetadata = clientAttributionMetadata
+        copy.confirmationToken = confirmationToken
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy
+    }
+
+    /// Returns mandate data for the specified payment method type, if required.
+    /// - Parameter paymentMethodType: The payment method type to check
+    /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
+    @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
+        switch paymentMethodType {
+        case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
+            return .makeWithInferredValues()
+        default:
+            return nil
+        }
     }
 
 }

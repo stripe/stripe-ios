@@ -4,11 +4,15 @@
 
 "Alternatively, you may manually upload a photo of your identity document." = "Inkella tista' ttella' ritratt tad-dokument tal-identità tiegħek int stess.";
 
-"App Settings" = "Settings tal-App";
+"App Settings" = "Għażliet tal-App";
 
-"Back identity card photo successfully uploaded" = "Ir-ritratt tan-naħa ta' wara tal-karta tal-identità ttella'";
+"Back %@ photo successfully uploaded" = "Ir-ritratt ta' wara ta’ %@ ġie mtella' b'suċċess";
 
-"Back of identity card" = "In-naħa ta' wara tal-karta tal-identità";
+"Back identity document photo successfully uploaded" = "Ir-ritratt ta' wara tad-dokument tal-identità ġie mtella' b'suċċess";
+
+"Back of %@" = "Wara ta' %@";
+
+"Back of driver's license or government-issued photo ID" = "In-naħa ta’ wara tal-liċenzja tas-sewqan jew ID bir-ritratt maħruġa mill-gvern";
 
 "Back of identity document" = "In-naħa ta' wara tad-dokument tal-identità";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Id-dettalji ma jidhrux";
 
-"Flip your identity card over to the other side" = "Aqleb il-kard tal-identità tiegħek għan-naħa l-oħra";
+"Flip your %@ over to the other side" = "Dawwar il-%@ tiegħek għan-naħa l-oħra";
 
-"Front identity card photo successfully uploaded" = "Ir-ritratt tan-naħa ta' quddiem tal-kard tal-identità ttella' b'suċċes";
+"Flip your driver's license or government-issued photo ID over to the other side" = "Aqleb il-liċenzja tas-sewqan tiegħek jew l-ID bir-ritratt maħruġa mill-gvern bil-maqlub għan-naħa l-oħra";
 
-"Front of identity card" = "In-naħa ta' quddiem tal-karta tal-identità";
+"Flip your identity card over to the other side" = "Dawwar il-karta tal-identità tiegħek";
+
+"Front %@ photo successfully uploaded" = "Ir-ritratt ta' quddiem ta’ %@ ġie mtella' b'suċċess";
+
+"Front identity document photo successfully uploaded" = "Ir-ritratt ta' quddiem tad-dokument tal-identità ġie mtella' b'suċċess";
+
+"Front of %@" = "Quddiem ta' %@";
+
+"Front of driver's license or government-issued photo ID" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan jew ID bir-ritratt maħruġa mill-gvern";
+
+"Front of driver's license or passport" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan jew il-passaport";
+
+"Front of driver's license, passport, or government-issued photo ID" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan, il-passaport, jew ID bir-ritratt maħruġa mill-gvern";
 
 "Front of identity document" = "In-naħa ta' quddiem tad-dokument tal-identità";
+
+"Front of passport or government-issued photo ID" = "In-naħa ta’ quddiem tal-passaport jew tal-ID bir-ritratt maħruġa mill-gvern";
 
 "Get ready to scan your photo ID" = "Ħejji ruħek biex tiskennja d-dokument tal-identità bir-ritratt tiegħek";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Ġabra tar-Ritratti";
 
-"Please upload images of the front and back of your identity card" = "Jekk jogħġbok tella' r-ritratti tan-naħa ta' quddiem u ta' wara tal-karta tal-identità tiegħek";
+"Please upload images of the front and back of your %@" = "Jekk jogħġbok tella' l-immaġini ta' quddiem u ta' wara ta' %@ tiegħek";
+
+"Please upload images of the front and back of your identity document" = "Jekk jogħġbok tella' l-immaġnijiet ta' quddiem u ta' wara tad-dokument tal-identità tiegħek";
+
+"Position your %@ in the center of the frame" = "Poġġi l-%@ tiegħek fiċ-ċentru tal-qafas";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Poġġi l-liċenzja tas-sewqan tiegħek jew l-ID bir-ritratt maħruġa mill-gvern fiċ-ċentru tal-frejm";
+
+"Position your driver's license or passport in the center of the frame" = "Poġġi l-liċenzja tas-sewqan tiegħek jew il-passaport fiċ-ċentru tal-frejm";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Poġġi l-liċenzja tas-sewqan, il-passaport, jew l-ID bir-ritratt maħruġa mill-gvern tiegħek fiċ-ċentru tal-frejm";
 
 "Position your face in the center of the frame." = "Qiegħed wiċċek f'nofs il-gwarniċ.";
 
-"Position your identity card in the center of the frame" = "Qiegħed il-karta tal-identità tiegħek f'nofs il-gwarniċ";
+"Position your identity document in the center of the frame" = "Poġġi d-dokument tal-identità tiegħek fiċ-ċentru tal-qafas";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Poġġi l-passaport tiegħek jew l-ID bir-ritratt maħruġa mill-gvern fiċ-ċentru tal-frejm";
 
 "Retake Photos" = "Erġa' ħu r-ritratti";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Agħżel il-post minn fejn tixtieq ittella' n-naħa ta' quddiem tad-dokument tal-identità";
 
-"Select back identity card photo" = "Agħżel ir-ritratt tan-naħa ta' wara tal-karta tal-identità";
+"Select back %@ photo" = "Agħżel ir-ritratt ta’ wara ta’ %@";
 
-"Select front identity card photo" = "Agħżel ir-ritratt tan-naħa ta' quddiem tal-karta tal-identità";
+"Select back identity document photo" = "Agħżel ir-ritratt ta' wara tad-dokument tal-identità";
+
+"Select front %@ photo" = "Agħżel ir-ritratt ta' quddiem ta’ %@";
+
+"Select front identity document photo" = "Agħżel ir-ritratt ta' quddiem tad-dokument tal-identità";
 
 "Selfie" = "Stessu";
 
@@ -130,17 +164,23 @@
 
 "Upload a Photo" = "Tella' Ritratt";
 
+"Upload your %@" = "Tella' l-%@ tiegħek";
+
 "Upload your photo ID" = "Tella' d-dokument tal-identità b'ritratt tiegħek";
 
-"Uploading back identity card photo" = "Qed ittella' r-ritratt tan-naħa ta' wara tal-kartà tal-identità";
+"Uploading back %@ photo" = "Tella' r-ritratt ta’ wara ta’ %@";
 
-"Uploading front identity card photo" = "Qed ittella' r-ritratt tan-naħa ta' quddiem tal-karta tal-identità";
+"Uploading back identity document photo" = "Tella' r-ritratt ta’ wara tad-dokument tal-identità";
+
+"Uploading front %@ photo" = "Tella' r-ritratt ta’ quddiem ta’ %@";
+
+"Uploading front identity document photo" = "Tella' r-ritratt ta’ quddiem tad-dokument tal-identità";
 
 "Verify your identity" = "Ivverifika l-identità tiegħek";
 
 "We could not capture a high-quality image." = "Ma stajniex nieħdu ritratt ta' kwalità tajba.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Neħtieġu l-permess biex bużaw il-kamera tiegħek. Jekk jogħġbok agħti aċċess għall-kamera mis-settings tal-apps.";
+"We need permission to use your camera. Please allow camera access in app settings." = "Neħtieġu l-permess biex nużaw il-kamera tiegħek. Jekk jogħġbok agħti aċċess għall-kamera mill-għażliet tal-apps.";
 
 "Welcome" = "Merħba";
 

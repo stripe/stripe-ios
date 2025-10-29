@@ -82,6 +82,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
+        let paymentMethodRemoveIsPartial: Bool
         let paymentMethodUpdate: Bool
         let paymentMethodSyncDefault: Bool
         let isTestMode: Bool
@@ -225,9 +226,9 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
         let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
-            leading: PaymentSheetUI.defaultMargins.leading,
+            leading: appearance.formInsets.leading,
             bottom: 0,
-            trailing: PaymentSheetUI.defaultMargins.trailing
+            trailing: appearance.formInsets.trailing
         )
         view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view
@@ -452,7 +453,11 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: configuration.paymentMethodUpdate,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
-        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+        let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
+            removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+            paymentMethodRemoveIsPartial: configuration.paymentMethodRemoveIsPartial,
+            merchantName: savedPaymentMethodsConfiguration.merchantDisplayName)
+        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
                                                        isTestMode: configuration.isTestMode,
                                                        configuration: updateConfig)
         editVc.delegate = self

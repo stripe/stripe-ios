@@ -24,7 +24,6 @@
 		163A77E9E4C40AFFA5226E23 /* TestFieldElement+AccountFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83462E27CEA3580E1BD3E2CD /* TestFieldElement+AccountFactoryTest.swift */; };
 		1EB16D8F60923EE9C890CE43 /* STPEmailAddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE233EED40F9D3FADDFE5951 /* STPEmailAddressValidator.swift */; };
 		225B20CEF547BB1F6C6D447E /* BSBNumberProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3DD58BEF337017E7286459 /* BSBNumberProvider.swift */; };
-		2AA023A5031CFF0E56C7A14E /* DateFieldElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B0431535F20802E386624B /* DateFieldElementTest.swift */; };
 		2ADEF1482E62A173A0C7F7AD /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 6E66B0CF81D4F8EDBB642C9F /* au_becs_bsb.json */; };
 		2F1D03471202E25FD7682148 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36342ED77935BE9A32B082EC /* Locale+StripeUICore.swift */; };
 		2FD444AC5FC064EFCF6259ED /* STPVPANumberValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AA9FCEF2640C493D140033 /* STPVPANumberValidatorTest.swift */; };
@@ -38,6 +37,8 @@
 		39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34178B51599FDCB0D0D7475A /* TextFieldFormatter.swift */; };
 		4755A24604B396D5A25058CD /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = CB8A9F7B4B2E8AA5A7E4FE98 /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D3B7C2983A8A25C6599119 /* OneTimeCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */; };
+		49377F042DE5F658005CA805 /* SectionSelectionBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49377F032DE5F658005CA805 /* SectionSelectionBehavior.swift */; };
+		495D530E2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D530D2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift */; };
 		4A5EADAF2F6514299BA4B8D8 /* FormElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1FE2B6BCD6FC77117A2521 /* FormElement.swift */; };
 		4B05CF7F485F0AED498DAE49 /* OneTimeCodeTextField-TextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815DB8DE48AE3CE1609C8316 /* OneTimeCodeTextField-TextStorage.swift */; };
 		4B414F0A0E46D914C89B3741 /* StaticElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583B93BE0152CDF7383A37E7 /* StaticElement.swift */; };
@@ -83,11 +84,11 @@
 		A29B5AC2F03116E2F48970EE /* TextOrDropdownElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD864C601BFB09A851715FA /* TextOrDropdownElement.swift */; };
 		A3F0D42EB3A3FF2299F2F473 /* BankRoutingNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312236317D0DA79F2D32CBE2 /* BankRoutingNumber.swift */; };
 		A5C379C7D1EEF497FD845306 /* STPEmailAddressValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312E77021827300B2504F016 /* STPEmailAddressValidatorTest.swift */; };
-		A5E59185A9708613676988C6 /* DateFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */; };
 		AA8F938C3A8B7BC7F11B5048 /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EECCC1035F00C122B2B1ED /* Enums+CustomStringConvertible.swift */; };
 		B106FCB3D7C3DE7C40F0AE5C /* AddressSectionElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55F7532752871E779F47278 /* AddressSectionElementTest.swift */; };
 		B1B177526E04EE65A9D1C64A /* DynamicHeightContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E7CFED5747279A5976D7BA /* DynamicHeightContainerView.swift */; };
 		B6107E5E2D6E116417D22DD9 /* StripeUICoreBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68363D1C6BB6468AC1DDA4C /* StripeUICoreBundleLocator.swift */; };
+		B65F5B032E60C5EB001425CC /* LiquidGlassHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F5B022E60C5EB001425CC /* LiquidGlassHelpers.swift */; };
 		BC40443B2A2F7130351589A7 /* NSAttributedString+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8AFA3891DA214D9FBEF650 /* NSAttributedString+StripeUICore.swift */; };
 		BE42104922DCA4DCB3919DD4 /* AddressSectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5CCD5D11A49D48D8D21C62 /* AddressSectionElement.swift */; };
 		BEB4F0E3B6218CA3E5DE95F9 /* STPBlikCodeValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055BFB32FE9CF519DC25C8F /* STPBlikCodeValidatorTest.swift */; };
@@ -95,7 +96,6 @@
 		C23C78D87D8E6682F31345CB /* DropdownFieldElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAD4C8EE686B0F9E86DBC8D /* DropdownFieldElement.swift */; };
 		C3D6D899B671398717F22520 /* CheckboxElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1EF8010A475D99C7190FF9 /* CheckboxElement.swift */; };
 		C44A57646A325EE26B75E6BF /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E799C8CB484FE83CB87E0 /* CheckboxButton.swift */; };
-		C6B11F4F219F7ED04321A33F /* DateFieldElementSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E2652D09C1A4EBBDE2FB61 /* DateFieldElementSnapshotTest.swift */; };
 		CF9D4CC40A7008DD1E8136A3 /* DoneButtonToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19F61D5356203ED977ED42E /* DoneButtonToolbar.swift */; };
 		D01976C07EB39B2BED64CCAC /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5E2F9A5B1A3E8E7B765E4F /* ButtonSnapshotTest.swift */; };
 		D083BAAF86707F9865AF2AF4 /* String+RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1688A2CE2037846F8E3937 /* String+RegionCodeProvider.swift */; };
@@ -160,11 +160,11 @@
 		011872F74559CB0D0D61170C /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		02DA3E661669718BD61C702D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0408AC0298D342DADD1F84A5 /* BSBNumberProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProviderTest.swift; sourceTree = "<group>"; };
-		08B0431535F20802E386624B /* DateFieldElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElementTest.swift; sourceTree = "<group>"; };
 		0D558F65E4C23971C94BAD3E /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		0ED24D748AEB8B1E0BA1FBAD /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11C37DE7B064DC9E3F7E55CD /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		12973742CA1AA39D3B84F072 /* UIViewController+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+StripeUICore.swift"; sourceTree = "<group>"; };
+		140589502DC8583600DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18C5B42A6D5AF223F0CFB23F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1A50D68D24D1DE0459ED9529 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		20209CDCC3856CE548DA4D25 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -187,7 +187,8 @@
 		4844F0B5436706225DE5A176 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		4893E4B43FEFCE920D432F0C /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
 		48C9A13C4663EA8ACA6EA2E5 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
-		48E2652D09C1A4EBBDE2FB61 /* DateFieldElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElementSnapshotTest.swift; sourceTree = "<group>"; };
+		49377F032DE5F658005CA805 /* SectionSelectionBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionSelectionBehavior.swift; sourceTree = "<group>"; };
+		495D530D2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeCodeTextFieldRepresentable.swift; sourceTree = "<group>"; };
 		4B66D666BB3EA733B92A60AA /* AddressSectionElement+DummyAddressLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSectionElement+DummyAddressLine.swift"; sourceTree = "<group>"; };
 		4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		4D4BD46908791D2E4150C4DC /* TextFieldElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Factory.swift"; sourceTree = "<group>"; };
@@ -263,11 +264,10 @@
 		AE4AB8A1DB70CDE06D9887CF /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B081CD063903B2FDBE327A15 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B2161853A89C273B745B8A60 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElement.swift; sourceTree = "<group>"; };
 		B32FABC26C892C74FD444E88 /* TextFieldFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatterTest.swift; sourceTree = "<group>"; };
+		B65F5B022E60C5EB001425CC /* LiquidGlassHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassHelpers.swift; sourceTree = "<group>"; };
 		B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
 		B844EED0578B990F4772CD01 /* AddressSpecProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProvider.swift; sourceTree = "<group>"; };
-		B84B32F86F684EA5233DDED5 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B871CED2EB8A1F7EEC0FE087 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B8DC1E33CDF3B3FE549A7210 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CAB799E5645867F2400F0F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -357,7 +357,6 @@
 				C55F7532752871E779F47278 /* AddressSectionElementTest.swift */,
 				83BC5E25F42045563F4A660B /* AddressSpecProviderTest.swift */,
 				0408AC0298D342DADD1F84A5 /* BSBNumberProviderTest.swift */,
-				08B0431535F20802E386624B /* DateFieldElementTest.swift */,
 				CF3B67DE90B0C1D71257D333 /* DropdownFieldElementTest.swift */,
 				8995A59E3BC6D26B8030C874 /* IDNumberTextFieldConfigurationTest.swift */,
 				794D2AA5365F9DE155083927 /* PhoneNumberElementTests.swift */,
@@ -390,7 +389,6 @@
 				B3A1C7E17AE91C2352DE42DB /* Section */,
 				82B232DB32C55ABC81F03EEA /* TextField */,
 				4893E4B43FEFCE920D432F0C /* ContainerElement.swift */,
-				B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */,
 				5BAD4C8EE686B0F9E86DBC8D /* DropdownFieldElement.swift */,
 				EAB02AB36074791D39F0CDC1 /* Element.swift */,
 				85AC8D5E9700C8471D225C22 /* ElementsUI.swift */,
@@ -483,7 +481,6 @@
 			children = (
 				BB7836BA51814D0841B688E1 /* AddressSectionElementSnapshotTest.swift */,
 				D917F78E89D67691EF760D14 /* CheckboxButtonSnapshotTests.swift */,
-				48E2652D09C1A4EBBDE2FB61 /* DateFieldElementSnapshotTest.swift */,
 				62575FAAAAEFF31406C9B417 /* DropdownFieldElementSnapshotTest.swift */,
 				7796F7211034806DA24D1710 /* PhoneNumberElementSnapshotTests.swift */,
 			);
@@ -522,6 +519,7 @@
 				E657F1ABE46BA5C0692D9D41 /* CompatibleColor.swift */,
 				A681C4DEAE7B35B4DC0BD0FB /* ImageMaker.swift */,
 				FB5A05E653BFD01FF65E193C /* InputFormColors.swift */,
+				B65F5B022E60C5EB001425CC /* LiquidGlassHelpers.swift */,
 				EA00332BBDCE27F6F5A615C4 /* RegionCodeProvider.swift */,
 				72394C7783071B1C6ED82A48 /* StackViewWithSeparator.swift */,
 				A4F4CE2A0B16DA57DB249227 /* STPLocalizedString.swift */,
@@ -627,6 +625,7 @@
 				7EB48FCA3B2447A5F4CCEC69 /* Button.swift */,
 				815DB8DE48AE3CE1609C8316 /* OneTimeCodeTextField-TextStorage.swift */,
 				AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */,
+				495D530D2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -684,6 +683,7 @@
 				7BB17B284B6D063AF0329DAD /* SectionElement.swift */,
 				B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */,
 				CF3C9C0D2302B8E7F421EFBD /* SectionView.swift */,
+				49377F032DE5F658005CA805 /* SectionSelectionBehavior.swift */,
 			);
 			path = Section;
 			sourceTree = "<group>";
@@ -821,7 +821,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -835,6 +834,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = 89921F2BD8A1893F01033619;
 			packageReferences = (
@@ -879,7 +879,6 @@
 				D01976C07EB39B2BED64CCAC /* ButtonSnapshotTest.swift in Sources */,
 				FC1F8C4DC70C8212B507AE7E /* AddressSectionElementSnapshotTest.swift in Sources */,
 				0D8AE1CEFBE7FA004A3DD62D /* CheckboxButtonSnapshotTests.swift in Sources */,
-				C6B11F4F219F7ED04321A33F /* DateFieldElementSnapshotTest.swift in Sources */,
 				FF4E844383E5A5FD5C099B41 /* DropdownFieldElementSnapshotTest.swift in Sources */,
 				1424B1529E24582122F86149 /* PhoneNumberElementSnapshotTests.swift in Sources */,
 				9DBFEB7045692EE931CE014D /* Locale+StripeUICoreTests.swift in Sources */,
@@ -888,7 +887,6 @@
 				B106FCB3D7C3DE7C40F0AE5C /* AddressSectionElementTest.swift in Sources */,
 				073D41F1EC0560423FEF87AA /* AddressSpecProviderTest.swift in Sources */,
 				32D69CBB3CE780A29AA553AB /* BSBNumberProviderTest.swift in Sources */,
-				2AA023A5031CFF0E56C7A14E /* DateFieldElementTest.swift in Sources */,
 				F0EB247FEFF4600CD44B8261 /* DropdownFieldElementTest.swift in Sources */,
 				88F53AB8F31B1DA2187E5740 /* IDNumberTextFieldConfigurationTest.swift in Sources */,
 				4C519A87445AB16A55FE2408 /* PhoneNumberElementTests.swift in Sources */,
@@ -925,6 +923,7 @@
 				62601F856C41CFA1C7A8B18F /* UIView+StripeUICore.swift in Sources */,
 				614197FD2D944A3200529A5F /* SubtitleElement.swift in Sources */,
 				D47D77A0B82DC6AE15E0A74E /* UIViewController+StripeUICore.swift in Sources */,
+				B65F5B032E60C5EB001425CC /* LiquidGlassHelpers.swift in Sources */,
 				4CD207111219BF250A400ACC /* UIWindow+StripeUICore.swift in Sources */,
 				778BACD1A29BEDEE21ED3FBE /* ActivityIndicator.swift in Sources */,
 				FDF52A43A01CD72D4B5A2CA9 /* Button.swift in Sources */,
@@ -933,7 +932,6 @@
 				C44A57646A325EE26B75E6BF /* CheckboxButton.swift in Sources */,
 				C3D6D899B671398717F22520 /* CheckboxElement.swift in Sources */,
 				8B8D3BD090415EFF9948D2C2 /* ContainerElement.swift in Sources */,
-				A5E59185A9708613676988C6 /* DateFieldElement.swift in Sources */,
 				C23C78D87D8E6682F31345CB /* DropdownFieldElement.swift in Sources */,
 				D7DB5C5724CD47E33245B25A /* Element.swift in Sources */,
 				FAD790056C7A9E645A6B2C74 /* ElementsUI.swift in Sources */,
@@ -953,6 +951,7 @@
 				86427678E119E4AD22410E30 /* PhoneNumberElement.swift in Sources */,
 				019C76A03A30A67AE9F1FAEE /* PickerFieldView.swift in Sources */,
 				57C288DFD2CC2CFC216E47CC /* PickerTextField.swift in Sources */,
+				49377F042DE5F658005CA805 /* SectionSelectionBehavior.swift in Sources */,
 				32971AFF5D0DF9B28E9C464C /* SectionContainerView.swift in Sources */,
 				5A9B21FE5A6941713087B94B /* SectionElement+MultiElementRow.swift in Sources */,
 				336B882978CA47EE46260774 /* SectionElement.swift in Sources */,
@@ -964,6 +963,7 @@
 				5936629C4665BC698C3458B1 /* TextFieldElementConfiguration.swift in Sources */,
 				39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */,
 				986924FDA1EEF4146CD81B50 /* TextFieldView.swift in Sources */,
+				495D530E2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift in Sources */,
 				A29B5AC2F03116E2F48970EE /* TextOrDropdownElement.swift in Sources */,
 				36376E12AE7ABA21FFC474E6 /* Events.swift in Sources */,
 				FB33F2F446570394AABB7EC7 /* CompatibleColor.swift in Sources */,
@@ -1031,7 +1031,6 @@
 				E0C8DFA9A617506071C59815 /* mt */,
 				34EC2F4C025AD1B1DD44CF78 /* nb */,
 				1A50D68D24D1DE0459ED9529 /* nl */,
-				B84B32F86F684EA5233DDED5 /* nn-NO */,
 				B871CED2EB8A1F7EEC0FE087 /* pl-PL */,
 				72EB2DE23B3740D8DA3081E5 /* pt-BR */,
 				B9CAB799E5645867F2400F0F /* pt-PT */,
@@ -1045,6 +1044,7 @@
 				81A4AE07CB9049B6D8C8D7D2 /* zh-Hans */,
 				9559041BED6315C71F796A5F /* zh-Hant */,
 				70B4BE2ACC46DF88949121CD /* zh-HK */,
+				140589502DC8583600DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

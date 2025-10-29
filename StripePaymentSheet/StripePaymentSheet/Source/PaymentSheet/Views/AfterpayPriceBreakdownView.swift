@@ -17,20 +17,9 @@ import UIKit
 @objc(STP_Internal_AfterpayPriceBreakdownView)
 class AfterpayPriceBreakdownView: UIView {
     private let afterPayClearPayLabel = UILabel()
-    private let theme: ElementsAppearance
-    private lazy var afterpayMarkImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = PaymentSheetImageLibrary.afterpayLogo(locale: locale)
-        imageView.tintColor = theme.colors.parentBackground.contrastingColor
-
-        return imageView
-    }()
+    private let appearance: PaymentSheet.Appearance
     private lazy var afterpayMarkImage: UIImage = {
-        return PaymentSheetImageLibrary.afterpayLogo(locale: locale)
-    }()
-    private lazy var infoImage: UIImage = {
-        return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info")
+        return PaymentSheetImageLibrary.afterpayLogo(currency: currency)
     }()
 
     private lazy var infoURL: URL? = {
@@ -41,10 +30,12 @@ class AfterpayPriceBreakdownView: UIView {
     }()
 
     let locale: Locale
+    let currency: String?
 
-    init(locale: Locale = Locale.autoupdatingCurrent, theme: ElementsAppearance = .default) {
+    init(locale: Locale = Locale.autoupdatingCurrent, currency: String?, appearance: PaymentSheet.Appearance = .default) {
         self.locale = locale
-        self.theme = theme
+        self.currency = currency
+        self.appearance = appearance
         super.init(frame: .zero)
 
         afterPayClearPayLabel.attributedText = makeAfterPayClearPayString()
@@ -70,57 +61,17 @@ class AfterpayPriceBreakdownView: UIView {
     }
 
     private func makeAfterPayClearPayString() -> NSMutableAttributedString {
-        let stringAttributes = [
-            NSAttributedString.Key.font: theme.fonts.subheadline,
-            .foregroundColor: theme.colors.bodyText,
-        ]
         let template = STPLocalizedString(
-            "Buy now or pay later with <img/>",
+            "Buy now or pay later with  <img/>",
             "Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay"
         )
-
-        let resultingString = NSMutableAttributedString()
-        resultingString.append(NSAttributedString(string: ""))
-        guard let img = template.range(of: "<img/>") else {
-            return resultingString
-        }
-
-        var imgAppended = false
-
-        for (indexOffset, currCharacter) in template.enumerated() {
-            let currIndex = template.index(template.startIndex, offsetBy: indexOffset)
-            if img.contains(currIndex) {
-                if imgAppended {
-                    continue
-                }
-                imgAppended = true
-                let titleFont = stringAttributes[NSAttributedString.Key.font] as! UIFont
-                let clearPay = attributedStringOfImageWithoutLink(uiImage: afterpayMarkImage, font: titleFont)
-                let infoButton = attributedStringOfImageWithoutLink(uiImage: infoImage, font: titleFont)
-                resultingString.append(clearPay)
-                resultingString.append(NSAttributedString(string: "\u{00A0}\u{00A0}", attributes: stringAttributes))
-                resultingString.append(infoButton)
-            } else {
-                resultingString.append(NSAttributedString(string: String(currCharacter),
-                                                          attributes: stringAttributes))
-            }
-        }
-        return resultingString
-    }
-
-    private func attributedStringOfImageWithoutLink(uiImage: UIImage, font: UIFont) -> NSAttributedString {
-        let imageAttachment = NSTextAttachment()
-        imageAttachment.bounds = boundsOfImage(font: font, uiImage: uiImage)
-        imageAttachment.image = uiImage
-        return NSAttributedString(attachment: imageAttachment)
-    }
-
-    // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel
-    private func boundsOfImage(font: UIFont, uiImage: UIImage) -> CGRect {
-        return CGRect(x: 0,
-                      y: (font.capHeight - uiImage.size.height).rounded() / 2,
-                      width: uiImage.size.width,
-                      height: uiImage.size.height)
+        return NSMutableAttributedString.bnplPromoString(
+            font: appearance.asElementsTheme.fonts.subheadline,
+            textColor: appearance.colors.text,
+            infoIconColor: appearance.colors.text,
+            template: template,
+            substitution: ("<img/>", afterpayMarkImage)
+        )
     }
 
     @objc
@@ -132,21 +83,20 @@ class AfterpayPriceBreakdownView: UIView {
         }
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        afterpayMarkImageView.tintColor = theme.colors.parentBackground.contrastingColor
+        afterPayClearPayLabel.attributedText = makeAfterPayClearPayString()
     }
 #endif
 
-    static func shouldUseClearpayBrand(for locale: Locale) -> Bool {
+    static func shouldUseClearpayBrand(for currency: String?) -> Bool {
         // See https://github.com/search?q=repo%3Aafterpay%2Fsdk-ios%20clearpay&type=code for latest rules
-        switch (locale.stp_languageCode, locale.stp_regionCode) {
-        case ("en", "GB"):
-            return true
-        default:
-            return false
-        }
+        return currency?.lowercased() == "gbp"
+    }
+
+    static func shouldUseCashAppBrand(for currency: String?) -> Bool {
+        return currency?.lowercased() == "usd"
     }
 }
 

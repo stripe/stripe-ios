@@ -4,15 +4,15 @@ https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_setup_intent
 text/html
 Content-Type: text/html;charset=utf-8
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=3ot4co8zTK3zRlrl%2Bq6zy1pYXyA5RQs5DhjAdKEoCIjFKfsHXoxtr0%2Feao1baPex%2BmTwyackXjji1EyyXYafJWsYzic9IXIUtHu89lSfKtNgZbR50n2gAPgA5IA%2FZOVZvJljVXmzn5PYL6nKavLIT30XAXm%2Bh%2FQtPYbOb6R2V1hi%2FGE4%2BSQjaWkF4sD58qXv5OkMrMnGePZCLqA074RlXPOPa9mWmL8KMA4%2Bk6Zb6uQ%3D; path=/
+Set-Cookie: rack.session=OQKAwiRCljwjlDcRSe4gYKGjcUppRTwjmHJaApStjEfSZqkwQVSmij8mWXN1GqOSHUqYglSTjGAO4iQzAwMKNgedW19c8bwXIV0PI5G0ArzY2EJpVZfwoZ948WKGuIYRJMn36G6UqkieigfUP%2Bt%2B8N7R3jBLK3Qa%2BONxMWnlTG6O5p7dyC9VDHMtIYGC58VIfZ2QLy3ZgOzl1L22eUbmn0Dx14oH1tmtPhaWsCMmlo0%3D; path=/
 Server: Google Frontend
-x-cloud-trace-context: 15ec16ffd15a0946d857ab480f54ff45
+x-cloud-trace-context: 50b35ee8758c74763811c5aab437819d
 Via: 1.1 google
 x-xss-protection: 1; mode=block
-Date: Fri, 28 Mar 2025 19:02:39 GMT
+Date: Tue, 29 Jul 2025 04:39:33 GMT
 x-robots-tag: noindex, nofollow
 Content-Length: 220
 x-content-type-options: nosniff
 x-frame-options: SAMEORIGIN
 
-{"intent":"seti_1R7iAtFY0qyl6XeWB0JFWdJs","secret":"seti_1R7iAtFY0qyl6XeWB0JFWdJs_secret_S1liLAvt0q2s8yRotwu7mPhxjJ1TEoX","status":"requires_payment_method","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
+{"intent":"seti_1Rq5K5FY0qyl6XeW8cKrZNDN","secret":"seti_1Rq5K5FY0qyl6XeW8cKrZNDN_secret_SlcZcsuv3qnFTrvt4HfC6d8OgDVmHTd","status":"requires_payment_method","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}

@@ -190,6 +190,20 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0B4292842E1EC57600012FB8"
+               BuildableName = "StripeCryptoOnramp.framework"
+               BlueprintName = "StripeCryptoOnramp"
+               ReferencedContainer = "container:StripeCryptoOnramp/StripeCryptoOnramp.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
@@ -354,6 +368,16 @@
                BuildableName = "Stripe3DS2DemoUITests.xctest"
                BlueprintName = "Stripe3DS2DemoUITests"
                ReferencedContainer = "container:Stripe3DS2/Stripe3DS2.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0B42928F2E1EC57700012FB8"
+               BuildableName = "StripeCryptoOnrampTests.xctest"
+               BlueprintName = "StripeCryptoOnrampTests"
+               ReferencedContainer = "container:StripeCryptoOnramp/StripeCryptoOnramp.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

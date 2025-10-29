@@ -16,7 +16,7 @@ abort('Version number must be in the format `x.x.x`, e.g. `ci_scripts/push_spm_m
 puts "Creating SPM mirror tag for version: #{@version}".red
 
 # Create a new temporary directory
-Dir.mktmpdir do |tmp_dir|
+Dir.mktmpdir(nil, "/tmp") do |tmp_dir|
   # create a temporary clone of stripe-ios-spm
   full_repo_dir = tmp_dir + '/stripe-ios'
   spm_repo_dir = tmp_dir + '/stripe-ios-spm'

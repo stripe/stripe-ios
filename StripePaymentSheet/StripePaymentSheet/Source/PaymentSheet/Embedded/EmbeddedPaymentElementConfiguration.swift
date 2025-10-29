@@ -137,13 +137,23 @@ extension EmbeddedPaymentElement {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
-        /// Flag used to stage the development of updating payment method
-        @_spi(UpdatePaymentMethodBeta) public var updatePaymentMethodEnabled: Bool = false
+        /// By default, the card form will provide a button to open the card scanner.
+        /// If true, the card form will instead initialize with the card scanner already open.
+        public var opensCardScannerAutomatically: Bool = false
+
+        /// If true, an invisible challenge will be performed for human verification
+        @_spi(STP) public var enablePassiveCaptcha: Bool = false
+
+        /// A map for specifying when legal agreements are displayed for each payment method type.
+        /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
+        /// Valid payment method types include:
+        /// .card
+        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
 
         /// The view can display payment methods like “Card” that, when tapped, open a form sheet where customers enter their payment method details. The sheet has a button at the bottom. `FormSheetAction` enumerates the actions the button can perform.
         public enum FormSheetAction {
             /// The button says “Pay” or “Setup”. When tapped, we confirm the payment or setup in the form sheet.
-            /// - Parameter completion: Called with the result of the payment or setup.
+            /// - Parameter completion: Called with the result of the payment or setup when the sheet is closed.
             case confirm(
                 completion: (EmbeddedPaymentElementResult) -> Void
             )
@@ -164,7 +174,34 @@ extension EmbeddedPaymentElement {
 
         internal var linkPaymentMethodsOnly: Bool = false
 
+        /// Describes how you handle row selections in EmbeddedPaymentElement
+        public enum RowSelectionBehavior {
+          /// When a payment option is selected, the customer taps a button to continue or confirm payment.
+          /// This is the default recommended integration.
+          case `default`
+
+          /// When a payment option is selected, `didSelectPaymentOption` is triggered.
+          /// You can implement this method to immediately perform an action e.g. go back to the checkout screen or confirm the payment.
+          /// Note that certain payment options like Apple Pay and saved payment methods are disabled in this mode if you set `formSheetAction` to `.confirm`.
+          case immediateAction(didSelectPaymentOption: () -> Void)
+        }
+
+        /// Determines the behavior when a row  is selected. Defaults to `.default`.
+        public var rowSelectionBehavior: RowSelectionBehavior = .default
+
         /// Initializes a Configuration with default values
-        public init() {}
+        public init() {
+            validateConfiguration()
+        }
+    }
+}
+
+extension EmbeddedPaymentElement.Configuration {
+    private func validateConfiguration() {
+        for (paymentMethodType, _) in termsDisplay {
+            if paymentMethodType != .card {
+                stpAssertionFailure("EmbeddedPaymentElement.Configuration termsDisplay contains unsupported payment method type: \(paymentMethodType)")
+            }
+        }
     }
 }
