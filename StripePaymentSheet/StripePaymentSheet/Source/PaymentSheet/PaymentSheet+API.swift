@@ -799,7 +799,7 @@ extension PaymentSheet {
             // Also send under payment_method_data because there are existing dependencies
             params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             if let shouldSetAsDefaultPM {
-                params.setAsDefaultPM = shouldSetAsDefaultPM
+                params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
             // These payment methods require mandate_data if setting up
             if let paymentMethodType = params.paymentMethodType, STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {

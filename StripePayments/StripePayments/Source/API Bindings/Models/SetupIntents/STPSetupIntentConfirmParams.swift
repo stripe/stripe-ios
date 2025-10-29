@@ -52,8 +52,9 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// Provide an already created PaymentMethod's id, and it will be used to confirm the SetupIntent.
     /// @note alternative to `paymentMethodParams`
     @objc public var paymentMethodID: String?
-    /// `true` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
-    @objc @_spi(STP) public var setAsDefaultPM: Bool = false
+    /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
+    /// This should be a boolean NSNumber, so that it can be `nil`
+    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
     /// This should probably be a URL that opens your iOS app.
@@ -123,7 +124,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
             "useStripeSDK = \(useStripeSDK)",
             // Set as default payment method
-            "setAsDefaultPM = \(setAsDefaultPM)",
+            "setAsDefaultPM = \(setAsDefaultPM ?? 0)",
             // Mandate
             "mandateData = \(String(describing: mandateData))",
             // RadarOptions
