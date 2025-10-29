@@ -12,29 +12,20 @@ import XCTest
 
 class TimeoutTests: XCTestCase {
     func testWithTimeout_allOperationsCompleteBeforeTimeout() async {
-        let operation1 = AsyncOperation<String>(
-            operation: {
-                try await Task.sleep(nanoseconds: 500_000_000) // 0.5s
-                return "Result1"
-            },
-            onCancel: {}
-        )
+        let operation1 = AsyncOperation<String> {
+            try await Task.sleep(nanoseconds: 500_000_000) // 0.5s
+            return "Result1"
+        } onCancel: {}
 
-        let operation2 = AsyncOperation<Int>(
-            operation: {
-                try await Task.sleep(nanoseconds: 100_000_000) // 0.1s
-                return 42
-            },
-            onCancel: {}
-        )
+        let operation2 = AsyncOperation<Int> {
+            try await Task.sleep(nanoseconds: 100_000_000) // 0.1s
+            return 42
+        } onCancel: {}
 
-        let operation3 = AsyncOperation<Bool>(
-            operation: {
-                try await Task.sleep(nanoseconds: 300_000_000) // 0.3s
-                return true
-            },
-            onCancel: {}
-        )
+        let operation3 = AsyncOperation<Bool> {
+            try await Task.sleep(nanoseconds: 300_000_000) // 0.3s
+            return true
+        } onCancel: {}
 
         let (result1, result2, result3) = await withTimeout(
             timeout: 1.0,
@@ -65,25 +56,19 @@ class TimeoutTests: XCTestCase {
         var cancel1Called = false
         var cancel2Called = false
 
-        let operation1 = AsyncOperation<String>(
-            operation: {
-                try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
-                return "Should not complete"
-            },
-            onCancel: {
-                cancel1Called = true
-            }
-        )
+        let operation1 = AsyncOperation<String> {
+            try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
+            return "Should not complete"
+        } onCancel: {
+            cancel1Called = true
+        }
 
-        let operation2 = AsyncOperation<Int>(
-            operation: {
-                try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
-                return 999
-            },
-            onCancel: {
-                cancel2Called = true
-            }
-        )
+        let operation2 = AsyncOperation<Int> {
+            try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
+            return 999
+        } onCancel: {
+            cancel2Called = true
+        }
 
         let (result1, result2) = await withTimeout(
             timeout: 0.1,
@@ -109,21 +94,15 @@ class TimeoutTests: XCTestCase {
     }
 
     func testWithTimeout_someOperationsTimeout() async {
-        let operation1 = AsyncOperation<String>(
-            operation: {
-                try await Task.sleep(nanoseconds: 100_000_000) // 0.1s - completes
-                return "Fast"
-            },
-            onCancel: {}
-        )
+        let operation1 = AsyncOperation<String> {
+            try await Task.sleep(nanoseconds: 100_000_000) // 0.1s - completes
+            return "Fast"
+        } onCancel: {}
 
-        let operation2 = AsyncOperation<String>(
-            operation: {
-                try await Task.sleep(nanoseconds: 5_000_000_000) // 5s - times out
-                return "Slow"
-            },
-            onCancel: {}
-        )
+        let operation2 = AsyncOperation<String> {
+            try await Task.sleep(nanoseconds: 5_000_000_000) // 5s - times out
+            return "Slow"
+        } onCancel: {}
 
         let (result1, result2) = await withTimeout(
             timeout: 1,
@@ -144,13 +123,10 @@ class TimeoutTests: XCTestCase {
     }
 
     func testWithTimeout_singleOperation() async {
-        let operation = AsyncOperation(
-            operation: {
-                try await Task.sleep(nanoseconds: 100_000_000) // 0.1s
-                return "Single"
-            },
-            onCancel: {}
-        )
+        let operation = AsyncOperation<String> {
+            try await Task.sleep(nanoseconds: 100_000_000) // 0.1s
+            return "Single"
+        } onCancel: {}
 
         let result = await withTimeout(timeout: 1.0, operation)
 
@@ -162,13 +138,10 @@ class TimeoutTests: XCTestCase {
     }
 
     func testWithTimeout_singleOperationTimesOut() async {
-        let operation = AsyncOperation(
-            operation: {
-                try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
-                return "Should timeout"
-            },
-            onCancel: {}
-        )
+        let operation = AsyncOperation<String> {
+            try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
+            return "Should timeout"
+        } onCancel: {}
 
         let result = await withTimeout(timeout: 0.1, operation)
 
@@ -184,19 +157,13 @@ class TimeoutTests: XCTestCase {
             case test
         }
 
-        let operation1 = AsyncOperation<Error>(
-            operation: {
-                throw TestError.test
-            },
-            onCancel: {}
-        )
+        let operation1 = AsyncOperation<Error> {
+            throw TestError.test
+        } onCancel: {}
 
-        let operation2 = AsyncOperation<String>(
-            operation: {
-                return "Success"
-            },
-            onCancel: {}
-        )
+        let operation2 = AsyncOperation<String> {
+            return "Success"
+        } onCancel: {}
 
         let (result1, result2) = await withTimeout(
             timeout: 1.0,
@@ -220,29 +187,20 @@ class TimeoutTests: XCTestCase {
         // All operations start at the same time, so total time should be ~0.5s
         let startTime = Date()
 
-        let operation1 = AsyncOperation(
-            operation: {
-                try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
-                return 1
-            },
-            onCancel: {}
-        )
+        let operation1 = AsyncOperation<Int> {
+            try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
+            return 1
+        } onCancel: {}
 
-        let operation2 = AsyncOperation(
-            operation: {
-                try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
-                return 2
-            },
-            onCancel: {}
-        )
+        let operation2 = AsyncOperation<Int> {
+            try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
+            return 2
+        } onCancel: {}
 
-        let operation3 = AsyncOperation(
-            operation: {
-                try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
-                return 3
-            },
-            onCancel: {}
-        )
+        let operation3 = AsyncOperation<Int> {
+            try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
+            return 3
+        } onCancel: {}
 
         let (result1, result2, result3) = await withTimeout(
             timeout: 1.0,
@@ -263,25 +221,19 @@ class TimeoutTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "Cancel handler 1 called")
         let expectation2 = XCTestExpectation(description: "Cancel handler 2 called")
 
-        let operation1 = AsyncOperation(
-            operation: {
-                try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
-                return "A"
-            },
-            onCancel: {
-                expectation1.fulfill()
-            }
-        )
+        let operation1 = AsyncOperation<String> {
+            try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
+            return "A"
+        } onCancel: {
+            expectation1.fulfill()
+        }
 
-        let operation2 = AsyncOperation(
-            operation: {
-                try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
-                return "B"
-            },
-            onCancel: {
-                expectation2.fulfill()
-            }
-        )
+        let operation2 = AsyncOperation<String> {
+            try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
+            return "B"
+        } onCancel: {
+            expectation2.fulfill()
+        }
 
         _ = await withTimeout(timeout: 0.1, operation1, operation2)
 
