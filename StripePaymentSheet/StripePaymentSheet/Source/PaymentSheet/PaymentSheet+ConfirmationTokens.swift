@@ -261,7 +261,7 @@ extension PaymentSheet {
     private static func isSavedFromLink(from confirmType: ConfirmPaymentMethodType) -> Bool {
         switch confirmType {
         case .saved(let paymentMethod, _, _, _):
-            return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.usBankAccount?.linkedAccount != nil || paymentMethod.link != nil
+            return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.link != nil
         case .new:
             return false
         }
