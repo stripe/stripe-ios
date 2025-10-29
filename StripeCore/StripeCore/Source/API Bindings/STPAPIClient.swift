@@ -592,7 +592,7 @@ extension STPAPIClient {
         ),
             var apiError = decodedErrorResponse.error
         {
-            apiError.statusCode = (response as? HTTPURLResponse)?.statusCode
+            apiError.httpStatusCode = (response as? HTTPURLResponse)?.statusCode
             apiError.requestID = (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "request-id")
 
             decodedError = StripeError.apiError(apiError)
