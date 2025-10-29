@@ -6,19 +6,7 @@
 project: Stripe.xcworkspace
 
 schemes:
-- Stripe3DS2
-- StripeApplePay
-- StripeCameraCore
-- StripeCardScan
-- StripeConnect
-- StripeCore
-- StripeFinancialConnections
-- StripeIdentity
-- StripePaymentSheet
-- StripePayments
-- StripePaymentsUI
-- StripeUICore
-- StripeiOS
+- AllStripeFrameworks
 
 retain_public: true
 retain_objc_accessible: false
