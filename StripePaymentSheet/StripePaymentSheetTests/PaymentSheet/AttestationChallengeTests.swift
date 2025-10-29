@@ -84,8 +84,6 @@ class AttestationChallengeTests: XCTestCase {
         await mockAttestService.setGenerateAssertionDelay(5.0)
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
         await attestationChallenge.setTimeout(timeout: 1)
-        // wait to make sure that the attestation will be done by the time we call fetchAssertion so we don't get shouldAttestButKeyIsAlreadyAttested
-        try await Task.sleep(nanoseconds: 1_000_000_000)
         let startTime = Date()
         let assertion = await attestationChallenge.fetchAssertionWithTimeout()
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)

@@ -15,6 +15,7 @@ actor AttestationChallenge {
 
     private let stripeAttest: StripeAttest
     private var assertionHandle: StripeAttest.AssertionHandle?
+    private let attestationTask: Task<Void, Never>
     private var assertionTask: Task<StripeAttest.Assertion?, Never>?
 
     var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
@@ -27,17 +28,26 @@ actor AttestationChallenge {
         self.stripeAttest = stripeAttest
         STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepare()
         let startTime = Date()
-        Task { // Intentionally not blocking loading/initialization!
-            let didAttest = await stripeAttest.prepareAttestation()
-            if didAttest {
-                STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareSucceeded(duration: Date().timeIntervalSince(startTime))
-            } else {
-                STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareFailed(duration: Date().timeIntervalSince(startTime))
+        self.attestationTask = Task { // Intentionally not blocking loading/initialization!
+            await withTaskCancellationHandler {
+                let didAttest = await stripeAttest.prepareAttestation()
+                if didAttest {
+                    STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareSucceeded(duration: Date().timeIntervalSince(startTime))
+                } else {
+                    STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareFailed(duration: Date().timeIntervalSince(startTime))
+                }
+            } onCancel: {
+                Task {
+                    await stripeAttest.cancel()
+                }
             }
         }
     }
 
     private func fetchAssertion() async -> StripeAttest.Assertion? {
+        // Wait for prewarm to complete first to avoid race conditions
+        await attestationTask.value
+
         if let assertionTask {
             return await assertionTask.value
         }
@@ -91,6 +101,7 @@ actor AttestationChallenge {
     }
 
     public func cancel() {
+        attestationTask.cancel()
         assertionTask?.cancel()
     }
 }
