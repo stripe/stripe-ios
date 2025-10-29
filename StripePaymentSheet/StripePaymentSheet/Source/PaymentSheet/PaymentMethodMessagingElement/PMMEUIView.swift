@@ -22,9 +22,9 @@ class PMMEUIView: UIStackView {
     private var previousHeight: CGFloat?
 
     // TODO(gbirch) add accessibilityHint property with instructions about opening info url
-    init(infoUrl: URL, appearance: PaymentMethodMessagingElement.Appearance, didUpdateHeight: ((CGFloat) -> Void)?) {
-        self.infoUrl = infoUrl
-        self.appearance = appearance
+    init(viewData: PaymentMethodMessagingElement.ViewData, didUpdateHeight: ((CGFloat) -> Void)? = nil) {
+        self.infoUrl = viewData.infoUrl
+        self.appearance = viewData.appearance
         self.didUpdateHeight = didUpdateHeight
         super.init(frame: .zero)
 
@@ -36,6 +36,16 @@ class PMMEUIView: UIStackView {
             overrideUserInterfaceStyle = .dark
         } else if case .alwaysLight = appearance.style {
             overrideUserInterfaceStyle = .light
+        }
+
+        // choose which style to initialize
+        switch viewData.mode {
+        case .singlePartner(let logo):
+            let view = PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
+            addAndPinSubview(view)
+        case .multiPartner(let logos):
+            let view = PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
+            addAndPinSubview(view)
         }
     }
 

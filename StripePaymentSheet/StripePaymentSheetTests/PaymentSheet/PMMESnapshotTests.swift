@@ -22,7 +22,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .automatic
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -32,7 +32,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .alwaysLight
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -42,7 +42,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .alwaysDark
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -52,7 +52,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .flat
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -66,7 +66,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "4 interest-free payments with {partner}",
             appearance: appearance
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -80,7 +80,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Pay in 4 installments with {partner}",
             appearance: appearance
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -90,7 +90,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "{partner} lets you pay over time",
             style: .automatic
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -102,7 +102,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Flexible payment options",
             style: .automatic
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -112,7 +112,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later",
             style: .automatic
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -126,7 +126,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Flexible payment options available",
             style: .alwaysLight
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -140,7 +140,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Flexible payment options available",
             style: .alwaysDark
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -150,7 +150,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Multiple BNPL options",
             style: .flat
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -163,7 +163,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Pay over time with trusted partners",
             appearance: appearance
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -175,7 +175,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later in 4 interest-free installments with {partner} for orders over $50",
             style: .automatic
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -185,7 +185,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Choose from multiple flexible payment options and pay over time with no hidden fees or interest charges",
             style: .automatic
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view)
     }
 
@@ -197,7 +197,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .automatic
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view, width: 200)
     }
 
@@ -207,7 +207,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Flexible payment options",
             style: .automatic
         )
-        let view = PaymentMethodMessagingElement.createUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData)
         verify(view, width: 200)
     }
 

@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-class PMMEMultiPartnerView: PMMEUIView {
+class PMMEMultiPartnerView: UIView {
 
     private let logoSets: [PaymentMethodMessagingElement.LogoSet]
     private let promotion: String
@@ -24,15 +24,13 @@ class PMMEMultiPartnerView: PMMEUIView {
 
     init(
         logoSets: [PaymentMethodMessagingElement.LogoSet],
-        infoUrl: URL,
         promotion: String,
-        appearance: PaymentMethodMessagingElement.Appearance,
-        didUpdateHeight: ((CGFloat) -> Void)? = nil
+        appearance: PaymentMethodMessagingElement.Appearance
     ) {
         self.logoSets = logoSets
         self.promotion = promotion
         self.appearance = appearance
-        super.init(infoUrl: infoUrl, appearance: appearance, didUpdateHeight: didUpdateHeight)
+        super.init(frame: .zero)
 
         setupView()
     }
@@ -70,11 +68,15 @@ class PMMEMultiPartnerView: PMMEUIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func willMove(toSuperview newSuperview: UIView?) {
+    // user interface style may be different because of the new superview overriding it
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
         updateLogoStyles()
+        promotionLabel.attributedText = getPromotionAttributedString()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
         updateLogoStyles()
         promotionLabel.attributedText = getPromotionAttributedString()
         // icon view scales may have changed
