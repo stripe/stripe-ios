@@ -95,8 +95,8 @@ final class LinkLegalTermsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func formattedLegalText() -> NSAttributedString {
-        let string: String = {
+    private func formattedLegalText() -> NSAttributedString? {
+        let string: String? = {
             if isStandalone {
                 return STPLocalizedString(
                     "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
@@ -124,29 +124,24 @@ final class LinkLegalTermsView: UIView {
                     "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
+            case .signupOptIn:
+                stpAssertionFailure("LinkLegalTermsView should not be available in signup opt-in mode")
+                return nil
             }
         }()
+
+        guard let string else {
+            return nil
+        }
 
         let leadingIcon: NSTextAttachment? = {
             guard mode == .checkboxWithDefaultOptIn else {
                 return nil
             }
-            let iconImage = Image.link_logo_knockout.makeImage(template: false)
-            let iconImageAttachment = NSTextAttachment()
-
-            let font = LinkUI.font(forTextStyle: .caption)
-            let targetHeight = font.capHeight * 1.3
-            let aspectRatio = iconImage.size.width / iconImage.size.height
-            let targetWidth = targetHeight * aspectRatio
-
-            iconImageAttachment.bounds = CGRect(
-                x: 0,
-                y: (font.capHeight - targetHeight).rounded() / 2,
-                width: targetWidth,
-                height: targetHeight
+            return LinkUI.inlineLogo(
+                withScale: 1.3,
+                forFont: LinkUI.font(forTextStyle: .caption)
             )
-            iconImageAttachment.image = iconImage
-            return iconImageAttachment
         }()
 
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
@@ -173,7 +168,7 @@ extension LinkLegalTermsView: UITextViewDelegate {
         case linkLegalTermsViewUITextViewDelegate
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,

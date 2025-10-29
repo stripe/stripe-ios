@@ -71,7 +71,7 @@ extension STPPaymentMethod {
     var expandedPaymentSheetLabel: String {
         switch type {
         case .card:
-            if isLinkPaymentMethod {
+            if isLinkPaymentMethod || isLinkPassthroughMode {
                 return STPPaymentMethodType.link.displayName
             } else if let card {
                 return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? STPPaymentMethodType.card.displayName
@@ -79,7 +79,11 @@ extension STPPaymentMethod {
                 return STPPaymentMethodType.card.displayName
             }
         case .USBankAccount:
-            return usBankAccount?.bankName ?? type.displayName
+            if isLinkPassthroughMode {
+                return STPPaymentMethodType.link.displayName
+            } else {
+                return usBankAccount?.bankName ?? type.displayName
+            }
         default:
             return type.displayName
         }

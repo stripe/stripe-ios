@@ -177,7 +177,7 @@ class PollingViewController: UIViewController {
         // disable swipe to dismiss
         isModalInPresentation = true
 
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         let height = parent?.view.frame.size.height ?? 600 // An arbitrary value for visionOS
         #else
         // Height of the polling view controller is either the height of the parent, or the height of the screen (flow controller use case)
@@ -196,7 +196,7 @@ class PollingViewController: UIViewController {
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            view.heightAnchor.constraint(equalToConstant: height - SheetNavigationBar.height),
+            view.heightAnchor.constraint(equalToConstant: height - SheetNavigationBar.height(appearance: appearance)),
         ])
     }
 

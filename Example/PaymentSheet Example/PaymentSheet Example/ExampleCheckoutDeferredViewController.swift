@@ -9,8 +9,8 @@
 import StripePaymentSheet
 import UIKit
 
-// View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
-private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
+// View and fork the backend code  here: https://codesandbox.io/p/devbox/dr4lkg
+private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.stripedemos.com"
 
 class ExampleDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
@@ -47,8 +47,12 @@ class ExampleDeferredCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            try await withCheckedThrowingContinuation { continuation in
+                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
+                    continuation.resume(with: result)
+                }
+            }
         }
     }
 
@@ -150,6 +154,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
     func serverSideConfirmHandler(_ paymentMethodID: String,
                                   _ shouldSavePaymentMethod: Bool,
                                   _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+
         // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret
         confirmIntent(paymentMethodID: paymentMethodID, shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
             switch result {

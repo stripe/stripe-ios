@@ -268,7 +268,9 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 email: "user@example.com",
                 session: LinkStubs.consumerSession(supportedPaymentDetailsTypes: supportedPaymentDetailsTypes),
                 publishableKey: nil,
-                useMobileEndpoints: false
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
             ),
             context: .init(
                 intent: intent,
@@ -277,6 +279,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
+                canSkipWalletAfterVerification: false,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
                 analyticsHelper: ._testValue()

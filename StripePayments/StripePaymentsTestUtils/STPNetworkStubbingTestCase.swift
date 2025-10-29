@@ -29,6 +29,9 @@ import XCTest
     /// Disable this when testing the STPPaymentHandler "UnredirectableSessionDelegate" behavior.
     open var followRedirects = true
 
+    /// Tracks the current request number for better error reporting
+    private var requestCount = 0
+
     open override func setUp() {
         super.setUp()
 
@@ -106,7 +109,11 @@ import XCTest
                         "app_version_key", // Current version of Xcode, for Alipay
 
                         "payment_user_agent", // Contains the SDK version number
-                        "pk_token_transaction_id", // Random string
+                        "pk_token_transaction_id", // Random string,
+                        "client_session_id", // Random string
+                        "merchant_integration_version", // Contains the SDK version number
+                        "elements_session_config_id", // Random string
+                        "hcaptcha_token", // Random string
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
@@ -154,14 +161,14 @@ import XCTest
                     for: config
                 )) != nil
             else {
-                assert(false, "Error recording requests")
+                assert(false, "❌ Error recording requests")
                 return
             }
 
             // Make sure to fail, to remind ourselves to turn this off
             addTeardownBlock {
                 XCTFail(
-                    "Network traffic has been recorded - re-run with self.recordingMode = NO for this test to succeed"
+                    "❌ Network traffic has been recorded - re-run with self.recordingMode = NO for this test to succeed"
                 )
             }
         } else {
@@ -171,7 +178,7 @@ import XCTest
                     return true
                 },
                 withStubResponse: { request in
-                    XCTFail("Attempted to hit the live network at \(request.url?.path ?? "")")
+                    XCTFail("❌ Attempted to hit the live network at \(request.url?.path ?? "")")
                     return HTTPStubsResponse()
                 }
             )
@@ -188,7 +195,7 @@ import XCTest
                     removeAfterUse: true
                 )
                 if let stubError = stubError {
-                    XCTFail("Error stubbing requests: \(stubError)")
+                    XCTFail("❌ Error stubbing requests: \(stubError)")
                 }
             } else {
                 print("No stubs found - all network access will raise an exception.")

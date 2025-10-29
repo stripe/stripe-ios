@@ -32,6 +32,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
 
@@ -97,8 +98,9 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     override func createBackButton() -> UIButton {
+        let image = Image.icon_chevron_left_standalone.makeImage(template: true)
         return Self.createButton(
-            with: Image.icon_chevron_left_standalone.makeImage(template: true),
+            with: image,
             accessibilityLabel: String.Localized.back,
             accessibilityIdentifier: "UIButton.Back",
             appearance: appearance
@@ -116,8 +118,9 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         accessibilityIdentifier: String,
         appearance: PaymentSheet.Appearance
     ) -> UIButton {
+        let image = Image.icon_x_standalone.makeImage(template: true)
         return createButton(
-            with: Image.icon_x_standalone.makeImage(template: true),
+            with: image,
             accessibilityLabel: String.Localized.close,
             accessibilityIdentifier: accessibilityIdentifier,
             appearance: appearance
@@ -130,37 +133,30 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         accessibilityIdentifier: String,
         appearance: PaymentSheet.Appearance
     ) -> UIButton {
+        let resizedImage = image.resized(to: CGSize(width: LinkUI.navigationBarButtonContentSize, height: LinkUI.navigationBarButtonContentSize))
         let button = SheetNavigationButton(type: .custom)
-        let size = LinkUI.navigationBarButtonSize
-        let contentSize = LinkUI.navigationBarButtonContentSize
-
-        // Create circular background
-        button.backgroundColor = .linkSurfaceSecondary
-        button.layer.cornerRadius = size / 2
-
-        button.setImage(image, for: .normal)
+        button.setImage(resizedImage ?? image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.contentMode = .scaleAspectFit
         button.accessibilityLabel = accessibilityLabel
         button.accessibilityIdentifier = accessibilityIdentifier
 
-        // Set fixed size for the button
         button.translatesAutoresizingMaskIntoConstraints = false
 
-        // Constrain the button size
-        NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: size),
-            button.heightAnchor.constraint(equalToConstant: size),
-        ])
+        if appearance.navigationBarStyle.isGlass {
+            button.ios26_applyGlassConfiguration()
+        } else {
+            // Add a background color and center the icon within it
+            let size = LinkUI.navigationBarButtonSize
 
-        // Constrain the image view size
-        if let imageView = button.imageView {
-            imageView.translatesAutoresizingMaskIntoConstraints = false
+            // Create circular background
+            button.backgroundColor = .linkSurfaceSecondary
+            button.layer.cornerRadius = size / 2
+
+            // Constrain the button size
             NSLayoutConstraint.activate([
-                imageView.widthAnchor.constraint(equalToConstant: contentSize),
-                imageView.heightAnchor.constraint(equalToConstant: contentSize),
-                imageView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
-                imageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+                button.widthAnchor.constraint(equalToConstant: size),
+                button.heightAnchor.constraint(equalToConstant: size),
             ])
         }
 
@@ -208,7 +204,13 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         // When title is too long, centering would conflict with leading/trailing constraints,
         // so we remove the center constraint and let it align left:
         // [Button] [ Very Long Title Message .. ]
-        layoutIfNeeded()
+
+        // This method is called initially the width of the view is 0.
+        // Activitating the constraint system at this time causes a layout conflict since nothing can layout in width 0.
+        // Hold off on laying anything out until self has width.
+        if bounds.width > 0 {
+            layoutIfNeeded()
+        }
         let titleSize = titleLabel.sizeThatFits(
             CGSize(
                 width: CGFloat.greatestFiniteMagnitude,

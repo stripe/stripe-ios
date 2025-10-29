@@ -3,22 +3,22 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=wHL9D9t5XWYw79ElhcpyVJUK4a_Ce3x7TqZJ9HGdO5EQs9SwXhA7DcuxznLUA8deZTnJWjzO3LD_qib6
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=hhcmsGmZpf5HUHKinJ9OpFR7sIm3pyZ9GyjLy6baRZSJJ43grHcppH7YGvK8me4kjYueWz2oWl7J3fHp
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_NDhXzMEcptclRs
+request-id: req_qy9JWlYEfmjsm9
 Content-Length: 595
 Vary: Origin
-Date: Tue, 03 Jun 2025 15:08:08 GMT
-original-request: req_NDhXzMEcptclRs
+Date: Tue, 19 Aug 2025 17:58:46 GMT
+original-request: req_qy9JWlYEfmjsm9
 stripe-version: 2020-08-27
-idempotency-key: 6f49ea3b-1aef-4e48-8ccb-9e965dac4d75
+idempotency-key: 15830ee6-41fa-49db-816f-e9d51e36f5b6
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -31,7 +31,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     "fingerprint" : "JxmkTwoBYdI5FIBL",
     "tax_id" : "00.000.000\/0001-91"
   },
-  "id" : "pm_1RVwRgFY0qyl6XeWXYz2nJ6L",
+  "id" : "pm_1Rxto2FY0qyl6XeWH2LSc9wf",
   "billing_details" : {
     "email" : "jane@example.com",
     "phone" : null,
@@ -47,7 +47,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     }
   },
   "livemode" : false,
-  "created" : 1748963288,
+  "created" : 1755626326,
   "allow_redisplay" : "unspecified",
   "type" : "boleto",
   "customer" : null

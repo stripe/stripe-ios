@@ -3,50 +3,19 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 74;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		41054E462C989FA200383C09 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 41054E452C989FA200383C09 /* OFL.txt */; };
-		4128D1A22C98C3C600760A48 /* Handjet-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4128D19E2C98BF9600760A48 /* Handjet-Bold.ttf */; };
-		4128D1A42C98C3CB00760A48 /* Handjet-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4128D1A12C98BFB200760A48 /* Handjet-Regular.ttf */; };
-		413D18422C7FA30A0051AA42 /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413D18412C7FA30A0051AA42 /* TextInput.swift */; };
-		413D18442C7FAE280051AA42 /* OptionListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413D18432C7FAE280051AA42 /* OptionListRow.swift */; };
 		413D184A2C7FCE5E0051AA42 /* StripeConnectExample.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */; };
-		4161C2822C9DBB92005BD67C /* OnboardingSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2812C9DBB92005BD67C /* OnboardingSettingsView.swift */; };
-		4161C2852C9DC235005BD67C /* OnboardingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2842C9DC235005BD67C /* OnboardingSettings.swift */; };
-		4161C2872C9DD035005BD67C /* URL+Valid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C2862C9DD035005BD67C /* URL+Valid.swift */; };
 		4161C2892CA1B438005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2882CA1B438005BD67C /* StripeUICore.framework */; };
 		4161C28A2CA1B438005BD67C /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2882CA1B438005BD67C /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		416E9E972C76BD4400A0B917 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E962C76BD4400A0B917 /* AppDelegate.swift */; };
-		416E9E992C76BD4400A0B917 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E982C76BD4400A0B917 /* SceneDelegate.swift */; };
-		416E9E9B2C76BD4400A0B917 /* AppStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E9A2C76BD4400A0B917 /* AppStartViewController.swift */; };
-		416E9EA02C76BD4600A0B917 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 416E9E9F2C76BD4600A0B917 /* Assets.xcassets */; };
-		416E9EA32C76BD4600A0B917 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 416E9EA22C76BD4600A0B917 /* Base */; };
-		416E9EB82C76BD4600A0B917 /* StripeConnectOnboardingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9EB72C76BD4600A0B917 /* StripeConnectOnboardingTests.swift */; };
 		416E9ECB2C76BE0C00A0B917 /* StripeConnect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */; };
 		416E9ECC2C76BE0C00A0B917 /* StripeConnect.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		416E9ED62C78BD9900A0B917 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ED52C78BD9900A0B917 /* API.swift */; };
-		416E9EDA2C78BDC300A0B917 /* AccountSessionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ED92C78BDC300A0B917 /* AccountSessionResponse.swift */; };
-		416E9EDC2C78BE1300A0B917 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9EDB2C78BE1300A0B917 /* APIError.swift */; };
-		416E9EDE2C78C0BA00A0B917 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9EDD2C78C0BA00A0B917 /* AppInfo.swift */; };
-		416E9EE02C78C10800A0B917 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9EDF2C78C10800A0B917 /* MainViewController.swift */; };
-		416E9EE32C7B988100A0B917 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9EE22C7B988100A0B917 /* AppSettings.swift */; };
-		41810D712C89F4CD00F10EB7 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D702C89F4CD00F10EB7 /* AppearanceSettings.swift */; };
-		41810D762C8A005D00F10EB7 /* AppearanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D752C8A005D00F10EB7 /* AppearanceInfo.swift */; };
-		41810D782C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */; };
-		41B2856F2D8CC5C500B6B34D /* ToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B2856E2D8CC5C300B6B34D /* ToastManager.swift */; };
-		41E126E32D80B97000623208 /* XCUIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E126E22D80B96900623208 /* XCUIApplication+Extension.swift */; };
-		41E126E52D80BD7100623208 /* StripeConnectExampleAppKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E126E42D80BD6D00623208 /* StripeConnectExampleAppKeys.swift */; };
-		41E126E62D80BEF700623208 /* StripeConnectExampleAppKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E126E42D80BD6D00623208 /* StripeConnectExampleAppKeys.swift */; };
-		41E9A1BD2C7CC85100EDE131 /* SwiftUIContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E9A1BC2C7CC85100EDE131 /* SwiftUIContainerViewController.swift */; };
-		41E9A1BF2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E9A1BE2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift */; };
-		41E9A1C12C7CE30000EDE131 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E9A1C02C7CE30000EDE131 /* AppSettingsView.swift */; };
 		E62B3CD72C99EA020098B607 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E62B3CD62C99EA020098B607 /* StripeCore.framework */; };
 		E62B3CD82C99EA020098B607 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E62B3CD62C99EA020098B607 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E640C9D92CC1970F009D0C6E /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */; };
 		E640C9DA2CC1970F009D0C6E /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E6C5E52D2CA771730021444D /* PresentationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C5E52C2CA771700021444D /* PresentationSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,45 +46,48 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		41054E452C989FA200383C09 /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
-		4128D19E2C98BF9600760A48 /* Handjet-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Handjet-Bold.ttf"; sourceTree = "<group>"; };
-		4128D1A12C98BFB200760A48 /* Handjet-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Handjet-Regular.ttf"; sourceTree = "<group>"; };
-		413D18412C7FA30A0051AA42 /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInput.swift; sourceTree = "<group>"; };
-		413D18432C7FAE280051AA42 /* OptionListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionListRow.swift; sourceTree = "<group>"; };
 		413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectExample.xctestplan; sourceTree = "<group>"; };
-		4161C2812C9DBB92005BD67C /* OnboardingSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSettingsView.swift; sourceTree = "<group>"; };
-		4161C2842C9DC235005BD67C /* OnboardingSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSettings.swift; sourceTree = "<group>"; };
-		4161C2862C9DD035005BD67C /* URL+Valid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Valid.swift"; sourceTree = "<group>"; };
 		4161C2882CA1B438005BD67C /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		416E9E932C76BD4400A0B917 /* StripeConnect Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StripeConnect Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		416E9E962C76BD4400A0B917 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		416E9E982C76BD4400A0B917 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		416E9E9A2C76BD4400A0B917 /* AppStartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStartViewController.swift; sourceTree = "<group>"; };
-		416E9E9F2C76BD4600A0B917 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		416E9EA22C76BD4600A0B917 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		416E9EA42C76BD4600A0B917 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		416E9EB32C76BD4600A0B917 /* StripeConnect ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StripeConnect ExampleUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		416E9EB72C76BD4600A0B917 /* StripeConnectOnboardingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectOnboardingTests.swift; sourceTree = "<group>"; };
 		416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeConnect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		416E9ED52C78BD9900A0B917 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
-		416E9ED92C78BDC300A0B917 /* AccountSessionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSessionResponse.swift; sourceTree = "<group>"; };
-		416E9EDB2C78BE1300A0B917 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
-		416E9EDD2C78C0BA00A0B917 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
-		416E9EDF2C78C10800A0B917 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		416E9EE22C7B988100A0B917 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
-		41810D702C89F4CD00F10EB7 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
-		41810D752C8A005D00F10EB7 /* AppearanceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceInfo.swift; sourceTree = "<group>"; };
-		41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppSettings+AppearanceInfo.swift"; sourceTree = "<group>"; };
-		41B2856E2D8CC5C300B6B34D /* ToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastManager.swift; sourceTree = "<group>"; };
-		41E126E22D80B96900623208 /* XCUIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIApplication+Extension.swift"; sourceTree = "<group>"; };
-		41E126E42D80BD6D00623208 /* StripeConnectExampleAppKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectExampleAppKeys.swift; sourceTree = "<group>"; };
-		41E9A1BC2C7CC85100EDE131 /* SwiftUIContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIContainerViewController.swift; sourceTree = "<group>"; };
-		41E9A1BE2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+NavigationEmbed.swift"; sourceTree = "<group>"; };
-		41E9A1C02C7CE30000EDE131 /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
 		E62B3CD62C99EA020098B607 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6C5E52C2CA771700021444D /* PresentationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		31C5F8272EB2ADA5005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				/Localized/LaunchScreen.storyboard,
+				Info.plist,
+			);
+			target = 416E9E922C76BD4400A0B917 /* StripeConnect Example */;
+		};
+		31C5F8292EB2ADA5005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Helpers/StripeConnectExampleAppKeys.swift,
+			);
+			target = 416E9EB22C76BD4600A0B917 /* StripeConnect ExampleUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		31C5F8282EB2ADA5005770FA /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 416E9E912C76BD4400A0B917 /* Resources */;
+			membershipExceptions = (
+				Base.lproj/LaunchScreen.storyboard,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		31C5F8072EB2ADA5005770FA /* StripeConnectExample */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F8272EB2ADA5005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 31C5F8282EB2ADA5005770FA /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, 31C5F8292EB2ADA5005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = StripeConnectExample; sourceTree = "<group>"; };
+		31C5F82F2EB2ADA9005770FA /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
+		31C5F8352EB2ADAA005770FA /* StripeConnectExampleUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = StripeConnectExampleUITests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		416E9E902C76BD4400A0B917 /* Frameworks */ = {
@@ -139,60 +111,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		41054E442C989F7F00383C09 /* Handjet */ = {
-			isa = PBXGroup;
-			children = (
-				4128D19E2C98BF9600760A48 /* Handjet-Bold.ttf */,
-				4128D1A12C98BFB200760A48 /* Handjet-Regular.ttf */,
-				41054E452C989FA200383C09 /* OFL.txt */,
-			);
-			path = Handjet;
-			sourceTree = "<group>";
-		};
-		413D18402C7FA2FF0051AA42 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				413D18412C7FA30A0051AA42 /* TextInput.swift */,
-				413D18432C7FAE280051AA42 /* OptionListRow.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		4161C27F2C9DBB70005BD67C /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				41E9A1C02C7CE30000EDE131 /* AppSettingsView.swift */,
-				4161C2802C9DBB7E005BD67C /* Components */,
-				E6C5E5272CA76AD20021444D /* PresentationSettings */,
-				41810D742C8A004F00F10EB7 /* Appearance */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		4161C2802C9DBB7E005BD67C /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				4161C2832C9DC1CC005BD67C /* Onboarding */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		4161C2832C9DC1CC005BD67C /* Onboarding */ = {
-			isa = PBXGroup;
-			children = (
-				4161C2812C9DBB92005BD67C /* OnboardingSettingsView.swift */,
-				4161C2842C9DC235005BD67C /* OnboardingSettings.swift */,
-			);
-			path = Onboarding;
-			sourceTree = "<group>";
-		};
 		416E9E8A2C76BD4400A0B917 = {
 			isa = PBXGroup;
 			children = (
-				41810D7B2C8A0B9000F10EB7 /* Resources */,
+				31C5F82F2EB2ADA9005770FA /* Resources */,
 				413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */,
-				416E9E952C76BD4400A0B917 /* StripeConnectExample */,
-				416E9EB62C76BD4600A0B917 /* StripeConnectExampleUITests */,
+				31C5F8072EB2ADA5005770FA /* StripeConnectExample */,
+				31C5F8352EB2ADAA005770FA /* StripeConnectExampleUITests */,
 				416E9E942C76BD4400A0B917 /* Products */,
 				416E9EC62C76BDFE00A0B917 /* Frameworks */,
 			);
@@ -207,34 +132,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		416E9E952C76BD4400A0B917 /* StripeConnectExample */ = {
-			isa = PBXGroup;
-			children = (
-				4161C27F2C9DBB70005BD67C /* Settings */,
-				413D18402C7FA2FF0051AA42 /* Views */,
-				41E9A1BB2C7CC83500EDE131 /* Helpers */,
-				416E9EE12C7B987400A0B917 /* Storage */,
-				416E9ED72C78BDAC00A0B917 /* API */,
-				416E9E962C76BD4400A0B917 /* AppDelegate.swift */,
-				416E9E982C76BD4400A0B917 /* SceneDelegate.swift */,
-				416E9E9A2C76BD4400A0B917 /* AppStartViewController.swift */,
-				416E9E9F2C76BD4600A0B917 /* Assets.xcassets */,
-				416E9EA12C76BD4600A0B917 /* LaunchScreen.storyboard */,
-				416E9EA42C76BD4600A0B917 /* Info.plist */,
-				416E9EDF2C78C10800A0B917 /* MainViewController.swift */,
-			);
-			path = StripeConnectExample;
-			sourceTree = "<group>";
-		};
-		416E9EB62C76BD4600A0B917 /* StripeConnectExampleUITests */ = {
-			isa = PBXGroup;
-			children = (
-				41E126E22D80B96900623208 /* XCUIApplication+Extension.swift */,
-				416E9EB72C76BD4600A0B917 /* StripeConnectOnboardingTests.swift */,
-			);
-			path = StripeConnectExampleUITests;
-			sourceTree = "<group>";
-		};
 		416E9EC62C76BDFE00A0B917 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,79 +141,6 @@
 				416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		416E9ED72C78BDAC00A0B917 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				416E9ED82C78BDB700A0B917 /* Models */,
-				416E9ED52C78BD9900A0B917 /* API.swift */,
-			);
-			path = API;
-			sourceTree = "<group>";
-		};
-		416E9ED82C78BDB700A0B917 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				416E9ED92C78BDC300A0B917 /* AccountSessionResponse.swift */,
-				416E9EDB2C78BE1300A0B917 /* APIError.swift */,
-				416E9EDD2C78C0BA00A0B917 /* AppInfo.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		416E9EE12C7B987400A0B917 /* Storage */ = {
-			isa = PBXGroup;
-			children = (
-				416E9EE22C7B988100A0B917 /* AppSettings.swift */,
-			);
-			path = Storage;
-			sourceTree = "<group>";
-		};
-		41810D742C8A004F00F10EB7 /* Appearance */ = {
-			isa = PBXGroup;
-			children = (
-				41810D702C89F4CD00F10EB7 /* AppearanceSettings.swift */,
-				41810D752C8A005D00F10EB7 /* AppearanceInfo.swift */,
-				41810D772C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift */,
-			);
-			path = Appearance;
-			sourceTree = "<group>";
-		};
-		41810D7B2C8A0B9000F10EB7 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				41810D7C2C8A0B9700F10EB7 /* Fonts */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		41810D7C2C8A0B9700F10EB7 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				41054E442C989F7F00383C09 /* Handjet */,
-			);
-			path = Fonts;
-			sourceTree = "<group>";
-		};
-		41E9A1BB2C7CC83500EDE131 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				41B2856E2D8CC5C300B6B34D /* ToastManager.swift */,
-				41E9A1BC2C7CC85100EDE131 /* SwiftUIContainerViewController.swift */,
-				41E9A1BE2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift */,
-				4161C2862C9DD035005BD67C /* URL+Valid.swift */,
-				41E126E42D80BD6D00623208 /* StripeConnectExampleAppKeys.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
-		E6C5E5272CA76AD20021444D /* PresentationSettings */ = {
-			isa = PBXGroup;
-			children = (
-				E6C5E52C2CA771700021444D /* PresentationSettings.swift */,
-			);
-			path = PresentationSettings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -335,6 +159,10 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				31C5F8072EB2ADA5005770FA /* StripeConnectExample */,
+				31C5F82F2EB2ADA9005770FA /* Resources */,
+			);
 			name = "StripeConnect Example";
 			productName = StripeConnectExample;
 			productReference = 416E9E932C76BD4400A0B917 /* StripeConnect Example.app */;
@@ -352,6 +180,9 @@
 			);
 			dependencies = (
 				416E9EB52C76BD4600A0B917 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F8352EB2ADAA005770FA /* StripeConnectExampleUITests */,
 			);
 			name = "StripeConnect ExampleUITests";
 			productName = StripeConnectExampleUITests;
@@ -378,7 +209,6 @@
 				};
 			};
 			buildConfigurationList = 416E9E8E2C76BD4400A0B917 /* Build configuration list for PBXProject "StripeConnect Example" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -386,6 +216,7 @@
 				Base,
 			);
 			mainGroup = 416E9E8A2C76BD4400A0B917;
+			preferredProjectObjectVersion = 56;
 			productRefGroup = 416E9E942C76BD4400A0B917 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -401,12 +232,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41054E462C989FA200383C09 /* OFL.txt in Resources */,
-				4128D1A22C98C3C600760A48 /* Handjet-Bold.ttf in Resources */,
 				413D184A2C7FCE5E0051AA42 /* StripeConnectExample.xctestplan in Resources */,
-				416E9EA02C76BD4600A0B917 /* Assets.xcassets in Resources */,
-				416E9EA32C76BD4600A0B917 /* Base in Resources */,
-				4128D1A42C98C3CB00760A48 /* Handjet-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,29 +250,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4161C2872C9DD035005BD67C /* URL+Valid.swift in Sources */,
-				416E9E9B2C76BD4400A0B917 /* AppStartViewController.swift in Sources */,
-				413D18442C7FAE280051AA42 /* OptionListRow.swift in Sources */,
-				41810D782C8A006F00F10EB7 /* AppSettings+AppearanceInfo.swift in Sources */,
-				416E9E972C76BD4400A0B917 /* AppDelegate.swift in Sources */,
-				41E9A1C12C7CE30000EDE131 /* AppSettingsView.swift in Sources */,
-				416E9ED62C78BD9900A0B917 /* API.swift in Sources */,
-				416E9E992C76BD4400A0B917 /* SceneDelegate.swift in Sources */,
-				E6C5E52D2CA771730021444D /* PresentationSettings.swift in Sources */,
-				4161C2822C9DBB92005BD67C /* OnboardingSettingsView.swift in Sources */,
-				416E9EDA2C78BDC300A0B917 /* AccountSessionResponse.swift in Sources */,
-				416E9EE32C7B988100A0B917 /* AppSettings.swift in Sources */,
-				416E9EDC2C78BE1300A0B917 /* APIError.swift in Sources */,
-				413D18422C7FA30A0051AA42 /* TextInput.swift in Sources */,
-				41E9A1BD2C7CC85100EDE131 /* SwiftUIContainerViewController.swift in Sources */,
-				4161C2852C9DC235005BD67C /* OnboardingSettings.swift in Sources */,
-				41E126E52D80BD7100623208 /* StripeConnectExampleAppKeys.swift in Sources */,
-				416E9EDE2C78C0BA00A0B917 /* AppInfo.swift in Sources */,
-				41810D762C8A005D00F10EB7 /* AppearanceInfo.swift in Sources */,
-				41810D712C89F4CD00F10EB7 /* AppearanceSettings.swift in Sources */,
-				41E9A1BF2C7CD3C700EDE131 /* UIViewController+NavigationEmbed.swift in Sources */,
-				41B2856F2D8CC5C500B6B34D /* ToastManager.swift in Sources */,
-				416E9EE02C78C10800A0B917 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,9 +257,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				416E9EB82C76BD4600A0B917 /* StripeConnectOnboardingTests.swift in Sources */,
-				41E126E62D80BEF700623208 /* StripeConnectExampleAppKeys.swift in Sources */,
-				41E126E32D80B97000623208 /* XCUIApplication+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,17 +269,6 @@
 			targetProxy = 416E9EB42C76BD4600A0B917 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		416E9EA12C76BD4600A0B917 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				416E9EA22C76BD4600A0B917 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		416E9EBB2C76BD4600A0B917 /* Debug */ = {
@@ -660,7 +449,6 @@
 		416E9EC42C76BD4600A0B917 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -678,7 +466,6 @@
 		416E9EC52C76BD4600A0B917 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;

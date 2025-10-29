@@ -32,7 +32,7 @@ class PaymentMethodFormViewController: UIViewController {
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
 
         if let params = form.updateParams(params: params) {
-            if let linkInlineSignupElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? LinkInlineSignupElement }).first {
+            if let linkInlineSignupElement = form.linkInlineSignupElement {
                 switch linkInlineSignupElement.action {
                 case .signupAndPay(let account, let phoneNumber, let legalName):
                     return .link(
@@ -48,7 +48,7 @@ class PaymentMethodFormViewController: UIViewController {
                     return .new(confirmParams: params)
                 case .none:
                     // Link is optional when in textFieldOnly mode
-                    if linkInlineSignupElement.viewModel.mode != .checkbox {
+                    if linkInlineSignupElement.viewModel.mode != .checkbox && linkInlineSignupElement.viewModel.mode != .checkboxWithDefaultOptIn {
                         return .new(confirmParams: params)
                     }
                     return nil
@@ -99,7 +99,10 @@ class PaymentMethodFormViewController: UIViewController {
         configuration: PaymentElementConfiguration,
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: PaymentMethodFormViewControllerDelegate
+        isLinkUI: Bool = false,
+        delegate: PaymentMethodFormViewControllerDelegate,
+        linkAppearance: LinkAppearance? = nil,
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
         self.paymentMethodType = type
         self.intent = intent
@@ -114,12 +117,14 @@ class PaymentMethodFormViewController: UIViewController {
             self.form = PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: elementsSession,
-                configuration: .paymentElement(configuration),
+                configuration: .paymentElement(configuration, isLinkUI: isLinkUI),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
-                analyticsHelper: analyticsHelper
+                analyticsHelper: analyticsHelper,
+                linkAppearance: linkAppearance,
+                previousLinkInlineSignupAction: previousLinkInlineSignupAction
             ).make()
             self.formCache[type] = form
         }
@@ -199,7 +204,7 @@ class PaymentMethodFormViewController: UIViewController {
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             addressSpecProvider: AddressSpecProvider.shared,
-            verticalOffset: PaymentSheetUI.navBarPadding
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )
         autoCompleteViewController.delegate = self
 
@@ -228,6 +233,16 @@ extension PaymentMethodFormViewController: ElementDelegate {
                 let headerIncentive = instantDebitsFormElement.showIncentiveInHeader ? incentive : nil
                 formHeaderView.setIncentive(headerIncentive)
             }
+        }
+
+        if let linkSignup = form.linkInlineSignupElement, linkSignup.viewModel.mode == .signupOptIn, let mandateElement = form.mandateElement {
+            // Update the mandate based on the checkbox state
+            let variant = MandateVariant.updated(shouldSignUpToLink: linkSignup.viewModel.saveCheckboxChecked)
+            let text = PaymentSheetFormFactory.makeMandateText(
+                variant: variant,
+                merchantName: configuration.merchantDisplayName
+            )
+            mandateElement.mandateTextView.attributedText = text
         }
     }
 }
@@ -321,6 +336,11 @@ extension PaymentMethodFormViewController {
         let linkMode = elementsSession.linkSettings?.linkMode
         let billingDetails = instantDebitsFormElement?.billingDetails
 
+        let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
+        let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
+        let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
+
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
@@ -328,7 +348,9 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
+            allowRedisplay: allowRedisplay?.stringValue,
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 
@@ -594,6 +616,16 @@ extension LinkBankPaymentMethod {
 
     func decode() -> STPPaymentMethod? {
         return STPPaymentMethod.decodedObject(fromAPIResponse: allResponseFields)
+    }
+}
+
+private extension Element {
+    var linkInlineSignupElement: LinkInlineSignupElement? {
+        return getAllUnwrappedSubElements().compactMap({ $0 as? LinkInlineSignupElement }).first
+    }
+
+    var mandateElement: SimpleMandateElement? {
+        return getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first
     }
 }
 

@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (izbirno)";
 
 "(not accepted)" = "(ni sprejeto)";
@@ -37,8 +39,6 @@
 "Country or region" = "Država ali regija";
 
 "County" = "Okraj";
-
-"Date is empty." = "Polje z datumom je prazno.";
 
 "Department" = "Oddelek";
 
@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Izberite blagovno znamko kartice (neobvezno)";
 
+"Selection is empty." = "Izbor je prazen.";
+
 "Sort code" = "Številka banke";
 
 "State" = "Zvezna država";
@@ -132,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Vaša koda BLIK ni veljavna.";
 
-"Your ZIP is incomplete." = "Vaša poštna številka ni popolna.";
+"Your ZIP code is incomplete." = "Vaša poštna številka je nepopolna.";
+
+"Your ZIP code is invalid." = "Vaša poštna številka ni veljavna.";
 
 "Your email is invalid." = "Vaš e-poštni naslov ni veljaven.";
 
 "Your payment information will not be saved." = "Vaši podatki o plačilo ne bodo shranjeni.";
 
 "Your postal code is incomplete." = "Vaša poštna številka ni popolna.";
+
+"Your postal code is invalid." = "Vaša poštna številka ni veljavna.";
 
 "ZIP" = "Poštna številka";

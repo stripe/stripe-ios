@@ -47,15 +47,6 @@ extension String.Localized {
         )
     }
 
-    static var save_your_payment_information_with_link: String {
-        STPLocalizedString(
-                "Save your payment information with Link, and securely check out in 1-click on Link-supported sites.",
-                """
-                Label describing the benefit of signing up for Link.
-                """
-                )
-    }
-
     static var save_for_future_payments: String {
         STPLocalizedString(
             "Save for future payments",
@@ -87,6 +78,17 @@ extension String.Localized {
 
     static var bank_continue_mandate_text: String {
         STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
+    }
+
+    static var bank_continue_mandate_text_with_seller: String {
+        STPLocalizedString("By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for bank payments")
+    }
+
+    static var bank_continue_mandate_and_reuse_text_with_seller: String {
+        STPLocalizedString(
+            "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.",
+            "Text providing link to terms for bank payments when seller information is provided"
+        )
     }
 
     static var back: String {
@@ -312,6 +314,13 @@ extension String.Localized {
         )
     }
 
+    static var satispay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.",
+            "Satispay mandate text"
+        )
+    }
+
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
@@ -470,6 +479,20 @@ extension String.Localized {
         STPLocalizedString(
             "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
             "Text displayed below a credit card entry form when the card will be saved to make future payments."
+        )
+    }
+
+    static var by_continuing_you_agree_to_save_your_information_to_merchant: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant."
+        )
+    }
+
+    static var by_continuing_you_agree_to_save_your_information_to_merchant_and_link: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link."
         )
     }
 

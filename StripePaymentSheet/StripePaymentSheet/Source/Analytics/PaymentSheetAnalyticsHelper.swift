@@ -27,6 +27,7 @@ final class PaymentSheetAnalyticsHelper {
         case flowController
         case complete
         case embedded
+        case linkController
 
         var analyticsValue: String {
             switch self {
@@ -36,6 +37,17 @@ final class PaymentSheetAnalyticsHelper {
                 return "paymentsheet"
             case .embedded:
                 return "embedded"
+            case .linkController:
+                return "linkcontroller"
+            }
+        }
+
+        var isMPE: Bool {
+            switch self {
+            case .complete, .flowController, .embedded:
+                return true
+            case .linkController:
+                return false
             }
         }
     }
@@ -69,7 +81,7 @@ final class PaymentSheetAnalyticsHelper {
                 case (true, true):
                     return .mcInitCustomCustomerApplePay
                 }
-            case .complete:
+            case .complete, .linkController:
                 switch (configuration.customer != nil, configuration.applePay != nil) {
                 case (false, false):
                     return .mcInitCompleteDefault
@@ -136,10 +148,8 @@ final class PaymentSheetAnalyticsHelper {
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
             "integration_shape": integrationShape.analyticsValue,
         ]
-        let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        if linkEnabled {
-            let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
-            params["link_mode"] = linkMode
+        if let linkMode = elementsSession.linkSettings?.linkMode {
+            params["link_mode"] = linkMode.rawValue
         }
         params["link_display"] = configuration.link.display.rawValue
         if elementsSession.customer?.customerSession != nil {
@@ -153,6 +163,9 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
+
+        params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
+        params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
 
         log(
             event: .paymentSheetLoadSucceeded,
@@ -199,7 +212,7 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return (.mcOptionSelectCustomLink, nil)
                 }
-            case .complete:
+            case .complete, .linkController:
                 switch option {
                 case .add:
                     return (.mcOptionSelectCompleteNewPM, nil)
@@ -228,12 +241,27 @@ final class PaymentSheetAnalyticsHelper {
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
+
+    func logWalletButtonTapped(walletType: PaymentSheet.WalletButtonsVisibility.ExpressType) {
+        let selectedLPM: String = {
+            switch walletType {
+            case .applePay:
+                return "apple_pay"
+            case .link:
+                return "link"
+            case .shopPay:
+                return "shop_pay"
+            }
+        }()
+        log(event: .mcWalletButtonTapped, selectedLPM: selectedLPM)
+    }
+
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
         let event: STPAnalyticEvent = {
             switch integrationShape {
             case .flowController:
                 return .mcOptionRemoveCustomSavedPM
-            case .complete:
+            case .complete, .linkController:
                 return .mcOptionRemoveCompleteSavedPM
             case .embedded:
                 return .mcOptionRemoveEmbeddedSavedPM
@@ -336,7 +364,7 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return success ? .mcPaymentCustomLinkSuccess : .mcPaymentCustomLinkFailure
                 }
-            case .complete:
+            case .complete, .linkController:
                 switch paymentOption {
                 case .new, .external:
                     return success ? .mcPaymentCompleteNewPMSuccess : .mcPaymentCompleteNewPMFailure
@@ -424,6 +452,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["mpe_config"] = configuration.analyticPayload
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
+        additionalParams["is_spt"] = intent?.intentConfig?.preparePaymentMethodHandler != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["require_cvc_recollection"] = intent?.cvcRecollectionEnabled
         additionalParams["selected_lpm"] = selectedLPM
@@ -431,7 +460,8 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_ui"] = linkUI
         additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
-
+        additionalParams["elements_session_config_id"] = elementsSession?.configID
+        additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
         }
@@ -515,6 +545,8 @@ extension PaymentElementConfiguration {
         if let cpms = customPaymentMethodConfiguration?.customPaymentMethods {
             payload["custom_payment_methods"] = cpms.map { $0.id }
         }
+        payload["opens_card_scanner_automatically"] = opensCardScannerAutomatically
+        payload["terms_display"] = termsDisplay.analyticValue
 
         return payload
     }

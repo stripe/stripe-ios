@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (προαιρετικό)";
 
 "(not accepted)" = "(μη αποδεκτή)";
@@ -37,8 +39,6 @@
 "Country or region" = "Χώρα ή περιοχή";
 
 "County" = "Κομητεία";
-
-"Date is empty." = "Η ημερομηνία είναι κενή.";
 
 "Department" = "Τμήμα";
 
@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Επιλέξτε επωνυμία κάρτας (προαιρετικό)";
 
+"Selection is empty." = "Η επιλογή είναι κενή.";
+
 "Sort code" = "Κωδικός sort";
 
 "State" = "Πολιτεία";
@@ -132,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Ο κωδικός σας BLIK δεν είναι έγκυρος.";
 
-"Your ZIP is incomplete." = "Ο ταχυδρομικός σας κώδικας είναι ελλιπής.";
+"Your ZIP code is incomplete." = "Ο ταχυδρομικός κώδικας είναι ελλιπής.";
+
+"Your ZIP code is invalid." = "Ο ταχυδρομικός κώδικας δεν είναι έγκυρος.";
 
 "Your email is invalid." = "Η διεύθυνση email σας δεν είναι έγκυρη.";
 
 "Your payment information will not be saved." = "Τα στοιχεία πληρωμής δε θα αποθηκευτούν.";
 
 "Your postal code is incomplete." = "Ο ταχυδρομικός κώδικάς σας είναι ελλιπής.";
+
+"Your postal code is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
 
 "ZIP" = "Τ.Κ.";

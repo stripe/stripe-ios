@@ -8,7 +8,12 @@
 import SwiftUI
 
 class LinkButtonViewModel: NSObject, ObservableObject {
-    @Published private(set) var account: PaymentSheetLinkAccountInfoProtocol?
+    @Published private(set) var account: PaymentSheetLinkAccount?
+
+    var paymentMethodPreview: LinkPaymentMethodPreview? {
+        guard let account else { return nil }
+        return .init(from: account.displayablePaymentDetails)
+    }
 
     override init() {
         super.init()
@@ -20,7 +25,7 @@ class LinkButtonViewModel: NSObject, ObservableObject {
         LinkAccountContext.shared.removeObserver(self)
     }
 
-    func setAccount(_ newAccount: PaymentSheetLinkAccountInfoProtocol?) {
+    func setAccount(_ newAccount: PaymentSheetLinkAccount?) {
         setAccountIfRegistered(newAccount)
     }
 
@@ -29,7 +34,7 @@ class LinkButtonViewModel: NSObject, ObservableObject {
     }
 
     /// Sets the account only if it exists and is registered
-    private func setAccountIfRegistered(_ newAccount: PaymentSheetLinkAccountInfoProtocol?) {
+    private func setAccountIfRegistered(_ newAccount: PaymentSheetLinkAccount?) {
         if let newAccount, newAccount.isRegistered {
             self.account = newAccount
         } else {

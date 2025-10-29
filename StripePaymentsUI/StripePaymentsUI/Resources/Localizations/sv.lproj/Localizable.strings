@@ -22,6 +22,8 @@
 
 "Billing address" = "Faktureringsadress";
 
+"Billing details" = "Billing uppgifter";
+
 "CVC" = "CVC-kod";
 
 "Card information" = "Kortinformation";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Tillåt kameraåtkomst i Inställningar för att skanna kortet.";
 
-"Your ZIP is invalid." = "Ditt postnummer är ogiltigt.";
-
 "Your card has expired." = "Ditt kort har upphört att gälla.";
 
 "Your card number is incomplete." = "Ditt kortnummer är ofullständigt.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Kortets säkerhetskod är ofullständig.";
 
 "Your card's security code is invalid." = "Kortets säkerhetskod är ogiltig.";
-
-"Your postal code is invalid." = "Ditt postnummer är ogiltigt.";
 
 "card number" = "kortnummer";
 

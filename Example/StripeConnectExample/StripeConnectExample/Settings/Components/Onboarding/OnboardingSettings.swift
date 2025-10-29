@@ -28,6 +28,8 @@ struct OnboardingSettings: Equatable {
     var skipTermsOfService: ToggleOption = .default
     var fieldOption: FieldOption = .default
     var futureRequirement: FutureRequirement = .default
+    var requirementsOption: RequirementsOption = .default
+    var requirementsString: String = ""
 
     var accountCollectionOptions: AccountCollectionOptions {
         var accountCollectionOptions: AccountCollectionOptions = .init()
@@ -51,7 +53,53 @@ struct OnboardingSettings: Equatable {
             accountCollectionOptions.futureRequirements = .include
         }
 
+        // Configure requirements
+        switch requirementsOption {
+        case .default:
+            // Default set nothing
+            break
+        case .only:
+            let requirements = parseRequirementsString()
+            if !requirements.isEmpty {
+                accountCollectionOptions.requirements = .only(requirements)
+            }
+        case .exclude:
+            let requirements = parseRequirementsString()
+            if !requirements.isEmpty {
+                accountCollectionOptions.requirements = .exclude(requirements)
+            }
+        }
+
         return accountCollectionOptions
+    }
+
+    private func parseRequirementsString() -> [String] {
+        guard !requirementsString.isEmpty else { return [] }
+        return requirementsString
+            .components(separatedBy: .newlines)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
+    enum RequirementsOption: String, CaseIterable, Identifiable {
+        var id: String {
+            self.rawValue
+        }
+
+        case `default`
+        case only
+        case exclude
+
+        var displayLabel: String {
+            switch self {
+            case .default:
+                return "Default"
+            case .only:
+                return "Only"
+            case .exclude:
+                return "Exclude"
+            }
+        }
     }
 
     enum FutureRequirement: String, CaseIterable, Identifiable {

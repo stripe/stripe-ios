@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Добавить";
 
 "Add US bank account" = "Добавить банковский счет в США";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Добавить новый метод оплаты";
 
 "Add your payment information" = "Укажите платежные данные";
-
-"Agree and continue" = "Согласиться и продолжить";
 
 "Approve payment" = "Подтвердить платеж";
 
@@ -60,11 +56,19 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Продолжая, вы соглашаетесь сохранить свою информацию для будущих покупок через %@ и <link>Link</link> в соответствии с <terms>условиями</terms> и <privacy>политикой конфиденциальности</privacy> Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Продолжая, вы соглашаетесь сохранить вашу информацию для будущих покупок через %@.";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Продолжая, вы разрешаете %@ автоматически списывать средства с баланса Satispay на регулярной основе в соответствии с вашим планом покупки или подписки.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя номер телефона и электронный адрес, вы соглашаетесь создать учетную запись Link, на которую распространяются <terms>Условия использования</terms> и <privacy>Условия конфиденциальности</privacy> Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Предоставляя данные своего банковского счета и подтверждая этот платеж, вы соглашаетесь с этим запросом на прямое списание средств и <terms>соглашением об услугах прямого списания средств</terms>, а также разрешаете Stripe Payments Australia Pty Ltd ACN 160 180 343, идентификационный номер получателя прямых списаний средств 507156 («Stripe»), списывать средства с вашего счета через систему массового электронного клиринга (BECS) от имени %@ («Продавец») на любые суммы, о которых Продавец сообщит вам в отдельном порядке. Вы подтверждаете, что являетесь держателем вышеуказанного счета либо уполномоченным представителем держателя счета с правом подписи.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Указывая реквизиты карты, вы разрешаете компании %@ списывать средства с карты в рамках будущих платежей в соответствии с условиями компании.";
 
@@ -75,6 +79,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой номер телефона, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Сохраняя реквизиты своего банковского счета у %@, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Отправляя заказ на %1$@ и %2$@, вы соглашаетесь сохранить вашу информацию в %3$@ для будущих покупок, а также соглашаетесь разрешить платежи в соответствии с <terms>этими условиями</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Отправляя заказ в %@, вы соглашаетесь разрешить платежи в соответствии с <terms>этими условиями</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -106,25 +114,27 @@
 
 "Continue another way" = "Продолжить другим способом";
 
+"Create an account with Link for faster checkout across the web" = "Создайте учетную запись в Link для более быстрого оформления заказов в Интернете";
+
 "Debit or credit card" = "Дебетовая или кредитная карта";
 
 "Default" = "По умолчанию";
 
 "Default payment method" = "Способ оплаты по умолчанию";
 
+"Did you mean %@? %@." = "Вы имели в виду %1$@? %2$@.";
+
 "EPS Bank" = "Банк EPS";
 
 "Enter address manually" = "Введите адрес вручную";
 
-"Enter the code sent to %@ to use your saved information." = "Чтобы использовать ранее сохраненные данные, введите код, отправленный на %@.";
+"Enter the code sent to %@." = "Введите код, отправленный на %s.";
 
 "FPX Bank" = "Банк FPX";
 
 "Failed to connect" = "Не удалось подключиться";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Быстрое, безопасное оформление оплаты одним щелчком";
-
-"For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
+"Fast, secure checkout" = "Быстрое и безопасное оформление заказа";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Получите возврат в сумме %@, когда впервые оплатите заказ с банковского счета. <terms>См. условия</terms>";
 
@@ -184,6 +194,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
 
+"Pay faster everywhere Link is accepted." = "Платите быстрее везде, где принимают Link.";
+
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
 
 "Pay over time with Affirm" = "Оплатить в рассрочку через систему Affirm";
@@ -234,8 +246,6 @@
 
 "Save your info for secure 1-click checkout with Link" = "Сохраните свои данные в Link для безопасного оформления покупок нажатием одной кнопки";
 
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Сохраните платежные реквизиты в Link, чтобы безопасно оформлять заказы одним щелчком на всех сайтах, поддерживающих Link.";
-
 "Saved" = "Сохранено";
 
 "Select card" = "Выберите карту";
@@ -256,6 +266,8 @@
 
 "Simple, secure one-click payments" = "Защищенные безопасные платежи одним нажатием";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Произошла ошибка при привязке аккаунта.\nПовторите попытку позже.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Через 1-2 рабочих дня Stripe зачислит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями, которые помогут вам закончить сохранение реквизитов своего банковского счета у %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
@@ -266,13 +278,15 @@
 
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Введенный IBAN недействителен, код \"%@\" не поддерживается в вашей стране.";
+
 "The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
 
 "The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Срок действия этой карты истек. Обновите данные карты или выберите другой способ оплаты.";
-
 "This is your default" = "Это ваше значение по умолчанию";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Этот способ оплаты будет удален, но останется доступным для подписок (%@).";
 
 "Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
 
@@ -282,9 +296,11 @@
 
 "Update payment method" = "Обновить способ оплаты";
 
-"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
+"Use billing address for shipping" = "Использовать для доставки адрес для выставления счетов";
 
 "View more" = "Показать ещё";
+
+"Yes, update" = "Да, обновить";
 
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
 

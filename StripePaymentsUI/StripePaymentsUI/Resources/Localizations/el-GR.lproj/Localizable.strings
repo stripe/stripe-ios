@@ -22,6 +22,8 @@
 
 "Billing address" = "Διεύθυνση χρέωσης";
 
+"Billing details" = "Λεπτομέρειες τιμολόγησης";
+
 "CVC" = "CVC";
 
 "Card information" = "Στοιχεία κάρτας";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Για να σαρώσετε την κάρτα σας, επιτρέψτε την πρόσβαση της κάμερας από τις Ρυθμίσεις.";
 
-"Your ZIP is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
-
 "Your card has expired." = "Η κάρτα σας έχει λήξει.";
 
 "Your card number is incomplete." = "Ο αριθμός της κάρτας σας είναι ελλιπής.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Ο κωδικός ασφαλείας της κάρτας σας είναι ελλιπής.";
 
 "Your card's security code is invalid." = "Ο κωδικός ασφαλείας της κάρτας σας δεν είναι έγκυρος.";
-
-"Your postal code is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
 
 "card number" = "αριθμός κάρτας";
 

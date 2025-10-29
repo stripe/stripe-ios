@@ -22,6 +22,8 @@
 
 "Billing address" = "Adres para sa billing";
 
+"Billing details" = "Mga detalye ng singil";
+
 "CVC" = "CVC";
 
 "Card information" = "Impormasyon ng kard";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
 
-"Your ZIP is invalid." = "Ang iyong ZIP ay di balido.";
-
 "Your card has expired." = "Napaso na ang iyong kard.";
 
 "Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
 
 "Your card's security code is invalid." = "Ang security code ng iyong kard ay di balido.";
-
-"Your postal code is invalid." = "Ang iyong postal code ay di balido.";
 
 "card number" = "numero ng kard";
 

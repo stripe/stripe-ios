@@ -80,22 +80,40 @@ extension ConsumerPaymentDetails {
             return false
         }
 
-        if case .bankAccount = details {
-            // Only support bank accounts if we don't have to collect any missing billing details
-            let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
-
-            let effectivePaymentDetails = update(
-                with: effectiveBillingDetails,
-                basedOn: configuration.billingDetailsCollectionConfiguration
-            )
-
-            return effectivePaymentDetails.supports(
-                configuration.billingDetailsCollectionConfiguration,
-                in: linkAccount.currentSession
-            )
+        if !isSupportedForAllowedCountries(configuration.billingDetailsCollectionConfiguration.allowedCountries) {
+            return false
         }
 
         return true
+    }
+
+    private func isSupportedForAllowedCountries(_ allowedCountries: Set<String>) -> Bool {
+        guard !allowedCountries.isEmpty else {
+            // No filtering required
+            return true
+        }
+
+        switch details {
+        case .card:
+            // If the merchant is filtering, only allow cards with a billing country
+            if let country = billingAddress?.countryCode {
+                return allowedCountries.contains(country)
+            } else {
+                return false
+            }
+        case .bankAccount:
+            // These are US bank accounts, so only check for US country code
+            return allowedCountries.contains("US")
+        case .unparsable:
+            return false
+        }
+    }
+
+    var isValidCard: Bool {
+        guard case let .card(cardDetails) = details else {
+            return false
+        }
+        return !cardDetails.hasExpired && !cardDetails.shouldRecollectCardCVC
     }
 }
 
@@ -279,20 +297,41 @@ extension ConsumerPaymentDetails.Details {
         let iconCode: String?
         let name: String
         let last4: String
+        let country: String
 
         private enum CodingKeys: String, CodingKey {
             case iconCode = "bankIconCode"
-            case name = "bankName"
+            case name = "bankAccountName"
             case last4
+            case country
         }
 
-        init(iconCode: String?,
-             name: String,
-             last4: String) {
+        init(
+            iconCode: String?,
+            name: String,
+            last4: String,
+            country: String
+        ) {
             self.iconCode = iconCode
             self.name = name
             self.last4 = last4
+            self.country = country
         }
+
+        func displayName(with nickname: String?) -> String {
+            if let nickname {
+                return nickname
+            }
+            return name
+        }
+    }
+}
+
+// MARK: - Details.BankAccount - Helpers
+extension ConsumerPaymentDetails.Details.BankAccount {
+    var asPassthroughPaymentMethodType: STPPaymentMethodType? {
+        // We don't support non-US bank accounts today.
+        country == "COUNTRY_US" ? .USBankAccount : nil
     }
 }
 
@@ -302,7 +341,7 @@ extension ConsumerPaymentDetails {
         case .card(let card):
             return card.displayName(with: nickname) ?? card.secondaryName
         case .bankAccount(let bank):
-            return "•••• \(bank.last4)"
+            return bank.displayName(with: nickname)
         case .unparsable:
             return ""
         }
@@ -316,7 +355,7 @@ extension ConsumerPaymentDetails {
             let components = [label, sublabel].compactMap { $0 }
             return components.joined(separator: " ")
         case .bankAccount(let bankAccount):
-            return "\(bankAccount.name) \(paymentSheetLabel)"
+            return bankAccount.displayName(with: nickname)
         case .unparsable:
             return nil
         }

@@ -17,7 +17,7 @@ class BackendViewModel: ObservableObject {
         let ephemeralKey: String
     }
 
-    private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
+    private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.stripedemos.com"
     private lazy var checkoutUrl = URL(string: baseUrl + "/checkout")!
     private lazy var confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
     private lazy var computeTotalsUrl = URL(string: baseUrl + "/compute_totals")!
@@ -77,20 +77,15 @@ class BackendViewModel: ObservableObject {
                 currency: "USD",
                 setupFutureUsage: usage
             )
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            guard let self = self else { return }
-            Task {
-                do {
-                    let clientSecret = try await self.confirmIntent(
-                        paymentMethodID: paymentMethod.stripeId,
-                        shouldSavePaymentMethod: shouldSavePaymentMethod,
-                        isSubscribing: isSubscribing
-                    )
-                    intentCreationCallback(.success(clientSecret))
-                } catch {
-                    intentCreationCallback(.failure(error))
-                }
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            guard let self = self else {
+                throw ExampleError()
             }
+            return try await self.confirmIntent(
+                paymentMethodID: paymentMethod.stripeId,
+                shouldSavePaymentMethod: shouldSavePaymentMethod,
+                isSubscribing: isSubscribing
+            )
         }
         return intentConfig
     }

@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Toevoegen";
 
 "Add US bank account" = "Amerikaanse bankrekening toevoegen";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Nieuwe betaalmethode toevoegen";
 
 "Add your payment information" = "Je betaalgegevens toevoegen";
-
-"Agree and continue" = "Akkoord en doorgaan";
 
 "Approve payment" = "Betaling goedkeuren";
 
@@ -60,11 +56,19 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je doorgaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Door verder te gaan, ga je ermee akkoord dat jouw informatie wordt opgeslagen voor toekomstige aankopen bij %@ en <link>Link</link> volgens Link <terms>voorwaarden</terms> en <privacy>privacy</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Door verder te gaan, ga je ermee akkoord jouw informatie op te slaan voor toekomstige aankopen bij %@.";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Door verder te gaan, machtigt u %@ om automatisch uw Satispay-saldo op terugkerende basis af te schrijven in overeenstemming met uw aankoop- of abonnementsplan.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Als je doorgaat, geef je %1$@ toestemming om deze betaling en toekomstige betalingen in rekening te brengen op je Cash App-account, in overeenstemming met de voorwaarden van %2$@, totdat je deze toestemming intrekt. Je kunt dit op elk moment wijzigen via je Cash App-instellingen.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je telefoonnummer en e-mailadres te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt dat onderhevig is aan de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Door uw bankgegevens te verstrekken en deze betaling te bevestigen, gaat u akkoord met deze Incasso-aanvraag en de <terms>Serviceovereenkomst voor Incasso-aanvragen</terms>, en machtigt u Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID nummer 507156 (“Stripe”) om uw rekening te debiteren via het Bulk Electronic Clearing System (BECS) namens %@ (de \"Verkoper\") voor alle bedragen die afzonderlijk aan u zijn gecommuniceerd door de Verkoper. U bevestigt dat u ofwel rekeninghouder bent of een gemachtigde ondertekenaar op de hierboven vermelde rekening.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Door je kaartgegevens te verstrekken geef je %@ toestemming om toekomstige betalingen af te schrijven van je betaalkaart in overeenstemming met hun voorwaarden.";
 
@@ -75,6 +79,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je telefoonnummer te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt en dat je betaalgegevens worden opgeslagen naar Link, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling bij %1$@ en %2$@ te plaatsen, ga je ermee akkoord dat je gegevens bij %3$@ opgeslagen worden voor toekomstige aankopen en autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling te plaatsen bij %@, autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -106,25 +114,27 @@
 
 "Continue another way" = "Op een andere manier doorgaan";
 
+"Create an account with Link for faster checkout across the web" = "Maak een account aan bij Link om sneller te kunnen afrekenen op het internet.";
+
 "Debit or credit card" = "Debitcard of creditcard";
 
 "Default" = "Standaard";
 
 "Default payment method" = "Standaardbetaalmethode";
 
+"Did you mean %@? %@." = "Bedoelde je %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Adres handmatig invoeren";
 
-"Enter the code sent to %@ to use your saved information." = "Voer de code in die is verzonden naar %@ om je opgeslagen gegevens te gebruiken.";
+"Enter the code sent to %@." = "Voer de code in die is verstuurd naar %s.";
 
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "Kan geen verbinding maken";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Snel en veilig met één klik afrekenen";
-
-"For security, please re-enter your card’s security code." = "Voer uit veiligheidsoverwegingen de beveiligingscode van je betaalkaart opnieuw in.";
+"Fast, secure checkout" = "Snel, beveiligd afrekenproces";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Krijg %@ terug wanneer je voor de eerste keer via je bank betaalt. <terms>Zie voorwaarden</terms>";
 
@@ -184,6 +194,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Reken sneller af bij %@ en duizenden andere bedrijven.";
 
+"Pay faster everywhere Link is accepted." = "Betaal sneller, overal waar Link wordt geaccepteerd.";
+
 "Pay over time with %@" = "Betalen in termijnen met %@";
 
 "Pay over time with Affirm" = "Betalen in termijnen met Affirm";
@@ -234,8 +246,6 @@
 
 "Save your info for secure 1-click checkout with Link" = "Bewaar je gegevens zodat je veilig met één klik kunt afrekenen met Link";
 
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Sla je betaalgegevens op met Link, en je kunt veilig met één klik afrekenen op sites die door Link worden ondersteund.";
-
 "Saved" = "Opgeslagen";
 
 "Select card" = "Betaalkaart selecteren";
@@ -256,6 +266,8 @@
 
 "Simple, secure one-click payments" = "Betaal eenvoudig en veilig met één klik";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Er is iets misgegaan bij het koppelen van uw account.\nProbeer het later opnieuw.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Binnen 1 à 2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies om het instellen van je bankrekening bij %@ te voltooien.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Binnen 1-2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies over hoe je de betaling aan %@ kunt voltooien.";
@@ -266,13 +278,15 @@
 
 "The IBAN you entered is incomplete." = "Het opgegeven IBAN-nummer is onvolledig.";
 
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "De IBAN die u heeft ingevoerd is ongeldig, \"%@\" is geen ondersteunde landcode.";
+
 "The provided verification code has expired." = "De opgegeven verificatiecode is verlopen.";
 
 "The provided verification code is incorrect." = "De opgegeven verificatiecode is onjuist.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Deze betaalkaart is verlopen. Werk de kaartgegevens bij of kies een andere betaalmethode.";
-
 "This is your default" = "Dit is je standaard";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Deze betaalmethode wordt verwijderd, maar blijft beschikbaar voor %@ abonnementen.";
 
 "Too many attempts. Please try again in a few minutes." = "Te veel pogingen. Probeer het over een paar minuten opnieuw.";
 
@@ -282,9 +296,11 @@
 
 "Update payment method" = "Betaalmethode bijwerken";
 
-"Use your saved info to check out faster" = "Gebruik je opgeslagen gegevens om sneller af te rekenen";
+"Use billing address for shipping" = "Gebruik factuuradres voor verzending";
 
 "View more" = "Meer weergeven";
+
+"Yes, update" = "Ja, bijwerken";
 
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
 

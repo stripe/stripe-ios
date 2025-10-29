@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -25,7 +26,7 @@ class ViewController: UIViewController {
     }
     @IBSegueAction func showSwiftUITestPlayground(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues()))
+            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground())
         } else {
             fatalError(">= iOS 15.0 required")
         }
@@ -33,7 +34,7 @@ class ViewController: UIViewController {
 
     @IBSegueAction func showSwiftUICustomerSheetTestPlayground(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues()))
+            return UIHostingController(coder: coder, rootView: CustomerSheetTestPlayground())
         } else {
             fatalError(">= iOS 15.0 required")
         }
@@ -54,6 +55,13 @@ class ViewController: UIViewController {
             return UIHostingController(coder: coder, rootView: ExampleWalletButtonsContainerView())
         } else {
             fatalError(">= iOS 15.0 required")
+        }
+    }
+    @IBSegueAction func showLinkStandaloneComponent(_ coder: NSCoder) -> UIViewController? {
+        if #available(iOS 16.0, *) {
+            return UIHostingController(coder: coder, rootView: ExampleLinkStandaloneComponent())
+        } else {
+            fatalError(">= iOS 16.0 required")
         }
     }
 }

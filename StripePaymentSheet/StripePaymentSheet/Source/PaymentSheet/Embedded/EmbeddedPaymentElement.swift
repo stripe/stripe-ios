@@ -242,7 +242,7 @@ public final class EmbeddedPaymentElement {
             assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
             return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
-        let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController, appearance: configuration.appearance)
+        let authContext = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: configuration.appearance)
         let confirmResult = await _confirm(paymentOption: paymentOption, authContext: authContext).result
         if confirmResult.isCanceledOrFailed {
             clearPaymentOptionIfNeeded()
@@ -356,6 +356,8 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
+    internal var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+
     internal init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
@@ -373,6 +375,9 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
+        if configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
+            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
+        }
     }
 }
 

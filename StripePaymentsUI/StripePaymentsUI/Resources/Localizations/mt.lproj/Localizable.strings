@@ -22,11 +22,13 @@
 
 "Billing address" = "Indirizz tal-kont";
 
+"Billing details" = "Dettalji tal-ħruġ tal-fatturi";
+
 "CVC" = "CVC";
 
-"Card information" = "L-informazzjoni tal-kard";
+"Card information" = "L-informazzjoni tal-karta";
 
-"Card number" = "In-numru tal-kard";
+"Card number" = "In-numru tal-karta";
 
 "Confirm your %@" = "Ikkonferma l-%@ tiegħek";
 
@@ -46,31 +48,27 @@
 
 "The selected brand is not allowed" = "Ix-xorta ta' karta magħżula ma tistax tintuża";
 
-"To scan your card, allow camera access in Settings." = "Biex tiskennja l-kard tiegħek, ippermetti l-aċċess tal-kamera fis-Settings.";
-
-"Your ZIP is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
+"To scan your card, allow camera access in Settings." = "Biex tiskennja l-karta tiegħek, agħti l-aċċess għall-kamera mill-Għażliet.";
 
 "Your card has expired." = "Il-karta tiegħek skadiet.";
 
-"Your card number is incomplete." = "In-numru tal-kard tiegħek mhux komplut.";
+"Your card number is incomplete." = "In-numru tal-karta tiegħek mhux komplut.";
 
-"Your card number is invalid." = "In-numru tal-kard tiegħek mhux validu.";
+"Your card number is invalid." = "In-numru tal-karta tiegħek mhux tajjeb.";
 
-"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-kard tiegħek mhijiex kompluta.";
+"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-karta tiegħek mhix sħiħa.";
 
-"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-kard tiegħek mhijiex valida.";
+"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-karta tiegħek mhix tajba.";
 
-"Your card's expiration month is invalid." = "Ix-xahar tal-iskadenza tal-kard tiegħek mhux validu.";
+"Your card's expiration month is invalid." = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb.";
 
-"Your card's expiration year is invalid." = "Is-sena tal-iskadenza tal-kard tiegħek mhijiex valida.";
+"Your card's expiration year is invalid." = "Is-sena tal-iskadenza tal-karta tiegħek mhix tajba.";
 
-"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux komplut.";
+"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux komplut.";
 
-"Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux validu.";
+"Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb.";
 
-"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
-
-"card number" = "in-numru tal-kard";
+"card number" = "in-numru tal-karta";
 
 "example@example.com" = "eżempju@eżempju.com";
 

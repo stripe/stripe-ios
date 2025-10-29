@@ -3,22 +3,22 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MRz2WrKq7ze2-iV9o2J83F80SP9b0hef9_U34W76UF2a8BHKnhb99cPT2f9IJZWJRuoO8N4MlCPK43bA
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=K7-vy-tbZp3jcsAuM7vbQRM5b7hPiqLkcy-OlubeAeUfAnJpY4y0CYvHZsxb1KJ-D_kHtRwLENiVUtZP
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_W2sR61bFaNYgF2
+request-id: req_cQNZ84k81P20Gg
 Content-Length: 722
 Vary: Origin
-Date: Mon, 02 Jun 2025 20:33:15 GMT
-original-request: req_W2sR61bFaNYgF2
+Date: Tue, 19 Aug 2025 17:48:57 GMT
+original-request: req_cQNZ84k81P20Gg
 stripe-version: 2020-08-27
-idempotency-key: 72a85ca2-e3a7-4589-b201-1f8b07393454
+idempotency-key: e9d3228f-1fa6-4031-ab7f-491c4fd66616
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -38,7 +38,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     },
     "branch_code" : ""
   },
-  "id" : "pm_1RVf2lFY0qyl6XeWcNGicRxQ",
+  "id" : "pm_1RxteXFY0qyl6XeWwAye74SI",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -54,7 +54,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1748896395,
+  "created" : 1755625737,
   "allow_redisplay" : "unspecified",
   "type" : "sepa_debit",
   "customer" : null

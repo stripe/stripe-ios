@@ -22,6 +22,8 @@
 
 "Billing address" = "Laskutusosoite";
 
+"Billing details" = "Laskutustiedot";
+
 "CVC" = "CVC-tunnus";
 
 "Card information" = "Kortin tiedot";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
 
-"Your ZIP is invalid." = "Postinumero on virheellinen.";
-
 "Your card has expired." = "Korttisi on vanhentunut.";
 
 "Your card number is incomplete." = "Kortin numero on puutteellinen.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Kortin turvakoodi on puutteellinen.";
 
 "Your card's security code is invalid." = "Kortin turvakoodi on virheellinen.";
-
-"Your postal code is invalid." = "Postinumeroon virheellinen.";
 
 "card number" = "kortin numero";
 

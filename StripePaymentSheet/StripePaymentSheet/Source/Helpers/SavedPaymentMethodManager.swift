@@ -20,7 +20,7 @@ final class SavedPaymentMethodManager {
     let elementsSession: STPElementsSession
 
     private lazy var ephemeralKey: String? = {
-        guard let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession) else {
+        guard let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession) else {
             stpAssert(true, "Failed to read ephemeral key.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: Error.missingEphemeralKey,

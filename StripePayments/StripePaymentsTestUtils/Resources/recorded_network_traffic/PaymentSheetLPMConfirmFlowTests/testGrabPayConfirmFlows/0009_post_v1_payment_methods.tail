@@ -3,31 +3,31 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=hNk3_CiK3pZogTqehruLl6NmtdsmpfsS_y9VA_SpXsBFKPFJkjnlkotDHA6qF1cFybfb0l8DDFvt3NtC
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=cuaS0tLWhF5-V0D3320ARlngzprmXz5ZOKKb3cmH8RgUnAR4CMLqEt8RJZlQ7DBGWKfysQX62LhXv-qu
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_wDzF5Z7XzevzB8
+request-id: req_hGFhkucEuAzYef
 Content-Length: 470
 Vary: Origin
-Date: Tue, 03 Jun 2025 21:00:27 GMT
-original-request: req_wDzF5Z7XzevzB8
+Date: Tue, 07 Oct 2025 19:09:02 GMT
+original-request: req_hGFhkucEuAzYef
 stripe-version: 2020-08-27
-idempotency-key: 5497a9c4-16d1-4e01-91a0-8a8c729e6c4e
+idempotency-key: 9aeb01d2-4d55-4e15-aec2-fa4eab3638e2
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=grabpay
+X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=grabpay
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RW1wdAOnZToJom1OKsjeCv4",
+  "id" : "pm_1SFgFuAOnZToJom10sUvbcHt",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_
   "grabpay" : {
 
   },
-  "created" : 1748984427,
+  "created" : 1759864142,
   "allow_redisplay" : "unspecified",
   "type" : "grabpay",
   "customer" : null

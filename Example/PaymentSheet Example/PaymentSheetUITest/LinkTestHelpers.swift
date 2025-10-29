@@ -51,7 +51,8 @@ extension XCTestCase {
             nameField.typeText("John Doe")
         }
 
-        XCTAssertTrue(app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10))
+        app.swipeDown()
+        XCTAssertTrue(app.buttons["Continue"].waitForExistenceAndTap(timeout: 10))
     }
 
     func fillOutLinkCardData(
@@ -90,6 +91,13 @@ extension XCTestCase {
             if cityField.exists {
                 cityField.tap()
                 cityField.typeText("South San Francisco")
+            }
+
+            let stateField = app.textFields["State"]
+            if stateField.exists {
+                stateField.tap()
+                app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+                app.toolbars.buttons["Done"].tap()
             }
 
             let zipField = app.textFields["ZIP"]

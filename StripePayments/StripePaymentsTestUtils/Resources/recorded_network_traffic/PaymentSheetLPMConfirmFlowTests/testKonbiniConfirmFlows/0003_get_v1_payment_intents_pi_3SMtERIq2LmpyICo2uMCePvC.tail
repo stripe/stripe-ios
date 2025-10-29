@@ -1,0 +1,106 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SMtERIq2LmpyICo2uMCePvC\?client_secret=pi_3SMtERIq2LmpyICo2uMCePvC_secret_MM84oH0llrhyvnVvFwSqcm3W1&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KOWedq14HZEocb4B8_UxPt5Myr6VAnSFWkJuAQKVjhf_R2sbGSz0_kkNdCmJGrrP-ZfkY27xhA5-ZPrH
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Mon, 27 Oct 2025 16:25:21 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 2119
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_h82g3T4GSxPvJm
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "jpy",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "konbini_display_details",
+    "konbini_display_details" : {
+      "stores" : {
+        "ministop" : {
+          "confirmation_number" : "34222833166",
+          "payment_code" : "123456"
+        },
+        "seicomart" : {
+          "confirmation_number" : "34222833166",
+          "payment_code" : "123456"
+        },
+        "familymart" : {
+          "confirmation_number" : "34222833166",
+          "payment_code" : "123456"
+        },
+        "lawson" : {
+          "confirmation_number" : "34222833166",
+          "payment_code" : "123456"
+        }
+      },
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/konbini\/voucher\/test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLF9USldINXU0Tm1wSUlyTUhCdGp2RFhvbVNHQ2ZxVVdz0100kZ1IQEQm",
+      "expires_at" : 1761922799
+    }
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "konbini" : {
+
+    },
+    "id" : "pm_1SMtESIq2LmpyICooj2UQZeA",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1761582320,
+    "allow_redisplay" : "unspecified",
+    "type" : "konbini",
+    "customer" : null
+  },
+  "client_secret" : "pi_3SMtERIq2LmpyICo2uMCePvC_secret_MM84oH0llrhyvnVvFwSqcm3W1",
+  "id" : "pi_3SMtERIq2LmpyICo2uMCePvC",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "konbini"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1761582319,
+  "description" : null
+}

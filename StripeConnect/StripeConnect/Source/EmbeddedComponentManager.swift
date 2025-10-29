@@ -10,7 +10,6 @@ import JavaScriptCore
 import UIKit
 
 /// Manages Connect embedded components
-/// - Note: Connect embedded components are only available in private preview.
 /// - Seealso: [Step by step integration guide](  https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios)
 @available(iOS 15, *)
 public final class EmbeddedComponentManager {
@@ -91,15 +90,6 @@ public final class EmbeddedComponentManager {
         }
     }
 
-    /// Creates a `PayoutsViewController`
-    /// - Seealso: [Payouts component documentation](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios)
-    @_spi(DashboardOnly)
-    public func createPayoutsViewController() -> PayoutsViewController {
-        .init(componentManager: self,
-              loadContent: shouldLoadContent,
-              analyticsClientFactory: analyticsClientFactory)
-    }
-
     /**
      Creates an `AccountOnboardingController
      - Seealso: [Account onboarding component documentation](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios)
@@ -155,6 +145,41 @@ public final class EmbeddedComponentManager {
               collectionOptions: collectionOptions,
               loadContent: shouldLoadContent,
               analyticsClientFactory: analyticsClientFactory)
+    }
+
+    /// Creates a `PayoutsViewController`
+    /// - Seealso: [Payouts component documentation](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios)
+    @_spi(PreviewConnect)
+    @_documentation(visibility: public)
+    public func createPayoutsViewController() -> PayoutsViewController {
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
+    }
+
+    /// Creates a `PaymentsViewController`
+    /// - Seealso: [Payments component documentation](https://docs.stripe.com/connect/supported-embedded-components/payments?platform=ios)
+    /// - Parameters:
+    ///   - defaultFilters: The default filters to apply to the payments list
+    @_spi(PreviewConnect)
+    @_documentation(visibility: public)
+    public func createPaymentsViewController(
+        defaultFilters: EmbeddedComponentManager.PaymentsListDefaultFiltersOptions = .init()
+    ) -> PaymentsViewController {
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory,
+              defaultFilters: defaultFilters)
+    }
+
+    @_spi(DashboardOnly)
+    public func createCheckScanningController(
+        handleCheckScanSubmitted: @escaping HandleCheckScanSubmittedFn
+    ) -> CheckScanningController {
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory,
+              handleCheckScanSubmitted: handleCheckScanSubmitted)
     }
 
     /// Used to keep reference of all web views associated with this component manager.
