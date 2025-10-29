@@ -4,6 +4,9 @@
 # Sorts Swift interface files alphabetically for consistent diffing
 # Usage: ruby sort_swift_interface.rb <input_file> <output_file>
 
+# This was entirely written by Claude Code to quickly fix our API checker. It just helps us
+# sort the file and notice changes in the diff. I would not recommend repurposing it for any other reason!
+
 class SwiftInterfaceNode
   attr_accessor :lines, :children, :indent_level, :sort_key, :member_group
 
