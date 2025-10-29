@@ -99,6 +99,8 @@
 		9DCBC08C182ED76A962961E7 /* NSURLComponents+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D475CD59778FAC1028670AB5 /* NSURLComponents+Stripe.swift */; };
 		9FBA50345D53E82AA974F672 /* STPAPIClient+FileUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FC2FC535DAF9B340F9EA75 /* STPAPIClient+FileUpload.swift */; };
 		A03F7C3B2E79CB2B006F0FDC /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03F7C3A2E79CB28006F0FDC /* AsyncTests.swift */; };
+		A3DA747D2EB16F6200FFFCC9 /* Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DA747C2EB16F6200FFFCC9 /* Timeout.swift */; };
+		A3DA747F2EB170B800FFFCC9 /* TimeoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DA747E2EB170B800FFFCC9 /* TimeoutTests.swift */; };
 		A3E0F5DF2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */; };
 		A454F368C505B2D80F0D8B19 /* PluginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDBCD70CB220014972B49A5 /* PluginDetector.swift */; };
 		A4DBBFD379C4E0120BD25C56 /* STPAPIClient+EmptyResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC70CDF482E22A29B11466F7 /* STPAPIClient+EmptyResponseTest.swift */; };
@@ -320,6 +322,8 @@
 		9E415507B0152B07796114CC /* NSError+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+Stripe.swift"; sourceTree = "<group>"; };
 		A03F7C3A2E79CB28006F0FDC /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
 		A0FBC76F73C3791701072BBA /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A3DA747C2EB16F6200FFFCC9 /* Timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timeout.swift; sourceTree = "<group>"; };
+		A3DA747E2EB170B800FFFCC9 /* TimeoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTests.swift; sourceTree = "<group>"; };
 		A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPClientAttributionMetadata.swift; sourceTree = "<group>"; };
 		A4336F071B0CE13306C8EB93 /* StripeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAPI.swift; sourceTree = "<group>"; };
 		A466F6075DCC39D5A976FB22 /* STPTelemetryClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTelemetryClient.swift; sourceTree = "<group>"; };
@@ -457,6 +461,7 @@
 				A03F7C3A2E79CB28006F0FDC /* AsyncTests.swift */,
 				7F2E1D80D0342CF09CB05415 /* URLEncoderTest.swift */,
 				31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */,
+				A3DA747E2EB170B800FFFCC9 /* TimeoutTests.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -695,6 +700,7 @@
 				B8B76840742D2CAF2931355A /* URLSession+Retry.swift */,
 				4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */,
 				49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */,
+				A3DA747C2EB16F6200FFFCC9 /* Timeout.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1023,6 +1029,7 @@
 				B67F2CA42BAB91860011E34A /* AnalyticLoggableErrorTest.swift in Sources */,
 				A4DBBFD379C4E0120BD25C56 /* STPAPIClient+EmptyResponseTest.swift in Sources */,
 				79DA4102C501FC2E53D946B5 /* STPAPIClient+ErrorResponseTest.swift in Sources */,
+				A3DA747F2EB170B800FFFCC9 /* TimeoutTests.swift in Sources */,
 				53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */,
 				3E9FC2CD06E1D5F6B09872E9 /* AnalyticsClientV2Test.swift in Sources */,
 				A03F7C3B2E79CB2B006F0FDC /* AsyncTests.swift in Sources */,
@@ -1060,6 +1067,7 @@
 				DAD4099D03E43A0CA89464CD /* StripeAPI.swift in Sources */,
 				D22FAB2F1AE9AE43C1808747 /* StripeAPIConfiguration+Version.swift in Sources */,
 				6B987BDA2C910F5500DDFDB3 /* STPAnalyticsEventTranslator.swift in Sources */,
+				A3DA747D2EB16F6200FFFCC9 /* Timeout.swift in Sources */,
 				677951C643328D76E46720A5 /* StripeAPIConfiguration.swift in Sources */,
 				6A05FB4B2BCF245C0001D128 /* FinancialConnectionsEvent.swift in Sources */,
 				02A26B79617FAE660C9EB506 /* StripeError.swift in Sources */,
