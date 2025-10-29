@@ -1083,11 +1083,6 @@ public class STPPaymentHandler: NSObject {
 
         case .canceled:
             action.complete(with: STPPaymentHandlerActionStatus.canceled, error: nil)
-
-        case .requiresSource:
-            action.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "PaymentIntent status is requiresSource"))
-        case .requiresSourceAction:
-            action.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "PaymentIntent status is requiresSourceAction"))
         }
         return false
     }
