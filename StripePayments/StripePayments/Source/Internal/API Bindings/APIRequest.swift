@@ -142,10 +142,7 @@ let JSONKeyObject = "object"
         completion: @escaping (ResponseType?, HTTPURLResponse?, Error?) -> Void
     ) {
         // Derive HTTP URL response
-        var httpResponse: HTTPURLResponse?
-        if response is HTTPURLResponse {
-            httpResponse = response as? HTTPURLResponse
-        }
+        let httpResponse = response as? HTTPURLResponse
 
         // Wrap completion block with main thread dispatch
         let safeCompletion: ((ResponseType?, Error?) -> Void) = { responseObject, responseError in
@@ -164,34 +161,10 @@ let JSONKeyObject = "object"
         if let body = body {
             do {
                 jsonDictionary =
-                    try JSONSerialization.jsonObject(with: body, options: []) as? [AnyHashable: Any]
+                try JSONSerialization.jsonObject(with: body, options: []) as? [AnyHashable: Any]
             } catch {
-
             }
         }
-
-        // HACK:
-        // STPEmptyStripeResponse will always parse successfully and never return an error, as we're
-        // not looking at the HTTP error code or the error dictionary.
-        // I'm afraid this will cause issues if anyone is depending on the old behavior, so let's treat
-        // STPEmptyStripeResponse as special.
-        // We probably always want errors to override object deserialization: re-evaluate
-        // this hack when building the new API client.
-        if ResponseType.self == STPEmptyStripeResponse.self {
-            if let error: Error =
-                NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
-            {
-                safeCompletion(nil, error)
-            } else if let responseObject = ResponseType.decodedObject(
-                fromAPIResponse: jsonDictionary
-            ) {
-                safeCompletion(responseObject, nil)
-            } else {
-                safeCompletion(nil, NSError.stp_genericFailedToParseResponseError())
-            }
-            return
-        }
-        // END OF STPEmptyStripeResponse HACK
 
         #if DEBUG
         if let httpResponse,
@@ -201,14 +174,16 @@ let JSONKeyObject = "object"
         }
         #endif
 
-        if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
+        if
+            let httpResponse, (200...299).contains(httpResponse.statusCode),
+            let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary)
+        {
             safeCompletion(responseObject, nil)
         } else {
-            let error: Error =
-                NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
+            let error = NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
+            // TODO: We should really include the http response code in the generic error here.
                 ?? NSError.stp_genericFailedToParseResponseError()
             safeCompletion(nil, error)
         }
     }
-
 }
