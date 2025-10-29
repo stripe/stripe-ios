@@ -79,7 +79,6 @@ public class STPPaymentIntentParams: NSObject {
     /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
     /// if the PaymentMethod/Source is not already attached.
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @available(*, deprecated, message: "Use setupFutureUsage instead")
     @objc(savePaymentMethod)
     public var savePaymentMethod_objc: NSNumber? {
         get {
@@ -91,7 +90,6 @@ public class STPPaymentIntentParams: NSObject {
 
     /// `true` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
     /// if the PaymentMethod/Source is not already attached.
-    @available(*, deprecated, message: "Use setupFutureUsage instead")
     public var savePaymentMethod: Bool?
 
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
