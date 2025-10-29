@@ -211,6 +211,19 @@ public class PaymentSheet {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
+    /// Presents a sheet for a customer to complete their payment
+    /// - Parameter presentingViewController: The view controller to present a payment sheet
+    /// - Returns: The result of the payment after the payment sheet is dismissed.
+    public func present(
+        from presentingViewController: UIViewController
+    ) async -> PaymentSheetResult {
+        return await withCheckedContinuation { continuation in
+            present(from: presentingViewController) { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
     /// Deletes all persisted authentication state associated with a customer.
     ///
     /// You must call this method when the user logs out from your app.

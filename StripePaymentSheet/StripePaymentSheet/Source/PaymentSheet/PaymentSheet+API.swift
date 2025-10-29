@@ -628,12 +628,10 @@ extension PaymentSheet {
                 }
             }
         case let .external(externalPaymentOption, billingDetails):
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 // Call confirmHandler so that the merchant completes the payment
-                externalPaymentOption.confirm(billingDetails: billingDetails) { result in
-                    // This closure is invoked by the merchant when payment is finished
-                    completion(result, nil)
-                }
+                let result = await externalPaymentOption.confirm(billingDetails: billingDetails)
+                completion(result, nil)
             }
         }
     }

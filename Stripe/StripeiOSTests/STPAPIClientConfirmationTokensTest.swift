@@ -195,8 +195,9 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         )
         let elementsSession = try await apiClient.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .setup(currency: "usd", setupFutureUsage: .offSession),
-                                    confirmHandler: { _, _, _ in
+                                    confirmHandler: { _, _ in
                                         // no-op
+                                        return ""
                                     }),
             clientDefaultPaymentMethod: nil,
             configuration: configuration
