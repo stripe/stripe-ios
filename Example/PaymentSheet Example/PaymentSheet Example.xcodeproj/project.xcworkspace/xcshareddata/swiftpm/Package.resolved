@@ -1,0 +1,24 @@
+{
+  "originHash" : "be9835f1cb082a5a456816154036ec06289a714522b11abb4ed45adfcd440192",
+  "pins" : [
+    {
+      "identity" : "ios-snapshot-test-case",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/uber/ios-snapshot-test-case",
+      "state" : {
+        "revision" : "7b10770333a961be6e5a41c9ce04b8c6d3990126",
+        "version" : "8.0.0"
+      }
+    },
+    {
+      "identity" : "reaper-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/getsentry/Reaper-iOS.git",
+      "state" : {
+        "revision" : "c9be8239b81e49870641bbaa475254de43e337be",
+        "version" : "2.0.1"
+      }
+    }
+  ],
+  "version" : 3
+}

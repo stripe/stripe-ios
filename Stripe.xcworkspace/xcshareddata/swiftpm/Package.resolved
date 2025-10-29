@@ -1,5 +1,5 @@
 {
-  "originHash" : "f16dd06a8f672ea0982887741f3e9e8b32d2e926529cffefd0ba4f377c7018ab",
+  "originHash" : "1425797330f8f43a05f0335e7836350fdb1229e4536429de14a9ed760aa0b857",
   "pins" : [
     {
       "identity" : "capture-core-sp",
@@ -34,6 +34,15 @@
       "state" : {
         "branch" : "stripe-mock",
         "revision" : "5e90dfd42873ab8de026735d0725ad618b8ca7dd"
+      }
+    },
+    {
+      "identity" : "reaper-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/getsentry/Reaper-iOS.git",
+      "state" : {
+        "revision" : "c9be8239b81e49870641bbaa475254de43e337be",
+        "version" : "2.0.1"
       }
     },
     {

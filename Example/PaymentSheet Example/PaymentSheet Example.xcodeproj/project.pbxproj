@@ -3,24 +3,19 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		000D59C19A60AB637CE65EE9 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; };
-		09FA1391DCA2717DBC962562 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1E565B552830E657F863C4F8 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1094816DB7E9DFAF01815365 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */; };
-		11DDC6610B393BFF4C6DF02C /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; };
 		17D626E890FD11B84654C846 /* PaymentSheetTestPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BA81F620FAB6E5505E0B32 /* PaymentSheetTestPlayground.swift */; };
-		185A611D085DC24198C3D2D1 /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9C96D25ED549D6255FC274 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		27233E85B0B6E1114E9AF6E8 /* ExampleSwiftUICustomerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */; };
 		2CB72F11E36DB65E8BA9205A /* PlaygroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0C0324B4075DED17688123 /* PlaygroundController.swift */; };
 		2CD71F097C7CD0D9BFC7499D /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD340D0C93E93B9E9DB7691F /* PaymentSheetTestPlaygroundSettings.swift */; };
+		310B3FBA2EAFF02000FF5CDE /* Reaper in Frameworks */ = {isa = PBXBuildFile; productRef = 310B3FB92EAFF02000FF5CDE /* Reaper */; };
 		31AB49B72C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */; };
+		31C5DD572EB18644005770FA /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 31C5DD562EB18644005770FA /* StripePaymentSheet */; };
 		31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */; };
 		3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */; };
-		37CDE2E21F00571F147FCFF7 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		424BBBEBF25E5F020FF40F36 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		432E82C3F5EC56E89D257563 /* ExampleSwiftUIPaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */; };
 		4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */; };
 		4954E96F2D960E340061585F /* FCLiteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4954E96E2D960E340061585F /* FCLiteUITests.swift */; };
@@ -28,13 +23,11 @@
 		4E3F7EFF78BC4F14D18024E7 /* PaymentSheetLocalizationScreenshotGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA08203146CADE9649CF0EAD /* PaymentSheetLocalizationScreenshotGenerator.swift */; };
 		540F279CE5B41C122AD1DEF6 /* PaymentSheetUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CA299EAF5914484195167EB /* PaymentSheetUITest.swift */; };
 		5441EB34BBE32DD98B7A6883 /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2806FC6A4514AA88A26B32CD /* CustomerSheetTestPlaygroundSettings.swift */; };
-		551DB033DB4C8257ABAADA8F /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; };
 		56EF0879D7EAC041B147680C /* ExampleLinkPaymentCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */; };
 		5AF35F9FA7106ACD4E4F360F /* PaymentSheetBillingCollectionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083DF3A89B26704DA21858DB /* PaymentSheetBillingCollectionUITests.swift */; };
 		61271F082E2167380016302B /* AddressElementExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61271F072E2167380016302B /* AddressElementExample.swift */; };
 		61B2532E2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B2532D2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift */; };
 		61FB6BC72C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FB6BC62C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift */; };
-		65D034E37B345C1B64785451 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6A5CCDA42C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5CCDA32C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift */; };
 		6B03B12F2CDA890700F95A9D /* XCUITest+PaymentSheetTestUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03B12E2CDA88F900F95A9D /* XCUITest+PaymentSheetTestUtilities.swift */; };
 		6B1E84072DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1E84062DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift */; };
@@ -44,7 +37,6 @@
 		6BCB57EA2D81FB15000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCB57E92D81FB13000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift */; };
 		6BE115002DF8A6150024AC26 /* PlaygroundController+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE114FF2DF8A6150024AC26 /* PlaygroundController+ApplePay.swift */; };
 		6BFE613D2D407C420094DFE2 /* CustomerSessionPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFE613C2D407C3B0094DFE2 /* CustomerSessionPlaygroundView.swift */; };
-		75D1997DA514F6DB82FF1CFC /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		79E8C77C99A25E38F96747F1 /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1261A6BDCDB7E81D08F137F0 /* PaymentSheetTestPlaygroundSettings.swift */; };
 		7B89F83982B6D43C3B9E8AD5 /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA7F02B5FFA4FEA1218561A /* PaymentSheetTestPlaygroundSettings.swift */; };
 		7CD54A47BC36A065ADA952BF /* StripeCoreTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -54,9 +46,7 @@
 		8A6DBB641294F9AE6A9C61B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CDBD593EFEAD2EDA4D33D5D /* LaunchScreen.storyboard */; };
 		8D9AAFD1D1D49112A7777414 /* CustomerSheetTestPlaygroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54E58F2CA450CF49ECD5637 /* CustomerSheetTestPlaygroundController.swift */; };
 		8F5C48FC825539B96F592315 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5259232431E2683DDD05CB84 /* ViewController.swift */; };
-		95B578013869DFEA1C912A10 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; };
 		973DA944730BD761CE479F8E /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575345B1A7F6EBD12A1A5F9C /* QRView.swift */; };
-		9F126696AD86BF2E861B5CC5 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */; };
 		A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */; };
 		A00DB98A2E132EAB00A75242 /* Appearance+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00DB9892E132EAB00A75242 /* Appearance+Codable.swift */; };
 		A03BF5292DD292B700B5122B /* EmbeddedPaymentElementWrapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03BF5282DD292A800B5122B /* EmbeddedPaymentElementWrapperViewController.swift */; };
@@ -77,7 +67,6 @@
 		CB6F8F872E04545D003551D5 /* ExampleLinkStandaloneComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6F8F862E04545D003551D5 /* ExampleLinkStandaloneComponent.swift */; };
 		CC9090D573972E8B14D204CB /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F10B63B9ECBC62AFCF8B32 /* CustomerSheetTestPlaygroundSettings.swift */; };
 		D235E82A7173E8051BC5A261 /* ExampleCustomCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */; };
-		D89C23032CFB732A0CFCD565 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E565B552830E657F863C4F8 /* StripePayments.framework */; };
 		DDF30DE9D7AA4BCC47CC12FB /* CustomerSheetTestPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC6711266D93A72ED4938F8 /* CustomerSheetTestPlayground.swift */; };
 		E3D7A04974C35D2D8D31CDCD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AAAA316E1DA1C44D30D7B0 /* SceneDelegate.swift */; };
 		E66F4E053FC6DD05EA245CDF /* CustomerSheetUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B294B57F4692E283110E205 /* CustomerSheetUITest.swift */; };
@@ -85,10 +74,7 @@
 		EB3C76C2A5704F94F0414BEF /* ExampleCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A5E37ECAEFAD0178E0A4E /* ExampleCheckoutViewController.swift */; };
 		EE0FA73AAB80863583C69D70 /* XCUITest+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */; };
 		F998DD23CE1F49B63F5A5741 /* ExampleCheckoutDeferredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74185DD2F7DC4BBDC4774A /* ExampleCheckoutDeferredViewController.swift */; };
-		FA36E30724AAC6E3EF717A6A /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9C96D25ED549D6255FC274 /* StripeUICore.framework */; };
-		FBA21DE7C9261D3BFD53A6CB /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD441E14EDF702D50D812875 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = B195FF5EEDEAC460C45887F1 /* iOSSnapshotTestCase */; };
-		FF1C880D1C27F7C384DD2509 /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,14 +111,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				424BBBEBF25E5F020FF40F36 /* Stripe3DS2.framework in Embed Frameworks */,
-				FF1C880D1C27F7C384DD2509 /* StripeApplePay.framework in Embed Frameworks */,
-				65D034E37B345C1B64785451 /* StripeCore.framework in Embed Frameworks */,
-				FBA21DE7C9261D3BFD53A6CB /* StripeFinancialConnections.framework in Embed Frameworks */,
-				75D1997DA514F6DB82FF1CFC /* StripePaymentSheet.framework in Embed Frameworks */,
-				09FA1391DCA2717DBC962562 /* StripePayments.framework in Embed Frameworks */,
-				37CDE2E21F00571F147FCFF7 /* StripePaymentsUI.framework in Embed Frameworks */,
-				185A611D085DC24198C3D2D1 /* StripeUICore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,14 +315,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95B578013869DFEA1C912A10 /* Stripe3DS2.framework in Frameworks */,
-				1094816DB7E9DFAF01815365 /* StripeApplePay.framework in Frameworks */,
-				11DDC6610B393BFF4C6DF02C /* StripeCore.framework in Frameworks */,
-				9F126696AD86BF2E861B5CC5 /* StripeFinancialConnections.framework in Frameworks */,
-				551DB033DB4C8257ABAADA8F /* StripePaymentSheet.framework in Frameworks */,
-				D89C23032CFB732A0CFCD565 /* StripePayments.framework in Frameworks */,
-				000D59C19A60AB637CE65EE9 /* StripePaymentsUI.framework in Frameworks */,
-				FA36E30724AAC6E3EF717A6A /* StripeUICore.framework in Frameworks */,
+				310B3FBA2EAFF02000FF5CDE /* Reaper in Frameworks */,
+				31C5DD572EB18644005770FA /* StripePaymentSheet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -658,6 +630,8 @@
 			mainGroup = C9D5B927CC2F83061D0651E5;
 			packageReferences = (
 				337D25C9801D91652C4A4F6B /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				310B3FB82EAFF02000FF5CDE /* XCRemoteSwiftPackageReference "Reaper-iOS" */,
+				31C5DD532EB18644005770FA /* XCLocalSwiftPackageReference "../../../stripe-ios" */,
 			);
 			productRefGroup = 3263B2FC73C06F5F4413D183 /* Products */;
 			projectDirPath = "";
@@ -1030,7 +1004,22 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		31C5DD532EB18644005770FA /* XCLocalSwiftPackageReference "../../../stripe-ios" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../stripe-ios";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
+		310B3FB82EAFF02000FF5CDE /* XCRemoteSwiftPackageReference "Reaper-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/Reaper-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.1;
+			};
+		};
 		337D25C9801D91652C4A4F6B /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uber/ios-snapshot-test-case";
@@ -1042,6 +1031,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		310B3FB92EAFF02000FF5CDE /* Reaper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 310B3FB82EAFF02000FF5CDE /* XCRemoteSwiftPackageReference "Reaper-iOS" */;
+			productName = Reaper;
+		};
+		31C5DD562EB18644005770FA /* StripePaymentSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StripePaymentSheet;
+		};
 		B195FF5EEDEAC460C45887F1 /* iOSSnapshotTestCase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = iOSSnapshotTestCase;

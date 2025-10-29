@@ -8,6 +8,7 @@
 
 import StripePaymentSheet
 import UIKit
+import Reaper
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(
@@ -29,6 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             // Speed up animations for quicker CI times
             UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.layer.speed = 100
+        }
+        EMGReaper.sharedInstance().start { types in
+          // Handle list of used types
+            print(types)
         }
 #endif
         catchBrokenConstraints()
