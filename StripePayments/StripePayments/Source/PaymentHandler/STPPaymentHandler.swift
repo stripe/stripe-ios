@@ -610,7 +610,7 @@ public class STPPaymentHandler: NSObject {
             }
         }
         var params = setupIntentConfirmParams
-        if !params.useStripeSDK {
+        if let useStripeSDK = params.useStripeSDK, !useStripeSDK {
             params = setupIntentConfirmParams.copy() as! STPSetupIntentConfirmParams
             params.useStripeSDK = true
         }

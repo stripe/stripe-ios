@@ -742,7 +742,7 @@ extension PaymentSheet {
             // Also send under payment_method_data because there are existing dependencies
             params.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
             if let shouldSetAsDefaultPM {
-                params.setAsDefaultPM = shouldSetAsDefaultPM
+                params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
             let isSetupFutureUsageOffSession = paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session"
             if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) && isSetupFutureUsageOffSession

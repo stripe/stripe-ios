@@ -65,14 +65,17 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// app.
     @objc(useStripeSDK)
     public var useStripeSDK_objc: NSNumber? {
-        get { NSNumber(value: useStripeSDK) }
-        set { useStripeSDK = newValue?.boolValue ?? false }
+        get {
+            guard let useStripeSDK else { return nil }
+            return NSNumber(value: useStripeSDK)
+        }
+        set { useStripeSDK = newValue?.boolValue }
     }
     /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any SetupIntent next actions.
     /// If set to false, STPSetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
     /// app.
-    public var useStripeSDK: Bool = false
+    public var useStripeSDK: Bool?
     /// Details about the Mandate to create.
     /// @note If this value is null, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context if it's required for `self.paymentMethodType`
     @objc public var mandateData: STPMandateDataParams? {
@@ -122,7 +125,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "returnURL = \(returnURL ?? "")",
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
-            "useStripeSDK = \(useStripeSDK)",
+            "useStripeSDK = \(useStripeSDK ?? false)",
             // Set as default payment method
             "setAsDefaultPM = \(setAsDefaultPM ?? 0)",
             // Mandate

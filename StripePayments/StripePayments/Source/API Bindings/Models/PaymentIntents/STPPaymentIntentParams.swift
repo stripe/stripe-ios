@@ -81,16 +81,20 @@ public class STPPaymentIntentParams: NSObject {
     /// This should be a boolean NSNumber, so that it can be `nil`
     @objc(savePaymentMethod)
     public var savePaymentMethod_objc: NSNumber? {
-        get { return NSNumber(value: savePaymentMethod) }
-        set { savePaymentMethod = newValue?.boolValue ?? false }
+        get {
+            guard let savePaymentMethod else { return nil }
+            return NSNumber(value: savePaymentMethod)
+        }
+        set { savePaymentMethod = newValue?.boolValue }
     }
 
     /// `true` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
     /// if the PaymentMethod/Source is not already attached.
-    public var savePaymentMethod: Bool = false
+    public var savePaymentMethod: Bool?
 
-    /// `true` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
-    @objc @_spi(STP) public var setAsDefaultPM: Bool = false
+    /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
+    /// This should be a boolean NSNumber, so that it can be `nil`
+    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
