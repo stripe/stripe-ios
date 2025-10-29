@@ -12,7 +12,7 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP)@_spi(CustomPaymentMethodsBeta)@_spi(SharedPaymentToken) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripePayments
 
 class STPAPIClient_PaymentSheetTest: XCTestCase {
     func testElementsSessionParameters_DeferredPayment() throws {
