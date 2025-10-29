@@ -22,7 +22,6 @@ enum TimeoutError: Error {
     case timeout
 }
 
-
 /// Runs multiple asynchronous operations in parallel with individual timeouts
 /// - Parameters:
 ///   - timeout: The maximum time interval to wait for each operation to complete
