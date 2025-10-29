@@ -40,10 +40,6 @@ import Foundation
 }
 
 @_spi(STP) public actor PassiveCaptchaChallenge {
-    enum PassiveCaptchaError: Error {
-        case timeout
-    }
-
     private let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
