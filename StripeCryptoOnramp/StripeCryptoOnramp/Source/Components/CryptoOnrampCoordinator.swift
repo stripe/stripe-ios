@@ -392,6 +392,38 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKycResult {
+        do {
+            // Fetch existing KYC info
+            //let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
+            let response = RetrieveKYCInfoResponse(kycInfo: .init(firstName: "Mike", lastName: "Liberatore", dateOfBirth: .init(day: 1, month: 2, year: 1990), address: .init(city: "New York", country: "US", line1: "123 Fake St", line2: "APT 2", postalCode: "10019", state: "NY"), idNumberLast4: "6789", idType: .socialSecurityNumber))
+            var displayInfo = response.kycInfo
+            if let newAddress = updatedAddress {
+                displayInfo = KYCRefreshInfo(
+                    firstName: displayInfo.firstName,
+                    lastName: displayInfo.lastName,
+                    dateOfBirth: displayInfo.dateOfBirth,
+                    address: newAddress,
+                    idNumberLast4: displayInfo.idNumberLast4,
+                    idType: displayInfo.idType
+                )
+            }
+
+            return try await withCheckedThrowingContinuation { continuation in
+                Task { @MainActor in
+                    let verifyKYCViewController = VerifyKYCViewController(info: displayInfo)
+
+                    verifyKYCViewController.onResult = { result in
+                        verifyKYCViewController.dismiss(animated: true) {
+                            continuation.resume(returning: result)
+                        }
+                    }
+
+                    viewController.presentAsBottomSheet(verifyKYCViewController, appearance: LinkUI.appearance)
+                }
+            }
+        } catch {
+            throw error
+        }
     }
 
     public func verifyIdentity(from viewController: UIViewController) async throws -> IdentityVerificationResult {
