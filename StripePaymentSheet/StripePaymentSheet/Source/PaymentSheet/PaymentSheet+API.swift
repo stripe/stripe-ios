@@ -339,7 +339,7 @@ extension PaymentSheet {
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
                     case .paymentIntent(let paymentIntent):
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.paymentMethodParams = paymentMethodParams
                         paymentIntentParams.returnURL = configuration.returnURL
                         let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
@@ -410,7 +410,7 @@ extension PaymentSheet {
                     let mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
                     switch intent {
                     case .paymentIntent(let paymentIntent):
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                         paymentIntentParams.returnURL = configuration.returnURL
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
