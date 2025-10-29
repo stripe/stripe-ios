@@ -15,7 +15,7 @@ actor AttestationChallenge {
 
     private let stripeAttest: StripeAttest
     private var assertionHandle: StripeAttest.AssertionHandle?
-    private let attestationTask: Task<Void, Never>
+    private let attestationTask: Task<Void, Error>
     private var assertionTask: Task<StripeAttest.Assertion?, Never>?
 
     var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
@@ -29,13 +29,15 @@ actor AttestationChallenge {
         STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepare()
         let startTime = Date()
         self.attestationTask = Task { // Intentionally not blocking loading/initialization!
-            await withTaskCancellationHandler {
+            try await withTaskCancellationHandler {
+                try Task.checkCancellation()
                 let didAttest = await stripeAttest.prepareAttestation()
                 if didAttest {
                     STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareSucceeded(duration: Date().timeIntervalSince(startTime))
                 } else {
                     STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareFailed(duration: Date().timeIntervalSince(startTime))
                 }
+                try Task.checkCancellation()
             } onCancel: {
                 Task {
                     await stripeAttest.cancel()
@@ -45,13 +47,16 @@ actor AttestationChallenge {
     }
 
     private func fetchAssertion() async -> StripeAttest.Assertion? {
-        // Wait for prewarm to complete first to avoid race conditions
-        await attestationTask.value
-
         if let assertionTask {
             return await assertionTask.value
         }
         let assertionTask = Task<StripeAttest.Assertion?, Never> {
+            // Wait for prewarm to complete first to avoid race conditions
+            do {
+                try await attestationTask.value
+            } catch {
+                return nil
+            }
             STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestToken()
             let startTime = Date()
             do {
