@@ -77,20 +77,15 @@ class BackendViewModel: ObservableObject {
                 currency: "USD",
                 setupFutureUsage: usage
             )
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            guard let self = self else { return }
-            Task {
-                do {
-                    let clientSecret = try await self.confirmIntent(
-                        paymentMethodID: paymentMethod.stripeId,
-                        shouldSavePaymentMethod: shouldSavePaymentMethod,
-                        isSubscribing: isSubscribing
-                    )
-                    intentCreationCallback(.success(clientSecret))
-                } catch {
-                    intentCreationCallback(.failure(error))
-                }
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            guard let self = self else {
+                throw ExampleError()
             }
+            return try await self.confirmIntent(
+                paymentMethodID: paymentMethod.stripeId,
+                shouldSavePaymentMethod: shouldSavePaymentMethod,
+                isSubscribing: isSubscribing
+            )
         }
         return intentConfig
     }

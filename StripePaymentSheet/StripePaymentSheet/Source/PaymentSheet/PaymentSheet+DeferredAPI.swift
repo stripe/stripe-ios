@@ -112,7 +112,7 @@ extension PaymentSheet {
                     return
                 }
 
-                // 2b. Otherwise, call the standard confirmHandler
+                // 2b. Otherwise, call the payment method confirmHandler
                 let shouldSavePaymentMethod: Bool = {
                     // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
                     if confirmType.shouldSave {
@@ -121,9 +121,8 @@ extension PaymentSheet {
                     // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
                     return getShouldSavePaymentMethodValue(for: paymentMethod.type, intentConfiguration: intentConfig)
                 }()
-                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
-                                                                                 paymentMethod: paymentMethod,
-                                                                                 shouldSavePaymentMethod: shouldSavePaymentMethod)
+                // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-4186 Fix the force unwrap
+                let clientSecret = try await intentConfig.confirmHandler!(paymentMethod, shouldSavePaymentMethod)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
                     completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
@@ -160,9 +159,9 @@ extension PaymentSheet {
                         // Set top-level SFU and PMO SFU to match the intent config
                         setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
 
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .client)
                         }
@@ -191,8 +190,8 @@ extension PaymentSheet {
                             mandateData: mandateData
                         )
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .client)
                         }
@@ -229,20 +228,6 @@ extension PaymentSheet {
             return .failed(error: error)
         @unknown default:
             return .failed(error: PaymentSheetError.unrecognizedHandlerStatus)
-        }
-    }
-
-    static func fetchIntentClientSecretFromMerchant(
-        intentConfig: IntentConfiguration,
-        paymentMethod: STPPaymentMethod,
-        shouldSavePaymentMethod: Bool
-    ) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                intentConfig.confirmHandler?(paymentMethod, shouldSavePaymentMethod) { result in
-                    continuation.resume(with: result)
-                }
-            }
         }
     }
 

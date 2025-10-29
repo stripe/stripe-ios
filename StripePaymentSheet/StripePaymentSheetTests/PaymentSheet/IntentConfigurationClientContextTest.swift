@@ -16,7 +16,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
     func testCreateClientContextFromPaymentModeMinimal() {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
 
         let clientContext = intentConfig.createClientContext(customerId: nil)
@@ -47,7 +47,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
             paymentMethodTypes: ["card", "apple_pay"],
             onBehalfOf: "acct_123456",
             paymentMethodConfigurationId: "pmc_123456",
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
 
         let clientContext = intentConfig.createClientContext(customerId: nil)
@@ -70,7 +70,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
                 setupFutureUsage: .offSession,
                 captureMethod: .automaticAsync
             ),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
 
         let clientContext = intentConfig.createClientContext(customerId: nil)
@@ -86,7 +86,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
     func testCreateClientContextFromSetupModeMinimal() {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .setup(),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
 
         let clientContext = intentConfig.createClientContext(customerId: nil)
@@ -107,7 +107,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
             paymentMethodTypes: ["card"],
             onBehalfOf: "acct_789",
             paymentMethodConfigurationId: "pmc_789",
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
 
         let clientContext = intentConfig.createClientContext(customerId: nil)
@@ -138,7 +138,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
                 currency: "usd",
                 paymentMethodOptions: paymentMethodOptions
             ),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
 
         let clientContext = intentConfig.createClientContext(customerId: nil)
@@ -153,7 +153,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
     func testCreateClientContextWithCVCRecollectionEnabled() {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
-            confirmHandler: { _, _, _ in },
+            confirmHandler: { _, _ in return "" },
             requireCVCRecollection: true
         )
 
@@ -168,7 +168,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
     func testCreateClientContextWithCVCRecollectionDisabled() {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
-            confirmHandler: { _, _, _ in },
+            confirmHandler: { _, _ in return "" },
             requireCVCRecollection: false
         )
 
@@ -189,7 +189,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
                 currency: "usd",
                 paymentMethodOptions: paymentMethodOptions
             ),
-            confirmHandler: { _, _, _ in },
+            confirmHandler: { _, _ in return "" },
             requireCVCRecollection: true
         )
 
@@ -216,7 +216,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
                 currency: "usd",
                 paymentMethodOptions: paymentMethodOptions
             ),
-            confirmHandler: { _, _, _ in },
+            confirmHandler: { _, _ in return "" },
             requireCVCRecollection: true
         )
 
@@ -241,7 +241,7 @@ class IntentConfigurationClientContextTest: XCTestCase {
         // CVC recollection should only apply to payment mode, not setup mode
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .setup(),
-            confirmHandler: { _, _, _ in },
+            confirmHandler: { _, _ in return "" },
             requireCVCRecollection: true
         )
 
