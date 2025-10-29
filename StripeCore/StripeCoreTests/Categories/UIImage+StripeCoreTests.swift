@@ -82,4 +82,25 @@ class UIImage_StripeTests: XCTestCase {
         XCTAssertEqual(data.count, baselineSize)
         XCTAssertEqual(resultingImage.size, testImage.size)
     }
+
+    func testFontImageScaling() {
+        guard
+            let testImage = UIImage(
+                named: "test_image",
+                in: Bundle(for: UIImage_StripeTests.self),
+                compatibleWith: nil
+            )
+        else {
+            return XCTFail("Could not load test image")
+        }
+        let font = UIFont.systemFont(ofSize: 30)
+        let scaledSize = testImage.sizeMatchingFont(font, additionalScale: 1.0)
+        XCTAssertEqual(scaledSize.width.rounded(), 21.0)
+        XCTAssertEqual(scaledSize.height.rounded(), 21.0)
+
+        let otherFont = UIFont(name: "AmericanTypewriter", size: 8)!
+        let otherScaledSize = testImage.sizeMatchingFont(otherFont, additionalScale: 1.8)
+        XCTAssertEqual(otherScaledSize.width.rounded(), 9.0)
+        XCTAssertEqual(otherScaledSize.height.rounded(), 10.0)
+    }
 }

@@ -6,7 +6,7 @@
 //
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@testable@_spi(STP) import StripePayments
 import XCTest
 
 class STPConfirmationTokenParamsTest: XCTestCase {
@@ -234,7 +234,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
 
         XCTAssertNil(params.clientAttributionMetadata)
 
-        let clientMetadata = STPClientAttributionMetadata()
+        let clientMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
         params.clientAttributionMetadata = clientMetadata
         XCTAssertEqual(params.clientAttributionMetadata, clientMetadata)
 
@@ -390,7 +390,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         params.setupFutureUsage = STPPaymentIntentSetupFutureUsage.offSession
 
         // Add client attribution metadata
-        let clientMetadata = STPClientAttributionMetadata()
+        let clientMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
         params.clientAttributionMetadata = clientMetadata
 
         // Verify all properties are set

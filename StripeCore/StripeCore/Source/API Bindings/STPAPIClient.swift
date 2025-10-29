@@ -52,6 +52,7 @@ import UIKit
     }
 
     // Stored STPPaymentConfiguration: Type checking handled in STPAPIClient+Payments.swift.
+    // TODO: Delete this, dead code
     @_spi(STP) public var _stored_configuration: NSObject?
 
     /// In order to perform API requests on behalf of a connected account, e.g. to

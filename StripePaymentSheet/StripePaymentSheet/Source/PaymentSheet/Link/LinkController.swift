@@ -117,11 +117,6 @@ import UIKit
         elementsSession.sessionID
     }
 
-    /// The merchant logo URL from the elements session, if available.
-    @_spi(STP) public var merchantLogoUrl: URL? {
-        elementsSession.merchantLogoUrl
-    }
-
     /// Completion handler for full consent screen
     private var fullConsentCompletion: ((Result<AuthorizationResult, Error>) -> Void)?
 
@@ -195,7 +190,7 @@ import UIKit
                     configuration.style = appearance.style
                 }
 
-                let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration)
+                let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .linkController, configuration: configuration)
 
                 let loadResult = try await Self.loadElementsSession(
                     configuration: configuration,
@@ -239,6 +234,33 @@ import UIKit
             case .success(let linkAccount):
                 LinkAccountContext.shared.account = linkAccount
                 completion(.success(linkAccount?.isRegistered ?? false))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Looks up the consumer using the provided auth token.
+    ///
+    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    /// - Parameter completion: A closure that is called when the lookup completes or fails.
+    @_spi(STP) public func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        Self.lookupLinkAuthToken(
+            linkAuthTokenClientSecret,
+            linkAccountService: linkAccountService,
+            requestSurface: requestSurface
+        ) { result in
+            switch result {
+            case .success(let linkAccount):
+                LinkAccountContext.shared.account = linkAccount
+                if linkAccount != nil {
+                    completion(.success(()))
+                } else {
+                    completion(.failure(PaymentSheetError.linkLookupNotFound(serverErrorMessage: "")))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -378,14 +400,11 @@ import UIKit
             return
         }
 
-        let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
-
         if elementsSession.linkPassthroughModeEnabled {
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 overridePublishableKey: overridePublishableKey,
-                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
         } else {
@@ -393,7 +412,6 @@ import UIKit
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
                 overridePublishableKey: overridePublishableKey,
-                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
         }
@@ -477,6 +495,7 @@ import UIKit
         completion: @escaping (Result<AuthorizationResult, Error>) -> Void
     ) {
         guard case .full(let fullConsentViewModel) = consentViewModel else {
+            LinkAccountContext.shared.account = self.linkAccount
             completion(.success(.consented))
             return
         }
@@ -554,7 +573,6 @@ import UIKit
             publishableKey: linkAccount.publishableKey,
             displayablePaymentDetails: linkAccount.displayablePaymentDetails,
             apiClient: linkAccount.apiClient,
-            cookieStore: linkAccount.cookieStore,
             useMobileEndpoints: linkAccount.useMobileEndpoints,
             canSyncAttestationState: linkAccount.canSyncAttestationState,
             requestSurface: linkAccount.requestSurface
@@ -597,7 +615,6 @@ import UIKit
         paymentDetails: ConsumerPaymentDetails,
         consumerSessionClientSecret: String,
         overridePublishableKey: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         // TODO: These parameters aren't final
@@ -609,7 +626,7 @@ import UIKit
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
             billingPhoneNumber: nil,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: nil // LinkController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id so we don't want to send CAM here
         ) { shareResult in
             switch shareResult {
             case .success(let success):
@@ -624,7 +641,6 @@ import UIKit
         paymentDetails: ConsumerPaymentDetails,
         linkAccount: PaymentSheetLinkAccount,
         overridePublishableKey: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         Task {
@@ -636,7 +652,6 @@ import UIKit
                     billingPhoneNumber: nil,
                     allowRedisplay: nil
                 )!
-                paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
 
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,
@@ -659,9 +674,9 @@ import UIKit
                 currency: nil,
                 setupFutureUsage: .offSession
             ),
-            confirmHandler: { _, _, intentCreationCallback in
+            confirmHandler: { _, _ in
                 stpAssertionFailure("The confirmHandler is not expected to be called in the LinkController.")
-                intentCreationCallback(.success(PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT))
+                return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
             }
         )
 
@@ -674,6 +689,19 @@ import UIKit
         )
 
         return result
+    }
+
+    private static func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        linkAccountService: any LinkAccountServiceProtocol,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    ) {
+        linkAccountService.lookupLinkAuthToken(
+            linkAuthTokenClientSecret,
+            requestSurface: requestSurface,
+            completion: completion
+        )
     }
 
     private static func lookupConsumer(
@@ -812,6 +840,19 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     func lookupConsumer(with email: String) async throws -> Bool {
         try await withCheckedThrowingContinuation { continuation in
             lookupConsumer(with: email) { result in
+                switch result {
+                case .success(let isExistingLinkConsumer):
+                    continuation.resume(returning: isExistingLinkConsumer)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func lookupLinkAuthToken(_ linkAuthTokenClientSecret: String) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            lookupLinkAuthToken(linkAuthTokenClientSecret) { result in
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)

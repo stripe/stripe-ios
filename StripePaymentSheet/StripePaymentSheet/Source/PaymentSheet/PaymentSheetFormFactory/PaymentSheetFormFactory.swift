@@ -252,7 +252,6 @@ class PaymentSheetFormFactory {
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-                stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
                 analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
@@ -845,7 +844,13 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {
-        return SubtitleElement(view: AfterpayPriceBreakdownView(currency: currency, theme: theme), isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(
+            view: AfterpayPriceBreakdownView(
+                currency: currency,
+                appearance: configuration.appearance
+            ),
+            isHorizontalMode: configuration.isHorizontalMode
+        )
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {

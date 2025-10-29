@@ -301,7 +301,7 @@ extension ConsumerPaymentDetails.Details {
 
         private enum CodingKeys: String, CodingKey {
             case iconCode = "bankIconCode"
-            case name = "bankName"
+            case name = "bankAccountName"
             case last4
             case country
         }
@@ -316,6 +316,13 @@ extension ConsumerPaymentDetails.Details {
             self.name = name
             self.last4 = last4
             self.country = country
+        }
+
+        func displayName(with nickname: String?) -> String {
+            if let nickname {
+                return nickname
+            }
+            return name
         }
     }
 }
@@ -334,7 +341,7 @@ extension ConsumerPaymentDetails {
         case .card(let card):
             return card.displayName(with: nickname) ?? card.secondaryName
         case .bankAccount(let bank):
-            return "•••• \(bank.last4)"
+            return bank.displayName(with: nickname)
         case .unparsable:
             return ""
         }
@@ -348,7 +355,7 @@ extension ConsumerPaymentDetails {
             let components = [label, sublabel].compactMap { $0 }
             return components.joined(separator: " ")
         case .bankAccount(let bankAccount):
-            return "\(bankAccount.name) \(paymentSheetLabel)"
+            return bankAccount.displayName(with: nickname)
         case .unparsable:
             return nil
         }

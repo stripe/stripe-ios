@@ -494,7 +494,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubReturningCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            confirmHandler: confirmHandler(_:_:_:),
+                                                            confirmHandler: confirmHandler,
                                                             requireCVCRecollection: true)
 
         preparePaymentSheet(
@@ -702,7 +702,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubNewCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            confirmHandler: confirmHandler(_:_:_:))
+                                                            confirmHandler: confirmHandler)
 
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: false)
@@ -713,7 +713,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubNewCustomerResponse()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
-                                                            confirmHandler: confirmHandler(_:_:_:))
+                                                            confirmHandler: confirmHandler)
         self.configuration.termsDisplay = [.card: .never]
         preparePaymentSheet(intentConfig: intentConfig)
         presentPaymentSheet(darkMode: false)
@@ -727,7 +727,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubConsumerSession()
 
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-                                                            confirmHandler: confirmHandler(_:_:_:))
+                                                            confirmHandler: confirmHandler)
 
         preparePaymentSheet(
             automaticPaymentMethods: false,
@@ -1235,12 +1235,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubConsumerSession()
     }
 
-    func confirmHandler(_ paymentMethod: STPPaymentMethod,
-                        _ shouldSavePaymentMethod: Bool,
-                        _ intentCreationCallback: (Result<String, Error>) -> Void) {
-        // no-op
-    }
-
+    let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in return "" }
 }
 
 fileprivate extension PaymentSheet.Appearance {

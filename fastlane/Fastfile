@@ -88,7 +88,7 @@ platform :ios do
 
     Dir.chdir('..') do
       schemes.each do |scheme|
-        sh("./ci_scripts/test.rb --scheme '#{scheme}' --device '#{options[:device]}' --version #{options[:version]} --skip-snapshot-tests --skip-test 'StripePaymentSheetTests/PayWithLinkViewController_NewPaymentViewControllerSnapshotTests/testIsAddingFirstPaymentMethod,StripePaymentSheetTests/PayWithLinkViewController_NewPaymentViewControllerSnapshotTests/testIsNotAddingFirstPaymentMethod' --retry-on-failure")
+        sh("./ci_scripts/test.rb --scheme '#{scheme}' --device '#{options[:device]}' --version #{options[:version]} --skip-snapshot-tests --retry-on-failure")
       end
     end
   end

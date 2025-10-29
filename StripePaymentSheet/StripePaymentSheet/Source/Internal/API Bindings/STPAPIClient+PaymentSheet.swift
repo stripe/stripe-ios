@@ -8,7 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(CustomerSessionBetaAccess) @_spi(STP) import StripePayments
+@_spi(STP) import StripePayments
 
 extension STPAPIClient {
     typealias STPIntentCompletionBlock = ((Result<Intent, Error>) -> Void)
@@ -19,6 +19,7 @@ extension STPAPIClient {
         cpmConfiguration: PaymentSheet.CustomPaymentMethodConfiguration?,
         clientDefaultPaymentMethod: String?,
         customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
+        linkDisallowFundingSourceCreation: Set<String>,
         userOverrideCountry: String? = nil
     ) -> [String: Any] {
         var parameters: [String: Any] = [
@@ -26,6 +27,11 @@ extension STPAPIClient {
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
             "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
         ]
+        if !linkDisallowFundingSourceCreation.isEmpty {
+            parameters["link"] = [
+                "disallow_funding_source_creation": Array(linkDisallowFundingSourceCreation),
+            ]
+        }
         if let userOverrideCountry {
             parameters["country_override"] = userOverrideCountry
         }
@@ -110,6 +116,7 @@ extension STPAPIClient {
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                 customerAccessProvider: configuration.customer?.customerAccessProvider,
+                linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
         )
@@ -138,6 +145,7 @@ extension STPAPIClient {
                 cpmConfiguration: configuration.customPaymentMethodConfiguration,
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                 customerAccessProvider: configuration.customer?.customerAccessProvider,
+                linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
                 userOverrideCountry: configuration.userOverrideCountry
             )
         )
@@ -163,6 +171,7 @@ extension STPAPIClient {
             cpmConfiguration: configuration.customPaymentMethodConfiguration,
             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
             customerAccessProvider: configuration.customer?.customerAccessProvider,
+            linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
             userOverrideCountry: configuration.userOverrideCountry
         )
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
@@ -192,10 +201,12 @@ extension STPAPIClient {
     }
 
     func retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
+                                                         onBehalfOf: String?,
                                                          clientDefaultPaymentMethod: String?,
                                                          customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
 
         let parameters = makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
+                                                                            onBehalfOf: onBehalfOf,
                                                                             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                             customerSessionClientSecret: customerSessionClientSecret)
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(
@@ -208,6 +219,7 @@ extension STPAPIClient {
     }
 
     func makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
+                                                            onBehalfOf: String?,
                                                             clientDefaultPaymentMethod: String?,
                                                             customerSessionClientSecret: CustomerSessionClientSecret?) -> [String: Any] {
         var parameters: [String: Any] = [:]
@@ -231,6 +243,7 @@ extension STPAPIClient {
         if let paymentMethodTypes {
             deferredIntent["payment_method_types"] = paymentMethodTypes
         }
+        deferredIntent["on_behalf_of"] = onBehalfOf
         parameters["deferred_intent"] = deferredIntent
         return parameters
     }

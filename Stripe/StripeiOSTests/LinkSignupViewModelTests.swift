@@ -284,6 +284,30 @@ extension LinkInlineSignupViewModelTests {
             }
         }
 
+        func lookupLinkAuthToken(
+            _ linkAuthTokenClientSecret: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface,
+            completion: @escaping (Result<StripePaymentSheet.PaymentSheetLinkAccount?, any Error>) -> Void
+        ) {
+            if shouldFailLookup {
+                completion(.failure(NSError.stp_genericConnectionError()))
+            } else {
+                completion(
+                    .success(
+                        PaymentSheetLinkAccount(
+                            email: "user@example.com",
+                            session: nil,
+                            publishableKey: nil,
+                            displayablePaymentDetails: nil,
+                            useMobileEndpoints: false,
+                            canSyncAttestationState: false,
+                            requestSurface: requestSurface
+                        )
+                    )
+                )
+            }
+        }
+
         func lookupLinkAuthIntent(
             linkAuthIntentID: String,
             requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
@@ -307,11 +331,6 @@ extension LinkInlineSignupViewModelTests {
                 )
                 completion(.success(response))
             }
-        }
-
-        func hasEmailLoggedOut(email: String) -> Bool {
-            // TODO(porter): Determine if we want to implement this in tests
-            return false
         }
     }
 

@@ -80,7 +80,8 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         return .saved(
             createTestSavedPaymentMethod(),
             paymentOptions: nil,
-            clientAttributionMetadata: nil
+            clientAttributionMetadata: nil,
+            radarOptions: nil
         )
     }
 
@@ -146,12 +147,13 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
         let paymentMethod = createTestSavedPaymentMethod()
         let paymentOptions = STPConfirmPaymentMethodOptions()
-        let clientAttributionMetadata = STPClientAttributionMetadata()
+        let clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
 
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
             paymentMethod,
             paymentOptions: paymentOptions,
-            clientAttributionMetadata: clientAttributionMetadata
+            clientAttributionMetadata: clientAttributionMetadata,
+            radarOptions: nil
         )
 
         let params = PaymentSheet.createConfirmationTokenParams(
@@ -170,10 +172,11 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
     func testCreateConfirmationTokenParams_newPaymentMethod() {
         let intentConfig = createTestIntentConfig(mode: .payment(amount: 100, currency: "USD"))
         let paymentMethodParams = createTestPaymentMethodParams()
-        let clientAttributionMetadata = STPClientAttributionMetadata()
+        let clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_123")
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         let paymentOptions = STPConfirmPaymentMethodOptions()
         let radarOptions = createTestRadarOptions()
+        paymentMethodParams.radarOptions = radarOptions
 
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.new(
             params: paymentMethodParams,
@@ -187,8 +190,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             confirmType: confirmType,
             configuration: configuration,
             intentConfig: intentConfig,
-            elementsSession: .emptyElementsSession,
-            radarOptions: radarOptions
+            elementsSession: .emptyElementsSession
         )
 
         XCTAssertEqual(params.paymentMethodData, paymentMethodParams)
@@ -339,7 +341,8 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
             payPalPaymentMethod,
             paymentOptions: nil,
-            clientAttributionMetadata: nil
+            clientAttributionMetadata: nil,
+            radarOptions: nil
         )
 
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -378,7 +381,8 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
         let confirmType = PaymentSheet.ConfirmPaymentMethodType.saved(
             usBankPaymentMethod,
             paymentOptions: nil,
-            clientAttributionMetadata: nil
+            clientAttributionMetadata: nil,
+            radarOptions: nil
         )
 
         let params = PaymentSheet.createConfirmationTokenParams(

@@ -56,6 +56,12 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     private func logOut() {
         isLoading.wrappedValue = true
 
+        // Note: We deliberately are not calling `APIClient.shared.clearAuthTokens()` here.
+        // Otherwise, exercising seamless sign-in functionality would be a bit awkward,
+        // given that you'd need to restart the app in a logged-in state to test the functionality.
+        // Therefore, logging out will take you back to the root view, which will display in
+        // the seamless sign-in state.
+
         Task {
             do {
                 try await coordinator.logOut()

@@ -253,7 +253,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -370,7 +370,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -399,14 +399,11 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         var capturedResult: PaymentSheetResult?
         var capturedDeferredType: STPAnalyticsClient.DeferredIntentConfirmationType?
 
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, intentCreationCallback in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in
             // Return a client secret to simulate normal flow
-            STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"]) { result in
-                switch result {
-                case .success(let clientSecret):
-                    intentCreationCallback(.success(clientSecret))
-                case .failure(let error):
-                    intentCreationCallback(.failure(error))
+            return try await withCheckedThrowingContinuation { continuation in
+                STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"]) { result in
+                    continuation.resume(with: result)
                 }
             }
         }
@@ -418,7 +415,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -461,14 +458,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // Override the confirmHandler to detect if it's called (it shouldn't be)
         let originalConfirmHandler = intentConfig.confirmHandler
-        intentConfig.confirmHandler = { paymentMethod, shouldSave, callback in
+        intentConfig.confirmHandler = { paymentMethod, shouldSave in
             intentCreationCallbackInvoked = true
-            originalConfirmHandler?(paymentMethod, shouldSave, callback)
+            return try await originalConfirmHandler!(paymentMethod, shouldSave)
         }
 
         // When
         PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),

@@ -11,7 +11,7 @@ import Foundation
 
 /// Represents an address used with `KYCInfo`.
 @_spi(STP)
-public struct Address: Equatable {
+public struct Address: Equatable, Decodable {
 
     /// City, district, suburb, town, or village.
     public var city: String?

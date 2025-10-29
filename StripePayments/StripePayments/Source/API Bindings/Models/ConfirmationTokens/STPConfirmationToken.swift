@@ -9,7 +9,7 @@ import Foundation
 
 /// ConfirmationToken objects represent your customer's payment details. They can be used with PaymentIntents and SetupIntents to collect payments.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
-@_spi(ConfirmationTokensPublicPreview) public class STPConfirmationToken: NSObject, STPAPIResponseDecodable {
+public class STPConfirmationToken: NSObject, STPAPIResponseDecodable {
     /// You cannot directly instantiate an `STPConfirmationToken`. You should only use one that is returned from the Stripe API.
     required internal init(
         stripeId: String,

@@ -36,6 +36,17 @@ protocol LinkAccountServiceProtocol {
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
 
+    /// Looks up an account by link auth token.
+    /// - Parameters:
+    ///   - linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
+    ///   - completion: Completion block.
+    func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    )
+
     /// Looks up an account by Link Auth Intent ID.
     ///
     /// - Parameters:
@@ -52,26 +63,20 @@ protocol LinkAccountServiceProtocol {
 final class LinkAccountService: LinkAccountServiceProtocol {
 
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
     let sessionID: String
     let customerID: String?
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
     let merchantLogoUrl: URL?
 
-    /// The default cookie store used by new instances of the service.
-    static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
-
     convenience init(
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = defaultCookieStore,
         elementsSession: STPElementsSession
     ) {
         let shouldPassCustomerIdToLookup = elementsSession.linkSettings?.linkEnableDisplayableDefaultValuesInECE == true
 
         self.init(
             apiClient: apiClient,
-            cookieStore: cookieStore,
             useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
             canSyncAttestationState: elementsSession.linkSettings?.attestationStateSyncEnabled ?? false,
             sessionID: elementsSession.sessionID,
@@ -83,7 +88,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
 
     init(
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = defaultCookieStore,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         sessionID: String,
@@ -92,7 +96,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         merchantLogoUrl: URL?
     ) {
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
         self.sessionID = sessionID
@@ -140,20 +143,20 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             requestSurface: requestSurface
                         )
                     ))
-                case .notFound:
+                case .notFound(_, let suggestedEmail):
                     if let email = email {
-                        completion(.success(
-                            PaymentSheetLinkAccount(
-                                email: email,
-                                session: nil,
-                                publishableKey: nil,
-                                displayablePaymentDetails: nil,
-                                apiClient: self.apiClient,
-                                useMobileEndpoints: self.useMobileEndpoints,
-                                canSyncAttestationState: self.canSyncAttestationState,
-                                requestSurface: requestSurface
-                            )
-                        ))
+                        let linkAccount = PaymentSheetLinkAccount(
+                            email: email,
+                            session: nil,
+                            publishableKey: nil,
+                            displayablePaymentDetails: nil,
+                            apiClient: self.apiClient,
+                            useMobileEndpoints: self.useMobileEndpoints,
+                            canSyncAttestationState: self.canSyncAttestationState,
+                            requestSurface: requestSurface
+                        )
+                        linkAccount.suggestedEmail = suggestedEmail
+                        completion(.success(linkAccount))
                     } else {
                         completion(.success(nil))
                     }
@@ -167,16 +170,44 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         }
     }
 
-    func hasEmailLoggedOut(email: String) -> Bool {
-        guard let hashedEmail = email.lowercased().sha256 else {
-            return false
+    func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    ) {
+        ConsumerSession.lookupLinkAuthToken(
+            linkAuthTokenClientSecret,
+            sessionID: sessionID,
+            customerID: customerID,
+            useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
+            requestSurface: requestSurface
+        ) { [apiClient] result in
+            switch result {
+            case .success(let lookupResponse):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
+                switch lookupResponse.responseType {
+                case .found(let session):
+                    completion(.success(
+                        PaymentSheetLinkAccount(
+                            email: session.consumerSession.emailAddress,
+                            session: session.consumerSession,
+                            publishableKey: session.publishableKey,
+                            displayablePaymentDetails: session.displayablePaymentDetails,
+                            apiClient: apiClient,
+                            useMobileEndpoints: self.useMobileEndpoints,
+                            canSyncAttestationState: self.canSyncAttestationState,
+                            requestSurface: requestSurface
+                        )
+                    ))
+                case .notFound, .noAvailableLookupParams:
+                    completion(.success(nil))
+                }
+            case .failure(let error):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
+                completion(.failure(error))
+            }
         }
-
-        return cookieStore.read(key: .lastLogoutEmail) == hashedEmail
-    }
-
-    func getLastSignUpEmail() -> String? {
-        return cookieStore.read(key: .lastSignupEmail)
     }
 
     /// Looks up an account by Link Auth Intent ID.
@@ -195,7 +226,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             sessionID: sessionID,
             customerID: customerID,
             with: apiClient,
-            cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface

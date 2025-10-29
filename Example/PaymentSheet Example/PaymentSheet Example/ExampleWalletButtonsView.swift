@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) @_spi(SharedPaymentToken) import StripePayments
-@_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(STP) @_spi(SharedPaymentToken) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
 struct ShopPayTestingOptions {
@@ -24,6 +24,7 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
     @State private var showingAppearancePlayground = false
     @State private var disableLink = false
+    @State private var hideBankTab = false
 
     // Wallet button visibility options
     @State private var applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic
@@ -64,6 +65,8 @@ struct ExampleWalletButtonsContainerView: View {
                         }
 
                     Toggle("Disable Link", isOn: $disableLink)
+
+                    Toggle("Hide Bank tab", isOn: $hideBankTab)
 
                     Button("Customize Appearance") {
                         showingAppearancePlayground = true
@@ -154,6 +157,7 @@ struct ExampleWalletButtonsContainerView: View {
                             email: email,
                             shopId: shopId,
                             disableLink: disableLink,
+                            hideBankTab: hideBankTab,
                             appearance: appearance,
                             applePayVisibilityInPaymentElement: applePayVisibilityInPaymentElement,
                             linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
@@ -190,6 +194,7 @@ struct ExampleWalletButtonsView: View {
         email: String,
         shopId: String,
         disableLink: Bool,
+        hideBankTab: Bool,
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(),
         applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
         linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
@@ -205,6 +210,7 @@ struct ExampleWalletButtonsView: View {
             email: email,
             shopId: shopId,
             disableLink: disableLink,
+            hideBankTab: hideBankTab,
             appearance: appearance,
             applePayVisibilityInPaymentElement: applePayVisibilityInPaymentElement,
             linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
@@ -348,6 +354,7 @@ class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let shopId: String
     let disableLink: Bool
+    let hideBankTab: Bool
     let appearance: PaymentSheet.Appearance
     let applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
     let linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
@@ -373,6 +380,7 @@ class ExampleWalletButtonsModel: ObservableObject {
         email: String,
         shopId: String,
         disableLink: Bool,
+        hideBankTab: Bool,
         appearance: PaymentSheet.Appearance,
         applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
         linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
@@ -387,6 +395,7 @@ class ExampleWalletButtonsModel: ObservableObject {
         self.email = email
         self.shopId = shopId
         self.disableLink = disableLink
+        self.hideBankTab = hideBankTab
         self.appearance = appearance
         self.applePayVisibilityInPaymentElement = applePayVisibilityInPaymentElement
         self.linkVisibilityInPaymentElement = linkVisibilityInPaymentElement
@@ -484,7 +493,11 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
                 configuration.appearance = self.appearance ?? PaymentSheet.Appearance()
-                configuration.link = .init(display: self.disableLink == true ? .never : .automatic)
+
+                var linkConfiguration = PaymentSheet.LinkConfiguration()
+                linkConfiguration.display = self.disableLink == true ? .never : .automatic
+                linkConfiguration.disallowFundingSourceCreation = self.hideBankTab ? ["usInstantBankPayment"] : []
+                configuration.link = linkConfiguration
 
                 // Configure wallet button visibility
                 configuration.walletButtonsVisibility.paymentElement[.applePay] = self.applePayVisibilityInPaymentElement

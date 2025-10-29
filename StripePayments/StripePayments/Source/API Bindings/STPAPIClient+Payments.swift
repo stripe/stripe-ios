@@ -24,7 +24,6 @@ extension STPAPIClient {
     ) {
         let tokenType = STPAnalyticsClient.tokenType(fromParameters: parameters)
         STPAnalyticsClient.sharedClient.logTokenCreationAttempt(
-            with: _stored_configuration,
             tokenType: tokenType
         )
         let preparedParameters = Self.paramsAddingPaymentUserAgent(parameters)
@@ -259,7 +258,6 @@ extension STPAPIClient {
     ) {
         let sourceType = STPSource.string(from: sourceParams.type)
         STPAnalyticsClient.sharedClient.logSourceCreationAttempt(
-            with: _stored_configuration,
             sourceType: sourceType
         )
         sourceParams.redirectMerchantName = Bundle.stp_applicationName() ?? ""
@@ -551,7 +549,6 @@ extension STPAPIClient {
             paymentIntentParams.paymentMethodParams?.rawTypeString
             ?? paymentIntentParams.sourceParams?.rawTypeString
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
-            with: _stored_configuration,
             paymentMethodType: type,
             apiClient: self
         )
@@ -753,8 +750,7 @@ extension STPAPIClient {
         )
 
         STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
-            with: _stored_configuration,
-            paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString,
+                        paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString,
             apiClient: self
         )
 
@@ -863,7 +859,6 @@ extension STPAPIClient {
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
-            with: _stored_configuration,
             paymentMethodType: paymentMethodParams.rawTypeString,
             apiClient: self
         )
@@ -1539,7 +1534,7 @@ extension STPAPIClient {
     ///   - ephemeralKeySecret: The ephemeral key secret to use for authentication if working with customer-scoped objects.
     ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: The created ConfirmationToken object.
-    @_spi(ConfirmationTokensPublicPreview) public func createConfirmationToken(
+   @_spi(STP) public func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
         ephemeralKeySecret: String? = nil,
         additionalPaymentUserAgentValues: [String] = []
@@ -1565,9 +1560,7 @@ extension STPAPIClient {
         additionalPaymentUserAgentValues: [String] = [],
         completion: @escaping STPConfirmationTokenCompletionBlock
     ) {
-        STPAnalyticsClient.sharedClient.logConfirmationTokenCreationAttempt(
-            with: _stored_configuration
-        )
+        STPAnalyticsClient.sharedClient.logConfirmationTokenCreationAttempt()
         var parameters = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
         if var paymentMethodParamsDict = parameters[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)

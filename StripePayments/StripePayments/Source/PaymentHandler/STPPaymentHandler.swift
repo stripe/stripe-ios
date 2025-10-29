@@ -165,7 +165,14 @@ public class STPPaymentHandler: NSObject {
     }
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
     /// Date at which `confirm` or `handleNextAction` is called. Used to report how long the call took.
-    internal var startTime: Date?
+    internal var startTime: Date? {
+        didSet {
+            actionID = startTime == nil ? nil : UUID().uuidString
+        }
+    }
+    /// A uuid unique to a given `confirm` or `handleNextAction` call, so that we can group together all the analytics sent during a confirmation / next action handling.
+    /// Note that Session ID is not good enough, since a single session may have multiple calls to confirm.
+    internal var actionID: String?
 
     // MARK: - PaymentIntent APIs
     /// Confirms the PaymentIntent using the provided `params` and handles any next actions required to authenticate the PaymentIntent.
@@ -690,7 +697,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             if let setupIntent, error == nil {
-                self.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, completion: completion)
+                self.handleNextAction(for: setupIntent, with: authenticationContext, returnURL: returnURL, shouldSendAnalytic: false, completion: completion)
             } else {
                 completion(.failed, setupIntent, error as NSError?)
             }
@@ -1212,7 +1219,6 @@ public class STPPaymentHandler: NSObject {
 
                             self.analyticsClient
                                 .log3DS2AuthenticationRequestParamsFailed(
-                                    with: currentAction.apiClient._stored_configuration,
                                     intentID: currentAction.intentStripeID,
                                     error: self._error(
                                         for: .stripe3DS2ErrorCode,
@@ -1233,7 +1239,6 @@ public class STPPaymentHandler: NSObject {
                     )
 
                     analyticsClient.log3DS2AuthenticateAttempt(
-                        with: currentAction.apiClient._stored_configuration,
                         intentID: currentAction.intentStripeID
                     )
 
@@ -1335,7 +1340,6 @@ public class STPPaymentHandler: NSObject {
                                 transaction.close()
                                 currentAction.threeDS2Transaction = nil
                                 self.analyticsClient.log3DS2FrictionlessFlow(
-                                    with: currentAction.apiClient._stored_configuration,
                                     intentID: currentAction.intentStripeID
                                 )
 
@@ -1751,52 +1755,12 @@ public class STPPaymentHandler: NSObject {
             object: nil
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
+        logURLRedirectNextActionFinished(returnType: .appForegrounded)
         _retrieveAndCheckIntentForCurrentAction()
     }
 
     @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?, useWebAuthSession: Bool) {
         _handleRedirect(to: url, fallbackURL: url, return: returnURL, useWebAuthSession: useWebAuthSession)
-    }
-
-    @_spi(STP) public func _handleRedirectToExternalBrowser(to url: URL, withReturn returnURL: URL?) {
-        if let _redirectShim {
-            _redirectShim(url, returnURL, false)
-        }
-        guard let currentAction else {
-            stpAssert(false, "Calling _handleRedirect without a currentAction")
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _handleRedirect without a currentAction"])
-            analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
-            return
-        }
-        if let returnURL {
-            STPURLCallbackHandler.shared().register(self, for: returnURL)
-        }
-        analyticsClient.logURLRedirectNextAction(
-            with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID,
-            usesWebAuthSession: false
-        )
-
-        // Setting universalLinksOnly to false will allow iOS to open https:// urls in an external browser, hopefully Safari.
-        // The links are expected to be either universal links or Stripe owned URLs.
-        // In the case that it is a stripe owned URL, the URL is expected to redirect our financial partners, at which point Safari can
-        // redirect to a native app if the app has been installed.  If Safari is not the default browser, then users not be
-        // automatically navigated to the native app.
-        let options: [UIApplication.OpenExternalURLOptionsKey: Any] = [
-            UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false,
-        ]
-        UIApplication.shared.open(
-            url,
-            options: options,
-            completionHandler: { _ in
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: #selector(self._handleWillForegroundNotification),
-                    name: UIApplication.willEnterForegroundNotification,
-                    object: nil
-                )
-            }
-        )
     }
 
     /// Handles redirection to URLs using a native URL or a fallback URL and updates the current action.
@@ -1831,12 +1795,6 @@ public class STPPaymentHandler: NSObject {
             STPURLCallbackHandler.shared().register(self, for: returnURL)
         }
 
-        analyticsClient.logURLRedirectNextAction(
-            with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID,
-            usesWebAuthSession: useWebAuthSession
-        )
-
         // Open the link in SafariVC
         let presentSFViewControllerBlock: (() -> Void) = {
             let context = currentAction.authenticationContext
@@ -1861,6 +1819,7 @@ public class STPPaymentHandler: NSObject {
                             // No-op if the redirect shim is active, as we don't want to open the consent dialog. We'll call the completion block automatically.
                             return
                         }
+                        self.logURLRedirectNextActionStarted(redirectType: .ASWebAuthenticationSession)
                         // Note that ASWebAuthenticationSession will also close based on the `redirectURL` defined in the app's Info.plist if called within the ASWAS,
                         // not only via this callbackURLScheme.
                         let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "stripesdk", completionHandler: { _, _ in
@@ -1873,11 +1832,7 @@ public class STPPaymentHandler: NSObject {
                             // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
                             self.callContextDidDismissIfNeeded(context, UIViewController())
                             STPURLCallbackHandler.shared().unregisterListener(self)
-                            self.analyticsClient.logURLRedirectNextActionCompleted(
-                                with: currentAction.apiClient._stored_configuration,
-                                intentID: currentAction.intentStripeID,
-                                usesWebAuthSession: true
-                            )
+                            self.logURLRedirectNextActionFinished(returnType: .ASWebAuthenticationSession)
                             self._retrieveAndCheckIntentForCurrentAction()
                             self.asWebAuthenticationSession = nil
                         })
@@ -1892,6 +1847,7 @@ public class STPPaymentHandler: NSObject {
                             asWebAuthenticationSession.start()
                         }
                     } else {
+                        self.logURLRedirectNextActionStarted(redirectType: .SFSafariViewController)
                         let safariViewController = SFSafariViewController(url: fallbackURL)
                         safariViewController.modalPresentationStyle = .overFullScreen
 #if !os(visionOS)
@@ -1949,6 +1905,7 @@ public class STPPaymentHandler: NSObject {
                         // no app installed, launch safari view controller
                         presentSFViewControllerBlock()
                     } else {
+                        self.logURLRedirectNextActionStarted(redirectType: .nativeApp)
                         completion?(nil)
                         NotificationCenter.default.addObserver(
                             self,
@@ -2071,7 +2028,6 @@ public class STPPaymentHandler: NSObject {
             }
 
             analyticsClient.log3DS2RedirectUserCanceled(
-                with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID
             )
 
@@ -2097,7 +2053,6 @@ public class STPPaymentHandler: NSObject {
             }
 
             analyticsClient.log3DS2RedirectUserCanceled(
-                with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID
             )
 
@@ -2381,13 +2336,8 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
 
         safariViewController = nil
         STPURLCallbackHandler.shared().unregisterListener(self)
+        logURLRedirectNextActionFinished(returnType: .SFSafariViewController)
         _retrieveAndCheckIntentForCurrentAction()
-
-        self.analyticsClient.logURLRedirectNextActionCompleted(
-            with: currentAction?.apiClient._stored_configuration,
-            intentID: currentAction?.intentStripeID,
-            usesWebAuthSession: true
-        )
     }
 }
 #endif
@@ -2402,6 +2352,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
             // (such as a banking app) and is waiting for a response from that app.
             return false
         }
+        logURLRedirectNextActionFinished(returnType: .returnURLCallback)
         // Note: At least my iOS 15 device, willEnterForegroundNotification is triggered before this method when returning from another app, which means this method isn't called because it unregisters from STPURLCallbackHandler.
         let context = currentAction?.authenticationContext
         if context?.responds(
@@ -2443,8 +2394,7 @@ extension STPPaymentHandler {
         }
         let transactionStatus = completionEvent.transactionStatus
         analyticsClient.log3DS2ChallengeFlowCompleted(
-            with: currentAction.apiClient._stored_configuration,
-            intentID: currentAction.intentStripeID,
+                        intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
         if transactionStatus == "Y" {
@@ -2498,7 +2448,6 @@ extension STPPaymentHandler {
         }
 
         analyticsClient.log3DS2ChallengeFlowUserCanceled(
-            with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
@@ -2519,7 +2468,6 @@ extension STPPaymentHandler {
         }
 
         analyticsClient.log3DS2ChallengeFlowTimedOut(
-            with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
@@ -2557,7 +2505,6 @@ extension STPPaymentHandler {
                 userInfo: userInfo
             )
             self?.analyticsClient.log3DS2ChallengeFlowErrored(
-                with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID,
                 error: localizedError
             )
@@ -2594,7 +2541,6 @@ extension STPPaymentHandler {
             )
 
             self?.analyticsClient.log3DS2ChallengeFlowErrored(
-                with: currentAction.apiClient._stored_configuration,
                 intentID: currentAction.intentStripeID,
                 error: localizedError
             )
@@ -2616,7 +2562,6 @@ extension STPPaymentHandler {
         }
 
         analyticsClient.log3DS2ChallengeFlowPresented(
-            with: currentAction.apiClient._stored_configuration,
             intentID: currentAction.intentStripeID,
             uiType: transaction.presentedChallengeUIType
         )
