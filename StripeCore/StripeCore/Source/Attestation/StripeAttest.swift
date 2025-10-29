@@ -333,9 +333,7 @@ import UIKit
         }
 
         let keyId = try await self.getOrCreateKeyID()
-
         let challenge = try await getChallenge()
-
         // If the backend claims that attestation isn't required, we should not attempt it.
         guard challenge.initial_attestation_required else {
             // And reset the key, as something has gone wrong.
@@ -351,12 +349,11 @@ import UIKit
         let deviceId = try await getDeviceID()
         let appId = try getAppID()
 
-        // Check before expensive crypto operation
+        // Check before expensive operation
         try Task.checkCancellation()
 
         do {
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
-
             if !appAttestService.attestationDataIsDevelopmentEnvironment(attestation) {
                 // We only need to limit attestations in production.
                 // Being more relaxed about this also helps with users switching between
@@ -364,7 +361,6 @@ import UIKit
                 // and a TestFlight/App Store/Enterprise app (which is always in the production attest environment)
                 dailyAttemptCount += 1
             }
-
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
             // Store the successful attestation
             successfullyAttested = true
@@ -444,7 +440,7 @@ import UIKit
                                                        options: [.sortedKeys])
         let assertionDataHash = Data(SHA256.hash(data: assertionData))
 
-        // Check before expensive crypto operation
+        // Check before expensive operation
         try Task.checkCancellation()
 
         do {
@@ -460,7 +456,6 @@ import UIKit
                     // If this doesn't work, then in `attest()` we'll deem the key to be corrupted
                     // and throw it out.
                     try await attest()
-
                     // Once we've successfully re-attested, we'll try one more time to do the assertion.
                     return try await generateAssertion(keyId: keyId, challenge: challenge, retryAfterReattestingIfNeeded: false)
                 } else {
