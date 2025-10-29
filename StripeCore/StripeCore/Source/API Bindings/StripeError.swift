@@ -13,7 +13,7 @@ import Foundation
     /// The server returned an API error.
     case apiError(StripeAPIError)
 
-    /// The request was invalid.
+    /// The request was invalid and not sent to the API.
     case invalidRequest
 
     /// Localized description of the error.

@@ -307,23 +307,18 @@ extension PaymentSheet {
         /// See https://stripe.com/docs/api/customers/object#customer_object-id
         public let id: String
 
-        /// A short-lived token that allows the SDK to access a Customer's payment methods
-        public let ephemeralKeySecret: String
-
         internal let customerAccessProvider: CustomerAccessProvider
 
         /// Initializes a CustomerConfiguration with an ephemeralKeySecret
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
             self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
-            self.ephemeralKeySecret = ephemeralKeySecret
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret
         public init(id: String, customerSessionClientSecret: String) {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
-            self.ephemeralKeySecret = ""
 
             stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
                       "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")

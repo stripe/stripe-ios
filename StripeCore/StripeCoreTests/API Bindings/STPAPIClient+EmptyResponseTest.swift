@@ -38,7 +38,7 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
             XCTFail("The request should not have succeeded")
         case .failure(let error):
             if let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError {
-                XCTAssert(apiError.statusCode == 400, "expected status code to be set")
+                XCTAssert(apiError.httpStatusCode == 400, "expected status code to be set")
             } else {
                 XCTFail("The error should have been an `.apiError`")
             }
