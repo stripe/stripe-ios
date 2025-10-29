@@ -109,10 +109,6 @@ class ConfirmationChallengeTests: XCTestCase {
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
         // should return nil due to timeout
         XCTAssertNil(hcaptchaToken)
-        let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.error" })
-        XCTAssertEqual(errorAnalytic?["site_key"] as? String, siteKey)
-        XCTAssertEqual(errorAnalytic?["error_code"] as? String, "timeout")
-        XCTAssertLessThan(errorAnalytic?["duration"] as! Double, 2000.0)
     }
 
     // MARK: - Attestation Tests
@@ -143,9 +139,6 @@ class ConfirmationChallengeTests: XCTestCase {
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
         // should return nil due to timeout
         XCTAssertNil(assertion)
-        let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.attestation.confirmation.error" })
-        XCTAssertEqual(errorAnalytic?["error_code"] as? String, "timeout")
-        XCTAssertLessThan(errorAnalytic?["duration"] as! Double, 2000.0)
         await confirmationChallenge.complete()
     }
 
@@ -207,7 +200,7 @@ class ConfirmationChallengeTests: XCTestCase {
         // Inject delays to force both to time out
         await mockAttestService.setGenerateAssertionDelay(15.0)
         let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
-        await confirmationChallenge.setTimeout(timeout: 1)
+        await confirmationChallenge.setTimeout(timeout: 0)
         // wait to make sure that the attestation will be done by the time we call fetchToken so we don't get shouldAttestButKeyIsAlreadyAttested
         try await Task.sleep(nanoseconds: 1_000_000_000)
         let startTime = Date()

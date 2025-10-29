@@ -38,60 +38,29 @@ actor ConfirmationChallenge {
     }
 
     func fetchTokensWithTimeout() async -> ChallengeTokens {
-        let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
-        let siteKey = await passiveCaptchaChallenge?.passiveCaptchaData.siteKey
-        do {
-            return try await withThrowingTaskGroup(of: ChallengeTokens.self) { group in
-                let isReady = await passiveCaptchaChallenge?.hasFetchedToken
-                var numberOfChallenges = 0
-                // Add hcaptcha task
-                if let passiveCaptchaChallenge {
-                    numberOfChallenges += 1
-                    group.addTask {
-                        let hcaptchaToken = try await passiveCaptchaChallenge.fetchToken()
-                        return await (hcaptchaToken, self.challengeTokens.assertion)
-                    }
-                }
-                // Add attestation task
-                if let attestationConfirmationChallenge {
-                    numberOfChallenges += 1
-                    group.addTask {
-                        let assertion = await attestationConfirmationChallenge.fetchAssertion()
-                        return await (self.challengeTokens.hcaptchaToken, assertion)
-                    }
-                }
-                // Add timeout task
-                group.addTask {
-                    try await Task.sleep(nanoseconds: timeoutNs)
-                    throw Error.timeout
-                }
-                defer {
-                    // ⚠️ TaskGroups can't return until all child tasks have completed, so we need to cancel remaining tasks and handle cancellation to complete as quickly as possible
-                    Task {
-                        await passiveCaptchaChallenge?.cancel()
-                        await attestationConfirmationChallenge?.cancel()
-                    }
-                    group.cancelAll()
-                }
-                // Wait for challenge completions
-                for _ in 0..<numberOfChallenges {
-                    let token = try await group.next()
-                    self.challengeTokens.hcaptchaToken = token?.hcaptchaToken ?? self.challengeTokens.hcaptchaToken
-                    self.challengeTokens.assertion = token?.assertion ?? self.challengeTokens.assertion
-                    logIfNecessary(result: token, siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
-                }
-                return challengeTokens
+        let isReady = await passiveCaptchaChallenge?.hasFetchedToken
+        let passiveCaptchaOperation = AsyncOperation<String?>(
+            operation: {
+                guard let passiveCaptchaChallenge = self.passiveCaptchaChallenge else { return nil }
+                return try await passiveCaptchaChallenge.fetchToken()
+     },
+            onCancel: { await self.passiveCaptchaChallenge?.cancel() }
+        )
+        let attestationOperation = AsyncOperation<StripeAttest.Assertion?>(
+            operation: {
+                guard let attestationConfirmationChallenge = self.attestationConfirmationChallenge else { return nil }
+                return await attestationConfirmationChallenge.fetchAssertion()
+            },
+            onCancel: {
+                await self.attestationConfirmationChallenge?.cancel()
             }
-        } catch {
-            if passiveCaptchaChallenge != nil, challengeTokens.hcaptchaToken == nil, let siteKey {
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
-            }
-            if attestationConfirmationChallenge != nil, challengeTokens.assertion == nil {
-                STPAnalyticsClient.sharedClient.logAttestationConfirmationError(error: error, duration: Date().timeIntervalSince(startTime))
-            }
-            return challengeTokens
-        }
+        )
+        let (hcaptchaTokenResult, assertionResult) = await withTimeout(timeout: timeout, passiveCaptchaOperation, attestationOperation)
+        let hcaptchaToken: String? = try? hcaptchaTokenResult.get()?.flatMap { $0 }
+        let assertion: StripeAttest.Assertion? = try? assertionResult.get()?.flatMap { $0 }
+        await logIfNecessary(token: hcaptchaToken, siteKey: passiveCaptchaChallenge?.passiveCaptchaData.siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
+        return (hcaptchaToken, assertion)
     }
 
     // must be called after completing the signed request
@@ -99,8 +68,8 @@ actor ConfirmationChallenge {
         await attestationConfirmationChallenge?.complete()
     }
 
-    private func logIfNecessary(result: ChallengeTokens?, siteKey: String?, isReady: Bool?, duration: TimeInterval) {
-        if result?.hcaptchaToken != nil, result?.assertion == nil, let siteKey, let isReady {
+    private func logIfNecessary(token: String?, siteKey: String?, isReady: Bool?, duration: TimeInterval) {
+        if token != nil, let siteKey, let isReady {
             STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: duration)
         }
     }
