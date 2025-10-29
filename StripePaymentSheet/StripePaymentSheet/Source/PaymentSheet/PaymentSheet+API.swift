@@ -220,9 +220,9 @@ extension PaymentSheet {
                         paymentIntent: paymentIntent,
                         configuration: configuration
                     )
-                    paymentHandler.confirmPayment(
-                        params,
-                        with: authenticationContext,
+                    paymentHandler.confirmPaymentIntent(
+                        params: params,
+                        authenticationContext: authenticationContext,
                         completion: { actionStatus, paymentIntent, error in
                             if let paymentIntent {
                                 setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -243,8 +243,8 @@ extension PaymentSheet {
                         configuration: configuration
                     )
                     paymentHandler.confirmSetupIntent(
-                        setupIntentParams,
-                        with: authenticationContext,
+                        params: setupIntentParams,
+                        authenticationContext: authenticationContext,
                         completion: { actionStatus, setupIntent, error in
                             if let setupIntent {
                                 setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -286,9 +286,9 @@ extension PaymentSheet {
 
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil), paymentIntent: paymentIntent, configuration: configuration)
 
-                paymentHandler.confirmPayment(
-                    paymentIntentParams,
-                    with: authenticationContext,
+                paymentHandler.confirmPaymentIntent(
+                    params: paymentIntentParams,
+                    authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -301,8 +301,8 @@ extension PaymentSheet {
                     configuration: configuration
                 )
                 paymentHandler.confirmSetupIntent(
-                    setupIntentParams,
-                    with: authenticationContext,
+                    params: setupIntentParams,
+                    authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -349,9 +349,9 @@ extension PaymentSheet {
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext,
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 paymentHandlerCompletion(actionStatus, error)
                                 if actionStatus == .succeeded {
@@ -365,8 +365,8 @@ extension PaymentSheet {
                         setupIntentParams.returnURL = configuration.returnURL
                         setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext,
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 paymentHandlerCompletion(actionStatus, error)
                                 if actionStatus == .succeeded {
@@ -422,9 +422,9 @@ extension PaymentSheet {
                         paymentIntentParams.radarOptions = radarOptions
                         paymentIntentParams.mandateData = mandateData
                         paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext,
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
@@ -440,8 +440,8 @@ extension PaymentSheet {
                         setupIntentParams.radarOptions = radarOptions
                         setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext,
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
