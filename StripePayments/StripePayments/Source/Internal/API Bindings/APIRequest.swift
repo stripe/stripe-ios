@@ -181,8 +181,6 @@ let JSONKeyObject = "object"
             safeCompletion(responseObject, nil)
         } else {
             let error = NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
-            // TODO: We should really include the http response code in the generic error here.
-                ?? NSError.stp_genericFailedToParseResponseError()
             safeCompletion(nil, error)
         }
     }
