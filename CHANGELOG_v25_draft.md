@@ -23,3 +23,7 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 ### STPApplePayContext
 * [Added] Added async delegate methods.
 * [Changed] Replaces the `ApplePayContextDelegate.didCreatePaymentMethod` method with an async version.
+
+### Payments
+* [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
+
