@@ -25,7 +25,6 @@
 		1C043C73281C0856D2C979C6 /* FinancialConnectionsSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEF0BAF1A5BBA3061C15A09 /* FinancialConnectionsSession.swift */; };
 		1E0C39EB65B8CB04F218D0BD /* NetworkingLinkLoginWarmupDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091D43608583C7BE5E444C2C /* NetworkingLinkLoginWarmupDataSource.swift */; };
 		22426A37E01AE759BF93C422 /* AttributedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE64D5A17913CF4AAD855A9A /* AttributedLabel.swift */; };
-		2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88FD9148F64D2AA8989D361 /* ManualEntryErrorView.swift */; };
 		23DBA4240ED1727C47937A6B /* AccountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CE72E38D41E86E0A1FAE9F /* AccountPickerViewController.swift */; };
 		2671241DE661B675E575C0AB /* NetworkingSaveToLinkVerificationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3BDFEB5860F73D4CD90907A /* NetworkingSaveToLinkVerificationDataSource.swift */; };
 		2AA0942F22A323B33CA6B7CA /* PartnerAuthDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC8B933341AF86D9AFF5979 /* PartnerAuthDataSource.swift */; };
@@ -166,7 +165,6 @@
 		9E0044ABEC04E2A8C50E3658 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 429F985168AE9F9D700AE37B /* FinancialConnectionsSessionManifest.swift */; };
 		A10B5A3E5E8AE8767CF09C15 /* AccountPickerSelectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283469CD0298E3AFCFDAF10F /* AccountPickerSelectionListView.swift */; };
 		A156FACA60231988F247F6F4 /* FinancialConnectionsSession_only_both_missing.json in Resources */ = {isa = PBXBuildFile; fileRef = 1DF07A1AAD6B39033F0B86FD /* FinancialConnectionsSession_only_both_missing.json */; };
-		A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */; };
 		A573468B2800DABF384CAB43 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCC4356AE3295B4A2F4A28 /* Image.swift */; };
 		A79D6A26EE9FF96D24F4AC5C /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 267B3586136203186882F5CE /* NSAttributedString+Extensions.swift */; };
 		A9F9E63FD6B72F5552A8A850 /* ResetFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA81F9910A88A7DEB0F0BFD /* ResetFlowViewController.swift */; };
@@ -208,7 +206,6 @@
 		D0C1EF46A418A8F8774B7418 /* FinancialConnectionsSession_both_accounts_la.json in Resources */ = {isa = PBXBuildFile; fileRef = F6CF7F1005B57D566E139DE3 /* FinancialConnectionsSession_both_accounts_la.json */; };
 		D0C6D94867FA04B1BF80D56D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9AB787FE87EDD702B1BBF09 /* StripeCoreTestUtils.framework */; };
 		D10FB0DAC5E452D4569CEA14 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */; };
-		D3AB52D5AE87FE51642C50C1 /* ExperimentHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2E9D1B7C962C46F7E0002A /* ExperimentHelper.swift */; };
 		D50E771043434AD80EA28628 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652EBE38C47B36962AD370A /* StripeUICore.framework */; };
 		D926228B6C7601AE4C806C93 /* FinancialConnectionsPaymentAccountResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF9E2D4C9D7684B02AD6037A /* FinancialConnectionsPaymentAccountResource.swift */; };
 		D936C8A9F6E018DB144A5B0A /* FinancialConnectionsSynchronize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4667E3861CDEC3A41B757714 /* FinancialConnectionsSynchronize.swift */; };
@@ -442,7 +439,6 @@
 		780BC432329228B042DA97D8 /* NativeFlowDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFlowDataManager.swift; sourceTree = "<group>"; };
 		782A419DCF59BE6AB6439D04 /* add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@3x.png"; sourceTree = "<group>"; };
 		7AFC0D3ED86914DC4216CCCA /* AuthFlowHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowHelpersTests.swift; sourceTree = "<group>"; };
-		7C2E9D1B7C962C46F7E0002A /* ExperimentHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentHelper.swift; sourceTree = "<group>"; };
 		7C402C24A15DC6167E2C593F /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7F3A660CB2E9651947FE6D0A /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		81304AD5BE5CCA10D1A866E0 /* ConsentDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentDataSource.swift; sourceTree = "<group>"; };
@@ -496,11 +492,9 @@
 		C3BDFEB5860F73D4CD90907A /* NetworkingSaveToLinkVerificationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingSaveToLinkVerificationDataSource.swift; sourceTree = "<group>"; };
 		C4DA5D0EB4ED760B3F9818C5 /* back_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_arrow@3x.png"; sourceTree = "<group>"; };
 		C650E82A4195A7566AA54298 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C88FD9148F64D2AA8989D361 /* ManualEntryErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryErrorView.swift; sourceTree = "<group>"; };
 		C8AFA09E86048B4325C36CC8 /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C93F7139E9BFB044902962D0 /* FinancialConnectionsImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsImage.swift; sourceTree = "<group>"; };
 		CA2DA47ECE153F888FA675CE /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
-		CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+KeyboardAvoiding.swift"; sourceTree = "<group>"; };
 		CBB6227C2D4846670003AF44 /* FinancialConnectionsRepairSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsRepairSession.swift; sourceTree = "<group>"; };
 		CDD861E4EB8BA294545B7651 /* NetworkingLinkVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLinkVerificationViewController.swift; sourceTree = "<group>"; };
 		CE10909F3FC7D60E13B65226 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -712,7 +706,6 @@
 		53C3F536D69FCBC77C3E7D5F /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				7C2E9D1B7C962C46F7E0002A /* ExperimentHelper.swift */,
 				1F2C7AE6509C80B6F30662AA /* FinancialConnectionsCustomManualEntryRequiredError.swift */,
 				6DA6A57067FB5EF86FEBD5B3 /* FinancialConnectionsNavigationController.swift */,
 				1407DD9E95ADFE143FA046E4 /* FlowRouter.swift */,
@@ -926,7 +919,6 @@
 			isa = PBXGroup;
 			children = (
 				BD4C39F5F9AF440B13F51A81 /* ManualEntryDataSource.swift */,
-				C88FD9148F64D2AA8989D361 /* ManualEntryErrorView.swift */,
 				73C03F4DDC67B50C5E1993F6 /* ManualEntryFormView.swift */,
 				F897F5AA6A684D0A370EA7BC /* ManualEntryValidator.swift */,
 				8301F7BA1FF90D131AE96E10 /* ManualEntryViewController.swift */,
@@ -1052,7 +1044,6 @@
 				D2EA7801B85973F10F65DDB6 /* UIImage+Extensions.swift */,
 				DDC3AC48492FAB61E5B66D94 /* UIImageView+Extensions.swift */,
 				B52F27D0FACAE9D4F4D15A73 /* UITableView+Extensions.swift */,
-				CB3C49A180D1697B03C79A59 /* UIViewController+KeyboardAvoiding.swift */,
 				6A7814192B45D53700168992 /* DataAccessNoticeViewController.swift */,
 				6A78141B2B462D5D00168992 /* LegalDetailsNoticeViewController.swift */,
 				6A13B9812B48BD6C00FFA327 /* AccountPickerRowView.swift */,
@@ -1361,7 +1352,6 @@
 				D936C8A9F6E018DB144A5B0A /* FinancialConnectionsSynchronize.swift in Sources */,
 				15EC9F36187C341800164428 /* FinancialConnectionsAnalyticsClient.swift in Sources */,
 				C61D5957D3276991795F7D16 /* FinancialConnectionsSheetAnalytics.swift in Sources */,
-				D3AB52D5AE87FE51642C50C1 /* ExperimentHelper.swift in Sources */,
 				6A13B9FA2B4E182A00FFA327 /* SpinnerView.swift in Sources */,
 				6A384A842C24DD720044AB99 /* FinancialConnectionsGenericInfoScreen.swift in Sources */,
 				0D56BD448019185656DF9310 /* FinancialConnectionsCustomManualEntryRequiredError.swift in Sources */,
@@ -1431,7 +1421,6 @@
 				4A0D015C978BD79BBFE6CE57 /* ManualEntryDataSource.swift in Sources */,
 				6A78141A2B45D53700168992 /* DataAccessNoticeViewController.swift in Sources */,
 				49B3543B2D9B239C006ECD9C /* FinancialConnectionsAPIEndpoint.swift in Sources */,
-				2343C58289259920DD81620D /* ManualEntryErrorView.swift in Sources */,
 				6ABFE5552B74479A0037437C /* ErrorViewController.swift in Sources */,
 				6A732C9C2B61C56A00828CB1 /* InstitutionTableLoadingView.swift in Sources */,
 				6D018BB3C1253ED4C1674E0B /* ManualEntryFormView.swift in Sources */,
@@ -1489,7 +1478,6 @@
 				E637387728FA1597B1B51E5D /* UIImage+Extensions.swift in Sources */,
 				486E50E6CB90208AB98C031E /* UIImageView+Extensions.swift in Sources */,
 				F0FB346A0F86C3561CD3C048 /* UITableView+Extensions.swift in Sources */,
-				A34AB3AC6D071605CABFFC9B /* UIViewController+KeyboardAvoiding.swift in Sources */,
 				B2970FE2753A4D79E428BA73 /* SuccessDataSource.swift in Sources */,
 				C39214EA5995D85B847406BE /* SuccessFooterView.swift in Sources */,
 				6A1D42FF2B1686FC005A1EB0 /* InstitutionTableView.swift in Sources */,

@@ -8,7 +8,7 @@
 import StripeCore
 import SwiftUI
 
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 import StripeCryptoOnramp
 
 @_spi(STP)
@@ -23,12 +23,19 @@ struct RegistrationView: View {
     /// The email address associated with the new account being registered.
     let email: String
 
+    /// The OAuth scopes selected for authentication.
+    let selectedScopes: [OAuthScopes]
+
+    /// Called when registration and authentication succeed.
+    let onCompleted: () -> Void
+
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
-    @State private var showAuthenticatedView: Bool = false
-    @State private var registrationCustomerId: String?
+    @State private var isRegistrationComplete: Bool = false
+    @State private var showUpdatePhoneNumberSheet: Bool = false
+    @State private var updatePhoneNumberInput: String = ""
 
     @Environment(\.isLoading) private var isLoading
 
@@ -38,6 +45,14 @@ struct RegistrationView: View {
 
     private var isRegisterButtonDisabled: Bool {
         isLoading.wrappedValue || phoneNumber.isEmpty
+    }
+
+    private var isUpdatePhoneNumberButtonDisabled: Bool {
+        isLoading.wrappedValue || !isRegistrationComplete
+    }
+
+    private var isAuthenticateButtonDisabled: Bool {
+        isLoading.wrappedValue
     }
 
     // MARK: - View
@@ -82,28 +97,55 @@ struct RegistrationView: View {
                         .focused($isCountryFieldFocused)
                 }
 
-                Button("Register") {
-                    registerUser()
+                if isRegistrationComplete {
+                    Button("Authenticate") {
+                        resetFocusState()
+                        Task {
+                            try await verify()
+                        }
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(isAuthenticateButtonDisabled)
+                    .opacity(isAuthenticateButtonDisabled ? 0.5 : 1)
+                } else {
+                    Button("Register") {
+                        resetFocusState()
+                        registerUser()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(isRegisterButtonDisabled)
+                    .opacity(isRegisterButtonDisabled ? 0.5 : 1)
+                }
+
+                Button("Update Phone Number") {
+                    resetFocusState()
+                    updatePhoneNumberInput = phoneNumber
+                    showUpdatePhoneNumberSheet = true
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                .disabled(isRegisterButtonDisabled)
-                .opacity(isRegisterButtonDisabled ? 0.5 : 1)
+                .disabled(isUpdatePhoneNumberButtonDisabled)
+                .opacity(isUpdatePhoneNumberButtonDisabled ? 0.5 : 1)
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }
 
-                if let customerId = registrationCustomerId {
-                    HiddenNavigationLink(
-                        destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
-                        isActive: $showAuthenticatedView
-                    )
-                }
             }
             .padding()
         }
         .navigationTitle("Registration")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Update phone number", isPresented: $showUpdatePhoneNumberSheet) {
+            TextField("New phone number", text: $updatePhoneNumberInput)
+                .textContentType(.telephoneNumber)
+                .keyboardType(.phonePad)
+            Button("Submit") {
+                updatePhoneNumber(to: updatePhoneNumberInput)
+            }
+            Button("Cancel", role: .cancel) {
+                updatePhoneNumberInput = ""
+            }
+        }
     }
 
     private func registerUser() {
@@ -112,7 +154,8 @@ struct RegistrationView: View {
 
         Task {
             do {
-                let customerId = try await coordinator.registerLinkUser(
+                try await coordinator.registerLinkUser(
+                    email: email,
                     fullName: fullName.isEmpty ? nil : fullName,
                     phone: phoneNumber,
                     country: country
@@ -120,16 +163,12 @@ struct RegistrationView: View {
 
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    registrationCustomerId = customerId
-
-                    // Delay so the navigation link animation doesn’t get canceled.
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showAuthenticatedView = true
-                    }
+                    isRegistrationComplete = true
                 }
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
+                    isRegistrationComplete = false
                     if let cryptoError = error as? CryptoOnrampCoordinator.Error, case .invalidPhoneFormat = cryptoError {
                         errorMessage = "Invalid phone format. Please use E.164 format (e.g., +12125551234)"
                     } else {
@@ -139,13 +178,94 @@ struct RegistrationView: View {
             }
         }
     }
+
+    private func verify() async throws {
+        // Authenticate with the demo merchant backend as well.
+        let response = try await APIClient.shared.createAuthIntent(oauthScopes: selectedScopes)
+
+        await MainActor.run {
+            isLoading.wrappedValue = true
+            errorMessage = nil
+        }
+
+        if await presentAuthorization(laiId: response.authIntentId, using: coordinator) {
+            await MainActor.run {
+                isLoading.wrappedValue = false
+                onCompleted()
+            }
+        } else {
+            await MainActor.run {
+                isLoading.wrappedValue = false
+            }
+        }
+    }
+
+    private func presentAuthorization(laiId: String, using coordinator: CryptoOnrampCoordinator) async -> Bool {
+        if let viewController = UIApplication.shared.findTopNavigationController() {
+            do {
+                let result = try await coordinator.authorize(linkAuthIntentId: laiId, from: viewController)
+
+                switch result {
+                case let .consented(customerId):
+                    try await APIClient.shared.saveUser(cryptoCustomerId: customerId)
+                    return true
+                case .denied:
+                    await MainActor.run {
+                        errorMessage = "Consent rejected"
+                    }
+                    return false
+                case .canceled:
+                    return false
+                @unknown default:
+                    return false
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = error.localizedDescription
+                }
+                return false
+            }
+        } else {
+            await MainActor.run {
+                errorMessage = "Unable to find view controller to present from."
+            }
+            return false
+        }
+    }
+
+    private func updatePhoneNumber(to phoneNumber: String) {
+        isLoading.wrappedValue = true
+        Task {
+            do {
+                try await coordinator.updatePhoneNumber(to: phoneNumber)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    updatePhoneNumberInput = ""
+                    self.phoneNumber = phoneNumber
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Updating phone number failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func resetFocusState() {
+        isFullNameFieldFocused = false
+        isPhoneNumberFieldFocused = false
+        isCountryFieldFocused = false
+    }
 }
 
 #Preview {
     PreviewWrapperView { coordinator in
         RegistrationView(
             coordinator: coordinator,
-            email: "test@example.com"
+            email: "test@example.com",
+            selectedScopes: OAuthScopes.requiredScopes,
+            onCompleted: {}
         )
     }
 }

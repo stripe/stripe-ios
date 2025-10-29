@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Afegir";
 
 "Add US bank account" = "Afegeix un compte bancari dels EUA";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Afegir nou mètode de pagament";
 
 "Add your payment information" = "Afegir la teva informació de pagament";
-
-"Agree and continue" = "Accepteu i continueu";
 
 "Approve payment" = "Aprova el pagament";
 
@@ -84,6 +80,10 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Si envieu la comanda a %1$@ i %2$@, accepteu desar la vostra informació amb %3$@ per a compres futures i accepteu autoritzar els pagaments d'acord amb <terms>aquestes condicions</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En enviar la comanda a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquestes condicions</terms>.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "Cancel·la i paga d'una altra manera";
@@ -114,25 +114,27 @@
 
 "Continue another way" = "Continua d'una altra manera";
 
+"Create an account with Link for faster checkout across the web" = "Creeu un compte amb Link per a una finalització de la compra més ràpida a tot el lloc web";
+
 "Debit or credit card" = "Targeta de crèdit o dèbit";
 
 "Default" = "Per defecte";
 
 "Default payment method" = "Mètode de pagament per defecte";
 
+"Did you mean %@? %@." = "Volíeu dir %1$@? %2$@.";
+
 "EPS Bank" = "Banc EPS";
 
 "Enter address manually" = "Introduir l'adreça manualment";
 
-"Enter the code sent to %@ to use your saved information." = "";
+"Enter the code sent to %@." = "Introduïu el codi que us hem enviat a %s.";
 
 "FPX Bank" = "Banc FPX";
 
 "Failed to connect" = "No s'ha pogut connectar";
 
 "Fast, secure checkout" = "Finalització de la compra ràpida i segura";
-
-"For security, please re-enter your card’s security code." = "Per raons de seguretat, torna a introduir el codi de seguretat de la targeta.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Obteniu %@ de reembossament quan pagueu per primera vegada amb el compte bancari. <terms>Consulteu les condicions</terms>";
 
@@ -282,9 +284,9 @@
 
 "The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Aquesta targeta ha caducat. Actualitzeu-ne la informació o trieu un altre mètode de pagament.";
-
 "This is your default" = "Aquesta és l'opció per defecte";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Aquesta forma de pagament se suprimirà, però continuarà disponible per a les subscripcions del %@.";
 
 "Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
 
@@ -296,9 +298,9 @@
 
 "Use billing address for shipping" = "Utilitzar l'adreça de facturació per a l'enviament";
 
-"Use your saved info to check out faster" = "Utilitza la informació desada per pagar més ràpidament";
-
 "View more" = "Visualitza més";
+
+"Yes, update" = "Sí, actualitzar";
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 

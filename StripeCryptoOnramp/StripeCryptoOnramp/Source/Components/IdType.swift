@@ -8,7 +8,7 @@
 import Foundation
 
 /// Represents possible types of customer identification.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public enum IdType: String, Codable, CaseIterable {
     case socialSecurityNumber = "social_security_number"
 }

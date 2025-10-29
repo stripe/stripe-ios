@@ -10,7 +10,7 @@
 import Stripe
 import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 
 class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
@@ -145,8 +145,8 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         let elementSession = try await client.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
-                                    confirmHandler: { _, _, _ in
-                                        // no-op
+                                    confirmHandler: { _, _ in
+                                        return "" // not executed
                                     }),
             clientDefaultPaymentMethod: paymentMethod2.stripeId,
             configuration: configuration)
@@ -244,8 +244,8 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         let elementSession = try await client.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .payment(amount: 5000, currency: "eur", setupFutureUsage: .offSession, captureMethod: .automatic),
-                                    confirmHandler: { _, _, _ in
-                                        // no-op
+                                    confirmHandler: { _, _ in
+                                        return "" // not executed
                                     }),
             clientDefaultPaymentMethod: nil,
             configuration: configuration)
@@ -292,6 +292,9 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
             customerID: customerAndEphemeralKey.customer,
             ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
         )
+
+        // Wait one second to make sure the ordering is correct (the `created` dates are in seconds)
+        try await Task.sleep(nanoseconds: NSEC_PER_SEC)
 
         // Fetch the customer's saved PMs
         let fetchedPaymentMethods = try await fetchPaymentMethods(

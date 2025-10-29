@@ -105,6 +105,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
             }
         }
 
+        var showProcessingLabel: Bool {
+            // If launched from FlowController for payment method selection (and not confirmation), we don't
+            // want to show the "Processing…" label, as that label implies that the transaction is being
+            // completed, which is not the case.
+            !launchedFromFlowController
+        }
+
         /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
         /// Returns [.card] as fallback if no types are supported after filtering.
         func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ConsumerPaymentDetails.DetailsType> {
@@ -190,6 +197,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
         LinkUI.largeCornerRadius
     }
 
+    override var navigationBarHeight: CGFloat {
+        LinkUI.navigationBarHeight
+    }
+
     private var isBailingToWebFlow: Bool = false
 
     convenience init(
@@ -209,6 +220,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil
     ) {
+        LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+
         self.init(
             context: Context(
                 intent: intent,
@@ -239,7 +252,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
         super.init(
             contentViewController: initialVC,
-            appearance: context.configuration.appearance,
+            appearance: LinkUI.appearance,
             isTestMode: false,
             didCancelNative3DS2: {
                 cancellationHandler?()
@@ -390,7 +403,8 @@ private extension PayWithLinkViewController {
 
         Task { @MainActor in
             async let paymentDetailsResult = linkAccount.listPaymentDetails(
-                supportedTypes: supportedPaymentDetailsTypes
+                supportedTypes: supportedPaymentDetailsTypes,
+                shouldRetryOnAuthError: false
             )
 
             async let shippingAddressResult = fetchShippingAddress(
@@ -427,11 +441,40 @@ private extension PayWithLinkViewController {
                     paymentDetails: paymentDetails
                 )
             } catch {
+                if error.isLinkAuthError {
+                    // Ask the user to verify the session again, as it might have expired.
+                    if let updatedAccount = await attemptReauthentication() {
+                        setViewControllers([VerifyAccountViewController(linkAccount: updatedAccount, context: context)])
+                        return
+                    }
+                }
+
                 payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
                     self,
                     result: PaymentSheetResult.failed(error: error),
                     deferredIntentConfirmationType: nil
                 )
+            }
+        }
+    }
+
+    private func attemptReauthentication() async -> PaymentSheetLinkAccount? {
+        // Tell the LinkAccountService to lookup again
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+
+        return await withCheckedContinuation { continuation in
+            accountService.lookupAccount(
+                withEmail: linkAccount?.email,
+                emailSource: .prefilledEmail,
+                doNotLogConsumerFunnelEvent: false
+            ) { result in
+                switch result {
+                case .success(let account):
+                    self.linkAccount = account
+                    continuation.resume(returning: account)
+                case .failure:
+                    continuation.resume(returning: nil)
+                }
             }
         }
     }
@@ -448,7 +491,7 @@ private extension PayWithLinkViewController {
         shouldFetch: Bool
     ) async throws -> ShippingAddressesResponse? {
         guard shouldFetch else { return nil }
-        return try await account.listShippingAddress()
+        return try await account.listShippingAddress(shouldRetryOnAuthError: false)
     }
 
     private func presentAppropriateViewController(
@@ -559,7 +602,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             switch sessionResult {
             case .success(let session):
                 session.createLinkAccountSession(
-                    consumerAccountPublishableKey: linkAccount.publishableKey,
                     linkMode: self?.context.elementsSession.linkSettings?.linkMode,
                     intentToken: self?.context.intent.stripeId
                 ) { [session, weak self] linkAccountSessionResult in
@@ -607,10 +649,13 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             verificationSessions: verificationSessions
         )
 
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+
         func createPaymentDetails(linkedAccountId: String) {
             linkAccount.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
                 isDefault: false,
+                clientAttributionMetadata: clientAttributionMetadata,
                 completion: { paymentDetailsResult in
                     switch paymentDetailsResult {
                     case .success:
@@ -628,7 +673,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
             style: .automatic,
-            elementsSessionContext: nil,
+            elementsSessionContext: ElementsSessionContext(clientAttributionMetadata: clientAttributionMetadata),
             onEvent: nil,
             from: self,
             completion: { result in

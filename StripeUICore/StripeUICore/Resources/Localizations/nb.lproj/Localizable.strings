@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valgfritt)";
 
 "(not accepted)" = "(ikke godtatt)";
@@ -37,8 +39,6 @@
 "Country or region" = "Land eller region";
 
 "County" = "Fylke";
-
-"Date is empty." = "Dato er tom.";
 
 "Department" = "Avdeling";
 
@@ -144,6 +144,6 @@
 
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";
 
-"Your postal code is invalid." = "Postnummeret ditt er ugyldig.";
+"Your postal code is invalid." = "Postnummeret er ugyldig.";
 
 "ZIP" = "ZIP";

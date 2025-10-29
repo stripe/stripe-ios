@@ -52,9 +52,15 @@ class STPErrorTests: XCTestCase {
     }
 
     func testLocalizedUserMessageWithDeclineCode() {
-        // Test decline codes (which should map correctly through the same API)
+        // Test that specific decline codes take priority when available
         XCTAssertEqual(
-            STPError.localizedUserMessage(forErrorCode: "card_declined"),
+            STPError.localizedUserMessage(forErrorCode: "card_declined", declineCode: "invalid_cvc"),
+            NSError.stp_cardInvalidCVCUserMessage()
+        )
+
+        // Test that unknown decline codes fall back to error code
+        XCTAssertEqual(
+            STPError.localizedUserMessage(forErrorCode: "card_declined", declineCode: "insufficient_funds"),
             NSError.stp_cardErrorDeclinedUserMessage()
         )
 

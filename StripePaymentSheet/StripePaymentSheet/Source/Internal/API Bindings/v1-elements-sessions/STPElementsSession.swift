@@ -17,6 +17,9 @@ import Foundation
     /// Elements Session ID for analytics purposes, looks like "elements_session_1234"
     let sessionID: String
 
+    /// Backend-logged Elements Session Config ID
+    let configID: String?
+
     /// The ordered payment method preference for this ElementsSession.
     let orderedPaymentMethodTypes: [STPPaymentMethodType]
 
@@ -59,7 +62,7 @@ import Foundation
     let customPaymentMethods: [CustomPaymentMethod]
 
     /// An object that contains information for the passive captcha
-    let passiveCaptcha: PassiveCaptcha?
+    let passiveCaptchaData: PassiveCaptchaData?
 
     let customer: ElementsCustomer?
 
@@ -71,6 +74,7 @@ import Foundation
     internal init(
         allResponseFields: [AnyHashable: Any],
         sessionID: String,
+        configID: String?,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         orderedPaymentMethodTypesAndWallets: [String],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType],
@@ -85,12 +89,13 @@ import Foundation
         isApplePayEnabled: Bool,
         externalPaymentMethods: [ExternalPaymentMethod],
         customPaymentMethods: [CustomPaymentMethod],
-        passiveCaptcha: PassiveCaptcha?,
+        passiveCaptchaData: PassiveCaptchaData?,
         customer: ElementsCustomer?,
         isBackupInstance: Bool = false
     ) {
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
+        self.configID = configID
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.orderedPaymentMethodTypesAndWallets = orderedPaymentMethodTypesAndWallets
         self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
@@ -105,7 +110,7 @@ import Foundation
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
         self.customPaymentMethods = customPaymentMethods
-        self.passiveCaptcha = passiveCaptcha
+        self.passiveCaptchaData = passiveCaptchaData
         self.customer = customer
         self.isBackupInstance = isBackupInstance
         super.init()
@@ -136,6 +141,7 @@ import Foundation
         return STPElementsSession(
             allResponseFields: allResponseFields,
             sessionID: UUID().uuidString,
+            configID: nil,
             orderedPaymentMethodTypes: sortedPaymentMethodTypes,
             orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: [],
@@ -150,7 +156,7 @@ import Foundation
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
-            passiveCaptcha: nil,
+            passiveCaptchaData: nil,
             customer: nil,
             isBackupInstance: true
         )
@@ -169,6 +175,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return nil
         }
 
+        let configID = response["config_id"] as? String
         // Optional fields:
         let unactivatedPaymentMethodTypeStrings = response["unactivated_payment_method_types"] as? [String] ?? []
         let orderedPaymentMethodTypesAndWallets = response["ordered_payment_method_types_and_wallets"] as? [String] ?? []
@@ -207,16 +214,16 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return epms
         }()
 
-        let passiveCaptcha: PassiveCaptcha? = {
+        let passiveCaptchaData: PassiveCaptchaData? = {
             let enablePassiveCaptcha = flags["elements_enable_passive_captcha"] ?? false
             let passiveCaptchaKey = "passive_captcha"
             guard enablePassiveCaptcha,
                   let passiveCaptchaJSON = response[passiveCaptchaKey] as? [AnyHashable: Any],
-                  let passiveCaptcha = PassiveCaptcha.decoded(fromAPIResponse: passiveCaptchaJSON)
+                  let passiveCaptchaData = PassiveCaptchaData.decoded(fromAPIResponse: passiveCaptchaJSON)
             else {
                 return nil
             }
-            return passiveCaptcha
+            return passiveCaptchaData
         }()
 
         let customPaymentMethods: [CustomPaymentMethod] = {
@@ -239,6 +246,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
         return self.init(
             allResponseFields: response,
             sessionID: sessionID,
+            configID: configID,
             orderedPaymentMethodTypes: paymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             orderedPaymentMethodTypesAndWallets: orderedPaymentMethodTypesAndWallets,
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
@@ -257,7 +265,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
-            passiveCaptcha: passiveCaptcha,
+            passiveCaptchaData: passiveCaptchaData,
             customer: customer
         )
     }
@@ -278,12 +286,23 @@ extension STPElementsSession {
         if let customerSession = customer?.customerSession {
             if customerSession.mobilePaymentElementComponent.enabled,
                let features = customerSession.mobilePaymentElementComponent.features {
-                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove == .enabled || features.paymentMethodRemove == .partial
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+
+    func paymentMethodRemoveIsPartialForPaymentSheet() -> Bool {
+        let isParital = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.mobilePaymentElementComponent.enabled,
+               let features = customerSession.mobilePaymentElementComponent.features {
+                return features.paymentMethodRemove == .partial
+            }
+        }
+        return isParital
     }
 
     func paymentMethodRemoveLast(configuration: PaymentElementConfiguration) -> Bool{
@@ -313,12 +332,22 @@ extension STPElementsSession {
         if let customerSession = customer?.customerSession {
             if customerSession.customerSheetComponent.enabled,
                let features = customerSession.customerSheetComponent.features {
-                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove == .enabled || features.paymentMethodRemove == .partial
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+    func paymentMethodRemoveIsPartialForCustomerSheet() -> Bool {
+        let isParital = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.customerSheetComponent.enabled,
+               let features = customerSession.customerSheetComponent.features {
+                return features.paymentMethodRemove == .partial
+            }
+        }
+        return isParital
     }
     var paymentMethodRemoveLastForCustomerSheet: Bool {
         return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
@@ -340,10 +369,8 @@ extension STPElementsSession {
         linkFlags["link_mobile_disable_default_opt_in"] != true
     }
 
-    var alwaysSaveForFutureUse: Bool {
-        // When this (now poorly named) feature flag is enabled for a merchant, we always show the reuse mandate,
-        // since the merchant will save the payment method for future use.
-        linkSignupOptInFeatureEnabled
+    var forceSaveFutureUseBehaviorAndNewMandateText: Bool {
+        flags["elements_mobile_force_setup_future_use_behavior_and_new_mandate_text"] == true
     }
 
     var linkSignupOptInFeatureEnabled: Bool {
@@ -352,6 +379,10 @@ extension STPElementsSession {
 
     var linkSignupOptInInitialValue: Bool {
         linkFlags["link_sign_up_opt_in_initial_value"] == true
+    }
+
+    var shouldAttestOnConfirmation: Bool {
+        flags["elements_mobile_attest_on_intent_confirmation"] == true
     }
 }
 
@@ -385,5 +416,27 @@ extension STPElementsSession {
             return false
         }
         return true
+    }
+}
+
+extension STPElementsSession {
+    func computeAllowRedisplay(isSettingUp: Bool) -> STPPaymentMethodAllowRedisplay? {
+        guard let customerSessionMobilePaymentElementFeatures else {
+            return nil
+        }
+
+        let allowRedisplayOverride = customerSessionMobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
+
+        if isSettingUp {
+            return allowRedisplayOverride ?? .limited
+        } else {
+            return .unspecified
+        }
+    }
+
+    var useCardPaymentMethodTypeForIBP: Bool {
+        let canAcceptACH = orderedPaymentMethodTypes.contains(.USBankAccount)
+        let isLinkCardBrand = linkSettings?.linkMode?.isPantherPayment ?? false
+        return isLinkCardBrand && !canAcceptACH
     }
 }

@@ -1,3 +1,6 @@
+/* Card preview details displaying the last four digits: {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (optional)";
 
@@ -59,9 +62,6 @@ Section header for address fields */
 /* Caption for County field on address form (only countries that use county, like United Kingdom)
 Label of an address field */
 "County" = "County";
-
-/* Error message for empty date. */
-"Date is empty." = "Date is empty.";
 
 /* Label of an address field */
 "Department" = "Department";

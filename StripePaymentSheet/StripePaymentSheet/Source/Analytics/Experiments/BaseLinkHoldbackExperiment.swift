@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 struct BaseLinkHoldbackExperiment {
@@ -18,6 +19,9 @@ struct BaseLinkHoldbackExperiment {
     let linkDefaultOptIn: String
     let linkDisplayed: Bool
     let linkNative: Bool
+    let sdkVersion: String
+    let elementsSessionId: String
+    let mobileSessionId: String
 
     var dimensionsDictionary: [String: Any] {
         [
@@ -30,6 +34,9 @@ struct BaseLinkHoldbackExperiment {
             "link_displayed": linkDisplayed,
             "link_native": linkNative,
             "recognition_type": "email",
+            "mobile_sdk_version": sdkVersion,
+            "elements_session_id": elementsSessionId,
+            "mobile_session_id": mobileSessionId,
         ]
     }
 
@@ -77,5 +84,9 @@ struct BaseLinkHoldbackExperiment {
         let paymentMethodSaveEnabled = elementsSession.customerSessionMobilePaymentElementFeatures?.paymentMethodSave == true
         let linkNotEnabledOrEnableLinkSPMFlag = !isLinkEnabled || elementsSession.flags["elements_enable_link_spm"] == true
         self.hasSPMs = hasCustomer && paymentMethodSaveEnabled && linkNotEnabledOrEnableLinkSPMFlag
+
+        self.sdkVersion = StripeAPIConfiguration.STPSDKVersion
+        self.elementsSessionId = elementsSession.sessionID
+        self.mobileSessionId = AnalyticsHelper.shared.sessionID ?? "N/a"
     }
 }

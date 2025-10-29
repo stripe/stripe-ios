@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import StripePayments
+@_spi(STP) import StripePayments
 
 /// Represents the possible selected payment method types.
 enum SelectedPaymentSource {
@@ -15,5 +15,14 @@ enum SelectedPaymentSource {
     case link
 
     /// Apple Pay was selected as the payment method.
-    case applePay(STPPaymentMethod)
+    case applePay(StripeAPI.PaymentMethod)
+
+    var analyticsValue: String {
+        switch self {
+        case .link:
+            return "link"
+        case .applePay:
+            return "apple_pay"
+        }
+    }
 }

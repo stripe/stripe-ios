@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@（可选）";
 
 "(not accepted)" = "（未接受）";
@@ -37,8 +39,6 @@
 "Country or region" = "国家或地区";
 
 "County" = "县";
-
-"Date is empty." = "日期为空。";
 
 "Department" = "部门";
 

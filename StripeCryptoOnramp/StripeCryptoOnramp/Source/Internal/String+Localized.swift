@@ -6,10 +6,12 @@
 //
 
 import Foundation
+@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
-import StripePayments
+@_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
-@_spi(STP) extension String.Localized {
+extension String.Localized {
     static var debitIsMostLikelyToBeAccepted: String {
         return STPLocalizedString(
             "Debit cards are most likely to be accepted.",
@@ -17,16 +19,26 @@ import StripePayments
         )
     }
 
-    static func redactedCardDetails(using card: STPPaymentMethodCard) -> String? {
-        let brand = STPCard.string(from: card.brand)
-        guard !brand.isEmpty, let last4 = card.last4 else {
+    static func redactedCardDetails(using card: StripeAPI.PaymentMethod.Card) -> String? {
+        let brand = stpCardBrand(from: card.brand)
+        let brandString = STPCard.string(from: brand)
+        guard !brandString.isEmpty, let last4 = card.last4 else {
             return nil
         }
 
-        let formattedMessage = STPLocalizedString(
-            "%1$@ •••• %2$@",
-            "Card preview details displaying the last four digits: {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
-        )
-        return String(format: formattedMessage, brand, last4)
+        return String(format: card_details_xxxx, brandString, last4)
+    }
+
+    private static func stpCardBrand(from brand: StripeAPI.PaymentMethod.Card.Brand) -> STPCardBrand {
+        switch brand {
+        case .visa: return .visa
+        case .amex: return .amex
+        case .mastercard: return .mastercard
+        case .discover: return .discover
+        case .jcb: return .JCB
+        case .diners: return .dinersClub
+        case .unionpay: return .unionPay
+        case .unknown, .unparsable: return .unknown
+        }
     }
 }

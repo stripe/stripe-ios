@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
 
@@ -117,13 +118,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         observePlaygroundController()
-        self.view.backgroundColor = UIColor(dynamicProvider: { traitCollection in
-            if traitCollection.userInterfaceStyle == .dark {
-                return .secondarySystemBackground
-            }
-
-            return .systemBackground
-        })
+        self.view.backgroundColor = configuration.appearance.colors.background
 
         setupLoadingIndicator()
         loadingIndicator.startAnimating()

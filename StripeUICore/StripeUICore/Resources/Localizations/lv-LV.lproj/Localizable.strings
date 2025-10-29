@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (nav obligāti)";
 
 "(not accepted)" = "(netiek pieņemts)";
@@ -37,8 +39,6 @@
 "Country or region" = "Valsts vai reģions";
 
 "County" = "Apriņķis";
-
-"Date is empty." = "Datums ir tukšs.";
 
 "Department" = "Departaments";
 
@@ -144,6 +144,6 @@
 
 "Your postal code is incomplete." = "Pasta indekss nav pilnīgs.";
 
-"Your postal code is invalid." = "Jūsu pasta indekss ir nederīgs.";
+"Your postal code is invalid." = "Pasta indekss nav derīgs.";
 
 "ZIP" = "Pasta ind.";

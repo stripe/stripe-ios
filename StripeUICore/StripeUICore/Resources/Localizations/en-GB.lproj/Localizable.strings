@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (optional)";
 
 "(not accepted)" = "(not accepted)";
@@ -37,8 +39,6 @@
 "Country or region" = "Country or region";
 
 "County" = "County";
-
-"Date is empty." = "Date is empty.";
 
 "Department" = "Department";
 

@@ -100,6 +100,48 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         waitForExpectations(timeout: 5)
     }
 
+    func testNoRefreshWhenNotRequested() {
+        let sut = makeSUT()
+        let listedPaymentDetailsExp = expectation(description: "Lists payment details")
+
+        // Set up a stub to return a 401 with the wrong key, otherwise return an empty PM list
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("consumers/payment_details/list") ?? false
+        } response: { urlRequest in
+            // Check to make sure we've passed the correct secret key
+            let body = String(data: urlRequest.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
+            if !body.contains("unexpired_key") {
+                // If it isn't the unexpired key, force a refresh by sending the correct error:
+                let errorResponse = [
+                    "error":
+                        [
+                            "message": "Fake invalid consumer session error.",
+                            "code": "consumer_session_credentials_invalid",
+                            "type": "invalid_request_error",
+                        ],
+                ]
+                return HTTPStubsResponse(jsonObject: errorResponse, statusCode: 401, headers: nil)
+            }
+
+            // If we did succeed, send an empty payment details list (which will be treated as a successful response).
+            let paymentDetailsEmptyList = ["redacted_payment_details": []]
+            return HTTPStubsResponse(jsonObject: paymentDetailsEmptyList, statusCode: 200, headers: nil)
+        }
+
+        // List the payment details. This will fail, refresh the token, then succeed.
+        sut.listPaymentDetails(
+            supportedTypes: [.card, .bankAccount],
+            shouldRetryOnAuthError: false
+        ) { result in
+            switch result {
+            case .success:
+                XCTFail("Should not have succeeded")
+            case .failure:
+                listedPaymentDetailsExp.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 5)
+    }
 }
 
 class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
@@ -118,7 +160,8 @@ class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
             unredactedPhoneNumber: "(555) 555-5555",
             phoneNumberCountry: "US",
             verificationSessions: [],
-            supportedPaymentDetailsTypes: [.card, .bankAccount]
+            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            mobileFallbackWebviewParams: nil
         )
         completion(.success(stubSession))
         expectation.fulfill()
@@ -153,7 +196,8 @@ extension PaymentSheetLinkAccountTests {
             publishableKey: nil,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
     }
 

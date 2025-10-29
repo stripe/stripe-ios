@@ -38,7 +38,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         let vc = makeViewController()
         // Allows front
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 1)
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license or passport")
     }
 
     func testIdCardBack() {
@@ -50,8 +50,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         let vc = makeViewController()
         // Allows front and back
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of identity card")
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license or passport")
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of driver's license")
 
         // Verify button is only enabled after both front and back images are uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
@@ -176,7 +176,8 @@ extension DocumentFileUploadViewControllerTest {
             sheetController: mockSheetController,
             documentUploader: mockDocumentUploader,
             cameraPermissionsManager: mockCameraPermissionsManager,
-            appSettingsHelper: mockAppSettingsHelper
+            appSettingsHelper: mockAppSettingsHelper,
+            availableIDTypes: ["driving_license", "passport"]
         )
     }
 }

@@ -16,6 +16,23 @@ final class APIClient {
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
     private(set) var authToken: String?
+    private(set) var authTokenWithLAI: String?
+    private var email: String?
+
+    private var persistedSeamlessSignInDetails: SeamlessSignInDetails? {
+        // Note that `UserDefaults` are used here in this example app for simplicity.
+        // In a real app, more secure storage mechanisms should be used, such as the Keychain.
+        guard let seamlessSignInData = UserDefaults.standard.data(forKey: DefaultsKeys.seamlessSignInDetails) else {
+            return nil
+        }
+
+        return try? jsonDecoder.decode(SeamlessSignInDetails.self, from: seamlessSignInData)
+    }
+
+    /// Persisted email address to use for seamless sign-in.
+    var seamlessSignInEmail: String? {
+        return persistedSeamlessSignInDetails?.email
+    }
 
     private init(session: URLSession = .shared) {
         self.session = session
@@ -29,6 +46,11 @@ final class APIClient {
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .secondsSince1970
         self.jsonEncoder = encoder
+
+        if let seamlessSignInDetails = persistedSeamlessSignInDetails {
+            self.authTokenWithLAI = seamlessSignInDetails.token
+            self.email = seamlessSignInDetails.email
+        }
     }
 
     enum HTTPMethod: String {
@@ -39,6 +61,7 @@ final class APIClient {
     enum APIError: Error, LocalizedError {
         case httpError(status: Int, message: String)
         case missingAuthToken
+        case missingAuthTokenWithLAI
 
         var errorDescription: String? {
             switch self {
@@ -46,12 +69,40 @@ final class APIClient {
                 return "HTTP \(status): \(message)"
             case .missingAuthToken:
                 return "Missing Authorization token"
+            case .missingAuthTokenWithLAI:
+                return "Missing Authorization token with LAI"
             }
         }
     }
 
-    func setAuthToken(_ token: String?) {
+    func setAuthToken(_ token: String, email: String) {
         self.authToken = token
+        self.email = email
+    }
+
+    func setAuthTokenWithLAI(_ token: String) {
+        self.authTokenWithLAI = token
+        persistSeamlessSignInDetails()
+    }
+
+    func clearAuthState() {
+        self.authToken = nil
+        self.authTokenWithLAI = nil
+        self.email = nil
+
+        UserDefaults.standard.removeObject(forKey: DefaultsKeys.seamlessSignInDetails)
+    }
+
+    private func persistSeamlessSignInDetails() {
+        // Note that `UserDefaults` are used here in this example app for simplicity.
+        // In a real app, more secure storage mechanisms should be used, such as the Keychain.
+        guard let email = email, let token = authTokenWithLAI else { return }
+        let details = SeamlessSignInDetails(email: email, token: token)
+        if let data = try? jsonEncoder.encode(details) {
+            UserDefaults.standard.set(data, forKey: DefaultsKeys.seamlessSignInDetails)
+        } else {
+            UserDefaults.standard.removeObject(forKey: DefaultsKeys.seamlessSignInDetails)
+        }
     }
 
     func request<T: Decodable, Body: Encodable>(

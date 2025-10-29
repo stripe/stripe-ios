@@ -7,7 +7,7 @@ require_relative 'validate_version_number'
 @version = @specified_version
 
 # If no argument, exit
-abort("Specify a version number. (e.g. `#{__FILE__} --version 21.0.0`)") if @version.nil?
+abort("Specify a version number or increment flag. (e.g. `#{__FILE__} --version 21.0.0` or `#{__FILE__} --patch/minor/major`)") if @version.nil?
 
 # Make sure version is a valid version number
 unless @version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/)
@@ -15,6 +15,10 @@ unless @version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/)
 end
 
 puts "Proposing version: #{@version}".red
+
+# Ensure there are no unstaged changes before starting
+unstaged_changes = `git diff --name-only`.strip
+abort('You have unstaged changes. Please commit or stash them before creating a release.') unless unstaged_changes.empty?
 
 # Create a new branch for the release, e.g. bg/release-9.0.0
 @branchname = "releases/#{@version}"

@@ -13,31 +13,38 @@
 extension STPAPIClient {
 
     /// Errors that can occur that are specific to usage of crypto endpoints.
-    enum CryptoOnrampAPIError: Error {
+    @_spi(STP)
+    public enum CryptoOnrampAPIError: LocalizedError {
 
         /// No consumer session client secret was found to be associated with the active link account session.
         case missingConsumerSessionClientSecret
 
         /// The request requires a session with a verified link account, but the account was found to not be verified.
         case linkAccountNotVerified
+
+        @_spi(STP)
+        public var errorDescription: String? {
+            switch self {
+            case .missingConsumerSessionClientSecret:
+                return "No consumer session client secret was found to be associated with the active link account session."
+            case .linkAccountNotVerified:
+                return "The request requires a session with a verified link account, but the account was found to not be verified."
+            }
+        }
     }
 
     /// Creates a crypto customer on the backend, upon granting the partner-merchant permission to facilitate crypto onramp transactions upon a customer’s behalf.
     /// - Parameter linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
-    func grantPartnerMerchantPermissions(with linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CustomerResponse {
+    func createCryptoCustomer(with linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CustomerResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
 
         try validateSessionState(using: linkAccountInfo)
 
-        guard case .verified = linkAccountInfo.sessionState else {
-            throw CryptoOnrampAPIError.linkAccountNotVerified
-        }
-
         let endpoint = "crypto/internal/customers"
-        let requestObject = CustomerRequest(consumerSessionClientSecret: consumerSessionClientSecret)
+        let requestObject = EmptyRequestWithCredentials(consumerSessionClientSecret: consumerSessionClientSecret)
         return try await post(resource: endpoint, object: requestObject)
     }
 
@@ -45,11 +52,10 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - info: The collected customer information.
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    ///   - calendar: The calendar to use to convert the user’s date of birth (`KycInfo.dateOfBirth`) to components compatible with the API. Defaults to `calendar.current`.
     /// - Returns: A response object containing the user’s identifier.
     /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
-    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol, calendar: Calendar = .current) async throws -> KYCDataCollectionResponse {
+    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> KYCDataCollectionResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -59,10 +65,49 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/kyc_data_collection"
         let requestObject = KYCDataCollectionRequest(
             credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
-            kycInfo: info,
-            calendar: calendar
+            kycInfo: info
         )
 
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Updates the KYC info for the current Link user on the backend.
+    /// - Parameters:
+    ///   - info: The collected customer information.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An empty response
+    /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    @discardableResult
+    func refreshKycInfo(info: KYCRefreshInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/refresh_consumer_person"
+        let requestObject = KYCRefreshRequest(
+            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
+            kycInfo: info
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Retrieves existing KYC info for the current Link user.
+    /// - Parameters:
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An instance of `RetrieveKYCInfoResponse` containing the information stored for the user.
+    /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    func retrieveKycInfo(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> RetrieveKYCInfoResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/kyc_data_retrieve"
+        let requestObject = EmptyRequestWithCredentials(consumerSessionClientSecret: consumerSessionClientSecret)
         return try await post(resource: endpoint, object: requestObject)
     }
 
@@ -111,56 +156,50 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves the PaymentIntent from an onramp session.
+    /// Retrieves an onramp session.
     /// - Parameters:
     ///   - sessionId: The onramp session identifier.
     ///   - sessionClientSecret: The onramp session client secret.
-    /// - Returns: The PaymentIntent associated with the onramp session.
-    func retrievePaymentIntentFromOnrampSession(
+    /// - Returns: The onramp session details.
+    func getOnrampSession(
         sessionId: String,
         sessionClientSecret: String
-    ) async throws -> STPPaymentIntent {
+    ) async throws -> OnrampSessionResponse {
         let endpoint = "crypto/internal/onramp_session"
         let parameters = ["crypto_onramp_session": sessionId, "client_secret": sessionClientSecret]
-        return try await APIRequest<STPPaymentIntent>.getWith(self, endpoint: endpoint, parameters: parameters)
+        return try await get(resource: endpoint, parameters: parameters)
     }
 
     /// Creates a crypto payment token from a given payment method and consumer.
     /// - Parameters:
     ///   - paymentMethodId: The originating payment method ID.
-    ///   - linkAccountInfo: Information associated with the link account including the client secret.
+    ///   - cryptoCustomerId: The crypto customer ID.
     /// - Returns: The created crypto payment token.
     /// Throws if an API error occurs.
     func createPaymentToken(
         for paymentMethodId: String,
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+        cryptoCustomerId: String
     ) async throws -> CreatePaymentTokenResponse {
-        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
-            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
-        }
-
         let endpoint = "crypto/internal/payment_token"
         let requestObject = CreatePaymentTokenRequest(
             paymentMethod: paymentMethodId,
-            consumerSessionClientSecret: consumerSessionClientSecret
+            cryptoCustomerId: cryptoCustomerId
         )
         return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameter linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Parameter cryptoCustomerId: The ID for the crypto customer.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+        cryptoCustomerId: String
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        var parameters: [String: Any] = [:]
-        if let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret {
-            parameters["credentials"] = ["consumer_session_client_secret": consumerSessionClientSecret]
-        }
-
+        let parameters: [String: Any] = [
+            "crypto_customer_id": cryptoCustomerId
+        ]
         return try await get(resource: endpoint, parameters: parameters)
     }
 

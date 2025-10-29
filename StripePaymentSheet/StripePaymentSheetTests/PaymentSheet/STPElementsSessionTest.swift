@@ -57,26 +57,38 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_attestation() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": true]
+
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertTrue(elementsSession.shouldAttestOnConfirmation)
+
+        elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": false]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": true]
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002", "rqdata": nil]
 
         var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNotNil(elementsSession.passiveCaptcha)
+        XCTAssertNotNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002"]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNotNil(elementsSession.passiveCaptcha)
+        XCTAssertNotNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["passive_captcha"] = ["rqdata": "data"]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNil(elementsSession.passiveCaptcha)
+        XCTAssertNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": false]
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002", "rqdata": nil]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNil(elementsSession.passiveCaptcha)
+        XCTAssertNil(elementsSession.passiveCaptchaData)
     }
 
     func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {
@@ -296,6 +308,7 @@ class STPElementsSessionTest: XCTestCase {
 
         XCTAssertFalse(allowsRemoval)
         XCTAssertEqual(.paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, savePaymentMethodConsentBehavior)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveIsPartialForPaymentSheet())
     }
     func testSPMConsentAndRemoval_pmsD_pmrD() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
@@ -336,6 +349,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
+        XCTAssertTrue(elementsSession.paymentMethodRemoveIsPartialForPaymentSheet())
         XCTAssertEqual(.paymentSheetWithCustomerSessionPaymentMethodSaveEnabled, savePaymentMethodConsentBehavior)
     }
 
@@ -357,6 +371,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
+        XCTAssertTrue(elementsSession.paymentMethodRemoveIsPartialForPaymentSheet())
         XCTAssertEqual(.paymentSheetWithCustomerSessionPaymentMethodSaveDisabled, savePaymentMethodConsentBehavior)
     }
     func testPaymentMethodRemoveLast_enabled() {
@@ -377,6 +392,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveIsPartialForPaymentSheet())
         XCTAssertTrue(elementsSession.customer!.customerSession.mobilePaymentElementComponent.features!.paymentMethodRemoveLast)
 
         // Test that local config can override behavior
@@ -407,6 +423,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
 
         XCTAssertTrue(allowsRemoval)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveIsPartialForPaymentSheet())
         XCTAssertFalse(elementsSession.customer!.customerSession.mobilePaymentElementComponent.features!.paymentMethodRemoveLast)
 
         // Test that local config can override behavior
@@ -517,6 +534,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
 
         XCTAssertFalse(allowsRemoval)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveIsPartialForCustomerSheet())
         XCTAssertTrue(elementsSession.paymentMethodRemoveLastForCustomerSheet)
     }
 
@@ -536,6 +554,7 @@ class STPElementsSessionTest: XCTestCase {
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
 
         XCTAssertTrue(allowsRemoval)
+        XCTAssertTrue(elementsSession.paymentMethodRemoveIsPartialForCustomerSheet())
         XCTAssertTrue(elementsSession.paymentMethodRemoveLastForCustomerSheet)
     }
     func testAllowsRemovalOfPaymentMethodsForCustomerSheet_removeLast_enabled() {
@@ -554,6 +573,7 @@ class STPElementsSessionTest: XCTestCase {
 
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
         XCTAssertTrue(allowsRemoval)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveIsPartialForCustomerSheet())
         XCTAssertTrue(elementsSession.paymentMethodRemoveLastForCustomerSheet)
     }
     func testAllowsRemovalOfPaymentMethodsForCustomerSheet_removeLast_disabled() {
@@ -572,6 +592,7 @@ class STPElementsSessionTest: XCTestCase {
 
         let allowsRemoval = elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
         XCTAssertTrue(allowsRemoval)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveIsPartialForCustomerSheet())
         XCTAssertFalse(elementsSession.paymentMethodRemoveLastForCustomerSheet)
     }
     func testSetAsDefaultForCustomerSheet_enabled() {
@@ -590,6 +611,7 @@ class STPElementsSessionTest: XCTestCase {
 
         let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
         XCTAssertTrue(allowsSetAsDefault)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveIsPartialForCustomerSheet())
     }
     func testSetAsDefaultForCustomerSheet_disabled() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
@@ -605,6 +627,7 @@ class STPElementsSessionTest: XCTestCase {
 
         let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
         XCTAssertFalse(allowsSetAsDefault)
+        XCTAssertFalse(elementsSession.paymentMethodRemoveIsPartialForCustomerSheet())
     }
     func testCanDeserializeMPEWithoutCS() {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],

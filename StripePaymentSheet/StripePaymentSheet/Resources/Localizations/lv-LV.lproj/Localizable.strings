@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Pievienot";
 
 "Add US bank account" = "Pievienot ASV bankas kontu";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Pievienot jaunu maksājuma veidu";
 
 "Add your payment information" = "Pievienot maksājuma informāciju";
-
-"Agree and continue" = "Piekrist un turpināt";
 
 "Approve payment" = "Apstiprināt maksājumu";
 
@@ -84,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Saglabājot savu bankas kontu %@, jūs piekrītat apstiprināt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Iesniedzot pasūtījumu %1$@ un %2$@, jūs piekrītat saglabāt savu informāciju %3$@ nākamajiem pirkumiem un piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Iesniedzot savu pasūtījumu %@, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -116,25 +114,27 @@
 
 "Continue another way" = "Turpināt ar citu veidu";
 
+"Create an account with Link for faster checkout across the web" = "Izveidojiet kontu Link, lai varētu ātrāk veikt apmaksu visā tīmeklī";
+
 "Debit or credit card" = "Debetkarte vai kredītkarte";
 
 "Default" = "Noklusējuma";
 
 "Default payment method" = "Noklusējuma maksājuma veids";
 
+"Did you mean %@? %@." = "Vai jūs domājāt %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
-"Enter the code sent to %@ to use your saved information." = "Ievadiet kodu, kas tika nosūtīts uz %@, lai izmantotu jūsu saglabāto informāciju.";
+"Enter the code sent to %@." = "Ievadiet kodu, kas nosūtīts uz %s.";
 
 "FPX Bank" = "FPX banka";
 
 "Failed to connect" = "Neizdevās izveidot savienojumu";
 
 "Fast, secure checkout" = "Ātra un droša norēķināšanās";
-
-"For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saņemiet %@ atmaksu, maksājot pirmo reizi ar savu banku. <terms>Skatīt noteikumus</terms>";
 
@@ -284,9 +284,9 @@
 
 "The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Šai kartei ir beidzies derīguma termiņš. Atjauniniet savu kartes informāciju vai izmantojiet citu maksājuma veidu.";
-
 "This is your default" = "Tas ir jūsu noklusējums";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Šis maksājuma veids tiks noņemts, bet joprojām būs pieejams %@ abonementiem.";
 
 "Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
 
@@ -298,9 +298,9 @@
 
 "Use billing address for shipping" = "Piegādei izmantot norēķinu adresi";
 
-"Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
-
 "View more" = "Skatīt vairāk";
+
+"Yes, update" = "Jā, atjaunināt";
 
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 

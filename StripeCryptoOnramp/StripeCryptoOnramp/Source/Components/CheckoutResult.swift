@@ -8,12 +8,12 @@
 import Foundation
 
 /// The result of a call to `CryptoOnrampCoordinator.performCheckout()`.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public enum CheckoutResult {
 
     /// The checkout was completed successfully.
     case completed
 
-    /// The checkout failed with an error.
-    case failed(Error)
+    /// The checkout was canceled by the user.
+    case canceled
 }

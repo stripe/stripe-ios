@@ -10,7 +10,55 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension PaymentSheet {
-    static func handleDeferredIntentConfirmation(
+    /// Routes deferred intent confirmation to either the regular flow or confirmation token flow based on available handlers
+    static func routeDeferredIntentConfirmation(
+        confirmType: ConfirmPaymentMethodType,
+        configuration: PaymentElementConfiguration,
+        intentConfig: PaymentSheet.IntentConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        paymentHandler: STPPaymentHandler,
+        isFlowController: Bool,
+        allowsSetAsDefaultPM: Bool = false,
+        elementsSession: STPElementsSession?,
+        mandateData: STPMandateDataParams? = nil,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        // Route based on which handler is available in the intent configuration
+        if intentConfig.confirmationTokenConfirmHandler != nil {
+            guard let elementsSession else {
+                stpAssertionFailure("Unexpected nil elementsSession when handling deferred intent confirmation with confirmation token flow")
+                return
+            }
+            // Use confirmation token flow
+            handleDeferredIntentConfirmation_confirmationToken(
+                confirmType: confirmType,
+                configuration: configuration,
+                intentConfig: intentConfig,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler,
+                isFlowController: isFlowController,
+                allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                elementsSession: elementsSession,
+                mandateData: mandateData,
+                completion: completion
+            )
+        } else {
+            // Use regular confirmation flow
+            handleDeferredIntentConfirmation(
+                confirmType: confirmType,
+                configuration: configuration,
+                intentConfig: intentConfig,
+                authenticationContext: authenticationContext,
+                paymentHandler: paymentHandler,
+                isFlowController: isFlowController,
+                allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                mandateData: mandateData,
+                completion: completion
+            )
+        }
+    }
+
+    private static func handleDeferredIntentConfirmation(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         intentConfig: PaymentSheet.IntentConfiguration,
@@ -27,7 +75,7 @@ extension PaymentSheet {
                 // 1. Create PM if necessary
                 let paymentMethod: STPPaymentMethod
                 switch confirmType {
-                case let .saved(savedPaymentMethod, _):
+                case let .saved(savedPaymentMethod, _, _, _):
                     paymentMethod = savedPaymentMethod
                 case let .new(params, paymentOptions, newPaymentMethod, shouldSave, shouldSetAsDefaultPM):
                     if let newPaymentMethod {
@@ -64,7 +112,7 @@ extension PaymentSheet {
                     return
                 }
 
-                // 2b. Otherwise, call the standard confirmHandler
+                // 2b. Otherwise, call the payment method confirmHandler
                 let shouldSavePaymentMethod: Bool = {
                     // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
                     if confirmType.shouldSave {
@@ -73,9 +121,8 @@ extension PaymentSheet {
                     // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
                     return getShouldSavePaymentMethodValue(for: paymentMethod.type, intentConfiguration: intentConfig)
                 }()
-                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
-                                                                                 paymentMethod: paymentMethod,
-                                                                                 shouldSavePaymentMethod: shouldSavePaymentMethod)
+                // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-4186 Fix the force unwrap
+                let clientSecret = try await intentConfig.confirmHandler!(paymentMethod, shouldSavePaymentMethod)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
                     completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
@@ -92,13 +139,17 @@ extension PaymentSheet {
 
                 // 3. Retrieve the PaymentIntent or SetupIntent
                 switch intentConfig.mode {
-                case .payment:
+                case let .payment(_, _, setupFutureUsage, _, paymentMethodOptions):
                     let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
-                        try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, paymentMethod: paymentMethod, isFlowController: isFlowController)
+                        try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, isFlowController: isFlowController)
+                        try PaymentSheetDeferredValidator.validateSFUAndPMOSFU(setupFutureUsage: setupFutureUsage,
+                                                 paymentMethodOptions: paymentMethodOptions,
+                                                 paymentMethodType: paymentMethod.type, paymentIntent: paymentIntent)
+                        try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
                         let paymentIntentParams = makePaymentIntentParams(
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
@@ -108,9 +159,9 @@ extension PaymentSheet {
                         // Set top-level SFU and PMO SFU to match the intent config
                         setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
 
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .client)
                         }
@@ -130,7 +181,8 @@ extension PaymentSheet {
                     let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
                     if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
                         // 4a. Client-side confirmation
-                        try PaymentSheetDeferredValidator.validate(setupIntent: setupIntent, intentConfiguration: intentConfig, paymentMethod: paymentMethod)
+                        try PaymentSheetDeferredValidator.validate(intentConfiguration: intentConfig)
+                        try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: setupIntent.paymentMethod, paymentMethod: paymentMethod)
                         let setupIntentParams = makeSetupIntentParams(
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
@@ -138,8 +190,8 @@ extension PaymentSheet {
                             mandateData: mandateData
                         )
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .client)
                         }
@@ -164,7 +216,7 @@ extension PaymentSheet {
 
     // MARK: - Helper methods
 
-    /// Convenience method that converts a STPPayymentHandlerActionStatus + error into a PaymentSheetResult
+    /// Convenience method that converts a STPPaymentHandlerActionStatus + error into a PaymentSheetResult
     static func makePaymentSheetResult(for status: STPPaymentHandlerActionStatus, error: Error?) -> PaymentSheetResult {
         switch status {
         case .succeeded:
@@ -176,20 +228,6 @@ extension PaymentSheet {
             return .failed(error: error)
         @unknown default:
             return .failed(error: PaymentSheetError.unrecognizedHandlerStatus)
-        }
-    }
-
-    static func fetchIntentClientSecretFromMerchant(
-        intentConfig: IntentConfiguration,
-        paymentMethod: STPPaymentMethod,
-        shouldSavePaymentMethod: Bool
-    ) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                intentConfig.confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
-                    continuation.resume(with: result)
-                }
-            }
         }
     }
 

@@ -276,6 +276,7 @@ extension LinkInlineSignupViewModelTests {
                             publishableKey: nil,
                             displayablePaymentDetails: nil,
                             useMobileEndpoints: false,
+                            canSyncAttestationState: false,
                             requestSurface: requestSurface
                         )
                     )
@@ -283,9 +284,53 @@ extension LinkInlineSignupViewModelTests {
             }
         }
 
-        func hasEmailLoggedOut(email: String) -> Bool {
-            // TODO(porter): Determine if we want to implement this in tests
-            return false
+        func lookupLinkAuthToken(
+            _ linkAuthTokenClientSecret: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface,
+            completion: @escaping (Result<StripePaymentSheet.PaymentSheetLinkAccount?, any Error>) -> Void
+        ) {
+            if shouldFailLookup {
+                completion(.failure(NSError.stp_genericConnectionError()))
+            } else {
+                completion(
+                    .success(
+                        PaymentSheetLinkAccount(
+                            email: "user@example.com",
+                            session: nil,
+                            publishableKey: nil,
+                            displayablePaymentDetails: nil,
+                            useMobileEndpoints: false,
+                            canSyncAttestationState: false,
+                            requestSurface: requestSurface
+                        )
+                    )
+                )
+            }
+        }
+
+        func lookupLinkAuthIntent(
+            linkAuthIntentID: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
+            completion: @escaping (Result<StripePaymentSheet.LookupLinkAuthIntentResponse?, Error>) -> Void
+        ) {
+            if shouldFailLookup {
+                completion(.failure(NSError.stp_genericConnectionError()))
+            } else {
+                let linkAccount = PaymentSheetLinkAccount(
+                    email: "user@example.com",
+                    session: nil,
+                    publishableKey: nil,
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false,
+                    requestSurface: requestSurface
+                )
+                let response = StripePaymentSheet.LookupLinkAuthIntentResponse(
+                    linkAccount: linkAccount,
+                    consentViewModel: nil
+                )
+                completion(.success(response))
+            }
         }
     }
 
@@ -304,7 +349,8 @@ extension LinkInlineSignupViewModelTests {
             session: nil,
             publishableKey: nil,
             displayablePaymentDetails: nil,
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
         : nil
 

@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (pasirenkamas)";
 
 "(not accepted)" = "(nepriimama)";
@@ -37,8 +39,6 @@
 "Country or region" = "Šalis arba regionas";
 
 "County" = "Apygarda";
-
-"Date is empty." = "Data neužpildyta.";
 
 "Department" = "Skyrius";
 
@@ -143,5 +143,7 @@
 "Your payment information will not be saved." = "Jūsų mokėjimo informacija nebus įrašyta.";
 
 "Your postal code is incomplete." = "Pašto kodas neišsamus.";
+
+"Your postal code is invalid." = "Jūsų pašto kodas yra netinkamas.";
 
 "ZIP" = "Pašto kodas";

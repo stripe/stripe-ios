@@ -21,6 +21,7 @@ final class ConsumerSession: Decodable {
     let phoneNumberCountry: String?
     let verificationSessions: [VerificationSession]
     let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
+    let mobileFallbackWebviewParams: MobileFallbackWebviewParams?
 
     init(
         clientSecret: String,
@@ -29,7 +30,8 @@ final class ConsumerSession: Decodable {
         unredactedPhoneNumber: String?,
         phoneNumberCountry: String?,
         verificationSessions: [VerificationSession],
-        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
+        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>,
+        mobileFallbackWebviewParams: MobileFallbackWebviewParams?
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
@@ -38,6 +40,7 @@ final class ConsumerSession: Decodable {
         self.phoneNumberCountry = phoneNumberCountry
         self.verificationSessions = verificationSessions
         self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
+        self.mobileFallbackWebviewParams = mobileFallbackWebviewParams
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -48,6 +51,7 @@ final class ConsumerSession: Decodable {
         case phoneNumberCountry
         case verificationSessions
         case supportedPaymentDetailsTypes = "supportPaymentDetailsTypes"
+        case mobileFallbackWebviewParams = "mobile_fallback_webview_params"
     }
 
     init(from decoder: Decoder) throws {
@@ -59,8 +63,39 @@ final class ConsumerSession: Decodable {
         self.phoneNumberCountry = try container.decodeIfPresent(String.self, forKey: .phoneNumberCountry)
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
         self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
+        self.mobileFallbackWebviewParams = try container.decodeIfPresent(MobileFallbackWebviewParams.self, forKey: .mobileFallbackWebviewParams)
     }
 
+}
+
+extension ConsumerSession {
+    struct MobileFallbackWebviewParams: Decodable {
+        let webviewOpenUrl: URL?
+        let webviewRequirementType: WebviewRequirementType
+
+        enum WebviewRequirementType: String, SafeEnumDecodable {
+            case required = "required"
+            case notRequired = "notrequired"
+            case unparsable
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let requirementType = try container.decode(WebviewRequirementType.self, forKey: .webviewRequirementType)
+            self.webviewRequirementType = requirementType
+
+            if let urlString = try container.decodeIfPresent(String.self, forKey: .webviewOpenUrl) {
+                self.webviewOpenUrl = URL(string: urlString)
+            } else {
+                self.webviewOpenUrl = nil
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case webviewOpenUrl = "webview_open_url"
+            case webviewRequirementType = "webview_requirement_type"
+        }
+    }
 }
 
 extension ConsumerSession: Equatable {
@@ -74,6 +109,10 @@ extension ConsumerSession: Equatable {
 extension ConsumerSession {
     var hasVerifiedSMSSession: Bool {
         verificationSessions.containsVerifiedSMSSession
+    }
+
+    var isVerifiedWithLinkAuthToken: Bool {
+        verificationSessions.containsVerifiedLinkAuthTokenSession
     }
 
     var hasStartedSMSVerification: Bool {
@@ -102,8 +141,8 @@ extension ConsumerSession {
         sessionID: String,
         customerID: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
@@ -113,9 +152,51 @@ extension ConsumerSession {
             emailSource: emailSource,
             sessionID: sessionID,
             customerID: customerID,
-            cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    class func lookupLinkAuthToken(
+        _ linkAuthTokenClientSecret: String,
+        sessionID: String,
+        customerID: String?,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
+        apiClient.lookupLinkAuthToken(
+            linkAuthTokenClientSecret,
+            sessionID: sessionID,
+            customerID: customerID,
+            useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
+    class func lookupLinkAuthIntent(
+        linkAuthIntentID: String,
+        sessionID: String,
+        customerID: String?,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
+        apiClient.lookupLinkAuthIntent(
+            linkAuthIntentID: linkAuthIntentID,
+            sessionID: sessionID,
+            customerID: customerID,
+            useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -129,6 +210,7 @@ extension ConsumerSession {
         countryCode: String?,
         consentAction: String?,
         useMobileEndpoints: Bool,
+        canSyncAttestationState: Bool,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<SessionWithPublishableKey, Error>) -> Void
@@ -141,6 +223,7 @@ extension ConsumerSession {
             countryCode: countryCode,
             consentAction: consentAction,
             useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface,
             completion: completion
         )
@@ -149,7 +232,6 @@ extension ConsumerSession {
     func createPaymentDetails(
         paymentMethodParams: STPPaymentMethodParams,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
         isDefault: Bool = false,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
@@ -177,7 +259,7 @@ extension ConsumerSession {
             billingEmailAddress: billingEmailAddress,
             billingDetails: paymentMethodParams.nonnil_billingDetails,
             isDefault: isDefault,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            clientAttributionMetadata: paymentMethodParams.clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion)
     }
@@ -185,16 +267,16 @@ extension ConsumerSession {
     func createPaymentDetails(
         linkedAccountId: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         apiClient.createPaymentDetails(
             for: clientSecret,
             linkedAccountId: linkedAccountId,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             isDefault: isDefault,
+            clientAttributionMetadata: clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion)
     }
@@ -202,9 +284,8 @@ extension ConsumerSession {
     func startVerification(
         type: VerificationSession.SessionType = .sms,
         locale: Locale = .autoupdatingCurrent,
+        isResendingSmsCode: Bool = false,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -212,8 +293,7 @@ extension ConsumerSession {
             for: clientSecret,
             type: type,
             locale: locale,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            isResendingSmsCode: isResendingSmsCode,
             requestSurface: requestSurface,
             completion: completion)
     }
@@ -221,23 +301,20 @@ extension ConsumerSession {
     func confirmSMSVerification(
         with code: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
+        consentGranted: Bool? = nil,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         apiClient.confirmSMSVerification(
             for: clientSecret,
             with: code,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
+            consentGranted: consentGranted,
             completion: completion)
     }
 
     func createLinkAccountSession(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
         requestSurface: LinkRequestSurface = .default,
@@ -245,7 +322,6 @@ extension ConsumerSession {
     ) {
         apiClient.createLinkAccountSession(
             for: clientSecret,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             linkMode: linkMode,
             intentToken: intentToken,
             requestSurface: requestSurface,
@@ -255,27 +331,23 @@ extension ConsumerSession {
     func listPaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         apiClient.listPaymentDetails(
             for: clientSecret,
             supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             completion: completion)
     }
 
     func listShippingAddress(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
     ) {
         apiClient.listShippingAddress(
             for: clientSecret,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             completion: completion)
     }
@@ -283,14 +355,12 @@ extension ConsumerSession {
     func deletePaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         apiClient.deletePaymentDetails(
             for: clientSecret,
             id: id,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             completion: completion)
     }
@@ -299,14 +369,14 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
         updateParams: UpdatePaymentDetailsParams,
-        consumerAccountPublishableKey: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         apiClient.updatePaymentDetails(
             for: clientSecret, id: id,
             updateParams: updateParams,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            clientAttributionMetadata: clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion)
     }
@@ -318,15 +388,13 @@ extension ConsumerSession {
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
-        consumerAccountPublishableKey: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         apiClient.sharePaymentDetails(
             for: clientSecret,
             id: id,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             allowRedisplay: allowRedisplay,
             cvc: cvc,
             expectedPaymentMethodType: expectedPaymentMethodType,
@@ -338,17 +406,25 @@ extension ConsumerSession {
 
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         apiClient.logout(
             consumerSessionClientSecret: clientSecret,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             completion: completion)
+    }
+
+    func refreshSession(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        apiClient.refreshSession(
+            consumerSessionClientSecret: clientSecret,
+            requestSurface: requestSurface,
+            completion: completion
+        )
     }
 
 }

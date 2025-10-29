@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj bančni račun v ZDA";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Dodaj nov način plačila";
 
 "Add your payment information" = "Dodajte podatke o plačilu";
-
-"Agree and continue" = "Strinjam se in nadaljuj";
 
 "Approve payment" = "Odobrite plačilo";
 
@@ -84,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila %1$@ in %2$@ se strinjate, da bodo vaši podatki shranjeni pri %3$@ za prihodnje nakupe, in se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila podjetju %@ se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -116,25 +114,27 @@
 
 "Continue another way" = "Nadaljuj na drug način";
 
+"Create an account with Link for faster checkout across the web" = "Ustvarite račun v storitvi Link za hitrejšo izvedbo plačila na spletu";
+
 "Debit or credit card" = "Debetna ali kreditna kartica";
 
 "Default" = "Privzeto";
 
 "Default payment method" = "Privzeti način plačila";
 
+"Did you mean %@? %@." = "Ali ste mislili %1$@? %2$@.";
+
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Naslov vnesite ročno";
 
-"Enter the code sent to %@ to use your saved information." = "Vnesite kodo, ki smo jo poslali na telefonsko številko %@, da boste lahko uporabili shranjene podatke.";
+"Enter the code sent to %@." = "Vnesite kodo, ki je bila poslana na %s.";
 
 "FPX Bank" = "Banka FPX";
 
 "Failed to connect" = "Povezave ni bilo mogoče vzpostaviti";
 
 "Fast, secure checkout" = "Hitra in varna izvedba plačil";
-
-"For security, please re-enter your card’s security code." = "Iz varnostnih razlogov morate znova vnesti varnostno kodo svoje kartice.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Pridobite %@ povračila za prvo plačilo prek svojega bančnega računa. <terms>Oglejte si pogoje</terms>";
 
@@ -284,9 +284,9 @@
 
 "The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Ta kartica je potekla. Posodobite podatke o kartici ali izberite drug način plačila.";
-
 "This is your default" = "To je vaš privzeti način plačila";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Ta način plačila bo odstranjen, vendar bo še naprej na voljo za naročnine %@.";
 
 "Too many attempts. Please try again in a few minutes." = "Preveč poskusov. Poskusite znova čez nekaj minut.";
 
@@ -298,9 +298,9 @@
 
 "Use billing address for shipping" = "Naslov za račun uporabi kot naslov za pošiljanje";
 
-"Use your saved info to check out faster" = "Uporabite svoje shranjene podatke za hitrejšo izvedbo plačila";
-
 "View more" = "Prikaži več";
+
+"Yes, update" = "Da, posodobi";
 
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
 

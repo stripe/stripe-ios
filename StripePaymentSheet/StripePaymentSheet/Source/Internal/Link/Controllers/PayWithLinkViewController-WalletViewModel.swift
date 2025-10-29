@@ -35,7 +35,7 @@ extension PayWithLinkViewController {
         }
 
         var supportedPaymentMethodTypes: Set<ConsumerPaymentDetails.DetailsType> {
-            return linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
+            return context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
         }
 
         var cvc: String? {
@@ -65,25 +65,30 @@ extension PayWithLinkViewController {
 
         /// The mandate text to show.
         var mandate: NSAttributedString? {
+            let isSettingUp = context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link)
+
             switch selectedPaymentMethod?.details {
             case .card:
-                if context.elementsSession.alwaysSaveForFutureUse {
+                if context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText {
                     // Use the updated mandate text that can mention both payment method reuse and Link signup.
                     // Since the user is already signed up for Link, we don't need to save to Link.
                     return PaymentSheetFormFactory.makeMandateText(
-                        useCombinedReuseAndLinkSignupText: true,
-                        shouldSaveToLink: false,
+                        variant: .updated(shouldSignUpToLink: false),
                         merchantName: context.configuration.merchantDisplayName
                     )
-                }
-                guard context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link) else {
+                } else if isSettingUp {
+                    let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
+                    return NSMutableAttributedString(string: string)
+                } else {
                     return nil
                 }
-                let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
-                return NSMutableAttributedString(string: string)
             case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
-                return PaymentSheetFormFactory.makeBankMandateText(sellerName: context.intent.sellerDetails?.businessName)
+                return PaymentSheetFormFactory.makeBankMandateText(
+                    isSettingUp: isSettingUp || context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
+                    merchantName: context.configuration.merchantDisplayName,
+                    sellerName: context.intent.sellerDetails?.businessName
+                )
             default:
                 return nil
             }
@@ -92,6 +97,11 @@ extension PayWithLinkViewController {
         /// Whether or not the view should show the mandate text.
         var shouldShowMandate: Bool {
             mandate != nil
+        }
+
+        /// Client attribution metadata for analytics
+        var clientAttributionMetadata: STPClientAttributionMetadata? {
+            STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
         }
 
         /// Returns a hint message, if it is supported.
@@ -110,31 +120,6 @@ extension PayWithLinkViewController {
             } else {
                 return nil
             }
-        }
-
-        var noticeText: String? {
-            if shouldRecollectCardExpiryDate {
-                return STPLocalizedString(
-                    "This card has expired. Update your card info or choose a different payment method.",
-                    "A text notice shown when the user selects an expired card."
-                )
-            }
-
-            if shouldRecollectCardCVC {
-                return STPLocalizedString(
-                    "For security, please re-enter your card’s security code.",
-                    """
-                    A text notice shown when the user selects a card that requires
-                    re-entering the security code (CVV/CVC).
-                    """
-                )
-            }
-
-            return nil
-        }
-
-        var shouldShowNotice: Bool {
-            return noticeText != nil
         }
 
         var shouldShowRecollectionSection: Bool {
@@ -270,7 +255,8 @@ extension PayWithLinkViewController {
 
             linkAccount.updatePaymentDetails(
                 id: paymentMethod.stripeID,
-                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil)
+                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil),
+                clientAttributionMetadata: clientAttributionMetadata
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {
                     paymentMethods.forEach({ $0.isDefault = false })
@@ -326,6 +312,7 @@ extension PayWithLinkViewController {
             linkAccount.updatePaymentDetails(
                 id: id,
                 updateParams: UpdatePaymentDetailsParams(details: .card(expiryDate: expiryDate)),
+                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
         }

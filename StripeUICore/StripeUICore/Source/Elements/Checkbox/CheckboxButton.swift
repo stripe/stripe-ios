@@ -63,7 +63,6 @@ import UIKit
         let stackView = UIStackView(arrangedSubviews: [textView, descriptionLabel])
         stackView.spacing = 4
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -147,8 +146,13 @@ import UIKit
         setText(text)
     }
 
-    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsAppearance = .default) {
-        self.init(description: description, theme: theme)
+    public convenience init(
+        attributedText: NSAttributedString,
+        description: String? = nil,
+        theme: ElementsAppearance = .default,
+        alwaysEmphasizeText: Bool = false
+    ) {
+        self.init(description: description, theme: theme, alwaysEmphasizeText: alwaysEmphasizeText)
         setAttributedText(attributedText)
     }
 

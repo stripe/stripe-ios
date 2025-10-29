@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Ekle";
 
 "Add US bank account" = "ABD banka hesabı ekleyin";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Yeni ödeme yöntemi ekle";
 
 "Add your payment information" = "Ödeme bilgilerinizi ekleyin";
-
-"Agree and continue" = "Kabul et ve devam et";
 
 "Approve payment" = "Ödemeyi onaylayın";
 
@@ -84,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %1$@ ve %2$@'e göndererek, bilgilerinizi gelecekteki satın alımlar için %3$@ ile kaydetmeyi ve <terms>bu koşullar</terms> uyarınca ödemeleri yetkilendirmeyi kabul etmiş olursunuz.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %@’ye göndererek ödemeleri <terms>bu koşullara</terms> uygun olarak yetkilendirmeyi kabul etmiş olursunuz.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -116,25 +114,27 @@
 
 "Continue another way" = "Başka bir yöntemle devam et";
 
+"Create an account with Link for faster checkout across the web" = "Web genelinde daha hızlı ödeme yapmak için Link ile bir hesap oluşturun";
+
 "Debit or credit card" = "Bankamatik ya da kredi kartı";
 
 "Default" = "Varsayılan";
 
 "Default payment method" = "Varsayılan ödeme yöntemi";
 
+"Did you mean %@? %@." = "%1$@ mi demek istediniz? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Adresi manuel olarak girin";
 
-"Enter the code sent to %@ to use your saved information." = "Kaydedilmiş bilgilerinizi kullanmak için %@ numaralı telefona gönderilen kodu girin.";
+"Enter the code sent to %@." = "%s yoluyla gönderilen kodu girin.";
 
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "Bağlantı başarısız.";
 
 "Fast, secure checkout" = "Hızlı, güvenli ödeme";
-
-"For security, please re-enter your card’s security code." = "Güvenliğinizin sağlanması için lütfen kartınızın güvenlik kodunu tekrar girin.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Bankanızla ilk kez ödeme yaptığınızda %@ tutarını geri alın. <terms>Şartları görün</terms>";
 
@@ -284,9 +284,9 @@
 
 "The provided verification code is incorrect." = "Sağlanan doğrulama kodu yanlış.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Bu kartın süresi dolmuş. Kart bilgileirnizi güncelleyin veya farklı bir ödeme yöntemi seçin.";
-
 "This is your default" = "Bu varsayılan ödeme yönteminizdir";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Bu ödeme yöntemi kaldırılacak ancak %@ abonelikleri için kullanılabilir kalacaktır.";
 
 "Too many attempts. Please try again in a few minutes." = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
 
@@ -298,9 +298,9 @@
 
 "Use billing address for shipping" = "Gönderim için fatura adresini kullanın";
 
-"Use your saved info to check out faster" = "Kayıtlı bilgilerinizi kullanarak daha hızlı ödeme yapabilirsiniz";
-
 "View more" = "Daha fazla göster";
+
+"Yes, update" = "Evet, güncelle";
 
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
 

@@ -6,9 +6,13 @@
 
 "App Settings" = "Impostazioni app";
 
-"Back identity card photo successfully uploaded" = "Foto del retro della carta di identità caricata";
+"Back %@ photo successfully uploaded" = "Foto del retro di %@ caricata con successo";
 
-"Back of identity card" = "Retro del documento di identità";
+"Back identity document photo successfully uploaded" = "Foto del retro del documento d'identità caricata con successo";
+
+"Back of %@" = "Retro di %@";
+
+"Back of driver's license or government-issued photo ID" = "Retro della patente di guida o documento di identità con foto rilasciato da un'autorità governativa";
 
 "Back of identity document" = "Retro documento di identità";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Dettagli non visibili";
 
+"Flip your %@ over to the other side" = "Capovolgi %@ sull'altro lato";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Capovolgi la patente di guida o il documento di identità con foto rilasciato da un'autorità governativa dall'altro lato";
+
 "Flip your identity card over to the other side" = "Gira sull'altro lato la carta di identità";
 
-"Front identity card photo successfully uploaded" = "Foto del fronte della carta di identità caricata";
+"Front %@ photo successfully uploaded" = "La foto del fronte di %@ è stata caricata con successo";
 
-"Front of identity card" = "Fronte della carta di identità";
+"Front identity document photo successfully uploaded" = "La foto del fronte del documento d'identità è stata caricata con successo";
+
+"Front of %@" = "Fronte di %@";
+
+"Front of driver's license or government-issued photo ID" = "Parte anteriore della patente di guida o del documento di identità con foto rilasciato da un'autorità governativa";
+
+"Front of driver's license or passport" = "Fronte della patente di guida o del passaporto";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Fronte della patente di guida, del passaporto o di un documento di identità con foto rilasciato da un'autorità governativa";
 
 "Front of identity document" = "Fronte documento di identità";
+
+"Front of passport or government-issued photo ID" = "Fronte del passaporto o documento di identità con foto rilasciato da un'autorità governativa";
 
 "Get ready to scan your photo ID" = "Preparati a scansionare il tuo documento di identità con foto";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Galleria foto";
 
-"Please upload images of the front and back of your identity card" = "Carica un'immagine fronte-retro del tuo documento di identità";
+"Please upload images of the front and back of your %@" = "La preghiamo di caricare le immagini del fronte e del retro di %@";
+
+"Please upload images of the front and back of your identity document" = "Carica un'immagine fronte-retro del tuo documento di identità";
+
+"Position your %@ in the center of the frame" = "Posiziona %@ al centro della cornice";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Posiziona la patente di guida o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
+
+"Position your driver's license or passport in the center of the frame" = "Posiziona la patente di guida o il passaporto al centro dell'inquadratura";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Posiziona la patente di guida, il passaporto o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
 
 "Position your face in the center of the frame." = "Posiziona il volto al centro della cornice.";
 
-"Position your identity card in the center of the frame" = "Posiziona la carta di identità al centro della cornice";
+"Position your identity document in the center of the frame" = "Posiziona il tuo documento di identità al centro della cornice";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Posiziona il passaporto o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
 
 "Retake Photos" = "Scatta di nuovo le foto";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Seleziona una posizione da cui caricare il fronte del tuo documento di identità";
 
-"Select back identity card photo" = "Seleziona la foto del retro della carta di identità";
+"Select back %@ photo" = "Seleziona la foto del retro di %@";
 
-"Select front identity card photo" = "Seleziona la foto del fronte della carta di identità";
+"Select back identity document photo" = "Seleziona la foto del retro del documento d'identità";
+
+"Select front %@ photo" = "Seleziona la foto del fronte di %@";
+
+"Select front identity document photo" = "Seleziona la foto del fronte del documento d'identità";
 
 "Selfie" = "Selfie";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Carica una foto";
 
+"Upload your %@" = "Carica %@";
+
 "Upload your photo ID" = "Carica il tuo documento d'identità con foto";
 
-"Uploading back identity card photo" = "Caricamento della foto del retro della carta di identità";
+"Uploading back %@ photo" = "Caricamento della foto del retro di %@";
 
-"Uploading front identity card photo" = "Caricamento della foto del fronte della carta di identità";
+"Uploading back identity document photo" = "Caricamento della foto del retro del documento di identità";
+
+"Uploading front %@ photo" = "Caricamento della foto del fronte di %@";
+
+"Uploading front identity document photo" = "Caricamento della foto del fronte del documento di identità";
 
 "Verify your identity" = "Verifica la tua identità";
 

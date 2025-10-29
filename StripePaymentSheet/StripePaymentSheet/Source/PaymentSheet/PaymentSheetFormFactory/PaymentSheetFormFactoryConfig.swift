@@ -28,14 +28,6 @@ enum PaymentSheetFormFactoryConfig {
             return config.merchantDisplayName
         }
     }
-    var overrideCountry: String? {
-        switch self {
-        case .paymentElement(let config, _):
-            return config.userOverrideCountry
-        case .customerSheet:
-            return nil
-        }
-    }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
         switch self {
         case .paymentElement(let config, _):
@@ -124,6 +116,15 @@ enum PaymentSheetFormFactoryConfig {
             }
         case .customerSheet:
             return true
+        }
+    }
+
+    var opensCardScannerAutomatically: Bool {
+        switch self {
+        case .customerSheet(let customerSheetConfiguration):
+            return customerSheetConfiguration.opensCardScannerAutomatically
+        case .paymentElement(let paymentElementConfiguration, _):
+            return paymentElementConfiguration.opensCardScannerAutomatically
         }
     }
 

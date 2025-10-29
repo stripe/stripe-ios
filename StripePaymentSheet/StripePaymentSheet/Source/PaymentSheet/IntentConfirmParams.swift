@@ -93,11 +93,11 @@ final class IntentConfirmParams {
     /// True if the customer opts to save their payment method as their default payment method.
     var setAsDefaultPM: Bool?
 
-    func makeIcon(currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    func makeIcon(forDarkBackground: Bool, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
             return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName), iconStyle: iconStyle)
         } else {
-            return paymentMethodParams.makeIcon(currency: currency, iconStyle: iconStyle, updateHandler: updateImageHandler)
+            return paymentMethodParams.makeIcon(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle, updateHandler: nil)
         }
     }
 
@@ -200,10 +200,6 @@ final class IntentConfirmParams {
         } else if savePaymentMethodConsentBehavior == .customerSheetWithCustomerSession {
             paymentMethodParams.allowRedisplay = .always
         }
-    }
-
-    func setClientAttributionMetadata(clientAttributionMetadata: STPClientAttributionMetadata) {
-        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
     }
 }
 

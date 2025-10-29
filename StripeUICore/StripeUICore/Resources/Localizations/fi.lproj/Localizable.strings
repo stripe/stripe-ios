@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valinnainen)";
 
 "(not accepted)" = "(ei hyväksytty)";
@@ -37,8 +39,6 @@
 "Country or region" = "Maa tai alue";
 
 "County" = "Lääni";
-
-"Date is empty." = "Päivämäärä on tyhjä.";
 
 "Department" = "Osasto";
 
@@ -144,6 +144,6 @@
 
 "Your postal code is incomplete." = "Postinumero on puutteellinen.";
 
-"Your postal code is invalid." = "Postinumerosi on virheellinen.";
+"Your postal code is invalid." = "Postinumeroon virheellinen.";
 
 "ZIP" = "Postinumero";

@@ -33,8 +33,12 @@ final class LinkSignUpViewController: UIViewController {
 
     private let viewModel: LinkSignUpViewModel
     private let defaultBillingDetails: PaymentSheet.BillingDetails?
-    private let selectionBehavior = SelectionBehavior.highlightBorder(configuration: LinkUI.highlightBorderConfiguration)
     private let theme = LinkUI.appearance.asElementsTheme
+
+    private lazy var selectionBehavior: SelectionBehavior = {
+        // This is lazily computed so that the iOS 26 style can be applied to LinkUI.
+        SelectionBehavior.highlightBorder(configuration: LinkUI.highlightBorderConfiguration)
+    }()
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -109,6 +113,17 @@ final class LinkSignUpViewController: UIViewController {
         return legalTermsView
     }()
 
+    private lazy var emailSuggestionLabel: TappableAttributedLabel = {
+        let label = TappableAttributedLabel()
+        label.font = LinkUI.font(forTextStyle: .caption)
+        label.textColor = .linkTextSecondary
+        label.textAlignment = .center
+        label.adjustsFontForContentSizeCategory = true
+        label.numberOfLines = 0
+        label.isHidden = true
+        return label
+    }()
+
     private lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(theme: theme)
         label.isHidden = true
@@ -123,6 +138,9 @@ final class LinkSignUpViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
         button.adjustsFontForContentSizeCategory = true
         button.isEnabled = false
+        if LinkUI.useLiquidGlass {
+            button.ios26_applyCapsuleCornerConfiguration()
+        }
         return button
     }()
 
@@ -131,6 +149,7 @@ final class LinkSignUpViewController: UIViewController {
             titleLabel,
             subtitleLabel,
             emailSection.view,
+            emailSuggestionLabel,
             phoneNumberSection.view,
             nameSection.view,
             legalTermsView,
@@ -217,6 +236,24 @@ final class LinkSignUpViewController: UIViewController {
             emailElement.stopAnimating()
         }
 
+        // Email suggestion
+        if let suggestedEmail = viewModel.suggestedEmail {
+            updateEmailSuggestionLabel(with: suggestedEmail)
+            stackView.setCustomSpacing(LinkUI.smallContentSpacing, after: emailSection.view)
+            stackView.toggleArrangedSubview(
+                emailSuggestionLabel,
+                shouldShow: true,
+                animated: animated
+            )
+        } else {
+            stackView.setCustomSpacing(LinkUI.contentSpacing, after: emailSection.view)
+            stackView.toggleArrangedSubview(
+                emailSuggestionLabel,
+                shouldShow: false,
+                animated: animated
+            )
+        }
+
         // Phone number
         stackView.toggleArrangedSubview(
             phoneNumberSection.view,
@@ -249,6 +286,44 @@ final class LinkSignUpViewController: UIViewController {
         // Signup button
         signUpButton.title = viewModel.signUpButtonTitle
         signUpButton.isEnabled = viewModel.shouldEnableSignUpButton
+    }
+
+    private func updateEmailSuggestionLabel(with suggestedEmail: String) {
+        let baseText = STPLocalizedString(
+            "Did you mean %@? %@.",
+            "Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link."
+        )
+        let yesUpdateLocalizedText = STPLocalizedString(
+            "Yes, update",
+            "Text for a tappable link that will update the email field with a suggested email address."
+        )
+        let fullText = String(format: baseText, suggestedEmail, yesUpdateLocalizedText)
+
+        emailSuggestionLabel.setText(
+            fullText,
+            baseFont: LinkUI.font(forTextStyle: .caption),
+            baseColor: .linkTextSecondary,
+            highlights: [
+                TappableAttributedLabel.TappableHighlight(
+                    text: yesUpdateLocalizedText,
+                    font: LinkUI.font(forTextStyle: .caption),
+                    color: .linkTextBrand,
+                    action: { [weak self] in
+                        self?.didTapYesUpdate()
+                    }
+                ),
+            ]
+        )
+    }
+
+    private func didTapYesUpdate() {
+        guard let suggestedEmail = viewModel.suggestedEmail else {
+            return
+        }
+
+        STPAnalyticsClient.sharedClient.logLinkEmailSuggestionAccepted()
+        emailElement.emailAddressElement.setText(suggestedEmail)
+        viewModel.emailAddress = suggestedEmail
     }
 
     @objc
@@ -339,7 +414,6 @@ extension LinkSignUpViewController: ElementDelegate {
 }
 
 extension LinkSignUpViewController: UITextViewDelegate {
-
 #if !os(visionOS)
     func textView(
         _ textView: UITextView,

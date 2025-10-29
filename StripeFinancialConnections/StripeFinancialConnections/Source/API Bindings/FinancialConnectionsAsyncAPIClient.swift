@@ -97,7 +97,7 @@ final class FinancialConnectionsAsyncAPIClient {
     ) async -> [String: Any] {
         do {
             let attest = backingAPIClient.stripeAttest
-            let handle = try await attest.assert()
+            let handle = try await attest.assert(canSyncState: false)
             logger.log(.attestationRequestTokenSucceeded(api), pane: pane)
             let newParameters = baseParameters.merging(handle.assertion.requestFields) { (_, new) in new }
             return newParameters
@@ -870,7 +870,8 @@ extension FinancialConnectionsAsyncAPIClient {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) async throws -> FinancialConnectionsPaymentDetails {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -892,6 +893,10 @@ extension FinancialConnectionsAsyncAPIClient {
             parameters["billing_email_address"] = billingEmail.lowercased()
         }
 
+        if let clientAttributionMetadata {
+            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+        }
+
         return try await post(endpoint: .paymentDetails, parameters: parameters)
     }
 
@@ -900,7 +905,9 @@ extension FinancialConnectionsAsyncAPIClient {
         paymentDetailsId: String,
         expectedPaymentMethodType: String,
         billingEmail: String?,
-        billingPhone: String?
+        billingPhone: String?,
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) async throws -> FinancialConnectionsSharePaymentDetails {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -920,6 +927,14 @@ extension FinancialConnectionsAsyncAPIClient {
             parameters["billing_phone"] = billingPhone
         }
 
+        if let allowRedisplay {
+            parameters["allow_redisplay"] = allowRedisplay
+        }
+
+        if let clientAttributionMetadata {
+            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+        }
+
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
         return try await post(endpoint: .sharePaymentDetails, parameters: parametersWithFraudDetection)
     }
@@ -927,7 +942,9 @@ extension FinancialConnectionsAsyncAPIClient {
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        billingDetails: ElementsSessionContext.BillingDetails?
+        billingDetails: ElementsSessionContext.BillingDetails?,
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) async throws -> LinkBankPaymentMethod {
         var parameters: [String: Any] = [
             "link": [
@@ -942,6 +959,14 @@ extension FinancialConnectionsAsyncAPIClient {
         if let billingDetails {
             let encodedBillingAddress = try Self.encodeAsParameters(billingDetails)
             parameters["billing_details"] = encodedBillingAddress
+        }
+
+        if let allowRedisplay {
+            parameters["allow_redisplay"] = allowRedisplay
+        }
+
+        if let clientAttributionMetadata {
+            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
         }
 
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)

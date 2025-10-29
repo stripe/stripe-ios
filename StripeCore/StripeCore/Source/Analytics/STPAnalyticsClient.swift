@@ -86,7 +86,7 @@ import UIKit
         #endif
     }
 
-    static var isUnitOrUITest: Bool {
+    public static var isUnitOrUITest: Bool {
         return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
     }
 
@@ -129,6 +129,11 @@ import UIKit
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
+        // Unexpected errors should never happen; make sure we fail loudly in our own tests and test apps
+        if analytic.event.rawValue.starts(with: "unexpected_error") {
+            stpAssertionFailure(payload.debugDescription)
+        }
+
         if let translatedEvent = analyticsEventTranslator.translate(analytic.event, payload: payload) {
             notificationCenter.post(name: translatedEvent.notificationName,
                                     object: translatedEvent.event)
@@ -170,6 +175,7 @@ extension STPAnalyticsClient {
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
         payload["session_id"] = AnalyticsHelper.shared.sessionID
+        payload["timestamp"] = Date().timeIntervalSince1970
         if STPAnalyticsClient.isSimulatorOrTest {
             payload["is_development"] = true
         }
