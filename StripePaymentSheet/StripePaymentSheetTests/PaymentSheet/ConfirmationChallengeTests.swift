@@ -5,7 +5,6 @@
 //  Created by Joyce Qin on 10/29/25.
 //
 
-
 import Foundation
 
 @_spi(STP) @testable import StripeCore
