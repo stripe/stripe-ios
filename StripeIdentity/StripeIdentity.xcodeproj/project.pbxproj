@@ -31,6 +31,7 @@
 		2B7C095E1029C163D107CF68 /* ListViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D82EAF85863CAAA250E393 /* ListViewSnapshotTest.swift */; };
 		2E943A5B252D7927CE3C32E3 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD5FEA0E4E7EF1A4BA9646B /* IdentityVerificationSheetError.swift */; };
 		313F5F812B0BE5DE00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F802B0BE5DE00BD98A9 /* Docs.docc */; };
+		31C5DEAD2EB2A76F005770FA /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C5DEAC2EB2A76F005770FA /* FileDownloader.swift */; };
 		33F0FF8DB7D784C95647B693 /* FaceCaptureData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4943A54EF548F28DB66DD1F /* FaceCaptureData.swift */; };
 		349A4B5CC24DF5539B773A84 /* MLDetectorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18593C820FE0E35DDEE36956 /* MLDetectorConfiguration.swift */; };
 		34ABF501E050B043CE1E859C /* IdentityImageUploaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08E49ED4B7010002D5FC734 /* IdentityImageUploaderTest.swift */; };
@@ -368,6 +369,7 @@
 		30748D6B84FC605EE612C2D3 /* DebugViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
 		3118D24F94912E8A9BB86BFE /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		313F5F802B0BE5DE00BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
+		31C5DEAC2EB2A76F005770FA /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 		31CC3450DDBE415B82707F4B /* IdentityElementsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactory.swift; sourceTree = "<group>"; };
 		3218882B7E1610E17BDB4522 /* VerificationPage_200.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPage_200.json; sourceTree = "<group>"; };
 		3943F18216635D56A3E6019C /* ErrorViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
@@ -1013,6 +1015,7 @@
 		882FA766B74C9E5C2E2F5382 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				31C5DEAC2EB2A76F005770FA /* FileDownloader.swift */,
 				3A81E3192E32AD95007E5AA6 /* String+IDType.swift */,
 				20D40A569C2BB62F86D57C01 /* Image.swift */,
 				E94605BCADE912561ED6F710 /* STPLocalizedString.swift */,
@@ -1759,6 +1762,7 @@
 				3A81E31A2E32AD9C007E5AA6 /* String+IDType.swift in Sources */,
 				D4715BBC2B0E8E80008D07CC /* BottomSheetView.swift in Sources */,
 				D4715B9E2B0E8E20008D07CC /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
+				31C5DEAD2EB2A76F005770FA /* FileDownloader.swift in Sources */,
 				D4715BED2B0E8E96008D07CC /* BottomSheetViewController.swift in Sources */,
 				4C9D354F6C1E9E89B13D0367 /* AnimatedBorderView.swift in Sources */,
 				8EB5D825D1ADC9DAB6E7D5A3 /* DocumentCaptureView.swift in Sources */,
