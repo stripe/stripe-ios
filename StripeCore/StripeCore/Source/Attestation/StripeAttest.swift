@@ -261,22 +261,17 @@ import UIKit
     private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
 
     func _assert(canSyncState: Bool, isRetry: Bool = false) async throws -> Assertion {
+        // Check at entry point
         try Task.checkCancellation()
 
         let keyId = try await self.getOrCreateKeyID()
-
-        try Task.checkCancellation()
 
         if !successfullyAttested {
             // We haven't attested yet, so do that first.
             try await self.attest()
         }
 
-        try Task.checkCancellation()
-
         let challenge = try await getChallenge()
-
-        try Task.checkCancellation()
 
         // State alignment: sync client state with server
         if canSyncState && !challenge.initial_attestation_required && !successfullyAttested {
@@ -303,18 +298,15 @@ import UIKit
             }
         }
 
-        try Task.checkCancellation()
-
         let deviceId = try await getDeviceID()
         let appId = try getAppID()
-
-        try Task.checkCancellation()
 
         let assertion = try await generateAssertion(keyId: keyId, challenge: challenge.challenge)
         return Assertion(assertionData: assertion, deviceID: deviceId, appID: appId, keyID: keyId)
     }
 
     func _attest() async throws {
+        // Check at entry point
         try Task.checkCancellation()
 
         // It's dangerous to attest, as it increments a permanent counter for the device.
@@ -340,15 +332,9 @@ import UIKit
             dailyAttemptCount = 0
         }
 
-        try Task.checkCancellation()
-
         let keyId = try await self.getOrCreateKeyID()
 
-        try Task.checkCancellation()
-
         let challenge = try await getChallenge()
-
-        try Task.checkCancellation()
 
         // If the backend claims that attestation isn't required, we should not attempt it.
         guard challenge.initial_attestation_required else {
@@ -362,11 +348,10 @@ import UIKit
         }
         let hash = Data(SHA256.hash(data: challengeData))
 
-        try Task.checkCancellation()
-
         let deviceId = try await getDeviceID()
         let appId = try getAppID()
 
+        // Check before expensive crypto operation
         try Task.checkCancellation()
 
         do {
@@ -459,6 +444,7 @@ import UIKit
                                                        options: [.sortedKeys])
         let assertionDataHash = Data(SHA256.hash(data: assertionData))
 
+        // Check before expensive crypto operation
         try Task.checkCancellation()
 
         do {
@@ -469,15 +455,11 @@ import UIKit
             let error = error as NSError
             if error.domain == DCErrorDomain && error.code == DCError.invalidKey.rawValue {
                 if retryAfterReattestingIfNeeded {
-                    try Task.checkCancellation()
-
                     // We'll try to attest again, maybe our initial attestation was unsuccessful?
                     // `DCError.invalidKey` could mean a lot of things, unfortunately.
                     // If this doesn't work, then in `attest()` we'll deem the key to be corrupted
                     // and throw it out.
                     try await attest()
-
-                    try Task.checkCancellation()
 
                     // Once we've successfully re-attested, we'll try one more time to do the assertion.
                     return try await generateAssertion(keyId: keyId, challenge: challenge, retryAfterReattestingIfNeeded: false)
