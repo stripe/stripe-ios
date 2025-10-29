@@ -331,6 +331,8 @@
 		9DEDA3E0FFF73F9275F5F8F0 /* AutoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDECF0A74497EE887DFCB46 /* AutoCompleteViewController.swift */; };
 		9E77F1E9F801AE970F1A5BE1 /* CustomerSheetConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7768E4377A7D7495A02655D /* CustomerSheetConfiguration.swift */; };
 		9F750611C4E8EAABE9F0B460 /* CustomerSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7ABCE56539213DCE501C54 /* CustomerSheetTests.swift */; };
+		A024A7A92EB2B6C500542C1E /* PMMEMultiPartnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A024A7A82EB2B6C500542C1E /* PMMEMultiPartnerView.swift */; };
+		A024A7AB2EB2B6D500542C1E /* PMMESinglePartnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A024A7AA2EB2B6D500542C1E /* PMMESinglePartnerView.swift */; };
 		A026EA0C2EA9AD4900E91278 /* PaymentMethodMessagingElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A026EA0B2EA9AD4300E91278 /* PaymentMethodMessagingElement.swift */; };
 		A026EA0E2EA9AD8400E91278 /* PMME+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = A026EA0D2EA9AD8200E91278 /* PMME+API.swift */; };
 		A026EAB52EAADA1700E91278 /* PMME+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A026EAB42EAADA1400E91278 /* PMME+Internal.swift */; };
@@ -864,6 +866,8 @@
 		9A0BBDBFC37770CF870594B1 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9A0D887C5AC6EFFAFE1AFD77 /* PaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodType.swift; sourceTree = "<group>"; };
 		9E3905FE9F40E82EAEF49CD2 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A024A7A82EB2B6C500542C1E /* PMMEMultiPartnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMMEMultiPartnerView.swift; sourceTree = "<group>"; };
+		A024A7AA2EB2B6D500542C1E /* PMMESinglePartnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMMESinglePartnerView.swift; sourceTree = "<group>"; };
 		A026EA0B2EA9AD4300E91278 /* PaymentMethodMessagingElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodMessagingElement.swift; sourceTree = "<group>"; };
 		A026EA0D2EA9AD8200E91278 /* PMME+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PMME+API.swift"; sourceTree = "<group>"; };
 		A026EAB42EAADA1400E91278 /* PMME+Internal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PMME+Internal.swift"; sourceTree = "<group>"; };
@@ -873,7 +877,6 @@
 		A0D591582EB0288B005CDE78 /* PMMEUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMMEUIView.swift; sourceTree = "<group>"; };
 		A0D5915C2EB0290B005CDE78 /* PaymentMethodMessagingElement+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentMethodMessagingElement+SwiftUI.swift"; sourceTree = "<group>"; };
 		A0D5915E2EB02987005CDE78 /* PMMESnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMMESnapshotTests.swift; sourceTree = "<group>"; };
-		A1928BE9DFF116368B1A19DC /* LinkCookieKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkCookieKey.swift; sourceTree = "<group>"; };
 		A30E2EC82E9E958B00E982DB /* STPClientAttributionMetadata+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPClientAttributionMetadata+PaymentSheet.swift"; sourceTree = "<group>"; };
 		A36949C42CE7D72300739E5D /* UpdatePaymentMethodViewController+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpdatePaymentMethodViewController+Configuration.swift"; sourceTree = "<group>"; };
 		A39F7EBA2E9E3CE55E7AADC9 /* STPFixtures+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPFixtures+PaymentSheet.swift"; sourceTree = "<group>"; };
@@ -1738,6 +1741,8 @@
 		A026EA0A2EA9AD3900E91278 /* PaymentMethodMessagingElement */ = {
 			isa = PBXGroup;
 			children = (
+				A024A7AA2EB2B6D500542C1E /* PMMESinglePartnerView.swift */,
+				A024A7A82EB2B6C500542C1E /* PMMEMultiPartnerView.swift */,
 				A0D5915C2EB0290B005CDE78 /* PaymentMethodMessagingElement+SwiftUI.swift */,
 				A0D591582EB0288B005CDE78 /* PMMEUIView.swift */,
 				A026EAB42EAADA1400E91278 /* PMME+Internal.swift */,
@@ -2556,6 +2561,7 @@
 				64DE5688E4FBE92E1F49810C /* ExternalPaymentMethod.swift in Sources */,
 				229A4A578609A3711F02682E /* STPCardBrandChoice.swift in Sources */,
 				61D946062D7901B400BFCD0C /* CustomPaymentMethod.swift in Sources */,
+				A024A7A92EB2B6C500542C1E /* PMMEMultiPartnerView.swift in Sources */,
 				3EDFACA133567159875143C5 /* STPElementsSession.swift in Sources */,
 				49909A1C2D8AFA600031EC33 /* FCLiteApiClient.swift in Sources */,
 				B62988F32E4405D7004FC9AF /* STPPaymentIntentParams+PaymentSheet.swift in Sources */,
@@ -2671,6 +2677,7 @@
 				8C91277A8FEFD0B914CC6564 /* PaymentSheet-LinkConfirmOption.swift in Sources */,
 				B63DC6782CC054410011C27E /* EmbeddedPaymentElementContainerView.swift in Sources */,
 				49B1F7CC2E1EC43300EA2593 /* LinkSignUpViewController.swift in Sources */,
+				A024A7AB2EB2B6D500542C1E /* PMMESinglePartnerView.swift in Sources */,
 				573E3DB554058AC1E34E34B6 /* AddPaymentMethodViewController.swift in Sources */,
 				4930D8D72DB93F060091FBFE /* LinkSeparatorView.swift in Sources */,
 				8D4951AE0D793D01528F352D /* PaymentMethodTypeCollectionView.swift in Sources */,

@@ -35,6 +35,28 @@ extension PaymentMethodMessagingElement {
         let dark: UIImage
         let altText: String
     }
+
+    // Factory method that creates a UIView for the PMME
+    static func createUIView(viewData: ViewData, didUpdateHeight: ((CGFloat) -> Void)? = nil) -> UIView {
+        switch viewData.mode {
+        case .singlePartner(let logo):
+            return PMMESinglePartnerView(
+                logoSet: logo,
+                infoUrl: viewData.infoUrl,
+                promotion: viewData.promotion,
+                appearance: viewData.appearance,
+                didUpdateHeight: didUpdateHeight
+            )
+        case .multiPartner(let logos):
+            return PMMEMultiPartnerView(
+                logoSets: logos,
+                infoUrl: viewData.infoUrl,
+                promotion: viewData.promotion,
+                appearance: viewData.appearance,
+                didUpdateHeight: didUpdateHeight
+            )
+        }
+    }
 }
 
 extension PaymentMethodMessagingElement.Appearance {
