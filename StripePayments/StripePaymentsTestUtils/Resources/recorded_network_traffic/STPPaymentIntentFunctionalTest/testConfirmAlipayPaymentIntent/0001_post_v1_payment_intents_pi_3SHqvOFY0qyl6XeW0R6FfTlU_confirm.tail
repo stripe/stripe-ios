@@ -1,0 +1,75 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SHqvOFY0qyl6XeW0R6FfTlU\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=az9qZCQjBc3SS1UhY0RSqmq8u00qEAbmUQZoHgFsQrHKL5lVaEURHe3NsgR08GlK1LeCjbv68ANA8aVI
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_S9vBrRmjTakEzl
+Content-Length: 1284
+Vary: Origin
+Date: Mon, 13 Oct 2025 18:56:51 GMT
+original-request: req_S9vBrRmjTakEzl
+stripe-version: 2020-08-27
+idempotency-key: da9392ae-ae28-47ef-99f8-774e3672a0fc
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3SHqvOFY0qyl6XeW0R6FfTlU_secret_BKBjKUzweJlahndkEv2sozM5f&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=alipay&payment_method_options\[alipay]\[app_bundle_id]=com\.apple\.dt\.xctest\.tool&payment_method_options\[alipay]\[app_version_key]=.*&return_url=foo%3A\/\/bar
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 2000,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 2000,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "alipay_handle_redirect",
+    "alipay_handle_redirect" : {
+      "native_url" : null,
+      "native_data" : null,
+      "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1SHqvPFY0qyl6XeWGP5Z8A46?client_secret=src_client_secret_4hSzz8XS08Fw2kFrbhKF4wVE",
+      "return_url" : "foo:\/\/bar"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : "pm_1SHqvPFY0qyl6XeW8xmntKC2",
+  "client_secret" : "pi_3SHqvOFY0qyl6XeW0R6FfTlU_secret_BKBjKUzweJlahndkEv2sozM5f",
+  "id" : "pi_3SHqvOFY0qyl6XeW0R6FfTlU",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "alipay"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1760381810,
+  "description" : null
+}

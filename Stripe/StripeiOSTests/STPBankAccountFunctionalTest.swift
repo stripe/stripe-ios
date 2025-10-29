@@ -41,6 +41,26 @@ class STPBankAccountFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testCreateAndRetreiveBankAccountTokenAsync() async throws {
+        let bankAccount = STPBankAccountParams()
+        bankAccount.accountNumber = "000123456789"
+        bankAccount.routingNumber = "110000000"
+        bankAccount.country = "US"
+        bankAccount.accountHolderName = "Jimmy bob"
+        bankAccount.accountHolderType = STPBankAccountHolderType.company
+
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let token = try await client.createToken(withBankAccount: bankAccount)
+        XCTAssertNotNil(token.tokenId)
+        XCTAssertEqual(token.type, .bankAccount)
+        XCTAssertNotNil(token.bankAccount?.stripeID)
+        XCTAssertEqual("STRIPE TEST BANK", token.bankAccount?.bankName)
+        XCTAssertEqual("6789", token.bankAccount?.last4)
+        XCTAssertEqual("Jimmy bob", token.bankAccount?.accountHolderName)
+        XCTAssertEqual(token.bankAccount?.accountHolderType, STPBankAccountHolderType.company)
+    }
+
     func testInvalidKey() {
         let bankAccount = STPBankAccountParams()
         bankAccount.accountNumber = "000123456789"
