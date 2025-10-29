@@ -213,7 +213,7 @@ class TimeoutTests: XCTestCase {
             onCancel: {}
         )
 
-        let (result,) = await withTimeout(timeout: 1.0, operation)
+        let (result, ) = await withTimeout(timeout: 1.0, operation)
 
         XCTAssertEqual(result, "Single")
     }
@@ -227,7 +227,7 @@ class TimeoutTests: XCTestCase {
             onCancel: {}
         )
 
-        let (result,) = await withTimeout(timeout: 0.1, operation)
+        let (result, ) = await withTimeout(timeout: 0.1, operation)
 
         XCTAssertNil(result)
     }
@@ -598,7 +598,7 @@ class TimeoutTests: XCTestCase {
             onCancel: {}
         )
 
-        let (result,) = await withResultTimeout(timeout: 1.0, operation)
+        let (result, ) = await withResultTimeout(timeout: 1.0, operation)
 
         guard case .success(let value) = result else {
             XCTFail("Operation should succeed")
@@ -616,7 +616,7 @@ class TimeoutTests: XCTestCase {
             onCancel: {}
         )
 
-        let (result,) = await withResultTimeout(timeout: 0.1, operation)
+        let (result, ) = await withResultTimeout(timeout: 0.1, operation)
 
         guard case .failure(let error) = result,
               error is TimeoutError else {
