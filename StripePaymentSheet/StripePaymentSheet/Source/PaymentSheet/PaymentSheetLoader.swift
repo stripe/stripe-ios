@@ -447,8 +447,7 @@ final class PaymentSheetLoader {
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
         guard let customerID = configuration.customer?.id,
-              let ephemeralKey = configuration.customer?.ephemeralKeySecret,
-              !ephemeralKey.isEmpty else {
+              case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider else {
             return []
         }
 
