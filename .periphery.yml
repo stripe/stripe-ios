@@ -3,25 +3,22 @@
 # Install/info https://github.com/peripheryapp/periphery
 # Why are so many targets/schemes commented out? This script takes a long time to run in CI, so we skip some schemes to speed it up. Note: AllStripeFrameworks covers a lot of the commented out schemes, e.g. AllStripeFrameworks contains StripeApplePay.
 
-workspace: Stripe.xcworkspace
+project: Stripe.xcworkspace
 
 schemes:
-  - AllStripeFrameworks
-
-targets:
-  - Stripe3DS2
-  - StripeApplePay
-  - StripeCameraCore
-  - StripeCardScan
-  - StripeConnect
-  - StripeCore
-  - StripeFinancialConnections
-  - StripeIdentity
-  - StripePaymentSheet
-  - StripePayments
-  - StripePaymentsUI
-  - StripeUICore
-  - StripeiOS
+- Stripe3DS2
+- StripeApplePay
+- StripeCameraCore
+- StripeCardScan
+- StripeConnect
+- StripeCore
+- StripeFinancialConnections
+- StripeIdentity
+- StripePaymentSheet
+- StripePayments
+- StripePaymentsUI
+- StripeUICore
+- StripeiOS
 
 retain_public: true
 retain_objc_accessible: false
@@ -32,4 +29,3 @@ verbose: true
 build_arguments:
   - -destination
   - 'generic/platform=iOS Simulator'
-  
