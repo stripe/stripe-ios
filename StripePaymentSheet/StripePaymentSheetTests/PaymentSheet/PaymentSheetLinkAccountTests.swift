@@ -15,7 +15,7 @@ import OHHTTPStubsSwift
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripePayments
 
 final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
 

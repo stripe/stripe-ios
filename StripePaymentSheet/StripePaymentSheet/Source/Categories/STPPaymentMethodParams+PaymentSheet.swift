@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
 
 extension STPPaymentMethodParams {
     var nonnil_billingDetails: STPPaymentMethodBillingDetails {

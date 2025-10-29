@@ -9,7 +9,7 @@
 import UIKit
 
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 /// A view that displays a horizontal collection of card brand images.

@@ -10,7 +10,7 @@ import Foundation
 import PassKit
 import UIKit
 
-@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 protocol WalletHeaderViewDelegate: AnyObject {

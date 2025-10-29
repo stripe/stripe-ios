@@ -8,6 +8,15 @@
 @_spi(STP) import StripeCore
 import UIKit
 
+extension NSAttributedString {
+
+    /// A range covering from the start to the end of the attributed string.
+    @_spi(STP) public var extent: NSRange {
+        return NSRange(location: 0, length: self.length)
+    }
+
+}
+
 extension NSMutableAttributedString {
     func replaceOccurrences(of textToReplace: String, with attachment: NSTextAttachment) {
         while let range = string.range(of: textToReplace) {

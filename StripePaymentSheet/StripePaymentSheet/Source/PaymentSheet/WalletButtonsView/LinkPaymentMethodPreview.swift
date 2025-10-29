@@ -5,7 +5,7 @@
 //  Created by Mat Schmid on 7/29/25.
 //
 
-@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
 import UIKit
 
 struct LinkPaymentMethodPreview {

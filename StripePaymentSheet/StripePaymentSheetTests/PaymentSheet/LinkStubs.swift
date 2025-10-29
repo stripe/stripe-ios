@@ -11,7 +11,7 @@ import Foundation
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripePayments
 
 struct LinkStubs {
     private init() {}

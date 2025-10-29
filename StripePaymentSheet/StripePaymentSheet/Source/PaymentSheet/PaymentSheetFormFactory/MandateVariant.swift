@@ -7,7 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
 
 enum MandateVariant {
     // The original mandate that describes reuse of the payment method by the merchant.

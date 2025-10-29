@@ -12,7 +12,7 @@ import XCTest
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
-@testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripeUICore
 
 class MockElement: Element {
