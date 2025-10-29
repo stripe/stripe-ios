@@ -23,9 +23,9 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
                                                             paymentMethodConfigurationId: "pmc_234",
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _ in return "" })
         var config = PaymentSheet.Configuration()
-        config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _, _ in })
+        config.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_foo", "external_bar"], externalPaymentMethodConfirmHandler: { _, _ in return .canceled })
 
         let cpm = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_123")
         let cpm2 = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_789")
@@ -68,7 +68,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                                            setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
-                                                            confirmHandler: { _, _, _ in })
+                                                            confirmHandler: { _, _ in return "" })
         // Create a session ID
         AnalyticsHelper.shared.generateSessionID()
 
@@ -254,7 +254,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 2000, currency: "USD"),
             paymentMethodTypes: ["card"],
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(

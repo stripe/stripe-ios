@@ -854,16 +854,14 @@ extension PaymentSheet {
 
         /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with e.g., "external_paypal"
         /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
-        /// - Parameter completion: Call this after payment has completed, passing the result of the payment.
         /// - Returns: The result of the attempt to confirm payment using the given external payment method.
         public typealias ExternalPaymentMethodConfirmHandler = (
             _ externalPaymentMethodType: String,
-            _ billingDetails: STPPaymentMethodBillingDetails,
-            _ completion: @escaping ((PaymentSheetResult) -> Void)
-        ) -> Void
+            _ billingDetails: STPPaymentMethodBillingDetails
+        ) async -> PaymentSheetResult
 
         /// This handler is called when the customer confirms the payment using an external payment method.
-        /// Your implementation should complete the payment and call the `completion` parameter with the result.
+        /// Your implementation should complete the payment and return the result.
         /// - Note: This is always called on the main thread.
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
     }

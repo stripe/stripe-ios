@@ -98,20 +98,11 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             } else if let confirmHandler = intentConfig.confirmHandler {
                 // PaymentMethod-based deferred intent flow
                 let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
-                return try await withCheckedThrowingContinuation { continuation in
-                    confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
-                        switch result {
-                        case .success(let clientSecret):
-                            guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
-                                continuation.resume(returning: STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT)
-                                return
-                            }
-                            continuation.resume(returning: clientSecret)
-                        case .failure(let error):
-                            continuation.resume(throwing: error)
-                        }
-                    }
+                let clientSecret = try await confirmHandler(stpPaymentMethod, shouldSavePaymentMethod)
+                guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                    return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
                 }
+                return clientSecret
             } else {
                 // Neither handler is available
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "No confirm handler available in IntentConfiguration")

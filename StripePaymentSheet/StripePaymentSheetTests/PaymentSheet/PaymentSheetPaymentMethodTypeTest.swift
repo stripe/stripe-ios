@@ -880,14 +880,14 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     func testPaymentMethodOrder() {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
             XCTFail()
-            completion(.canceled)
+            return .canceled
         })
 
         func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String], externalPMTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(
-                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in })
+                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
             )
             // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, externalPaymentMethodTypes: externalPMTypes), configuration: configuration)
