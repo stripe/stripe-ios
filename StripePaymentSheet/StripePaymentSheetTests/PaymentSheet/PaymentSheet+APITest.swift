@@ -1314,7 +1314,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     func testMakeIntentParams_paypal_sets_mandate() {
         let paypalPaymentMethodParams = STPPaymentMethodParams(payPal: .init(), billingDetails: nil, metadata: nil)
-        let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal"])!
+        let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal", "created": "12345"])!
         let paymentOptions = STPConfirmPaymentMethodOptions()
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")

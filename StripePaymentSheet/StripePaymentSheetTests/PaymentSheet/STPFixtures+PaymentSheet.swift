@@ -297,6 +297,7 @@ extension STPPaymentMethod {
     static let _testCardJSON = [
         "id": "pm_123card",
         "type": "card",
+        "created": "12345",
         "card": [
             "last4": "4242",
             "brand": "visa",
@@ -338,6 +339,7 @@ extension STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
             "type": "card",
+            "created": "12345",
             "card": [
                 "last4": "4242",
                 "brand": "visa",
@@ -355,6 +357,7 @@ extension STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
             "type": "card",
+            "created": "12345",
             "card": [
                 "last4": "0005",
                 "brand": "amex",
@@ -366,6 +369,7 @@ extension STPPaymentMethod {
         var apiResponse: [String: Any] = [
             "id": "pm_123card",
             "type": "card",
+            "created": "12345",
             "card": [
                 "last4": "4242",
                 "brand": brand,
@@ -384,6 +388,7 @@ extension STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123",
             "type": "us_bank_account",
+            "created": "12345",
             "us_bank_account": [
                 "account_holder_type": "individual",
                 "account_type": "checking",
@@ -409,6 +414,7 @@ extension STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123",
             "type": "sepa_debit",
+            "created": "12345",
             "sepa_debit": [
                 "last4": "1234",
             ],
@@ -423,6 +429,7 @@ extension STPPaymentMethod {
         let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123",
             "type": "link",
+            "created": "12345",
             "sepa_debit": [
                 "last4": "1234",
             ],

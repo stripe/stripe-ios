@@ -177,6 +177,7 @@ extension STPPaymentMethod {
     static var usBankAccountJson: [String: Any] {
         return [
             "id": "pm_123",
+            "created": "12345",
             "type": "us_bank_account",
             "us_bank_account": [
                 "account_holder_type": "individual",
