@@ -34,4 +34,5 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Changed] Renamed STPPaymentIntentParams to STPPaymentIntentConfirmParams
 * [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
 * [Removed] Removed deprecated `STPPaymentIntentParams.saveSourceToCustomer` property. Use `savePaymentMethod` instead.
+* [Removed] Removed `singleUsePaymentMethod` STPPaymentMethodParams initializer.
 
