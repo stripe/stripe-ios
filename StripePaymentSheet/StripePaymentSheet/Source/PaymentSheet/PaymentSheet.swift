@@ -3,7 +3,7 @@
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 9/3/20.
-//  Copyright © 2020 Stripe, Inc. All rights reserved.
+//  Copyright © 2025 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
