@@ -446,8 +446,8 @@ import UIKit
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: .link)
                 paymentIntentParams.paymentMethodId = paymentMethodId
                 paymentIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
-                STPPaymentHandler.shared().confirmPayment(
-                    paymentIntentParams, with: authenticationContext
+                STPPaymentHandler.shared().confirmPaymentIntent(
+                    params: paymentIntentParams, authenticationContext: authenticationContext
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -465,7 +465,7 @@ import UIKit
                 setupIntentParams.paymentMethodID = paymentMethodId
                 setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                 STPPaymentHandler.shared().confirmSetupIntent(
-                    setupIntentParams, with: authenticationContext
+                    params: setupIntentParams, authenticationContext: authenticationContext
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
