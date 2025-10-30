@@ -31,7 +31,8 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Changed] `STPPaymentIntent.paymentMethodTypes` and `STPSetupIntent.paymentMethodTypes` now return `[STPPaymentMethodType]` instead of `[NSNumber]` in Swift for better ergonomics.
 * [Changed] `STPSetupIntentConfirmParams.useStripeSDK` now uses `Bool?` instead of `NSNumber?` in Swift for better ergonomics.
 * [Changed] Renamed STPPaymentHandler's `confirm` and `handleNextAction` methods and added async versions.
+* [Changed] Renamed STPPaymentIntentParams to STPPaymentIntentConfirmParams
 * [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
 * [Removed] Removed deprecated `STPPaymentIntentParams.saveSourceToCustomer` property. Use `savePaymentMethod` instead.
+* [Removed] Removed `singleUsePaymentMethod` STPPaymentMethodParams initializer.
 * [Removed] Removed STPPaymentMethod `metadata`.
-

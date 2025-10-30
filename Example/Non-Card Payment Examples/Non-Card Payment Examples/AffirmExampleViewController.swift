@@ -80,7 +80,7 @@ extension AffirmExampleViewController {
 
                 let shippingDetailsParam = STPPaymentIntentShippingDetailsParams(address: shippingAddress,
                                                                                  name: "TestName")
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     affirm: STPPaymentMethodAffirmParams(),
                     metadata: [:])
