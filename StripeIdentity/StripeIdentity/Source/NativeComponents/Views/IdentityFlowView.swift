@@ -255,8 +255,8 @@ extension IdentityFlowView {
             buttonTopBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
             buttonTopBackgroundView.bottomAnchor.constraint(equalTo: buttonBackgroundView.topAnchor),
 
-            // Limit width without pinning; keep centered
             buttonTopContentView.centerXAnchor.constraint(equalTo: buttonTopBackgroundView.centerXAnchor),
+            // Limit width without pinning
             buttonTopContentView.widthAnchor.constraint(lessThanOrEqualTo: buttonTopBackgroundView.widthAnchor, constant: -(Style.buttonInsets.leading + Style.buttonInsets.trailing)),
             buttonTopContentView.topAnchor.constraint(equalTo: buttonTopBackgroundView.topAnchor, constant: Style.buttontopInsets.top),
             buttonTopContentView.bottomAnchor.constraint(equalTo: buttonTopBackgroundView.bottomAnchor, constant: Style.buttontopInsets.bottom),
