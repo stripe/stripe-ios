@@ -19,9 +19,6 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(STPSource.type(from: "card"), STPSourceType.card)
         XCTAssertEqual(STPSource.type(from: "CARD"), STPSourceType.card)
 
-        XCTAssertEqual(STPSource.type(from: "three_d_secure"), STPSourceType.threeDSecure)
-        XCTAssertEqual(STPSource.type(from: "THREE_D_SECURE"), STPSourceType.threeDSecure)
-
         XCTAssertEqual(STPSource.type(from: "unknown"), STPSourceType.unknown)
         XCTAssertEqual(STPSource.type(from: "UNKNOWN"), STPSourceType.unknown)
 
@@ -32,7 +29,6 @@ class STPSourceTest: XCTestCase {
     func testStringFromType() {
         let values = [
             STPSourceType.card,
-            STPSourceType.threeDSecure,
             STPSourceType.unknown,
         ]
 
@@ -42,8 +38,6 @@ class STPSourceTest: XCTestCase {
             switch type {
             case STPSourceType.card:
                 XCTAssertEqual(string, "card")
-            case STPSourceType.threeDSecure:
-                XCTAssertEqual(string, "three_d_secure")
             case STPSourceType.unknown:
                 XCTAssertNil(string)
             default:
@@ -193,7 +187,6 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.livemode, false)
         XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
         XCTAssertEqual(source?.status, STPSourceStatus.pending)
-        XCTAssertEqual(source?.type, STPSourceType.threeDSecure)
         XCTAssertEqual(source?.usage, STPSourceUsage.singleUse)
         var threedsecure = response?["three_d_secure"] as? [AnyHashable: Any]
         threedsecure?.removeValue(forKey: "customer") // should be nil

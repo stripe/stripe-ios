@@ -30,9 +30,6 @@ class STPSourceParamsTest: XCTestCase {
         sourceParams.rawTypeString = "card"
         XCTAssertEqual(sourceParams.type, .card)
 
-        sourceParams.rawTypeString = "three_d_secure"
-        XCTAssertEqual(sourceParams.type, .threeDSecure)
-
         sourceParams.rawTypeString = "unknown"
         XCTAssertEqual(sourceParams.type, .unknown)
 
@@ -46,9 +43,6 @@ class STPSourceParamsTest: XCTestCase {
 
         sourceParams.type = .card
         XCTAssertEqual(sourceParams.rawTypeString, "card")
-
-        sourceParams.type = .threeDSecure
-        XCTAssertEqual(sourceParams.rawTypeString, "three_d_secure")
 
         sourceParams.type = .unknown
         XCTAssertNil(sourceParams.rawTypeString)
@@ -114,32 +108,6 @@ class STPSourceParamsTest: XCTestCase {
         XCTAssertEqual(sourceAddress["state"] as? String, card.address.state)
         XCTAssertEqual(sourceAddress["postal_code"] as? String, card.address.postalCode)
         XCTAssertEqual(sourceAddress["country"] as? String, card.address.country)
-    }
-
-    func testParamsWithVisaCheckout() {
-        let params = STPSourceParams.visaCheckoutParams(withCallId: "12345678")
-
-        XCTAssertEqual(params.type, .card)
-        let sourceCard = params.additionalAPIParameters["card"] as? [AnyHashable: Any]
-        XCTAssertNotNil(sourceCard)
-        let sourceVisaCheckout = sourceCard!["visa_checkout"] as? [AnyHashable: Any]
-        XCTAssertNotNil(sourceVisaCheckout)
-        XCTAssertEqual(sourceVisaCheckout!["callid"] as! String, "12345678")
-    }
-
-    func testParamsWithMasterPass() {
-        let params = STPSourceParams.masterpassParams(
-            withCartId: "12345678",
-            transactionId: "87654321"
-        )
-
-        XCTAssertEqual(params.type, .card)
-        let sourceCard = params.additionalAPIParameters["card"] as? [AnyHashable: Any]
-        XCTAssertNotNil(sourceCard)
-        let sourceMasterpass = sourceCard!["masterpass"] as? [AnyHashable: Any]
-        XCTAssertNotNil(sourceMasterpass)
-        XCTAssertEqual(sourceMasterpass!["cart_id"] as! String, "12345678")
-        XCTAssertEqual(sourceMasterpass!["transaction_id"] as! String, "87654321")
     }
 
     // MARK: - STPFormEncodable Tests
