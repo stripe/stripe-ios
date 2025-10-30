@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.frameworks                     = 'Foundation', 'Security', 'WebKit', 'PassKit', 'Contacts', 'CoreLocation' 
   s.requires_arc                   = true 
   s.platform                       = :ios 
-  s.ios.deployment_target          = '13.0' 
+  s.ios.deployment_target          = '15.0' 
   s.swift_version                  = '5.0' 
   s.source_files                   = 'StripeApplePay/StripeApplePay/**/*.swift' 
   s.dependency                       'StripeCore', "#{s.version}"

@@ -15,7 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init {
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
 #if !TARGET_OS_VISION
-    configuration.preferences.javaScriptEnabled = NO;
+    // Use WKWebpagePreferences for iOS 14+ instead of deprecated javaScriptEnabled
+    WKWebpagePreferences *pagePreferences = [[WKWebpagePreferences alloc] init];
+    pagePreferences.allowsContentJavaScript = NO;
+    configuration.defaultWebpagePreferences = pagePreferences;
 #endif
     return [super initWithFrame:CGRectZero configuration:configuration];
 }

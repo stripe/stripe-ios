@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.platform                       = :ios
   s.swift_version		               = '5.0'
-  s.ios.deployment_target          = '13.0'
+  s.ios.deployment_target          = '15.0'
   s.weak_framework                 = 'SwiftUI'
   s.source_files                   = 'Stripe/StripeiOS/Source/*.swift'
   s.ios.resource_bundle            = { 'StripeBundle' => ['Stripe/StripeiOS/Resources/**/*.{lproj,png,xcassets}', 'Stripe/StripeiOS/PrivacyInfo.xcprivacy'] }

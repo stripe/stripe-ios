@@ -221,16 +221,13 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @available(macCatalystApplicationExtension, unavailable)
     @objc(presentApplePayWithCompletion:)
     public func presentApplePay(completion: STPVoidBlock? = nil) {
-        #if os(visionOS)
+        // Use UIWindowScene for iOS 15+ to avoid deprecated UIApplication.windows
         // This isn't great: We should encourage the use of presentApplePay(from window:) instead.
         let windows = UIApplication.shared.connectedScenes
             .compactMap { ($0 as? UIWindowScene)?.windows }
             .flatMap { $0 }
             .sorted { firstWindow, _ in firstWindow.isKeyWindow }
         let window = windows.first
-        #else
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-        #endif
         self.presentApplePay(from: window, completion: completion)
     }
 

@@ -168,7 +168,7 @@ WARNING_CFLAGS = -Wall -Wextra -Wundef -Wfloat-equal
 // pointers or specific system versions before calling newer APIs.
 //
 
-IPHONEOS_DEPLOYMENT_TARGET = 13.0
+IPHONEOS_DEPLOYMENT_TARGET = 15.0
 
 APPLICATION_EXTENSION_API_ONLY = NO
 

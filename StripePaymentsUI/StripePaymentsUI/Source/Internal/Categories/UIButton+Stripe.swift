@@ -19,29 +19,34 @@ extension UIButton {
         _ spacing: CGFloat,
         withEdgeInsets edgeInsets: NSDirectionalEdgeInsets
     ) {
-// TODO: Rewrite this for visionOS & iOS 17.
         #if os(visionOS)
         #else
-        // UIButton doesn't have support for directional edge insets. We should
-        // apply insets depending on the layout direction.
-        if self.effectiveUserInterfaceLayoutDirection == .leftToRight {
-            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: -spacing, bottom: 0, right: spacing)
-            self.contentEdgeInsets = UIEdgeInsets(
-                top: edgeInsets.top,
-                left: edgeInsets.leading + spacing,
-                bottom: edgeInsets.bottom,
-                right: edgeInsets.trailing
-            )
+        // Use UIButtonConfiguration for iOS 15+ to avoid deprecated edge inset properties
+        if var config = self.configuration {
+            // Update existing configuration
+            config.contentInsets = edgeInsets
+            config.imagePadding = spacing
+            self.configuration = config
         } else {
-            self.imageEdgeInsets = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: -spacing)
-            self.contentEdgeInsets = UIEdgeInsets(
-                top: edgeInsets.top,
-                left: edgeInsets.trailing,
-                bottom: edgeInsets.bottom,
-                right: edgeInsets.leading + spacing
-            )
+            // Create new configuration if button doesn't have one
+            var config = UIButton.Configuration.plain()
+            config.contentInsets = edgeInsets
+            config.imagePadding = spacing
+
+            // Preserve existing button properties
+            if let currentTitle = self.currentTitle {
+                config.title = currentTitle
+            }
+            if let currentImage = self.currentImage {
+                config.image = currentImage
+            }
+            if let currentAttributedTitle = self.currentAttributedTitle {
+                config.attributedTitle = AttributedString(currentAttributedTitle)
+            }
+
+            self.configuration = config
         }
-#endif
+        #endif
     }
 
 }

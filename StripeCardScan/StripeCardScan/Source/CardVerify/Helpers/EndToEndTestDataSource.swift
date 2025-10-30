@@ -23,7 +23,11 @@
         }()
 
         func nextSquareAndFullImage() -> CGImage? {
-            guard let targetSize = UIApplication.shared.windows.first?.frame.size else {
+            // Use UIWindowScene for iOS 15+ to avoid deprecated UIApplication.windows
+            let windows = UIApplication.shared.connectedScenes
+                .compactMap { ($0 as? UIWindowScene)?.windows }
+                .flatMap { $0 }
+            guard let targetSize = windows.first?.frame.size else {
                 return nil
             }
 

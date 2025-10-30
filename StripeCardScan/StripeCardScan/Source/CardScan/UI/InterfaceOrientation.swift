@@ -9,8 +9,11 @@ import UIKit
 
 extension UIWindow {
     static var interfaceOrientation: UIInterfaceOrientation {
+        // Use UIWindowScene for iOS 15+ to avoid deprecated UIApplication.windows
         return
-            UIApplication.shared.windows
+            UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.windows }
+            .flatMap { $0 }
             .first?
             .windowScene?
             .interfaceOrientation ?? .unknown
