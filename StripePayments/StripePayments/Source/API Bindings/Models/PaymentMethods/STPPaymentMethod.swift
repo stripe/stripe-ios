@@ -207,12 +207,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         }) ?? .unspecified
     }
 
-    class func types(from strings: [String]) -> [NSNumber] {
-        var types: [AnyHashable] = []
+    class func types(from strings: [String]) -> [STPPaymentMethodType] {
+        var types: [STPPaymentMethodType] = []
         for string in strings {
-            types.append(NSNumber(value: self.type(from: string).rawValue))
+            types.append(self.type(from: string))
         }
-        return types as? [NSNumber] ?? []
+        return types
     }
 
     class func paymentMethodTypes(from strings: [String]) -> [STPPaymentMethodType] {
