@@ -106,13 +106,13 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         let address = formattedAddress(info.address)
 
         let stackView = UIStackView(arrangedSubviews: [
-            KYCInfoRowView(title: "Name", value: name),
+            VerifyKYCInfoRowView(title: "Name", value: name),
             makeDivider(),
-            KYCInfoRowView(title: "Date of Birth", value: dob),
+            VerifyKYCInfoRowView(title: "Date of Birth", value: dob),
             makeDivider(),
-            KYCInfoRowView(title: "Last 4 digits of SSN", value: last4),
+            VerifyKYCInfoRowView(title: "Last 4 digits of SSN", value: last4),
             makeDivider(),
-            KYCInfoRowView(title: "Address", value: address, editAction: { [weak self] in
+            VerifyKYCInfoRowView(title: "Address", value: address, editAction: { [weak self] in
                 self?.onResult?(.updateAddress)
             })
         ])

@@ -45,6 +45,7 @@
 		0B83D9922E1EF6EF004F0115 /* StripeCryptoOnramp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0B83D99A2E1EF8B7004F0115 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B83D9992E1EF8B7004F0115 /* XCTest.framework */; platformFilter = ios; };
 		0B9A09C42EB3A695002879BB /* VerifyKYCContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9A09C32EB3A695002879BB /* VerifyKYCContentViewController.swift */; };
+		0B9A09C62EB3AB15002879BB /* VerifyKYCInfoRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9A09C52EB3AB15002879BB /* VerifyKYCInfoRowView.swift */; };
 		0BA705082E4132640044B483 /* KYCDataCollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA705072E4132640044B483 /* KYCDataCollectionResponse.swift */; };
 		0BA7050A2E413D6B0044B483 /* KYCDataCollectionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA705092E413D6B0044B483 /* KYCDataCollectionRequest.swift */; };
 		0BA7050C2E413DA40044B483 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA7050B2E413DA40044B483 /* Credentials.swift */; };
@@ -137,6 +138,7 @@
 		0B83D98E2E1EF6EF004F0115 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		0B83D9992E1EF8B7004F0115 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0B9A09C32EB3A695002879BB /* VerifyKYCContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyKYCContentViewController.swift; sourceTree = "<group>"; };
+		0B9A09C52EB3AB15002879BB /* VerifyKYCInfoRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyKYCInfoRowView.swift; sourceTree = "<group>"; };
 		0BA705072E4132640044B483 /* KYCDataCollectionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KYCDataCollectionResponse.swift; sourceTree = "<group>"; };
 		0BA705092E413D6B0044B483 /* KYCDataCollectionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KYCDataCollectionRequest.swift; sourceTree = "<group>"; };
 		0BA7050B2E413DA40044B483 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 			children = (
 				0B5315DC2EB1619C00ADFE65 /* VerifyKYCViewController.swift */,
 				0B9A09C32EB3A695002879BB /* VerifyKYCContentViewController.swift */,
+				0B9A09C52EB3AB15002879BB /* VerifyKYCInfoRowView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -585,6 +588,7 @@
 				0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */,
 				0BA7050C2E413DA40044B483 /* Credentials.swift in Sources */,
 				0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */,
+				0B9A09C62EB3AB15002879BB /* VerifyKYCInfoRowView.swift in Sources */,
 				0B089E6D2E5392F1007D160E /* CheckoutResult.swift in Sources */,
 				49A11F432E5A295B002ECED5 /* AuthorizeResult.swift in Sources */,
 				0B6DF3492E296E41008B1800 /* STPAPIClient+CryptoOnramp.swift in Sources */,
