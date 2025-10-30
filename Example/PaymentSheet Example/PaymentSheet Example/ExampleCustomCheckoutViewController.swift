@@ -15,7 +15,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var paymentMethodButton: UIButton!
     @IBOutlet weak var paymentMethodImage: UIImageView!
     var paymentSheetFlowController: PaymentSheet.FlowController!
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
+    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.stripedemos.com/checkout")!  // An example backend endpoint
 
     override func viewDidLoad() {
         super.viewDidLoad()

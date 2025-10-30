@@ -12,7 +12,8 @@ import UIKit
 class PlaygroundViewController: UIViewController {
 
     // Constants
-    let baseURL = "https://stripe-mobile-identity-verification-playground.glitch.me"
+    // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
+    let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
     let verifyEndpoint = "/create-verification-session"
     let reuseEndpoint = "/reuse-verification-session"
 
@@ -161,11 +162,11 @@ class PlaygroundViewController: UIViewController {
         var url: URL
         var requestDict: [String: Any]
 
-        if (creationMethod == .reuse) {
+        if creationMethod == .reuse {
             url = URL(string: baseURL + reuseEndpoint)!
 
             requestDict = [
-                "verification_session":reuseVerificationSessionIDInput.text ?? ""
+                "verification_session": reuseVerificationSessionIDInput.text ?? ""
             ]
         } else {
             // Make request to our verification endpoint

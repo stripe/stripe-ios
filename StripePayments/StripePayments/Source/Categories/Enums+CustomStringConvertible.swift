@@ -374,24 +374,6 @@ extension STPPaymentIntentSetupFutureUsage: CustomStringConvertible {
 }
 
 /// :nodoc:
-@available(
-    *,
-    deprecated,
-    message: "Use STPIntentActionType instead",
-    renamed: "STPIntentActionType"
-)
-extension STPPaymentIntentSourceActionType: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .authorizeWithURL:
-            return "authorizeWithURL"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
 extension STPPaymentIntentStatus: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -407,10 +389,6 @@ extension STPPaymentIntentStatus: CustomStringConvertible {
             return "requiresConfirmation"
         case .requiresPaymentMethod:
             return "requiresPaymentMethod"
-        case .requiresSource:
-            return "requiresSource"
-        case .requiresSourceAction:
-            return "requiresSourceAction"
         case .succeeded:
             return "succeeded"
         case .unknown:
@@ -525,7 +503,7 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "swish"
         case .twint:
             return "TWINT"
-        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay, .alma, .konbini, .promptPay, .sunbit, .billie, .satispay, .crypto:
+        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay, .alma, .konbini, .promptPay, .sunbit, .billie, .satispay, .crypto, .shopPay:
             // `description` is the value used when this type is converted to a string for debugging purposes, just use the display name.
             return displayName
         case .multibanco:

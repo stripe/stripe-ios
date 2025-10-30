@@ -1,0 +1,63 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/sources\/src_1SGOFjFY0qyl6XeWAC8MzG8h\?client_secret=src_client_secret_5rzfSfU3LAi5sqiGdESXjNCZ$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=43bFqTMsQ4RBGRzVlXZvAjc_IuwizW6L8z6JD6flgRh48z2sBxITeBbXm8YV9MswFEyEPsPmD5gmJMSW
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Thu, 09 Oct 2025 18:07:48 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 926
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_eKDCZyBPv0g6Ui
+
+{
+  "id" : "src_1SGOFjFY0qyl6XeWAC8MzG8h",
+  "livemode" : false,
+  "amount" : null,
+  "owner" : {
+    "address" : null,
+    "phone" : null,
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : null,
+    "name" : null
+  },
+  "usage" : "reusable",
+  "statement_descriptor" : null,
+  "type" : "card",
+  "object" : "source",
+  "card" : {
+    "last4" : "4242",
+    "dynamic_last4" : null,
+    "funding" : "credit",
+    "brand" : "Visa",
+    "exp_month" : 12,
+    "exp_year" : 2042,
+    "address_zip_check" : null,
+    "cvc_check" : "unchecked",
+    "tokenization_method" : null,
+    "address_line1_check" : null,
+    "country" : "US",
+    "name" : null,
+    "three_d_secure" : "optional"
+  },
+  "allow_redisplay" : "unspecified",
+  "created" : 1760033267,
+  "client_secret" : "src_client_secret_5rzfSfU3LAi5sqiGdESXjNCZ",
+  "flow" : "none",
+  "currency" : null,
+  "status" : "chargeable"
+}

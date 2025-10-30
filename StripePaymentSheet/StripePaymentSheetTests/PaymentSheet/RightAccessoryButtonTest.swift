@@ -91,14 +91,14 @@ final class RightAccessoryButtonTest: XCTestCase {
         }
     }
 
-    func testViewMore_Returned_When_SavedPaymentsGreaterThanOne_FlatCheckmarkStyle() {
+    func testViewMore_Returned_When_SavedPaymentsGreaterThanOne_FlatCheckmarkOrChevronStyle() {
         let result = RowButton.RightAccessoryButton.getAccessoryButtonType(savedPaymentMethodsCount: 2,
                                                                            isFirstCardCoBranded: true,
                                                                            isCBCEligible: true,
                                                                            allowsRemovalOfLastSavedPaymentMethod: true,
                                                                            allowsPaymentMethodRemoval: true,
                                                                            allowsPaymentMethodUpdate: true,
-                                                                           isFlatCheckmarkStyle: true)
+                                                                           omitChevron: true)
         XCTAssertEqual(result, .viewMore)
     }
 }

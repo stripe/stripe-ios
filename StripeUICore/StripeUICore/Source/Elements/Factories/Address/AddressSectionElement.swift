@@ -23,12 +23,14 @@ import UIKit
         @_spi(STP) public static let empty = AddressDetails()
         public var name: String?
         public var phone: String?
+        public var email: String?
         public var address: Address
 
         /// Initializes an Address
-        public init(name: String? = nil, phone: String? = nil, address: Address = .init()) {
+        public init(name: String? = nil, phone: String? = nil, email: String? = nil, address: Address = .init()) {
             self.name = name
             self.phone = phone
+            self.email = email
             self.address = address
         }
 
@@ -68,6 +70,8 @@ import UIKit
         /// The default collection mode.
         /// - Parameter autocompletableCountries: If non-empty, the line1 field displays an autocomplete accessory button if the current country is in this list. Set the `didTapAutocompleteButton` property to be notified when the button is tapped.
         case all(autocompletableCountries: [String] = [])
+        /// Collects all address fields and always shows the autocomplete button for all countries.
+        case allWithAutocomplete
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
@@ -81,10 +85,12 @@ import UIKit
         public init(
             name: FieldConfiguration = .disabled,
             phone: FieldConfiguration = .disabled,
+            email: FieldConfiguration = .disabled,
             billingSameAsShippingCheckbox: FieldConfiguration = .disabled
         ) {
             self.name = name
             self.phone = phone
+            self.email = email
             self.billingSameAsShippingCheckbox = billingSameAsShippingCheckbox
         }
 
@@ -95,6 +101,7 @@ import UIKit
 
         public let name: FieldConfiguration
         public let phone: FieldConfiguration
+        public let email: FieldConfiguration
         public let billingSameAsShippingCheckbox: FieldConfiguration
     }
 
@@ -112,6 +119,7 @@ import UIKit
     let addressSection: SectionElement
     public let name: TextFieldElement?
     public let phone: PhoneNumberElement?
+    public let email: TextFieldElement?
     public let country: DropdownFieldElement
     public private(set) var autoCompleteLine: DummyAddressLine?
     public private(set) var line1: TextFieldElement?
@@ -141,16 +149,16 @@ import UIKit
             )
         }
     }
-    var addressDetails: AddressDetails {
+    public var addressDetails: AddressDetails {
         let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.rawData)
-        return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
+        return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), email: email?.text, address: address)
     }
 
     public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
-    let didTapAutocompleteButton: () -> Void
+    @_spi(STP) public var didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
 
     // MARK: - Implementation
@@ -216,6 +224,13 @@ import UIKit
                 return nil
             }
         }()
+        self.email = {
+            if case .enabled(let isOptional) = additionalFields.email {
+                return TextFieldElement.makeEmail(defaultValue: defaults.email, isOptional: isOptional, theme: theme)
+            } else {
+                return nil
+            }
+        }()
         self.sameAsCheckbox = CheckboxElement(theme: theme, label: String.Localized.billing_same_as_shipping, isSelectedByDefault: true)
         if case .enabled = additionalFields.billingSameAsShippingCheckbox, let defaultCountry = defaults.address.country, countryCodes.contains(defaultCountry) {
             // Country must exist in the dropdown, otherwise this address can't be same as shipping
@@ -260,7 +275,7 @@ import UIKit
         self.defaults.address = defaultAddress
 
         // Next, show/hide the checkbox if address is valid/invalid
-        sameAsCheckbox.view.isHidden = defaultAddress == .init() || !countryCodes.contains(defaultAddress.country ?? "country doesnt exist")
+        sameAsCheckbox.view.isHidden = defaultAddress == .init() || !countryCodes.contains(defaultAddress.country ?? "country doesn't exist")
         guard !sameAsCheckbox.view.isHidden else {
             // We're done if the checkbox is hidden
             return
@@ -308,11 +323,13 @@ import UIKit
                 }
             case .autoCompletable:
                 return false
+            case .allWithAutocomplete:
+                return true
             }
         }
 
         if collectionMode == .autoCompletable {
-            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: didTapAutocompleteButton)
+            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: handleAutocompleteButtonTap)
         } else {
             autoCompleteLine = nil
         }
@@ -320,7 +337,12 @@ import UIKit
         if fieldOrdering.contains(.line) {
             if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
                 line1 = TextFieldElement.Address.LineConfiguration(
-                    lineType: .line1Autocompletable(didTapAutocomplete: didTapAutocompleteButton),
+                    lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
+                    defaultValue: address.line1
+                ).makeElement(theme: theme)
+            } else if case .allWithAutocomplete = collectionMode {
+                line1 = TextFieldElement.Address.LineConfiguration(
+                    lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
                     defaultValue: address.line1
                 ).makeElement(theme: theme)
             } else {
@@ -358,8 +380,9 @@ import UIKit
             initialElements.append(country)
         }
         initialElements.append(autoCompleteLine)
+        let emailElement: [Element?] = [email]
         let phoneElement: [Element?] = [phone]
-        addressSection.elements = (initialElements + addressFields + phoneElement).compactMap { $0 }
+        addressSection.elements = (emailElement + phoneElement + initialElements + addressFields).compactMap { $0 }
     }
 
     /// Returns `true` iff all **displayed** address fields match the given `address`, treating `nil` and "" as equal.
@@ -384,6 +407,12 @@ import UIKit
            allDisplayedFieldsEqual = false
         }
         return allDisplayedFieldsEqual
+    }
+
+    /// Internal method that calls the current didTapAutocompleteButton
+    /// This ensures subcomponents always call the latest callback
+    private func handleAutocompleteButtonTap() {
+        didTapAutocompleteButton()
     }
 }
 
@@ -443,10 +472,16 @@ extension AddressSectionElement: ElementDelegate {
 }
 
 @_spi(STP) public extension AddressSectionElement.AddressDetails {
-    init(billingAddress: BillingAddress, phone: String?) {
+    init(
+        billingAddress: BillingAddress,
+        phone: String?,
+        name: String? = nil,
+        email: String? = nil
+    ) {
         self.init(
-            name: billingAddress.name,
+            name: name ?? billingAddress.name,
             phone: phone,
+            email: email,
             address: Address(
                 city: billingAddress.city,
                 country: billingAddress.countryCode,

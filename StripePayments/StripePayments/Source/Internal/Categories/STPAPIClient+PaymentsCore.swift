@@ -20,4 +20,21 @@ extension STPAPIClient {
         newParams["payment_user_agent"] = ([PaymentsSDKVariant.paymentUserAgent] + additionalValues).joined(separator: "; ")
         return newParams
     }
+
+    @_spi(STP) public class func paramsAddingClientAttributionMetadata(
+        _ params: [String: Any],
+        clientAttributionMetadata: STPClientAttributionMetadata
+    ) -> [String: Any] {
+        stpAssert(
+            params["client_attribution_metadata"] == nil,
+            "Overwriting existing client_attribution_metadata"
+        )
+        var newParams = params
+        do {
+            newParams["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+        } catch {
+            stpAssertionFailure("Could not encode clientAttributionMetadata to JSON: \(error)")
+        }
+        return newParams
+    }
 }

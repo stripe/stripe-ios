@@ -3,31 +3,27 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=P45V6wctGjDWkNDDNBzZHyPidmvAXa0Fjm10Tg2X2SP1izA2HY5K3LxWKVGkxDow7Zf_rfk-4g%3D%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=K7-vy-tbZp3jcsAuM7vbQRM5b7hPiqLkcy-OlubeAeUfAnJpY4y0CYvHZsxb1KJ-D_kHtRwLENiVUtZP
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_XDF7sx6GQsAhmB
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 702
+request-id: req_cQNZ84k81P20Gg
+Content-Length: 722
 Vary: Origin
-Date: Thu, 02 Jan 2025 17:11:45 GMT
-original-request: req_XDF7sx6GQsAhmB
+Date: Tue, 19 Aug 2025 17:48:57 GMT
+original-request: req_cQNZ84k81P20Gg
 stripe-version: 2020-08-27
-idempotency-key: 7fc6bbab-a31f-418b-a40e-12fbb0f9a3bc
+idempotency-key: e9d3228f-1fa6-4031-ab7f-491c4fd66616
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&billing_details\[name]=SEPA%20Test%20Customer&payment_user_agent=.*&sepa_debit\[iban]=DE89370400440532013000&type=sepa_debit
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&billing_details\[name]=SEPA%20Test%20Customer&guid=.*&muid=.*&payment_user_agent=.*&sepa_debit\[iban]=DE89370400440532013000&sid=.*&type=sepa_debit
 
 {
   "object" : "payment_method",
@@ -42,10 +38,11 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     },
     "branch_code" : ""
   },
-  "id" : "pm_1QcrvxFY0qyl6XeWC4bOomNS",
+  "id" : "pm_1RxteXFY0qyl6XeWwAye74SI",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
+    "tax_id" : null,
     "name" : "SEPA Test Customer",
     "address" : {
       "state" : null,
@@ -57,7 +54,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1735837905,
+  "created" : 1755625737,
   "allow_redisplay" : "unspecified",
   "type" : "sepa_debit",
   "customer" : null

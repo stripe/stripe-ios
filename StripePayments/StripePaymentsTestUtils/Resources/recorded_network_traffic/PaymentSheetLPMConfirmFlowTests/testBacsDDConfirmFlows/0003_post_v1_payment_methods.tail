@@ -2,46 +2,44 @@ POST
 https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
-access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
-content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_methods; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=5NlpBQ5b5ySeaM6cHLNJq0SD_Ad5toPWBjBUeAYHjATA9OyzZWdwKqvnXIUwY9PQh9-Fm2vZcjlZTYJW
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
-request-id: req_RYzO1PKu6KF8bg
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 554
+request-id: req_lfk1wa1aFAoCwY
+Content-Length: 606
 Vary: Origin
-Date: Wed, 31 Jul 2024 03:30:53 GMT
-original-request: req_RYzO1PKu6KF8bg
+Date: Mon, 27 Oct 2025 16:22:51 GMT
+original-request: req_lfk1wa1aFAoCwY
 stripe-version: 2020-08-27
-idempotency-key: 3a84886c-4bbe-426b-8164-dbac91783054
+idempotency-key: 9ee6e675-29c0-49e4-8e50-203f974a0e60
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-content-type-options: nosniff
-X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=asdf&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=asdf&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=12345&billing_details\[address]\[state]=AL&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&payment_user_agent=.*&type=bacs_debit
+X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=South%20San%20Francisco&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=354%20Oyster%20Point%20Blvd&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=94080&billing_details\[address]\[state]=CA&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=bacs_debit
 
 {
   "object" : "payment_method",
-  "id" : "pm_1PiTFZGoesj9fw9QSvQY1lFs",
+  "id" : "pm_1SMtC3Goesj9fw9QA2b3bQcR",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
+    "tax_id" : null,
     "name" : "Foo",
     "address" : {
-      "state" : "AL",
+      "state" : "CA",
       "country" : "US",
       "line2" : "",
-      "city" : "asdf",
-      "line1" : "asdf",
-      "postal_code" : "12345"
+      "city" : "South San Francisco",
+      "line1" : "354 Oyster Point Blvd",
+      "postal_code" : "94080"
     }
   },
   "livemode" : false,
@@ -51,7 +49,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=0
     "sort_code" : "108800"
   },
   "allow_redisplay" : "unspecified",
-  "created" : 1722396653,
+  "created" : 1761582171,
   "customer" : null,
   "type" : "bacs_debit"
 }

@@ -1,0 +1,195 @@
+"A few photos will be taken automatically on the next step to verify it's you" = "ระบบจะถ่ายภาพ 2-3 รายการโดยอัตโนมัติในขั้นตอนถัดไปเพื่อยืนยันว่าเป็นคุณจริงๆ";
+
+"Accepted forms of ID include" = "รูปแบบเอกสารประจำตัวที่ยอมรับประกอบด้วย";
+
+"Alternatively, you may manually upload a photo of your identity document." = "หรือคุณจะทำการอัปโหลดรูปภาพเอกสารประจำตัวด้วยตนเองก็ได้";
+
+"App Settings" = "การตั้งค่าแอป";
+
+"Back %@ photo successfully uploaded" = "อัปโหลดรูปภาพ %@ ด้านหลังเรียบร้อย";
+
+"Back identity document photo successfully uploaded" = "อัปโหลดรูปภาพด้านหลังเอกสารประจำตัวเรียบร้อย";
+
+"Back of %@" = "ด้านหลังของ %@";
+
+"Back of driver's license or government-issued photo ID" = "ด้านหลังของใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
+
+"Back of identity document" = "ด้านหลังของเอกสารประจำตัว";
+
+"Camera permission" = "สิทธิ์สำหรับกล้องถ่ายรูป";
+
+"Camera unavailable" = "กล้องไม่พร้อมใช้งาน";
+
+"Capturing…" = "กำลังจับภาพ...";
+
+"Choose File" = "เลือกไฟล์";
+
+"Consent" = "คำยินยอม";
+
+"Could not capture image" = "ไม่สามารถถ่ายภาพ";
+
+"Date of Birth" = "วันเกิด";
+
+"Date of birth does not look valid" = "ดูเหมือนว่าวันเกิดไม่ถูกต้อง";
+
+"Details not visible" = "รายละเอียดไม่ชัดเจน";
+
+"Flip your %@ over to the other side" = "พลิก %@ ของคุณเป็นอีกด้าน";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "พลิกใบอนุญาตขับขี่หรือบัตรประจำตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลไปอีกด้านหนึ่ง";
+
+"Flip your identity card over to the other side" = "พลิกไปยังอีกด้านของบัตรประจำตัว";
+
+"Front %@ photo successfully uploaded" = "อัปโหลดรูปภาพ %@ ด้านหน้าเรียบร้อย";
+
+"Front identity document photo successfully uploaded" = "อัปโหลดรูปภาพด้านหน้าเอกสารประจำตัวเรียบร้อย";
+
+"Front of %@" = "ด้านหน้าของ %@";
+
+"Front of driver's license or government-issued photo ID" = "ด้านหน้าของใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
+
+"Front of driver's license or passport" = "ด้านหน้าของใบอนุญาตขับขี่หรือหนังสือเดินทาง";
+
+"Front of driver's license, passport, or government-issued photo ID" = "ด้านหน้าของใบอนุญาตขับขี่ หนังสือเดินทาง หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
+
+"Front of identity document" = "ด้านหน้าของเอกสารประจำตัว";
+
+"Front of passport or government-issued photo ID" = "ด้านหน้าของหนังสือเดินทางหรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
+
+"Get ready to scan your photo ID" = "เตรียมพร้อมสแกนเอกสารประจำตัวที่มีรูปถ่าย";
+
+"Get ready to take a selfie" = "เตรียมตัวถ่ายภาพเซลฟี";
+
+"Go Back" = "ย้อนกลับ";
+
+"Hold still, scanning" = "ถือไว้ให้นิ่ง ระบบกำลังสแกน";
+
+"I'm ready" = "ฉันพร้อมแล้ว";
+
+"ID Number" = "หมายเลขประจำตัวประชาชน";
+
+"Individual CPF" = "CPF ส่วนบุคคล";
+
+"Keep ID level" = "วางเอกสารให้อยู่ในมุมที่พอดี";
+
+"Last 4 of Social Security number" = "ตัวเลข 4 หลักสุดท้ายของหมายเลขประกันสังคม";
+
+"Loading" = "กำลังโหลด";
+
+"Make sure all details are visible and focus" = "ตรวจสอบว่ารายละเอียดทั้งหมดสามารถมองเห็นได้และอยู่ในระยะโฟกัส";
+
+"Make sure you're in a well lit space." = "ตรวจสอบว่าคุณอยู่ในสภาพแวดล้อมที่มีแสงสว่างเพียงพอ";
+
+"Move closer" = "เลื่อนเข้ามา";
+
+"Move farther" = "เลื่อนออกไป";
+
+"Move to a darker area" = "ย้ายไปพื้นที่ที่มีแสงสว่างน้อยลง";
+
+"Move to a well-lit area" = "ย้ายไปพื้นที่ที่มีแสงสว่างเพียงพอ";
+
+"NRIC or FIN" = "NRIC หรือ FIN";
+
+"No document detected" = "ตรวจไม่พบเอกสาร";
+
+"Personal ID number" = "หมายเลขประจำตัวประชาชน";
+
+"Personal Information" = "ข้อมูลส่วนตัว";
+
+"Phone Number" = "หมายเลขโทรศัพท์";
+
+"Phone Verification" = "การยืนยันหมายเลขโทรศัพท์";
+
+"Photo Library" = "คลังภาพ";
+
+"Please upload images of the front and back of your %@" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของ %@";
+
+"Please upload images of the front and back of your identity document" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของเอกสารประจำตัวของคุณ";
+
+"Position your %@ in the center of the frame" = "จัดตำแหน่ง %@ ให้อยู่กลางเฟรม";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "จัดตำแหน่งใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
+
+"Position your driver's license or passport in the center of the frame" = "จัดตําแหน่งใบอนุญาตขับขี่หรือหนังสือเดินทางให้อยู่กลางเฟรม";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "จัดตําแหน่งใบอนุญาตขับขี่ หนังสือเดินทาง หรือ บัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
+
+"Position your face in the center of the frame." = "จัดตำแหน่งใบหน้าให้อยู่กลางเฟรม";
+
+"Position your identity document in the center of the frame" = "จัดตำแหน่งเอกสารประจำตัวของคุณให้อยู่กลางเฟรม";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "จัดตําแหน่งหนังสือเดินทางหรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
+
+"Retake Photos" = "ถ่ายภาพอีกครั้ง";
+
+"Scan" = "สแกน";
+
+"Scanned" = "สแกนแล้ว";
+
+"Select" = "เลือก";
+
+"Select a location to upload the back of your identity document from" = "เลือกตำแหน่งที่จะทำการอัปโหลดรูปภาพด้านหลังของเอกสารประจำตัว";
+
+"Select a location to upload the front of your identity document from" = "เลือกตำแหน่งที่จะทำการอัปโหลดรูปภาพด้านหน้าของเอกสารประจำตัว";
+
+"Select back %@ photo" = "เลือกรูปภาพ %@ ด้านหลัง";
+
+"Select back identity document photo" = "เลือกรูปภาพด้านหลังของเอกสารประจำตัว";
+
+"Select front %@ photo" = "เลือกรูปภาพ %@ ด้านหน้า";
+
+"Select front identity document photo" = "เลือกรูปภาพด้านหน้าของเอกสารประจำตัว";
+
+"Selfie" = "เซลฟี";
+
+"Selfie captures" = "ถ่ายเซลฟี";
+
+"Selfie captures are complete" = "ถ่ายเซลฟีเรียบร้อยแล้ว";
+
+"Take Photo" = "ถ่ายภาพ";
+
+"The images of your identity document have not been saved. Do you want to leave?" = "ระบบยังไม่ได้บันทึกรูปภาพของเอกสารพิสูจน์ตัวตน คุณต้องการออกจากส่วนนี้ไหม";
+
+"There was an error accessing the camera." = "เกิดข้อผิดพลาดในการเข้าถึงกล้องถ่ายรูป";
+
+"Try Again" = "ลองอีกครั้ง";
+
+"Try reduce glare and make ID visible" = "ลองลดแสงสะท้อนในรูปภาพและตรวจสอบว่ามองเห็นเอกสารประจำตัวครบทุกส่วน";
+
+"Unable to establish a connection." = "เชื่อมต่อไม่ได้";
+
+"Unsaved changes" = "การเปลี่ยนแปลงที่ไม่ได้บันทึก";
+
+"Upload" = "อัปโหลด";
+
+"Upload a Photo" = "อัปโหลดรูปภาพ";
+
+"Upload your %@" = "อัปโหลด %@ ของคุณ";
+
+"Upload your photo ID" = "อัปโหลดบัตรประจำตัวของคุณ";
+
+"Uploading back %@ photo" = "กำลังอัปโหลดรูปภาพ %@ ด้านหลัง";
+
+"Uploading back identity document photo" = "กำลังอัปโหลดรูปภาพเอกสารประจำตัวด้านหลัง";
+
+"Uploading front %@ photo" = "กำลังอัปโหลดรูปภาพด้านหน้า %@";
+
+"Uploading front identity document photo" = "กำลังอัปโหลดรูปภาพเอกสารประจำตัวด้านหน้า";
+
+"Verify your identity" = "ยืนยันตัวตนของคุณ";
+
+"We could not capture a high-quality image." = "ไม่สามารถถ่ายรูปคุณภาพสูงได้";
+
+"We need permission to use your camera. Please allow camera access in app settings." = "เราต้องการสิทธิ์เข้าถึงกล้องถ่ายรูปของคุณ โปรดให้สิทธิ์ดังกล่าวในการตั้งค่าแอป";
+
+"Welcome" = "ยินดีต้อนรับ";
+
+"You can either try again or upload an image from your device." = "โปรดลองอีกครั้งหรืออัปโหลดรูปภาพจากอุปกรณ์";
+
+"Your selfie images have not been saved. Do you want to leave?" = "ระบบยังไม่ได้บันทึกภาพเซลฟี คุณต้องการออกจากส่วนนี้ไหม";
+
+"driver's license" = "ใบอนุญาตขับขี่";
+
+"government-issued photo ID" = "บัตรประจำตัวที่มีรูปถ่ายที่รัฐบาลออกให้";
+
+"passport" = "หนังสือเดินทาง";

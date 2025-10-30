@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ Card";
+
+"%1$@ Credit" = "%1$@ Credit";
+
+"%1$@ Debit" = "%1$@ Debit";
+
+"%1$@ Prepaid" = "%1$@ Prepaid";
+
 "%1$@ account ending in %2$@" = "%1$@ account na nagtatapos sa %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ nagtatapos sa %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Account sa Bangko";
 
 "Billing address" = "Adres para sa billing";
+
+"Billing details" = "Mga detalye ng singil";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
 
-"Your ZIP is invalid." = "Ang iyong ZIP ay di balido.";
-
 "Your card has expired." = "Napaso na ang iyong kard.";
 
 "Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
 
 "Your card's security code is invalid." = "Ang security code ng iyong kard ay di balido.";
-
-"Your postal code is invalid." = "Ang iyong postal code ay di balido.";
 
 "card number" = "numero ng kard";
 

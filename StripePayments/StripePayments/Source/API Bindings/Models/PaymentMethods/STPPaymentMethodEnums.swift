@@ -96,6 +96,8 @@ import Foundation
     case twint
     /// A Multibanco payment method
     case multibanco
+    /// A ShopPay payment method
+    @_spi(STP) case shopPay
     /// An unknown type.
     case unknown
 
@@ -190,6 +192,8 @@ import Foundation
             return "TWINT"
         case .multibanco:
             return "Multibanco"
+        case .shopPay:
+            return "ShopPay"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -287,40 +291,31 @@ import Foundation
             return "twint"
         case .multibanco:
             return "multibanco"
+        case .shopPay:
+            return "shop_pay"
         }
     }
+
+    @_spi(STP) public static func fromIdentifier(_ identifier: String) -> STPPaymentMethodType {
+        return allCases.first(where: { $0.identifier == identifier }) ?? .unknown
+    }
+
+    @_spi(STP) public static func fromNSNumber(_ nsNumber: NSNumber) -> STPPaymentMethodType {
+        return allCases.first(where: { NSNumber(value: $0.rawValue) == nsNumber }) ?? .unknown
+    }
+
 }
 
 extension STPPaymentMethodType: CaseIterable { }
 
 extension STPPaymentMethodType {
-    struct PollingRequirement {
-        /// - Note: This is a bit hacky. STPPaymentHandlet is hardcoded to poll the Intent status 5 times. `timeBetweenPollingAttempts` controls how long it waits between each poll.
-        var timeBetweenPollingAttempts: TimeInterval
-    }
-
-    /// If non-nil, Intents with this PM type do not update immediately after the next action is handled and require us to poll and this property contains the information needed to poll.
-    var pollingRequirement: PollingRequirement? {
-        switch self {
-        // Note: Card only requires polling for 3DS2 web-based transactions
-        case .card, .amazonPay, .revolutPay:
-            return PollingRequirement(timeBetweenPollingAttempts: 3)
-        case .swish, .twint:
-            // We are intentionally polling for Swish and Twint even though they use the redirect trampoline.
-            // The intent is still in `requires_action` status after redirecting following a successful payment (about 50% of the time for Swish).
-            // This allows time for the intent to transition to its terminal state.
-            return PollingRequirement(timeBetweenPollingAttempts: 1)
-        default:
-            return nil
-        }
-    }
 
     var supportsRefreshing: Bool {
         switch self {
         // Payment methods such as CashApp implement app-to-app redirects that bypass the "redirect trampoline" too give a more seamless user experience for app-to-app.
         // However, when returning to the merchant app in this scenario, the intent often isn't updated instantaneously, requiring us to hit the refresh endpoint.
         // Only a small subset of LPMs support refreshing
-        case .cashApp:
+        case .cashApp, .klarna:
             return true
         default:
             return false

@@ -75,7 +75,7 @@ class STPViewWithSeparator: UIView {
     }
 
     func _currentPixelHeight() -> CGFloat {
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         return 1.0
         #else
         let screen = window?.screen ?? UIScreen.main

@@ -42,7 +42,6 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
     enum Error: Swift.Error, LocalizedError {
         case failedToStart
         case noURL
-        case unexpectedURL
         case noPaymentMethodID
         case canceled
 

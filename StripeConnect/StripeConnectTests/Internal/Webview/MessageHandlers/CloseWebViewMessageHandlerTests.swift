@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 2/12/25.
 //
 
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@testable import StripeConnect
 import XCTest
 
 class CloseWebViewMessageHandlerTests: ScriptWebTestBase {
@@ -21,7 +21,7 @@ class CloseWebViewMessageHandlerTests: ScriptWebTestBase {
         webView.addMessageHandler(messageHandler: messageHandler)
 
         try await webView.evaluateMessage(name: "closeWebView",
-                                  json: """
+                                          json: """
                                   {}
                                   """)
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)

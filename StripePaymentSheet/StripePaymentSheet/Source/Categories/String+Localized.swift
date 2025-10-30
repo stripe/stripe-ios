@@ -26,6 +26,13 @@ extension String.Localized {
         )
     }
 
+    static var continue_another_way: String {
+        STPLocalizedString(
+            "Continue another way",
+            "Label of a button that when tapped allows the user to select a different form of payment."
+        )
+    }
+
     static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
@@ -38,15 +45,6 @@ extension String.Localized {
             ),
             merchantDisplayName
         )
-    }
-
-    static var save_your_payment_information_with_link: String {
-        STPLocalizedString(
-                "Save your payment information with Link, and securely check out in 1-click on Link-supported sites.",
-                """
-                Label describing the benefit of signing up for Link.
-                """
-                )
     }
 
     static var save_for_future_payments: String {
@@ -82,8 +80,26 @@ extension String.Localized {
         STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
     }
 
+    static var bank_continue_mandate_text_with_seller: String {
+        STPLocalizedString("By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for bank payments")
+    }
+
+    static var bank_continue_mandate_and_reuse_text_with_seller: String {
+        STPLocalizedString(
+            "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.",
+            "Text providing link to terms for bank payments when seller information is provided"
+        )
+    }
+
     static var back: String {
         STPLocalizedString("Back", "Text for back button")
+    }
+
+    static var manage_bank_account: String {
+        STPLocalizedString(
+            "Manage bank account",
+            "Title shown above a view containing the customer's bank account that they can delete"
+        )
     }
 
     static var manage_us_bank_account: String {
@@ -298,6 +314,13 @@ extension String.Localized {
         )
     }
 
+    static var satispay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.",
+            "Satispay mandate text"
+        )
+    }
+
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
@@ -459,6 +482,20 @@ extension String.Localized {
         )
     }
 
+    static var by_continuing_you_agree_to_save_your_information_to_merchant: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant."
+        )
+    }
+
+    static var by_continuing_you_agree_to_save_your_information_to_merchant_and_link: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link."
+        )
+    }
+
     static var confirm_your_cvc: String {
         STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
     }
@@ -511,5 +548,9 @@ extension String.Localized {
             "Please choose a valid payment method.",
             "Error message that's displayed when you try to confirm a payment without a valid payment method"
        )
+    }
+
+    static var use_billing_address_for_shipping: String {
+        STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
     }
 }

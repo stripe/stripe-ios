@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
@@ -54,6 +55,10 @@ extension String.Localized {
 
     @_spi(STP) public static var billing_address_lowercase: String {
         STPLocalizedString("Billing address", "Billing address section title for card form entry.")
+    }
+
+    @_spi(STP) public static var billing_details_lowercase: String {
+        STPLocalizedString("Billing details", "Billing details section title for card form entry.")
     }
 
     @_spi(STP) public static var your_card_number_is_incomplete: String {
@@ -136,12 +141,42 @@ extension String.Localized {
             "String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted"
         )
     }
-    
+
     @_spi(STP) public static var generic_brand_not_allowed: String {
         STPLocalizedString(
             "The selected brand is not allowed",
             "String to inform a user that specific card brands are not accepted."
         )
+    }
+
+    @_spi(STP) public enum Funding {
+        @_spi(STP) public static var credit: String {
+            STPLocalizedString(
+                "%1$@ Credit",
+                "Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte'"
+            )
+        }
+
+        @_spi(STP) public static var debit: String {
+            STPLocalizedString(
+                "%1$@ Debit",
+                "Label a debit funding source. E.g. 'Visa Debit'"
+            )
+        }
+
+        @_spi(STP) public static var prepaid: String {
+            STPLocalizedString(
+                "%1$@ Prepaid",
+                "Label a prepaid funding source. E.g. 'Visa Prepaid'"
+            )
+        }
+
+        @_spi(STP) public static var `default`: String {
+            STPLocalizedString(
+                "%1$@ Card",
+                "Label a default funding source, which we treat as a generic card. E.g. 'Visa Card'"
+            )
+        }
     }
 }
 

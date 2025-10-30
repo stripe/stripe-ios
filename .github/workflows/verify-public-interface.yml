@@ -10,15 +10,21 @@ on:
 
 jobs:
   public-api-check:
-    runs-on: macos-14
+    runs-on: macos-15
     permissions:
       pull-requests: write
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-            fetch-depth: 0
+          fetch-depth: 100
+
+      - name: Fetch master branch
+        run: git fetch origin master
+
+      - name: Setup Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
 
       - name: Build frameworks and compare interfaces
         id: build-frameworks-compare-interface
@@ -33,13 +39,13 @@ jobs:
             echo "diff_result.txt not found, skipping." 
           fi
           
-      - uses: peter-evans/find-comment@v1
+      - uses: davidme-stripe/find-comment@v1
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Public API changes detected
 
-      - uses: peter-evans/create-or-update-comment@v1
+      - uses: davidme-stripe/create-or-update-comment@v1
         id: create-update-comment
         if: env.diff != ''
         with:

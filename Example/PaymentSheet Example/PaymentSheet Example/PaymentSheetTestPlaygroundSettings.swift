@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@_spi(STP) import StripePayments
+@_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
@@ -55,6 +57,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case deferred_mc
         /// Def MP: Deferred multiprocessor flow
         case deferred_mp
+        /// Def CSC CT: Deferred client side confirmation with confirmation tokens
+        case deferred_csc_ct
+        /// Def SSC CT: Deferred server side confirmation with confirmation tokens
+        case deferred_ssc_ct
 
         var displayName: String {
             switch self {
@@ -68,6 +74,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred server side confirmation with manual confirmation"
             case .deferred_mp:
                 return "Deferred multiprocessor flow"
+            case .deferred_csc_ct:
+                return "Deferred client side confirmation with CTs"
+            case .deferred_ssc_ct:
+                return "Deferred server side confirmation with CTs"
             }
         }
     }
@@ -221,6 +231,20 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             return result
         }
 
+        func makePaymentMethodOptions() -> PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions {
+            let paymentMethodOptionsSetupFutureUsageDictionary: [String: String] = toDictionary()
+            let setupFutureUsageValues: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = {
+                var result: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = [:]
+                paymentMethodOptionsSetupFutureUsageDictionary.forEach { paymentMethodTypeIdentifier, setupFutureUsageString in
+                    let paymentMethodType = STPPaymentMethodType.fromIdentifier(paymentMethodTypeIdentifier)
+                    let setupFutureUsage = PaymentSheet.IntentConfiguration.SetupFutureUsage(rawValue: setupFutureUsageString)
+                    result[paymentMethodType] = setupFutureUsage
+                }
+                return result
+            }()
+            return PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: setupFutureUsageValues)
+        }
+
     }
 
     enum SetupFutureUsageAll: String, PickerEnum {
@@ -258,6 +282,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
         case onWithDetails = "on w/details"
+        case onWithShipping = "on w/Shipping"
     }
 
     enum ApplePayButtonType: String, PickerEnum {
@@ -282,6 +307,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+
+    enum EnablePassiveCaptcha: String, PickerEnum {
+        static var enumName: String { "Enable passive captcha" }
+
+        case on
+        case off
+    }
+
     enum PaymentMethodSave: String, PickerEnum {
         static var enumName: String { "PaymentMethodSave" }
 
@@ -376,6 +409,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "UserOverrideCountry (debug only)" }
 
         case off
+        case US
         case GB
     }
 
@@ -413,6 +447,40 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case automatic
         case never
         case full
+    }
+    enum BillingDetailsAllowedCountries: String, PickerEnum {
+        static var enumName: String { "Allowed Countries" }
+
+        case all
+        case usOnly = "us_only"
+        case northAmerica = "north_america"
+        case someEuropeanCountries = "some_european_countries"
+
+        var countries: Set<String> {
+            switch self {
+            case .all:
+                return []  // Empty set means all countries
+            case .usOnly:
+                return ["US"]
+            case .northAmerica:
+                return ["US", "CA", "MX"]
+            case .someEuropeanCountries:
+                return ["FR", "DE", "IT", "ES"]
+            }
+        }
+
+        var displayName: String {
+            switch self {
+            case .all:
+                return "All Countries"
+            case .usOnly:
+                return "US Only"
+            case .northAmerica:
+                return "North America (US, CA, MX)"
+            case .someEuropeanCountries:
+                return "Some Europe (FR, DE, IT, ES)"
+            }
+        }
     }
     enum Autoreload: String, PickerEnum {
         static var enumName: String { "Autoreload" }
@@ -563,6 +631,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case `continue`
     }
 
+    enum RowSelectionBehavior: String, PickerEnum {
+        static let enumName: String = "rowSelectionBehavior"
+        case `default`
+        case immediateAction
+    }
+
     enum CardBrandAcceptance: String, PickerEnum {
         static let enumName: String = "cardBrandAcceptance"
         case all
@@ -575,6 +649,18 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case automatic
         case alwaysLight
         case alwaysDark
+    }
+    enum PaymentMethodTermsDisplay: String, PickerEnum {
+        static var enumName: String { "Card TermsDisplay" }
+        case unset
+        case automatic
+        case never
+    }
+
+    enum OpensCardScannerAutomatically: String, PickerEnum {
+        static let enumName: String = "opensCardScannerAutomatically"
+        case on
+        case off
     }
 
     var uiStyle: UIStyle
@@ -595,6 +681,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
+    var enablePassiveCaptcha: EnablePassiveCaptcha
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
@@ -626,9 +713,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectEmail: BillingDetailsEmail
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
+    var allowedCountries: BillingDetailsAllowedCountries
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
+    var rowSelectionBehavior: RowSelectionBehavior
     var cardBrandAcceptance: CardBrandAcceptance
+    var opensCardScannerAutomatically: OpensCardScannerAutomatically
+    var termsDisplay: PaymentMethodTermsDisplay
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -648,6 +739,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
+            enablePassiveCaptcha: .on,
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,
@@ -678,13 +770,19 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectEmail: .automatic,
             collectPhone: .automatic,
             collectAddress: .automatic,
+            allowedCountries: .all,
             formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
-            cardBrandAcceptance: .all)
+            rowSelectionBehavior: .default,
+            cardBrandAcceptance: .all,
+            opensCardScannerAutomatically: .off,
+            termsDisplay: .unset
+        )
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"
     static let nsUserDefaultsCustomerIDKey = "PaymentSheetTestPlaygroundCustomerId"
+    static let nsUserDefaultsAppearanceKey = "PaymentSheetTestPlaygroundAppearance"
 
     static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
     static var endpointSelectorEndpoint: String {
