@@ -33,4 +33,5 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Changed] Renamed STPPaymentHandler's `confirm` and `handleNextAction` methods and added async versions.
 * [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
 * [Removed] Removed deprecated `STPPaymentIntentParams.saveSourceToCustomer` property. Use `savePaymentMethod` instead.
+[Changed] Changed STPPaymentMethodType.description
 
