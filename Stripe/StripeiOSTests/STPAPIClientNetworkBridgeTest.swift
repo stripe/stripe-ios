@@ -236,7 +236,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
-            let params = STPPaymentIntentParams(clientSecret: clientSecret!)
+            let params = STPPaymentIntentConfirmParams(clientSecret: clientSecret!)
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmPaymentIntent(with: params) { pi, error2 in
@@ -250,7 +250,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
             XCTAssertNil(error)
 
-            let params = STPPaymentIntentParams(clientSecret: clientSecret!)
+            let params = STPPaymentIntentConfirmParams(clientSecret: clientSecret!)
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmPaymentIntent(with: params) { pi, error2 in
