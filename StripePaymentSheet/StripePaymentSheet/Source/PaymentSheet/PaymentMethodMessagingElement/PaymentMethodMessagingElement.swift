@@ -38,8 +38,8 @@ public class PaymentMethodMessagingElement {
         public var textColor: UIColor = .label
 
         /// The color for the PaymentMethodElement's info icon.
-        /// Defaults to `UIColor.seconaryLabel`.
-        public var infoIconColor: UIColor = .secondaryLabel
+        /// Defaults to `textColor`.
+        public var infoIconColor: UIColor?
     }
 
     /// Describes the configuration of the PaymentMethodMessagingElement.

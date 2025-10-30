@@ -86,7 +86,7 @@ extension PaymentSheet {
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 5a. Client-side confirmation with confirmation token
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.confirmationToken = confirmationToken.stripeId
                         paymentIntentParams.returnURL = configuration.returnURL
                         paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
@@ -223,7 +223,7 @@ extension PaymentSheet {
 
                 // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
                 if confirmationTokenParams.mandateData == nil {
-                    confirmationTokenParams.mandateData = STPPaymentIntentParams.mandateDataIfRequired(for: paymentMethodType)
+                    confirmationTokenParams.mandateData = STPPaymentIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
                 }
             case .setup:
                 // Setup intents always require mandate data for certain payment methods

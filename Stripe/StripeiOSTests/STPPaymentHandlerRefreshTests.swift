@@ -27,6 +27,7 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
         for paymentMethodType in STPPaymentMethodType.allCases {
             let paymentMethodDict: [AnyHashable: Any] = [
                 "id": "pm_test",
+                "created": "1753466748",
                 "type": paymentMethodType.identifier,
             ]
             let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: [paymentMethodType.identifier],
@@ -56,6 +57,7 @@ class STPPaymentHandlerRefreshTests: XCTestCase {
         for paymentMethodType in STPPaymentMethodType.allCases {
             let paymentMethodDict: [AnyHashable: Any] = [
                 "id": "pm_test",
+                "created": "1753466748",
                 "type": paymentMethodType.identifier,
             ]
 

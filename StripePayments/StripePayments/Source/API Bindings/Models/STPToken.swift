@@ -25,13 +25,9 @@ public enum STPTokenType: Int {
 
 /// A token returned from submitting payment details to the Stripe API. You should not have to instantiate one of these directly.
 public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
-    /// You cannot directly instantiate an `STPToken`. You should only use one that has been returned from an `STPAPIClient` callback.
-    override init() {
-    }
-
     /// The value of the token. You can store this value on your server and use it to make charges and customers.
     /// - seealso: https://stripe.com/docs/payments/charges-api
-    @objc public private(set) var tokenId = ""
+    @objc public private(set) var tokenId: String
     /// Whether or not this token was created in livemode. Will be YES if you used your Live Publishable Key, and NO if you used your Test Publishable Key.
     @objc public private(set) var livemode = false
     /// The type of this token.
@@ -42,8 +38,14 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// The bank account details that were used to create the token. Will only be set if the token was created with a bank account, otherwise it will be nil.
     @objc public private(set) var bankAccount: STPBankAccount?
     /// When the token was created.
-    @objc public private(set) var created: Date?
+    @objc public private(set) var created: Date
     @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+
+    required init(tokenId: String, type: STPTokenType, created: Date) {
+        self.tokenId = tokenId
+        self.type = type
+        self.created = created
+    }
 
     // MARK: - Description
     /// :nodoc:
@@ -89,11 +91,8 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             return false
         }
 
-        if let created1 = object.created {
-            return livemode == object.livemode && type == object.type && (tokenId == object.tokenId)
-                && created == created1 && (card == object.card)
-        }
-        return false
+        return livemode == object.livemode && type == object.type && (tokenId == object.tokenId)
+            && created == object.created && (card == object.card)
     }
 
     // MARK: - STPSourceProtocol
@@ -107,19 +106,20 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         guard let response = response else { return nil }
         let dict = response.stp_dictionaryByRemovingNulls()
         guard let stripeId = dict.stp_string(forKey: "id"),
-            let created = dict.stp_date(forKey: "created"),
-            let rawType = dict.stp_string(forKey: "type"),
-            dict["livemode"] != nil, self._isValidRawTokenType(rawType)
+              let created = dict.stp_date(forKey: "created"),
+              let rawType = dict.stp_string(forKey: "type"),
+              dict["livemode"] != nil,
+              self._isValidRawTokenType(rawType)
         else {
             return nil
         }
 
-        let token = STPToken.init()
-        token.tokenId = stripeId
+        let token = STPToken.init(
+            tokenId: stripeId,
+            type: self._tokenType(for: rawType),
+            created: created
+        )
         token.livemode = dict.stp_bool(forKey: "livemode", or: true)
-        token.created = created
-        token.type = self._tokenType(for: rawType)
-
         let rawCard = dict.stp_dictionary(forKey: "card")
         token.card = STPCard.decodedObject(fromAPIResponse: rawCard)
 

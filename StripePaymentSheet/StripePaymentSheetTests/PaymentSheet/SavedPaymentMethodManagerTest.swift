@@ -165,6 +165,7 @@ extension STPPaymentMethod {
     static var paymentMethodJson: [String: Any] {
         return [
             "id": "pm_123card",
+            "created": "12345",
             "type": "card",
             "card": [
                 "last4": "4242",
@@ -177,6 +178,7 @@ extension STPPaymentMethod {
     static var usBankAccountJson: [String: Any] {
         return [
             "id": "pm_123",
+            "created": "12345",
             "type": "us_bank_account",
             "us_bank_account": [
                 "account_holder_type": "individual",
@@ -200,6 +202,7 @@ extension STPPaymentMethod {
             [
                 "id": "pm_123card",
                 "type": "card",
+                "created": "12345",
                 "card": [
                     "last4": "4242",
                     "brand": "visa",
@@ -208,6 +211,7 @@ extension STPPaymentMethod {
             [
                 "id": "pm_123mastercard",
                 "type": "card",
+                "created": "12345",
                 "card": [
                     "last4": "5555",
                     "brand": "mastercard",
@@ -216,6 +220,7 @@ extension STPPaymentMethod {
             [
                 "id": "pm_123amex",
                 "type": "card",
+                "created": "12345",
                 "card": [
                     "last4": "6789",
                     "brand": "amex",

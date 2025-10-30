@@ -16,7 +16,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// Unique identifier for the object.
     @objc private(set) public var stripeId: String
     /// Time at which the object was created. Measured in seconds since the Unix epoch.
-    @objc private(set) public var created: Date?
+    @objc private(set) public var created: Date
     /// `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
     @objc private(set) public var liveMode = false
     /// The type of the PaymentMethod.  The corresponding, similarly named property contains additional information specific to the PaymentMethod type.
@@ -210,12 +210,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         }) ?? .unspecified
     }
 
-    class func types(from strings: [String]) -> [NSNumber] {
-        var types: [AnyHashable] = []
+    class func types(from strings: [String]) -> [STPPaymentMethodType] {
+        var types: [STPPaymentMethodType] = []
         for string in strings {
-            types.append(NSNumber(value: self.type(from: string).rawValue))
+            types.append(self.type(from: string))
         }
-        return types as? [NSNumber] ?? []
+        return types
     }
 
     class func paymentMethodTypes(from strings: [String]) -> [STPPaymentMethodType] {
@@ -230,10 +230,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
     @objc @_spi(STP) public required init(
         stripeId: String,
+        created: Date,
         type: STPPaymentMethodType,
         allowRedisplay: STPPaymentMethodAllowRedisplay = .unspecified
     ) {
         self.stripeId = stripeId
+        self.created = created
         self.type = type
         self.allowRedisplay = allowRedisplay
         super.init()
@@ -247,16 +249,17 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         let dict = response.stp_dictionaryByRemovingNulls()
 
         // Required fields
-        guard let stripeId = dict.stp_string(forKey: "id") else {
+        guard let stripeId = dict.stp_string(forKey: "id"),
+              let created = dict.stp_date(forKey: "created") else {
             return nil
         }
 
         let paymentMethod = self.init(stripeId: stripeId,
+                                      created: created,
                                       type: self.type(from: dict.stp_string(forKey: "type") ?? ""),
                                       allowRedisplay: self.allowRedisplay(from: dict.stp_string(forKey: "allow_redisplay") ?? ""))
         paymentMethod.allResponseFields = response
         paymentMethod.stripeId = stripeId
-        paymentMethod.created = dict.stp_date(forKey: "created")
         paymentMethod.liveMode = dict.stp_bool(forKey: "livemode", or: false)
         paymentMethod.billingDetails = STPPaymentMethodBillingDetails.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "billing_details")
