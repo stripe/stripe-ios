@@ -327,7 +327,6 @@ extension STPAPIClient {
         STPAnalyticsClient.sharedClient.logSourceCreationAttempt(
             sourceType: sourceType
         )
-        sourceParams.redirectMerchantName = Bundle.stp_applicationName() ?? ""
         var params = STPFormEncoder.dictionary(forObject: sourceParams)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         params = Self.paramsAddingPaymentUserAgent(params)
@@ -426,53 +425,6 @@ extension STPAPIClient {
         )
     }
 
-    /// Starts polling the Source object with the given ID. For payment methods that require
-    /// additional customer action (e.g. authorizing a payment with their bank), polling
-    /// allows you to determine if the action was successful. Polling will stop and the
-    /// provided callback will be called once the source's status is no longer `pending`,
-    /// or if the given timeout is reached and the source is still `pending`. If polling
-    /// stops due to an error, the callback will be fired with the latest retrieved
-    /// source and the error.
-    /// Note that if a poll is already running for a source, subsequent calls to `startPolling`
-    /// with the same source ID will do nothing.
-    /// - Parameters:
-    ///   - identifier:  The identifier of the source to be retrieved. Cannot be nil.
-    ///   - secret:      The client secret of the source. Cannot be nil.
-    ///   - timeout:     The timeout for the polling operation, in seconds. Timeouts are capped at 5 minutes.
-    ///   - completion:  The callback to run with the returned Source object, or an error.
-    @objc(startPollingSourceWithId:clientSecret:timeout:completion:)
-    public func startPollingSource(
-        withId identifier: String,
-        clientSecret secret: String,
-        timeout: TimeInterval,
-        completion: @escaping STPSourceCompletionBlock
-    ) {
-        stopPollingSource(withId: identifier)
-        let poller = STPSourcePoller(
-            apiClient: self,
-            clientSecret: secret,
-            sourceID: identifier,
-            timeout: timeout,
-            completion: completion
-        )
-        sourcePollersQueue?.async(execute: {
-            self.sourcePollers?[identifier] = poller
-        })
-    }
-
-    /// Stops polling the Source object with the given ID. Note that the completion block passed to
-    /// `startPolling` will not be fired when `stopPolling` is called.
-    /// - Parameter identifier:  The identifier of the source to be retrieved. Cannot be nil.
-    @objc(stopPollingSourceWithId:)
-    public func stopPollingSource(withId identifier: String) {
-        sourcePollersQueue?.async(execute: {
-            let poller = self.sourcePollers?[identifier] as? STPSourcePoller
-            if let poller = poller {
-                poller.stopPolling()
-                self.sourcePollers?[identifier] = nil
-            }
-        })
-    }
 }
 
 // MARK: Payment Intents
@@ -489,7 +441,7 @@ extension STPAPIClient {
             return "\(APIEndpointPaymentIntents)/\(secret)"
         } else {
             assert(
-                STPPaymentIntentParams.isClientSecretValid(secret),
+                STPPaymentIntentConfirmParams.isClientSecretValid(secret),
                 "`secret` format does not match expected client secret formatting."
             )
             let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
@@ -649,16 +601,16 @@ extension STPAPIClient {
     /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
-    ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
+    ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
     @objc(confirmPaymentIntentWithParams:completion:)
     public func confirmPaymentIntent(
-        with paymentIntentParams: STPPaymentIntentParams,
+        with paymentIntentConfirmParams: STPPaymentIntentConfirmParams,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         confirmPaymentIntent(
-            with: paymentIntentParams,
+            with: paymentIntentConfirmParams,
             expand: nil,
             completion: completion
         )
@@ -669,26 +621,26 @@ extension STPAPIClient {
     /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
-    ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
+    ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable.
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api/payment_intents/object)
     @objc(confirmPaymentIntentWithParams:expand:completion:)
     public func confirmPaymentIntent(
-        with paymentIntentParams: STPPaymentIntentParams,
+        with paymentIntentConfirmParams: STPPaymentIntentConfirmParams,
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         assert(
-            STPPaymentIntentParams.isClientSecretValid(paymentIntentParams.clientSecret),
+            STPPaymentIntentConfirmParams.isClientSecretValid(paymentIntentConfirmParams.clientSecret),
             "`paymentIntentParams.clientSecret` format does not match expected client secret formatting."
         )
 
-        let identifier = paymentIntentParams.stripeId ?? ""
+        let identifier = paymentIntentConfirmParams.stripeId ?? ""
         let type =
-            paymentIntentParams.paymentMethodParams?.rawTypeString
-            ?? paymentIntentParams.sourceParams?.rawTypeString
+            paymentIntentConfirmParams.paymentMethodParams?.rawTypeString
+            ?? paymentIntentConfirmParams.sourceParams?.rawTypeString
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
             paymentMethodType: type,
             apiClient: self
@@ -696,7 +648,7 @@ extension STPAPIClient {
 
         let endpoint = "\(APIEndpointPaymentIntents)/\(identifier)/confirm"
 
-        var params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
+        var params = STPFormEncoder.dictionary(forObject: paymentIntentConfirmParams)
         if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
             sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)
@@ -736,7 +688,7 @@ extension STPAPIClient {
     /// - Throws: The error that occurred making the Stripe API request.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
     public func confirmPaymentIntent(
-        with paymentIntentParams: STPPaymentIntentParams,
+        with paymentIntentParams: STPPaymentIntentConfirmParams,
         expand: [String]? = nil
     ) async throws -> STPPaymentIntent {
         return try await withCheckedThrowingContinuation { continuation in

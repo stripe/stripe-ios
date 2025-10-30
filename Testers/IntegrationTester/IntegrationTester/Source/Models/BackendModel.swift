@@ -18,14 +18,14 @@ class BackendModel {
 
     public static let shared = BackendModel()
 
-    func fetchPaymentIntent(integrationMethod: IntegrationMethod = .card, completion: @escaping (STPPaymentIntentParams?) -> Void) {
+    func fetchPaymentIntent(integrationMethod: IntegrationMethod = .card, completion: @escaping (STPPaymentIntentConfirmParams?) -> Void) {
         let params = ["integration_method": integrationMethod.rawValue]
         getAPI(method: "create_pi", params: params) { (json) in
             guard let paymentIntentClientSecret = json["paymentIntent"] as? String else {
                 completion(nil)
                 return
             }
-            completion(STPPaymentIntentParams(clientSecret: paymentIntentClientSecret))
+            completion(STPPaymentIntentConfirmParams(clientSecret: paymentIntentClientSecret))
         }
     }
 
@@ -63,7 +63,7 @@ class BackendModel {
                 let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String: Any],
                 let publishableKey = json["publishableKey"] as? String else {
             if let data = data {
-                print("\(String(decoding: data, as: UTF8.self))")
+                print("\(String(data: data, encoding: .utf8) ?? "")")
             } else {
                 print("\(error ?? NSError())")  // swiftlint:disable:this discouraged_direct_init
             }
