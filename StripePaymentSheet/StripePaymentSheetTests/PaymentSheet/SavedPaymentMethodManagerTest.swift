@@ -165,6 +165,7 @@ extension STPPaymentMethod {
     static var paymentMethodJson: [String: Any] {
         return [
             "id": "pm_123card",
+            "created": "12345",
             "type": "card",
             "card": [
                 "last4": "4242",
@@ -209,6 +210,7 @@ extension STPPaymentMethod {
             [
                 "id": "pm_123mastercard",
                 "type": "card",
+                "created": "12345",
                 "card": [
                     "last4": "5555",
                     "brand": "mastercard",

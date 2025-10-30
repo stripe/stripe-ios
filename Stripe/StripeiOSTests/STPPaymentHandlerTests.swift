@@ -218,7 +218,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         let setupIntent = STPFixtures.setupIntent(
             paymentMethodTypes: ["card"],
             status: .processing,
-            paymentMethod: ["id": "pm_test", "type": "card"]
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
         )
 
         mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in

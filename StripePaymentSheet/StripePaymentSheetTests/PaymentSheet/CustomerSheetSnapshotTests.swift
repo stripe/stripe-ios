@@ -469,6 +469,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
             "type": "card",
+            "created": "12345",
             "card": [
                 "last4": "4242",
                 "brand": "visa",
