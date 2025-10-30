@@ -142,17 +142,6 @@ class STPSourceParamsTest: XCTestCase {
         XCTAssertEqual(sourceMasterpass!["transaction_id"] as! String, "87654321")
     }
 
-    // MARK: - Redirect Dictionary Tests
-    func redirectMerchantNameQueryItemValue(fromURLString urlString: String?) -> String? {
-        let components = NSURLComponents(string: urlString ?? "")
-        for item in components!.queryItems! {
-            if item.name == "redirect_merchant_name" {
-                return item.value
-            }
-        }
-        return nil
-    }
-
     // MARK: - STPFormEncodable Tests
     func testRootObjectName() {
         XCTAssertNil(STPSourceParams.rootObjectName())

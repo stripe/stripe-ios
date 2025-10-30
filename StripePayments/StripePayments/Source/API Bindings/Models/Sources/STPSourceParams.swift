@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// An object representing parameters used to create a Source object.
 /// - seealso: https://stripe.com/docs/api#create_source
