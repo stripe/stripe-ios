@@ -25,7 +25,7 @@ actor AttestationChallenge {
         self.timeout = timeout
     }
 
-    public init(stripeAttest: StripeAttest, canSyncState: Bool) {
+    public init(stripeAttest: StripeAttest, canSyncState: Bool = false) {
         self.stripeAttest = stripeAttest
         self.canSyncState = canSyncState
         STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepare()
