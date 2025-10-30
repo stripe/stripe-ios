@@ -118,7 +118,17 @@ public class STPPaymentIntentConfirmParams: NSObject {
     /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
     /// app.
-    @objc public var useStripeSDK: NSNumber?
+    @objc(useStripeSDK)
+    @available(swift, obsoleted: 1.0, renamed: "useStripeSDK")
+    public var useStripeSDK_objc: NSNumber? {
+        get { return useStripeSDK.map { NSNumber(value: $0) } }
+        set { useStripeSDK = newValue?.boolValue }
+    }
+
+    /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any PaymentIntent next actions.
+    /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
+    /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
+    public var useStripeSDK: Bool?
 
     internal var _paymentMethodType: STPPaymentMethodType?
     @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
@@ -192,7 +202,7 @@ public class STPPaymentIntentConfirmParams: NSObject {
             "savePaymentMethod = \(String(describing: savePaymentMethod))",
             "setupFutureUsage = \(String(describing: setupFutureUsage))",
             "shipping = \(String(describing: shipping))",
-            "useStripeSDK = \(String(describing: useStripeSDK?.boolValue))",
+            "useStripeSDK = \(String(describing: useStripeSDK))",
             // Source
             "sourceId = \(String(describing: sourceId))",
             "sourceParams = \(String(describing: sourceParams))",
@@ -236,10 +246,8 @@ public class STPPaymentIntentConfirmParams: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPPaymentIntentConfirmParams: STPFormEncodable {
-
-    @objc internal var setupFutureUsageRawString: String? {
-        return setupFutureUsage?.stringValue
-    }
+    @objc private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
+    @objc internal var setupFutureUsageRawString: String? { setupFutureUsage?.stringValue }
 
     @objc
     public class func rootObjectName() -> String? {
@@ -259,7 +267,7 @@ extension STPPaymentIntentConfirmParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: savePaymentMethod)): "save_payment_method",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
-            NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
+            NSStringFromSelector(#selector(getter: useStripeSDK_apiValue)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
             NSStringFromSelector(#selector(getter: shipping)): "shipping",

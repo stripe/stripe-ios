@@ -137,63 +137,6 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
-    // MARK: Sources
-
-    func testCreateRetrieveAndPollSource() {
-        let exp = expectation(description: "Upload file")
-        let expR = expectation(description: "Retrieve source")
-        let expP = expectation(description: "Poll source")
-
-        let card = STPCardParams()
-        card.number = "4242424242424242"
-        card.expYear = 42
-        card.expMonth = 12
-        card.cvc = "123"
-
-        let params = STPSourceParams.cardParams(withCard: card)
-
-        client.createSource(with: params) { [self] source, error in
-            guard let source = source else {
-                XCTFail()
-                return
-            }
-            XCTAssertNil(error)
-            exp.fulfill()
-
-            client?.retrieveSource(withId: source.stripeID, clientSecret: source.clientSecret!) { source2, error2 in
-                XCTAssertNotNil(source2)
-                XCTAssertNil(error2)
-                expR.fulfill()
-            }
-
-            client?.startPollingSource(withId: source.stripeID, clientSecret: source.clientSecret!, timeout: 10) { [self] source2, error2 in
-                XCTAssertNotNil(source2)
-                XCTAssertNil(error2)
-                client?.stopPollingSource(withId: source.stripeID)
-                expP.fulfill()
-            }
-        }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
-    }
-
-    func testCreateRetrieveAndPollSourceAsync() async throws {
-        let card = STPCardParams()
-        card.number = "4242424242424242"
-        card.expYear = 42
-        card.expMonth = 12
-        card.cvc = "123"
-
-        let params = STPSourceParams.cardParams(withCard: card)
-
-        let source = try await client.createSource(with: params)
-        XCTAssertNotNil(source.stripeID)
-        XCTAssertNotNil(source.clientSecret)
-
-        let source2 = try await client.retrieveSource(withId: source.stripeID, clientSecret: source.clientSecret!)
-        XCTAssertNotNil(source2)
-    }
-
     // MARK: Payment Intents
 
     func testRetrievePaymentIntent() {

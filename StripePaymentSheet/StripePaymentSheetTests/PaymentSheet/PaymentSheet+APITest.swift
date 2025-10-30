@@ -313,7 +313,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     authenticationContext: self,
                     intent: loadResult.intent,
                     elementsSession: loadResult.elementsSession,
-                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", type: .card), confirmParams: nil),
+                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", created: Date(), type: .card), confirmParams: nil),
                     paymentHandler: self.paymentHandler,
                     analyticsHelper: ._testValue()
                 ) { result, _ in
@@ -795,7 +795,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }
 
     func testDeferredConfirm_saved_insufficient_funds_card() {
-        let insufficient_funds_saved_PM = STPPaymentMethod(stripeId: "pm_card_visa_chargeDeclinedInsufficientFunds", type: .card)
+        let insufficient_funds_saved_PM = STPPaymentMethod(stripeId: "pm_card_visa_chargeDeclinedInsufficientFunds", created: Date(), type: .card)
         _testDeferredConfirm(
             inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
@@ -1314,7 +1314,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     func testMakeIntentParams_paypal_sets_mandate() {
         let paypalPaymentMethodParams = STPPaymentMethodParams(payPal: .init(), billingDetails: nil, metadata: nil)
-        let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal"])!
+        let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal", "created": "12345"])!
         let paymentOptions = STPConfirmPaymentMethodOptions()
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")

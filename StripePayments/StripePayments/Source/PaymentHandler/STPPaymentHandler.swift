@@ -276,9 +276,9 @@ public class STPPaymentHandler: NSObject {
 
         var params = paymentParams
         // We always set useStripeSDK = @YES in STPPaymentHandler
-        if !(params.useStripeSDK?.boolValue ?? false) {
+        if !(params.useStripeSDK ?? false) {
             params = paymentParams.copy() as! STPPaymentIntentConfirmParams
-            params.useStripeSDK = NSNumber(value: true)
+            params.useStripeSDK = true
         }
         apiClient.confirmPaymentIntent(
             with: params,

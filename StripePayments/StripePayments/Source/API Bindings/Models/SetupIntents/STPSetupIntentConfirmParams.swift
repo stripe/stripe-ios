@@ -64,10 +64,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
     /// app.
     @objc(useStripeSDK)
+    @available(swift, obsoleted: 1.0, renamed: "useStripeSDK")
     public var useStripeSDK_objc: NSNumber? {
         get {
-            guard let useStripeSDK else { return nil }
-            return NSNumber(value: useStripeSDK)
+            return useStripeSDK.map { NSNumber(value: $0) }
         }
         set { useStripeSDK = newValue?.boolValue }
     }
@@ -177,7 +177,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: paymentMethodID)): "payment_method",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
-            NSStringFromSelector(#selector(getter: useStripeSDK_objc)): "use_stripe_sdk",
+            NSStringFromSelector(#selector(getter: useStripeSDK_apiValue)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
@@ -186,6 +186,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     // MARK: - Utilities
+    @objc private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
     static private let regex = try! NSRegularExpression(
         pattern: "^seti_[^_]+_secret_[^_]+$",
         options: []
