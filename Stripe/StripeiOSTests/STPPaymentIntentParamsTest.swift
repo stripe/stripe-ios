@@ -28,7 +28,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
             XCTAssertNil(params.sourceParams)
             XCTAssertNil(params.sourceId)
             XCTAssertNil(params.receiptEmail)
-            XCTAssertNil(params.savePaymentMethod_objc)
+            XCTAssertNil(params.savePaymentMethod)
             XCTAssertNil(params.returnURL)
             XCTAssertNil(params.setAsDefaultPM)
             XCTAssertNil(params.setupFutureUsage)

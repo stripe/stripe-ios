@@ -79,18 +79,7 @@ public class STPPaymentIntentParams: NSObject {
     /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
     /// if the PaymentMethod/Source is not already attached.
     /// This should be a boolean NSNumber, so that it can be `nil`
-    @objc(savePaymentMethod)
-    public var savePaymentMethod_objc: NSNumber? {
-        get {
-            guard let savePaymentMethod else { return nil }
-            return NSNumber(value: savePaymentMethod)
-        }
-        set { savePaymentMethod = newValue?.boolValue }
-    }
-
-    /// `true` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
-    /// if the PaymentMethod/Source is not already attached.
-    public var savePaymentMethod: Bool?
+    @objc public var savePaymentMethod: NSNumber?
 
     /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
@@ -267,7 +256,7 @@ extension STPPaymentIntentParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: sourceParams)): "source_data",
             NSStringFromSelector(#selector(getter: sourceId)): "source",
             NSStringFromSelector(#selector(getter: receiptEmail)): "receipt_email",
-            NSStringFromSelector(#selector(getter: savePaymentMethod_objc)): "save_payment_method",
+            NSStringFromSelector(#selector(getter: savePaymentMethod)): "save_payment_method",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
