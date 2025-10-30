@@ -223,7 +223,12 @@ enum PMMEPlaygroundFontSetting: PMMEPlaygroundSetting {
     case `default`
     case americanTypewriter
 
-    var stringValue: String { return switch self { case .americanTypewriter: "AmericanTypewriter" case .default: "default" }}
+    var stringValue: String {
+        switch self {
+        case .americanTypewriter: "AmericanTypewriter"
+        case .default: "default"
+        }
+    }
 }
 
 enum PMMEPlaygroundColorSetting: UInt, PMMEPlaygroundSetting {
