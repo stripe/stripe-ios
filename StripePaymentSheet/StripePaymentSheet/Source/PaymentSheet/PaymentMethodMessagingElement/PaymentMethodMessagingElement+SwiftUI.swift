@@ -43,7 +43,7 @@ extension PaymentMethodMessagingElement {
         }
 
         /// Initializes a PaymentMethodMessagingElement SwiftUI View.
-        /// Use this initializer when you want manual control over the elment creation or to initialize it outside of the UI layer.
+        /// Use this initializer when you want manual control over the element creation or to initialize it outside of the UI layer.
         /// - Parameter viewData: The ViewData for a given configuration.
         public init(_ viewData: ViewData) where Content == AnyView {
             self.config = nil
