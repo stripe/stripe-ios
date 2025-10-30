@@ -289,7 +289,7 @@ extension Intent {
         setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil,
         paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]? = nil
     ) -> Intent {
-        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _, _ in }))
+        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
 }
 
@@ -495,7 +495,7 @@ extension PaymentSheet.Appearance {
 
 extension PaymentSheetLoader.LoadResult {
     static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes
         )

@@ -188,8 +188,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         let configuration = PaymentSheet.ExternalPaymentMethodConfiguration(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { _, _, completion in
-                completion(.completed)
+            externalPaymentMethodConfirmHandler: { _, _ in
+                return .completed
             }
         )
 
