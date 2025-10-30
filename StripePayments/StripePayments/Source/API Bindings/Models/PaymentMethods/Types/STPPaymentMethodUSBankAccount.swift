@@ -28,6 +28,9 @@ public class STPPaymentMethodUSBankAccount: NSObject {
     /// Last four digits of the bank account number
     @objc public let last4: String
 
+    @available(*, deprecated, renamed: "financialConnectionsAccount")
+    @objc public var linkedAccount: String? { financialConnectionsAccount }
+
     /// The ID of the Financial Connections Account used to create the payment method
     @objc public let financialConnectionsAccount: String?
 
