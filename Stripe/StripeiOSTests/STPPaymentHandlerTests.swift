@@ -38,7 +38,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         let paymentIntent = STPFixtures.paymentIntent(
             paymentMethodTypes: ["card"],
             status: .processing,
-            paymentMethod: ["id": "pm_test", "type": "card"]
+            paymentMethod: ["id": "pm_test", "type": "card", "created": Date().timeIntervalSince1970]
         )
 
         mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
