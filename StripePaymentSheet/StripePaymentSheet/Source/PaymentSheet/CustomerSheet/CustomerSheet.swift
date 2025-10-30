@@ -123,6 +123,14 @@ public class CustomerSheet {
         case error(Error)
     }
 
+    public func present(from presentingViewController: UIViewController) async -> CustomerSheetResult {
+        await withCheckedContinuation { continuation in
+            present(from: presentingViewController) { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
     public func present(from presentingViewController: UIViewController,
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {

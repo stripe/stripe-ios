@@ -38,8 +38,8 @@ public class PaymentMethodMessagingElement {
         public var textColor: UIColor = .label
 
         /// The color for the PaymentMethodElement's info icon.
-        /// Defaults to `UIColor.seconaryLabel`.
-        public var infoIconColor: UIColor = .secondaryLabel
+        /// Defaults to `textColor`.
+        public var infoIconColor: UIColor?
     }
 
     /// Describes the configuration of the PaymentMethodMessagingElement.
@@ -69,5 +69,19 @@ public class PaymentMethodMessagingElement {
 
         /// Describes the visual appearance of the PaymentMethodMessaingElement.
         public var appearance: PaymentMethodMessagingElement.Appearance = PaymentMethodMessagingElement.Appearance()
+    }
+
+    // MARK: - Internal
+
+    let mode: Mode
+    let infoUrl: URL
+    let promotion: String
+    let appearance: Appearance
+
+    init(mode: Mode, infoUrl: URL, promotion: String, appearance: PaymentMethodMessagingElement.Appearance) {
+        self.mode = mode
+        self.infoUrl = infoUrl
+        self.promotion = promotion
+        self.appearance = appearance
     }
 }

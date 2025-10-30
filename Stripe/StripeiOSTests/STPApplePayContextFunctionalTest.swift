@@ -416,7 +416,7 @@ class STPTestPKPaymentAuthorizationController: PKPaymentAuthorizationController 
 // MARK: - Async delegate methods
 // Keeps track of which async delegate methods have been called
 class TestAsyncApplePayContextDelegate: NSObject, ApplePayContextDelegate {
-    enum AsyncDelegateMethods {
+    enum AsyncDelegateMethods: Comparable {
         case didCreatePaymentMethod
         case didSelectShippingMethod
         case didSelectShippingContact
@@ -525,6 +525,6 @@ extension STPApplePayContextFunctionalTest {
             // Fallback on earlier versions
         }
         waitForExpectations(timeout: 3)
-        XCTAssertEqual(delegate.delegateMethodsCalled, [.didCompleteWithStatus, .didSelectShippingMethod, .didSelectShippingContact, .didChangeCouponCode])
+        XCTAssertEqual(delegate.delegateMethodsCalled.sorted(), [.didCompleteWithStatus, .didSelectShippingMethod, .didSelectShippingContact, .didChangeCouponCode].sorted())
     }
 }

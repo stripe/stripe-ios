@@ -24,18 +24,15 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
     let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(
         mode: .payment(amount: 1000, currency: "USD"),
         paymentMethodTypes: ["card", "cashapp"]
-    ) { paymentMethod, _, intentCreationCallback in
-        STPTestingAPIClient.shared.fetchPaymentIntent(
-            types: ["card"],
-            currency: "USD",
-            paymentMethodID: paymentMethod.stripeId,
-            confirm: true
-        ) { result in
-            switch result {
-            case .success(let clientSecret):
-                intentCreationCallback(.success(clientSecret))
-            case .failure(let error):
-                intentCreationCallback(.failure(error))
+    ) { paymentMethod, _ in
+        try await withCheckedThrowingContinuation { continuation in
+            STPTestingAPIClient.shared.fetchPaymentIntent(
+                types: ["card"],
+                currency: "USD",
+                paymentMethodID: paymentMethod.stripeId,
+                confirm: true
+            ) { result in
+                continuation.resume(with: result)
             }
         }
     }
@@ -43,15 +40,17 @@ class EmbeddedPaymentElementViewModelTest: XCTestCase {
     let paymentIntentConfigUpdated = EmbeddedPaymentElement.IntentConfiguration(
         mode: .payment(amount: 1001, currency: "USD"),
         paymentMethodTypes: ["card", "cashapp"]
-    ) { _, _, _ in
+    ) { _, _ in
         // no-op
+        return ""
     }
 
     let brokenPaymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(
         mode: .payment(amount: -1000, currency: "bad currency"),
         paymentMethodTypes: ["card", "cashapp"]
-    ) { _, _, _ in
-        // // no-op, this should fail due to invalid amounts/currency
+    ) { _, _ in
+        // no-op, this should fail due to invalid amounts/currency
+        return ""
     }
 
     // MARK: - Tests
