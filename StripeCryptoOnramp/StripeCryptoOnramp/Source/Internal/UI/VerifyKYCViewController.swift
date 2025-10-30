@@ -12,7 +12,10 @@ import SwiftUI
 @_spi(STP) import StripePaymentSheet
 
 final class VerifyKYCViewController: BottomSheetViewController {
-    private let info: KYCRefreshInfo
+    private enum Constants {
+        static let sheetCornerRadius: CGFloat = 24
+    }
+
     private weak var contentViewController: VerifyKYCContentViewController?
 
     var onResult: ((VerifyKycResult) -> Void)? {
@@ -22,12 +25,10 @@ final class VerifyKYCViewController: BottomSheetViewController {
     }
 
     override var sheetCornerRadius: CGFloat? {
-        24
+        Constants.sheetCornerRadius
     }
 
     init(info: KYCRefreshInfo, appearance: LinkAppearance) {
-        self.info = info
-
         let contentViewController = VerifyKYCContentViewController(info: info, appearance: appearance)
         self.contentViewController = contentViewController
 
@@ -68,6 +69,11 @@ extension VerifyKYCContentViewController: SheetNavigationBarDelegate {
 }
 
 final class VerifyKYCContentViewController: UIViewController, BottomSheetContentViewController {
+    private enum Constants {
+        static let layoutMargins = NSDirectionalEdgeInsets.insets(leading: 24, trailing: 24)
+        static let ctaLayoutMargins = NSDirectionalEdgeInsets.insets(amount: 24)
+        static let infoContainerCornerRadius: CGFloat = 12
+    }
 
     // MARK: - BottomSheetContentViewController
 
@@ -116,7 +122,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         stackView.axis = .vertical
         stackView.spacing = LinkUI.contentSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = .insets(leading: 24, trailing: 24)
+        stackView.directionalLayoutMargins = Constants.layoutMargins
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -133,7 +139,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         container.translatesAutoresizingMaskIntoConstraints = false
 
         container.backgroundColor = .linkSurfaceSecondary
-        container.layer.cornerRadius = 12
+        container.layer.cornerRadius = Constants.infoContainerCornerRadius
         container.layer.masksToBounds = true
 
         let stack = UIStackView()
@@ -224,7 +230,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         view.addSubview(scrollView)
         view.addSubview(bottomButtonContainer)
 
-        bottomButtonContainer.addAndPinSubviewToSafeArea(confirmButton, insets: .insets(amount: 24))
+        bottomButtonContainer.addAndPinSubviewToSafeArea(confirmButton, insets: Constants.ctaLayoutMargins)
 
         NSLayoutConstraint.activate([
             bottomButtonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -257,6 +263,10 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
 // MARK: - Private Views
 
 private final class KYCInfoRowView: UIView {
+    private enum Constants {
+        static let editButtonSize = CGSize(width: 44, height: 44)
+    }
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -283,8 +293,8 @@ private final class KYCInfoRowView: UIView {
         button.tintColor = .linkIconPrimary
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: 44),
-            button.heightAnchor.constraint(equalToConstant: 44),
+            button.widthAnchor.constraint(equalToConstant: Constants.editButtonSize.width),
+            button.heightAnchor.constraint(equalToConstant: Constants.editButtonSize.height),
         ])
         return button
     }()
