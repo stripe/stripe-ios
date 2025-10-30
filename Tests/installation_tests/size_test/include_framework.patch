@@ -1,5 +1,5 @@
 diff --git a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
-index e81bf834efb..98dae85ad68 100644
+index e81bf834efb..3a106bebd37 100644
 --- a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 +++ b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 @@ -8,6 +8,7 @@
@@ -10,22 +10,22 @@ index e81bf834efb..98dae85ad68 100644
  		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
  		C176899020616C7E003DE895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C176898F20616C7E003DE895 /* Assets.xcassets */; };
  		C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176899120616C7E003DE895 /* LaunchScreen.storyboard */; };
-@@ -32,6 +33,7 @@
- 			dstPath = "";
- 			dstSubfolderSpec = 10;
- 			files = (
-+				318005902BC0AF5000BC6B82 /* {{SDK}} in Frameworks */,
- 			);
- 			name = "Embed Frameworks";
- 			runOnlyForDeploymentPostprocessing = 0;
-@@ -57,6 +59,7 @@
+@@ -64,6 +65,7 @@
  			isa = PBXFrameworksBuildPhase;
  			buildActionMask = 2147483647;
  			files = (
-+				3180058F2BC0AF5000BC6B82 /* {{SDK}} */,
++				318005902BC0AF5000BC6B82 /* {{SDK}} in Frameworks */,
  			);
  			runOnlyForDeploymentPostprocessing = 0;
  		};
+@@ -156,6 +158,7 @@
+ 			);
+ 			name = SPMTest;
+ 			packageProductDependencies = (
++				3180058F2BC0AF5000BC6B82 /* {{SDK}} */,
+ 			);
+ 			productName = CocoapodsTest;
+ 			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
 @@ -468,8 +471,8 @@
  					"$(inherited)",
  					"@executable_path/Frameworks",
