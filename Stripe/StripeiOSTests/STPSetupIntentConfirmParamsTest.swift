@@ -96,8 +96,8 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         params.paymentMethodParams = STPPaymentMethodParams()
         params.paymentMethodID = "test_payment_method_id"
         params.returnURL = "fake://testing_only"
-        params.setAsDefaultPM = NSNumber(value: true)
-        params.useStripeSDK = NSNumber(value: true)
+        params.setAsDefaultPM = true
+        params.useStripeSDK = true
         params.mandateData = STPMandateDataParams(
             customerAcceptance: STPMandateCustomerAcceptanceParams(
                 type: .offline,
