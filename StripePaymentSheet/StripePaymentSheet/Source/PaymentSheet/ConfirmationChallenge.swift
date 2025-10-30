@@ -26,7 +26,7 @@ actor ConfirmationChallenge {
             self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
         }
         if enableAttestation, elementsSession.shouldAttestOnConfirmation {
-            self.attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
+            self.attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest, canSyncState: elementsSession.linkSettings?.attestationStateSyncEnabled ?? false)
         }
     }
 
