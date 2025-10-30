@@ -12,7 +12,7 @@ import SwiftUI
 import UIKit
 
 /// An element that provides a view with information about how a purchase could be paid for using Buy Now, Pay Later payment methods.
-@_spi(PMME) // leaving spi protected until public preview launch
+@_spi(PMME)
 public class PaymentMethodMessagingElement {
 
     /// A UIKit view of the element.
@@ -127,5 +127,41 @@ public class PaymentMethodMessagingElement {
         self.infoUrl = infoUrl
         self.promotion = promotion
         self.appearance = appearance
+    }
+}
+
+// MARK: - Initializers
+
+public extension PaymentMethodMessagingElement.Appearance {
+    init(
+        style: UserInterfaceStyle? = nil,
+        font: UIFont? = nil,
+        textColor: UIColor? = nil,
+        infoIconColor: UIColor? = nil
+    ) {
+        if let style { self.style = style }
+        if let font { self.font = font }
+        if let textColor { self.textColor = textColor }
+        if let infoIconColor { self.infoIconColor = infoIconColor }
+    }
+}
+
+public extension PaymentMethodMessagingElement.Configuration {
+    init(
+        amount: Int,
+        currency: String,
+        apiClient: STPAPIClient? = nil,
+        locale: String? = nil,
+        countryCode: String? = nil,
+        paymentMethodTypes: [STPPaymentMethodType]? = nil,
+        appearance: PaymentMethodMessagingElement.Appearance? = nil
+    ) {
+        self.amount = amount
+        self.currency = currency
+        if let apiClient { self.apiClient = apiClient }
+        if let locale { self.locale = locale }
+        if let countryCode { self.countryCode = countryCode }
+        if let paymentMethodTypes { self.paymentMethodTypes = paymentMethodTypes }
+        if let appearance { self.appearance = appearance }
     }
 }
