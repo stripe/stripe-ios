@@ -67,7 +67,7 @@ extension PaymentSheet {
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, passiveCaptchaChallenge: passiveCaptchaChallenge)
 
         payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {
@@ -123,5 +123,48 @@ extension PaymentSheet {
 
         /// Decides whether Link inline verification is shown in the `WalletButtonsView`.
         @_spi(STP) public static var enableLinkInlineVerification: Bool = false
+    }
+}
+
+// MARK: - Link disabled reasons
+
+extension PaymentSheet {
+
+    enum LinkDisabledReason: String {
+        /// The Elements session response indicates that Link isn't supported.
+        case notSupportedInElementsSession = "not_supported_in_elements_session"
+        /// Link is disabled via `PaymentSheet.LinkConfiguration`.
+        case linkConfiguration = "link_configuration"
+        /// Card brand filtering is requested and native Link isn't available.
+        case cardBrandFiltering = "card_brand_filtering"
+        /// Billing details collection is requested and native Link isn't available.
+        case billingDetailsCollection = "billing_details_collection"
+    }
+
+    enum LinkSignupDisabledReason: String {
+        /// Link itself is not enabled.
+        case linkNotEnabled = "link_not_enabled"
+        /// The card funding source is not supported.
+        case linkCardNotSupported = "link_card_not_supported"
+        /// Link signup is disabled in Elements session. Consult backend logs for more info.
+        case disabledInElementsSession = "disabled_in_elements_session"
+        /// Link signup opt-in feature is enabled, but the merchant didn't provide an email address via the customer or billing details.
+        case signupOptInFeatureNoEmailProvided = "signup_opt_in_feature_no_email_provided"
+        /// Attestation is requested, but isn't supported on this device.
+        case attestationIssues = "attestation_issues"
+        /// The customer has used Link before in this app.
+        case linkUsedBefore = "link_used_before"
+    }
+}
+
+extension Array where Element == PaymentSheet.LinkDisabledReason {
+    var analyticsValue: String {
+        return self.map { $0.rawValue }.joined(separator: ",")
+    }
+}
+
+extension Array where Element == PaymentSheet.LinkSignupDisabledReason {
+    var analyticsValue: String {
+        return self.map { $0.rawValue }.joined(separator: ",")
     }
 }

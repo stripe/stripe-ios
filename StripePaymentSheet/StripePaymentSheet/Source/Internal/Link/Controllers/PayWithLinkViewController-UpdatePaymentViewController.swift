@@ -31,22 +31,19 @@ extension PayWithLinkViewController {
         /// If that is the case, we will immediately confirm the intent after updating the payment method.
         let isBillingDetailsUpdateFlow: Bool
 
-        private lazy var thisIsYourDefaultLabel: UILabel = {
-            let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.textColor = .linkTextSecondary
-            label.adjustsFontForContentSizeCategory = true
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = STPLocalizedString(
+        private let linkAppearance: LinkAppearance?
+
+        private lazy var thisIsYourDefaultView: LinkHintMessageView = {
+            let message = STPLocalizedString(
                 "This is your default",
                 "Text of a label indicating that a payment method is the default."
             )
-            return label
+            return LinkHintMessageView(message: message, style: .outlined)
         }()
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
             callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card),
+            showProcessingLabel: context.showProcessingLabel,
             linkAppearance: context.linkAppearance,
             didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
@@ -54,22 +51,24 @@ extension PayWithLinkViewController {
         }
 
         private func didTapWhenDisabled() {
-            guard case let .invalid(error, _) = paymentMethodEditElement.validationState else {
-                return
-            }
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
 
-            errorLabel.text = error.localizedDescription
-            errorLabel.isHidden = false
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+            paymentMethodEditElement.showAllValidationErrors()
         }
 
-        private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
+        private lazy var errorView: LinkHintMessageView = {
+            LinkHintMessageView(message: nil, style: .error)
         }()
 
         private lazy var paymentMethodEditElement = LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: makeConfiguration(),
-            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
+            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow,
+            linkAppearance: linkAppearance
         )
 
         private func makeConfiguration() -> PaymentElementConfiguration {
@@ -86,7 +85,8 @@ extension PayWithLinkViewController {
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
             paymentMethod: ConsumerPaymentDetails,
-            isBillingDetailsUpdateFlow: Bool
+            isBillingDetailsUpdateFlow: Bool,
+            linkAppearance: LinkAppearance? = nil
         ) {
             self.linkAccount = linkAccount
             self.intent = context.intent
@@ -94,6 +94,7 @@ extension PayWithLinkViewController {
             self.configuration.linkPaymentMethodsOnly = true
             self.paymentMethod = paymentMethod
             self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
+            self.linkAppearance = linkAppearance
 
             let title: String = isBillingDetailsUpdateFlow ? String.Localized.confirm_payment_details : String.Localized.update_card
             super.init(context: context, navigationTitle: title)
@@ -108,12 +109,12 @@ extension PayWithLinkViewController {
             self.paymentMethodEditElement.delegate = self
             view.backgroundColor = .linkSurfacePrimary
             view.directionalLayoutMargins = LinkUI.contentMargins
-            errorLabel.isHidden = true
+            errorView.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
                 paymentMethodEditElement.view,
-                errorLabel,
-                thisIsYourDefaultLabel,
+                thisIsYourDefaultView,
+                errorView,
                 updateButton,
             ])
 
@@ -122,23 +123,14 @@ extension PayWithLinkViewController {
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview(stackView)
-
-            NSLayoutConstraint.activate([
-                contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
-                contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
-            ])
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.bottomInset))
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
-                thisIsYourDefaultLabel.isHidden = true
-                stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: paymentMethodEditElement.view)
-            } else {
-                stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: thisIsYourDefaultLabel)
+                thisIsYourDefaultView.isHidden = true
             }
 
             updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
+
         }
 
         func updatePaymentMethod() {
@@ -165,9 +157,11 @@ extension PayWithLinkViewController {
                 details: updateDetails
             )
 
+            let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+
             coordinator?.allowSheetDismissal(false)
 
-            linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
+            linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams, clientAttributionMetadata: clientAttributionMetadata) { [weak self] result in
                 guard let self else {
                     return
                 }
@@ -186,7 +180,7 @@ extension PayWithLinkViewController {
                         confirmationExtras = .init(billingPhoneNumber: self.isBillingDetailsUpdateFlow ? params.billingDetails.phone : nil)
                     }
 
-                    self.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
+                    self.updateButton.update(state: .succeeded, callToAction: nil, animated: true) {
                         self.coordinator?.allowSheetDismissal(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
@@ -204,8 +198,8 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorLabel.text = error?.nonGenericDescription
-            errorLabel.setHiddenIfNecessary(error == nil)
+            errorView.text = error?.nonGenericDescription
+            errorView.setHiddenIfNecessary(error == nil)
         }
 
         private func createUpdateDetails(for params: LinkPaymentMethodFormElement.Params) -> UpdatePaymentDetailsParams.DetailsType? {

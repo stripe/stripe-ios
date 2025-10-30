@@ -24,7 +24,7 @@ class STPE2ETest: XCTestCase {
         )!
 
         func createPaymentIntent(
-            completion: @escaping (STPPaymentIntentParams, E2EExpectation) -> Void
+            completion: @escaping (STPPaymentIntentConfirmParams, E2EExpectation) -> Void
         ) {
             requestAPI("create_pi", method: "POST") { (json) in
                 let paymentIntentClientSecret = json["paymentIntent"] as! String
@@ -34,7 +34,7 @@ class STPE2ETest: XCTestCase {
                 let publishableKey = json["publishableKey"] as! String
                 STPAPIClient.shared.publishableKey = publishableKey
                 completion(
-                    STPPaymentIntentParams(clientSecret: paymentIntentClientSecret),
+                    STPPaymentIntentConfirmParams(clientSecret: paymentIntentClientSecret),
                     E2EExpectation(
                         amount: expectedAmount,
                         currency: expectedCurrency,

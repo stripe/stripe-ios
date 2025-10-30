@@ -8,7 +8,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -83,11 +83,13 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         unredactedPhoneNumber: "(555) 555-5555",
                         phoneNumberCountry: "US",
                         verificationSessions: [.init(type: .sms, state: .verified)],
-                        supportedPaymentDetailsTypes: [.card]
+                        supportedPaymentDetailsTypes: [.card],
+                        mobileFallbackWebviewParams: nil
                     ),
                     publishableKey: "pk_xxx_for_link_account_xxx",
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 paymentDetails: .init(
                     stripeID: "pd1",
@@ -118,11 +120,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         static let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: MockJson.setupIntent)!
 
         static func deferredPaymentIntentConfiguration(clientSecret: String) -> PaymentSheet.IntentConfiguration {
-            .init(mode: .payment(amount: 123, currency: "USD"), paymentMethodTypes: ["card"]) { _, _, c in c(.success(clientSecret)) }
+            .init(mode: .payment(amount: 123, currency: "USD"), paymentMethodTypes: ["card"]) { _, _ in return clientSecret }
         }
 
         static func deferredSetupIntentConfiguration(clientSecret: String) -> PaymentSheet.IntentConfiguration {
-            .init(mode: .setup(currency: "USD", setupFutureUsage: .offSession), confirmHandler: { _, _, c in c(.success(clientSecret)) })
+            .init(mode: .setup(currency: "USD", setupFutureUsage: .offSession)) { _, _ in return clientSecret }
         }
     }
 
@@ -189,11 +191,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                             unredactedPhoneNumber: "(555) 555-5555",
                             phoneNumberCountry: "US",
                             verificationSessions: [.init(type: .sms, state: .verified)],
-                            supportedPaymentDetailsTypes: [.card]
+                            supportedPaymentDetailsTypes: [.card],
+                            mobileFallbackWebviewParams: nil
                         ),
                         publishableKey: MockParams.publicKey,
                         displayablePaymentDetails: nil,
-                        useMobileEndpoints: false),
+                        useMobileEndpoints: false,
+                        canSyncAttestationState: false
+                    ),
                     paymentDetails: .init(
                         stripeID: "pd1",
                         details: .card(card: .init(
@@ -261,7 +266,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     session: nil,
                     publishableKey: "pk_123",
                     displayablePaymentDetails: nil,
-                    useMobileEndpoints: false
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
                 ),
                 phoneNumber: PhoneNumber(number: "5555555555", countryCode: "US")!,
                 consentAction: .implied_v0_0,

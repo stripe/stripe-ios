@@ -48,10 +48,19 @@ final class LinkPaymentMethodFormElement: Element {
 
     let paymentMethod: ConsumerPaymentDetails
     let isBillingDetailsUpdateFlow: Bool
+    private let linkAppearance: LinkAppearance?
 
     let configuration: PaymentElementConfiguration
 
-    let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
+    private lazy var theme: ElementsAppearance = {
+        var theme = LinkUI.appearance.asElementsTheme
+
+        if let primaryColor = linkAppearance?.colors?.primary {
+            theme.colors.primary = primaryColor
+        }
+
+        return theme
+    }()
 
     var params: Params? {
         guard validationState.isValid else {
@@ -67,7 +76,7 @@ final class LinkPaymentMethodFormElement: Element {
         // This matches the object that was returned by CardDetailsEditView, but won't work
         // with `collectionMode: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.name = billingAddressSection?.name?.text ?? nameElement?.text
+        billingDetails.name = billingAddressSection?.name?.text ?? nameOnCardElement?.text
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
         billingDetails.nonnil_address.line1 = billingAddressSection?.line1?.text
         billingDetails.nonnil_address.line2 = billingAddressSection?.line2?.text
@@ -101,13 +110,14 @@ final class LinkPaymentMethodFormElement: Element {
         return !isCard && collectsName
     }
 
-    private lazy var nameElement: TextFieldElement? = {
+    private lazy var nameOnCardElement: TextFieldElement? = {
         guard configuration.billingDetailsCollectionConfiguration.name == .always else { return nil }
 
         return TextFieldElement.makeName(
             label: STPLocalizedString("Name on card", "Label for name on card field"),
-            defaultValue: paymentMethod.billingAddress?.name,
-            theme: theme)
+            defaultValue: paymentMethod.billingAddress?.name ?? configuration.defaultBillingDetails.name,
+            theme: theme
+        )
     }()
 
     private lazy var cardBrandDropdownElement: PaymentMethodElementWrapper<DropdownFieldElement>? = {
@@ -204,7 +214,7 @@ final class LinkPaymentMethodFormElement: Element {
 
     private lazy var cardSection: SectionElement = {
         let allElements: [Element?] = [
-            nameElement,
+            nameOnCardElement,
             panElement, SectionElement.HiddenElement(cardBrandDropdownElement),
             SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
         ]
@@ -218,10 +228,13 @@ final class LinkPaymentMethodFormElement: Element {
     }()
 
     private lazy var billingAddressSection: AddressSectionElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
-
         let collectPhone = configuration.billingDetailsCollectionConfiguration.phone == .always && isBillingDetailsUpdateFlow
         let collectEmail = configuration.billingDetailsCollectionConfiguration.email == .always
+        let collectAddress = configuration.billingDetailsCollectionConfiguration.address != .never || paymentMethod.type == .card
+
+        guard collectPhone || collectEmail || collectAddress else {
+            return nil
+        }
 
         let phone: String? = if collectPhone {
             configuration.defaultBillingDetails.phone
@@ -235,10 +248,12 @@ final class LinkPaymentMethodFormElement: Element {
             nil
         }
 
+        let name = paymentMethod.billingAddress?.name ?? configuration.defaultBillingDetails.name
+
         let defaultBillingAddress = AddressSectionElement.AddressDetails(
             billingAddress: paymentMethod.billingAddress ?? .init(),
             phone: phone,
-            name: paymentMethod.billingAddress?.name,
+            name: name,
             email: email
         )
 
@@ -250,6 +265,7 @@ final class LinkPaymentMethodFormElement: Element {
 
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
+            countries: isBillingDetailsUpdateFlow ? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray : nil,
             defaults: defaultBillingAddress,
             collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
                 ? .all()
@@ -259,10 +275,11 @@ final class LinkPaymentMethodFormElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool, linkAppearance: LinkAppearance? = nil) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
+        self.linkAppearance = linkAppearance
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
             self.expiryDateElement.setText(expiryDate.displayString)
@@ -273,6 +290,9 @@ final class LinkPaymentMethodFormElement: Element {
         self.checkboxElement.checkboxButton.isHidden = true
     }
 
+    func showAllValidationErrors() {
+        formElement.showAllValidationErrors()
+    }
 }
 
 extension LinkPaymentMethodFormElement: ElementDelegate {

@@ -47,20 +47,16 @@ extension STPElementsSession {
         linkAccount.sessionState == .requiresVerification &&
         !linkAccount.hasStartedSMSVerification &&
         linkAccount.useMobileEndpoints &&
-        self.linkSettings?.suppress2FAModal != true
-    }
-
-    func countryCode(overrideCountry: String?) -> String? {
-#if DEBUG
-        if let overrideCountry {
-            return overrideCountry
-        }
-#endif
-        return countryCode
+        self.linkSettings?.suppress2FAModal != true &&
+        linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required
     }
 
     var linkFlags: [String: Bool] {
         linkSettings?.linkFlags ?? [:]
+    }
+
+    var shouldShowPreferDebitCardHint: Bool {
+        linkSettings?.linkShowPreferDebitCardHint ?? false
     }
 }
 

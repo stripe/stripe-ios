@@ -24,7 +24,17 @@ public class STPConnectAccountCompanyParams: NSObject {
     /// Whether the company’s directors have been provided.
     /// Set this Boolean to true after creating all the company’s directors with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.director requirement.
     /// This value is not automatically set to true after creating directors, so it needs to be updated to indicate all directors have been provided.
-    @objc public var directorsProvided: NSNumber?
+    @objc(directorsProvided)
+    @available(swift, obsoleted: 1.0, renamed: "directorsProvided")
+    public var directorsProvided_objc: NSNumber? {
+        get { directorsProvided.map { NSNumber(value: $0) } }
+        set { directorsProvided = newValue?.boolValue }
+    }
+
+    /// Whether the company’s directors have been provided.
+    /// Set this Boolean to true after creating all the company’s directors with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.director requirement.
+    /// This value is not automatically set to true after creating directors, so it needs to be updated to indicate all directors have been provided.
+    public var directorsProvided: Bool?
 
     /// The company’s legal name.
     @objc public var name: String?
@@ -37,7 +47,16 @@ public class STPConnectAccountCompanyParams: NSObject {
 
     /// Whether the company’s owners have been provided.
     /// Set this Boolean to true after creating all the company’s owners with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.owner requirement.
-    @objc public var ownersProvided: NSNumber?
+    @objc(ownersProvided)
+    @available(swift, obsoleted: 1.0, renamed: "ownersProvided")
+    public var ownersProvided_objc: NSNumber? {
+        get { ownersProvided.map { NSNumber(value: $0) } }
+        set { ownersProvided = newValue?.boolValue }
+    }
+
+    /// Whether the company’s owners have been provided.
+    /// Set this Boolean to true after creating all the company’s owners with the Persons API (https://stripe.com/docs/api/persons) for accounts with a relationship.owner requirement.
+    public var ownersProvided: Bool?
 
     /// The company’s phone number (used for verification).
     @objc public var phone: String?
@@ -82,17 +101,20 @@ public class STPConnectAccountCompanyParams: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConnectAccountCompanyParams: STPFormEncodable {
+    @objc private var directorsProvided_apiValue: NSNumber? { directorsProvided.map { NSNumber(value: $0) } }
+    @objc private var ownersProvided_apiValue: NSNumber? { ownersProvided.map { NSNumber(value: $0) } }
+
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: address)): "address",
             NSStringFromSelector(#selector(getter: kanaAddress)): "address_kana",
             NSStringFromSelector(#selector(getter: kanjiAddress)): "address_kanji",
-            NSStringFromSelector(#selector(getter: directorsProvided)): "directors_provided",
+            NSStringFromSelector(#selector(getter: directorsProvided_apiValue)): "directors_provided",
             NSStringFromSelector(#selector(getter: name)): "name",
             NSStringFromSelector(#selector(getter: kanaName)): "name_kana",
             NSStringFromSelector(#selector(getter: kanjiName)): "name_kanji",
-            NSStringFromSelector(#selector(getter: ownersProvided)): "owners_provided",
+            NSStringFromSelector(#selector(getter: ownersProvided_apiValue)): "owners_provided",
             NSStringFromSelector(#selector(getter: phone)): "phone",
             NSStringFromSelector(#selector(getter: taxID)): "tax_id",
             NSStringFromSelector(#selector(getter: taxIDRegistrar)): "tax_id_registrar",

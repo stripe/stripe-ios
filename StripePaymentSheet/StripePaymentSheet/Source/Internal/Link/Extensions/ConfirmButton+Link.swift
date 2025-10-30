@@ -12,6 +12,7 @@ extension ConfirmButton {
 
     static func makeLinkButton(
         callToAction: CallToActionType,
+        showProcessingLabel: Bool,
         compact: Bool = false,
         linkAppearance: LinkAppearance? = nil,
         didTapWhenDisabled: @escaping () -> Void = {},
@@ -22,8 +23,9 @@ extension ConfirmButton {
         var appearance = LinkUI.appearance
 
         if let linkAppearance {
-            if let colors = linkAppearance.colors {
-                appearance.primaryButton.backgroundColor = colors.primary
+            if let primaryColor = linkAppearance.colors?.primary {
+                appearance.primaryButton.backgroundColor = primaryColor
+                appearance.primaryButton.successBackgroundColor = primaryColor
             }
 
             if let buttonConfiguration = linkAppearance.primaryButton {
@@ -41,6 +43,7 @@ extension ConfirmButton {
 
         let button = ConfirmButton(
             callToAction: callToAction,
+            showProcessingLabel: showProcessingLabel,
             appearance: appearance,
             didTap: didTap,
             didTapWhenDisabled: didTapWhenDisabled

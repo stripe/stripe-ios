@@ -64,6 +64,7 @@ class CustomerSheetDataSource {
                 async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
                 async let selectedPaymentMethodResult = try customerAdapter.fetchSelectedPaymentOption()
                 async let elementsSessionResult = try self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes,
+                                                                                                                                   onBehalfOf: nil,
                                                                                                                                    clientDefaultPaymentMethod: nil,
                                                                                                                                    customerSessionClientSecret: nil)
 
@@ -208,6 +209,16 @@ extension CustomerSheetDataSource {
             return elementsSession.allowsRemovalOfPaymentMethodsForCustomerSheet()
         }
     }
+
+    func paymentMethodRemoveIsPartial(elementsSession: STPElementsSession) -> Bool {
+        switch dataSource {
+        case .customerAdapter:
+            return false
+        case .customerSession:
+            return elementsSession.paymentMethodRemoveIsPartialForCustomerSheet()
+        }
+    }
+
     func paymentMethodUpdate(elementsSession: STPElementsSession) -> Bool {
         switch dataSource {
         case .customerAdapter:

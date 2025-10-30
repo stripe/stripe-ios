@@ -14,6 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+// @iOS26
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
     // MARK: Normal mode
@@ -77,6 +78,14 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
             saveCheckboxChecked: true,
             preFillPhone: "+13105551234",
             allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
+
+    func testSignupOptInFeatureEnabled_unchecked() {
+        let sut = makeSUT(
+            linkAccountEmailAddress: "unknown@stripe.com",
+            signupOptInFeatureEnabled: true
         )
         verify(sut)
     }
@@ -149,15 +158,52 @@ extension LinkInlineSignupElementSnapshotTests {
                         publishableKey: nil,
                         displayablePaymentDetails: nil,
                         useMobileEndpoints: false,
+                        canSyncAttestationState: false,
                         requestSurface: requestSurface
                     )
                 )
             )
         }
 
-        func hasEmailLoggedOut(email: String) -> Bool {
-            // TODO(porter): Determine if we want to implement this in tests
-            return false
+        func lookupLinkAuthToken(
+            _ linkAuthTokenClientSecret: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface,
+            completion: @escaping (Result<StripePaymentSheet.PaymentSheetLinkAccount?, any Error>) -> Void
+        ) {
+            completion(
+                .success(
+                    PaymentSheetLinkAccount(
+                        email: "user@example.com",
+                        session: nil,
+                        publishableKey: nil,
+                        displayablePaymentDetails: nil,
+                        useMobileEndpoints: false,
+                        canSyncAttestationState: false,
+                        requestSurface: requestSurface
+                    )
+                )
+            )
+        }
+
+        func lookupLinkAuthIntent(
+            linkAuthIntentID: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
+            completion: @escaping (Result<StripePaymentSheet.LookupLinkAuthIntentResponse?, Error>) -> Void
+        ) {
+            let linkAccount = PaymentSheetLinkAccount(
+                email: "user@example.com",
+                session: nil,
+                publishableKey: nil,
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false,
+                canSyncAttestationState: false,
+                requestSurface: requestSurface
+            )
+            let response = StripePaymentSheet.LookupLinkAuthIntentResponse(
+                linkAccount: linkAccount,
+                consentViewModel: nil
+            )
+            completion(.success(response))
         }
     }
 
@@ -169,12 +215,14 @@ extension LinkInlineSignupElementSnapshotTests {
         preFillName: String? = nil,
         preFillPhone: String? = nil,
         showCheckbox: Bool = true,
-        allowsDefaultOptIn: Bool = false
+        allowsDefaultOptIn: Bool = false,
+        signupOptInFeatureEnabled: Bool = false
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
         configuration.defaultBillingDetails.name = preFillName
         configuration.defaultBillingDetails.phone = preFillPhone
+        configuration.appearance.applyLiquidGlassIfPossible()
 
         var linkAccount: PaymentSheetLinkAccount?
 
@@ -184,7 +232,8 @@ extension LinkInlineSignupElementSnapshotTests {
                 session: nil,
                 publishableKey: nil,
                 displayablePaymentDetails: nil,
-                useMobileEndpoints: false
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
             )
         }
 
@@ -193,7 +242,7 @@ extension LinkInlineSignupElementSnapshotTests {
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
             allowsDefaultOptIn: allowsDefaultOptIn,
-            signupOptInFeatureEnabled: false,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: false,
             linkAccount: linkAccount,
             country: country

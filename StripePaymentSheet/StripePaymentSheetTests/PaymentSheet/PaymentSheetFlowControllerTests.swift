@@ -39,7 +39,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             details: .bankAccount(bankAccount: .init(
                 iconCode: nil,
                 name: "STRIPE TEST BANK",
-                last4: "6789"
+                last4: "6789",
+                country: "COUNTRY_US"
             )),
             billingAddress: nil,
             billingEmailAddress: nil,
@@ -55,7 +56,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             publishableKey: nil,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
-            useMobileEndpoints: false
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
         )
     }
 
@@ -186,8 +188,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         let configuration = PaymentSheet.ExternalPaymentMethodConfiguration(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { _, _, completion in
-                completion(.completed)
+            externalPaymentMethodConfirmHandler: { _, _ in
+                return .completed
             }
         )
 
@@ -287,7 +289,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for Link with bank account payment details - should show "Link" as label and formatted details as sublabel
         XCTAssertEqual(displayData.labels.label, "Link")
         // The sublabel should show the bank account details
-        XCTAssertEqual(displayData.labels.sublabel, "STRIPE TEST BANK •••• 6789")
+        XCTAssertEqual(displayData.labels.sublabel, "My Checking")
     }
 
     // MARK: - Enhanced Completion Block Tests

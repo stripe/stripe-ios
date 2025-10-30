@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (volitelné)";
 
 "(not accepted)" = "(nepřijímá se)";
@@ -37,8 +39,6 @@
 "Country or region" = "Země nebo region";
 
 "County" = "Okres";
-
-"Date is empty." = "Datum je prázdné.";
 
 "Department" = "Oddělení";
 
@@ -144,6 +144,6 @@
 
 "Your postal code is incomplete." = "Vaše poštovní směrovací číslo je neúplné.";
 
-"Your postal code is invalid." = "Vaše poštovní směrovací číslo je neplatné.";
+"Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
 
 "ZIP" = "PSČ";

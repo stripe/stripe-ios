@@ -5,7 +5,7 @@
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(SharedPaymentToken) import StripePaymentSheet
+@testable @_spi(STP) @_spi(SharedPaymentToken) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 import UIKit
 import XCTest
@@ -701,6 +701,261 @@ class ShopPayECEPresenterTests: XCTestCase {
         // Then
         let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
         XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_confirm_success"))
+    }
+
+    // MARK: - Shipping Rate Mutation Tests
+
+    func testShippingRatesPersistAfterShippingAddressChange() async throws {
+        // Given
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
+        let expectation = expectation(description: "Shipping contact handler called")
+
+        // Create configuration with handler that adds new shipping rates
+        shopPayConfiguration = PaymentSheet.ShopPayConfiguration(
+            billingAddressRequired: true,
+            emailRequired: true,
+            shippingAddressRequired: true,
+            lineItems: shopPayConfiguration.lineItems,
+            shippingRates: shopPayConfiguration.shippingRates,
+            shopId: shopPayConfiguration.shopId,
+            allowedShippingCountries: shopPayConfiguration.allowedShippingCountries,
+            handlers: PaymentSheet.ShopPayConfiguration.Handlers(
+                shippingMethodUpdateHandler: nil,
+                shippingContactUpdateHandler: { _, completion in
+                    expectation.fulfill()
+
+                    // Return updated rates with new shipping option
+                    let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
+                        lineItems: self.shopPayConfiguration.lineItems,
+                        shippingRates: self.shopPayConfiguration.shippingRates + [
+                            PaymentSheet.ShopPayConfiguration.ShippingRate(
+                                id: "overnight",
+                                amount: 2500,
+                                displayName: "Overnight Shipping",
+                                deliveryEstimate: nil
+                            ),
+                        ]
+                    )
+                    completion(update)
+                }
+            )
+        )
+
+        sut = ShopPayECEPresenter(
+            flowController: mockFlowController,
+            configuration: shopPayConfiguration,
+            analyticsHelper: mockFlowController.analyticsHelper
+        )
+
+        let shippingAddress: [String: Any] = [
+            "name": "Test User",
+            "address": [
+                "city": "San Francisco",
+                "state": "CA",
+                "postalCode": "94103",
+                "country": "US",
+            ],
+        ]
+
+        // When - First update shipping address to get new rates
+        let firstResponse = try await sut.eceView(mockECEViewController, didReceiveShippingAddressChange: shippingAddress)
+        await fulfillment(of: [expectation], timeout: 1.0)
+
+        // Then - Check that new shipping rate is available
+        let firstShippingRates = firstResponse["shippingRates"] as? [[String: Any]]
+        XCTAssertEqual(firstShippingRates?.count, 3) // Original 2 + new 1
+        XCTAssertTrue(firstShippingRates?.contains { ($0["id"] as? String) == "overnight" } ?? false)
+
+        // When - Make another address change (without handler providing new rates)
+        let secondShippingAddress: [String: Any] = [
+            "name": "Test User 2",
+            "address": [
+                "city": "Los Angeles",
+                "state": "CA",
+                "postalCode": "90210",
+                "country": "US",
+            ],
+        ]
+
+        // Create new configuration without handler to test persisted rates
+        shopPayConfiguration = PaymentSheet.ShopPayConfiguration(
+            billingAddressRequired: true,
+            emailRequired: true,
+            shippingAddressRequired: true,
+            lineItems: shopPayConfiguration.lineItems,
+            shippingRates: shopPayConfiguration.shippingRates,
+            shopId: shopPayConfiguration.shopId,
+            allowedShippingCountries: shopPayConfiguration.allowedShippingCountries
+        )
+
+        sut = ShopPayECEPresenter(
+            flowController: mockFlowController,
+            configuration: shopPayConfiguration,
+            analyticsHelper: mockFlowController.analyticsHelper
+        )
+
+        let secondResponse = try await sut.eceView(mockECEViewController, didReceiveShippingAddressChange: secondShippingAddress)
+
+        // Then - Verify that updated rates are still available in subsequent calls
+        let secondShippingRates = secondResponse["shippingRates"] as? [[String: Any]]
+        XCTAssertEqual(secondShippingRates?.count, 2) // Only original rates since no handler provided new ones
+        XCTAssertFalse(secondShippingRates?.contains { ($0["id"] as? String) == "overnight" } ?? true)
+    }
+
+    func testShippingRatesPersistAfterShippingRateChange() async throws {
+        // Given
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
+        let expectation = expectation(description: "Shipping method handler called")
+
+        // Create configuration with handler that adds new shipping rates when rate is selected
+        shopPayConfiguration = PaymentSheet.ShopPayConfiguration(
+            billingAddressRequired: true,
+            emailRequired: true,
+            shippingAddressRequired: true,
+            lineItems: shopPayConfiguration.lineItems,
+            shippingRates: shopPayConfiguration.shippingRates,
+            shopId: shopPayConfiguration.shopId,
+            allowedShippingCountries: shopPayConfiguration.allowedShippingCountries,
+            handlers: PaymentSheet.ShopPayConfiguration.Handlers(
+                shippingMethodUpdateHandler: { _, completion in
+                    expectation.fulfill()
+
+                    // Return updated rates with new option
+                    let update = PaymentSheet.ShopPayConfiguration.ShippingRateUpdate(
+                        lineItems: self.shopPayConfiguration.lineItems,
+                        shippingRates: self.shopPayConfiguration.shippingRates + [
+                            PaymentSheet.ShopPayConfiguration.ShippingRate(
+                                id: "same-day",
+                                amount: 3000,
+                                displayName: "Same Day Delivery",
+                                deliveryEstimate: nil
+                            ),
+                        ]
+                    )
+                    completion(update)
+                },
+                shippingContactUpdateHandler: nil
+            )
+        )
+
+        sut = ShopPayECEPresenter(
+            flowController: mockFlowController,
+            configuration: shopPayConfiguration,
+            analyticsHelper: mockFlowController.analyticsHelper
+        )
+
+        let shippingRate: [String: Any] = ["id": "express", "amount": 1500, "displayName": "Express Shipping"]
+
+        // When - Change shipping rate to trigger handler
+        let response = try await sut.eceView(mockECEViewController, didReceiveShippingRateChange: shippingRate)
+        await fulfillment(of: [expectation], timeout: 1.0)
+
+        // Then - Verify new shipping rate is available
+        let shippingRates = response["shippingRates"] as? [[String: Any]]
+        XCTAssertEqual(shippingRates?.count, 3) // Original 2 + new 1
+        XCTAssertTrue(shippingRates?.contains { ($0["id"] as? String) == "same-day" } ?? false)
+
+        // When - Test ECE click to verify persisted rates are used
+        let event = [
+            "walletType": "shop_pay",
+            "expressPaymentType": "shop_pay",
+        ]
+
+        let clickResponse = try await sut.eceView(mockECEViewController, didReceiveECEClick: event)
+
+        // Then - Verify click response includes the updated rates
+        let clickShippingRates = clickResponse["shippingRates"] as? [[String: Any]]
+        XCTAssertEqual(clickShippingRates?.count, 3) // Should have all rates including new one
+        XCTAssertTrue(clickShippingRates?.contains { ($0["id"] as? String) == "same-day" } ?? false)
+    }
+
+    func testShippingRateChangeUsesCurrentRatesForValidation() async throws {
+        // Given
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
+        let addressExpectation = expectation(description: "Shipping contact handler called")
+
+        // First, add a new shipping rate through address change
+        shopPayConfiguration = PaymentSheet.ShopPayConfiguration(
+            billingAddressRequired: true,
+            emailRequired: true,
+            shippingAddressRequired: true,
+            lineItems: shopPayConfiguration.lineItems,
+            shippingRates: shopPayConfiguration.shippingRates,
+            shopId: shopPayConfiguration.shopId,
+            allowedShippingCountries: shopPayConfiguration.allowedShippingCountries,
+            handlers: PaymentSheet.ShopPayConfiguration.Handlers(
+                shippingMethodUpdateHandler: nil,
+                shippingContactUpdateHandler: { _, completion in
+                    addressExpectation.fulfill()
+
+                    // Add new shipping rate
+                    let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
+                        lineItems: self.shopPayConfiguration.lineItems,
+                        shippingRates: self.shopPayConfiguration.shippingRates + [
+                            PaymentSheet.ShopPayConfiguration.ShippingRate(
+                                id: "new-rate",
+                                amount: 2000,
+                                displayName: "New Rate",
+                                deliveryEstimate: nil
+                            ),
+                        ]
+                    )
+                    completion(update)
+                }
+            )
+        )
+
+        sut = ShopPayECEPresenter(
+            flowController: mockFlowController,
+            configuration: shopPayConfiguration,
+            analyticsHelper: mockFlowController.analyticsHelper
+        )
+
+        let shippingAddress: [String: Any] = [
+            "name": "Test User",
+            "address": [
+                "city": "San Francisco",
+                "state": "CA",
+                "postalCode": "94103",
+                "country": "US",
+            ],
+        ]
+
+        // Add new rate through address change
+        _ = try await sut.eceView(mockECEViewController, didReceiveShippingAddressChange: shippingAddress)
+        await fulfillment(of: [addressExpectation], timeout: 1.0)
+
+        // When - Try to select the new rate (should succeed)
+        let newShippingRate: [String: Any] = ["id": "new-rate", "amount": 2000, "displayName": "New Rate"]
+
+        // Then - Should not throw error since "new-rate" is now in currentShippingRates
+        do {
+            _ = try await sut.eceView(mockECEViewController, didReceiveShippingRateChange: newShippingRate)
+        } catch {
+            XCTFail("Should not throw error for valid new rate: \(error)")
+        }
+
+        // When - Try to select a rate that was never added (should fail)
+        let invalidShippingRate: [String: Any] = ["id": "never-added", "amount": 1000, "displayName": "Never Added"]
+
+        // Then - Should throw error for invalid rate
+        do {
+            _ = try await sut.eceView(mockECEViewController, didReceiveShippingRateChange: invalidShippingRate)
+            XCTFail("Should have thrown error for invalid rate")
+        } catch let error as ExpressCheckoutError {
+            switch error {
+            case .invalidShippingRate(let rateId):
+                XCTAssertEqual(rateId, "never-added")
+            default:
+                XCTFail("Unexpected error type")
+            }
+        }
     }
 
 }

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=IqETWkPib4kSP5UcihwFy86_MSdELIvTVT_G2TzahxvqaO16u2ErITUrZUeR92odQ1wlUyIU4C1PHJFC
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KOWedq14HZEocb4B8_UxPt5Myr6VAnSFWkJuAQKVjhf_R2sbGSz0_kkNdCmJGrrP-ZfkY27xhA5-ZPrH
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_zuXmEHn53qcqGM
+request-id: req_Ec6gjEfxlz0ahU
 Content-Length: 733
 Vary: Origin
-Date: Thu, 07 Aug 2025 16:17:24 GMT
-original-request: req_zuXmEHn53qcqGM
+Date: Mon, 27 Oct 2025 16:16:24 GMT
+original-request: req_Ec6gjEfxlz0ahU
 stripe-version: 2020-08-27
-idempotency-key: 3d9f99d0-030e-4f29-9044-ae5b2a7a2178
+idempotency-key: 0c51b8d7-2768-4aca-8b89-fa193a5d5854
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -38,7 +38,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     },
     "branch_code" : ""
   },
-  "id" : "pm_1RtWVMFY0qyl6XeWjKKwW8eE",
+  "id" : "pm_1SMt5oFY0qyl6XeWAztNM602",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
@@ -54,7 +54,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     }
   },
   "livemode" : false,
-  "created" : 1754583444,
+  "created" : 1761581784,
   "allow_redisplay" : "unspecified",
   "type" : "sepa_debit",
   "customer" : null

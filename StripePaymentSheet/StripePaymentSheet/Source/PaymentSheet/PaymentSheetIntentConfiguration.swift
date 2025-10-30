@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+import StripePayments
 
 public extension PaymentSheet {
     /// Contains information needed to render PaymentSheet
@@ -28,12 +29,25 @@ public extension PaymentSheet {
         ///   If your server needs the payment method, send `paymentMethod.stripeId` to your server and have it fetch the PaymentMethod object. Otherwise, you can ignore this. Don't send other properties besides the ID to your server.
         ///   - shouldSavePaymentMethod: This is `true` if the customer selected the "Save this payment method for future use" checkbox.
         ///     If you confirm the PaymentIntent on your server, set `setup_future_usage` on the PaymentIntent to `off_session` if this is `true`. Otherwise, ignore this parameter.
-        ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server or the error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
+        /// - Returns: The `client_secret` of the PaymentIntent or SetupIntent created by your server.
+        /// - Throws: The error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         public typealias ConfirmHandler = (
             _ paymentMethod: STPPaymentMethod,
-            _ shouldSavePaymentMethod: Bool,
-            _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
-        ) -> Void
+            _ shouldSavePaymentMethod: Bool
+        ) async throws -> String
+
+        /// Called when the customer confirms payment using confirmation tokens.
+        /// Your implementation should follow the [guide](https://stripe.com/docs/payments/finalize-payments-on-the-server) to create (and optionally confirm) a PaymentIntent or SetupIntent on your server and return its client secret.
+        /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
+        /// - Note: When confirming the PaymentIntent or SetupIntent on your server, use the confirmation token ID (`confirmationToken.stripeId`) as the `confirmation_token` parameter.
+        /// - Parameters:
+        ///   - confirmationToken: The `STPConfirmationToken` representing the customer's payment details and any additional information collected during checkout (e.g., billing details, shipping address).
+        /// - Returns: The `client_secret` of the PaymentIntent or SetupIntent created by your server.
+        /// - Throws: An error if one occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
+        /// - SeeAlso: [Confirmation Tokens documentation](https://stripe.com/docs/api/confirmation_tokens) for more information about how confirmation tokens work.
+        public typealias ConfirmationTokenConfirmHandler = @MainActor (
+            _ confirmationToken: STPConfirmationToken
+        ) async throws -> String
 
         /// Called when the payment is confirmed in a shared payment token session.
         /// Returns `paymentMethod` and `shippingAddress` info, which can be passed to the backend for confirmation.
@@ -102,11 +116,39 @@ public extension PaymentSheet {
             self.preparePaymentMethodHandler = preparePaymentMethodHandler
             self.requireCVCRecollection = requireCVCRecollection
             self.sellerDetails = sellerDetails
-            self.confirmHandler = { _, _, callback in
+            self.confirmHandler = { _, _ in
                 // fail immediately, this should never be called
                 stpAssertionFailure("sharedPaymentTokenSessionWithMode call the preparePaymentMethodHandler, not the confirmHandler")
-                let error = PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Shared Payment Token session error. Please file an issue at https://github.com/stripe/stripe-ios.")
-                callback(.failure(error))
+                throw PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Shared Payment Token session error. Please file an issue at https://github.com/stripe/stripe-ios.")
+            }
+            validate()
+        }
+
+        /// Creates a `PaymentSheet.IntentConfiguration` with a confirmation token handler
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - paymentMethodTypes: The payment method types for the intent
+        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
+        ///   - confirmationTokenConfirmHandler: A handler called with a confirmation token when the user taps the primary button. Use this for a more secure and streamlined payment flow.
+        ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        public init(mode: Mode,
+                    paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    paymentMethodConfigurationId: String? = nil,
+                    confirmationTokenConfirmHandler: @escaping ConfirmationTokenConfirmHandler,
+                    requireCVCRecollection: Bool = false) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfigurationId = paymentMethodConfigurationId
+            self.confirmationTokenConfirmHandler = confirmationTokenConfirmHandler
+            self.requireCVCRecollection = requireCVCRecollection
+            self.sellerDetails = nil
+            self.confirmHandler = { _, _ in
+                // fail immediately, this should never be called
+                stpAssertionFailure("Confirmation token configuration should use confirmationTokenConfirmHandler, not confirmHandler")
+                throw PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Confirmation Token error. Please file an issue at https://github.com/stripe/stripe-ios.")
             }
             validate()
         }
@@ -121,7 +163,12 @@ public extension PaymentSheet {
 
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.
-        public var confirmHandler: ConfirmHandler
+        public var confirmHandler: ConfirmHandler?
+
+        /// Called when the customer confirms payment using confirmation tokens.
+        /// See the documentation for `ConfirmationTokenConfirmHandler` for more details.
+        /// - Note: Use this instead of `confirmHandler` when you want to use confirmation tokens for a more secure and streamlined payment flow.
+        public var confirmationTokenConfirmHandler: ConfirmationTokenConfirmHandler?
 
         /// Replacement for confirmHandler in sharedPaymentTokenSession flows. Not publicly available.
         var preparePaymentMethodHandler: PreparePaymentMethodHandler?
@@ -211,37 +258,6 @@ public extension PaymentSheet {
         }
 
         // MARK: - Internal
-
-        /// An async version of `ConfirmHandler`.
-        typealias AsyncConfirmHandler = (
-            _ paymentMethod: STPPaymentMethod,
-            _ shouldSavePaymentMethod: Bool
-        ) async throws -> String
-
-        /// An async version of the initializer. See the other initializer for documentation.
-        init(
-            mode: Mode,
-            paymentMethodTypes: [String]? = nil,
-            onBehalfOf: String? = nil,
-            confirmHandler2: @escaping AsyncConfirmHandler
-        ) {
-            self.mode = mode
-            self.paymentMethodTypes = paymentMethodTypes
-            self.onBehalfOf = onBehalfOf
-            self.confirmHandler = { paymentMethod, shouldSavePaymentMethod, callback in
-                Task {
-                    do {
-                        let clientSecret = try await confirmHandler2(paymentMethod, shouldSavePaymentMethod)
-                        callback(.success(clientSecret))
-                    } catch {
-                        callback(.failure(error))
-                    }
-                }
-            }
-            // TODO
-            self.requireCVCRecollection = false
-            self.sellerDetails = nil
-        }
 
         @discardableResult
         func validate() -> Error? {

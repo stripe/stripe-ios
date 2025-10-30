@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (tùy chọn)";
 
 "(not accepted)" = "(không được chấp nhận)";
@@ -37,8 +39,6 @@
 "Country or region" = "Quốc gia hoặc khu vực";
 
 "County" = "Quận";
-
-"Date is empty." = "Ngày trống.";
 
 "Department" = "Sở ngành";
 
@@ -144,6 +144,6 @@
 
 "Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
 
-"Your postal code is invalid." = "Mã bưu chính của bạn không hợp lệ.";
+"Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
 
 "ZIP" = "ZIP";

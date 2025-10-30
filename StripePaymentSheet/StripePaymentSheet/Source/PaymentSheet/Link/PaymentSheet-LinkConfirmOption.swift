@@ -126,4 +126,13 @@ extension PaymentSheet.LinkConfirmOption {
             return nil
         }
     }
+
+    var signupAction: LinkInlineSignupViewModel.Action? {
+        switch self {
+        case .signUp(let account, let phoneNumber, _, let legalName, _):
+            return .signupAndPay(account: account, phoneNumber: phoneNumber, legalName: legalName)
+        case .wallet, .withPaymentDetails, .withPaymentMethod:
+            return nil
+        }
+    }
 }

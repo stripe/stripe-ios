@@ -87,7 +87,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         return nil
     }
 
-    private lazy var paymentMethodFormElement: PaymentMethodElement = {
+    lazy var paymentMethodFormElement: PaymentMethodElement = {
         if let cachedForm = formCache[selectedPaymentMethodType] {
             return cachedForm
         } else {
@@ -101,7 +101,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     private lazy var paymentMethodDetailsView: UIView = {
         return paymentMethodFormElement.view
     }()
-    private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
+    lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
             paymentMethodTypes: paymentMethodTypes,
             appearance: configuration.appearance,
@@ -295,7 +295,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             addressSpecProvider: AddressSpecProvider.shared,
-            verticalOffset: PaymentSheetUI.navBarPadding
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )
         autoCompleteViewController.delegate = self
 

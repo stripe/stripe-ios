@@ -80,6 +80,17 @@ extension String.Localized {
         STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
     }
 
+    static var bank_continue_mandate_text_with_seller: String {
+        STPLocalizedString("By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for bank payments")
+    }
+
+    static var bank_continue_mandate_and_reuse_text_with_seller: String {
+        STPLocalizedString(
+            "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.",
+            "Text providing link to terms for bank payments when seller information is provided"
+        )
+    }
+
     static var back: String {
         STPLocalizedString("Back", "Text for back button")
     }
@@ -480,7 +491,7 @@ extension String.Localized {
 
     static var by_continuing_you_agree_to_save_your_information_to_merchant_and_link: String {
         STPLocalizedString(
-            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>.",
+            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.",
             "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link."
         )
     }

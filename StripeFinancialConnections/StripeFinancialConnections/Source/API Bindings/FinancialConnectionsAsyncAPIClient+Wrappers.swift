@@ -432,14 +432,16 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         consumerSessionClientSecret: String,
         bankAccountId: String,
         billingAddress: BillingAddress?,
-        billingEmail: String?
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails> {
         wrapAsyncToFuture {
             try await self.paymentDetails(
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 bankAccountId: bankAccountId,
                 billingAddress: billingAddress,
-                billingEmail: billingEmail
+                billingEmail: billingEmail,
+                clientAttributionMetadata: clientAttributionMetadata
             )
         }
     }
@@ -449,7 +451,9 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         paymentDetailsId: String,
         expectedPaymentMethodType: String,
         billingEmail: String?,
-        billingPhone: String?
+        billingPhone: String?,
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsSharePaymentDetails> {
         wrapAsyncToFuture {
             try await self.sharePaymentDetails(
@@ -457,7 +461,9 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 paymentDetailsId: paymentDetailsId,
                 expectedPaymentMethodType: expectedPaymentMethodType,
                 billingEmail: billingEmail,
-                billingPhone: billingPhone
+                billingPhone: billingPhone,
+                allowRedisplay: allowRedisplay,
+                clientAttributionMetadata: clientAttributionMetadata
             )
         }
     }
@@ -465,13 +471,17 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        billingDetails: ElementsSessionContext.BillingDetails?
+        billingDetails: ElementsSessionContext.BillingDetails?,
+        allowRedisplay: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<LinkBankPaymentMethod> {
         wrapAsyncToFuture {
             try await self.paymentMethods(
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 paymentDetailsId: paymentDetailsId,
-                billingDetails: billingDetails
+                billingDetails: billingDetails,
+                allowRedisplay: allowRedisplay,
+                clientAttributionMetadata: clientAttributionMetadata
             )
         }
     }

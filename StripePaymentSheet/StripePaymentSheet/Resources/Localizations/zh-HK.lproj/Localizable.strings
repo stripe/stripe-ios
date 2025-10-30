@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ 添加";
 
 "Add US bank account" = "添加美國銀行賬戶";
@@ -17,8 +15,6 @@
 "Add new payment method" = "添加新支付方式";
 
 "Add your payment information" = "添加您的支付資訊";
-
-"Agree and continue" = "同意並繼續";
 
 "Approve payment" = "批准付款";
 
@@ -60,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "繼續操作即表示您同意按照<terms>這些條款</terms>授權付款。";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "繼續即表示您同意儲存您的資訊，以便將來透過 %@ 和 Link 進行 <link>購買</link>。您也同意 Link 的<terms>條款</terms>和<privacy>隱私政策</privacy>。";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "繼續即表示您同意儲存您的個人資料，以便將來根據 <link>Link</link> <terms>條款</terms>與<privacy>私隱政策</privacy> 透過 %@ 和 Link 購物";
 
 "By continuing, you agree to save your information for future purchases with %@." = "繼續即表示您同意儲存您的資訊,以便將來透過 %@ 進行購買。";
 
@@ -83,6 +79,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的手機號碼，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱政策</privacy>建立 Link 賬戶並將您的支付資訊儲存到 Link。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "儲存您的 %@ 銀行賬戶即表示您同意按照<terms>這些條款</terms>授權付款。";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "向 %1$@ 和 %2$@ 提交訂單，即表示您同意使用 %3$@ 儲存您的資訊以供日後購買之用，並同意依據<terms>這些條款</terms>授權支付。";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "將訂單提交至 %@ 即表示您同意根據<terms>這些條款</terms>授權付款。";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -114,25 +114,27 @@
 
 "Continue another way" = "用另一方式繼續";
 
+"Create an account with Link for faster checkout across the web" = "使用 Link 建立帳戶，以便在網站上更快結帳";
+
 "Debit or credit card" = "扣賬卡或信用卡";
 
 "Default" = "預設";
 
 "Default payment method" = "預設支付方式";
 
+"Did you mean %@? %@." = "您的意思是 %1$@ 嗎？%2$@。";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "手動輸入地址";
 
-"Enter the code sent to %@ to use your saved information." = "輸入傳送到 %@ 的驗證碼來使用您儲存的資訊。";
+"Enter the code sent to %@." = "請輸入發送至 %s 的驗證碼。";
 
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "連接失敗";
 
 "Fast, secure checkout" = "快速、安全的結帳";
-
-"For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您的銀行卡的安全碼。";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "透過您的銀行首次支付時獲得 %@ 的返現。<terms>查看條款</terms>";
 
@@ -282,9 +284,9 @@
 
 "The provided verification code is incorrect." = "提供的驗證碼不正確。";
 
-"This card has expired. Update your card info or choose a different payment method." = "該卡已過期。更新您的銀行卡資訊或選擇另一支付方式。";
-
 "This is your default" = "這是您的預設支付方式";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式將被移除，但仍適用於 %@ 項訂閱。";
 
 "Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
 
@@ -296,9 +298,9 @@
 
 "Use billing address for shipping" = "使用帳單地址作為送貨地址";
 
-"Use your saved info to check out faster" = "用您儲存的資訊，更快結賬";
-
 "View more" = "查看更多";
+
+"Yes, update" = "是，更新";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
 

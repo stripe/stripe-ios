@@ -7,17 +7,20 @@
 
 import SwiftUI
 
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 import StripeCryptoOnramp
 
 @_spi(STP)
 import StripePaymentSheet
 
-/// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator’s` `collectKYCInfo(info:)` functionality.
+/// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator's` `attachKYCInfo(info:)` functionality.
 struct KYCInfoView: View {
 
     /// The coordinator to use to submit KYC information.
     let coordinator: CryptoOnrampCoordinator
+
+    /// Closure called when KYC submission succeeds, allowing parent flows to advance.
+    let onCompleted: (() -> Void)
 
     @State private var firstName: String = ""
     @State private var lastName: String = ""
@@ -30,7 +33,6 @@ struct KYCInfoView: View {
     @State private var country: String = "US"
     @State private var dateOfBirth: Date = Self.today
     @State private var errorMessage: String?
-    @State private var isKYCComplete = false
 
     @Environment(\.isLoading) private var isLoading
 
@@ -51,122 +53,111 @@ struct KYCInfoView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                if isKYCComplete {
-                    Text("KYC Information Submitted")
-                        .foregroundColor(.green)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 8)
-                                .foregroundColor(.green.opacity(0.1))
-                        }
-                } else {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Please provide additional information to continue.")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-
-                    FormField("First Name") {
-                        makeTextField(
-                            "Enter your first name",
-                            text: $firstName,
-                            field: .firstName,
-                            autocapitalization: .words
-                        )
-                    }
-
-                    FormField("Last Name") {
-                        makeTextField(
-                            "Enter your last name",
-                            text: $lastName,
-                            field: .lastName,
-                            autocapitalization: .words
-                        )
-                    }
-
-                    FormField("Social Security Number") {
-                        makeTextField(
-                            "Enter your SSN",
-                            text: $idNumber,
-                            field: .idNumber,
-                            keyboardType: .numberPad
-                        )
-                    }
-
-                    FormField("Date of Birth") {
-                        DatePicker("", selection: $dateOfBirth, in: ...Self.today, displayedComponents: .date)
-                            .datePickerStyle(WheelDatePickerStyle())
-                            .labelsHidden()
-                            .frame(maxWidth: .infinity)
-                    }
-
-                    FormField("Address Line 1") {
-                        makeTextField(
-                            "Enter your street address",
-                            text: $addressLine1,
-                            field: .addressLine1,
-                            autocapitalization: .words
-                        )
-                    }
-
-                    FormField("Address Line 2 (optional)") {
-                        makeTextField(
-                            "Apartment, suite, etc.",
-                            text: $addressLine2,
-                            field: .addressLine2,
-                            autocapitalization: .words
-                        )
-                    }
-
-                    FormField("City") {
-                        makeTextField(
-                            "Enter your city",
-                            text: $city,
-                            field: .city,
-                            autocapitalization: .words
-                        )
-                    }
-
-                    FormField("State/Province") {
-                        makeTextField(
-                            "Enter your state or province",
-                            text: $state,
-                            field: .state,
-                            autocapitalization: .words
-                        )
-                    }
-
-                    FormField("Postal Code") {
-                        makeTextField(
-                            "Enter your postal code",
-                            text: $postalCode,
-                            field: .postalCode
-                        )
-                    }
-
-                    FormField("Country") {
-                        makeTextField(
-                            "Country code",
-                            text: $country,
-                            field: .country,
-                            autocapitalization: .allCharacters
-                        )
-                    }
-
-                    if let errorMessage {
-                        ErrorMessageView(message: errorMessage)
-                    }
-
-                    Button("Submit") {
-                        focusedField = nil
-                        submitKYCInfo()
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(isSubmitButtonDisabled)
-                    .opacity(isSubmitButtonDisabled ? 0.5 : 1)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Please provide additional information to continue.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
+
+                FormField("First Name") {
+                    makeTextField(
+                        "Enter your first name",
+                        text: $firstName,
+                        field: .firstName,
+                        autocapitalization: .words
+                    )
+                }
+
+                FormField("Last Name") {
+                    makeTextField(
+                        "Enter your last name",
+                        text: $lastName,
+                        field: .lastName,
+                        autocapitalization: .words
+                    )
+                }
+
+                FormField("Social Security Number") {
+                    makeTextField(
+                        "Enter your SSN",
+                        text: $idNumber,
+                        field: .idNumber,
+                        keyboardType: .numberPad
+                    )
+                }
+
+                FormField("Date of Birth") {
+                    DatePicker("", selection: $dateOfBirth, in: ...Self.today, displayedComponents: .date)
+                        .datePickerStyle(WheelDatePickerStyle())
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity)
+                }
+
+                FormField("Address Line 1") {
+                    makeTextField(
+                        "Enter your street address",
+                        text: $addressLine1,
+                        field: .addressLine1,
+                        autocapitalization: .words
+                    )
+                }
+
+                FormField("Address Line 2 (optional)") {
+                    makeTextField(
+                        "Apartment, suite, etc.",
+                        text: $addressLine2,
+                        field: .addressLine2,
+                        autocapitalization: .words
+                    )
+                }
+
+                FormField("City") {
+                    makeTextField(
+                        "Enter your city",
+                        text: $city,
+                        field: .city,
+                        autocapitalization: .words
+                    )
+                }
+
+                FormField("State/Province") {
+                    makeTextField(
+                        "Enter your state or province",
+                        text: $state,
+                        field: .state,
+                        autocapitalization: .words
+                    )
+                }
+
+                FormField("Postal Code") {
+                    makeTextField(
+                        "Enter your postal code",
+                        text: $postalCode,
+                        field: .postalCode
+                    )
+                }
+
+                FormField("Country") {
+                    makeTextField(
+                        "Country code",
+                        text: $country,
+                        field: .country,
+                        autocapitalization: .allCharacters
+                    )
+                }
+
+                if let errorMessage {
+                    ErrorMessageView(message: errorMessage)
+                }
+
+                Button("Submit") {
+                    focusedField = nil
+                    submitKYCInfo()
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(isSubmitButtonDisabled)
+                .opacity(isSubmitButtonDisabled ? 0.5 : 1)
             }
             .padding()
         }
@@ -187,6 +178,14 @@ struct KYCInfoView: View {
             state: state.isEmpty ? nil : state
         )
 
+        let dateOfBirthComponents = Calendar.current.dateComponents([.day, .month, .year], from: dateOfBirth)
+
+        let dateOfBirth = KycInfo.DateOfBirth(
+            day: dateOfBirthComponents.day ?? 0,
+            month: dateOfBirthComponents.month ?? 0,
+            year: dateOfBirthComponents.year ?? 0
+        )
+
         let kycInfo = KycInfo(
             firstName: firstName,
             lastName: lastName,
@@ -197,10 +196,10 @@ struct KYCInfoView: View {
 
         Task {
             do {
-                try await coordinator.collectKYCInfo(info: kycInfo)
+                try await coordinator.attachKYCInfo(info: kycInfo)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    isKYCComplete = true
+                    onCompleted()
                 }
             } catch {
                 await MainActor.run {
@@ -228,6 +227,6 @@ struct KYCInfoView: View {
 
 #Preview {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator)
+        KYCInfoView(coordinator: coordinator, onCompleted: {})
     }
 }

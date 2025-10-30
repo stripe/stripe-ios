@@ -82,6 +82,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
+        let paymentMethodRemoveIsPartial: Bool
         let paymentMethodUpdate: Bool
         let paymentMethodSyncDefault: Bool
         let isTestMode: Bool
@@ -452,7 +453,11 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: configuration.paymentMethodUpdate,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
-        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+        let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
+            removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+            paymentMethodRemoveIsPartial: configuration.paymentMethodRemoveIsPartial,
+            merchantName: savedPaymentMethodsConfiguration.merchantDisplayName)
+        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
                                                        isTestMode: configuration.isTestMode,
                                                        configuration: updateConfig)
         editVc.delegate = self

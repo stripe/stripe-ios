@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (mhux obbligatorja)";
 
 "(not accepted)" = "(ma tistax tintuża)";
@@ -37,8 +39,6 @@
 "Country or region" = "Pajjiż jew reġjun";
 
 "County" = "Kontea";
-
-"Date is empty." = "Id-data hija battala.";
 
 "Department" = "Dipartiment";
 
@@ -144,6 +144,6 @@
 
 "Your postal code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
 
-"Your postal code is invalid." = "Il-kodiċi postali tiegħek huwa invalidu.";
+"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
 
 "ZIP" = "Kodiċi Postali";

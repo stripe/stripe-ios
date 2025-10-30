@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valikuline)";
 
 "(not accepted)" = "(pole aktsepteeritud)";
@@ -37,8 +39,6 @@
 "Country or region" = "Riik või regioon";
 
 "County" = "Maakond";
-
-"Date is empty." = "Kuupäev on tühi.";
 
 "Department" = "Departemang";
 

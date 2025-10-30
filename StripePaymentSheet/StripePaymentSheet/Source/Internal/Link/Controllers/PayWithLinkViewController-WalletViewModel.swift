@@ -35,7 +35,7 @@ extension PayWithLinkViewController {
         }
 
         var supportedPaymentMethodTypes: Set<ConsumerPaymentDetails.DetailsType> {
-            return linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
+            return context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
         }
 
         var cvc: String? {
@@ -65,28 +65,29 @@ extension PayWithLinkViewController {
 
         /// The mandate text to show.
         var mandate: NSAttributedString? {
+            let isSettingUp = context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link)
+
             switch selectedPaymentMethod?.details {
             case .card:
-                if context.elementsSession.combinedReuseAndLinkMandateEnabled {
+                if context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText {
                     // Use the updated mandate text that can mention both payment method reuse and Link signup.
                     // Since the user is already signed up for Link, we don't need to save to Link.
                     return PaymentSheetFormFactory.makeMandateText(
-                        useCombinedReuseAndLinkSignupText: true,
-                        shouldSaveToLink: false,
+                        variant: .updated(shouldSignUpToLink: false),
                         merchantName: context.configuration.merchantDisplayName
                     )
-                }
-                guard context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link) else {
+                } else if isSettingUp {
+                    let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
+                    return NSMutableAttributedString(string: string)
+                } else {
                     return nil
                 }
-                let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
-                return NSMutableAttributedString(string: string)
             case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
-                let string = String.Localized.bank_continue_mandate_text
-                return STPStringUtils.applyLinksToString(
-                    template: string,
-                    links: ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
+                return PaymentSheetFormFactory.makeBankMandateText(
+                    isSettingUp: isSettingUp || context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
+                    merchantName: context.configuration.merchantDisplayName,
+                    sellerName: context.intent.sellerDetails?.businessName
                 )
             default:
                 return nil
@@ -98,29 +99,27 @@ extension PayWithLinkViewController {
             mandate != nil
         }
 
-        var noticeText: String? {
-            if shouldRecollectCardExpiryDate {
-                return STPLocalizedString(
-                    "This card has expired. Update your card info or choose a different payment method.",
-                    "A text notice shown when the user selects an expired card."
-                )
-            }
-
-            if shouldRecollectCardCVC {
-                return STPLocalizedString(
-                    "For security, please re-enter your card’s security code.",
-                    """
-                    A text notice shown when the user selects a card that requires
-                    re-entering the security code (CVV/CVC).
-                    """
-                )
-            }
-
-            return nil
+        /// Client attribution metadata for analytics
+        var clientAttributionMetadata: STPClientAttributionMetadata? {
+            STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
         }
 
-        var shouldShowNotice: Bool {
-            return noticeText != nil
+        /// Returns a hint message, if it is supported.
+        /// - The `link_show_prefer_debit_card_hint` flag must be enabled.
+        /// - A non-empty hint message must exist in the `LinkConfiguration`.
+        /// - Cards are a supported payment types.
+        func debitCardHintIfSupported(for linkAccount: PaymentSheetLinkAccount) -> String? {
+            let flagEnabled = context.elementsSession.shouldShowPreferDebitCardHint
+            let hintMessage = context.linkConfiguration?.hintMessage
+            let hasHintMessage = hintMessage?.isEmpty == false
+            let supportedPaymentDetailTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+            let supportsCards = supportedPaymentDetailTypes.contains(.card)
+
+            if flagEnabled && hasHintMessage && supportsCards {
+                return hintMessage
+            } else {
+                return nil
+            }
         }
 
         var shouldShowRecollectionSection: Bool {
@@ -256,7 +255,8 @@ extension PayWithLinkViewController {
 
             linkAccount.updatePaymentDetails(
                 id: paymentMethod.stripeID,
-                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil)
+                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil),
+                clientAttributionMetadata: clientAttributionMetadata
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {
                     paymentMethods.forEach({ $0.isDefault = false })
@@ -312,12 +312,13 @@ extension PayWithLinkViewController {
             linkAccount.updatePaymentDetails(
                 id: id,
                 updateParams: UpdatePaymentDetailsParams(details: .card(expiryDate: expiryDate)),
+                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
         }
 
         func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
-            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
+            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, configuration: context.configuration, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
         }
     }
 }

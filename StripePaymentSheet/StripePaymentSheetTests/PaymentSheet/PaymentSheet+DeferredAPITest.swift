@@ -80,13 +80,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         let expectation = expectation(description: "Confirm intent")
         // When we confirm the Intent...
         let examplePaymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
-        PaymentSheet.handleDeferredIntentConfirmation(
+        PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .new(params: examplePaymentMethodParams, paymentOptions: .init(), paymentMethod: nil, shouldSave: false, shouldSetAsDefaultPM: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: paymentHandler,
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { _, _ in
             expectation.fulfill()
         }
@@ -251,13 +252,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil),
+        PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { result, deferredType in
             capturedResult = result
             capturedDeferredType = deferredType
@@ -317,7 +319,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
+        PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .new(
                 params: paymentMethodParams,
                 paymentOptions: .init(),
@@ -329,7 +331,8 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { result, _ in
             capturedResult = result
             completionCalledExpectation.fulfill()
@@ -366,13 +369,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil),
+        PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { result, _ in
             capturedResult = result
             completionCalledExpectation.fulfill()
@@ -395,14 +399,11 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         var capturedResult: PaymentSheetResult?
         var capturedDeferredType: STPAnalyticsClient.DeferredIntentConfirmationType?
 
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, intentCreationCallback in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in
             // Return a client secret to simulate normal flow
-            STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"]) { result in
-                switch result {
-                case .success(let clientSecret):
-                    intentCreationCallback(.success(clientSecret))
-                case .failure(let error):
-                    intentCreationCallback(.failure(error))
+            return try await withCheckedThrowingContinuation { continuation in
+                STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"]) { result in
+                    continuation.resume(with: result)
                 }
             }
         }
@@ -413,13 +414,14 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil),
+        PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { result, deferredType in
             capturedResult = result
             capturedDeferredType = deferredType
@@ -456,19 +458,20 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // Override the confirmHandler to detect if it's called (it shouldn't be)
         let originalConfirmHandler = intentConfig.confirmHandler
-        intentConfig.confirmHandler = { paymentMethod, shouldSave, callback in
+        intentConfig.confirmHandler = { paymentMethod, shouldSave in
             intentCreationCallbackInvoked = true
-            originalConfirmHandler(paymentMethod, shouldSave, callback)
+            return try await originalConfirmHandler!(paymentMethod, shouldSave)
         }
 
         // When
-        PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil),
+        PaymentSheet.routeDeferredIntentConfirmation(
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
         ) { _, _ in
             completionCalledExpectation.fulfill()
         }

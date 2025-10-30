@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (opsional)";
 
 "(not accepted)" = "(tidak diterima)";
@@ -37,8 +39,6 @@
 "Country or region" = "Negara atau wilayah";
 
 "County" = "County";
-
-"Date is empty." = "Data kosong.";
 
 "Department" = "Departemen";
 

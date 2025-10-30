@@ -15,26 +15,17 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-private class CardScanningEasilyTappableButton: UIButton {
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let newArea = bounds.insetBy(
-            dx: -(PaymentSheetUI.minimumTapSize.width - bounds.width) / 2,
-            dy: -(PaymentSheetUI.minimumTapSize.height - bounds.height) / 2)
-        return newArea.contains(point)
-    }
-}
-
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
-protocol STP_Internal_CardScanningViewDelegate: AnyObject {
-    func cardScanningView(_ cardScanningView: CardScanningView, didScanCard cardParams: STPPaymentMethodCardParams)
-    func cardScanningViewShouldClose(_ cardScanningView: CardScanningView)
+@objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
+    func cardScanningView(
+        _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
 }
 
 /// For internal SDK use only
 @objc(STP_Internal_CardScanningView)
 @available(macCatalyst 14.0, *)
-class CardScanningView: UIView {
+class CardScanningView: UIView, STPCardScannerDelegate {
 
     private(set) weak var cameraView: STPCameraView?
 
@@ -52,14 +43,25 @@ class CardScanningView: UIView {
         }
     }
 
+    func cardScanner(
+        _ scanner: STPCardScanner,
+        didFinishWith cardParams: STPPaymentMethodCardParams?,
+        error: Error?
+    ) {
+        if error != nil {
+            self.isDisplayingError = true
+        } else {
+            self.delegate?.cardScanningView(self, didFinishWith: cardParams)
+        }
+    }
+
     private lazy var cardScanner: STPCardScanner? = nil
 
-    private static let cardSizeRatio: CGFloat = 2.125 / 3.370  // ID-1 card size (in inches) converted to ratio
+    private static let cardSizeRatio: CGFloat = 2.125 / 3.370  // ID-1 card size (in inches)
     private static let cardCornerRadius: CGFloat = 0.125 / 3.370  // radius / ID-1 card width
     private static let cornerRadius: CGFloat = 4
     private static let cardInset: CGFloat = 32
-    private static let errorLabelInset: CGFloat = 8
-    private static let closeButtonInset: CGFloat = 8
+    private static let textInset: CGFloat = 14
 
     private lazy var cardOutlineView: UIView = {
         let view = UIView()
@@ -138,17 +140,19 @@ class CardScanningView: UIView {
         ])
     }
 
-    func startScanner() {
+    func start() {
         cardScanner?.start()
     }
 
-    func stopScanner() {
-        cardScanner?.stop(didError: false)
+    func stop() {
+        if isDisplayingError {
+            self.delegate?.cardScanningView(self, didFinishWith: nil)
+        }
+        cardScanner?.stop()
     }
 
     @objc private func closeTapped() {
-        delegate?.cardScanningViewShouldClose(self)
-        stopScanner()
+        self.stop()
     }
 
     var snapshotView: UIView?
@@ -156,7 +160,11 @@ class CardScanningView: UIView {
     // The shape layers don't animate cleanly during setHidden,
     // so let's use a snapshot view instead.
     func prepDismissAnimation() {
-        if let snapshot = snapshotView(afterScreenUpdates: true) {
+        // Taking a snapshot while the view is offscreen can result in layout issues,
+        //    and is unnecessary since we won't show an animation in this case
+        guard window != nil else { return }
+
+        if let snapshot = snapshotView(afterScreenUpdates: false) {
             self.addSubview(snapshot)
             self.snapshotView = snapshot
         }
@@ -167,8 +175,8 @@ class CardScanningView: UIView {
         snapshotView = nil
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(theme: ElementsAppearance) {
+        super.init(frame: .zero)
         self.setupBlurView()
 
         let cameraView = STPCameraView(frame: bounds)
@@ -181,18 +189,29 @@ class CardScanningView: UIView {
 
         closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
 
-        self.addSubview(cameraView)
-        self.addSubview(cardOutlineView)
-        self.addSubview(cardOuterBlurView)
-        self.addSubview(errorLabel)
-        self.addSubview(closeButton)
+        addSubview(cameraView)
+        addSubview(cardOutlineView)
+        addSubview(cardOuterBlurView)
+        addSubview(errorLabel)
+        addSubview(closeButton)
 
-        self.layer.cornerRadius = Self.cornerRadius
         self.cameraView = cameraView
-        cameraView.layer.cornerRadius = CardScanningView.cornerRadius
         self.cameraView?.translatesAutoresizingMaskIntoConstraints = false
         // The first few frames of the camera view will be black, so our background should be black too.
         self.cameraView?.backgroundColor = UIColor.black
+
+        let closeButtonInset: CGFloat
+        // If Liquid Glass is enabled, we use rounder corners to match the appearance of the text fields and other elements
+        // The close button is pushed a bit further away from the edge to compensate
+        // If the user has set a customer corner radius, we do not apply the Liquid Glass style, but we still use our corner radius
+        if theme.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp {
+            ios26_applyDefaultCornerConfiguration()
+            closeButtonInset = 12
+        } else {
+            layer.cornerRadius = Self.cornerRadius
+            cameraView.layer.cornerRadius = Self.cornerRadius
+            closeButtonInset = 8
+        }
 
         // To get the right animation, we'll add a breakable bottom constraint
         // and enable clipsToBounds. Then, when hidden, the view will shrink while
@@ -218,13 +237,13 @@ class CardScanningView: UIView {
                 cardOuterBlurView.rightAnchor.constraint(equalTo: self.rightAnchor),
                 cardOuterBlurView.topAnchor.constraint(equalTo: self.topAnchor),
 
-                errorLabel.leftAnchor.constraint(equalTo: cardOutlineView.leftAnchor, constant: Self.errorLabelInset),
+                errorLabel.leftAnchor.constraint(equalTo: cardOutlineView.leftAnchor, constant: 8),
                 errorLabel.rightAnchor.constraint(
-                    equalTo: cardOutlineView.rightAnchor, constant: -Self.errorLabelInset),
+                    equalTo: cardOutlineView.rightAnchor, constant: -8),
                 errorLabel.centerYAnchor.constraint(equalTo: cardOutlineView.centerYAnchor),
 
-                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -Self.closeButtonInset),
-                closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: Self.closeButtonInset),
+                closeButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -closeButtonInset),
+                closeButton.topAnchor.constraint(equalTo: self.topAnchor, constant: closeButtonInset),
 
                 cardOutlineView.heightAnchor.constraint(
                     equalTo: cardOutlineView.widthAnchor, multiplier: CardScanningView.cardSizeRatio),
@@ -240,8 +259,8 @@ class CardScanningView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         let cornerRadius =
-            (self.bounds.size.width - (CardScanningView.cardInset * 2))
-            * CardScanningView.cardCornerRadius
+        (self.bounds.size.width - (CardScanningView.cardInset * 2))
+        * CardScanningView.cardCornerRadius
         cardOutlineView.layer.cornerRadius = cornerRadius
 
         let outerPath = UIBezierPath(
@@ -266,23 +285,9 @@ class CardScanningView: UIView {
 
     override func willMove(toWindow newWindow: UIWindow?) {
         if newWindow == nil {
-            stopScanner()
+            stop()
         }
         super.willMove(toWindow: newWindow)
     }
 }
-
-@available(macCatalyst 14.0, *)
-extension CardScanningView: STPCardScannerDelegate {
-
-    func cardScanner(_ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams) {
-        self.delegate?.cardScanningView(self, didScanCard: cardParams)
-        self.delegate?.cardScanningViewShouldClose(self)
-    }
-
-    func cardScannerDidError(_ scanner: STPCardScanner) {
-        self.isDisplayingError = true
-    }
-}
-
 #endif

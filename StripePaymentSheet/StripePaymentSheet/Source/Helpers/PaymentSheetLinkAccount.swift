@@ -72,10 +72,11 @@ struct LinkPMDisplayDetails {
 
     // Dependencies
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
 
     let useMobileEndpoints: Bool
+    let canSyncAttestationState: Bool
     let requestSurface: LinkRequestSurface
+    let createdFromAuthIntentID: Bool
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
@@ -84,6 +85,7 @@ struct LinkPMDisplayDetails {
 
     var phoneNumberUsedInSignup: String?
     var nameUsedInSignup: String?
+    var suggestedEmail: String?
 
     @_spi(STP) public let email: String
 
@@ -97,8 +99,8 @@ struct LinkPMDisplayDetails {
 
     @_spi(STP) public var sessionState: SessionState {
         if let currentSession = currentSession {
-            // sms verification is not required if we are in the signup flow
-            return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup
+            // sms verification is not required if we are in the signup flow or are using seamless sign-in
+            return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup || currentSession.isVerifiedWithLinkAuthToken
                 ? .verified : .requiresVerification
         } else {
             return .requiresSignUp
@@ -121,6 +123,11 @@ struct LinkPMDisplayDetails {
         currentSession?.isVerifiedForSignup ?? false
     }
 
+    // Webview fallback URLs have a lifespan of one attempt.
+    // If a user opens one and dismisses it, it can't be used again,
+    // So we'll fetch a new one in that case.
+    var visitedFallbackURLs: [URL] = []
+
     private(set) var currentSession: ConsumerSession?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
@@ -130,18 +137,20 @@ struct LinkPMDisplayDetails {
         publishableKey: String?,
         displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?,
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
-        requestSurface: LinkRequestSurface = .default
+        canSyncAttestationState: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        createdFromAuthIntentID: Bool = false
     ) {
         self.email = email
         self.currentSession = session
         self.publishableKey = publishableKey
         self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
+        self.canSyncAttestationState = canSyncAttestationState
         self.requestSurface = requestSurface
+        self.createdFromAuthIntentID = createdFromAuthIntentID
     }
 
     func signUp(
@@ -186,6 +195,7 @@ struct LinkPMDisplayDetails {
             countryCode: countryCode,
             consentAction: consentAction.rawValue,
             useMobileEndpoints: useMobileEndpoints,
+            canSyncAttestationState: canSyncAttestationState,
             with: apiClient,
             requestSurface: requestSurface
         ) { [weak self] result in
@@ -200,14 +210,10 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard case .requiresVerification = sessionState else {
-            DispatchQueue.main.async {
-                completion(.success(false))
-            }
-            return
-        }
-
+    func startVerification(
+        isResendingSmsCode: Bool = false,
+        completion: @escaping (Result<Bool, Error>) -> Void
+    ) {
         guard let session = currentSession else {
             stpAssertionFailure()
             DispatchQueue.main.async {
@@ -221,9 +227,8 @@ struct LinkPMDisplayDetails {
         }
 
         session.startVerification(
+            isResendingSmsCode: isResendingSmsCode,
             with: apiClient,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface
         ) { [weak self] result in
             switch result {
@@ -236,7 +241,11 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func verify(with oneTimePasscode: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func verify(
+        with oneTimePasscode: String,
+        consentGranted: Bool? = nil,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
         guard case .requiresVerification = sessionState,
             hasStartedSMSVerification,
             let session = currentSession
@@ -255,9 +264,8 @@ struct LinkPMDisplayDetails {
         session.confirmSMSVerification(
             with: oneTimePasscode,
             with: apiClient,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey,
-            requestSurface: requestSurface
+            requestSurface: requestSurface,
+            consentGranted: consentGranted
         ) { [weak self] result in
             switch result {
             case .success(let verifiedSession):
@@ -286,7 +294,6 @@ struct LinkPMDisplayDetails {
             }
 
             session.createLinkAccountSession(
-                consumerAccountPublishableKey: self.publishableKey,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -310,7 +317,6 @@ struct LinkPMDisplayDetails {
             session.createPaymentDetails(
                 paymentMethodParams: paymentMethodParams,
                 with: self.apiClient,
-                consumerAccountPublishableKey: self.publishableKey,
                 isDefault: isDefault,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
@@ -321,6 +327,7 @@ struct LinkPMDisplayDetails {
     func createPaymentDetails(
         linkedAccountId: String,
         isDefault: Bool,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
@@ -332,8 +339,8 @@ struct LinkPMDisplayDetails {
 
             session.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
-                consumerAccountPublishableKey: self.publishableKey,
                 isDefault: isDefault,
+                clientAttributionMetadata: clientAttributionMetadata,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -341,10 +348,14 @@ struct LinkPMDisplayDetails {
     }
 
     func listPaymentDetails(
-        supportedTypes: [ConsumerPaymentDetails.DetailsType]
+        supportedTypes: [ConsumerPaymentDetails.DetailsType],
+        shouldRetryOnAuthError: Bool = true
     ) async throws -> [ConsumerPaymentDetails] {
         return try await withCheckedThrowingContinuation { continuation in
-            listPaymentDetails(supportedTypes: supportedTypes) { result in
+            listPaymentDetails(
+                supportedTypes: supportedTypes,
+                shouldRetryOnAuthError: shouldRetryOnAuthError
+            ) { result in
                 switch result {
                 case .success(let details):
                     continuation.resume(returning: details)
@@ -357,9 +368,13 @@ struct LinkPMDisplayDetails {
 
     func listPaymentDetails(
         supportedTypes: [ConsumerPaymentDetails.DetailsType],
+        shouldRetryOnAuthError: Bool = true,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+        retryingOnAuthError(
+            shouldRetry: shouldRetryOnAuthError,
+            completion: completion
+        ) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
@@ -369,16 +384,17 @@ struct LinkPMDisplayDetails {
             session.listPaymentDetails(
                 with: self.apiClient,
                 supportedPaymentDetailsTypes: supportedTypes,
-                consumerAccountPublishableKey: self.publishableKey,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
         }
     }
 
-    func listShippingAddress() async throws -> ShippingAddressesResponse {
+    func listShippingAddress(
+        shouldRetryOnAuthError: Bool = true
+    ) async throws -> ShippingAddressesResponse {
         return try await withCheckedThrowingContinuation { continuation in
-            listShippingAddress { result in
+            listShippingAddress(shouldRetryOnAuthError: shouldRetryOnAuthError) { result in
                 switch result {
                 case .success(let response):
                     continuation.resume(returning: response)
@@ -390,16 +406,20 @@ struct LinkPMDisplayDetails {
     }
 
     func listShippingAddress(
+        shouldRetryOnAuthError: Bool = true,
         completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+        retryingOnAuthError(
+            shouldRetry: shouldRetryOnAuthError,
+            completion: completion
+        ) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
                 return
             }
 
-            session.listShippingAddress(with: self.apiClient, consumerAccountPublishableKey: self.publishableKey, requestSurface: self.requestSurface, completion: completionRetryingOnAuthErrors)
+            session.listShippingAddress(with: self.apiClient, requestSurface: self.requestSurface, completion: completionRetryingOnAuthErrors)
         }
     }
 
@@ -419,7 +439,6 @@ struct LinkPMDisplayDetails {
             session.deletePaymentDetails(
                 with: self.apiClient,
                 id: id,
-                consumerAccountPublishableKey: self.publishableKey,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -429,9 +448,10 @@ struct LinkPMDisplayDetails {
     func updatePaymentDetails(
         id: String,
         updateParams: UpdatePaymentDetailsParams,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
+        retryingOnAuthError(completion: completion) { [apiClient] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 return completion(
@@ -447,7 +467,7 @@ struct LinkPMDisplayDetails {
                 with: apiClient,
                 id: id,
                 updateParams: updateParams,
-                consumerAccountPublishableKey: publishableKey,
+                clientAttributionMetadata: clientAttributionMetadata,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -460,10 +480,10 @@ struct LinkPMDisplayDetails {
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>
     ) -> Void) {
-        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
+        retryingOnAuthError(completion: completion) { [apiClient] completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 return completion(
@@ -480,7 +500,6 @@ struct LinkPMDisplayDetails {
                 allowRedisplay: allowRedisplay,
                 expectedPaymentMethodType: expectedPaymentMethodType,
                 billingPhoneNumber: billingPhoneNumber,
-                consumerAccountPublishableKey: publishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
@@ -488,22 +507,35 @@ struct LinkPMDisplayDetails {
         }
     }
 
+    func refresh(
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        guard let session = currentSession else {
+            stpAssertionFailure()
+            completion(.failure(
+                PaymentSheetError.unknown(debugDescription: "Refreshing session without valid current session")
+            ))
+            return
+        }
+
+        session.refreshSession(
+            with: apiClient,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            if case .success(let refreshedSession) = result {
+                self?.currentSession = refreshedSession
+            }
+            completion(result)
+        }
+    }
+
     func logout() {
         guard let session = currentSession else {
             return
         }
-        session.logout(with: apiClient, consumerAccountPublishableKey: publishableKey, requestSurface: requestSurface) { _ in
+        session.logout(with: apiClient, requestSurface: requestSurface) { _ in
             // We don't need to do anything if this fails, the key will expire automatically.
         }
-    }
-
-    func markEmailAsLoggedOut() {
-        guard let hashedEmail = email.lowercased().sha256 else {
-            stpAssertionFailure()
-            return
-        }
-
-        cookieStore.write(key: .lastLogoutEmail, value: hashedEmail)
     }
 }
 
@@ -528,6 +560,7 @@ private extension PaymentSheetLinkAccount {
     /// Attempts attempts a request using apiCall. If the session
     /// is invalid, refresh it and re-attempt the apiCall.
     func retryingOnAuthError<T>(
+        shouldRetry: Bool = true,
         completion: @escaping CompletionBlock<T>,
         apiCall: @escaping (@escaping CompletionBlock<T>) -> Void
     ) {
@@ -536,16 +569,7 @@ private extension PaymentSheetLinkAccount {
             case .success:
                 completion(result)
             case .failure(let error as NSError):
-                let isAuthError: Bool = {
-                    if let stripeError = error as? StripeError,
-                    case let .apiError(stripeAPIError) = stripeError,
-                       stripeAPIError.code == "consumer_session_credentials_invalid" {
-                        return true
-                    }
-                    return false
-                }()
-
-                if isAuthError {
+                if error.isLinkAuthError && shouldRetry && self?.createdFromAuthIntentID != true {
                     self?.refreshSession { refreshSessionResult in
                         switch refreshSessionResult {
                         case .success(let refreshedSession):

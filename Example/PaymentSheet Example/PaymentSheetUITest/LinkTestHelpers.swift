@@ -51,7 +51,8 @@ extension XCTestCase {
             nameField.typeText("John Doe")
         }
 
-        XCTAssertTrue(app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: 10))
+        app.swipeDown()
+        XCTAssertTrue(app.buttons["Continue"].waitForExistenceAndTap(timeout: 10))
     }
 
     func fillOutLinkCardData(

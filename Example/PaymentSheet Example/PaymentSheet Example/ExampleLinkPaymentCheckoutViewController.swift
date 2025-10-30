@@ -56,11 +56,14 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                     let intentConfiguration = PaymentSheet
                         .IntentConfiguration(
                             mode: .payment(amount: 100, currency: "usd"),
-                            paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-                                self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
-                                                           paymentMethod: paymentMethod,
-                                                           shouldSavePaymentMethod: shouldSavePaymentMethod,
-                                                           intentCreationCallback: intentCreationCallback)
+                            paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod in
+                                try await withCheckedThrowingContinuation { continuation in
+                                    self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
+                                                               paymentMethod: paymentMethod,
+                                                               shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
+                                        continuation.resume(with: result)
+                                    }
+                                }
                             }
 
                     self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
@@ -183,7 +186,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                 if let data = data,
                    (response as? HTTPURLResponse)?.statusCode == 400 {
                     // read the error message
-                    let errorMessage = String(decoding: data, as: UTF8.self)
+                    let errorMessage = String(data: data, encoding: .utf8) ?? "unknown error"
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
                     intentCreationCallback(.failure(error ?? ConfirmHandlerError.unknown))

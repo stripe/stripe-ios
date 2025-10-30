@@ -923,6 +923,42 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertEqual(zipCode, "12345")
         XCTAssertEqual(country, "United States")
     }
+
+    func testCachesFormDetails() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        loadPlayground(app, settings)
+
+        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
+
+        // Tap Add button to open the form
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
+
+        // Start entering card details
+        let cardNumberField = app.textFields["Card number"]
+        cardNumberField.waitForExistenceAndTap(timeout: timeout)
+        cardNumberField.typeText("4")
+        app.toolbars.buttons["Done"].tap()
+
+        // Switch to bank form
+        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
+        let nameField = app.textFields["Full name"]
+        nameField.waitForExistenceAndTap(timeout: timeout)
+        nameField.typeText("H")
+
+        // Switch bank to card form and verify that input is still there
+        app.staticTexts["Card"].waitForExistenceAndTap(timeout: timeout)
+        // Hack - we do this twice since the first tap only dismisses the keyboard
+        app.staticTexts["Card"].waitForExistenceAndTap(timeout: timeout)
+        let cardInput = app.textFields["Card number"].value as? String
+        XCTAssertTrue(cardInput?.hasPrefix("4") == true, "Card number field should preserve entered data")
+
+        // Switch back to bank form and verify that input is still there
+        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
+        let bankInput = app.textFields["Full name"].value as? String
+        XCTAssertTrue(bankInput?.hasPrefix("H") == true, "Bank name field should preserve entered data")
+    }
+
     // MARK: - Helpers
 
     func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {
@@ -986,184 +1022,58 @@ class CustomerSheetUITest: XCTestCase {
         alert.buttons[buttonToTap].tap()
     }
 
-    // MARK: - Card Scanner Tests
-    func testCustomerSheetOpensCardScannerAutomatically() throws {
+    func testCustomerSheetCardScannerOpensAutomatically() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePay = .on
         settings.opensCardScannerAutomatically = .on
+        settings.customerMode = .new
+
         loadPlayground(app, settings)
 
         let selectButton = app.staticTexts["None"]
         XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
         selectButton.tap()
 
-        // Check that product usage doesn't contain STPCardScanner initially
+        // Verify STPCardScanner is NOT in analytics product_usage when sheet is open but card form hasn't been opened
         let initialProductUsage = analyticsLog.last!["product_usage"] as! [String]
-        XCTAssertFalse(initialProductUsage.contains("STPCardScanner"))
+        XCTAssertFalse(initialProductUsage.contains("STPCardScanner"), "STPCardScanner should not be in product_usage before opening card form")
 
-        // Tap + Add to enter card form
         app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
 
-        // Verify card scanner is open (scanner UI should be visible and scan button hidden due to alpha)
-        let scanButton = app.buttons["Scan card"]
+        // Wait for the close card scanner button to appear, which indicates the scanner is open and analytics updated
         let closeScannerButton = app.buttons["Close card scanner"]
+        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Close card scanner button should appear when scanner opens")
 
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 5))
-        XCTAssertFalse(scanButton.isHittable) // Button should be hidden (alpha 0) when scanner is open
-
-        // Check that product usage now contains STPCardScanner
+        // Verify STPCardScanner IS in analytics product_usage after opening card form
         let updatedProductUsage = analyticsLog.last!["product_usage"] as! [String]
-        XCTAssertTrue(updatedProductUsage.contains("STPCardScanner"))
+        XCTAssertTrue(updatedProductUsage.contains("STPCardScanner"), "STPCardScanner should be in product_usage after opening card form")
 
-        // Test scanner state preservation when opensCardScannerAutomatically = .on
-        // 1. Scanner should start open, close it, then switch payment methods and verify it stays closed
-
-        // Close the scanner
+        // Close the card scanner
         closeScannerButton.tap()
 
-        // Verify scanner is closed (scan button should be hittable again)
-        XCTAssertTrue(scanButton.waitForExistence(timeout: 5))
-        XCTAssertTrue(scanButton.isHittable)
-        XCTAssertFalse(closeScannerButton.exists)
+        // Verify card scanner is closed
+        XCTAssertFalse(closeScannerButton.waitForExistence(timeout: 2.0), "Card scanner should be closed after tapping close button")
 
-        // Switch to US bank account directly from card form
-        app.staticTexts["US bank account"].waitForExistenceAndTap()
+        // Verify we can open the scanner again using the scan button
+        let scanCardButton = app.buttons["Scan card"]
+        XCTAssertTrue(scanCardButton.waitForExistence(timeout: 5.0), "Scan card button should exist")
+        scanCardButton.tap()
+        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Card scanner should open when tapping scan button")
 
-        // Switch back to card form
-        app.staticTexts["Card"].waitForExistenceAndTap()
-
-        // Scanner should remain closed (scan button hittable, close button not present)
-        XCTAssertTrue(scanButton.waitForExistence(timeout: 5))
-        XCTAssertTrue(scanButton.isHittable)
-        XCTAssertFalse(closeScannerButton.exists)
-
-        // 2. Now open the scanner manually, switch payment methods, and verify it stays open
-
-        // Open the scanner manually
-        scanButton.tap()
-
-        // Verify scanner is now open
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 5))
-        XCTAssertFalse(scanButton.isHittable)
-
-        // Switch to US bank account directly from card form
-        app.staticTexts["US bank account"].waitForExistenceAndTap()
-
-        // Switch back to card form
-        app.staticTexts["Card"].waitForExistenceAndTap()
-
-        // Scanner should remain open (close button present, scan button not hittable)
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 5))
-        XCTAssertFalse(scanButton.isHittable)
-
-        // Close customer sheet
-        app.buttons["Close"].waitForExistenceAndTap()
-    }
-
-    func testCustomerSheetOpensCardScannerAutomaticallyOff() throws {
-        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePay = .on
-        settings.opensCardScannerAutomatically = .off
-        loadPlayground(app, settings)
-
-        let selectButton = app.staticTexts["None"]
-        XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
-        selectButton.tap()
-
-        // Check that product usage doesn't contain STPCardScanner initially
-        let initialProductUsage = analyticsLog.last!["product_usage"] as! [String]
-        XCTAssertFalse(initialProductUsage.contains("STPCardScanner"))
-
-        // Tap + Add to enter card form
-        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
-
-        // Verify card scanner is NOT open (scan button should be hittable, close scanner button not present)
-        let scanButton = app.buttons["Scan card"]
-        let closeScannerButton = app.buttons["Close card scanner"]
-
-        XCTAssertTrue(scanButton.waitForExistence(timeout: 5))
-        XCTAssertTrue(scanButton.isHittable)
-        XCTAssertFalse(closeScannerButton.exists)
-
-        // Check that product usage still doesn't contain STPCardScanner
-        let updatedProductUsage = analyticsLog.last!["product_usage"] as! [String]
-        XCTAssertFalse(updatedProductUsage.contains("STPCardScanner"))
-
-        // Test scanner state preservation when opensCardScannerAutomatically = .off
-        // 1. Scanner should start closed, switch payment methods and verify it stays closed
-
-        // Switch to US bank account directly from card form
-        app.staticTexts["US bank account"].waitForExistenceAndTap()
-
-        // Switch back to card form
-        app.staticTexts["Card"].waitForExistenceAndTap()
-
-        // Scanner should remain closed (scan button hittable, close button not present)
-        XCTAssertTrue(scanButton.waitForExistence(timeout: 5))
-        XCTAssertTrue(scanButton.isHittable)
-        XCTAssertFalse(closeScannerButton.exists)
-
-        // 2. Now open the scanner manually, switch payment methods, and verify it stays open
-
-        // Manually open the scanner
-        scanButton.tap()
-
-        // Verify scanner is now open
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 5))
-        XCTAssertFalse(scanButton.isHittable) // Button should be hidden when scanner is open
-
-        // Check that product usage now contains STPCardScanner after manual activation
-        let finalProductUsage = analyticsLog.last!["product_usage"] as! [String]
-        XCTAssertTrue(finalProductUsage.contains("STPCardScanner"))
-
-        // Switch to US bank account directly from card form
-        app.staticTexts["US bank account"].waitForExistenceAndTap()
-
-        // Switch back to card form
-        app.staticTexts["Card"].waitForExistenceAndTap()
-
-        // Scanner should remain open (close button present, scan button not hittable)
-        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 5))
-        XCTAssertFalse(scanButton.isHittable)
-
-        // Close customer sheet
-        app.buttons["Close"].waitForExistenceAndTap()
-    }
-
-    func testCustomerSheetFormStatePersistence() throws {
-        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePay = .on
-        loadPlayground(app, settings)
-
-        let selectButton = app.staticTexts["None"]
-        XCTAssertTrue(selectButton.waitForExistence(timeout: timeout))
-        selectButton.tap()
-
-        // Tap + Add to enter card form
-        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
-
-        // Start entering card details (enter one digit in card number field)
+        // Verify that editing a form field closes the scanner
         let cardNumberField = app.textFields["Card number"]
-        XCTAssertTrue(cardNumberField.waitForExistence(timeout: timeout))
+        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should exist")
         cardNumberField.tap()
-        cardNumberField.typeText("4")
 
-        // Switch to a different payment method (US bank account) directly from card form
-        app.staticTexts["US bank account"].waitForExistenceAndTap()
+        // Verify scanner is closed after editing form field
+        XCTAssertFalse(closeScannerButton.exists, "Card scanner should be closed when editing form fields")
 
-        // Switch back to card form (should show as "Card" title)
-        app.staticTexts["Card"].waitForExistenceAndTap()
+        // Close the card entry form
+        let backButton = app.buttons["Back"]
+        XCTAssertTrue(backButton.waitForExistence(timeout: timeout))
+        backButton.tap()
 
-        // Verify that the entered card number digit is still there
-        let cardNumberFieldAgain = app.textFields["Card number"]
-        XCTAssertTrue(cardNumberFieldAgain.waitForExistence(timeout: timeout))
-        let fieldValue = cardNumberFieldAgain.value as? String
-        XCTAssertTrue(fieldValue?.hasPrefix("4") == true, "Card number field should preserve entered data when returning to card form, got: \(fieldValue ?? "nil")")
-
-        // Close customer sheet
-        app.buttons["Close"].waitForExistenceAndTap()
+        let closeButton = app.buttons["Close"]
+        XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
+        closeButton.tap()
     }
 }

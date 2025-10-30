@@ -62,7 +62,7 @@ class HCaptcha: NSObject {
     convenience init(
         apiKey: String? = nil,
         passiveApiKey: Bool = false,
-        baseURL: URL? = nil,
+        baseURL: URL? = URL(string: "http://localhost"),
         locale: Locale? = nil,
         size: HCaptchaSize = .invisible,
         orientation: HCaptchaOrientation = .portrait,

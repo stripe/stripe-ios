@@ -18,15 +18,37 @@ import UIKit
 struct CustomerSheetTestPlayground: View {
     @StateObject var playgroundController: CustomerSheetTestPlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
+    @State private var isViewReady = false
 
     init(settings: CustomerSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController(settings: settings))
     }
 
+    init() {
+        _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController())
+    }
+
     var body: some View {
-        VStack {
-            ScrollView {
+        if !isViewReady {
+            return AnyView(
                 VStack {
+                    ProgressView()
+                    Text("Loading playground...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        isViewReady = true
+                    }
+                }
+            )
+        }
+
+        return AnyView(VStack {
+            ScrollView {
+                LazyVStack {
                     Group {
                         HStack {
                             if ProcessInfo.processInfo.environment["UITesting"] != nil {
@@ -72,6 +94,7 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
                         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
+                        SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
@@ -106,8 +129,9 @@ struct CustomerSheetTestPlayground: View {
             Divider()
             CustomerSheetButtons()
                 .environmentObject(playgroundController)
-        }
+        })
     }
+
     var customerKeyTypeBinding: Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
         Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
             return playgroundController.settings.customerKeyType

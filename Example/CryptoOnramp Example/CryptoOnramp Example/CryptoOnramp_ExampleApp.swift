@@ -24,6 +24,11 @@ struct CryptoOnramp_ExampleApp: App {
                     Color.black.opacity(0.3)
                         .ignoresSafeArea()
                     ProgressView("Loading…")
+                        .padding()
+                        .background {
+                            Color(.tertiarySystemBackground)
+                                .cornerRadius(8)
+                        }
                 }
             }
         }

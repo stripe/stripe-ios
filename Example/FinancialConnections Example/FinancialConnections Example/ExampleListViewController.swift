@@ -37,7 +37,7 @@ class ExampleListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        title = "Financial Connections"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.cellIdentifier)
     }
 

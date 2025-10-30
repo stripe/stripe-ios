@@ -6,9 +6,13 @@
 
 "App Settings" = "Tetapan Aplikasi";
 
-"Back identity card photo successfully uploaded" = "Foto bahagian belakang kad pengenalan berjaya dimuat naik";
+"Back %@ photo successfully uploaded" = "Foto bahagian belakang %@ berjaya dimuat naik";
 
-"Back of identity card" = "Bahagian belakang kad pengenalan";
+"Back identity document photo successfully uploaded" = "Foto bahagian belakang dokumen pengenalan diri berjaya dimuat naik";
+
+"Back of %@" = "Bahagian belakang %@";
+
+"Back of driver's license or government-issued photo ID" = "Belakang lesen memandu atau ID bergambar yang dikeluarkan kerajaan";
 
 "Back of identity document" = "Bahagian belakang dokumen pengenalan";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Butiran tidak kelihatan";
 
+"Flip your %@ over to the other side" = "Terbalikkan %@ anda ke bahagian yang sebelah lagi";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Terbalikkan lesen memandu atau ID bergambar yang dikeluarkan kerajaan ke bahagian belakang";
+
 "Flip your identity card over to the other side" = "Terbalikkan kad pengenalan anda ke sebelah satu lagi";
 
-"Front identity card photo successfully uploaded" = "Foto bahagian hadapan kad pengenalan berjaya dimuat naik";
+"Front %@ photo successfully uploaded" = "Foto bahagian hadapan %@ berjaya dimuat naik";
 
-"Front of identity card" = "Bahagian hadapan kad pengenalan";
+"Front identity document photo successfully uploaded" = "Foto bahagian hadapan dokumen pengenalan diri berjaya dimuat naik";
+
+"Front of %@" = "Bahagian hadapan %@";
+
+"Front of driver's license or government-issued photo ID" = "Hadapan lesen memandu atau ID bergambar yang dikeluarkan kerajaan";
+
+"Front of driver's license or passport" = "Hadapan lesen memandu atau pasport";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Hadapan lesen memandu, pasport, atau ID bergambar yang dikeluarkan kerajaan";
 
 "Front of identity document" = "Bahagian hadapan dokumen pengenalan";
+
+"Front of passport or government-issued photo ID" = "Hadapan pasport atau ID bergambar yang dikeluarkan kerajaan";
 
 "Get ready to scan your photo ID" = "Bersedia untuk mengimbas ID berfoto anda";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Pustaka Foto";
 
-"Please upload images of the front and back of your identity card" = "Sila muat naik imej hadapan dan belakang kad pengenalan anda";
+"Please upload images of the front and back of your %@" = "Sila muat naik imej bahagian hadapan dan belakang %@ anda";
+
+"Please upload images of the front and back of your identity document" = "Sila muat naik imej bahagian hadapan dan belakang dokumen pengenalan anda";
+
+"Position your %@ in the center of the frame" = "Letakkan %@ anda di tengah-tengah bingkai";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "letakkan lesen memandu atau ID bergambar yang dikeluarkan kerajaan di tengah bingkai";
+
+"Position your driver's license or passport in the center of the frame" = "Letakkan lesen memandu atau pasport di tengah bingkai";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Letakkan lesen memandu, pasport, atau ID bergambar yang dikeluarkan kerajaan di tengah bingkai";
 
 "Position your face in the center of the frame." = "Letakkan muka anda di tengah bingkai";
 
-"Position your identity card in the center of the frame" = "Letakkan kad pengenalan anda di tengah bingkai";
+"Position your identity document in the center of the frame" = "Letakkan dokumen pengenalan anda di tengah-tengah bingkai";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Letakkan pasport atau ID bergambar yang dikeluarkan kerajaan di tengah bingkai";
 
 "Retake Photos" = "Ambil Semula Foto";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Pilih lokasi sumber untuk memuat naik bahagian hadapan dokumen pengenalan anda";
 
-"Select back identity card photo" = "Pilih foto bahagian belakang kad pengenalan";
+"Select back %@ photo" = "Pilih foto bahagian belakang %@";
 
-"Select front identity card photo" = "Pilih foto bahagian hadapan kad pengenalan";
+"Select back identity document photo" = "Pilih foto bahagian belakang dokumen pengenalan diri";
+
+"Select front %@ photo" = "Pilih foto bahagian hadapan %@";
+
+"Select front identity document photo" = "Pilih foto bahagian hadapan dokumen pengenalan diri";
 
 "Selfie" = "Swafoto";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Muat Naik Foto";
 
+"Upload your %@" = "Muat naik %@ anda";
+
 "Upload your photo ID" = "Muat naik ID berfoto anda";
 
-"Uploading back identity card photo" = "Foto bahagian belakang kad pengenalan sedang dimuat naik";
+"Uploading back %@ photo" = "Memuat naik foto bahagian belakang %@";
 
-"Uploading front identity card photo" = "Foto bahagian hadapan kad pengenalan sedang dimuat naik";
+"Uploading back identity document photo" = "Memuat naik foto bahagian belakang dokumen pengenalan diri";
+
+"Uploading front %@ photo" = "Memuat naik foto bahagian hadapan %@";
+
+"Uploading front identity document photo" = "Memuat naik foto bahagian hadapan dokumen pengenalan diri";
 
 "Verify your identity" = "Tentusahkan identiti anda";
 

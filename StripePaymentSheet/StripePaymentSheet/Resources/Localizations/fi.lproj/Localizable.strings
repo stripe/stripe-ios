@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Lisää";
 
 "Add US bank account" = "Lisää yhdysvaltalainen pankkitili";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Lisää uusi maksutapa";
 
 "Add your payment information" = "Lisää maksutiedot";
-
-"Agree and continue" = "Hyväksy ja jatka";
 
 "Approve payment" = "Hyväksy maksu";
 
@@ -60,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jatkamalla hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ kanssa ja <link>Linkin kanssa</link>. Hyväksyt myös Linkin <terms>ehdot</terms> ja <privacy>tietosuojakäytännön</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ ja <link>Linkin kanssa</link> Linkin <terms>ehtojen</terms> ja <privacy>tietosuojakäytännön</privacy> mukaisesti.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ kanssa.";
 
@@ -83,6 +79,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Antamalla puhelinnumerosi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi kohteille %1$@ ja %2$@ valtuutat tallentamaan tietosi kohteen %3$@ kanssa tulevia ostoksia varten, ja valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi yritykselle %@, valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -114,25 +114,27 @@
 
 "Continue another way" = "Jatka toisella tavalla";
 
+"Create an account with Link for faster checkout across the web" = "Luo tili Link-palvelulla nopeampaa verkkomaksamista varten";
+
 "Debit or credit card" = "Pankki- tai luottokortti";
 
 "Default" = "Oletus";
 
 "Default payment method" = "Oletusmaksutapa";
 
+"Did you mean %@? %@." = "Tarkoititko %1$@? %2$@.";
+
 "EPS Bank" = "EPS-pankki";
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
-"Enter the code sent to %@ to use your saved information." = "Syötä kohteeseen %@ lähetetty koodi käyttääksesi tallennettuja tietoja.";
+"Enter the code sent to %@." = "Syötä koodi, joka lähetettiin numeroon %s.";
 
 "FPX Bank" = "FPX-pankki";
 
 "Failed to connect" = "Yhteyden muodostaminen epäonnistui";
 
 "Fast, secure checkout" = "Nopea, turvallinen maksaminen";
-
-"For security, please re-enter your card’s security code." = "Turvallisuussyistä sinun on annettava korttisi turvakoodi uudelleen.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saat %@ takaisin, kun maksat ensimmäistä kertaa pankillasi. <terms>Katso ehdot</terms>";
 
@@ -282,9 +284,9 @@
 
 "The provided verification code is incorrect." = "Annettu vahvistuskoodi on virheellinen.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Tämä kortti on erääntynyt. Päivitä kortin tiedot tai valitse toinen maksutapa.";
-
 "This is your default" = "Tämä on oletusarvoinen";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Tämä maksutapa poistetaan, mutta se on edelleen käytettävissä %@ tilauksissa.";
 
 "Too many attempts. Please try again in a few minutes." = "Liian monta yritystä. Kokeile uudelleen muutaman minuutin kuluttua.";
 
@@ -296,9 +298,9 @@
 
 "Use billing address for shipping" = "Käytä laskutusosoitetta toimituksessa";
 
-"Use your saved info to check out faster" = "Käytä tallennettuja tietoja nopeampaan maksamiseen";
-
 "View more" = "Näytä lisää";
+
+"Yes, update" = "Kyllä, päivitä";
 
 "Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
 

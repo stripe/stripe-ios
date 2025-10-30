@@ -8,8 +8,8 @@
 import Foundation
 
 /// Supported crypto networks for wallet address registration.
-@_spi(CryptoOnrampSDKPreview)
-public enum CryptoNetwork: String, Codable {
+@_spi(STP)
+public enum CryptoNetwork: String, Codable, CaseIterable {
     case bitcoin = "bitcoin"
     case ethereum = "ethereum"
     case solana = "solana"

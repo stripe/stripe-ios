@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (neobavezno)";
 
 "(not accepted)" = "(nije prihvaćena)";
@@ -37,8 +39,6 @@
 "Country or region" = "Zemlja ili regija";
 
 "County" = "Grofovija";
-
-"Date is empty." = "Datum je prazan.";
 
 "Department" = "Administrativna jedinica";
 
@@ -144,6 +144,6 @@
 
 "Your postal code is incomplete." = "Vaš poštanski broj nije kompletan.";
 
-"Your postal code is invalid." = "Vaš poštanski broj nevaljan je.";
+"Your postal code is invalid." = "Vaš poštanski broj nije valjan.";
 
 "ZIP" = "ZIP";

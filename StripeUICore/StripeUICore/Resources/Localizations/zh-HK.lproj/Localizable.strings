@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@（可選）";
 
 "(not accepted)" = "（未接受）";
@@ -37,8 +39,6 @@
 "Country or region" = "國家或地區";
 
 "County" = "縣";
-
-"Date is empty." = "日期為空。";
 
 "Department" = "部門";
 
@@ -144,6 +144,6 @@
 
 "Your postal code is incomplete." = "您的郵區編號不完整。";
 
-"Your postal code is invalid." = "您的郵政編碼無效。";
+"Your postal code is invalid." = "您的郵區編號無效。";
 
 "ZIP" = "郵區編號";

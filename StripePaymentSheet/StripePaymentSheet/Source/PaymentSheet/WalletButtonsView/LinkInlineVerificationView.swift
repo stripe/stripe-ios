@@ -82,7 +82,8 @@ struct LinkInlineVerificationView: View {
                         configuration: .init(
                             enableDigitGrouping: false,
                             font: LinkUI.font(forTextStyle: .title),
-                            itemCornerRadius: viewModel.appearance.cornerRadius,
+                            // TODO(iOS 26): Is this supposed to apply a Liquid Glass style?
+                            itemCornerRadius: viewModel.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
                             itemFocusBackgroundColor: viewModel.appearance.colors.background
                         ),
                         controller: viewModel.textFieldController,
@@ -148,7 +149,8 @@ enum Stubs {
         unredactedPhoneNumber: "+17070707070",
         phoneNumberCountry: "US",
         verificationSessions: [],
-        supportedPaymentDetailsTypes: [.card]
+        supportedPaymentDetailsTypes: [.card],
+        mobileFallbackWebviewParams: nil
     )
 
     static func displayablePaymentDetails(
@@ -171,7 +173,8 @@ enum Stubs {
             session: isRegistered ? Self.consumerSession : nil,
             publishableKey: "pk_test_123",
             displayablePaymentDetails: paymentMethodType.map { Self.displayablePaymentDetails(paymentMethodType: $0) },
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }

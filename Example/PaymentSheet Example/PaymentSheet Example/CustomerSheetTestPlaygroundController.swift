@@ -5,7 +5,7 @@
 
 import Combine
 @_spi(STP) import StripeCore
-@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -17,6 +17,18 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     @Published var paymentOptionSelection: CustomerSheet.PaymentOptionSelection?
 
     private var subscribers: Set<AnyCancellable> = []
+
+    convenience init() {
+        self.init(settings: .defaultValues())
+        Task.detached {
+            let settings = Self.settingsFromDefaults() ?? .defaultValues()
+
+            await MainActor.run {
+                self.settings = settings
+            }
+        }
+    }
+
     init(settings: CustomerSheetTestPlaygroundSettings) {
         // Hack to ensure we don't force the native flow unless we're in a UI test
         if ProcessInfo.processInfo.environment["UITesting"] == nil {
@@ -28,9 +40,11 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         self.settings = settings
         self.currentlyRenderedSettings = .defaultValues()
         $settings
-            .sink { newValue in
-            if !self.isLoading && newValue.autoreload == .on {
-                self.load()
+            .sink { [weak self] newValue in
+                if let isLoading = self?.isLoading,
+                   !isLoading,
+                   newValue.autoreload == .on {
+                self?.load()
             }
         }.store(in: &subscribers)
     }
@@ -68,10 +82,10 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
     func appearanceButtonTapped() {
         if #available(iOS 14.0, *) {
-            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
-                self.appearance = updatedAppearance
-                self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load()
+            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { [weak self] updatedAppearance in
+                self?.appearance = updatedAppearance
+                self?.rootViewController.dismiss(animated: true, completion: nil)
+                self?.load()
             }))
             rootViewController.present(vc, animated: true, completion: nil)
         } else {
@@ -82,7 +96,9 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     func presentCustomerSheet() {
-        customerSheet?.present(from: rootViewController, completion: { result in
+        customerSheet?.present(from: rootViewController, completion: { [weak self] result in
+            guard let self else { return }
+
             switch result {
             case .selected(let paymentOptionSelection), .canceled(let paymentOptionSelection):
                 self.paymentOptionSelection = paymentOptionSelection
@@ -143,6 +159,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.enablePassiveCaptcha = settings.enablePassiveCaptcha == .on
 
         return configuration
     }
@@ -156,7 +173,8 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func createCustomerSheet(configuration: CustomerSheet.Configuration,
                              customerId: String,
                              customerSessionClientSecret: String?) -> CustomerSheet {
-        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: {
+        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: { [weak self] in
+            guard let self else { throw NSError(domain: "", code: 0) }
             return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
         })
         return CustomerSheet(configuration: configuration,

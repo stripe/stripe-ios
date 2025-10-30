@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Hozzáadás";
 
 "Add US bank account" = "Amerikai bankszámla hozzáadása";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Új fizetési mód hozzáadása";
 
 "Add your payment information" = "Fizetési adatok megadása";
-
-"Agree and continue" = "Beleegyezés és folytatás";
 
 "Approve payment" = "Fizetés jóváhagyása";
 
@@ -60,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@ és <link>Link</link>. Ön elfogadja a Link <terms>feltételeit</terms> és <privacy>adatvédelmi szabályzatát</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@ és <link>a Linknél</link> a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@.";
 
@@ -81,6 +77,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A telefonszáma megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy megrendelését elküldi ide: %1$@ és %2$@, Ön beleegyezik abba, hogy adatait a(z) %3$@ szolgáltatás menti a jövőbeni vásárlásokhoz, illetve beleegyezik abba, hogy engedélyezi a kifizetéseket <terms>a jelen feltételek</terms> szerint.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "A megrendelésének a(z) %@ részére történő elküldésével Ön beleegyezik abba, hogy engedélyezi a fizetéseket a <terms>jelen feltételek</terms> szerint.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -112,25 +112,27 @@
 
 "Continue another way" = "Folytatás más módon";
 
+"Create an account with Link for faster checkout across the web" = "Hozzon létre egy fiókot a Link segítségével a gyorsabb fizetéshez az interneten";
+
 "Debit or credit card" = "Betéti vagy hitelkártya";
 
 "Default" = "Alapértelmezett";
 
 "Default payment method" = "Alapértelmezett fizetési mód";
 
+"Did you mean %@? %@." = "Erre gondolt: %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Cím megadása kézzel";
 
-"Enter the code sent to %@ to use your saved information." = "A mentett adatai használatához adja meg a(z) %@ telefonszámra küldött kódot.";
+"Enter the code sent to %@." = "Adja meg a(z) %s telefonszámra küldött kódot.";
 
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "Nem sikerült csatlakozni";
 
 "Fast, secure checkout" = "Gyors és biztonságos fizetés";
-
-"For security, please re-enter your card’s security code." = "Biztonsági okból adja meg újra kártyája biztonsági kódját.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Kapjon vissza %@ összeget, amikor először fizet bankjával. <terms>Olvassa el a feltételeket</terms>";
 
@@ -280,9 +282,9 @@
 
 "The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Ez a kártya lejárt. Frissítse a kártyájat, vagy használjon másik fizetési módot.";
-
 "This is your default" = "Ez az alapértelmezett";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Ez a fizetési mód eltávolításra kerül, de továbbra is elérhető marad %@ előfizetések esetén.";
 
 "Too many attempts. Please try again in a few minutes." = "Túl sok kísérlet. Próbálja meg újra néhány perc múlva.";
 
@@ -294,9 +296,9 @@
 
 "Use billing address for shipping" = "Számlázási cím használata a szállításhoz";
 
-"Use your saved info to check out faster" = "Mentett adatok használata a gyorsabb fizetéshez";
-
 "View more" = "Továbbiak megjelenítése";
+
+"Yes, update" = "Igen, frissítés";
 
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 

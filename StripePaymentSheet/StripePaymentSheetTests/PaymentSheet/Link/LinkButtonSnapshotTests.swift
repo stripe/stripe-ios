@@ -19,7 +19,7 @@ class LinkButtonSnapshotTests: STPSnapshotTestCase {
         let viewModel = LinkButtonViewModel()
         viewModel.setAccount(nil)
 
-        let linkButton = LinkButton(viewModel: viewModel, action: {})
+        let linkButton = LinkButton(viewModel: viewModel, borderColor: .gray, action: {})
         let vc = UIHostingController(rootView: linkButton)
 
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 100))
@@ -37,7 +37,7 @@ class LinkButtonSnapshotTests: STPSnapshotTestCase {
             isRegistered: true
         ))
 
-        let linkButton = LinkButton(viewModel: viewModel, action: {})
+        let linkButton = LinkButton(viewModel: viewModel, borderColor: .gray, action: {})
         let vc = UIHostingController(rootView: linkButton)
 
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 100))
@@ -55,7 +55,7 @@ class LinkButtonSnapshotTests: STPSnapshotTestCase {
             isRegistered: true
         ))
 
-        let linkButton = LinkButton(viewModel: viewModel, action: {})
+        let linkButton = LinkButton(viewModel: viewModel, borderColor: .gray, action: {})
         let vc = UIHostingController(rootView: linkButton)
 
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 100))
@@ -75,7 +75,7 @@ class LinkButtonSnapshotTests: STPSnapshotTestCase {
         let viewModel = LinkButtonViewModel()
         viewModel.setAccount(linkAccount)
 
-        let linkButton = LinkButton(viewModel: viewModel, action: {})
+        let linkButton = LinkButton(viewModel: viewModel, borderColor: .gray, action: {})
         let vc = UIHostingController(rootView: linkButton)
 
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 100))
@@ -95,7 +95,7 @@ class LinkButtonSnapshotTests: STPSnapshotTestCase {
         let viewModel = LinkButtonViewModel()
         viewModel.setAccount(linkAccount)
 
-        let linkButton = LinkButton(viewModel: viewModel, action: {})
+        let linkButton = LinkButton(viewModel: viewModel, borderColor: .green, action: {})
         let vc = UIHostingController(rootView: linkButton)
 
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 100))
@@ -117,7 +117,8 @@ enum Stubs {
         unredactedPhoneNumber: "+17070707070",
         phoneNumberCountry: "US",
         verificationSessions: [],
-        supportedPaymentDetailsTypes: [.card, .bankAccount]
+        supportedPaymentDetailsTypes: [.card, .bankAccount],
+        mobileFallbackWebviewParams: nil
     )
 
     static func displayablePaymentDetails(
@@ -140,7 +141,8 @@ enum Stubs {
             session: isRegistered ? Self.consumerSession : nil,
             publishableKey: "pk_test_123",
             displayablePaymentDetails: paymentMethodType.map { Self.displayablePaymentDetails(paymentMethodType: $0) },
-            useMobileEndpoints: true
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }

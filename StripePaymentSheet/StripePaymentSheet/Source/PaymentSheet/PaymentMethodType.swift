@@ -73,7 +73,7 @@ extension PaymentSheet {
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
-        func makeImage(forDarkBackground: Bool = false, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+        func makeImage(forDarkBackground: Bool, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
@@ -386,14 +386,8 @@ extension PaymentSheet {
                 missingRequirements.formUnion(requirements)
             }
 
-            // - US Bank Account is *not* an available payment method.
-            if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.unexpectedUsBankAccount)
-            }
-
-            // - Link Funding Sources contains Bank Account.
-            if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.linkFundingSourcesMissingBankAccount)
+            if elementsSession.linkSettings?.instantDebitsOnboardingEnabled != true {
+                missingRequirements.insert(.instantDebitsDisabledForOnboarding)
             }
 
             // - We collect an email, or a default non-empty email has been provided.
@@ -436,14 +430,8 @@ extension PaymentSheet {
                 missingRequirements.formUnion(requirements)
             }
 
-            // - Link Funding Sources contains Bank Account.
-            if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.linkFundingSourcesMissingBankAccount)
-            }
-
-            // - US Bank Account is *not* an available payment method.
-            if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.unexpectedUsBankAccount)
+            if elementsSession.linkSettings?.instantDebitsOnboardingEnabled != true {
+                missingRequirements.insert(.instantDebitsDisabledForOnboarding)
             }
 
             // - We collect an email, or a default non-empty email has been provided.

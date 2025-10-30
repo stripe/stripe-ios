@@ -21,15 +21,16 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         let e2 = expectation(description: "External PM confirm handler called")
 
         var configuration = PaymentSheet.Configuration()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, _, completion in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, _ in
             XCTAssertEqual(externalPaymentMethodType, "external_paypal")
             e2.fulfill()
             XCTAssertTrue(Thread.isMainThread)
-            completion(.completed)
+            return .completed
         })
 
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
+            return ""
         }))
 
         // Make the form
@@ -61,7 +62,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
     func testExternalFormBillingDetails() async throws {
         let externalConfirmHandlerCalled = expectation(description: "External PM confirm handler called")
         var configuration = PaymentSheet.Configuration()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails, completion in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { externalPaymentMethodType, billingDetails in
             XCTAssertEqual(externalPaymentMethodType, "external_paypal")
             // (2) ...and billing details collected in the form should be passed to the merchant's confirm handler
             XCTAssertEqual(billingDetails.name, "Jane Doe")
@@ -73,7 +74,7 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             XCTAssertEqual(billingDetails.address?.postalCode, "94080")
             XCTAssertEqual(billingDetails.address?.country, "US")
             externalConfirmHandlerCalled.fulfill()
-            completion(.completed)
+            return .completed
         })
         // Configuring PaymentSheet to collect full billing details with default values...
         configuration.billingDetailsCollectionConfiguration.name = .always
@@ -94,8 +95,9 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
             phone: "+15551234567"
         )
 
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
+            return ""
         }))
 
         // (1) ...should result in the external payment method form showing billing detail fields pre-populated with default values...
@@ -132,12 +134,13 @@ final class PaymentSheetExternalPaymentMethodTests: XCTestCase {
         func _confirm(with merchantReturnedResult: PaymentSheetResult) {
             let e = expectation(description: "External PM confirm handler called")
             var configuration = PaymentSheet.Configuration()
-            configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
+            configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
                 // The merchant's returned result should be passed back in `PaymentSheet.confirm`
-                completion(merchantReturnedResult)
+                return merchantReturnedResult
             })
-            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
                 XCTFail("Intent confirm handler shouldn't be called")
+                return ""
             }))
             PaymentSheet.confirm(
                 configuration: configuration,

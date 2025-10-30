@@ -117,6 +117,10 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
     }
 
     func testIsLinkSignupEnabled_enabled_for_linkSignupOptInFeatureEnabled_if_general_signup_disabled() {
+        // Set a test mode publishable key so that we don't check for attestation support
+        let originalPublishableKey = STPAPIClient.shared.publishableKey
+        STPAPIClient.shared.publishableKey = "pk_test_123"
+
         // Lookup happened during initialization and an email was provided
         LinkAccountContext.shared.account = ._testValue(email: "john@doe.com", isRegistered: false)
 
@@ -129,10 +133,15 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let isLinkSignupEnabled = PaymentSheet.isLinkSignupEnabled(elementsSession: elementsSession, configuration: configuration)
 
+        STPAPIClient.shared.publishableKey = originalPublishableKey
         XCTAssertTrue(isLinkSignupEnabled, "Link inline signup should be enabled for linkSignupOptInFeatureEnabled even if general signup disabled")
     }
 
     func testIsLinkSignupEnabled_enabled_for_linkSignupOptInFeatureEnabled_if_email_provided() {
+        // Set a test mode publishable key so that we don't check for attestation support
+        let originalPublishableKey = STPAPIClient.shared.publishableKey
+        STPAPIClient.shared.publishableKey = "pk_test_123"
+
         // Lookup happened during initialization and an email was provided
         LinkAccountContext.shared.account = ._testValue(email: "john@doe.com", isRegistered: false)
 
@@ -142,10 +151,15 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let isLinkSignupEnabled = PaymentSheet.isLinkSignupEnabled(elementsSession: elementsSession, configuration: configuration)
 
+        STPAPIClient.shared.publishableKey = originalPublishableKey
         XCTAssertTrue(isLinkSignupEnabled, "Link inline signup should be enabled for linkSignupOptInFeatureEnabled if an email was provided")
     }
 
     func testIsLinkSignupEnabled_disabled_for_linkSignupOptInFeatureEnabled_if_no_email_provided() {
+        // Set a test mode publishable key so that we don't check for attestation support
+        let originalPublishableKey = STPAPIClient.shared.publishableKey
+        STPAPIClient.shared.publishableKey = "pk_test_123"
+
         // Lookup happened during initialization and no email was provided
         LinkAccountContext.shared.account = nil
 
@@ -158,14 +172,16 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let isLinkSignupEnabled = PaymentSheet.isLinkSignupEnabled(elementsSession: elementsSession, configuration: configuration)
 
+        STPAPIClient.shared.publishableKey = originalPublishableKey
         XCTAssertFalse(isLinkSignupEnabled, "Link inline signup should be disabled for linkSignupOptInFeatureEnabled if no email was provided")
     }
 }
 
-private extension LinkSettings {
+extension LinkSettings {
     static func _testValue(
         disableSignup: Bool = false,
-        flags: [String: Bool]? = nil
+        flags: [String: Bool]? = nil,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> LinkSettings {
         return .init(
             fundingSources: [.card, .bankAccount],
@@ -180,6 +196,9 @@ private extension LinkSettings {
             linkConsumerIncentive: nil,
             linkDefaultOptIn: nil,
             linkEnableDisplayableDefaultValuesInECE: nil,
+            linkShowPreferDebitCardHint: nil,
+            attestationStateSyncEnabled: nil,
+            linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
             allResponseFields: [:]
         )
     }

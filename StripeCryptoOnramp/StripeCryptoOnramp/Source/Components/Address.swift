@@ -10,8 +10,8 @@ import Foundation
 @_spi(STP) import StripePaymentSheet
 
 /// Represents an address used with `KYCInfo`.
-@_spi(CryptoOnrampSDKPreview)
-public struct Address: Equatable {
+@_spi(STP)
+public struct Address: Equatable, Decodable {
 
     /// City, district, suburb, town, or village.
     public var city: String?

@@ -87,6 +87,12 @@ extension LinkPaymentMethodPicker {
                 activityIndicator.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
                 activityIndicator.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             ])
+
+            if LinkUI.useLiquidGlass {
+                NSLayoutConstraint.activate([
+                    heightAnchor.constraint(greaterThanOrEqualToConstant: LinkUI.minimumItemHeightForLiquidGlass),
+                ])
+            }
         }
 
         private func update() {

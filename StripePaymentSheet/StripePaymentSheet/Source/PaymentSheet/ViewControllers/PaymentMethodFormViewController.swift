@@ -101,7 +101,8 @@ class PaymentMethodFormViewController: UIViewController {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         isLinkUI: Bool = false,
         delegate: PaymentMethodFormViewControllerDelegate,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
         self.paymentMethodType = type
         self.intent = intent
@@ -122,7 +123,8 @@ class PaymentMethodFormViewController: UIViewController {
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
                 analyticsHelper: analyticsHelper,
-                linkAppearance: linkAppearance
+                linkAppearance: linkAppearance,
+                previousLinkInlineSignupAction: previousLinkInlineSignupAction
             ).make()
             self.formCache[type] = form
         }
@@ -202,7 +204,7 @@ class PaymentMethodFormViewController: UIViewController {
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             addressSpecProvider: AddressSpecProvider.shared,
-            verticalOffset: PaymentSheetUI.navBarPadding
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )
         autoCompleteViewController.delegate = self
 
@@ -233,11 +235,11 @@ extension PaymentMethodFormViewController: ElementDelegate {
             }
         }
 
-        if let linkSignup = form.linkInlineSignupElement, let mandateElement = form.mandateElement {
-            // Update the mandate with or without Link
+        if let linkSignup = form.linkInlineSignupElement, linkSignup.viewModel.mode == .signupOptIn, let mandateElement = form.mandateElement {
+            // Update the mandate based on the checkbox state
+            let variant = MandateVariant.updated(shouldSignUpToLink: linkSignup.viewModel.saveCheckboxChecked)
             let text = PaymentSheetFormFactory.makeMandateText(
-                useCombinedReuseAndLinkSignupText: linkSignup.viewModel.mode == .signupOptIn,
-                shouldSaveToLink: linkSignup.viewModel.saveCheckboxChecked,
+                variant: variant,
                 merchantName: configuration.merchantDisplayName
             )
             mandateElement.mandateTextView.attributedText = text
@@ -334,6 +336,11 @@ extension PaymentMethodFormViewController {
         let linkMode = elementsSession.linkSettings?.linkMode
         let billingDetails = instantDebitsFormElement?.billingDetails
 
+        let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
+        let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
+        let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: analyticsHelper, intent: intent, elementsSession: elementsSession)
+
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
@@ -341,7 +348,9 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
+            allowRedisplay: allowRedisplay?.stringValue,
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 

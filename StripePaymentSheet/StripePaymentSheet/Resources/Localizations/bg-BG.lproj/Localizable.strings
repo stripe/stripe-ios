@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@••••%2$@";
-
 "+ Add" = "+ Добавяне";
 
 "Add US bank account" = "Добавяне на банкова сметка в САЩ";
@@ -17,8 +15,6 @@
 "Add new payment method" = "Добавяне на нов метод на плащане";
 
 "Add your payment information" = "Добавете своята информация за плащането";
-
-"Agree and continue" = "Съгласяване и продължаване";
 
 "Approve payment" = "Одобряване на плащането";
 
@@ -60,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Продължавайки, вие се съгласявате да запазите информацията си за бъдещи покупки с %@ и <link>Link</link>. Също така се съгласявате и с <terms>Условията за ползване</terms> и <privacy>поверителност</privacy> на Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Продължавайки, Вие се съгласявате да запазите информацията си за бъдещи покупки с %@ и <link>Link</link> според <terms>Условията</terms> и <privacy>Правилата</privacy> на Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Продължавайки, вие се съгласявате да запазите информацията си за бъдещи покупки с %@.";
 
@@ -83,6 +79,10 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С предоставяне на телефонния си номер, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правила за защита на личните данни</privacy>на Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да оторизирате плащания съгласно <terms>тези условия</terms>.";
+
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %1$@ и %2$@ се съгласявате да запазите информацията си в %3$@ за бъдещи покупки и се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %@ Вие се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -114,25 +114,27 @@
 
 "Continue another way" = "Продължете по друг начин";
 
+"Create an account with Link for faster checkout across the web" = "Създаване на акаунт с Link за по-бързо финализиране на плащане в мрежата";
+
 "Debit or credit card" = "Дебитна или кредитна карта";
 
 "Default" = "По подразбиране";
 
 "Default payment method" = "Начин на плащане по подразбиране";
 
+"Did you mean %@? %@." = "Имахте предвид %1$@? %2$@.";
+
 "EPS Bank" = "Банка EPS";
 
 "Enter address manually" = "Ръчно въвеждане на адрес";
 
-"Enter the code sent to %@ to use your saved information." = "Въведете кода, изпратен на %@, за да използвате запазената си информация.";
+"Enter the code sent to %@." = "Въведете кода, изпратен на %s.";
 
 "FPX Bank" = "Банка FPX";
 
 "Failed to connect" = "Неуспешно свързване";
 
 "Fast, secure checkout" = "Бързо и сигурно финализиране на плащане";
-
-"For security, please re-enter your card’s security code." = "От съображения за сигурност, моля, въведете отново защитния код на Вашата банкова карта.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Получете %@ обратно при първо плащане по банков път. <terms>Вижте условията</terms>";
 
@@ -282,9 +284,9 @@
 
 "The provided verification code is incorrect." = "Предоставеният код за потвърждаване е неправилен.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Срокът на валидност на тази банкова карта е изтекъл. Актуализирайте информацията за картата си или изберете друг начин на плащане.";
-
 "This is your default" = "Това е настройката по подразбиране.";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Този метод на плащане ще бъде премахнат, но ще остане наличен за абонаменти %@.";
 
 "Too many attempts. Please try again in a few minutes." = "Твърде много опити. Моля, опитайте отново след няколко минути.";
 
@@ -296,9 +298,9 @@
 
 "Use billing address for shipping" = "Използвайте адреса за фактуриране за доставка";
 
-"Use your saved info to check out faster" = "Използвайте запазената си информация за по-бързо финализиране";
-
 "View more" = "Вижте повече";
+
+"Yes, update" = "Да, актуализиране";
 
 "Your IBAN should start with a two-letter country code." = "Вашият IBAN трябва да започва с двубуквен код на държава.";
 

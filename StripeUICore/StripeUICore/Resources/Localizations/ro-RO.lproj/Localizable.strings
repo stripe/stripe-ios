@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (opțional)";
 
 "(not accepted)" = "(nu este acceptat)";
@@ -37,8 +39,6 @@
 "Country or region" = "Țară sau regiune";
 
 "County" = "Județ";
-
-"Date is empty." = "Data nu este completată.";
 
 "Department" = "Departament";
 

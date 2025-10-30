@@ -21,66 +21,15 @@ extension UIViewController {
 
     func presentNativeLink(
         selectedPaymentDetailsID: String?,
-        linkAccount: PaymentSheetLinkAccount? = LinkAccountContext.shared.account,
         configuration: PaymentElementConfiguration,
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
-        verificationDismissed: (() -> Void)? = nil,
-        callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
-    ) {
-        if let linkAccount, linkAccount.sessionState == .requiresVerification {
-            let verificationController = LinkVerificationController(
-                mode: .inlineLogin,
-                linkAccount: linkAccount,
-                configuration: configuration,
-                appearance: linkAppearance,
-                allowLogoutInDialog: true
-            )
-
-            verificationController.present(from: bottomSheetController ?? self) { [weak self] result in
-                if case .switchAccount = result {
-                    // The user logged out in the dialog. Clear the account, but still open the Link flow
-                    // to allow them to sign into another account.
-                    LinkAccountContext.shared.account = nil
-                }
-
-                guard let self, case .completed = result else {
-                    verificationDismissed?()
-                    return
-                }
-
-                self.presentNativeLink(
-                    selectedPaymentDetailsID: selectedPaymentDetailsID,
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper,
-                    linkAppearance: linkAppearance,
-                    callback: callback
-                )
-            }
-        } else {
-            presentNativeLink(
-                selectedPaymentDetailsID: selectedPaymentDetailsID,
-                intent: intent,
-                elementsSession: elementsSession,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                linkAppearance: linkAppearance,
-                callback: callback
-            )
-        }
-    }
-
-    private func presentNativeLink(
-        selectedPaymentDetailsID: String?,
-        intent: Intent,
-        elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
-        analyticsHelper: PaymentSheetAnalyticsHelper,
-        linkAppearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
+        shouldShowSecondaryCta: Bool = true,
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -90,12 +39,16 @@ extension UIViewController {
             configuration: configuration,
             logPayment: false,
             analyticsHelper: analyticsHelper,
-            linkAppearance: linkAppearance
+            supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+            linkAppearance: linkAppearance,
+            linkConfiguration: linkConfiguration,
+            passiveCaptchaChallenge: passiveCaptchaChallenge
         )
 
         payWithLinkController.presentForPaymentMethodSelection(
             from: self,
             initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
+            shouldShowSecondaryCta: shouldShowSecondaryCta,
             canSkipWalletAfterVerification: false,
             completion: callback
         )
