@@ -3010,35 +3010,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     // MARK: - Saved Payment Method Country Filtering Tests
 
-    private func createMockPaymentMethod(id: String, country: String?) -> STPPaymentMethod {
-        // Create mock payment method data that matches API response structure
-        var mockData: [String: Any] = [
-            "id": id,
-            "object": "payment_method",
-            "type": "card",
-            "card": [
-                "brand": "visa",
-                "last4": "4242",
-                "exp_month": 12,
-                "exp_year": 2025,
-            ],
-        ]
-
-        if let country = country {
-            mockData["billing_details"] = [
-                "address": [
-                    "country": country
-                ],
-            ]
-        }
-
-        return STPPaymentMethod.decodedObject(fromAPIResponse: mockData)!
-    }
-
     func testSavedPaymentMethods_countryFiltering_emptyAllowedCountries() {
         // Create test payment methods with different billing countries
-        let pmUS = createMockPaymentMethod(id: "pm_test_us", country: "US")
-        let pmCA = createMockPaymentMethod(id: "pm_test_ca", country: "CA")
+        let pmUS = STPPaymentMethod._testCard(id: "pm_test_us", country: "US")
+        let pmCA = STPPaymentMethod._testCard(id: "pm_test_ca", country: "CA")
         let savedPaymentMethods = [pmUS, pmCA]
 
         // Configuration with empty allowedCountries (should show all)
@@ -3064,9 +3039,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testSavedPaymentMethods_countryFiltering_specificCountries() {
         // Create test payment methods with different billing countries
-        let pmUS = createMockPaymentMethod(id: "pm_test_us", country: "US")
-        let pmCA = createMockPaymentMethod(id: "pm_test_ca", country: "CA")
-        let pmGB = createMockPaymentMethod(id: "pm_test_gb", country: "GB")
+        let pmUS = STPPaymentMethod._testCard(id: "pm_test_us", country: "US")
+        let pmCA = STPPaymentMethod._testCard(id: "pm_test_ca", country: "CA")
+        let pmGB = STPPaymentMethod._testCard(id: "pm_test_gb", country: "GB")
         let savedPaymentMethods = [pmUS, pmCA, pmGB]
 
         // Configuration allowing only US and CA
@@ -3086,8 +3061,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testSavedPaymentMethods_countryFiltering_withNilBillingDetails() {
         // Create payment methods with various billing details scenarios
-        let pmWithCountry = createMockPaymentMethod(id: "pm_with_country", country: "US")
-        let pmWithoutBillingDetails = createMockPaymentMethod(id: "pm_no_billing", country: nil)
+        let pmWithCountry = STPPaymentMethod._testCard(id: "pm_with_country", country: "US")
+        let pmWithoutBillingDetails = STPPaymentMethod._testCard(id: "pm_no_billing", country: nil)
         let savedPaymentMethods = [pmWithCountry, pmWithoutBillingDetails]
 
         // Configuration allowing only US
@@ -3115,9 +3090,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testSavedPaymentMethods_countryFiltering_excludesDisallowedCountry() {
         // Create payment methods from different countries
-        let pmUS = createMockPaymentMethod(id: "pm_test_us", country: "US")
-        let pmDE = createMockPaymentMethod(id: "pm_test_de", country: "DE")
-        let pmJP = createMockPaymentMethod(id: "pm_test_jp", country: "JP")
+        let pmUS = STPPaymentMethod._testCard(id: "pm_test_us", country: "US")
+        let pmDE = STPPaymentMethod._testCard(id: "pm_test_de", country: "DE")
+        let pmJP = STPPaymentMethod._testCard(id: "pm_test_jp", country: "JP")
         let savedPaymentMethods = [pmUS, pmDE, pmJP]
 
         // Configuration allowing only US and DE
@@ -3137,8 +3112,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testSavedPaymentMethods_countryFiltering_singleCountryAllowed() {
         // Create payment methods from different countries
-        let pmUS = createMockPaymentMethod(id: "pm_test_us", country: "US")
-        let pmCA = createMockPaymentMethod(id: "pm_test_ca", country: "CA")
+        let pmUS = STPPaymentMethod._testCard(id: "pm_test_us", country: "US")
+        let pmCA = STPPaymentMethod._testCard(id: "pm_test_ca", country: "CA")
         let savedPaymentMethods = [pmUS, pmCA]
 
         // Configuration allowing only US

@@ -202,6 +202,7 @@ extension STPPaymentMethod {
             [
                 "id": "pm_123card",
                 "type": "card",
+                "created": "12345",
                 "card": [
                     "last4": "4242",
                     "brand": "visa",
@@ -219,6 +220,7 @@ extension STPPaymentMethod {
             [
                 "id": "pm_123amex",
                 "type": "card",
+                "created": "12345",
                 "card": [
                     "last4": "6789",
                     "brand": "amex",
