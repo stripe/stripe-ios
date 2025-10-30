@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (opcional)";
 
 "(not accepted)" = "(no s'accepta)";
@@ -37,8 +39,6 @@
 "Country or region" = "País o regió";
 
 "County" = "Comtat";
-
-"Date is empty." = "La data és buida.";
 
 "Department" = "Departament";
 
@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Seleccioneu la marca de la targeta (opcional)";
 
+"Selection is empty." = "La selecció és buida.";
+
 "Sort code" = "Codi de classificació";
 
 "State" = "País";
@@ -132,12 +134,16 @@
 
 "Your BLIK code is invalid." = "El codi BLIK no és vàlid.";
 
-"Your ZIP is incomplete." = "El teu ZIP no està complet.";
+"Your ZIP code is incomplete." = "El teu codi postal està incomplet.";
+
+"Your ZIP code is invalid." = "El codi ZIP no és vàlid.";
 
 "Your email is invalid." = "L'adreça electrònica no és vàlida.";
 
 "Your payment information will not be saved." = "La informació de pagament no es desarà.";
 
 "Your postal code is incomplete." = "El teu codi postal no està complet.";
+
+"Your postal code is invalid." = "El teu codi postal no és vàlid.";
 
 "ZIP" = "ZIP";

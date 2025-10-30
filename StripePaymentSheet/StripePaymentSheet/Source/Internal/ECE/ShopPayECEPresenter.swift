@@ -19,6 +19,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private weak var presentingViewController: UIViewController?
     private var didReceiveECEClick: Bool = false
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private var currentShippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate]
 
     init(
         flowController: PaymentSheet.FlowController,
@@ -28,6 +29,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         self.flowController = flowController
         self.shopPayConfiguration = configuration
         self.analyticsHelper = analyticsHelper
+        self.currentShippingRates = configuration.shippingRates
         super.init()
     }
 
@@ -47,7 +49,13 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
         eceVC.expressCheckoutWebviewDelegate = self
         self.eceViewController = eceVC
-        eceVC.modalPresentationStyle = .pageSheet
+
+        let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
+        eceVC.transitioningDelegate = transitionDelegate
+        eceVC.modalPresentationStyle = .custom
+        eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.sheetCornerRadius
+        eceVC.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        eceVC.view.clipsToBounds = true
         viewController.present(eceVC, animated: true)
         eceVC.presentationController?.delegate = self
         // retain self while presented
@@ -114,6 +122,9 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             return try await withCheckedThrowingContinuation { continuation in
                 handler(selectedContact) { update in
                     if let update = update {
+                        // Update our current shipping rates
+                        self.currentShippingRates = update.shippingRates
+
                         // Create typed response
                         let response = ECEShippingUpdateResponse(
                             lineItems: update.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
@@ -148,7 +159,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             // No handler, accept with default values
             let response = ECEShippingUpdateResponse(
                 lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
-                shippingRates: shopPayConfiguration.shippingRates.map { rate in
+                shippingRates: currentShippingRates.map { rate in
                     ECEShippingRate(
                         id: rate.id,
                         amount: rate.amount,
@@ -168,7 +179,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Decode the shipping rate
         let selectedRate = try ECEBridgeTypes.decode(ECEShippingRate.self, from: shippingRate)
 
-        guard let matchingRate = shopPayConfiguration.shippingRates.first(where: { $0.id == selectedRate.id }) else {
+        guard let matchingRate = currentShippingRates.first(where: { $0.id == selectedRate.id }) else {
             throw ExpressCheckoutError.invalidShippingRate(rateId: selectedRate.id)
         }
 
@@ -181,6 +192,9 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             return await withCheckedContinuation { continuation in
                 handler(rateSelected) { update in
                     if let update = update {
+                        // Update our current shipping rates
+                        self.currentShippingRates = update.shippingRates
+
                         // Create typed response
                         let response = ECEShippingUpdateResponse(
                             lineItems: update.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
@@ -215,7 +229,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             // No handler, return current configuration
             let response = ECEShippingUpdateResponse(
                 lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
-                shippingRates: shopPayConfiguration.shippingRates.map { rate in
+                shippingRates: currentShippingRates.map { rate in
                     ECEShippingRate(
                         id: rate.id,
                         amount: rate.amount,
@@ -236,7 +250,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Build the configuration for Shop Pay
         let clickConfig = ECEClickConfiguration(
             lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
-            shippingRates: shopPayConfiguration.shippingAddressRequired ? shopPayConfiguration.shippingRates.map { rate in
+            shippingRates: shopPayConfiguration.shippingAddressRequired ? currentShippingRates.map { rate in
                 ECEShippingRate(
                     id: rate.id,
                     amount: rate.amount,
@@ -250,12 +264,14 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Convert to dictionary and add Shop Pay specific fields
         var response = try ECEBridgeTypes.encode(clickConfig)
 
+        let businessName = flowController.intent.sellerDetails?.businessName ?? flowController.configuration.merchantDisplayName
+
         // Add Shop Pay specific configuration
         response["billingAddressRequired"] = shopPayConfiguration.billingAddressRequired
         response["emailRequired"] = shopPayConfiguration.emailRequired
         response["phoneNumberRequired"] = true // Shop Pay always requires phone
         response["shippingAddressRequired"] = shopPayConfiguration.shippingAddressRequired
-        response["business"] = ["name": flowController.configuration.merchantDisplayName]
+        response["business"] = ["name": businessName]
         response["allowedShippingCountries"] = shopPayConfiguration.allowedShippingCountries
         response["shopId"] = shopPayConfiguration.shopId
 
@@ -291,15 +307,10 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                                          metadata: nil)
 
         // Add billing details
-        if let email = billingDetails.email {
-            paymentMethodParams.billingDetails?.email = email
-        }
-        if let phone = billingDetails.phone {
-            paymentMethodParams.billingDetails?.phone = phone
-        }
-        if let name = billingDetails.name {
-            paymentMethodParams.billingDetails?.name = name
-        }
+        paymentMethodParams.billingDetails?.email = billingDetails.email
+        paymentMethodParams.billingDetails?.phone = billingDetails.phone
+        paymentMethodParams.billingDetails?.name = billingDetails.name
+        paymentMethodParams.billingDetails?.address = billingDetails.address?.stpPaymentMethodAddress
 
         // Create payment method
         do {
@@ -319,12 +330,24 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a preparePaymentMethodHandler")
                         return
                     }
-                    preparePaymentMethodHandler(paymentMethod,
-                                                confirmData.shippingAddress?.toSTPAddress())
-                    // Log successful completion
-                    self.analyticsHelper.logShopPayWebviewConfirmSuccess()
-                    // And then the PaymentSheet presentation handler
-                    self.confirmHandler?(.completed)
+
+                    // Try to create a radar session for the payment method before calling the handler
+                    flowController.configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
+                        // If radar session creation fails, just continue with the payment method directly
+                        if let error {
+                            // Log the error but don't fail the payment
+                            let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
+                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: self.flowController.configuration.apiClient)
+                        }
+
+                        // Call the handler regardless of radar session success/failure
+                        preparePaymentMethodHandler(paymentMethod, confirmData.shippingAddress?.toSTPAddress())
+
+                        // Log successful completion
+                        self.analyticsHelper.logShopPayWebviewConfirmSuccess()
+                        // And then the PaymentSheet presentation handler
+                        self.confirmHandler?(.completed)
+                    }
                 }
             }
         } catch {

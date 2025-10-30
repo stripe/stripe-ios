@@ -199,7 +199,8 @@ class EmbeddedPaymentMethodsView: UIView {
             if let initialSelectedRowChangeButtonState {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
-                    rowButtonMatchingInitialSelection.addChangeButton(sublabel: initialSelectedRowChangeButtonState.sublabel)
+                    rowButtonMatchingInitialSelection.addChangeButton()
+                    rowButtonMatchingInitialSelection.setSublabel(text: initialSelectedRowChangeButtonState.sublabel)
                 }
             }
             self.selectedRowButton = rowButtonMatchingInitialSelection
@@ -234,19 +235,24 @@ class EmbeddedPaymentMethodsView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        // to make sure that it doesn't log on height change
+        // Only log this once
         if !didLogRenderLPMs {
             logRenderLPMs()
             didLogRenderLPMs = true
         }
 
+        // Calculate our natural height
+        let desiredHeight = systemLayoutSizeFitting(CGSize(width: frame.width, height: UIView.layoutFittingExpandedSize.height)).height
+
+        // If we never recorded a height, this is our first layout; don't notify the delegate.
         guard let previousHeight else {
             previousHeight = frame.height
             return
         }
 
-        if frame.height != previousHeight {
-            self.previousHeight = frame.height
+        // If the desired height is different from our last recorded, notify the delegate that our height is updating.
+        if desiredHeight != previousHeight {
+            self.previousHeight = desiredHeight
             delegate?.embeddedPaymentMethodsViewDidUpdateHeight()
         }
     }
@@ -428,6 +434,7 @@ class EmbeddedPaymentMethodsView: UIView {
         case (false, true): // Showing mandate -> Showing mandate
             UIView.transition(with: self.mandateView, duration: 0.25, options: .transitionCrossDissolve) {
                 self.mandateView.attributedText = mandateText
+                self.setNeedsLayout()
                 self.layoutIfNeeded()
             }
         case (true, false): // Hidden -> Hidden
@@ -487,7 +494,7 @@ class EmbeddedPaymentMethodsView: UIView {
     func makePaymentMethodRowButton(paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> RowButton {
         // We always add a hidden accessory button ("Change >") so we can show/hide it easily
         let accessoryButton = RowButton.RightAccessoryButton(
-            accessoryType: appearance.embeddedPaymentElement.row.style == .flatWithCheckmark ? .change : .changeWithChevron,
+            accessoryType: appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton ? .change : .changeWithChevron,
             appearance: appearance,
             didTap: { [weak self] in
                 guard let self, let selectedRowButton else { return }
@@ -518,7 +525,7 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
         switch self {
         case .flatWithRadio:
             return UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        case .floatingButton, .flatWithCheckmark, .flatWithChevron:
+        case .floatingButton, .flatWithCheckmark, .flatWithDisclosure:
             return .zero
         }
     }
@@ -531,7 +538,7 @@ extension Array where Element == STPPaymentMethod {
 }
 
 extension RowButton {
-    func addChangeButton(sublabel: String?) {
+    func addChangeButton() {
         // Hack: We assume the accessory view is "Change >"
         self.accessoryView?.isHidden = false
         self.setNeedsLayout()
@@ -539,9 +546,6 @@ extension RowButton {
         self.accessoryView?.alpha = 0
         UIView.animate(withDuration: 0.2) {
             self.accessoryView?.alpha = 1
-        }
-        if let sublabel {
-            setSublabel(text: sublabel)
         }
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }

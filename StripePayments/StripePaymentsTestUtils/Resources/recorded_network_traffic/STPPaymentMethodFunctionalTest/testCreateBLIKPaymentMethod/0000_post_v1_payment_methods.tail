@@ -3,22 +3,22 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ldf7VOfiPSuCTP10AG-L1lJwamPEC60T9LnRCl7Hi4g7kFJRCkWv0UGyC04FXq2GIeSMBS0jGMzzj4WV
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=WkkcALZ3U3d5HPHle59mjA2q1aMiUVlowSdqDr2UM5sVy4dtanPXSAI4RTcbUJQqyTiS7e04F1cSXKHZ
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_EPKJFOa6qKV4Z2
+request-id: req_Na0bHajVI0tlid
 Content-Length: 464
 Vary: Origin
-Date: Tue, 03 Jun 2025 15:07:00 GMT
-original-request: req_EPKJFOa6qKV4Z2
+Date: Tue, 19 Aug 2025 17:59:32 GMT
+original-request: req_Na0bHajVI0tlid
 stripe-version: 2020-08-27
-idempotency-key: cf4d9204-cb9b-4247-8091-bf1a776e7914
+idempotency-key: 2bf0a450-d25f-4423-b9e5-1f2a857b39f0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RVwQaFY0qyl6XeW7WQKnRuw",
+  "id" : "pm_1RxtomFY0qyl6XeWNtgRVzs7",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -47,7 +47,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_
 
   },
   "allow_redisplay" : "unspecified",
-  "created" : 1748963220,
+  "created" : 1755626372,
   "customer" : null,
   "type" : "blik"
 }

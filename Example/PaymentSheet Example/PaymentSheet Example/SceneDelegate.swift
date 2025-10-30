@@ -45,7 +45,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @available(iOS 15.0, *)
     func launchWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: PaymentSheetTestPlaygroundSettings.self)!
-        let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings))
+        let paymentSheetPlayground = PaymentSheetTestPlayground(settings: settings, appearance: .default)
+        let hvc = UIHostingController(rootView: paymentSheetPlayground)
         let navController = UINavigationController(rootViewController: hvc)
         windowScene.windows.first!.rootViewController = navController
     }
@@ -53,7 +54,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @available(iOS 15.0, *)
     func launchCustomerSheetWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: CustomerSheetTestPlaygroundSettings.self)!
-        let hvc = UIHostingController(rootView: CustomerSheetTestPlayground(settings: settings))
+        let customerSheetPlayground = CustomerSheetTestPlayground(settings: settings)
+        let hvc = UIHostingController(rootView: customerSheetPlayground)
         let navController = UINavigationController(rootViewController: hvc)
         windowScene.windows.first!.rootViewController = navController
     }

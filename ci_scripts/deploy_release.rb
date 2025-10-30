@@ -2,6 +2,7 @@
 
 require_relative 'release_common'
 require_relative 'vm_tools'
+require_relative 'get_bundle_version'
 
 # This should generally be the minimum Xcode version supported by the App Store, as the
 # compiled XCFrameworks won't be usable on older versions.
@@ -27,8 +28,8 @@ end
 def export_builds
   verify_xcode_version
 
-  # Delete Stripe.xcframework.zip if one exists
-  run_command('rm -f build/Stripe.xcframework.zip')
+  # Delete entire build directory if it exists
+  run_command('rm -Rf build/')
 
   run_command('ci_scripts/export_builds.rb')
 
@@ -37,8 +38,8 @@ end
 
 def export_builds_from_xcode_cloud
   return if @is_dry_run
-  # Delete Stripe.xcframework.zip if one exists
-  run_command('rm -f build/Stripe.xcframework.zip')
+  # Delete entire build directory if it exists
+  run_command('rm -Rf build/')
 
   run_command('ci_scripts/export_builds_from_xcode_cloud.rb')
 
@@ -89,6 +90,9 @@ end
 
 def upload_framework
   return if @is_dry_run
+  # Validate the downloaded xcframework bundle version before uploading
+  bundle_version = get_bundle_version('build/Stripe.xcframework.zip')
+  raise "build/Stripe.xcframework bundle version (#{bundle_version}) doesn't match the VERSION file (#{@version})!" unless bundle_version == @version
 
   # Use the reference to the release object from `create_release` if it exists,
   # otherwise fetch it.

@@ -135,6 +135,7 @@ class BankAccountInfoView: UIView {
             contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
             contentStackView.trailingAnchor.constraint(lessThanOrEqualTo: xIconTappableArea.leadingAnchor),
             contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
+            contentStackView.heightAnchor.constraint(equalTo: accountInfoStackView.heightAnchor),
 
             xIconTappableArea.trailingAnchor.constraint(equalTo: trailingAnchor),
             xIconTappableArea.widthAnchor.constraint(equalToConstant: 44.0),

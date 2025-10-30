@@ -20,8 +20,9 @@ class FlowControllerStateTests: XCTestCase {
         let exp = expectation(description: "No delegate methods should be called during init but before viewDidLoad")
         exp.isInverted = true
         let config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
             // Nothing
+            return ""
         }
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(intentConfig: intentConfig)

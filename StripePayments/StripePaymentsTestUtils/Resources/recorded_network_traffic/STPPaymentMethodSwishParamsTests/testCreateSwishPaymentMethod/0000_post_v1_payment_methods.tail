@@ -3,22 +3,22 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=dBixMfSMtZE4xT6SUJu0IxbIkJ9datx6N-Vbu2zPtJe72nf17PAFVbY0kB6qbazslh1e82KpOhCYMDQZ
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mtZD_VkwM0gNuVkQJef_VnNKKwAa5fx4nL5kMNXAwKyC2R27Ama27-Dtkw4y6mRBdJRXzGw7XbN_aOdD
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_ATpZj0kGHyGjFI
+request-id: req_lhGzVw3aEYeXXM
 Content-Length: 466
 Vary: Origin
-Date: Tue, 03 Jun 2025 15:18:38 GMT
-original-request: req_ATpZj0kGHyGjFI
+Date: Wed, 20 Aug 2025 17:17:49 GMT
+original-request: req_lhGzVw3aEYeXXM
 stripe-version: 2020-08-27
-idempotency-key: 69028380-8c12-4597-9022-d331358e0546
+idempotency-key: 9e4fd0f9-f173-4a37-ba55-9bcd51f7be46
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RVwbqKG6vc7r7YC5qYErj1F",
+  "id" : "pm_1RyFdxKG6vc7r7YCdLdpdaQZ",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_
   "swish" : {
 
   },
-  "created" : 1748963918,
+  "created" : 1755710269,
   "allow_redisplay" : "unspecified",
   "type" : "swish",
   "customer" : null

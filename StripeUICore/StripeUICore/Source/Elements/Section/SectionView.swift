@@ -39,8 +39,7 @@ final class SectionView: UIView {
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorOrSubLabel])
         stack.axis = .vertical
-        stack.spacing = 4
-        stack.setCustomSpacing(8, after: containerView)
+        stack.spacing = ElementsUI.sectionElementInternalSpacing
         addAndPinSubview(stack)
 
         setupBorderLayer()
@@ -143,9 +142,11 @@ final class SectionView: UIView {
     // For highlighted borders, apply a custom `UIBezierPath` border for smoother corners.
     private func applyHighlightedBorder(with configuration: HighlightBorderConfiguration) {
         containerView.layer.borderWidth = 0
+        containerView.layer.cornerRadius = configuration.cornerRadius
 
         selectedBorderLayer.strokeColor = configuration.color.cgColor
         selectedBorderLayer.lineWidth = configuration.width
+        selectedBorderLayer.cornerRadius = configuration.cornerRadius
 
         if selectedBorderLayer.superlayer != containerView.layer {
             containerView.layer.addSublayer(selectedBorderLayer)
@@ -154,7 +155,7 @@ final class SectionView: UIView {
         updateBorderPath()
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         guard previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }

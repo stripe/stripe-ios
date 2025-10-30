@@ -6,10 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
@@ -17,7 +17,7 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
 
 final class LinkInlineSignupViewModel {
     enum Action: Equatable {
-        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
+        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber?, legalName: String?)
         case continueWithoutLink
     }
 
@@ -26,11 +26,14 @@ final class LinkInlineSignupViewModel {
         case checkboxWithDefaultOptIn // shows the Link inline signup with a pre-checked checkbox and a label showing the used signup data
         case textFieldsOnlyEmailFirst // shows the Link inline signup without the checkbox, email field first
         case textFieldsOnlyPhoneFirst // shows the Link inline signup without the checkbox, phone number field first
+        case signupOptIn // shows the Link signup opt-in with a checkbox
     }
 
     weak var delegate: LinkInlineSignupViewModelDelegate?
 
     private let accountService: LinkAccountServiceProtocol
+
+    let analyticsHelper: PaymentSheetAnalyticsHelper?
 
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
 
@@ -43,6 +46,7 @@ final class LinkInlineSignupViewModel {
     var saveCheckboxChecked: Bool = false {
         didSet {
             if saveCheckboxChecked != oldValue {
+                didInteractWithSaveCheckbox = true
                 notifyUpdate()
 
                 if saveCheckboxChecked, mode == .checkbox {
@@ -51,6 +55,8 @@ final class LinkInlineSignupViewModel {
             }
         }
     }
+
+    private var didInteractWithSaveCheckbox = false
 
     var emailAddress: String? {
         didSet {
@@ -105,6 +111,12 @@ final class LinkInlineSignupViewModel {
             return .implied_v0
         case .textFieldsOnlyPhoneFirst:
             return .implied_v0_0
+        case .signupOptIn:
+            if didInteractWithSaveCheckbox {
+                return .sign_up_opt_in_mobile_checked
+            } else {
+                return .sign_up_opt_in_mobile_prechecked
+            }
         }
     }
 
@@ -135,6 +147,10 @@ final class LinkInlineSignupViewModel {
                 notifyUpdate()
             }
         }
+    }
+
+    var useLiquidGlass: Bool {
+        configuration.appearance.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp
     }
 
     var requiresNameCollection: Bool {
@@ -172,6 +188,8 @@ final class LinkInlineSignupViewModel {
         case .textFieldsOnlyPhoneFirst:
             // Only show email if the phone number field has contents
             return (phoneNumber?.isComplete ?? false)
+        case .signupOptIn:
+            return false
         }
     }
 
@@ -187,6 +205,8 @@ final class LinkInlineSignupViewModel {
             return false
         case .textFieldsOnlyPhoneFirst:
             return requiresNameCollection && phoneNumber?.isComplete ?? false
+        case .signupOptIn:
+            return false
         }
     }
 
@@ -205,6 +225,8 @@ final class LinkInlineSignupViewModel {
             return saveCheckboxChecked && (!defaultOptInInfoWasPrefilled || didAskToChangeSignupData) && !isExistingConsumer
         case .textFieldsOnlyPhoneFirst:
             return true
+        case .signupOptIn:
+            return false
         }
     }
 
@@ -216,6 +238,8 @@ final class LinkInlineSignupViewModel {
             return saveCheckboxChecked
         case .textFieldsOnlyPhoneFirst, .textFieldsOnlyEmailFirst:
             return true
+        case .signupOptIn:
+            return false
         }
     }
 
@@ -249,18 +273,19 @@ final class LinkInlineSignupViewModel {
 
         switch linkAccount.sessionState {
         case .requiresSignUp:
-            guard let phoneNumber = phoneNumber,
-                  phoneNumber.isComplete else {
+            guard phoneNumber?.isComplete == true || mode == .signupOptIn else {
                 return nil
             }
 
-            if requiresNameCollection && !legalNameProvided {
+            if mode != .signupOptIn && requiresNameCollection && !legalNameProvided {
                 return nil
             }
+
+            let phone = phoneNumber?.isComplete == true ? phoneNumber : nil
 
             return .signupAndPay(
                 account: linkAccount,
-                phoneNumber: phoneNumber,
+                phoneNumber: phone,
                 legalName: requiresNameCollection ? legalName : nil
             )
         case .verified, .requiresVerification:
@@ -274,26 +299,51 @@ final class LinkInlineSignupViewModel {
         switch mode {
         case .checkbox:
             return 16
-        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             return 0
-        }
-    }
-
-    var showCheckbox: Bool {
-        switch mode {
-        case .checkbox, .checkboxWithDefaultOptIn:
-            return true
-        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
-            return false
         }
     }
 
     var bordered: Bool {
         switch mode {
         case .checkbox:
-            return true
-        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+            return !useLiquidGlass
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             return false
+        }
+    }
+
+    var containerBackground: UIColor {
+        switch mode {
+        case .checkbox:
+            if useLiquidGlass {
+                return configuration.appearance.colors.componentBackground
+            } else {
+                return configuration.appearance.colors.background
+            }
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
+            return configuration.appearance.colors.background
+        }
+    }
+
+    var containerCornerRadius: CGFloat? {
+        switch mode {
+        case .checkbox:
+            return configuration.appearance.cornerRadius
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
+            // The content is right at the border of the view. Remove the corner radius so that we don't cut off anything.
+            return 0
+        }
+    }
+
+    var combinedEmailNameSectionBorderWidth: CGFloat {
+        let borderWidth = configuration.appearance.borderWidth
+        switch mode {
+        case .checkbox:
+            // Make sure we always display at least some border around the section, which is nested in a component
+            return max(borderWidth, 1.0)
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
+            return borderWidth
         }
     }
 
@@ -305,6 +355,9 @@ final class LinkInlineSignupViewModel {
             return true
         case .textFieldsOnlyPhoneFirst:
             return false
+        case .signupOptIn:
+            // Not applicable
+            return true
         }
     }
 
@@ -317,6 +370,9 @@ final class LinkInlineSignupViewModel {
         case .textFieldsOnlyEmailFirst:
             return false
         case .textFieldsOnlyPhoneFirst:
+            return true
+        case .signupOptIn:
+            // Not applicable
             return true
         }
     }
@@ -331,6 +387,9 @@ final class LinkInlineSignupViewModel {
         case .textFieldsOnlyPhoneFirst:
             // Already shown in the phone number field
             return false
+        case .signupOptIn:
+            // Not applicable
+            return false
         }
     }
 
@@ -339,18 +398,24 @@ final class LinkInlineSignupViewModel {
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
         allowsDefaultOptIn: Bool,
+        signupOptInFeatureEnabled: Bool,
+        signupOptInInitialValue: Bool,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        country: String? = nil
+        country: String? = nil,
+        analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
         self.configuration = configuration
         self.accountService = accountService
+        self.analyticsHelper = analyticsHelper
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
         if let email = self.emailAddress,
            !email.isEmpty {
             emailWasPrefilled = true
         }
-        if showCheckbox {
+        if signupOptInFeatureEnabled && emailWasPrefilled {
+            self.mode = .signupOptIn
+        } else if showCheckbox {
             let allowsDefaultOptIn = allowsDefaultOptIn && country == "US"
             self.mode = allowsDefaultOptIn ? .checkboxWithDefaultOptIn : .checkbox
         } else {
@@ -360,7 +425,20 @@ final class LinkInlineSignupViewModel {
         self.legalName = configuration.defaultBillingDetails.name
         self.country = country
 
-        self.saveCheckboxChecked = mode == .checkboxWithDefaultOptIn
+        self.saveCheckboxChecked = {
+            switch mode {
+            case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                return false
+            case .checkboxWithDefaultOptIn:
+                return true
+            case .signupOptIn:
+                return signupOptInInitialValue
+            }
+        }()
+    }
+
+    func logInlineSignupShown() {
+        analyticsHelper?.analyticsClient.logLinkInlineSignupShown(mode: self.mode)
     }
 }
 
@@ -393,7 +471,8 @@ private extension LinkInlineSignupViewModel {
             self?.accountService.lookupAccount(
                 withEmail: emailAddress,
                 emailSource: .userAction,
-                doNotLogConsumerFunnelEvent: false
+                doNotLogConsumerFunnelEvent: false,
+                requestSurface: .default
             ) { result in
                 // Check the requested email address against the current one. Handle
                 // email address changes while a lookup is in-flight.
@@ -414,4 +493,5 @@ private extension LinkInlineSignupViewModel {
             }
         }
     }
+
 }

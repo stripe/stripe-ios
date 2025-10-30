@@ -63,7 +63,6 @@ import UIKit
         let stackView = UIStackView(arrangedSubviews: [textView, descriptionLabel])
         stackView.spacing = 4
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -147,8 +146,13 @@ import UIKit
         setText(text)
     }
 
-    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsAppearance = .default) {
-        self.init(description: description, theme: theme)
+    public convenience init(
+        attributedText: NSAttributedString,
+        description: String? = nil,
+        theme: ElementsAppearance = .default,
+        alwaysEmphasizeText: Bool = false
+    ) {
+        self.init(description: description, theme: theme, alwaysEmphasizeText: alwaysEmphasizeText)
         setAttributedText(attributedText)
     }
 
@@ -164,7 +168,7 @@ import UIKit
         textView.invalidateIntrinsicContentSize()
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateLabels()
@@ -276,7 +280,7 @@ extension CheckboxButton: EventHandler {
 
 // MARK: - UITextViewDelegate
 extension CheckboxButton: UITextViewDelegate {
-    #if !canImport(CompositorServices)
+    #if !os(visionOS)
     // This is only used by StripeIdentity, which does not support visionOS.
     public func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange) -> Bool {
         return delegate?.checkboxButton(self, shouldOpen: url) ?? true

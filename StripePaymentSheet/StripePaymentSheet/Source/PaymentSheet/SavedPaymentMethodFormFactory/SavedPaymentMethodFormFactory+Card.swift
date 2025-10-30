@@ -13,6 +13,7 @@ import UIKit
 
 extension SavedPaymentMethodFormFactory {
     func makeCard(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
+        let theme = configuration.appearance.asElementsTheme
         let cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>? = {
             guard configuration.isCBCEligible else {
                 return nil
@@ -22,7 +23,7 @@ extension SavedPaymentMethodFormFactory {
 
             let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
                                                                                disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
-                                                                               theme: configuration.appearance.asElementsTheme,
+                                                                               theme: theme,
                                                                                includePlaceholder: false)
             // pre-select current card brand
             if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand,
@@ -48,7 +49,7 @@ extension SavedPaymentMethodFormFactory {
                                                                           cardBrand: configuration.paymentMethod.calculateCardBrandToDisplay(),
                                                                           cardBrandDropDown: cardBrandDropDown?.element)
 
-            let panElement = panElementConfig.makeElement(theme: configuration.appearance.asElementsTheme)
+            let panElement = panElementConfig.makeElement(theme: theme)
             return panElement
         }()
 
@@ -57,7 +58,7 @@ extension SavedPaymentMethodFormFactory {
                                             year: configuration.paymentMethod.card?.expYear ?? 0)
             let expirationDateConfig = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString,
                                                                                 editConfiguration: configuration.canUpdate ? .editable : .readOnly)
-            let expirationField = expirationDateConfig.makeElement(theme: configuration.appearance.asElementsTheme)
+            let expirationField = expirationDateConfig.makeElement(theme: theme)
             let wrappedElement = PaymentMethodElementWrapper<TextFieldElement>(expirationField) { field, params in
                 if let month = Int(field.text.prefix(2)) {
                     cardParams(for: params).expMonth = NSNumber(value: month)
@@ -71,18 +72,21 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let cvcElement: TextFieldElement = {
-            return TextFieldElement.CensoredCVCConfiguration(brand: configuration.paymentMethod.card?.preferredDisplayBrand ?? .unknown).makeElement(theme: configuration.appearance.asElementsTheme)
+            return TextFieldElement.CensoredCVCConfiguration(brand: configuration.paymentMethod.card?.preferredDisplayBrand ?? .unknown).makeElement(theme: theme)
         }()
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
             guard configuration.canUpdate else {
                 return nil
             }
+            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
+                : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(configuration, collectionMode: .countryAndPostal(), countries: nil)
+                return makeBillingAddressSection(configuration, collectionMode: .countryAndPostal(), countries: countries)
             case .full:
-                return makeBillingAddressSection(configuration, collectionMode: .all(), countries: nil)
+                return makeBillingAddressSection(configuration, collectionMode: .all(), countries: countries)
             case .never:
                 return nil
             }
@@ -92,13 +96,13 @@ extension SavedPaymentMethodFormFactory {
             let allSubElements: [Element?] = [
                 panElement,
                 SectionElement.HiddenElement(cardBrandDropDown),
-                SectionElement.MultiElementRow([expiryDateElement, cvcElement]),
+                SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
             ]
             return SectionElement(title: billingAddressSection != nil ? String.Localized.card_information : nil,
                                   elements: allSubElements.compactMap { $0 },
-                                  theme: configuration.appearance.asElementsTheme)
+                                  theme: theme)
         }()
-        return FormElement(elements: [cardSection, billingAddressSection], theme: configuration.appearance.asElementsTheme)
+        return FormElement(elements: [cardSection, billingAddressSection], theme: theme)
     }
 
     func makeBillingAddressSection(

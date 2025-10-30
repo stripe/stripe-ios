@@ -38,25 +38,25 @@ extension STPElementsSession {
         linkSettings?.popupWebviewOption ?? .shared
     }
 
+    var canSkipLinkWallet: Bool {
+        linkFlags["link_mobile_skip_wallet_in_flow_controller"] ?? false
+    }
+
     func shouldShowLink2FABeforePaymentSheet(for linkAccount: PaymentSheetLinkAccount) -> Bool {
         return self.supportsLink &&
         linkAccount.sessionState == .requiresVerification &&
         !linkAccount.hasStartedSMSVerification &&
         linkAccount.useMobileEndpoints &&
-        self.linkSettings?.suppress2FAModal != true
-    }
-
-    func countryCode(overrideCountry: String?) -> String? {
-#if DEBUG
-        if let overrideCountry {
-            return overrideCountry
-        }
-#endif
-        return countryCode
+        self.linkSettings?.suppress2FAModal != true &&
+        linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required
     }
 
     var linkFlags: [String: Bool] {
         linkSettings?.linkFlags ?? [:]
+    }
+
+    var shouldShowPreferDebitCardHint: Bool {
+        linkSettings?.linkShowPreferDebitCardHint ?? false
     }
 }
 

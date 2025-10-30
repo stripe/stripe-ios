@@ -22,6 +22,8 @@
 
 "Billing address" = "Fakturační adresa";
 
+"Billing details" = "Fakturační údaje";
+
 "CVC" = "CVC";
 
 "Card information" = "Informace o kartě";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
 
-"Your ZIP is invalid." = "PSČ je neplatné.";
-
 "Your card has expired." = "Platnost vaší karty vypršela.";
 
 "Your card number is incomplete." = "Číslo karty je neúplné.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Bezpečnostní kód karty je neúplný.";
 
 "Your card's security code is invalid." = "Bezpečnostní kód vaší karty je neplatný.";
-
-"Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
 
 "card number" = "číslo karty";
 

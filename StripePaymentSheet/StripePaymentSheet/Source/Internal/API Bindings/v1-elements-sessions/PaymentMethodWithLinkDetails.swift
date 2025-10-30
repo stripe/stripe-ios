@@ -9,13 +9,20 @@ import Foundation
 
 class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
     let paymentMethod: STPPaymentMethod
+    let isLinkOrigin: Bool
     let linkDetails: ConsumerPaymentDetails?
     var allResponseFields: [AnyHashable: Any]
 
     // MARK: - STPAPIResponseDecodable
 
-    required init(paymentMethod: STPPaymentMethod, linkDetails: ConsumerPaymentDetails?, allResponseFields: [AnyHashable: Any]) {
+    required init(
+        paymentMethod: STPPaymentMethod,
+        isLinkOrigin: Bool,
+        linkDetails: ConsumerPaymentDetails?,
+        allResponseFields: [AnyHashable: Any]
+    ) {
         self.paymentMethod = paymentMethod
+        self.isLinkOrigin = isLinkOrigin
         self.linkDetails = linkDetails
         self.allResponseFields = allResponseFields
     }
@@ -28,6 +35,8 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
         else {
             return nil
         }
+
+        let isLinkOrigin = response["is_link_origin"] as? Bool ?? false
 
         var linkDetails: ConsumerPaymentDetails?
 
@@ -47,6 +56,7 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
 
         return self.init(
             paymentMethod: paymentMethod,
+            isLinkOrigin: isLinkOrigin,
             linkDetails: linkDetails,
             allResponseFields: response
         )

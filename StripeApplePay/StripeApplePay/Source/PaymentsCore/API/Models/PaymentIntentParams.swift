@@ -62,6 +62,9 @@ extension StripeAPI {
         /// Shipping information.
         @_spi(STP) public var shipping: ShippingDetails?
 
+        /// Contains metadata with identifiers for the session and information about the integration
+        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
         /// Indicates how you intend to use the payment method that your customer provides after the current payment completes.
         /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
         /// - seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-setup_future_usage

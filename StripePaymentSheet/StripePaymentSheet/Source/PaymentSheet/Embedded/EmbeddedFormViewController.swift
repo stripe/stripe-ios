@@ -70,8 +70,12 @@ class EmbeddedFormViewController: UIViewController {
         }
     }
 
+    var form: PaymentMethodElement {
+        return paymentMethodFormViewController.form
+    }
+
     var collectsUserInput: Bool {
-        return paymentMethodFormViewController.form.collectsUserInput
+        return form.collectsUserInput
     }
 
     enum Error: Swift.Error {
@@ -111,10 +115,12 @@ class EmbeddedFormViewController: UIViewController {
     private lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
+            },
+            didTapWhenDisabled: { [weak self] in
+                self?.didTapPrimaryButtonWhenDisabled()
             }
         )
     }()
@@ -146,6 +152,7 @@ class EmbeddedFormViewController: UIViewController {
             configuration: configuration,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
+            isLinkUI: false,
             delegate: self
         )
     }()
@@ -214,7 +221,6 @@ class EmbeddedFormViewController: UIViewController {
         }()
         primaryButton.update(
             state: state,
-            style: .stripe,
             callToAction: callToAction,
             animated: true
         )
@@ -322,7 +328,7 @@ class EmbeddedFormViewController: UIViewController {
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
                     // Update state
@@ -337,7 +343,7 @@ class EmbeddedFormViewController: UIViewController {
                     self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
@@ -377,6 +383,14 @@ class EmbeddedFormViewController: UIViewController {
         }
 
         pay(with: selectedPaymentOption)
+    }
+
+    @objc func didTapPrimaryButtonWhenDisabled() {
+        // When the disabled button is tapped, show validation errors on all form fields
+#if !os(visionOS)
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+        paymentMethodFormViewController.form.showAllValidationErrors()
     }
 }
 

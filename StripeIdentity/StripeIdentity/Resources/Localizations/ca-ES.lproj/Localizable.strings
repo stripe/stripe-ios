@@ -6,9 +6,13 @@
 
 "App Settings" = "Configuració de l'aplicació";
 
-"Back identity card photo successfully uploaded" = "La foto del revers document d'identitat s'ha carregat correctament";
+"Back %@ photo successfully uploaded" = "La foto de la cara posterior de %@ s'ha carregat correctament";
 
-"Back of identity card" = "Revers del document d'identitat";
+"Back identity document photo successfully uploaded" = "La foto de la cara posterior del document d'identitat s'ha carregat correctament";
+
+"Back of %@" = "Cara posterior de %@";
+
+"Back of driver's license or government-issued photo ID" = "Revers del carnet de conduir o del document d'identitat amb foto emès pel govern";
 
 "Back of identity document" = "Dors del document d'identitat";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Els detalls no es veuen bé";
 
+"Flip your %@ over to the other side" = "Gira el %@";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Gireu el carnet de conduir o el document d'identitat amb foto emès pel govern cap a l'altre costat";
+
 "Flip your identity card over to the other side" = "Gireu el document d'identitat perquè se'n vegi l'altra cara";
 
-"Front identity card photo successfully uploaded" = "La foto de l'anvers del document d'identitat s'ha carregat correctament";
+"Front %@ photo successfully uploaded" = "La foto de la cara frontal de %@ s'ha carregat correctament";
 
-"Front of identity card" = "Anvers del document d'identitat";
+"Front identity document photo successfully uploaded" = "La foto de la cara frontal del document d'identitat s'ha carregat correctament";
+
+"Front of %@" = "Cara frontal de %@";
+
+"Front of driver's license or government-issued photo ID" = "Anvers del carnet de conduir o del document d'identitat amb foto emès pel govern";
+
+"Front of driver's license or passport" = "Anvers del carnet de conduir o del passaport";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Anvers del carnet de conduir, del passaport o del document d'identitat amb foto emès pel govern";
 
 "Front of identity document" = "Anvers del document d'identitat";
+
+"Front of passport or government-issued photo ID" = "Anvers del passaport o del document d'identitat amb foto emès pel govern";
 
 "Get ready to scan your photo ID" = "Prepareu-vos per escanejar la vostra identificació amb foto";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Biblioteca de fotos";
 
-"Please upload images of the front and back of your identity card" = "Carregueu les imatges de l'anvers i el revers del document d'identitat";
+"Please upload images of the front and back of your %@" = "Si us plau, penja la foto de la cara frontal i de la cara posterior del teu %@";
+
+"Please upload images of the front and back of your identity document" = "Carregueu la foto de la cara frontal i de la cara posterior del vostre document d'identitat";
+
+"Position your %@ in the center of the frame" = "Col·loca el %@ al centre del marc";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Col·loqueu el carnet de conduir o el document d'identitat amb foto emès pel govern al centre del marc";
+
+"Position your driver's license or passport in the center of the frame" = "Col·loqueu el carnet de conduir o el passaport al centre del marc";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Col·loqueu el carnet de conduir, el passaport o el document d'identitat amb foto emès pel govern al centre del marc";
 
 "Position your face in the center of the frame." = "Col·loqueu la cara al centre del marc.";
 
-"Position your identity card in the center of the frame" = "Col·loqueu el document d'identitat al centre del marc";
+"Position your identity document in the center of the frame" = "Col·loqueu el vostre document d'identitat al centre del marc";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Col·loqueu el passaport o el document d'identitat amb foto emès pel govern al centre del marc";
 
 "Retake Photos" = "Torna a fer les fotos";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Seleccioneu una ubicació des d'on carregar l'anvers del document d'identitat";
 
-"Select back identity card photo" = "Seleccioneu la foto del revers del document d'identitat";
+"Select back %@ photo" = "Selecciona la foto de la cara posterior de %@";
 
-"Select front identity card photo" = "Seleccioneu la foto del document d'identitat";
+"Select back identity document photo" = "Selecciona la foto de la cara posterior del document d'identitat";
+
+"Select front %@ photo" = "Selecciona la foto de la cara frontal de %@";
+
+"Select front identity document photo" = "Selecciona la foto de la cara frontal del document d'identitat";
 
 "Selfie" = "Autofoto";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Carrega una foto";
 
+"Upload your %@" = "Puja el teu %@";
+
 "Upload your photo ID" = "Carregueu la vostra ID amb foto";
 
-"Uploading back identity card photo" = "S'està carregant la foto del revers del document d'identitat";
+"Uploading back %@ photo" = "S'està carregant la foto de la cara posterior de %@";
 
-"Uploading front identity card photo" = "S'està carregant la foto de l'anvers del document d'identitat";
+"Uploading back identity document photo" = "S'està carregant la foto de la cara posterior del document d'identitat";
+
+"Uploading front %@ photo" = "S'està carregant la foto de la cara frontal de %@";
+
+"Uploading front identity document photo" = "S'està carregant la foto de la cara frontal del document d'identitat";
 
 "Verify your identity" = "Verifica la teva identitat";
 

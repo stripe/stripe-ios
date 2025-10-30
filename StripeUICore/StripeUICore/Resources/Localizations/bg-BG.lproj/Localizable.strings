@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@••••%2$@";
+
 "%@ (optional)" = "%@ (по желание)";
 
 "(not accepted)" = "(не се приема)";
@@ -37,8 +39,6 @@
 "Country or region" = "Държава или регион";
 
 "County" = "Окръг";
-
-"Date is empty." = "Датата е празна.";
 
 "Department" = "Отдел";
 
@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Изберете марка на картата (по избор)";
 
+"Selection is empty." = "Изборът е празен.";
+
 "Sort code" = "Идентификационен банков код";
 
 "State" = "Щат";
@@ -132,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Вашият BLIK код е невалиден.";
 
-"Your ZIP is incomplete." = "Вашият ZIP код е непълен.";
+"Your ZIP code is incomplete." = "Вашият пощенски код е непълен.";
+
+"Your ZIP code is invalid." = "Вашият пощенски код е невалиден.";
 
 "Your email is invalid." = "Вашият имейл е невалиден.";
 
 "Your payment information will not be saved." = "Вашата информация за плащане няма да бъде запазена.";
 
 "Your postal code is incomplete." = "Вашият пощенски код е непълен.";
+
+"Your postal code is invalid." = "Вашият пощенски код е невалиден.";
 
 "ZIP" = "п.к.";

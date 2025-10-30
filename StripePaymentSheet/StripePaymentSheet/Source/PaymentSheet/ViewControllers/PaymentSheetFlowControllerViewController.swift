@@ -22,6 +22,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
+    var passiveCaptchaChallenge: PassiveCaptchaChallenge?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -296,7 +297,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            passiveCaptchaChallenge: passiveCaptchaChallenge
         ) { [weak self] confirmOption, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption
@@ -453,6 +455,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
         }
+    }
+
+    func clearSelection() {
+        savedPaymentOptionsViewController.unselectPaymentMethod()
+        updateButton()
     }
 
     @objc

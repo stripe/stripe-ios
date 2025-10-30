@@ -3,31 +3,31 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yZiLIxI9mqYoRetucO7yBPVGgdRSAsIFW1rCD60TLVIm3uBG93Fmi3fXkOS0CXvaQKlfY1mmIFKg1tDO
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=HSqQjRQBPUzLM9DE0GLsY2S6eFrknm52-ethUsr_UfiSYL09jcm8TyunHvw-avewTUhokXo86f-WW_Tu
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_G2l8VLHKZdB9rt
+request-id: req_6zLR9jGDnsc8vA
 Content-Length: 990
 Vary: Origin
-Date: Tue, 03 Jun 2025 20:28:51 GMT
-original-request: req_G2l8VLHKZdB9rt
+Date: Thu, 07 Aug 2025 16:41:20 GMT
+original-request: req_6zLR9jGDnsc8vA
 stripe-version: 2020-08-27
-idempotency-key: 4ba2e19b-1aa7-4a41-9cda-d79662404899
+idempotency-key: 96c5780b-1580-492b-b397-859daf97d926
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=limited&billing_details\[address]\[country]=US&billing_details\[address]\[postal_code]=65432&card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=32&card\[number]=4242424242424242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
+X-Stripe-Mock-Request: allow_redisplay=limited&billing_details\[address]\[country]=US&billing_details\[address]\[postal_code]=65432&card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=32&card\[number]=4242424242424242&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RW1S3FY0qyl6XeWq2ul5LyX",
+  "id" : "pm_1RtWsWFY0qyl6XeWCWhfDHqr",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -69,7 +69,7 @@ X-Stripe-Mock-Request: allow_redisplay=limited&billing_details\[address]\[countr
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1748982531,
+  "created" : 1754584880,
   "allow_redisplay" : "limited",
   "type" : "card",
   "customer" : null

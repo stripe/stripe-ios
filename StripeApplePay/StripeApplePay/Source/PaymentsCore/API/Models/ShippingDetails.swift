@@ -51,7 +51,7 @@ extension StripeAPI {
             @_spi(STP) public init(
                 city: String? = nil,
                 country: String? = nil,
-                line1: String,
+                line1: String? = nil,
                 line2: String? = nil,
                 postalCode: String? = nil,
                 state: String? = nil,
@@ -75,7 +75,7 @@ extension StripeAPI {
             @_spi(STP) public var country: String?
 
             /// Address line 1 (Street address/PO Box/Company name).
-            @_spi(STP) public var line1: String
+            @_spi(STP) public var line1: String?
 
             /// Address line 2 (Apartment/Suite/Unit/Building).
             @_spi(STP) public var line2: String?

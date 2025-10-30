@@ -90,8 +90,16 @@
                                             <segue destination="jqF-43-4W3" kind="show" id="I4Q-i5-Ogf"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="NEW-LINK-BTN" userLabel="LinkStandaloneComponent">
+                                        <rect key="frame" x="89" y="108" width="220" height="0.0"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Link Standalone Component"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showLinkStandaloneComponent:" id="NEW-LINK-SEGUE"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ZXq-dE-S2O" userLabel="EmbeddedPaymentElement">
-                                        <rect key="frame" x="104" y="108" width="190" height="0.0"/>
+                                        <rect key="frame" x="104" y="120" width="190" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="EmbeddedPaymentElement"/>
                                         <connections>
@@ -99,7 +107,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ExN-w7-ZQf" userLabel="EmbeddedPaymentElement (SwiftUI)">
-                                        <rect key="frame" x="72" y="120" width="254" height="0.0"/>
+                                        <rect key="frame" x="72" y="132" width="254" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="EmbeddedPaymentElement (SwiftUI)"/>
                                         <connections>
@@ -107,7 +115,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="8uB-H8-3cZ" userLabel="WalletButtonsView (SwiftUI)">
-                                        <rect key="frame" x="102.5" y="132" width="193" height="0.0"/>
+                                        <rect key="frame" x="102.5" y="144" width="193" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="WalletButtonsView (SwiftUI)"/>
                                         <connections>
@@ -115,13 +123,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test Playgrounds" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5HP-ay-2IP" userLabel="Test playgrounds">
-                                        <rect key="frame" x="133.5" y="144" width="131" height="0.0"/>
+                                        <rect key="frame" x="133.5" y="156" width="131" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="or6-aq-0to">
-                                        <rect key="frame" x="84.5" y="156" width="229" height="0.0"/>
+                                        <rect key="frame" x="84.5" y="168" width="229" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="CustomerSheet (test playground)"/>
                                         <connections>
@@ -129,7 +137,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ynH-6g-uwR">
-                                        <rect key="frame" x="88" y="168" width="222" height="12"/>
+                                        <rect key="frame" x="88" y="180" width="222" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet (test playground)"/>
                                         <connections>

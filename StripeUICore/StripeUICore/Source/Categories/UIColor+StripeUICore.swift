@@ -146,19 +146,6 @@ import UIKit
         return self.withAlphaComponent(alpha * 0.4)
     }
 
-    /// Returns a translucent mask based on the brightness of the color
-    var translucentMaskColor: UIColor {
-        let alpha: CGFloat = 0.04
-        let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
-        let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
-
-        return isBright
-            ? UIColor.dynamic(light: colorMaskForLight,
-                              dark: colorMaskForDark)
-            : UIColor.dynamic(light: colorMaskForDark,
-                              dark: colorMaskForLight)
-    }
-
     /// Returns this color in a "disabled" state by reducing the alpha by 40% if `isDisabled` is `true`,
     /// or the original color if `false`.
     func disabled(_ isDisabled: Bool = true) -> UIColor {

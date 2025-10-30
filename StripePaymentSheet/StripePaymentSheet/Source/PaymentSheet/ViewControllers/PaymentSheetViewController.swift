@@ -131,7 +131,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
         let button = ConfirmButton(
             callToAction: callToAction,
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
@@ -333,7 +332,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
 
         // Buy button
-        let buyButtonStyle: ConfirmButton.Style
         var buyButtonStatus: ConfirmButton.Status
         var showBuyButton: Bool = true
 
@@ -343,15 +341,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
         switch mode {
         case .selectingSaved:
-            if case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
-                buyButtonStyle = .applePay
-            } else {
-                buyButtonStyle = .stripe
-            }
             buyButtonStatus = buyButtonEnabledForSavedPayments()
             showBuyButton = savedPaymentOptionsViewController.selectedPaymentOption != nil
         case .addingNew:
-            buyButtonStyle = .stripe
             if let overridePrimaryButtonState = addPaymentMethodViewController.overridePrimaryButtonState {
                 callToAction = overridePrimaryButtonState.ctaType
                 buyButtonStatus = overridePrimaryButtonState.enabled ? .enabled : .disabled
@@ -366,9 +358,11 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         if isPaymentInFlight {
             buyButtonStatus = .processing
         }
+        if case .selectingSaved = mode, case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
+            stpAssertionFailure("Apple Pay should be handled directly by the Apple Pay button in the wallet header")
+        }
         self.buyButton.update(
             state: buyButtonStatus,
-            style: buyButtonStyle,
             callToAction: callToAction,
             animated: animated,
             completion: nil
@@ -466,7 +460,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     // Do nothing, keep customer on payment sheet
                     self.updateUI()
                 case .failed(let error):
-                    #if !canImport(CompositorServices)
+                    #if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
                     #endif
                     // Update state
@@ -478,7 +472,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     let delay: TimeInterval = self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.buyButton.update(state: .succeeded, animated: true) {

@@ -19,9 +19,9 @@ import UIKit
     public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
     public static let sectionTitleFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 13, weight: .semibold))
     /// The spacing between elements of a SectionElement
-    public static let sectionSpacing: CGFloat = 4
+    public static let sectionElementInternalSpacing: CGFloat = 8
     /// The spacing between elements of a FormElement
-    public static let formSpacing: CGFloat = 12
+    public static let formSpacing: CGFloat = 16
     public static let defaultCornerRadius: CGFloat = 6
     public static let backgroundColor: UIColor = {
         // systemBackground has a 'base' and 'elevated' state; we don't want this behavior.
@@ -86,8 +86,12 @@ import UIKit
     public var fonts = Font()
     public var colors = Color()
 
+    /// The thickness of divider lines between elements in a section uses `borderWidth` for consistency, with a minimum thickness of 0.5.
+    public var separatorWidth: CGFloat {
+        borderWidth > 0 ? borderWidth : 0.5
+    }
     public var borderWidth = ElementsUI.fieldBorderWidth
-    public var cornerRadius = ElementsUI.defaultCornerRadius
+    public var cornerRadius: CGFloat? = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
     public var textFieldInsets = ElementsUI.contentViewInsets
     public var iconStyle: IconStyle = .filled
@@ -124,6 +128,25 @@ import UIKit
         public var secondaryText = UIColor.secondaryLabel
         public var placeholderText = UIColor.secondaryLabel
         public var danger = UIColor.systemRed
+
+        public var readonlyComponentBackground: UIColor {
+            let backgroundColor = parentBackground
+            return UIColor(dynamicProvider: { traitCollection in
+                let resolvedColor = componentBackground.resolvedColor(with: traitCollection)
+                if resolvedColor.isBright {
+                    // The brighter the background color, the less we need to darken the color in order to ensure it looks disabled _and_ has enough contrast.
+                    // There's undoubtedly a better formula, but I just want:
+                    // 0.04 when brightness is 1
+                    // 0.09 when brightness is 0.96
+                    // and some linear interpolation between:
+                    let darkenFactor = -1.25 * backgroundColor.brightness + 1.29
+                    return resolvedColor.darken(by: darkenFactor)
+                } else {
+                    return resolvedColor.lighten(by: 0.01)
+                }
+            })
+        }
+
     }
 
     public struct Shadow {

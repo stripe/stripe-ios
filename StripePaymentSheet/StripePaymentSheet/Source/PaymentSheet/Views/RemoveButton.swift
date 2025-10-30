@@ -28,7 +28,7 @@ class RemoveButton: UIButton {
 
     init(
         title: String = .Localized.remove,
-        appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
+        appearance: PaymentSheet.Appearance
     ) {
         self.appearance = appearance
         super.init(frame: .zero)
@@ -36,26 +36,17 @@ class RemoveButton: UIButton {
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
 
         let font = appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
-        if #available(iOS 15.0, *) {
-            var config = UIButton.Configuration.bordered()
-            config.baseBackgroundColor = .clear
-            config.background.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius
-            config.background.strokeWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
-            config.background.strokeColor = appearance.colors.danger
-            config.titleAlignment = .center
-            config.attributedTitle = AttributedString(title, attributes: AttributeContainer([.font: font, .foregroundColor: appearance.colors.danger]))
-            configuration = config
-        } else {
-            setTitleColor(appearance.colors.danger, for: .normal)
-            setTitleColor(appearance.colors.danger.disabledColor, for: .highlighted)
-            layer.borderColor = appearance.colors.danger.cgColor
-            layer.borderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
-            layer.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius
-            setTitle(title, for: .normal)
-            titleLabel?.textAlignment = .center
-            titleLabel?.font = font
-            titleLabel?.adjustsFontForContentSizeCategory = true
-        }
+        setTitleColor(appearance.colors.danger, for: .normal)
+        setTitleColor(appearance.colors.danger.disabledColor, for: .highlighted)
+        layer.borderColor = appearance.colors.danger.cgColor
+        setTitle(title, for: .normal)
+        titleLabel?.textAlignment = .center
+        titleLabel?.font = font
+        titleLabel?.adjustsFontForContentSizeCategory = true
+        applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule, shouldUsePrimaryButtonCornerRadius: true)
+        // Workaround:  Use layer.borderWidth because background.strokeWidth isn't compatible with .capsule()
+        layer.borderWidth = 1.5
+
         addTarget(self, action: #selector(buttonTouchDown(_:)), for: .touchDown)
         addTarget(self, action: #selector(buttonTouchUp(_:)), for: [.touchUpInside, .touchUpOutside])
     }

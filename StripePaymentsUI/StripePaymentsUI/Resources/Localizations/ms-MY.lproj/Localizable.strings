@@ -22,6 +22,8 @@
 
 "Billing address" = "Alamat pengebilan";
 
+"Billing details" = "Butiran pengebilan";
+
 "CVC" = "CVC";
 
 "Card information" = "Maklumat kad";
@@ -48,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Untuk mengimbas kad anda, benarkan akses kamera dalam Tetapan.";
 
-"Your ZIP is invalid." = "Kod ZIP anda tidak sah.";
-
 "Your card has expired." = "Kad anda telah tamat tempoh.";
 
 "Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
@@ -67,8 +67,6 @@
 "Your card's security code is incomplete." = "Kod keselamatan kad anda tidak lengkap.";
 
 "Your card's security code is invalid." = "Kod keselamatan kad anda tidak sah.";
-
-"Your postal code is invalid." = "Poskod anda tidak sah.";
 
 "card number" = "nombor kad";
 

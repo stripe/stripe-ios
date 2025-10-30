@@ -48,6 +48,31 @@ struct OnboardingSettingsView: View {
                     }
                 }
 
+                Picker("Requirements", selection: $onboardingSettings.requirementsOption) {
+                    ForEach(OnboardingSettings.RequirementsOption.allCases) { option in
+                        Text(option.displayLabel)
+                            .tag(option)
+                    }
+                }
+
+                if onboardingSettings.requirementsOption != .default {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Requirements List")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("Enter one requirement per line")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        TextEditor(text: $onboardingSettings.requirementsString)
+                            .frame(minHeight: 80)
+                            .padding(4)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(8)
+                            .font(.system(.body, design: .monospaced))
+                    }
+                    .padding(.vertical, 4)
+                }
+
                 Button {
                     onboardingSettings = .init()
                     AppSettings.shared.onboardingSettings = onboardingSettings

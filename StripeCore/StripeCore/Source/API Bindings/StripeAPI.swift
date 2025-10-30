@@ -25,6 +25,7 @@ import PassKit
     /// @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
     @objc public func setDefaultPublishableKey(_ publishableKey: String) {
         StripeAPI.defaultPublishableKey = publishableKey
+        STPAPIClient.shared.publishableKey = publishableKey
     }
 
     /// A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.
@@ -163,7 +164,7 @@ import PassKit
         let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = merchantIdentifier
         paymentRequest.supportedNetworks = self.supportedPKPaymentNetworks()
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         paymentRequest.merchantCapabilities = .threeDSecure
         #else
         paymentRequest.merchantCapabilities = .capability3DS

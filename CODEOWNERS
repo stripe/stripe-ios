@@ -7,3 +7,4 @@
 */StripePaymentsUI @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
 */StripeApplePay @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
 */Stripe3DS2 @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+*/StripeConnect @stripe/ios-connect-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers

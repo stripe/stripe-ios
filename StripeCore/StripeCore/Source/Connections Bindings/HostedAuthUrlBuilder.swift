@@ -85,6 +85,10 @@ import Foundation
 
         parameters.append("launched_by=ios_sdk")
 
+        if let allowRedisplay = elementsSessionContext?.allowRedisplay {
+            parameters.append("allow_redisplay=\(allowRedisplay)")
+        }
+
         // Join all values with an &, and URL encode.
         // We encode these parameters since they will be appended to the auth flow URL.
         let joinedParameters = parameters

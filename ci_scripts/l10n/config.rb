@@ -33,7 +33,6 @@ LANGUAGES = %w[
   mt
   nb
   nl
-  nn-NO
   pl-PL
   pt-BR
   pt-PT

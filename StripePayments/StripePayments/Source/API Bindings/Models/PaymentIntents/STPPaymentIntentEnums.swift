@@ -14,30 +14,11 @@ import Foundation
     case unknown
     /// This PaymentIntent requires a PaymentMethod or Source
     case requiresPaymentMethod
-    /// This PaymentIntent requires a Source
-    /// Deprecated: Use STPPaymentIntentStatusRequiresPaymentMethod instead.
-    @available(
-        *,
-        deprecated,
-        message: "Use STPPaymentIntentStatus.requiresPaymentMethod instead",
-        renamed: "STPPaymentIntentStatus.requiresPaymentMethod"
-    )
-    case requiresSource
     /// This PaymentIntent needs to be confirmed
     case requiresConfirmation
     /// The selected PaymentMethod or Source requires additional authentication steps.
     /// Additional actions found via `next_action`
     case requiresAction
-    /// The selected Source requires additional authentication steps.
-    /// Additional actions found via `next_source_action`
-    /// Deprecated: Use STPPaymentIntentStatusRequiresAction instead.
-    @available(
-        *,
-        deprecated,
-        message: "Use STPPaymentIntentStatus.requiresAction instead",
-        renamed: "STPPaymentIntentStatus.requiresAction"
-    )
-    case requiresSourceAction
     /// Stripe is processing this PaymentIntent
     case processing
     /// The payment has succeeded
@@ -112,24 +93,4 @@ import Foundation
         renamed: "STPIntentActionType.redirectToURL"
     )
     case redirectToURL
-}
-
-/// Types of Source Actions from a `STPPaymentIntent`, when the payment intent
-/// status is `STPPaymentIntentStatusRequiresSourceAction`.
-/// @deprecated Use`STPPaymentIntentActionType` instead.
-@available(
-    *,
-    deprecated,
-    message: "Use STPIntentActionType instead",
-    renamed: "STPIntentActionType"
-)
-@objc public enum STPPaymentIntentSourceActionType: Int {
-    /// This is an unknown source action, that's been added since the SDK
-    /// was last updated.
-    /// Update your SDK, or use the `nextSourceAction.allResponseFields`
-    /// for custom handling.
-    case unknown
-    /// The payment intent needs to be authorized by the user. We provide
-    /// `STPRedirectContext` to handle the url redirections necessary.
-    case authorizeWithURL
 }

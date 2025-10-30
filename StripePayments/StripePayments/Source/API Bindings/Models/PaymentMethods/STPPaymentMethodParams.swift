@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import UIKit
 
 /// An object representing parameters used to create a PaymentMethod object.
@@ -113,8 +114,14 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     /// If this is a ShopPay PaymentMethod, this contains additional details.
     @objc @_spi(STP) public var shopPay: STPPaymentMethodShopPayParams?
 
+    /// Radar options that may contain HCaptcha token
+    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
+
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
+
+    /// Contains metadata with identifiers for the session and information about the integration
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// Creates params for a card PaymentMethod.
     /// - Parameters:
@@ -903,7 +910,9 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: crypto)): "crypto",
             NSStringFromSelector(#selector(getter: multibanco)): "multibanco",
             NSStringFromSelector(#selector(getter: link)): "link",
+            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
+            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
         ]
     }
 

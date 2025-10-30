@@ -111,7 +111,7 @@ import UIKit
         )
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     private let feedbackGenerator = UINotificationFeedbackGenerator()
 #endif
 
@@ -199,7 +199,7 @@ import UIKit
         let result = super.resignFirstResponder()
 
         if result {
-            #if !canImport(CompositorServices)
+            #if !os(visionOS)
             hideMenu()
             #endif
             update()
@@ -217,7 +217,7 @@ import UIKit
         }
 
         if isFirstResponder {
-            #if !canImport(CompositorServices)
+            #if !os(visionOS)
             toggleMenu()
             #endif
         } else {
@@ -287,7 +287,7 @@ private extension OneTimeCodeTextField {
             : STPLocalizedString("Double tap to edit", "Accessibility hint for a text field")
     }
 
-    #if !canImport(CompositorServices) // Don't mess with the UIMenuController on visionOS
+    #if !os(visionOS) // Don't mess with the UIMenuController on visionOS
     func toggleMenu() {
         if UIMenuController.shared.isMenuVisible {
             hideMenu()
@@ -375,7 +375,7 @@ public extension OneTimeCodeTextField {
             digitView.borderLayer.add(borderColorAnimation, forKey: "borderColor")
         }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         feedbackGenerator.notificationOccurred(.error)
 #endif
 
@@ -414,7 +414,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         hideMenu()
         #endif
         update()
@@ -430,7 +430,7 @@ extension OneTimeCodeTextField: UIKeyInput {
         inputDelegate?.textDidChange(self)
 
         sendActions(for: [.editingChanged, .valueChanged])
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         hideMenu()
         #endif
         update()
@@ -815,7 +815,7 @@ private extension OneTimeCodeTextField {
             }
 
             // Animate background color change when field becomes active
-            if isActive, let backgroundColor = configuration.focusBackgroundColor {
+            if isActive, let backgroundColor = configuration.focusBackgroundColor?.resolvedColor(with: traitCollection) {
                 let backgroundAnimation = CABasicAnimation(keyPath: "backgroundColor")
                 backgroundAnimation.fromValue = borderLayer.backgroundColor
                 backgroundAnimation.toValue = backgroundColor.cgColor
@@ -838,7 +838,7 @@ private extension OneTimeCodeTextField {
             borderLayer.backgroundColor = backgroundColor.resolvedColor(with: traitCollection).cgColor
             borderLayer.borderColor = theme.colors.border.resolvedColor(with: traitCollection).cgColor
             caret.backgroundColor = label.textColor.resolvedColor(with: traitCollection).cgColor
-            focusRing.borderColor = tintColor.cgColor
+            focusRing.borderColor = tintColor.resolvedColor(with: traitCollection).cgColor
         }
 
         private func showCaret() {
@@ -865,7 +865,7 @@ private extension OneTimeCodeTextField {
             updateColors()
         }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             updateColors()

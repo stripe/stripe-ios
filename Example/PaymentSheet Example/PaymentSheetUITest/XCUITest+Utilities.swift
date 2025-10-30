@@ -211,7 +211,7 @@ extension XCUIApplication {
         XCTAssertTrue(staticTexts["Enter address manually"].waitForExistence(timeout: 2), "Autocomplete view should appear")
 
         // Proceed with autocomplete flow
-        let autocompleteTextField = textFields.firstMatch
+        let autocompleteTextField = textFields["Address"].firstMatch
         autocompleteTextField.waitForExistenceAndTap()
         typeText(searchTerm)
 
@@ -228,7 +228,8 @@ extension XCTestCase {
                       cardNumber: String? = nil,
                       cvc: String = "123",
                       postalEnabled: Bool = true,
-                      tapCheckboxWithText checkboxText: String? = nil) throws {
+                      tapCheckboxWithText checkboxText: String? = nil,
+                      disableDefaultOptInIfNeeded: Bool = false) throws {
         let context = container ?? app
 
         let numberField = context.textFields["Card number"]
@@ -244,6 +245,12 @@ extension XCTestCase {
             XCTAssertFalse(saveThisAccountToggle.isSelected)
             saveThisAccountToggle.tap()
             XCTAssertTrue(saveThisAccountToggle.isSelected)
+        }
+        if disableDefaultOptInIfNeeded {
+            let saveSwitch = app.switches.containing(NSPredicate(format: "label CONTAINS[c] 'Save'")).firstMatch
+            if saveSwitch.exists && saveSwitch.isSelected {
+                saveSwitch.tap()
+            }
         }
     }
 
@@ -261,29 +268,7 @@ extension XCTestCase {
     func fillUSBankData_microdeposits(_ app: XCUIApplication,
                                       container: XCUIElement? = nil) throws {
         let context = container ?? app
-        let routingField = context.textFields["manual_entry_routing_number_text_field"]
-        routingField.forceTapWhenHittableInTestCase(self)
-        app.typeText("110000000")
-
-        // Dismiss keyboard, otherwise we can not see the next field
-        // This is only an artifact in the (test) native version of the flow
-        app.tapCoordinate(at: .init(x: 150, y: 150))
-
-        let acctField = context.textFields["manual_entry_account_number_text_field"]
-        acctField.forceTapWhenHittableInTestCase(self)
-        app.typeText("000123456789")
-
-        // Dismiss keyboard, otherwise we can not see the next field
-        // This is only an artifact in the (test) native version of the flow
-        app.tapCoordinate(at: .init(x: 150, y: 150))
-
-        let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"]
-        acctConfirmField.forceTapWhenHittableInTestCase(self)
-        app.typeText("000123456789")
-
-        // Dismiss keyboard again otherwise we can not see the continue button
-        // This is only an artifact in the (test) native version of the flow
-        app.tapCoordinate(at: .init(x: 150, y: 150))
+        context.buttons["test_mode_autofill_button"].tap()
     }
     func fillSepaData(_ app: XCUIApplication,
                       iban: String = "DE89370400440532013000",

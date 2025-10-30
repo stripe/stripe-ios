@@ -371,7 +371,10 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // auto-fill manual entry screen
         app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
 
-        app.fc_nativeSaveToLinkButton.waitForExistenceAndTap()
+        // Wait a moment for the consumer session lookup to complete before tapping `Save to Link`.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            app.fc_nativeSaveToLinkButton.waitForExistenceAndTap()
+        }
 
         app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
 

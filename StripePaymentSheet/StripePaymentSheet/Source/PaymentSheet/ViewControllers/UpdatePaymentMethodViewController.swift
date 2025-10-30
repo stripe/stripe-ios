@@ -415,3 +415,23 @@ extension STPPaymentMethodCard {
         return nil
     }
 }
+
+extension UpdatePaymentMethodViewController {
+    static func resolveRemoveMessage(removeSavedPaymentMethodMessage: String?,
+                                     paymentMethodRemoveIsPartial: Bool,
+                                     merchantName: String) -> String? {
+        if let removeSavedPaymentMethodMessage {
+            return removeSavedPaymentMethodMessage
+        }
+        if paymentMethodRemoveIsPartial {
+            return String(
+                format: STPLocalizedString(
+                    "This payment method will be removed but will remain available for %@ subscriptions.",
+                    "Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name"
+                ),
+                merchantName
+            )
+        }
+        return nil
+    }
+}
