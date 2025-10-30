@@ -27,41 +27,19 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     @objc public private(set) var created: Date?
     /// The currency associated with the source.
     @objc public private(set) var currency: String?
-    /// The authentication flow of the source.
-    @objc public private(set) var flow: STPSourceFlow = .none
     /// Whether or not this source was created in livemode.
     @objc public private(set) var livemode = false
-    /// Information about the owner of the payment instrument.
-    @objc public private(set) var owner: STPSourceOwner?
-    /// Information related to the receiver flow. Present if the source's flow
-    /// is receiver.
-    @objc public private(set) var receiver: STPSourceReceiver?
-    /// Information related to the redirect flow. Present if the source's flow
-    /// is redirect.
-    @objc public private(set) var redirect: STPSourceRedirect?
     /// The status of the source.
     @objc public private(set) var status: STPSourceStatus = .unknown
     /// The type of the source.
     @objc public private(set) var type: STPSourceType = .unknown
     /// Whether this source should be reusable or not.
     @objc public private(set) var usage: STPSourceUsage = .unknown
-    /// Information related to the verification flow. Present if the source's flow
-    /// is verification.
-    @objc public private(set) var verification: STPSourceVerification?
     /// Information about the source specific to its type
     @objc public private(set) var details: [AnyHashable: Any]?
     /// If this is a card source, this property provides typed access to the
     /// contents of the `details` dictionary.
     @objc public private(set) var cardDetails: STPSourceCardDetails?
-    /// If this is a Klarna source, this property provides typed access to the
-    /// contents of the `details` dictionary.
-    @objc public private(set) var klarnaDetails: STPSourceKlarnaDetails?
-    /// If this is a SEPA Debit source, this property provides typed access to the
-    /// contents of the `details` dictionary.
-    @objc public private(set) var sepaDebitDetails: STPSourceSEPADebitDetails?
-    /// If this is a WeChat Pay source, this property provides typed access to the
-    /// contents of the `details` dictionary.
-    @objc public private(set) var weChatPayDetails: STPSourceWeChatPayDetails?
     // MARK: - Deprecated
 
     /// A set of key/value pairs associated with the source object.
@@ -80,19 +58,7 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     // MARK: - STPSourceType
     class func stringToTypeMapping() -> [String: NSNumber] {
         return [
-            "bancontact": NSNumber(value: STPSourceType.bancontact.rawValue),
             "card": NSNumber(value: STPSourceType.card.rawValue),
-            "giropay": NSNumber(value: STPSourceType.giropay.rawValue),
-            "ideal": NSNumber(value: STPSourceType.iDEAL.rawValue),
-            "sepa_debit": NSNumber(value: STPSourceType.SEPADebit.rawValue),
-            "sofort": NSNumber(value: STPSourceType.sofort.rawValue),
-            "three_d_secure": NSNumber(value: STPSourceType.threeDSecure.rawValue),
-            "alipay": NSNumber(value: STPSourceType.alipay.rawValue),
-            "p24": NSNumber(value: STPSourceType.P24.rawValue),
-            "eps": NSNumber(value: STPSourceType.EPS.rawValue),
-            "multibanco": NSNumber(value: STPSourceType.multibanco.rawValue),
-            "wechat": NSNumber(value: STPSourceType.weChatPay.rawValue),
-            "klarna": NSNumber(value: STPSourceType.klarna.rawValue),
         ]
     }
 
@@ -113,37 +79,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         return
             (self.stringToTypeMapping() as NSDictionary).allKeys(
                 for: NSNumber(value: type.rawValue)
-            )
-            .first as? String
-    }
-
-    // MARK: - STPSourceFlow
-    class func stringToFlowMapping() -> [String: NSNumber] {
-        return [
-            "redirect": NSNumber(value: STPSourceFlow.redirect.rawValue),
-            "receiver": NSNumber(value: STPSourceFlow.receiver.rawValue),
-            "code_verification": NSNumber(value: STPSourceFlow.codeVerification.rawValue),
-            "none": NSNumber(value: STPSourceFlow.none.rawValue),
-        ]
-    }
-
-    @objc(flowFromString:)
-    class func flow(from string: String) -> STPSourceFlow {
-        let key = string.lowercased()
-        let flowNumber = self.stringToFlowMapping()[key]
-
-        if let flowNumber = flowNumber {
-            return (STPSourceFlow(rawValue: flowNumber.intValue))!
-        }
-
-        return .unknown
-    }
-
-    @objc(stringFromFlow:)
-    class func string(from flow: STPSourceFlow) -> String? {
-        return
-            (self.stringToFlowMapping() as NSDictionary).allKeys(
-                for: NSNumber(value: flow.rawValue)
             )
             .first as? String
     }
@@ -246,15 +181,10 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             "clientSecret = \(((clientSecret) != nil ? "<redacted>" : nil) ?? "")",
             "created = \(String(describing: created))",
             "currency = \(currency ?? "")",
-            "flow = \((STPSource.string(from: flow)) ?? "unknown")",
             "livemode = \((livemode) ? "YES" : "NO")",
-            "owner = \(((owner) != nil ? "<redacted>" : nil) ?? "")",
-            "receiver = \(String(describing: receiver))",
-            "redirect = \(String(describing: redirect))",
             "status = \((STPSource.string(from: status)) ?? "unknown")",
             "type = \((STPSource.string(from: type)) ?? "unknown")",
             "usage = \((STPSource.string(from: usage)) ?? "unknown")",
-            "verification = \(String(describing: verification))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -286,25 +216,11 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         source.clientSecret = dict.stp_string(forKey: "client_secret")
         source.created = dict.stp_date(forKey: "created")
         source.currency = dict.stp_string(forKey: "currency")
-        let rawFlow = dict.stp_string(forKey: "flow")
-        source.flow = self.flow(from: rawFlow ?? "")
         source.livemode = dict.stp_bool(forKey: "livemode", or: true)
-        let rawOwner = dict.stp_dictionary(forKey: "owner")
-        source.owner = STPSourceOwner.decodedObject(fromAPIResponse: rawOwner)
-        let rawReceiver = dict.stp_dictionary(forKey: "receiver")
-        source.receiver = STPSourceReceiver.decodedObject(fromAPIResponse: rawReceiver)
-        let rawRedirect = dict.stp_dictionary(forKey: "redirect")
-        source.redirect = STPSourceRedirect.decodedObject(fromAPIResponse: rawRedirect)
         source.status = self.status(from: rawStatus ?? "")
         source.type = self.type(from: rawType ?? "")
         let rawUsage = dict.stp_string(forKey: "usage")
         source.usage = self.usage(from: rawUsage ?? "")
-        let rawVerification = dict.stp_dictionary(forKey: "verification")
-        if let rawVerification = rawVerification {
-            source.verification = STPSourceVerification.decodedObject(
-                fromAPIResponse: rawVerification
-            )
-        }
         source.details = dict.stp_dictionary(forKey: rawType ?? "")
         source.allResponseFields = dict
 
@@ -312,18 +228,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             if let details1 = source.details {
                 source.cardDetails = STPSourceCardDetails.decodedObject(fromAPIResponse: details1)
             }
-        } else if source.type == .SEPADebit {
-            source.sepaDebitDetails = STPSourceSEPADebitDetails.decodedObject(
-                fromAPIResponse: source.details
-            )
-        } else if source.type == .weChatPay {
-            source.weChatPayDetails = STPSourceWeChatPayDetails.decodedObject(
-                fromAPIResponse: source.details
-            )
-        } else if source.type == .klarna {
-            source.klarnaDetails = STPSourceKlarnaDetails.decodedObject(
-                fromAPIResponse: source.details
-            )
         }
 
         return source

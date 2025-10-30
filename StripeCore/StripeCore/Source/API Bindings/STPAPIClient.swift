@@ -77,8 +77,6 @@ import UIKit
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
 
-    @_spi(STP) public var sourcePollers: [String: NSObject]?
-    @_spi(STP) public var sourcePollersQueue: DispatchQueue?
     /// A set of beta headers to add to Stripe API requests e.g. `Set(["alipay_beta=v1"])`.
     @_spi(STP) public var betas: Set<String> = []
 
@@ -94,8 +92,6 @@ import UIKit
 
     // MARK: Initializers
     override public init() {
-        sourcePollers = [:]
-        sourcePollersQueue = DispatchQueue(label: "com.stripe.sourcepollers")
     }
 
     /// Initializes an API client with the given publishable key.
