@@ -66,7 +66,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }
         )
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             afterpayClearpay: STPPaymentMethodAfterpayClearpayParams(),
@@ -166,7 +166,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }
         )
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             afterpayClearpay: STPPaymentMethodAfterpayClearpayParams(),
@@ -198,7 +198,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
 
         // Override it with a spec that doesn't define a next action so that we force the SDK to default behavior
         let updatedSpecJson =
-            """
+            Data("""
             [{
                 "type": "affirm",
                 "async": false,
@@ -208,7 +208,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                     }
                 ]
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
         XCTAssert(formSpecProvider.loadFrom(formSpec))
         guard formSpecProvider.formSpec(for: "affirm") != nil else {
@@ -263,7 +263,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }
         )
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             afterpayClearpay: STPPaymentMethodAfterpayClearpayParams(),
@@ -320,7 +320,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
               }
             """
         let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider())
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             blik: STPPaymentMethodBLIKParams(),
@@ -358,7 +358,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         paymentMethodData: String,
         didRedirect: XCTestExpectation,
         paymentHandler: STPPaymentHandler,
-        paymentIntentParams: STPPaymentIntentParams
+        paymentIntentParams: STPPaymentIntentConfirmParams
     ) {
         let expectConfirmSucceeded = expectation(description: "didSucceed")
         paymentHandler.confirmPayment(paymentIntentParams, with: self) {
