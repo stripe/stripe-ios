@@ -587,7 +587,10 @@ class PlaygroundController: ObservableObject {
 
     var rootViewController: UIViewController {
         // Hack, should do this in SwiftUI
-        return UIApplication.shared.windows.first!.rootViewController!
+        return UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.windows }
+            .flatMap { $0 }
+            .first!.rootViewController!
     }
 
     private var subscribers: Set<AnyCancellable> = []

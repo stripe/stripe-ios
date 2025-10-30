@@ -32,7 +32,10 @@ extension AppDelegate {
         guard let constraint = notification.object as? NSLayoutConstraint else {
             return
         }
-        let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
+        let window = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.windows }
+            .flatMap { $0 }
+            .first(where: { $0.isKeyWindow })
         // Ignore broken constraints that existed at the time of writing this - please try to fix newly introduced ones instead of ignoring!
         // Sometimes the broken constraint references something that is unique, in which case we can ignore it easily
         let ignoredBrokenConstraints = [
