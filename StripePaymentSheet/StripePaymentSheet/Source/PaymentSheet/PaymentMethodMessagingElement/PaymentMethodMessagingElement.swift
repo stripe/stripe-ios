@@ -5,13 +5,40 @@
 //  Created by George Birch on 10/9/25.
 //
 
+import Combine
+import StripeCore
+import StripePayments
+import SwiftUI
 import UIKit
 
 /// An element that provides a view with information about how a purchase could be paid for using Buy Now, Pay Later payment methods.
 public class PaymentMethodMessagingElement {
 
+    /// A UIKit view of the element.
+    public lazy var view: UIView = {
+        PMMEUIView(viewData: viewData)
+    }()
+
+    /// The result of an attempt to create a PaymentMethodMessagingElement.
+    public enum CreationResult {
+
+        /// The PaymentMethodMessagingElement was success fully created.
+        /// - Parameter PaymentMethodMessagingElement: The created Element object.
+        case success(PaymentMethodMessagingElement)
+
+        /// The configuration was successfully loaded, but there is no content available to display (for example because the amount is less than the minimum for available payment methods).
+        case noContent
+
+        /// The configuration failed to be loaded.
+        /// - Parameter Error: An `Error` object representing the reason the element failed to load
+        case failed(Error)
+    }
+
     /// Describes the visual appearance of the PaymentMethodMessagingElement.
-    public struct Appearance {
+    public struct Appearance: Equatable {
+
+        /// The default appearance for Payment Method Messaging Element.
+        public static let `default` = PaymentMethodMessagingElement.Appearance()
 
         /// The color scheme style of the PaymentMethodMessagingElement.
         public enum UserInterfaceStyle {
@@ -43,7 +70,7 @@ public class PaymentMethodMessagingElement {
     }
 
     /// Describes the configuration of the PaymentMethodMessagingElement.
-    public struct Configuration {
+    public struct Configuration: Equatable {
 
         /// The amount intended to be collected in the smallest currency unit (for example, 100 cents to charge $1.00 USD).
         public let amount: Int
@@ -64,11 +91,27 @@ public class PaymentMethodMessagingElement {
 
         /// The payment methods to request messaging for. Valid values are `.affirm`, `.klarna`, and `.afterpayClearpay`.
         /// Defaults to `nil`.
-        /// If `nil`, uses your preferences from the Stripe dashboard to show the relevant payment methods. See Dynamic payment methods for more information.
+        /// If `nil` or empty, uses your preferences from the Stripe dashboard to show the relevant payment methods. See Dynamic payment methods for more information.
         public var paymentMethodTypes: [STPPaymentMethodType]?
 
         /// Describes the visual appearance of the PaymentMethodMessaingElement.
         public var appearance: PaymentMethodMessagingElement.Appearance = PaymentMethodMessagingElement.Appearance()
+    }
+
+    /// Creates an instance of `PaymentMethodMessagingElement`.
+    /// - Parameter configuration: Configuration for the PaymentMethodMessagingElement, such as the amount and currency of the purchase.
+    /// - Returns: A `CreationResult` object representing the result of the attempt to load the element and an instance of the element if applicable.
+    public static func create(configuration: Configuration) async -> CreationResult {
+        do {
+            let apiResponse = try await get(configuration: configuration)
+            if let pmme = try await PaymentMethodMessagingElement(apiResponse: apiResponse, configuration: configuration) {
+                return .success(pmme)
+            } else {
+                return .noContent
+            }
+        } catch {
+            return .failed(error)
+        }
     }
 
     // MARK: - Internal
