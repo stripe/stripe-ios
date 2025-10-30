@@ -137,7 +137,7 @@ extension STPSetupIntentFunctionalTestSwift {
                 XCTAssertFalse(setupIntent.livemode)
                 XCTAssertNil(setupIntent.nextAction)
                 XCTAssertNil(setupIntent.paymentMethodID)
-                XCTAssertEqual(setupIntent.paymentMethodTypes, [NSNumber(value: STPPaymentMethodType.card.rawValue)])
+                XCTAssertEqual(setupIntent.paymentMethodTypes, [STPPaymentMethodType.card])
                 XCTAssertEqual(setupIntent.status, STPSetupIntentStatus.requiresPaymentMethod)
                 XCTAssertEqual(setupIntent.usage, STPSetupIntentUsage.offSession)
                 expectation.fulfill()
@@ -158,7 +158,7 @@ extension STPSetupIntentFunctionalTestSwift {
         XCTAssertFalse(setupIntent.livemode)
         XCTAssertNil(setupIntent.nextAction)
         XCTAssertNil(setupIntent.paymentMethodID)
-        XCTAssertEqual(setupIntent.paymentMethodTypes, [NSNumber(value: STPPaymentMethodType.card.rawValue)])
+        XCTAssertEqual(setupIntent.paymentMethodTypes, [STPPaymentMethodType.card])
         XCTAssertEqual(setupIntent.status, STPSetupIntentStatus.requiresPaymentMethod)
         XCTAssertEqual(setupIntent.usage, STPSetupIntentUsage.offSession)
     }

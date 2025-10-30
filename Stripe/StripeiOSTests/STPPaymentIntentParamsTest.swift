@@ -28,7 +28,6 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
             XCTAssertNil(params.sourceParams)
             XCTAssertNil(params.sourceId)
             XCTAssertNil(params.receiptEmail)
-            XCTAssertNil(params.perform(NSSelectorFromString("saveSourceToCustomer")))
             XCTAssertNil(params.savePaymentMethod)
             XCTAssertNil(params.returnURL)
             XCTAssertNil(params.setAsDefaultPM)
@@ -61,19 +60,6 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
 
         params.perform(NSSelectorFromString("setReturnUrl:"), with: "set via old name")
         XCTAssertEqual(params.returnURL, "set via old name")
-    }
-
-    func testSaveSourceToCustomerRenaming() {
-        let params = STPPaymentIntentConfirmParams()
-
-        XCTAssertNil(params.perform(NSSelectorFromString("saveSourceToCustomer")))
-        XCTAssertNil(params.savePaymentMethod)
-
-        params.savePaymentMethod = NSNumber(value: false)
-        XCTAssertEqual(params.perform(NSSelectorFromString("saveSourceToCustomer")).takeUnretainedValue() as? NSNumber, NSNumber(value: false))
-
-        params.perform(NSSelectorFromString("setSaveSourceToCustomer:"), with: NSNumber(value: true))
-        XCTAssertEqual(params.savePaymentMethod, NSNumber(value: true))
     }
 
     func testDefaultMandateData() {
@@ -141,9 +127,9 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
         let params = STPPaymentIntentConfirmParams(clientSecret: "test_client_secret")
         params.paymentMethodParams = STPPaymentMethodParams()
         params.paymentMethodId = "test_payment_method_id"
-        params.savePaymentMethod = NSNumber(value: true)
+        params.savePaymentMethod = true
         params.returnURL = "fake://testing_only"
-        params.setAsDefaultPM = NSNumber(value: true)
+        params.setAsDefaultPM = true
         params.setupFutureUsage = STPPaymentIntentSetupFutureUsage(
             rawValue: Int(truncating: NSNumber(value: 1))
         )
