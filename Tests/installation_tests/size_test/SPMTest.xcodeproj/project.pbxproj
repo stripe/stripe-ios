@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -148,6 +148,7 @@
 				C176898020616C7E003DE895 /* Frameworks */,
 				C176898120616C7E003DE895 /* Resources */,
 				31530F28250974420041CFE3 /* Embed Frameworks */,
+				31DF8BF92EB3C641007D3B45 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -221,6 +222,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		31DF8BF92EB3C641007D3B45 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\nset -euo pipefail\n\nAPP_BUNDLE=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\nRES_DIR=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\n\nif [ ! -d \"$APP_BUNDLE\" ]; then\n  echo \"App bundle not found: $APP_BUNDLE\"\n  exit 0\nfi\n\n# Build the allowlist of locales to keep\ndeclare -a KEEP_LOCALES=()\n\n# 1) App's own .lproj folders (selected in the project \"Localizations\")\nif compgen -G \"$RES_DIR/*.lproj\" > /dev/null; then\n  while IFS= read -r -d '' lproj; do\n    KEEP_LOCALES+=(\"$(basename \"$lproj\" .lproj)\")\n  done < <(find \"$RES_DIR\" -maxdepth 1 -type d -name \"*.lproj\" -print0)\nfi\n\n# 2) Fallback to Info.plist CFBundleLocalizations if present\nif [ \"${#KEEP_LOCALES[@]}\" -eq 0 ] && [ -f \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\" ]; then\n  mapfile -t plistLocales < <(/usr/libexec/PlistBuddy -c \"Print CFBundleLocalizations\" \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\" 2>/dev/null | awk -F'[ \\t]*= ' '/^[[:space:]]*[0-9]+\\)/{print $2}')\n  if [ \"${#plistLocales[@]}\" -gt 0 ]; then\n    KEEP_LOCALES+=(\"${plistLocales[@]}\")\n  fi\nfi\n\n# Always keep Base and the project's development language\nKEEP_LOCALES+=(\"Base\")\nif [ -n \"${DEVELOPMENT_LANGUAGE:-}\" ]; then\n  KEEP_LOCALES+=(\"$DEVELOPMENT_LANGUAGE\")\nfi\n\n# Unique + sorted\nKEEP_LOCALES=($(printf \"%s\\n\" \"${KEEP_LOCALES[@]}\" | awk 'NF' | sort -u))\necho \"Keeping localizations: ${KEEP_LOCALES[*]}\"\n\n# Find all resource bundles (SwiftPM bundles included)\nmapfile -d '' BUNDLES < <(find \"$APP_BUNDLE\" -type d -name \"*.bundle\" -print0)\n\nfor bundle in \"${BUNDLES[@]}\"; do\n  echo \"Pruning localizations in: $(basename \"$bundle\")\"\n  shopt -s nullglob\n  for lproj in \"$bundle\"/*.lproj; do\n    loc=\"$(basename \"$lproj\" .lproj)\"\n    keep=false\n    for k in \"${KEEP_LOCALES[@]}\"; do\n      if [[ \"$k\" == \"$loc\" ]]; then keep=true; break; fi\n    done\n    if [ \"$keep\" = false ]; then\n      echo \"  Removing $loc.lproj\"\n      rm -rf \"$lproj\"\n    fi\n  done\ndone\n\nexit 0\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3117ED9626C2E9DF00C8E897 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -280,7 +302,11 @@
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = SPMTestUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTestUITests;
@@ -304,11 +330,16 @@
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = SPMTestUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = SPMTest;
@@ -433,7 +464,10 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = SPMTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -452,7 +486,10 @@
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = SPMTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
