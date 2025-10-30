@@ -393,28 +393,42 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKycResult {
         do {
+            let linkAccountInfo = try await self.linkAccountInfo
+            let apiClient = self.apiClient
+
             // Fetch existing KYC info
             // let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
             let response = RetrieveKYCInfoResponse(kycInfo: .init(firstName: "Mike", lastName: "Liberatore", dateOfBirth: .init(day: 1, month: 2, year: 1990), address: .init(city: "New York", country: "US", line1: "123 Fake St", line2: "APT 2", postalCode: "10019", state: "NY"), idNumberLast4: "6789", idType: .socialSecurityNumber))
+
             var displayInfo = response.kycInfo
-            if let newAddress = updatedAddress {
-                displayInfo = KYCRefreshInfo(
-                    firstName: displayInfo.firstName,
-                    lastName: displayInfo.lastName,
-                    dateOfBirth: displayInfo.dateOfBirth,
-                    address: newAddress,
-                    idNumberLast4: displayInfo.idNumberLast4,
-                    idType: displayInfo.idType
-                )
+
+            if let updatedAddress {
+                displayInfo.address = updatedAddress
             }
 
             return try await withCheckedThrowingContinuation { continuation in
                 Task { @MainActor in
                     let verifyKYCViewController = VerifyKYCViewController(info: displayInfo, appearance: appearance)
-
                     verifyKYCViewController.onResult = { result in
-                        verifyKYCViewController.dismiss(animated: true) {
-                            continuation.resume(returning: result)
+                        let dismissAndResumeWithResult: (Result<VerifyKycResult, Swift.Error>) -> Void = { continuationResult in
+                            print("Thread: \(Thread.current)")
+                            verifyKYCViewController.dismiss(animated: true) {
+                                continuation.resume(with: continuationResult)
+                            }
+                        }
+
+                        switch result {
+                        case .canceled, .updateAddress:
+                            dismissAndResumeWithResult(.success(result))
+                        case .confirmed:
+                            Task {
+                                do {
+                                    try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
+                                    dismissAndResumeWithResult(.success(result))
+                                } catch {
+                                    dismissAndResumeWithResult(.failure(error))
+                                }
+                            }
                         }
                     }
 

@@ -22,7 +22,7 @@ struct KYCRefreshInfo {
     let dateOfBirth: KycInfo.DateOfBirth
 
     /// The user’s address.
-    let address: Address
+    var address: Address
 
     /// The last four digits of the user’s id number.
     let idNumberLast4: String?
