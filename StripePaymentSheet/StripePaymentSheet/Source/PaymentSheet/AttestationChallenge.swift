@@ -19,7 +19,7 @@ actor AttestationChallenge {
     private let attestationTask: Task<Void, Error>
     private var assertionTask: Task<StripeAttest.Assertion?, Never>?
 
-    public init(stripeAttest: StripeAttest, canSyncState: Bool) {
+    public init(stripeAttest: StripeAttest, canSyncState: Bool = false) {
         self.stripeAttest = stripeAttest
         self.canSyncState = canSyncState
         STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepare()

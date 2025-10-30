@@ -3,7 +3,7 @@
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 9/3/20.
-//  Copyright © 2020 Stripe, Inc. All rights reserved.
+//  Copyright © 2025 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -207,6 +207,19 @@ public class PaymentSheet {
         }
         self.bottomSheetViewController.setViewControllers([self.loadingViewController])
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+    }
+
+    /// Presents a sheet for a customer to complete their payment
+    /// - Parameter presentingViewController: The view controller to present a payment sheet
+    /// - Returns: The result of the payment after the payment sheet is dismissed.
+    public func present(
+        from presentingViewController: UIViewController
+    ) async -> PaymentSheetResult {
+        return await withCheckedContinuation { continuation in
+            present(from: presentingViewController) { result in
+                continuation.resume(returning: result)
+            }
+        }
     }
 
     /// Deletes all persisted authentication state associated with a customer.

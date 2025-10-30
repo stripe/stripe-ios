@@ -219,9 +219,9 @@ extension PaymentSheet {
                         paymentIntent: paymentIntent,
                         configuration: configuration
                     )
-                    paymentHandler.confirmPayment(
-                        params,
-                        with: authenticationContext,
+                    paymentHandler.confirmPaymentIntent(
+                        params: params,
+                        authenticationContext: authenticationContext,
                         completion: { actionStatus, paymentIntent, error in
                             Task { await confirmationChallenge?.complete() }
                             if let paymentIntent {
@@ -243,8 +243,8 @@ extension PaymentSheet {
                         configuration: configuration
                     )
                     paymentHandler.confirmSetupIntent(
-                        setupIntentParams,
-                        with: authenticationContext,
+                        params: setupIntentParams,
+                        authenticationContext: authenticationContext,
                         completion: { actionStatus, setupIntent, error in
                             Task { await confirmationChallenge?.complete() }
                             if let setupIntent {
@@ -290,9 +290,9 @@ extension PaymentSheet {
 
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil), paymentIntent: paymentIntent, configuration: configuration)
 
-                paymentHandler.confirmPayment(
-                    paymentIntentParams,
-                    with: authenticationContext,
+                paymentHandler.confirmPaymentIntent(
+                    params: paymentIntentParams,
+                    authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -305,8 +305,8 @@ extension PaymentSheet {
                     configuration: configuration
                 )
                 paymentHandler.confirmSetupIntent(
-                    setupIntentParams,
-                    with: authenticationContext,
+                    params: setupIntentParams,
+                    authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -352,9 +352,9 @@ extension PaymentSheet {
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext,
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
                                 paymentHandlerCompletion(actionStatus, error)
@@ -369,8 +369,8 @@ extension PaymentSheet {
                         setupIntentParams.returnURL = configuration.returnURL
                         setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext,
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
                                 paymentHandlerCompletion(actionStatus, error)
@@ -427,9 +427,9 @@ extension PaymentSheet {
                         paymentIntentParams.radarOptions = radarOptions
                         paymentIntentParams.mandateData = mandateData
                         paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext,
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
                                 if actionStatus == .succeeded {
@@ -446,8 +446,8 @@ extension PaymentSheet {
                         setupIntentParams.radarOptions = radarOptions
                         setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext,
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 Task { await confirmationChallenge?.complete() }
                                 if actionStatus == .succeeded {
@@ -636,12 +636,10 @@ extension PaymentSheet {
                 }
             }
         case let .external(externalPaymentOption, billingDetails):
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 // Call confirmHandler so that the merchant completes the payment
-                externalPaymentOption.confirm(billingDetails: billingDetails) { result in
-                    // This closure is invoked by the merchant when payment is finished
-                    completion(result, nil)
-                }
+                let result = await externalPaymentOption.confirm(billingDetails: billingDetails)
+                completion(result, nil)
             }
         }
     }

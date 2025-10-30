@@ -447,9 +447,13 @@ class PlaygroundController: ObservableObject {
                 )
             }
         } else {
-            // Use regular confirmation handler for non-CT integration types
-            let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
-                self?.confirmHandler($0, $1, $2)
+            // Use payment method confirmation handler for non-CT integration types
+            let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] pm, billingDetails in
+                try await withCheckedThrowingContinuation { continuation in
+                    self?.confirmHandler(pm, billingDetails) { result in
+                        continuation.resume(with: result)
+                    }
+                }
             }
 
             switch settings.mode {
@@ -495,11 +499,11 @@ class PlaygroundController: ObservableObject {
         guard let externalPaymentMethods = settings.externalPaymentMethods.paymentMethods else {
             return nil
         }
-
         return .init(
             externalPaymentMethods: externalPaymentMethods
-        ) { [weak self] externalPaymentMethodType, billingDetails, completion in
-            self?.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails, completion: completion)
+        ) { [weak self] externalPaymentMethodType, billingDetails in
+            guard let self else { return .canceled }
+            return await self.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails)
         }
     }
 
@@ -533,36 +537,32 @@ class PlaygroundController: ObservableObject {
         _ customPaymentMethodType: PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod,
         _ billingDetails: STPPaymentMethodBillingDetails
     ) async -> PaymentSheetResult {
-        return await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails) { result in
-                    continuation.resume(returning: result)
-                }
-            }
-        }
+        return await self.handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails)
     }
 
-    func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails, completion: @escaping (PaymentSheetResult) -> Void) {
+    @MainActor
+    func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult {
         print("Customer is attempting to complete payment with \(type). Their billing details: \(billingDetails)")
         print(billingDetails)
-        let alert = UIAlertController(title: "Confirm \(type)?", message: nil, preferredStyle: .alert)
-        alert.addAction(.init(title: "Confirm", style: .default) {_ in
-            completion(.completed)
-        })
-        alert.addAction(.init(title: "Cancel", style: .default) {_ in
-            completion(.canceled)
-        })
-        alert.addAction(.init(title: "Fail", style: .default) {_ in
-            let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
-            completion(.failed(error: exampleError))
-        })
+        return await withCheckedContinuation { continuation in
+            let alert = UIAlertController(title: "Confirm \(type)?", message: nil, preferredStyle: .alert)
+            alert.addAction(.init(title: "Confirm", style: .default) { _ in
+                continuation.resume(returning: .completed)
+            })
+            alert.addAction(.init(title: "Cancel", style: .default) {_ in
+                continuation.resume(returning: .canceled)
+            })
+            alert.addAction(.init(title: "Fail", style: .default) {_ in
+                let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
+                continuation.resume(returning: .failed(error: exampleError))
+            })
+            guard let topMostVC = UIViewController.topMostViewController() else {
+                assertionFailure("Unable to find top most view controller")
+                return
+            }
 
-        guard let topMostVC = UIViewController.topMostViewController() else {
-            print("Unable to find top most view controller")
-            return
+            topMostVC.present(alert, animated: true)
         }
-
-        topMostVC.present(alert, animated: true)
     }
 
     var clientSecret: String?
