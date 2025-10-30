@@ -69,7 +69,7 @@ public final class CheckScanningController {
         }
     }
 
-    func dismiss(animated: Bool = true) {
+    public func dismiss(animated: Bool = true) {
         webVC.dismiss(animated: animated)
     }
 
