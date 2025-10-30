@@ -160,12 +160,12 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         return view
     }()
 
-    private lazy var confirmButton: ConfirmButton = .makeLinkButton(
+    private lazy var confirmButton = ConfirmButton.makeLinkButton(
         callToAction: .custom(title: "Confirm"),
         showProcessingLabel: false,
         linkAppearance: appearance
     ) { [weak self] in
-        self?.onResult?(.confirmed)
+        self?.confirmButtonTapped()
     }
 
     override func viewDidLoad() {
@@ -184,6 +184,11 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
         ])
+    }
+
+    private func confirmButtonTapped() {
+       confirmButton.update(state: .spinnerWithInteractionDisabled)
+       onResult?(.confirmed)
     }
 
     // MARK: - BottomSheetContentViewController
