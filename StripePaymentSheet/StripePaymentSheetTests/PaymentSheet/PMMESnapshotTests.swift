@@ -7,7 +7,7 @@
 
 @_spi(STP)@testable import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @_spi(PMME) @testable import StripePaymentSheet
+@_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 import UIKit
 
