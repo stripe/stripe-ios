@@ -311,7 +311,7 @@ extension IdentityFlowView {
 
         // Remove old buttons and create new ones and add them to the stack view
         buttons.forEach { $0.removeFromSuperview() }
-        buttons = buttonViewModels.enumerated().map { index, _ in
+        buttons = buttonViewModels.indices.map { index in
             let button = Button(
                 index: index,
                 target: self,
