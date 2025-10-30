@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@-kortti";
+"fbfa6" = "%1$@-kortti";
 
-"%1$@ Credit" = "%1$@-luottokortti";
+"a11b0" = "%1$@-luottokortti";
 
-"%1$@ Debit" = "%1$@-pankkikortti";
+"95233" = "%1$@-pankkikortti";
 
-"%1$@ Prepaid" = "%1$@ Prepaid";
+"c90ba" = "%1$@ Prepaid";
 
-"%1$@ account ending in %2$@" = "%1$@ -tili päättyy numeroihin %2$@";
+"3b24a" = "%1$@ -tili päättyy numeroihin %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ päättyy numeroihin %2$@";
+"f5b21" = "%1$@ päättyy numeroihin %2$@";
 
-"%1$@ is not accepted" = "%1$@ ei hyväksytä";
+"29adf" = "%1$@ ei hyväksytä";
 
-"Address line 2 (optional)" = "Osoiterivi 2 (valinnainen)";
+"9ada7" = "Osoiterivi 2 (valinnainen)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Pankkitili";
+"c6f64" = "Pankkitili";
 
-"Billing address" = "Laskutusosoite";
+"1f516" = "Laskutusosoite";
 
-"Billing details" = "Laskutustiedot";
+"7c928" = "Laskutustiedot";
 
-"CVC" = "CVC-tunnus";
+"19e9b" = "CVC-tunnus";
 
-"Card information" = "Kortin tiedot";
+"fca47" = "Kortin tiedot";
 
-"Card number" = "Kortin numero";
+"816fc" = "Kortin numero";
 
-"Confirm your %@" = "Vahvista %@";
+"002d7" = "Vahvista %@";
 
-"Invalid data." = "Virheelliset tiedot.";
+"da175" = "Virheelliset tiedot.";
 
-"MM / YY" = "KK/VV";
+"58f4a" = "KK/VV";
 
-"MM/YY" = "KK/VV";
+"1b5f6" = "KK/VV";
 
-"Postal Code" = "Postinumero";
+"8198b" = "Postinumero";
 
-"Shipping Address" = "Lähetysosoite";
+"6e244" = "Lähetysosoite";
 
-"State / Province / Region" = "Osavaltio/maakunta/alue";
+"649f1" = "Osavaltio/maakunta/alue";
 
-"The BSB you entered is invalid." = "Antamasi BSB-numero on virheellinen.";
+"dfa21" = "Antamasi BSB-numero on virheellinen.";
 
-"The selected brand is not allowed" = "Valittu merkki ei ole sallittu";
+"aaf53" = "Valittu merkki ei ole sallittu";
 
-"To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
+"9f2d9" = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
 
-"Your card has expired." = "Korttisi on vanhentunut.";
+"393e6" = "Korttisi on vanhentunut.";
 
-"Your card number is incomplete." = "Kortin numero on puutteellinen.";
+"7e5ae" = "Kortin numero on puutteellinen.";
 
-"Your card number is invalid." = "Kortin numero on virheellinen.";
+"3c122" = "Kortin numero on virheellinen.";
 
-"Your card's expiration date is incomplete." = "Kortin voimassaoloaika on puutteellinen.";
+"a2036" = "Kortin voimassaoloaika on puutteellinen.";
 
-"Your card's expiration date is invalid." = "Kortin voimassaoloaika on virheellinen.";
+"6a457" = "Kortin voimassaoloaika on virheellinen.";
 
-"Your card's expiration month is invalid." = "Kortin erääntymiskuukausi ei kelpaa.";
+"e47c0" = "Kortin erääntymiskuukausi ei kelpaa.";
 
-"Your card's expiration year is invalid." = "Kortin voimassaolovuosi ei kelpaa.";
+"36ae2" = "Kortin voimassaolovuosi ei kelpaa.";
 
-"Your card's security code is incomplete." = "Kortin turvakoodi on puutteellinen.";
+"300dd" = "Kortin turvakoodi on puutteellinen.";
 
-"Your card's security code is invalid." = "Kortin turvakoodi on virheellinen.";
+"394fd" = "Kortin turvakoodi on virheellinen.";
 
-"card number" = "kortin numero";
+"58da6" = "kortin numero";
 
-"example@example.com" = "esimerkki@esimerkki.com";
+"31c55" = "esimerkki@esimerkki.com";
 
-"expiration date" = "erääntymispäivä";
+"b34dd" = "erääntymispäivä";

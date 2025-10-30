@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Automatikusan elkészítünk néhány fényképet a következő lépés során, hogy ellenőrizhessük a személyazonosságát";
+"40b57" = "Automatikusan elkészítünk néhány fényképet a következő lépés során, hogy ellenőrizhessük a személyazonosságát";
 
-"Accepted forms of ID include" = "Elfogadott igazolványok, többek között";
+"a9934" = "Elfogadott igazolványok, többek között";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Emellett lehetősége van arra is, hogy fotót töltsön fel az azonosító okmányáról.";
+"a570c" = "Emellett lehetősége van arra is, hogy fotót töltsön fel az azonosító okmányáról.";
 
-"App Settings" = "Alkalmazásbeállítások";
+"da645" = "Alkalmazásbeállítások";
 
-"Back %@ photo successfully uploaded" = "Vissza %@ fotó sikeresen feltöltve";
+"31438" = "Vissza %@ fotó sikeresen feltöltve";
 
-"Back identity document photo successfully uploaded" = "Vissza azonosító dokumentum fénykép sikeresen feltöltve";
+"3253a" = "Vissza azonosító dokumentum fénykép sikeresen feltöltve";
 
-"Back of %@" = "%@-a vissza";
+"128b0" = "%@-a vissza";
 
-"Back of driver's license or government-issued photo ID" = "A vezetői engedély vagy más hivatalos fényképes igazolvány hátlapja";
+"37929" = "A vezetői engedély vagy más hivatalos fényképes igazolvány hátlapja";
 
-"Back of identity document" = "Személyazonosító okmány hátulja";
+"3229d" = "Személyazonosító okmány hátulja";
 
-"Camera permission" = "Kameraengedély";
+"51e72" = "Kameraengedély";
 
-"Camera unavailable" = "A kamera nem érhető el";
+"06cc3" = "A kamera nem érhető el";
 
-"Capturing…" = "Felvétel...";
+"806e3" = "Felvétel...";
 
-"Choose File" = "Fájl kiválasztása";
+"d7042" = "Fájl kiválasztása";
 
-"Consent" = "Hozzájárulás";
+"d37e0" = "Hozzájárulás";
 
-"Could not capture image" = "Nem sikerült felvételt készíteni";
+"bf6e9" = "Nem sikerült felvételt készíteni";
 
-"Date of Birth" = "Születési idő";
+"fdc73" = "Születési idő";
 
-"Date of birth does not look valid" = "A születési idő megadása kötelező";
+"2baa1" = "A születési idő megadása kötelező";
 
-"Details not visible" = "A részletek nem láthatók";
+"687cd" = "A részletek nem láthatók";
 
-"Flip your %@ over to the other side" = "Fordítsa a %@ -át a másik oldalra";
+"e3292" = "Fordítsa a %@ -át a másik oldalra";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Fordítsa a vezetői engedélyét vagy más hivatalos fényképes igazolványát a másik oldalára";
+"dd41b" = "Fordítsa a vezetői engedélyét vagy más hivatalos fényképes igazolványát a másik oldalára";
 
-"Flip your identity card over to the other side" = "Fordítsa személyazonosító igazolványát a másik oldalára";
+"87346" = "Fordítsa személyazonosító igazolványát a másik oldalára";
 
-"Front %@ photo successfully uploaded" = "Elülső oldal %@ fotó sikeresen feltöltve";
+"b57ad" = "Elülső oldal %@ fotó sikeresen feltöltve";
 
-"Front identity document photo successfully uploaded" = "Elülső oldali azonosító dokumentum fénykép sikeresen feltöltve";
+"3a9fd" = "Elülső oldali azonosító dokumentum fénykép sikeresen feltöltve";
 
-"Front of %@" = "%@ elülső oldal";
+"73fc5" = "%@ elülső oldal";
 
-"Front of driver's license or government-issued photo ID" = "A vezetői engedély vagy más hivatalos fényképes igazolvány előlapja";
+"b3d9a" = "A vezetői engedély vagy más hivatalos fényképes igazolvány előlapja";
 
-"Front of driver's license or passport" = "A vezetői engedély vagy az útlevél előlapja";
+"8d188" = "A vezetői engedély vagy az útlevél előlapja";
 
-"Front of driver's license, passport, or government-issued photo ID" = "A vezetői engedély, útlevél vagy más hivatalos fényképes igazolvány előlapja";
+"070b5" = "A vezetői engedély, útlevél vagy más hivatalos fényképes igazolvány előlapja";
 
-"Front of identity document" = "Személyazonosító okmány eleje";
+"8562c" = "Személyazonosító okmány eleje";
 
-"Front of passport or government-issued photo ID" = "Az útlevél vagy más hivatalos fényképes igazolvány előlapja";
+"bb2ee" = "Az útlevél vagy más hivatalos fényképes igazolvány előlapja";
 
-"Get ready to scan your photo ID" = "Készítse elő fényképes igazolványát a beolvasásra";
+"83016" = "Készítse elő fényképes igazolványát a beolvasásra";
 
-"Get ready to take a selfie" = "Készüljön fel egy szelfi elkészítésére";
+"9e29f" = "Készüljön fel egy szelfi elkészítésére";
 
-"Go Back" = "Visszalépés";
+"b8d99" = "Visszalépés";
 
-"Hold still, scanning" = "Ne mozgassa, beolvasás folyamatban";
+"b63f6" = "Ne mozgassa, beolvasás folyamatban";
 
-"I'm ready" = "Készen állok";
+"d5b05" = "Készen állok";
 
-"ID Number" = "Azonosítószám";
+"a403d" = "Azonosítószám";
 
-"Individual CPF" = "Személyes CPF";
+"6212a" = "Személyes CPF";
 
-"Keep ID level" = "Tartsa egyenesen az igazolványt";
+"6be11" = "Tartsa egyenesen az igazolványt";
 
-"Last 4 of Social Security number" = "A társadalombiztosítási szám utolsó 4 számjegye";
+"77dd8" = "A társadalombiztosítási szám utolsó 4 számjegye";
 
-"Loading" = "Betöltés folyamatban";
+"dc3808" = "Betöltés folyamatban";
 
-"Make sure all details are visible and focus" = "Győződjön meg arról, hogy minden részlet látható és fókuszban van.";
+"859af" = "Győződjön meg arról, hogy minden részlet látható és fókuszban van.";
 
-"Make sure you're in a well lit space." = "Válasszon jól megvilágított helyet.";
+"6c2aa" = "Válasszon jól megvilágított helyet.";
 
-"Move closer" = "Helyezze közelebb";
+"1da05" = "Helyezze közelebb";
 
-"Move farther" = "Helyezze távolabb";
+"73333" = "Helyezze távolabb";
 
-"Move to a darker area" = "Menjen sötétebb helyre";
+"4687a" = "Menjen sötétebb helyre";
 
-"Move to a well-lit area" = "Menjen egy jól megvilágított helyre";
+"f579f" = "Menjen egy jól megvilágított helyre";
 
-"NRIC or FIN" = "NRIC vagy FIN";
+"32e72" = "NRIC vagy FIN";
 
-"No document detected" = "Nem észlelhető a dokumentum";
+"b376f" = "Nem észlelhető a dokumentum";
 
-"Personal ID number" = "Személyazonosító szám";
+"fae7d" = "Személyazonosító szám";
 
-"Personal Information" = "Személyes adatok";
+"c4b37" = "Személyes adatok";
 
-"Phone Number" = "Telefonszám";
+"72dba" = "Telefonszám";
 
-"Phone Verification" = "Telefonos ellenőrzés";
+"cb074" = "Telefonos ellenőrzés";
 
-"Photo Library" = "Képek";
+"e0b2a" = "Képek";
 
-"Please upload images of the front and back of your %@" = "Kérjük, töltse fel %@-ja elülső és hátsó oldalának képét";
+"03fa9" = "Kérjük, töltse fel %@-ja elülső és hátsó oldalának képét";
 
-"Please upload images of the front and back of your identity document" = "Kérjük, töltse fel a személyazonosító okmánya elülső és hátsó oldalának képét";
+"8c273" = "Kérjük, töltse fel a személyazonosító okmánya elülső és hátsó oldalának képét";
 
-"Position your %@ in the center of the frame" = "Helyezze a %@-át a keret középpontjába";
+"ceab8" = "Helyezze a %@-át a keret középpontjába";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Igazítsa a vezetői engedélyét vagy más hivatalos fényképes igazolványát a keret közepére";
+"12559" = "Igazítsa a vezetői engedélyét vagy más hivatalos fényképes igazolványát a keret közepére";
 
-"Position your driver's license or passport in the center of the frame" = "Igazítsa a vezetői engedélyét vagy útlevelét a keret közepére";
+"453ad" = "Igazítsa a vezetői engedélyét vagy útlevelét a keret közepére";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Igazítsa a vezetői engedélyét, útlevelét vagy más hivatalos fényképes igazolványát a keret közepére";
+"ad934" = "Igazítsa a vezetői engedélyét, útlevelét vagy más hivatalos fényképes igazolványát a keret közepére";
 
-"Position your face in the center of the frame." = "Igazítsa az arcát a kép közepére.";
+"6f758" = "Igazítsa az arcát a kép közepére.";
 
-"Position your identity document in the center of the frame" = "Helyezze a személyazonosító okmányt a keret közepére";
+"68f51" = "Helyezze a személyazonosító okmányt a keret közepére";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Igazítsa az útlevelét vagy más hivatalos fényképes igazolványát a keret közepére";
+"74830" = "Igazítsa az útlevelét vagy más hivatalos fényképes igazolványát a keret közepére";
 
-"Retake Photos" = "Fényképek megismétlése";
+"16681" = "Fényképek megismétlése";
 
-"Scan" = "Beolvasás";
+"ea1c5" = "Beolvasás";
 
-"Scanned" = "Beolvasva";
+"e9b3b" = "Beolvasva";
 
-"Select" = "Kiválasztás";
+"2a780" = "Kiválasztás";
 
-"Select a location to upload the back of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának hátlapját";
+"568f3" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának hátlapját";
 
-"Select a location to upload the front of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának előlapját";
+"a352a" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának előlapját";
 
-"Select back %@ photo" = "Válassza vissza %@ fénykép";
+"0dfa8" = "Válassza vissza %@ fénykép";
 
-"Select back identity document photo" = "Válassza vissza azonosító dokumentum fénykép";
+"38aec" = "Válassza vissza azonosító dokumentum fénykép";
 
-"Select front %@ photo" = "Válassza elülső %@ fénykép";
+"1ca11" = "Válassza elülső %@ fénykép";
 
-"Select front identity document photo" = "Válassza az azonosító okmány elülső oldalának fényképét";
+"5c25a" = "Válassza az azonosító okmány elülső oldalának fényképét";
 
-"Selfie" = "Szelfi";
+"7891f" = "Szelfi";
 
-"Selfie captures" = "Szelfi készítése";
+"ccd67" = "Szelfi készítése";
 
-"Selfie captures are complete" = "Szelfi felvétel kész";
+"a7b36" = "Szelfi felvétel kész";
 
-"Take Photo" = "Fénykép készítése";
+"1ca36" = "Fénykép készítése";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Nem mentette azonosító okmányának képeit. Biztosan kilép?";
+"b6b76" = "Nem mentette azonosító okmányának képeit. Biztosan kilép?";
 
-"There was an error accessing the camera." = "Hiba történt a kamerához való hozzáférés során";
+"1eda8" = "Hiba történt a kamerához való hozzáférés során";
 
-"Try Again" = "Újrapróbálkozás";
+"df0fe" = "Újrapróbálkozás";
 
-"Try reduce glare and make ID visible" = "Próbálja csökkenteni a csillogást, hogy jól látható legyen az igazolvány";
+"ffd3d" = "Próbálja csökkenteni a csillogást, hogy jól látható legyen az igazolvány";
 
-"Unable to establish a connection." = "Nem létesíthető kapcsolat.";
+"77ee9" = "Nem létesíthető kapcsolat.";
 
-"Unsaved changes" = "Mentetlen módosítások";
+"a710c" = "Mentetlen módosítások";
 
-"Upload" = "Feltöltés";
+"865e8" = "Feltöltés";
 
-"Upload a Photo" = "Fotó feltöltése";
+"f0c8a" = "Fotó feltöltése";
 
-"Upload your %@" = "Töltse fel a %@-át";
+"7f6c1" = "Töltse fel a %@-át";
 
-"Upload your photo ID" = "Fényképes azonosító igazolvány feltöltése";
+"40a76" = "Fényképes azonosító igazolvány feltöltése";
 
-"Uploading back %@ photo" = "Hátoldali %@ fénykép feltöltése";
+"eaebd" = "Hátoldali %@ fénykép feltöltése";
 
-"Uploading back identity document photo" = "Az azonosító dokumentum hátoldali fényképének feltöltése";
+"e16b7" = "Az azonosító dokumentum hátoldali fényképének feltöltése";
 
-"Uploading front %@ photo" = "Elülső oldali %@ fénykép feltöltése";
+"93af2" = "Elülső oldali %@ fénykép feltöltése";
 
-"Uploading front identity document photo" = "Elülső oldali azonosító dokumentum fényképének feltöltése";
+"5dfbf" = "Elülső oldali azonosító dokumentum fényképének feltöltése";
 
-"Verify your identity" = "A személyazonosság igazolása";
+"ed32a" = "A személyazonosság igazolása";
 
-"We could not capture a high-quality image." = "Nem tudtunk jó minőségű képet készíteni.";
+"55e29" = "Nem tudtunk jó minőségű képet készíteni.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Engedélyre van szükségünk, hogy hozzáférjünk a kamerához. Engedélyezze a kamerához való hozzáférést az alkalmazásbeállításokban.";
+"a98b4" = "Engedélyre van szükségünk, hogy hozzáférjünk a kamerához. Engedélyezze a kamerához való hozzáférést az alkalmazásbeállításokban.";
 
-"Welcome" = "Üdvözöljük!";
+"0e222" = "Üdvözöljük!";
 
-"You can either try again or upload an image from your device." = "Próbálkozhat újra vagy feltölthet egy képet eszközéről is.";
+"348a7" = "Próbálkozhat újra vagy feltölthet egy képet eszközéről is.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Nincs mentve a szelfi, biztos kilép?";
+"b892f" = "Nincs mentve a szelfi, biztos kilép?";
 
-"driver's license" = "vezetői engedély";
+"cadf1" = "vezetői engedély";
 
-"government-issued photo ID" = "Állam által kiadott fényképes igazolvány";
+"29fd8" = "Állam által kiadott fényképes igazolvány";
 
-"passport" = "útlevél";
+"cbc47" = "útlevél";

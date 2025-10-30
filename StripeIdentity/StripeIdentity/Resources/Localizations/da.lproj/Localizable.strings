@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Der tages automatisk nogle få billeder i det næste trin for at bekræfte, at det er dig";
+"40b57" = "Der tages automatisk nogle få billeder i det næste trin for at bekræfte, at det er dig";
 
-"Accepted forms of ID include" = "Godkendte former for ID inkluderer";
+"a9934" = "Godkendte former for ID inkluderer";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Alternativt kan du manuelt uploade et foto af dit identifikationsdokument.";
+"a570c" = "Alternativt kan du manuelt uploade et foto af dit identifikationsdokument.";
 
-"App Settings" = "Appindstillinger";
+"da645" = "Appindstillinger";
 
-"Back %@ photo successfully uploaded" = "Billedet på bagsiden %@ er uploadet";
+"31438" = "Billedet på bagsiden %@ er uploadet";
 
-"Back identity document photo successfully uploaded" = "Billedet af identitetsdokumentet på bagsiden er uploadet";
+"3253a" = "Billedet af identitetsdokumentet på bagsiden er uploadet";
 
-"Back of %@" = "Bagsiden af %@";
+"128b0" = "Bagsiden af %@";
 
-"Back of driver's license or government-issued photo ID" = "Bagsiden af kørekortet eller offentligt udstedt billedlegitimation";
+"37929" = "Bagsiden af kørekortet eller offentligt udstedt billedlegitimation";
 
-"Back of identity document" = "Bagsiden af identitetsdokumentet";
+"3229d" = "Bagsiden af identitetsdokumentet";
 
-"Camera permission" = "Kameratilladelse";
+"51e72" = "Kameratilladelse";
 
-"Camera unavailable" = "Kamera ikke tilgængeligt";
+"06cc3" = "Kamera ikke tilgængeligt";
 
-"Capturing…" = "Optager...";
+"806e3" = "Optager...";
 
-"Choose File" = "Vælg fil";
+"d7042" = "Vælg fil";
 
-"Consent" = "Samtykke";
+"d37e0" = "Samtykke";
 
-"Could not capture image" = "Kunne ikke tage billede";
+"bf6e9" = "Kunne ikke tage billede";
 
-"Date of Birth" = "Fødselsdato";
+"fdc73" = "Fødselsdato";
 
-"Date of birth does not look valid" = "Fødselsdatoen ser ikke ud til at være gyldig.";
+"2baa1" = "Fødselsdatoen ser ikke ud til at være gyldig.";
 
-"Details not visible" = "Detaljer ikke synlige";
+"687cd" = "Detaljer ikke synlige";
 
-"Flip your %@ over to the other side" = "Vend din %@ over på den anden side";
+"e3292" = "Vend din %@ over på den anden side";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Vend dit kørekort eller offentligt udstedt billed-id over på den anden side";
+"dd41b" = "Vend dit kørekort eller offentligt udstedt billed-id over på den anden side";
 
-"Flip your identity card over to the other side" = "Vend dit identitetskort om på bagsiden";
+"87346" = "Vend dit identitetskort om på bagsiden";
 
-"Front %@ photo successfully uploaded" = "Billedet %@ på forsiden er uploadet";
+"b57ad" = "Billedet %@ på forsiden er uploadet";
 
-"Front identity document photo successfully uploaded" = "Billedet af identitetsdokumentet på forsiden er uploadet";
+"3a9fd" = "Billedet af identitetsdokumentet på forsiden er uploadet";
 
-"Front of %@" = "Forsiden af %@";
+"73fc5" = "Forsiden af %@";
 
-"Front of driver's license or government-issued photo ID" = "Forsiden af kørekort eller offentligt udstedt billed-id";
+"b3d9a" = "Forsiden af kørekort eller offentligt udstedt billed-id";
 
-"Front of driver's license or passport" = "Forsiden af kørekort eller pas";
+"8d188" = "Forsiden af kørekort eller pas";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Forsiden af kørekort, pas eller offentligt udstedt billed-id";
+"070b5" = "Forsiden af kørekort, pas eller offentligt udstedt billed-id";
 
-"Front of identity document" = "Forsiden af identitetsdokumentet";
+"8562c" = "Forsiden af identitetsdokumentet";
 
-"Front of passport or government-issued photo ID" = "Forsiden af pas eller offentligt udstedt billed-id";
+"bb2ee" = "Forsiden af pas eller offentligt udstedt billed-id";
 
-"Get ready to scan your photo ID" = "Gør dig klar til at scanne dit foto-ID";
+"83016" = "Gør dig klar til at scanne dit foto-ID";
 
-"Get ready to take a selfie" = "Gør klar til at tage en selfie";
+"9e29f" = "Gør klar til at tage en selfie";
 
-"Go Back" = "Gå tilbage";
+"b8d99" = "Gå tilbage";
 
-"Hold still, scanning" = "Hold stille, scanner";
+"b63f6" = "Hold stille, scanner";
 
-"I'm ready" = "Jeg er klar";
+"d5b05" = "Jeg er klar";
 
-"ID Number" = "ID-nummer";
+"a403d" = "ID-nummer";
 
-"Individual CPF" = "Individuel CPF";
+"6212a" = "Individuel CPF";
 
-"Keep ID level" = "Hold id'et vandret";
+"6be11" = "Hold id'et vandret";
 
-"Last 4 of Social Security number" = "Sidste 4 cifre af personnummer";
+"77dd8" = "Sidste 4 cifre af personnummer";
 
-"Loading" = "Indlæser";
+"dc3808" = "Indlæser";
 
-"Make sure all details are visible and focus" = "Kontrollér, at alle detaljer er synlige og i fokus";
+"859af" = "Kontrollér, at alle detaljer er synlige og i fokus";
 
-"Make sure you're in a well lit space." = "Sørg for, at du er et sted, der er ordentligt oplyst.";
+"6c2aa" = "Sørg for, at du er et sted, der er ordentligt oplyst.";
 
-"Move closer" = "Flyt tættere på";
+"1da05" = "Flyt tættere på";
 
-"Move farther" = "Flyt længere væk";
+"73333" = "Flyt længere væk";
 
-"Move to a darker area" = "Gå til et mørkere område";
+"4687a" = "Gå til et mørkere område";
 
-"Move to a well-lit area" = "Gå til et område med god belysning";
+"f579f" = "Gå til et område med god belysning";
 
-"NRIC or FIN" = "NRIC eller FIN";
+"32e72" = "NRIC eller FIN";
 
-"No document detected" = "Intet dokument registreret";
+"b376f" = "Intet dokument registreret";
 
-"Personal ID number" = "Personligt id-nummer";
+"fae7d" = "Personligt id-nummer";
 
-"Personal Information" = "Personlige oplysninger";
+"c4b37" = "Personlige oplysninger";
 
-"Phone Number" = "Telefonnummer";
+"72dba" = "Telefonnummer";
 
-"Phone Verification" = "Telefonbekræftelse";
+"cb074" = "Telefonbekræftelse";
 
-"Photo Library" = "Fotobibliotek";
+"e0b2a" = "Fotobibliotek";
 
-"Please upload images of the front and back of your %@" = "Upload billeder af forsiden og bagsiden af din %@";
+"03fa9" = "Upload billeder af forsiden og bagsiden af din %@";
 
-"Please upload images of the front and back of your identity document" = "Upload billeder af forsiden og bagsiden af dit identitetsdokument";
+"8c273" = "Upload billeder af forsiden og bagsiden af dit identitetsdokument";
 
-"Position your %@ in the center of the frame" = "Placer dit %@ i midten af rammen";
+"ceab8" = "Placer dit %@ i midten af rammen";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Placer dit kørekort eller offentligt udstedt billed-id i midten af rammen";
+"12559" = "Placer dit kørekort eller offentligt udstedt billed-id i midten af rammen";
 
-"Position your driver's license or passport in the center of the frame" = "Placer dit kørekort eller pas i midten af rammen";
+"453ad" = "Placer dit kørekort eller pas i midten af rammen";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Placer dit kørekort, pas eller offentligt udstedt billed-id i midten af rammen";
+"ad934" = "Placer dit kørekort, pas eller offentligt udstedt billed-id i midten af rammen";
 
-"Position your face in the center of the frame." = "Placer dit ansigt i midten af rammen.";
+"6f758" = "Placer dit ansigt i midten af rammen.";
 
-"Position your identity document in the center of the frame" = "Placer dit identitetsdokument midt i rammen";
+"68f51" = "Placer dit identitetsdokument midt i rammen";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Placer dit pas eller offentligt udstedt billed-id i midten af rammen";
+"74830" = "Placer dit pas eller offentligt udstedt billed-id i midten af rammen";
 
-"Retake Photos" = "Tag billeder igen";
+"16681" = "Tag billeder igen";
 
-"Scan" = "Scan";
+"ea1c5" = "Scan";
 
-"Scanned" = "Scannet";
+"e9b3b" = "Scannet";
 
-"Select" = "Vælg";
+"2a780" = "Vælg";
 
-"Select a location to upload the back of your identity document from" = "Vælg en placering, som bagsiden af dit identitetsdokument skal uploades fra";
+"568f3" = "Vælg en placering, som bagsiden af dit identitetsdokument skal uploades fra";
 
-"Select a location to upload the front of your identity document from" = "Vælg en placering, som forsiden af dit identitetsdokument skal uploades fra";
+"a352a" = "Vælg en placering, som forsiden af dit identitetsdokument skal uploades fra";
 
-"Select back %@ photo" = "Vælg billedet %@ på bagsiden";
+"0dfa8" = "Vælg billedet %@ på bagsiden";
 
-"Select back identity document photo" = "Vælg billedet af identitetsdokumentet på bagsiden";
+"38aec" = "Vælg billedet af identitetsdokumentet på bagsiden";
 
-"Select front %@ photo" = "Vælg billedet %@ på forsiden";
+"1ca11" = "Vælg billedet %@ på forsiden";
 
-"Select front identity document photo" = "Vælg billedet af identitetsdokumentet på forsiden";
+"5c25a" = "Vælg billedet af identitetsdokumentet på forsiden";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Selfie-optagelser";
+"ccd67" = "Selfie-optagelser";
 
-"Selfie captures are complete" = "Optagelse af selfier er fuldført";
+"a7b36" = "Optagelse af selfier er fuldført";
 
-"Take Photo" = "Tag foto";
+"1ca36" = "Tag foto";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Billederne af dit identitetsdokument er ikke blevet gemt. Ønsker du at forlade denne session?";
+"b6b76" = "Billederne af dit identitetsdokument er ikke blevet gemt. Ønsker du at forlade denne session?";
 
-"There was an error accessing the camera." = "Det var ikke muligt at få adgang til kameraet.";
+"1eda8" = "Det var ikke muligt at få adgang til kameraet.";
 
-"Try Again" = "Prøv igen";
+"df0fe" = "Prøv igen";
 
-"Try reduce glare and make ID visible" = "Prøv at reducere genskin, og sørg for, at id'et er synligt";
+"ffd3d" = "Prøv at reducere genskin, og sørg for, at id'et er synligt";
 
-"Unable to establish a connection." = "Kunne ikke oprette forbindelse.";
+"77ee9" = "Kunne ikke oprette forbindelse.";
 
-"Unsaved changes" = "Ikke-gemte ændringer";
+"a710c" = "Ikke-gemte ændringer";
 
-"Upload" = "Upload";
+"865e8" = "Upload";
 
-"Upload a Photo" = "Upload et foto";
+"f0c8a" = "Upload et foto";
 
-"Upload your %@" = "Upload dit %@";
+"7f6c1" = "Upload dit %@";
 
-"Upload your photo ID" = "Upload dit foto-id";
+"40a76" = "Upload dit foto-id";
 
-"Uploading back %@ photo" = "Billedet %@ på bagsiden uploades";
+"eaebd" = "Billedet %@ på bagsiden uploades";
 
-"Uploading back identity document photo" = "Billedet af identitetsdokumentet på bagsiden uploades";
+"e16b7" = "Billedet af identitetsdokumentet på bagsiden uploades";
 
-"Uploading front %@ photo" = "Billedet %@ på forsiden uploades";
+"93af2" = "Billedet %@ på forsiden uploades";
 
-"Uploading front identity document photo" = "Billedet af identitetsdokumentet på forsiden uploades";
+"5dfbf" = "Billedet af identitetsdokumentet på forsiden uploades";
 
-"Verify your identity" = "Bekræft din identitet";
+"ed32a" = "Bekræft din identitet";
 
-"We could not capture a high-quality image." = "Vi kunne ikke tage et billede i høj kvalitet.";
+"55e29" = "Vi kunne ikke tage et billede i høj kvalitet.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Vi skal bruge en tilladelse til at bruge dit kamera. Tillad kameraadgang i appindstillingerne.";
+"a98b4" = "Vi skal bruge en tilladelse til at bruge dit kamera. Tillad kameraadgang i appindstillingerne.";
 
-"Welcome" = "Velkommen";
+"0e222" = "Velkommen";
 
-"You can either try again or upload an image from your device." = "Du kan enten prøve igen eller uploade et billede fra din enhed.";
+"348a7" = "Du kan enten prøve igen eller uploade et billede fra din enhed.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Dine selfie-billeder er ikke blevet gemt. Ønsker du at forlade denne session?";
+"b892f" = "Dine selfie-billeder er ikke blevet gemt. Ønsker du at forlade denne session?";
 
-"driver's license" = "kørekort";
+"cadf1" = "kørekort";
 
-"government-issued photo ID" = "myndighedsudstedt foto-ID";
+"29fd8" = "myndighedsudstedt foto-ID";
 
-"passport" = "pas";
+"cbc47" = "pas";

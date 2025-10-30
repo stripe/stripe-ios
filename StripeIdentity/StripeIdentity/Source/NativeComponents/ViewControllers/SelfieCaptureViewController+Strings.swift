@@ -10,22 +10,19 @@ import Foundation
 
 extension SelfieCaptureViewController {
     static var initialInstructionText: String {
-        return STPLocalizedString(
-            "Position your face in the center of the frame.",
+        return STPLocalizedString("6f758",
             "Instructional text for scanning selfies"
         )
     }
 
     static var capturingInstructionText: String {
-        return STPLocalizedString(
-            "Capturing…",
+        return STPLocalizedString("806e3",
             "Instructional text for scanning selfies"
         )
     }
 
     static var scannedInstructionText: String {
-        return STPLocalizedString(
-            "Selfie captures are complete",
+        return STPLocalizedString("a7b36",
             "Status text when selfie images have been captured"
         )
     }

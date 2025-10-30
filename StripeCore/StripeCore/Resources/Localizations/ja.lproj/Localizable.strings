@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "エラーが発生しました。もう一度お試しください。";
+"9c170" = "エラーが発生しました。もう一度お試しください。";
 
-"Card brand was not updated. Please try again." = "カードブランドは更新されていません。もう一度お試しください。";
+"4bc73" = "カードブランドは更新されていません。もう一度お試しください。";
 
-"Close" = "閉じる";
+"7d9eb" = "閉じる";
 
-"Default payment method was not updated. Please try again." = "デフォルトの決済手段は更新されていません。もう一度お試しください。";
+"3048d" = "デフォルトの決済手段は更新されていません。もう一度お試しください。";
 
-"Scan Card" = "クレジットカードをスキャン";
+"b60b5" = "クレジットカードをスキャン";
 
-"Scan card" = "カードをスキャン";
+"ea2fe" = "カードをスキャン";
 
-"The IBAN you entered is invalid." = "入力した IBAN が無効です。";
+"ee81e" = "入力した IBAN が無効です。";
 
-"There was an error processing your card -- try again in a few seconds" = "クレジットカード情報の処理中にエラーが発生しました。数秒後にもう一度お試しください";
+"fa47c" = "クレジットカード情報の処理中にエラーが発生しました。数秒後にもう一度お試しください";
 
-"There was an unexpected error -- try again in a few seconds" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
+"c98a4" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
 
-"Try again" = "もう一度お試しください";
+"d8b83" = "もう一度お試しください";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Stripe を使用してカード詳細を確認します。Stripe はプライバシーポリシーに従ってお客様のデータを使用および保管することがあります。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>もっと知る</u></a>";
+"96fe7" = "Stripe を使用してカード詳細を確認します。Stripe はプライバシーポリシーに従ってお客様のデータを使用および保管することがあります。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>もっと知る</u></a>";
 
-"Your card has expired" = "クレジットカードの有効期限が切れています";
+"f5c35" = "クレジットカードの有効期限が切れています";
 
-"Your card was declined" = "クレジットカードが拒否されました";
+"b9821" = "クレジットカードが拒否されました";
 
-"Your card's expiration month is invalid" = "指定したクレジットカードの有効期限の月が無効です";
+"e02cf" = "指定したクレジットカードの有効期限の月が無効です";
 
-"Your card's expiration year is invalid" = "指定したクレジットカードの有効期限の年が無効です";
+"53311" = "指定したクレジットカードの有効期限の年が無効です";
 
-"Your card's number is invalid" = "指定したクレジットカードの番号が無効です";
+"c433c" = "指定したクレジットカードの番号が無効です";
 
-"Your card's security code is invalid" = "指定したクレジットカードのセキュリティコードが無効です";
+"15f5b" = "指定したクレジットカードのセキュリティコードが無効です";
 
-"Your name is invalid." = "名前が無効です。";
+"b1d57" = "名前が無効です。";
 
-"Your payment method was declined." = "お客様の支払い方法が拒否されました。";
+"3209d" = "お客様の支払い方法が拒否されました。";

@@ -1,63 +1,63 @@
-"AU Direct Debit" = "澳洲直接借記";
+"c1188" = "澳洲直接借記";
 
-"Affirm" = "Affirm";
+"07b9f" = "Affirm";
 
-"Afterpay" = "Afterpay";
+"032a2" = "Afterpay";
 
-"Alipay" = "支付寶";
+"d5b72" = "支付寶";
 
-"BLIK" = "BLIK";
+"354ad" = "BLIK";
 
-"Bacs Direct Debit" = "Bacs 直接借記";
+"0b4ee" = "Bacs 直接借記";
 
-"Bancontact" = "Bancontact";
+"84e7c" = "Bancontact";
 
-"Boleto" = "Boleto";
+"3a3c9" = "Boleto";
 
-"Card" = "卡";
+"be370" = "卡";
 
-"Cash App Pay" = "Cash App Pay";
+"35d08" = "Cash App Pay";
 
-"Clearpay" = "Clearpay";
+"268da" = "Clearpay";
 
-"EPS" = "EPS";
+"6d9d7" = "EPS";
 
-"FPX" = "FPX";
+"fed44" = "FPX";
 
-"GrabPay" = "GrabPay";
+"09996" = "GrabPay";
 
-"Klarna" = "Klarna";
+"a2e77" = "Klarna";
 
-"Konbini" = "Konbini";
+"3f752" = "Konbini";
 
-"Link" = "Link";
+"a6a32" = "Link";
 
-"NetBanking" = "NetBanking";
+"3aba6" = "NetBanking";
 
-"OXXO" = "OXXO";
+"71ecf" = "OXXO";
 
-"PayPal" = "PayPal";
+"ab8a4" = "PayPal";
 
-"Przelewy24" = "Przelewy24";
+"0a7ad" = "Przelewy24";
 
-"SEPA Debit" = "SEPA Debit";
+"b5dc7" = "SEPA Debit";
 
-"Sofort" = "Sofort";
+"02f19" = "Sofort";
 
-"Swish" = "Swish";
+"1e736" = "Swish";
 
-"Timed out authenticating your payment method -- try again" = "驗證您的支付方式時逾時——請重試";
+"37fc6" = "驗證您的支付方式時逾時——請重試";
 
-"UPI" = "UPI";
+"7b06e" = "UPI";
 
-"US bank account" = "美國銀行帳戶";
+"40d8d" = "美國銀行帳戶";
 
-"Unknown" = "未知";
+"b764c" = "未知";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "我們未能驗證您的支付方式。請選擇另一支付方式並重試。";
+"f2763" = "我們未能驗證您的支付方式。請選擇另一支付方式並重試。";
 
-"WeChat Pay" = "微信支付";
+"a39c6" = "微信支付";
 
-"giropay" = "Giropay";
+"83eee" = "Giropay";
 
-"iDEAL" = "iDEAL";
+"f54ab" = "iDEAL";

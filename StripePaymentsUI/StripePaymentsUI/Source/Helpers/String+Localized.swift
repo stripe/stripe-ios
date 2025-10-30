@@ -13,11 +13,11 @@
 // We use snake case to make long names easier to read.
 extension String.Localized {
     @_spi(STP) public static var bank_account: String {
-        STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
+        STPLocalizedString("c6f64", "Label for Bank Account selection or detail entry form")
     }
 
     @_spi(STP) public static var card_number: String {
-        STPLocalizedString("Card number", "Label for card number entry text field")
+        STPLocalizedString("816fc", "Label for card number entry text field")
     }
 
     @_spi(STP) public static var card_brand_ending_in_last_4: String {
@@ -35,11 +35,11 @@ extension String.Localized {
     }
 
     @_spi(STP) public static var apple_pay: String {
-        STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
+        STPLocalizedString("9bb3a", "Text for Apple Pay payment method")
     }
 
     @_spi(STP) public static var expiration_date_accessibility_label: String {
-        STPLocalizedString("expiration date", "accessibility label for text field")
+        STPLocalizedString("b34dd", "accessibility label for text field")
     }
 
     @_spi(STP) public static var allow_camera_access: String {
@@ -50,15 +50,15 @@ extension String.Localized {
     }
 
     @_spi(STP) public static var shipping_address: String {
-        STPLocalizedString("Shipping Address", "Title for shipping address entry section")
+        STPLocalizedString("6e244", "Title for shipping address entry section")
     }
 
     @_spi(STP) public static var billing_address_lowercase: String {
-        STPLocalizedString("Billing address", "Billing address section title for card form entry.")
+        STPLocalizedString("1f516", "Billing address section title for card form entry.")
     }
 
     @_spi(STP) public static var billing_details_lowercase: String {
-        STPLocalizedString("Billing details", "Billing details section title for card form entry.")
+        STPLocalizedString("7c928", "Billing details section title for card form entry.")
     }
 
     @_spi(STP) public static var your_card_number_is_incomplete: String {
@@ -82,15 +82,15 @@ extension String.Localized {
     }
 
     @_spi(STP) public static var cvc: String {
-        STPLocalizedString("CVC", "Label for entering CVC in text field")
+        STPLocalizedString("19e9b", "Label for entering CVC in text field")
     }
 
     @_spi(STP) public static var card_information: String {
-        STPLocalizedString("Card information", "Card details entry form header title")
+        STPLocalizedString("fca47", "Card details entry form header title")
     }
 
     @_spi(STP) public static var mm_yy: String {
-        STPLocalizedString("MM / YY", "label for text field to enter card expiry")
+        STPLocalizedString("58f4a", "label for text field to enter card expiry")
     }
 
     @_spi(STP) public static var your_cards_security_code_is_incomplete: String {

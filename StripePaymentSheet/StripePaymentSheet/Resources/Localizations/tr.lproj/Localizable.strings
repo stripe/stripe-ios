@@ -1,307 +1,307 @@
-"+ Add" = "+ Ekle";
+"c0072" = "+ Ekle";
 
-"Add US bank account" = "ABD banka hesabı ekleyin";
+"1b3a4" = "ABD banka hesabı ekleyin";
 
-"Add a card" = "Kart ekle";
+"be8f5" = "Kart ekle";
 
-"Add a payment method" = "Ödeme yöntemi ekle";
+"7e917" = "Ödeme yöntemi ekle";
 
-"Add bank account" = "Banka hesabı ekle";
+"a3cc9" = "Banka hesabı ekle";
 
-"Add card" = "Kart ekle";
+"769c5" = "Kart ekle";
 
-"Add new card" = "Yeni kart ekle";
+"800f4" = "Yeni kart ekle";
 
-"Add new payment method" = "Yeni ödeme yöntemi ekle";
+"8130f" = "Yeni ödeme yöntemi ekle";
 
-"Add your payment information" = "Ödeme bilgilerinizi ekleyin";
+"eaa33" = "Ödeme bilgilerinizi ekleyin";
 
-"Approve payment" = "Ödemeyi onaylayın";
+"e70d2" = "Ödemeyi onaylayın";
 
-"Are you sure you want to remove this card?" = "Bu kartı kaldırmak istediğinizden emin misiniz?";
+"c8af7" = "Bu kartı kaldırmak istediğinizden emin misiniz?";
 
-"Are you sure you want to remove this linked account?" = "Bu bağlı hesabı kaldırmak istediğinizden emin misiniz?";
+"74460" = "Bu bağlı hesabı kaldırmak istediğinizden emin misiniz?";
 
-"Back" = "Geri";
+"76900" = "Geri";
 
-"Bank" = "Banka";
+"676c4" = "Banka";
 
-"Bank account" = "Banka hesabı";
+"1b427" = "Banka hesabı";
 
-"Bank account details cannot be changed." = "Banka hesabı ayrıntıları değiştirilemiyor.";
+"12ab1" = "Banka hesabı ayrıntıları değiştirilemiyor.";
 
-"Buy now or pay later with  <img/>" = "Şimdi satın alın veya daha sonra <img/> ile ödeyin.";
+"38088" = "Şimdi satın alın veya daha sonra <img/> ile ödeyin.";
 
-"Buy now or pay later with Afterpay" = "Şimdi satın alın veya daha sonra Afterpay ile ödeyin";
+"c04b4" = "Şimdi satın alın veya daha sonra Afterpay ile ödeyin";
 
-"Buy now or pay later with Cash App Afterpay" = "Şimdi satın alın veya daha sonra Cash Uygulaması Afterpay ile ödeyin";
+"f566d" = "Şimdi satın alın veya daha sonra Cash Uygulaması Afterpay ile ödeyin";
 
-"Buy now or pay later with Clearpay" = "Şimdi satın alın veya daha sonra Clearpay ile ödeyin";
+"bf452" = "Şimdi satın alın veya daha sonra Clearpay ile ödeyin";
 
-"Buy now or pay later with Klarna" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
+"5c41c" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
 
-"Buy using a UPI ID" = "UPI Numarası kullanarak satın alın";
+"21793" = "UPI Numarası kullanarak satın alın";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'la ödemeyi onayladığınızda, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
+"313bb" = "PayPal'la ödemeyi onayladığınızda, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak Amazon Pay hesabınızı ücretlendirme izni vermiş olursunuz.";
+"c1642" = "Amazon Pay'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak Amazon Pay hesabınızı ücretlendirme izni vermiş olursunuz.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Klarna'ya devam ederek, %1$@ şirketine gelecekteki ödemeler için kendi koşullarına ve Klarna'nın koşullarına uygun olarak Klarna hesabınızı ücretlendirme izni vermiş olursunuz. Bunu dilediğiniz zaman Klarna uygulamanızdan veya %2$@ ile iletişime geçerek değiştirebilirsiniz.";
+"09c61" = "Klarna'ya devam ederek, %1$@ şirketine gelecekteki ödemeler için kendi koşullarına ve Klarna'nın koşullarına uygun olarak Klarna hesabınızı ücretlendirme izni vermiş olursunuz. Bunu dilediğiniz zaman Klarna uygulamanızdan veya %2$@ ile iletişime geçerek değiştirebilirsiniz.";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
+"c6ff4" = "PayPal'a devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay'e devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak Revolut Pay hesabınızı ücretlendirme izni vermiş olursunuz.";
+"694b5" = "Revolut Pay'e devam ederek, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak Revolut Pay hesabınızı ücretlendirme izni vermiş olursunuz.";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Devam ettiğinizde <terms>Koşulları</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
+"8ba3b" = "Devam ettiğinizde <terms>Koşulları</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
+"23d3e" = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Devam ederek, bilgilerinizi gelecekteki %@ ve <link>Link satın alımları için</link> Link <terms>koşulları</terms> ve <privacy>gizlilik kuralları</privacy> uyarınca kaydetmeyi kabul etmiş olursunuz.";
+"b8e49" = "Devam ederek, bilgilerinizi gelecekteki %@ ve <link>Link satın alımları için</link> Link <terms>koşulları</terms> ve <privacy>gizlilik kuralları</privacy> uyarınca kaydetmeyi kabul etmiş olursunuz.";
 
-"By continuing, you agree to save your information for future purchases with %@." = "Devam ederek, bilgilerinizi gelecekteki %@ satın alımları için kaydetmeyi kabul etmiş olursunuz.";
+"8ca70" = "Devam ederek, bilgilerinizi gelecekteki %@ satın alımları için kaydetmeyi kabul etmiş olursunuz.";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Devam ederek, %@ tarafından Satispay Bakiyenizin satın alma veya abonelik planınıza uygun olarak yinelenen bir şekilde otomatik olarak borçlandırılmasına izin verirsiniz.";
+"d451f" = "Devam ederek, %@ tarafından Satispay Bakiyenizin satın alma veya abonelik planınıza uygun olarak yinelenen bir şekilde otomatik olarak borçlandırılmasına izin verirsiniz.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Devam ederek %1$@ şirketinin bu ödeme ve gelecekteki ödemeler için Cash Uygulaması hesabınızı %2$@ şirketinin şartlarına uygun olarak borçlandırmasına izin vermiş olursunuz. Bu durum, izin iptal edilene kadar geçerli olur. İstediğiniz zaman Cash Uygulamasının Ayarlarından bu izni değiştirebilirsiniz.";
+"97461" = "Devam ederek %1$@ şirketinin bu ödeme ve gelecekteki ödemeler için Cash Uygulaması hesabınızı %2$@ şirketinin şartlarına uygun olarak borçlandırmasına izin vermiş olursunuz. Bu durum, izin iptal edilene kadar geçerli olur. İstediğiniz zaman Cash Uygulamasının Ayarlarından bu izni değiştirebilirsiniz.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link'e katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
+"225b7" = "Link'e katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefon numarası ve e-posta adresi vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'na tabi bir Link hesabı oluşturmayı kabul etmiş olursunuz.";
+"05e15" = "Telefon numarası ve e-posta adresi vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'na tabi bir Link hesabı oluşturmayı kabul etmiş olursunuz.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Banka hesap bilgilerinizi vererek ve bu ödemeyi onaylayarak bu Doğrudan Borçlandırma Talebini ve <terms>Doğrudan Borçlandırma Talebi hizmet sözleşmesini</terms> kabul etmiş ve Stripe Payments Australia Pty Ltd ACN 160 180 343 Doğrudan Borçlandırma Kullanıcı Kimliği numarası 507156 (\"Stripe\") tarafından %@ (\"Satıcı\") adına Toplu Elektronik Takas Sistemi (BECS) aracılığıyla Satıcı tarafından size ayrıca bildirilen tutarlar için hesabınızın borçlandırılmasını yetkilendirmiş olursunuz. Yukarıda listelenen hesabın hesap sahibi veya imza yetkilisi olduğu tarafınızca onaylanmaktadır.";
+"ba265" = "Banka hesap bilgilerinizi vererek ve bu ödemeyi onaylayarak bu Doğrudan Borçlandırma Talebini ve <terms>Doğrudan Borçlandırma Talebi hizmet sözleşmesini</terms> kabul etmiş ve Stripe Payments Australia Pty Ltd ACN 160 180 343 Doğrudan Borçlandırma Kullanıcı Kimliği numarası 507156 (\"Stripe\") tarafından %@ (\"Satıcı\") adına Toplu Elektronik Takas Sistemi (BECS) aracılığıyla Satıcı tarafından size ayrıca bildirilen tutarlar için hesabınızın borçlandırılmasını yetkilendirmiş olursunuz. Yukarıda listelenen hesabın hesap sahibi veya imza yetkilisi olduğu tarafınızca onaylanmaktadır.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Kart bilgilerinizi sağlayarak %@ işletmesinin gelecekteki ödemeler için kartınızı kendi şartlarına uygun olarak ücretlendirmesine izin vermiş olursunuz.";
+"0cdc0" = "Kart bilgilerinizi sağlayarak %@ işletmesinin gelecekteki ödemeler için kartınızı kendi şartlarına uygun olarak ücretlendirmesine izin vermiş olursunuz.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "E-postanızı vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy> uyarınca bir Link hesabı oluşturmayı ve ödeme bilgilerinizi Link'e kaydetmeyi kabul edersiniz.";
+"36fad" = "E-postanızı vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy> uyarınca bir Link hesabı oluşturmayı ve ödeme bilgilerinizi Link'e kaydetmeyi kabul edersiniz.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ödeme bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, (A) %@ ve ödeme hizmeti sağlayıcımız Stripe'a hesabınızdan ödeme tahsilatı yapması için bankanıza talimatlar göndermesi ve (B) bankanıza bu talimatlara uygun olarak hesabınızdan ödeme tahsilatı yapması için yetki verirsiniz. Haklarınızın bir parçası olarak, bankanızla yaptığınız sözleşmenin hüküm ve koşulları uyarınca bankanızdan geri ödeme alma hakkına sahipsiniz. Geri ödeme, hesabınızdan ödeme tahsilatı yapıldığı tarihten itibaren 8 hafta içinde talep edilmelidir. Haklarınız, bankanızdan alabileceğiniz bir hesap özetinde açıklanmaktadır. Tahakkuk etmeden 2 gün öncesine kadar gelecekteki ödeme tahsilatları için bildirim almayı da kabul edersiniz.";
+"289c5" = "Ödeme bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, (A) %@ ve ödeme hizmeti sağlayıcımız Stripe'a hesabınızdan ödeme tahsilatı yapması için bankanıza talimatlar göndermesi ve (B) bankanıza bu talimatlara uygun olarak hesabınızdan ödeme tahsilatı yapması için yetki verirsiniz. Haklarınızın bir parçası olarak, bankanızla yaptığınız sözleşmenin hüküm ve koşulları uyarınca bankanızdan geri ödeme alma hakkına sahipsiniz. Geri ödeme, hesabınızdan ödeme tahsilatı yapıldığı tarihten itibaren 8 hafta içinde talep edilmelidir. Haklarınız, bankanızdan alabileceğiniz bir hesap özetinde açıklanmaktadır. Tahakkuk etmeden 2 gün öncesine kadar gelecekteki ödeme tahsilatları için bildirim almayı da kabul edersiniz.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefon numaranızı vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy> uyarınca bir Link hesabı oluşturmayı ve ödeme bilgilerinizi Link'e kaydetmeyi kabul edersiniz.";
+"e3661" = "Telefon numaranızı vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy> uyarınca bir Link hesabı oluşturmayı ve ödeme bilgilerinizi Link'e kaydetmeyi kabul edersiniz.";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
+"02d39" = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %1$@ ve %2$@'e göndererek, bilgilerinizi gelecekteki satın alımlar için %3$@ ile kaydetmeyi ve <terms>bu koşullar</terms> uyarınca ödemeleri yetkilendirmeyi kabul etmiş olursunuz.";
+"c041a" = "Siparişinizi %1$@ ve %2$@'e göndererek, bilgilerinizi gelecekteki satın alımlar için %3$@ ile kaydetmeyi ve <terms>bu koşullar</terms> uyarınca ödemeleri yetkilendirmeyi kabul etmiş olursunuz.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %@’ye göndererek ödemeleri <terms>bu koşullara</terms> uygun olarak yetkilendirmeyi kabul etmiş olursunuz.";
+"532e1" = "Siparişinizi %@’ye göndererek ödemeleri <terms>bu koşullara</terms> uygun olarak yetkilendirmeyi kabul etmiş olursunuz.";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "İptal edip başka bir yöntemle ödeyin";
+"58817" = "İptal edip başka bir yöntemle ödeyin";
 
-"Card details cannot be changed." = "Kart ayrıntıları değiştirilemiyor.";
+"34c44" = "Kart ayrıntıları değiştirilemiyor.";
 
-"Change" = "Değiştir";
+"c0bf7" = "Değiştir";
 
-"Choose a payment method" = "Yeni bir ödeme yöntemi seçin";
+"1dc8a" = "Yeni bir ödeme yöntemi seçin";
 
-"Close card scanner" = "Kart tarayıcısını kapat";
+"c0077" = "Kart tarayıcısını kapat";
 
-"Code sent" = "Kod gönderildi";
+"f98a1" = "Kod gönderildi";
 
-"Confirm" = "Onayla";
+"eebdd" = "Onayla";
 
-"Confirm it's you" = "Siz olduğunuzu teyit edin";
+"6176e" = "Siz olduğunuzu teyit edin";
 
-"Confirm payment details" = "Ödeme bilgilerini onayla";
+"3a6b5" = "Ödeme bilgilerini onayla";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ içinde banka veya ödeme uygulamanızla ödemeyi onaylayarak satın almayı tamamlayın.";
+"101ef" = "%@ içinde banka veya ödeme uygulamanızla ödemeyi onaylayarak satın almayı tamamlayın.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ içinde banka uygulamanızda ödemeyi onaylayarak satın almayı tamamlayın.";
+"a8c9a" = "%@ içinde banka uygulamanızda ödemeyi onaylayarak satın almayı tamamlayın.";
 
-"Confirm your CVC" = "CVC kodunuzu onaylayın";
+"a4bdf" = "CVC kodunuzu onaylayın";
 
-"Contact information" = "İletişim bilgileri";
+"cbc73" = "İletişim bilgileri";
 
-"Continue another way" = "Başka bir yöntemle devam et";
+"c2a49" = "Başka bir yöntemle devam et";
 
-"Create an account with Link for faster checkout across the web" = "Web genelinde daha hızlı ödeme yapmak için Link ile bir hesap oluşturun";
+"b568d" = "Web genelinde daha hızlı ödeme yapmak için Link ile bir hesap oluşturun";
 
-"Debit or credit card" = "Bankamatik ya da kredi kartı";
+"04f63" = "Bankamatik ya da kredi kartı";
 
-"Default" = "Varsayılan";
+"21b11" = "Varsayılan";
 
-"Default payment method" = "Varsayılan ödeme yöntemi";
+"4c163" = "Varsayılan ödeme yöntemi";
 
-"Did you mean %@? %@." = "%1$@ mi demek istediniz? %2$@.";
+"6d7d1" = "%1$@ mi demek istediniz? %2$@.";
 
-"EPS Bank" = "EPS Bank";
+"8f218" = "EPS Bank";
 
-"Enter address manually" = "Adresi manuel olarak girin";
+"1534f" = "Adresi manuel olarak girin";
 
-"Enter the code sent to %@." = "%s yoluyla gönderilen kodu girin.";
+"1e836" = "%s yoluyla gönderilen kodu girin.";
 
-"FPX Bank" = "FPX Bank";
+"8c73e" = "FPX Bank";
 
-"Failed to connect" = "Bağlantı başarısız.";
+"46c9f" = "Bağlantı başarısız.";
 
-"Fast, secure checkout" = "Hızlı, güvenli ödeme";
+"2aeb3" = "Hızlı, güvenli ödeme";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Bankanızla ilk kez ödeme yaptığınızda %@ tutarını geri alın. <terms>Şartları görün</terms>";
+"b70b0" = "Bankanızla ilk kez ödeme yaptığınızda %@ tutarını geri alın. <terms>Şartları görün</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Bankanızla ödeme yaptığınızda %@ tutarını geri alın. <terms>Şartları görün</terms>";
+"332d2" = "Bankanızla ödeme yaptığınızda %@ tutarını geri alın. <terms>Şartları görün</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
+"b751e" = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "Oturum açın veya kaydolun";
+"38f51" = "Oturum açın veya kaydolun";
 
-"Log out of Link" = "Link'ten çıkış yap";
+"57083" = "Link'ten çıkış yap";
 
-"Manage SEPA debit" = "SEPA bankamatik hesabını yönet";
+"a7ff3" = "SEPA bankamatik hesabını yönet";
 
-"Manage US bank account" = "ABD banka hesabını yönet";
+"0b654" = "ABD banka hesabını yönet";
 
-"Manage bank account" = "Banka hesabını yönet";
+"2d4ed" = "Banka hesabını yönet";
 
-"Manage card" = "Kartı yönetin";
+"49e98" = "Kartı yönetin";
 
-"Manage cards" = "Kartları yönet";
+"fe215" = "Kartları yönet";
 
-"Manage payment method" = "Ödeme yöntemini yönetin";
+"67c16" = "Ödeme yöntemini yönetin";
 
-"Manage payment methods" = "Ödeme yöntemlerini yönetin";
+"cf0c9" = "Ödeme yöntemlerini yönetin";
 
-"Manage your payment methods" = "Ödeme yöntemlerinizi yönetin";
+"74db7" = "Ödeme yöntemlerinizi yönetin";
 
-"Name on card" = "Karttaki isim";
+"18bf0" = "Karttaki isim";
 
-"New card" = "Yeni kart";
+"8d3ef" = "Yeni kart";
 
-"New payment method" = "Yeni ödeme yöntemi";
+"c5f95" = "Yeni ödeme yöntemi";
 
-"No %@ promo" = "%@ promosyonu yok";
+"99d88" = "%@ promosyonu yok";
 
-"Not you?" = "Siz değil misiniz?";
+"5b978" = "Siz değil misiniz?";
 
-"Only card brand can be changed." = "Yalnızca kart markası değiştirilebilir.";
+"d1c0a" = "Yalnızca kart markası değiştirilebilir.";
 
-"Open your UPI app to approve your payment within %@" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
+"b7546" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
 
-"Or" = "Veya";
+"0568b" = "Veya";
 
-"Or pay using" = "Veya şununla ödeyin:";
+"3c3f7" = "Veya şununla ödeyin:";
 
-"Or pay with a card" = "Ya da kartla ödeyin";
+"682d8" = "Ya da kartla ödeyin";
 
-"Or use" = "Veya şunu kullan:";
+"4158c" = "Veya şunu kullan:";
 
-"Or use a card" = "Veya kart kullan";
+"b529c" = "Veya kart kullan";
 
-"Pay %@" = "%@ öde";
+"964f6" = "%@ öde";
 
-"Pay another way" = "Başka bir ödeme şekli kullanın";
+"4bb4a" = "Başka bir ödeme şekli kullanın";
 
-"Pay faster at %@ and thousands of businesses." = "%@ ve binlerce işletmede daha hızlı ödeme yapın.";
+"f43bb" = "%@ ve binlerce işletmede daha hızlı ödeme yapın.";
 
-"Pay faster everywhere Link is accepted." = "Link'in kabul edildiği her yerde daha hızlı ödeme yapın.";
+"d49c1" = "Link'in kabul edildiği her yerde daha hızlı ödeme yapın.";
 
-"Pay over time with %@" = "%@ ile zaman içinde ödeyin";
+"77196" = "%@ ile zaman içinde ödeyin";
 
-"Pay over time with Affirm" = "Affirm ile zaman içinde ödeyin";
+"2f870" = "Affirm ile zaman içinde ödeyin";
 
-"Pay with Link" = "Link ile öde";
+"9d81a" = "Link ile öde";
 
-"Pay with your bank account in just a few steps." = "Sadece birkaç adımda banka hesabınız ile ödeyin.";
+"bc021" = "Sadece birkaç adımda banka hesabınız ile ödeyin.";
 
-"Payment" = "Ödeme";
+"7048f" = "Ödeme";
 
-"Payment failed" = "Ödeme başarısız oldu";
+"17aad" = "Ödeme başarısız oldu";
 
-"Payment methods" = "Ödeme yöntemleri";
+"16d26" = "Ödeme yöntemleri";
 
-"Please choose a valid payment method." = "Lütfen geçerli bir ödeme yöntemi seçin.";
+"5ddb8" = "Lütfen geçerli bir ödeme yöntemi seçin.";
 
-"Please go back and select another payment method" = "Lütfen geri gidip başka bir ödeme yöntemi seçin";
+"cf6c1" = "Lütfen geri gidip başka bir ödeme yöntemi seçin";
 
-"Point the camera at your card." = "Kamerayı kartınıza doğrultun.";
+"59a6c" = "Kamerayı kartınıza doğrultun.";
 
-"Processing..." = "İşleniyor...";
+"f40a8" = "İşleniyor...";
 
-"Przelewy24 Bank" = "Przelewy24 Bank";
+"b0866" = "Przelewy24 Bank";
 
-"Remove card?" = "Kart kaldırılsın mı?";
+"ce640" = "Kart kaldırılsın mı?";
 
-"Remove linked account" = "Bağlı hesabı kaldır";
+"a545c" = "Bağlı hesabı kaldır";
 
-"Resend code" = "Kodu tekrar gönder";
+"b9745" = "Kodu tekrar gönder";
 
-"SEPA debit details cannot be changed." = "SEPA bankamatik ayrıntıları değiştirilemiyor.";
+"a4f77" = "SEPA bankamatik ayrıntıları değiştirilemiyor.";
 
-"Save" = "Kaydet";
+"1509f" = "Kaydet";
 
-"Save a new payment method" = "Yeni bir ödeme yöntemi kaydedin";
+"6b6eb" = "Yeni bir ödeme yöntemi kaydedin";
 
-"Save address" = "Adresi kaydet";
+"0cbb9" = "Adresi kaydet";
 
-"Save for future payments" = "Gelecekteki ödemeler için kaydedilsin";
+"7990e" = "Gelecekteki ödemeler için kaydedilsin";
 
-"Save my info for faster checkout with Link" = "Link ile daha hızlı ödeme için bilgilerimi kaydet";
+"8e1e1" = "Link ile daha hızlı ödeme için bilgilerimi kaydet";
 
-"Save payment details to %@ for future purchases" = "Ödeme bilgilerini gelecekteki satın almalar için %@ işletmesine kaydet";
+"0745e" = "Ödeme bilgilerini gelecekteki satın almalar için %@ işletmesine kaydet";
 
-"Save this account for future %@ payments" = "Bu hesabı gelecekteki %@ ödemeleri için kaydedin";
+"e8c88" = "Bu hesabı gelecekteki %@ ödemeleri için kaydedin";
 
-"Save your bank account in just a few steps." = "Banka hesabınızı birkaç adımda kaydedin.";
+"b4042" = "Banka hesabınızı birkaç adımda kaydedin.";
 
-"Save your info for secure 1-click checkout with Link" = "Link ile tek tıklamayla güvenli ödeme yapmak için bilgilerinizi kaydedin";
+"650b1" = "Link ile tek tıklamayla güvenli ödeme yapmak için bilgilerinizi kaydedin";
 
-"Saved" = "Kaydedildi";
+"b5c12" = "Kaydedildi";
 
-"Select card" = "Kart seçin";
+"59ffd" = "Kart seçin";
 
-"Select payment method" = "Ödeme yöntemini seçin";
+"659d1" = "Ödeme yöntemini seçin";
 
-"Select your payment method" = "Ödeme yönteminizi seçin";
+"d23e3" = "Ödeme yönteminizi seçin";
 
-"Set as default" = "Varsayılan olarak ayarla";
+"d09b4" = "Varsayılan olarak ayarla";
 
-"Set as default payment method" = "Varsayılan ödeme yöntemi olarak ayarla";
+"af056" = "Varsayılan ödeme yöntemi olarak ayarla";
 
-"Set up" = "Ayarla";
+"4da10" = "Ayarla";
 
-"Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
+"b8e46" = "Varış noktası %@ olan gönderimler desteklenmez.";
 
-"Show menu" = "Menüyü göster";
+"0b0af" = "Menüyü göster";
 
-"Simple, secure one-click payments" = "Tek tıkla basit ve güvenli ödemeler";
+"edd6d" = "Tek tıkla basit ve güvenli ödemeler";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Hesabınızı bağlarken bir sorun oluştu.\nLütfen daha sonra tekrar deneyin.";
+"33596" = "Hesabınızı bağlarken bir sorun oluştu.\nLütfen daha sonra tekrar deneyin.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe, 1-2 iş günü içerisinde hesabınıza 0,01 ABD doları yatıracaktır. Bunun ardından %@ işletmesinde banka hesabınızı kaydetme işlemini tamamlamak için yapmanız gerekenleri içeren bir e-posta alacaksınız.";
+"822ff" = "Stripe, 1-2 iş günü içerisinde hesabınıza 0,01 ABD doları yatıracaktır. Bunun ardından %@ işletmesinde banka hesabınızı kaydetme işlemini tamamlamak için yapmanız gerekenleri içeren bir e-posta alacaksınız.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe, 1-2 iş günü içinde hesabınıza 0,01 ABD doları yatıracaktır. Ardından, %@ ödemesini tamamlama talimatlarını içeren bir e-posta alacaksınız.";
+"72fd8" = "Stripe, 1-2 iş günü içinde hesabınıza 0,01 ABD doları yatıracaktır. Ardından, %@ ödemesini tamamlama talimatlarını içeren bir e-posta alacaksınız.";
 
-"Tap to close" = "Kapatmak için dokunun";
+"e263d" = "Kapatmak için dokunun";
 
-"Tap to expand" = "Genişletmek için dokunun";
+"1cbaf" = "Genişletmek için dokunun";
 
-"The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
+"477cb" = "Girdiğiniz IBAN eksik.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Girdiğiniz IBAN geçersiz, \"%@\" desteklenen bir ülke kodu değil.";
+"a70c6" = "Girdiğiniz IBAN geçersiz, \"%@\" desteklenen bir ülke kodu değil.";
 
-"The provided verification code has expired." = "Sağlanan doğrulama kodunun süresi dolmuş.";
+"e32a6" = "Sağlanan doğrulama kodunun süresi dolmuş.";
 
-"The provided verification code is incorrect." = "Sağlanan doğrulama kodu yanlış.";
+"e8cb8" = "Sağlanan doğrulama kodu yanlış.";
 
-"This is your default" = "Bu varsayılan ödeme yönteminizdir";
+"f3c56" = "Bu varsayılan ödeme yönteminizdir";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Bu ödeme yöntemi kaldırılacak ancak %@ abonelikleri için kullanılabilir kalacaktır.";
+"478c1" = "Bu ödeme yöntemi kaldırılacak ancak %@ abonelikleri için kullanılabilir kalacaktır.";
 
-"Too many attempts. Please try again in a few minutes." = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
+"4a754" = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
 
-"Unavailable for this purchase" = "Bu satın alım için kullanılamaz";
+"19202" = "Bu satın alım için kullanılamaz";
 
-"Update card" = "Kartı güncelle";
+"e28b5" = "Kartı güncelle";
 
-"Update payment method" = "Ödeme yöntemini güncelleyin";
+"fa7bf" = "Ödeme yöntemini güncelleyin";
 
-"Use billing address for shipping" = "Gönderim için fatura adresini kullanın";
+"4a82d" = "Gönderim için fatura adresini kullanın";
 
-"View more" = "Daha fazla göster";
+"267e5" = "Daha fazla göster";
 
-"Yes, update" = "Evet, güncelle";
+"fa298" = "Evet, güncelle";
 
-"Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
+"42ef0" = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
 
-"iDEAL Bank" = "iDEAL Bank";
+"460cb" = "iDEAL Bank";

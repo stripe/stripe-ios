@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (mhux obbligatorja)";
+"224e3" = "%@ (mhux obbligatorja)";
 
-"(not accepted)" = "(ma tistax tintuża)";
+"f676f" = "(ma tistax tintuża)";
 
-"Account number" = "In-numru tal-kont";
+"f7573" = "In-numru tal-kont";
 
-"Address" = "Indirizz";
+"56ef8" = "Indirizz";
 
-"Address line 1" = "Indirizz linja 1";
+"ee760" = "Indirizz linja 1";
 
-"Address line 2" = "It-tieni linja tal-indirizz";
+"350b2" = "It-tieni linja tal-indirizz";
 
-"Area" = "Żona";
+"024dc" = "Żona";
 
-"BLIK code" = "Kodiċi BLIK";
+"35cc2" = "Kodiċi BLIK";
 
-"BSB number" = "Numru BSB";
+"88a06" = "Numru BSB";
 
-"Bank account •••• %@" = "Kont tal-bank •••• %@";
+"7a614" = "Kont tal-bank •••• %@";
 
-"Billing address is same as shipping" = "L-indirizz tal-fatturazzjoni huwa l-istess bħall-indirizz tal-posta";
+"a03f3" = "L-indirizz tal-fatturazzjoni huwa l-istess bħall-indirizz tal-posta";
 
-"Cancel" = "Ikkanċella";
+"19766e" = "Ikkanċella";
 
-"Card brand" = "Id-ditta tal-karta";
+"45022" = "Id-ditta tal-karta";
 
-"City" = "Belt";
+"fc33f" = "Belt";
 
-"Code field" = "Taqsima tal-kodiċi";
+"2b743" = "Taqsima tal-kodiċi";
 
-"Company" = "Kumpanija";
+"de474" = "Kumpanija";
 
-"Continue" = "Kompli";
+"31fbe" = "Kompli";
 
-"Country" = "Pajjiż";
+"701d0" = "Pajjiż";
 
-"Country or region" = "Pajjiż jew reġjun";
+"8d236" = "Pajjiż jew reġjun";
 
-"County" = "Kontea";
+"136c8" = "Kontea";
 
-"Department" = "Dipartiment";
+"5304a" = "Dipartiment";
 
-"District" = "Distrett";
+"50f18" = "Distrett";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Trid tagħlaq din il-formola?";
+"6ebfc" = "Trid tagħlaq din il-formola?";
 
-"Done" = "Bil-lest";
+"11a67" = "Bil-lest";
 
-"Double tap to edit" = "Taptap biex tibdel";
+"f5dd0" = "Taptap biex tibdel";
 
-"Edit" = "Editja";
+"464c4" = "Editja";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "Email";
+"969cc" = "Email";
 
-"Emirate" = "Emirat";
+"4309c" = "Emirat";
 
-"Error" = "Żball";
+"54a0e" = "Żball";
 
-"First" = "Ismek";
+"a151c" = "Ismek";
 
-"Full name" = "Isem sħiħ";
+"f13a6" = "Isem sħiħ";
 
-"Incomplete phone number" = "In-numru tat-telefon mhuwiex komplut";
+"6d2d3" = "In-numru tat-telefon mhuwiex komplut";
 
-"Invalid UPI ID" = "L-ID UPI mhix tajba";
+"14cf3" = "L-ID UPI mhix tajba";
 
-"Island" = "Gżira";
+"730f5" = "Gżira";
 
-"Last" = "L-aħħar";
+"eb970" = "L-aħħar";
 
-"Name" = "Isem";
+"dcd1d" = "Isem";
 
-"Name on account" = "Isem sid il-kont";
+"59f3a" = "Isem sid il-kont";
 
-"OK" = "Tajjeb";
+"56533" = "Tajjeb";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Oħrajn";
+"f97e9" = "Oħrajn";
 
-"Parish" = "Parroċċa";
+"45ab6" = "Parroċċa";
 
-"Phone number" = "In-numru tal-mowbajl";
+"306f1" = "In-numru tal-mowbajl";
 
-"Postal code" = "Kodiċi postali";
+"ae53c" = "Kodiċi postali";
 
-"Prefecture" = "Prefettura";
+"50571" = "Prefettura";
 
-"Province" = "Provinċja";
+"abfce" = "Provinċja";
 
-"Remove" = "Neħħi";
+"c3812" = "Neħħi";
 
-"Remove bank account?" = "Tixtieq tneħħi l-kont tal-bank?";
+"05b2c" = "Tixtieq tneħħi l-kont tal-bank?";
 
-"Remove card" = "Neħħi l-karta";
+"dcf7d" = "Neħħi l-karta";
 
-"Search" = "Fittex";
+"49c26" = "Fittex";
 
-"Select card brand (optional)" = "Agħżel id-ditta tal-karta (mhux obbligatorja)";
+"4dc47" = "Agħżel id-ditta tal-karta (mhux obbligatorja)";
 
-"Selection is empty." = "L-għażla hija vojta.";
+"4d6f0" = "L-għażla hija vojta.";
 
-"Sort code" = "Il-kodiċi Sort";
+"a9002" = "Il-kodiċi Sort";
 
-"State" = "Stat";
+"a3b50" = "Stat";
 
-"Suburb" = "Subborg";
+"9e843" = "Subborg";
 
-"Suburb or city" = "Subborg jew belt";
+"c3273" = "Subborg jew belt";
 
-"The BSB you entered is incomplete." = "Il-BSB li daħħalt mhux komplut.";
+"d5ad2" = "Il-BSB li daħħalt mhux komplut.";
 
-"The ID number you entered is incomplete." = "In-numru tal-ID li daħħalt mhuwiex komplut.";
+"0f9bf" = "In-numru tal-ID li daħħalt mhuwiex komplut.";
 
-"The account number you entered is incomplete." = "In-numru tal-kont li daħħalt mhux komplut.";
+"e10dd" = "In-numru tal-kont li daħħalt mhux komplut.";
 
-"The sort code you entered is invalid." = "Il-kodiċi sort li daħħalt mhux tajjeb.";
+"ac7db" = "Il-kodiċi sort li daħħalt mhux tajjeb.";
 
-"Town or city" = "Belt";
+"9ce56" = "Belt";
 
-"UPI ID" = "ID UPI";
+"cec4a" = "ID UPI";
 
-"Unable to parse phone number" = "Ma jistax jaqra n-numru tat-telefown";
+"72356" = "Ma jistax jaqra n-numru tat-telefown";
 
-"Use rotor to access links" = "Uża r-rotor biex tiftaħ il-ħoloq";
+"11480" = "Uża r-rotor biex tiftaħ il-ħoloq";
 
-"Your BLIK code is incomplete." = "Il-kodiċi BLIK li ktibt mhux komplut.";
+"6c0af" = "Il-kodiċi BLIK li ktibt mhux komplut.";
 
-"Your BLIK code is invalid." = "Il-kodiċi BLIK li ktibt mhux tajjeb.";
+"224bb" = "Il-kodiċi BLIK li ktibt mhux tajjeb.";
 
-"Your ZIP code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+"3e686" = "Il-kodiċi postali tiegħek mhux komplut.";
 
-"Your ZIP code is invalid." = "Il-kodiċi ZIP tiegħek huwa invalidu.";
+"f029b" = "Il-kodiċi ZIP tiegħek huwa invalidu.";
 
-"Your email is invalid." = "L-indirizz tal-email li daħħalt mhux tajjeb.";
+"57c28" = "L-indirizz tal-email li daħħalt mhux tajjeb.";
 
-"Your payment information will not be saved." = "L-informazzjoni tal-pagament tiegħek mhux se tiġi merfugħa.";
+"cc532" = "L-informazzjoni tal-pagament tiegħek mhux se tiġi merfugħa.";
 
-"Your postal code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+"52c55" = "Il-kodiċi postali tiegħek mhux komplut.";
 
-"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
+"037ec" = "Il-kodiċi postali tiegħek mhux validu.";
 
-"ZIP" = "Kodiċi Postali";
+"eaca4" = "Kodiċi Postali";

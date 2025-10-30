@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Došlo k chybě. Zkuste to prosím znovu.";
+"9c170" = "Došlo k chybě. Zkuste to prosím znovu.";
 
-"Card brand was not updated. Please try again." = "Značka karty nebyla aktualizována. Zkuste to prosím znovu.";
+"4bc73" = "Značka karty nebyla aktualizována. Zkuste to prosím znovu.";
 
-"Close" = "Zavřít";
+"7d9eb" = "Zavřít";
 
-"Default payment method was not updated. Please try again." = "Výchozí způsob platby nebyl aktualizován. Zkuste to prosím znovu.";
+"3048d" = "Výchozí způsob platby nebyl aktualizován. Zkuste to prosím znovu.";
 
-"Scan Card" = "Naskenovat kartu";
+"b60b5" = "Naskenovat kartu";
 
-"Scan card" = "Naskenovat kartu";
+"ea2fe" = "Naskenovat kartu";
 
-"The IBAN you entered is invalid." = "Číslo IBAN, které jste zadali, je neplatné.";
+"ee81e" = "Číslo IBAN, které jste zadali, je neplatné.";
 
-"There was an error processing your card -- try again in a few seconds" = "Při zpracování Vaší karty došlo k chybě -- zkuste to za několik sekund znovu";
+"fa47c" = "Při zpracování Vaší karty došlo k chybě -- zkuste to za několik sekund znovu";
 
-"There was an unexpected error -- try again in a few seconds" = "Došlo k neočekávané chybě -- zkuste to znovu za několik sekund";
+"c98a4" = "Došlo k neočekávané chybě -- zkuste to znovu za několik sekund";
 
-"Try again" = "Zkusit znovu";
+"d8b83" = "Zkusit znovu";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "K ověření údajů o vaší kartě používáme službu Stripe. Společnost Stripe může vaše údaje používat a ukládat v souladu se svými zásadami ochrany osobních údajů. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Více informací</u></a>";
+"96fe7" = "K ověření údajů o vaší kartě používáme službu Stripe. Společnost Stripe může vaše údaje používat a ukládat v souladu se svými zásadami ochrany osobních údajů. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Více informací</u></a>";
 
-"Your card has expired" = "Platnost Vaší karty uplynula";
+"f5c35" = "Platnost Vaší karty uplynula";
 
-"Your card was declined" = "Vaše karta byla odmítnuta";
+"b9821" = "Vaše karta byla odmítnuta";
 
-"Your card's expiration month is invalid" = "Měsíc konce platnosti Vaší karty je neplatný";
+"e02cf" = "Měsíc konce platnosti Vaší karty je neplatný";
 
-"Your card's expiration year is invalid" = "Rok konce platnosti Vaší karty je neplatný";
+"53311" = "Rok konce platnosti Vaší karty je neplatný";
 
-"Your card's number is invalid" = "Číslo Vaší karty je neplatné";
+"c433c" = "Číslo Vaší karty je neplatné";
 
-"Your card's security code is invalid" = "Bezpečnostní kód Vaší karty je neplatný";
+"15f5b" = "Bezpečnostní kód Vaší karty je neplatný";
 
-"Your name is invalid." = "Vaše jméno je neplatné.";
+"b1d57" = "Vaše jméno je neplatné.";
 
-"Your payment method was declined." = "Vaše platební metoda byla zamítnuta.";
+"3209d" = "Vaše platební metoda byla zamítnuta.";

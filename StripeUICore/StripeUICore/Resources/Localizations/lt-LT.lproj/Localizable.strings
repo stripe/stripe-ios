@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (pasirenkamas)";
+"224e3" = "%@ (pasirenkamas)";
 
-"(not accepted)" = "(nepriimama)";
+"f676f" = "(nepriimama)";
 
-"Account number" = "Sąskaitos numeris";
+"f7573" = "Sąskaitos numeris";
 
-"Address" = "Adresas";
+"56ef8" = "Adresas";
 
-"Address line 1" = "1 adreso eilutė";
+"ee760" = "1 adreso eilutė";
 
-"Address line 2" = "2 adreso eilutė";
+"350b2" = "2 adreso eilutė";
 
-"Area" = "Sritis";
+"024dc" = "Sritis";
 
-"BLIK code" = "BLIK kodas";
+"35cc2" = "BLIK kodas";
 
-"BSB number" = "BSB numeris";
+"88a06" = "BSB numeris";
 
-"Bank account •••• %@" = "Banko sąskaita •••• %@";
+"7a614" = "Banko sąskaita •••• %@";
 
-"Billing address is same as shipping" = "Atsiskaitymo ir siuntimo adresai vienodi";
+"a03f3" = "Atsiskaitymo ir siuntimo adresai vienodi";
 
-"Cancel" = "Atšaukti";
+"19766e" = "Atšaukti";
 
-"Card brand" = "Kortelės prekės ženklas";
+"45022" = "Kortelės prekės ženklas";
 
-"City" = "Miestas";
+"fc33f" = "Miestas";
 
-"Code field" = "Kodo laukas";
+"2b743" = "Kodo laukas";
 
-"Company" = "Bendrovė";
+"de474" = "Bendrovė";
 
-"Continue" = "Tęsti";
+"31fbe" = "Tęsti";
 
-"Country" = "Šalis";
+"701d0" = "Šalis";
 
-"Country or region" = "Šalis arba regionas";
+"8d236" = "Šalis arba regionas";
 
-"County" = "Apygarda";
+"136c8" = "Apygarda";
 
-"Department" = "Skyrius";
+"5304a" = "Skyrius";
 
-"District" = "Rajonas";
+"50f18" = "Rajonas";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Ar norite uždaryti šią formą?";
+"6ebfc" = "Ar norite uždaryti šią formą?";
 
-"Done" = "Atlikta";
+"11a67" = "Atlikta";
 
-"Double tap to edit" = "Norėdami redaguoti, dukart bakstelėkite";
+"f5dd0" = "Norėdami redaguoti, dukart bakstelėkite";
 
-"Edit" = "Redaguoti";
+"464c4" = "Redaguoti";
 
-"Eircode" = "Pašto kodas (EIR)";
+"113d9" = "Pašto kodas (EIR)";
 
-"Email" = "El. paštas";
+"969cc" = "El. paštas";
 
-"Emirate" = "Emyratas";
+"4309c" = "Emyratas";
 
-"Error" = "Klaida";
+"54a0e" = "Klaida";
 
-"First" = "Vardas";
+"a151c" = "Vardas";
 
-"Full name" = "Vardas, pavardė";
+"f13a6" = "Vardas, pavardė";
 
-"Incomplete phone number" = "Ne visas telefono numeris";
+"6d2d3" = "Ne visas telefono numeris";
 
-"Invalid UPI ID" = "Netinkamas UPI ID";
+"14cf3" = "Netinkamas UPI ID";
 
-"Island" = "Sala";
+"730f5" = "Sala";
 
-"Last" = "Pavardė";
+"eb970" = "Pavardė";
 
-"Name" = "Vardas, pavardė";
+"dcd1d" = "Vardas, pavardė";
 
-"Name on account" = "Sąskaitos turėtojo vardas ir pavardė";
+"59f3a" = "Sąskaitos turėtojo vardas ir pavardė";
 
-"OK" = "GERAI";
+"56533" = "GERAI";
 
-"Oblast" = "Sritis";
+"2ba5c" = "Sritis";
 
-"Other" = "Kita";
+"f97e9" = "Kita";
 
-"Parish" = "Parapija";
+"45ab6" = "Parapija";
 
-"Phone number" = "Telefono numeris";
+"306f1" = "Telefono numeris";
 
-"Postal code" = "Pašto kodas";
+"ae53c" = "Pašto kodas";
 
-"Prefecture" = "Prefektūra";
+"50571" = "Prefektūra";
 
-"Province" = "Provincija";
+"abfce" = "Provincija";
 
-"Remove" = "Pašalinti";
+"c3812" = "Pašalinti";
 
-"Remove bank account?" = "Pašalinti banko sąskaitą?";
+"05b2c" = "Pašalinti banko sąskaitą?";
 
-"Remove card" = "Pašalinti kortelę";
+"dcf7d" = "Pašalinti kortelę";
 
-"Search" = "Paieška";
+"49c26" = "Paieška";
 
-"Select card brand (optional)" = "Pasirinkite kortelės prekės ženklą (neprivaloma)";
+"4dc47" = "Pasirinkite kortelės prekės ženklą (neprivaloma)";
 
-"Selection is empty." = "Nieko nepasirinkta.";
+"4d6f0" = "Nieko nepasirinkta.";
 
-"Sort code" = "Identifikacinis kodas";
+"a9002" = "Identifikacinis kodas";
 
-"State" = "Valstija";
+"a3b50" = "Valstija";
 
-"Suburb" = "Priemiestis";
+"9e843" = "Priemiestis";
 
-"Suburb or city" = "Priemiestis arba miestas";
+"c3273" = "Priemiestis arba miestas";
 
-"The BSB you entered is incomplete." = "Įvestas neišsamus BSB numeris.";
+"d5ad2" = "Įvestas neišsamus BSB numeris.";
 
-"The ID number you entered is incomplete." = "Įvedėte ne visą identifikacinį numerį.";
+"0f9bf" = "Įvedėte ne visą identifikacinį numerį.";
 
-"The account number you entered is incomplete." = "Įvedėte ne visą sąskaitos numerį.";
+"e10dd" = "Įvedėte ne visą sąskaitos numerį.";
 
-"The sort code you entered is invalid." = "Jūsų įvestas identifikacinis kodas negalioja.";
+"ac7db" = "Jūsų įvestas identifikacinis kodas negalioja.";
 
-"Town or city" = "Miestelis arba miestas";
+"9ce56" = "Miestelis arba miestas";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Nepavyko išanalizuoti telefono numerio";
+"72356" = "Nepavyko išanalizuoti telefono numerio";
 
-"Use rotor to access links" = "Naudoti pasukimo ratuką prieigai prie saitų";
+"11480" = "Naudoti pasukimo ratuką prieigai prie saitų";
 
-"Your BLIK code is incomplete." = "Jūsų BLIK kodas neišsamus.";
+"6c0af" = "Jūsų BLIK kodas neišsamus.";
 
-"Your BLIK code is invalid." = "Jūsų BLIK kodas netinkamas.";
+"224bb" = "Jūsų BLIK kodas netinkamas.";
 
-"Your ZIP code is incomplete." = "Jūsų pašto kodas yra nepilnas.";
+"3e686" = "Jūsų pašto kodas yra nepilnas.";
 
-"Your ZIP code is invalid." = "Jūsų pašto kodas netinkamas.";
+"f029b" = "Jūsų pašto kodas netinkamas.";
 
-"Your email is invalid." = "Jūsų el. paštas yra neteisingas.";
+"57c28" = "Jūsų el. paštas yra neteisingas.";
 
-"Your payment information will not be saved." = "Jūsų mokėjimo informacija nebus įrašyta.";
+"cc532" = "Jūsų mokėjimo informacija nebus įrašyta.";
 
-"Your postal code is incomplete." = "Pašto kodas neišsamus.";
+"52c55" = "Pašto kodas neišsamus.";
 
-"Your postal code is invalid." = "Jūsų pašto kodas yra netinkamas.";
+"037ec" = "Jūsų pašto kodas yra netinkamas.";
 
-"ZIP" = "Pašto kodas";
+"eaca4" = "Pašto kodas";

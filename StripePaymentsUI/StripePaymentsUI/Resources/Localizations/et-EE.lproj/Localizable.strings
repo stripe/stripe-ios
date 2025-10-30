@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ kaart";
+"fbfa6" = "%1$@ kaart";
 
-"%1$@ Credit" = "%1$@ krediit";
+"a11b0" = "%1$@ krediit";
 
-"%1$@ Debit" = "%1$@ deebet";
+"95233" = "%1$@ deebet";
 
-"%1$@ Prepaid" = "%1$@ ettemakstud";
+"c90ba" = "%1$@ ettemakstud";
 
-"%1$@ account ending in %2$@" = "%1$@ konto lõpuga %2$@";
+"3b24a" = "%1$@ konto lõpuga %2$@";
 
-"%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
+"f5b21" = "%1$@, lõpeb nr-ga %2$@";
 
-"%1$@ is not accepted" = "%1$@ pole aktsepteeritud";
+"29adf" = "%1$@ pole aktsepteeritud";
 
-"Address line 2 (optional)" = "Aadressirida 2 (valikuline)";
+"9ada7" = "Aadressirida 2 (valikuline)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Pangakonto";
+"c6f64" = "Pangakonto";
 
-"Billing address" = "Arveldusaadress";
+"1f516" = "Arveldusaadress";
 
-"Billing details" = "Arveldusandmed";
+"7c928" = "Arveldusandmed";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Kaardi andmed";
+"fca47" = "Kaardi andmed";
 
-"Card number" = "Kaardinumber";
+"816fc" = "Kaardinumber";
 
-"Confirm your %@" = "Kinnitage oma %@";
+"002d7" = "Kinnitage oma %@";
 
-"Invalid data." = "Valed andmed.";
+"da175" = "Valed andmed.";
 
-"MM / YY" = "KK / AA";
+"58f4a" = "KK / AA";
 
-"MM/YY" = "KK/AA";
+"1b5f6" = "KK/AA";
 
-"Postal Code" = "Sihtnumber";
+"8198b" = "Sihtnumber";
 
-"Shipping Address" = "Tarneaadress";
+"6e244" = "Tarneaadress";
 
-"State / Province / Region" = "Maakond";
+"649f1" = "Maakond";
 
-"The BSB you entered is invalid." = "Sisestatud BSB-number ei ole kehtiv.";
+"dfa21" = "Sisestatud BSB-number ei ole kehtiv.";
 
-"The selected brand is not allowed" = "Valitud tootemark pole lubatud";
+"aaf53" = "Valitud tootemark pole lubatud";
 
-"To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
+"9f2d9" = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
 
-"Your card has expired." = "Teie kaart on aegunud.";
+"393e6" = "Teie kaart on aegunud.";
 
-"Your card number is incomplete." = "Teie kaardinumber on puudulik.";
+"7e5ae" = "Teie kaardinumber on puudulik.";
 
-"Your card number is invalid." = "Teie kaardinumber on kehtetu.";
+"3c122" = "Teie kaardinumber on kehtetu.";
 
-"Your card's expiration date is incomplete." = "Kaardi aegumiskuupäev on puudulik.";
+"a2036" = "Kaardi aegumiskuupäev on puudulik.";
 
-"Your card's expiration date is invalid." = "Teie kaardi aegumiskuupäev on kehtetu.";
+"6a457" = "Teie kaardi aegumiskuupäev on kehtetu.";
 
-"Your card's expiration month is invalid." = "Kaardi aegumiskuu on kehtetu.";
+"e47c0" = "Kaardi aegumiskuu on kehtetu.";
 
-"Your card's expiration year is invalid." = "Kaardi aegumisaasta on kehtetu.";
+"36ae2" = "Kaardi aegumisaasta on kehtetu.";
 
-"Your card's security code is incomplete." = "Teie kaardi turvakood on puudulik.";
+"300dd" = "Teie kaardi turvakood on puudulik.";
 
-"Your card's security code is invalid." = "Kaardi turvakood on kehtetu.";
+"394fd" = "Kaardi turvakood on kehtetu.";
 
-"card number" = "kaardinumber";
+"58da6" = "kaardinumber";
 
-"example@example.com" = "näide@näide.com";
+"31c55" = "näide@näide.com";
 
-"expiration date" = "aegumiskuupäev";
+"b34dd" = "aegumiskuupäev";

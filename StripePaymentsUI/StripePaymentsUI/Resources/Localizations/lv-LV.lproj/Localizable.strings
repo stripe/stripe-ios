@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Karte";
+"fbfa6" = "%1$@ Karte";
 
-"%1$@ Credit" = "%1$@ Kredīta";
+"a11b0" = "%1$@ Kredīta";
 
-"%1$@ Debit" = "%1$@ Debeta";
+"95233" = "%1$@ Debeta";
 
-"%1$@ Prepaid" = "%1$@ Priekšapmaksas";
+"c90ba" = "%1$@ Priekšapmaksas";
 
-"%1$@ account ending in %2$@" = "%1$@konts, kas beidzas ar%2$@";
+"3b24a" = "%1$@konts, kas beidzas ar%2$@";
 
-"%1$@ ending in %2$@" = "%1$@, kuras numura pēdējie cipari ir %2$@";
+"f5b21" = "%1$@, kuras numura pēdējie cipari ir %2$@";
 
-"%1$@ is not accepted" = "%1$@ netiek pieņemts";
+"29adf" = "%1$@ netiek pieņemts";
 
-"Address line 2 (optional)" = "2. adreses rindiņa (nav obligāti)";
+"9ada7" = "2. adreses rindiņa (nav obligāti)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bankas konts";
+"c6f64" = "Bankas konts";
 
-"Billing address" = "Norēķinu adrese";
+"1f516" = "Norēķinu adrese";
 
-"Billing details" = "Norēķinu informācija";
+"7c928" = "Norēķinu informācija";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Kartes informācija";
+"fca47" = "Kartes informācija";
 
-"Card number" = "Kartes numurs";
+"816fc" = "Kartes numurs";
 
-"Confirm your %@" = "Apstipriniet savu %@";
+"002d7" = "Apstipriniet savu %@";
 
-"Invalid data." = "Nederīgi dati.";
+"da175" = "Nederīgi dati.";
 
-"MM / YY" = "MM/GG";
+"58f4a" = "MM/GG";
 
-"MM/YY" = "MM/GG";
+"1b5f6" = "MM/GG";
 
-"Postal Code" = "Pasta indekss";
+"8198b" = "Pasta indekss";
 
-"Shipping Address" = "Piegādes adrese";
+"6e244" = "Piegādes adrese";
 
-"State / Province / Region" = "Novads/štats/province/reģions";
+"649f1" = "Novads/štats/province/reģions";
 
-"The BSB you entered is invalid." = "Ievadītais BSB nav derīgs.";
+"dfa21" = "Ievadītais BSB nav derīgs.";
 
-"The selected brand is not allowed" = "Atlasītais zīmols nav atļauts";
+"aaf53" = "Atlasītais zīmols nav atļauts";
 
-"To scan your card, allow camera access in Settings." = "Lai noskenētu karti, Iestatījumos atļaujiet piekļuvi kamerai.";
+"9f2d9" = "Lai noskenētu karti, Iestatījumos atļaujiet piekļuvi kamerai.";
 
-"Your card has expired." = "Kartes derīguma termiņš ir beidzies.";
+"393e6" = "Kartes derīguma termiņš ir beidzies.";
 
-"Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
+"7e5ae" = "Kartes numurs nav pilnīgs.";
 
-"Your card number is invalid." = "Kartes numurs nav derīgs.";
+"3c122" = "Kartes numurs nav derīgs.";
 
-"Your card's expiration date is incomplete." = "Kartes derīguma termiņa datums nav pilnīgs.";
+"a2036" = "Kartes derīguma termiņa datums nav pilnīgs.";
 
-"Your card's expiration date is invalid." = "Kartes derīguma termiņa beigu datums nav derīgs.";
+"6a457" = "Kartes derīguma termiņa beigu datums nav derīgs.";
 
-"Your card's expiration month is invalid." = "Kartes derīguma termiņa mēnesis nav derīgs.";
+"e47c0" = "Kartes derīguma termiņa mēnesis nav derīgs.";
 
-"Your card's expiration year is invalid." = "Kartes derīguma termiņa gads nav derīgs.";
+"36ae2" = "Kartes derīguma termiņa gads nav derīgs.";
 
-"Your card's security code is incomplete." = "Kartes drošības kods nav pilnīgs.";
+"300dd" = "Kartes drošības kods nav pilnīgs.";
 
-"Your card's security code is invalid." = "Kartes drošības kods nav derīgs.";
+"394fd" = "Kartes drošības kods nav derīgs.";
 
-"card number" = "kartes numurs";
+"58da6" = "kartes numurs";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "derīguma termiņš";
+"b34dd" = "derīguma termiņš";

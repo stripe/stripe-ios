@@ -57,8 +57,7 @@ final class IndividualViewController: IdentityFlowViewController {
 
     func updateUI() {
         configure(
-            backButtonTitle: STPLocalizedString(
-                "Personal Information",
+            backButtonTitle: STPLocalizedString("c4b37",
                 "Back button title for returning to the individual's perssonal infomation screen"
             ),
             viewModel: .init(

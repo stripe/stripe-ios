@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Thẻ";
+"fbfa6" = "%1$@ Thẻ";
 
-"%1$@ Credit" = "%1$@ Ghi có";
+"a11b0" = "%1$@ Ghi có";
 
-"%1$@ Debit" = "%1$@ Ghi nợ";
+"95233" = "%1$@ Ghi nợ";
 
-"%1$@ Prepaid" = "%1$@ Trả trước";
+"c90ba" = "%1$@ Trả trước";
 
-"%1$@ account ending in %2$@" = "Tài khoản %1$@ kết thúc bằng %2$@";
+"3b24a" = "Tài khoản %1$@ kết thúc bằng %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
+"f5b21" = "%1$@ kết thúc bằng %2$@";
 
-"%1$@ is not accepted" = "%1$@ không được chấp nhận";
+"29adf" = "%1$@ không được chấp nhận";
 
-"Address line 2 (optional)" = "Dòng địa chỉ 2 (tùy chọn)";
+"9ada7" = "Dòng địa chỉ 2 (tùy chọn)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Tài khoản ngân hàng";
+"c6f64" = "Tài khoản ngân hàng";
 
-"Billing address" = "Địa chỉ thanh toán";
+"1f516" = "Địa chỉ thanh toán";
 
-"Billing details" = "Chi tiết hóa đơn";
+"7c928" = "Chi tiết hóa đơn";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Thông tin thẻ";
+"fca47" = "Thông tin thẻ";
 
-"Card number" = "Số thẻ";
+"816fc" = "Số thẻ";
 
-"Confirm your %@" = "Xác nhận %@ của bạn";
+"002d7" = "Xác nhận %@ của bạn";
 
-"Invalid data." = "Dữ liệu không hợp lệ.";
+"da175" = "Dữ liệu không hợp lệ.";
 
-"MM / YY" = "Tháng /Năm";
+"58f4a" = "Tháng /Năm";
 
-"MM/YY" = "Tháng/Năm";
+"1b5f6" = "Tháng/Năm";
 
-"Postal Code" = "Mã bưu điện";
+"8198b" = "Mã bưu điện";
 
-"Shipping Address" = "Địa chỉ vận chuyển";
+"6e244" = "Địa chỉ vận chuyển";
 
-"State / Province / Region" = "Tiểu bang/Tỉnh/Khu vực";
+"649f1" = "Tiểu bang/Tỉnh/Khu vực";
 
-"The BSB you entered is invalid." = "BSB mà bạn nhập không hợp lệ.";
+"dfa21" = "BSB mà bạn nhập không hợp lệ.";
 
-"The selected brand is not allowed" = "Thương hiệu đã chọn không được cho phép";
+"aaf53" = "Thương hiệu đã chọn không được cho phép";
 
-"To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
+"9f2d9" = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
 
-"Your card has expired." = "Thẻ đã hết hạn.";
+"393e6" = "Thẻ đã hết hạn.";
 
-"Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
+"7e5ae" = "Số thẻ chưa đầy đủ.";
 
-"Your card number is invalid." = "Số thẻ không hợp lệ.";
+"3c122" = "Số thẻ không hợp lệ.";
 
-"Your card's expiration date is incomplete." = "Ngày hết hạn trên thẻ không hợp lệ.";
+"a2036" = "Ngày hết hạn trên thẻ không hợp lệ.";
 
-"Your card's expiration date is invalid." = "Ngày hết hạn trên thẻ không hợp lệ.";
+"6a457" = "Ngày hết hạn trên thẻ không hợp lệ.";
 
-"Your card's expiration month is invalid." = "Tháng hết hạn trên thẻ của bạn không hợp lệ.";
+"e47c0" = "Tháng hết hạn trên thẻ của bạn không hợp lệ.";
 
-"Your card's expiration year is invalid." = "Năm hết hạn trên thẻ của bạn không hợp lệ.";
+"36ae2" = "Năm hết hạn trên thẻ của bạn không hợp lệ.";
 
-"Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
+"300dd" = "Mã bảo mật trên thẻ chưa đầy đủ.";
 
-"Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
+"394fd" = "Mã bảo mật trên thẻ không hợp lệ.";
 
-"card number" = "số thẻ";
+"58da6" = "số thẻ";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "Ngày hết hạn";
+"b34dd" = "Ngày hết hạn";

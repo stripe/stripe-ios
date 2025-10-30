@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Ada ralat berlaku. Sila cuba lagi.";
+"9c170" = "Ada ralat berlaku. Sila cuba lagi.";
 
-"Card brand was not updated. Please try again." = "Jenama kad tidak dikemaskinikan. Sila cuba lagi.";
+"4bc73" = "Jenama kad tidak dikemaskinikan. Sila cuba lagi.";
 
-"Close" = "Tutup";
+"7d9eb" = "Tutup";
 
-"Default payment method was not updated. Please try again." = "Kaedah pembayaran tetapan asal tidak dikemaskinikan. Sila cuba lagi.";
+"3048d" = "Kaedah pembayaran tetapan asal tidak dikemaskinikan. Sila cuba lagi.";
 
-"Scan Card" = "Imbas Kad";
+"b60b5" = "Imbas Kad";
 
-"Scan card" = "Imbas kad";
+"ea2fe" = "Imbas kad";
 
-"The IBAN you entered is invalid." = "IBAN yang anda masukkan tidak sah.";
+"ee81e" = "IBAN yang anda masukkan tidak sah.";
 
-"There was an error processing your card -- try again in a few seconds" = "Ada ralat ketika memproses kad anda -- cuba lagi dalam masa beberapa saat";
+"fa47c" = "Ada ralat ketika memproses kad anda -- cuba lagi dalam masa beberapa saat";
 
-"There was an unexpected error -- try again in a few seconds" = "Ada ralat yang tidak dijangka -- cuba lagi dalam masa beberapa saat";
+"c98a4" = "Ada ralat yang tidak dijangka -- cuba lagi dalam masa beberapa saat";
 
-"Try again" = "Cuba lagi";
+"d8b83" = "Cuba lagi";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Kami menggunakan Stripe untuk mengesahkan butiran kad anda. Stripe mungkin menggunakan dan menyimpan data anda menurut dasar privasi Stripe. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ketahui selanjutnya</u></a>";
+"96fe7" = "Kami menggunakan Stripe untuk mengesahkan butiran kad anda. Stripe mungkin menggunakan dan menyimpan data anda menurut dasar privasi Stripe. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ketahui selanjutnya</u></a>";
 
-"Your card has expired" = "Kad anda telah tamat tempoh";
+"f5c35" = "Kad anda telah tamat tempoh";
 
-"Your card was declined" = "Kad anda telah ditolak";
+"b9821" = "Kad anda telah ditolak";
 
-"Your card's expiration month is invalid" = "Bulan tamat tempoh kad anda tidak sah";
+"e02cf" = "Bulan tamat tempoh kad anda tidak sah";
 
-"Your card's expiration year is invalid" = "Tahun tamat tempoh kad anda tidak sah";
+"53311" = "Tahun tamat tempoh kad anda tidak sah";
 
-"Your card's number is invalid" = "Nombor kad anda tidak sah";
+"c433c" = "Nombor kad anda tidak sah";
 
-"Your card's security code is invalid" = "Kod keselamatan kad anda tidak sah";
+"15f5b" = "Kod keselamatan kad anda tidak sah";
 
-"Your name is invalid." = "Nama anda tidak sah.";
+"b1d57" = "Nama anda tidak sah.";
 
-"Your payment method was declined." = "Kaedah pembayaran anda ditolak.";
+"3209d" = "Kaedah pembayaran anda ditolak.";

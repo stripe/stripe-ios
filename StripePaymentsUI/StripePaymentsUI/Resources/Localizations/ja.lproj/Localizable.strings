@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ カード";
+"fbfa6" = "%1$@ カード";
 
-"%1$@ Credit" = "%1$@ クレジット";
+"a11b0" = "%1$@ クレジット";
 
-"%1$@ Debit" = "%1$@ デビット";
+"95233" = "%1$@ デビット";
 
-"%1$@ Prepaid" = "%1$@ プリペイド";
+"c90ba" = "%1$@ プリペイド";
 
-"%1$@ account ending in %2$@" = "末尾が %2$@ の %1$@ 口座";
+"3b24a" = "末尾が %2$@ の %1$@ 口座";
 
-"%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
+"f5b21" = "末尾が %2$@ の %1$@";
 
-"%1$@ is not accepted" = "%1$@ は受け付けられていません";
+"29adf" = "%1$@ は受け付けられていません";
 
-"Address line 2 (optional)" = "住所 (2 行目、省略可)";
+"9ada7" = "住所 (2 行目、省略可)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "銀行口座";
+"c6f64" = "銀行口座";
 
-"Billing address" = "請求先住所";
+"1f516" = "請求先住所";
 
-"Billing details" = "請求先の詳細";
+"7c928" = "請求先の詳細";
 
-"CVC" = "セキュリティコード";
+"19e9b" = "セキュリティコード";
 
-"Card information" = "カード情報";
+"fca47" = "カード情報";
 
-"Card number" = "カード番号";
+"816fc" = "カード番号";
 
-"Confirm your %@" = "%@ を確認してください";
+"002d7" = "%@ を確認してください";
 
-"Invalid data." = "データが無効です。";
+"da175" = "データが無効です。";
 
-"MM / YY" = "月 / 年";
+"58f4a" = "月 / 年";
 
-"MM/YY" = "MM/YY";
+"1b5f6" = "MM/YY";
 
-"Postal Code" = "郵便番号";
+"8198b" = "郵便番号";
 
-"Shipping Address" = "配送先住所";
+"6e244" = "配送先住所";
 
-"State / Province / Region" = "都道府県";
+"649f1" = "都道府県";
 
-"The BSB you entered is invalid." = "入力した BSB コードが無効です。";
+"dfa21" = "入力した BSB コードが無効です。";
 
-"The selected brand is not allowed" = "選択したブランドは許可されていません";
+"aaf53" = "選択したブランドは許可されていません";
 
-"To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
+"9f2d9" = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
 
-"Your card has expired." = "カードの有効期限が切れています。";
+"393e6" = "カードの有効期限が切れています。";
 
-"Your card number is incomplete." = "カード番号に不備があります。";
+"7e5ae" = "カード番号に不備があります。";
 
-"Your card number is invalid." = "カード番号が無効です。";
+"3c122" = "カード番号が無効です。";
 
-"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
+"a2036" = "カードの有効期限の日付に不備があります。";
 
-"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
+"6a457" = "カードの有効期限の日付が無効です。";
 
-"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
+"e47c0" = "カードの有効期限の月が無効です。";
 
-"Your card's expiration year is invalid." = "カードの有効期限の年が無効です。";
+"36ae2" = "カードの有効期限の年が無効です。";
 
-"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
+"300dd" = "カードのセキュリティコードに不備があります。";
 
-"Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
+"394fd" = "カードのセキュリティコードが無効です。";
 
-"card number" = "カード番号";
+"58da6" = "カード番号";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "有効期限";
+"b34dd" = "有効期限";

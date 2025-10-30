@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (optional)";
+"224e3" = "%@ (optional)";
 
-"(not accepted)" = "(not accepted)";
+"f676f" = "(not accepted)";
 
-"Account number" = "Account number";
+"f7573" = "Account number";
 
-"Address" = "Address";
+"56ef8" = "Address";
 
-"Address line 1" = "Address line 1";
+"ee760" = "Address line 1";
 
-"Address line 2" = "Address line 2";
+"350b2" = "Address line 2";
 
-"Area" = "Area";
+"024dc" = "Area";
 
-"BLIK code" = "BLIK code";
+"35cc2" = "BLIK code";
 
-"BSB number" = "BSB number";
+"88a06" = "BSB number";
 
-"Bank account •••• %@" = "Bank account •••• %@";
+"7a614" = "Bank account •••• %@";
 
-"Billing address is same as shipping" = "Billing address is same as shipping";
+"a03f3" = "Billing address is same as shipping";
 
-"Cancel" = "Cancel";
+"19766e" = "Cancel";
 
-"Card brand" = "Card brand";
+"45022" = "Card brand";
 
-"City" = "City";
+"fc33f" = "City";
 
-"Code field" = "Code field";
+"2b743" = "Code field";
 
-"Company" = "Company";
+"de474" = "Company";
 
-"Continue" = "Continue";
+"31fbe" = "Continue";
 
-"Country" = "Country";
+"701d0" = "Country";
 
-"Country or region" = "Country or region";
+"8d236" = "Country or region";
 
-"County" = "County";
+"136c8" = "County";
 
-"Department" = "Department";
+"5304a" = "Department";
 
-"District" = "District";
+"50f18" = "District";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Do you want to close this form?";
+"6ebfc" = "Do you want to close this form?";
 
-"Done" = "Done";
+"11a67" = "Done";
 
-"Double tap to edit" = "Double tap to edit";
+"f5dd0" = "Double tap to edit";
 
-"Edit" = "Edit";
+"464c4" = "Edit";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "Email";
+"969cc" = "Email";
 
-"Emirate" = "Emirate";
+"4309c" = "Emirate";
 
-"Error" = "Error";
+"54a0e" = "Error";
 
-"First" = "First";
+"a151c" = "First";
 
-"Full name" = "Full name";
+"f13a6" = "Full name";
 
-"Incomplete phone number" = "Incomplete phone number";
+"6d2d3" = "Incomplete phone number";
 
-"Invalid UPI ID" = "Invalid UPI ID";
+"14cf3" = "Invalid UPI ID";
 
-"Island" = "Island";
+"730f5" = "Island";
 
-"Last" = "Last";
+"eb970" = "Last";
 
-"Name" = "Name";
+"dcd1d" = "Name";
 
-"Name on account" = "Name on account";
+"59f3a" = "Name on account";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Other";
+"f97e9" = "Other";
 
-"Parish" = "Parish";
+"45ab6" = "Parish";
 
-"Phone number" = "Phone number";
+"306f1" = "Phone number";
 
-"Postal code" = "Postcode";
+"ae53c" = "Postcode";
 
-"Prefecture" = "Prefecture";
+"50571" = "Prefecture";
 
-"Province" = "Province";
+"abfce" = "Province";
 
-"Remove" = "Remove";
+"c3812" = "Remove";
 
-"Remove bank account?" = "Remove bank account?";
+"05b2c" = "Remove bank account?";
 
-"Remove card" = "Remove card";
+"dcf7d" = "Remove card";
 
-"Search" = "Search";
+"49c26" = "Search";
 
-"Select card brand (optional)" = "Select card brand (optional)";
+"4dc47" = "Select card brand (optional)";
 
-"Selection is empty." = "Selection is empty.";
+"4d6f0" = "Selection is empty.";
 
-"Sort code" = "Sort code";
+"a9002" = "Sort code";
 
-"State" = "State";
+"a3b50" = "State";
 
-"Suburb" = "Suburb";
+"9e843" = "Suburb";
 
-"Suburb or city" = "Suburb or city";
+"c3273" = "Suburb or city";
 
-"The BSB you entered is incomplete." = "The BSB you entered is incomplete.";
+"d5ad2" = "The BSB you entered is incomplete.";
 
-"The ID number you entered is incomplete." = "The ID number you entered is incomplete.";
+"0f9bf" = "The ID number you entered is incomplete.";
 
-"The account number you entered is incomplete." = "The account number you entered is incomplete.";
+"e10dd" = "The account number you entered is incomplete.";
 
-"The sort code you entered is invalid." = "The sort code you entered is invalid.";
+"ac7db" = "The sort code you entered is invalid.";
 
-"Town or city" = "Town or city";
+"9ce56" = "Town or city";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Unable to parse phone number";
+"72356" = "Unable to parse phone number";
 
-"Use rotor to access links" = "Use rotor to access links";
+"11480" = "Use rotor to access links";
 
-"Your BLIK code is incomplete." = "Your BLIK code is incomplete.";
+"6c0af" = "Your BLIK code is incomplete.";
 
-"Your BLIK code is invalid." = "Your BLIK code is invalid.";
+"224bb" = "Your BLIK code is invalid.";
 
-"Your ZIP code is incomplete." = "Your postcode is incomplete.";
+"3e686" = "Your postcode is incomplete.";
 
-"Your ZIP code is invalid." = "Your postcode is invalid.";
+"f029b" = "Your postcode is invalid.";
 
-"Your email is invalid." = "Your email is invalid.";
+"57c28" = "Your email is invalid.";
 
-"Your payment information will not be saved." = "Your payment information will not be saved.";
+"cc532" = "Your payment information will not be saved.";
 
-"Your postal code is incomplete." = "Your postcode is incomplete.";
+"52c55" = "Your postcode is incomplete.";
 
-"Your postal code is invalid." = "Your postcode is invalid.";
+"037ec" = "Your postcode is invalid.";
 
-"ZIP" = "ZIP";
+"eaca4" = "ZIP";

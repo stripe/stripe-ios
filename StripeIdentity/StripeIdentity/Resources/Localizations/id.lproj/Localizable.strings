@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Beberapa foto akan diambil secara otomatis pada langkah berikutnya untuk memverifikasi diri Anda";
+"40b57" = "Beberapa foto akan diambil secara otomatis pada langkah berikutnya untuk memverifikasi diri Anda";
 
-"Accepted forms of ID include" = "Bentuk identifikasi yang diterima antara lain";
+"a9934" = "Bentuk identifikasi yang diterima antara lain";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Atau, Anda dapat mengunggah foto dokumen identitas secara manual";
+"a570c" = "Atau, Anda dapat mengunggah foto dokumen identitas secara manual";
 
-"App Settings" = "Pengaturan Aplikasi";
+"da645" = "Pengaturan Aplikasi";
 
-"Back %@ photo successfully uploaded" = "Bagian belakang %@ foto berhasil diunggah";
+"31438" = "Bagian belakang %@ foto berhasil diunggah";
 
-"Back identity document photo successfully uploaded" = "Foto dokumen identitas belakang berhasil diunggah";
+"3253a" = "Foto dokumen identitas belakang berhasil diunggah";
 
-"Back of %@" = "Bagian belakang %@";
+"128b0" = "Bagian belakang %@";
 
-"Back of driver's license or government-issued photo ID" = "Bagian belakang SIM atau identitas berfoto yang dikeluarkan pemerintah";
+"37929" = "Bagian belakang SIM atau identitas berfoto yang dikeluarkan pemerintah";
 
-"Back of identity document" = "Bagian belakang dokumen identitas";
+"3229d" = "Bagian belakang dokumen identitas";
 
-"Camera permission" = "Izin kamera";
+"51e72" = "Izin kamera";
 
-"Camera unavailable" = "Kamera tidak tersedia";
+"06cc3" = "Kamera tidak tersedia";
 
-"Capturing…" = "Mengambil gambar...";
+"806e3" = "Mengambil gambar...";
 
-"Choose File" = "Pilih File";
+"d7042" = "Pilih File";
 
-"Consent" = "Persetujuan";
+"d37e0" = "Persetujuan";
 
-"Could not capture image" = "Tidak dapat mengambil gambar";
+"bf6e9" = "Tidak dapat mengambil gambar";
 
-"Date of Birth" = "Tanggal Lahir";
+"fdc73" = "Tanggal Lahir";
 
-"Date of birth does not look valid" = "Tanggal lahir sepertinya tidak valid";
+"2baa1" = "Tanggal lahir sepertinya tidak valid";
 
-"Details not visible" = "Detail tidak terlihat";
+"687cd" = "Detail tidak terlihat";
 
-"Flip your %@ over to the other side" = "Balikkan %@ Anda ke sisi lain";
+"e3292" = "Balikkan %@ Anda ke sisi lain";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Balikkan SIM atau identitas berfoto yang dikeluarkan pemerintah ke sisi lainnya";
+"dd41b" = "Balikkan SIM atau identitas berfoto yang dikeluarkan pemerintah ke sisi lainnya";
 
-"Flip your identity card over to the other side" = "Balikkan kartu identitas Anda ke sisi yang lain";
+"87346" = "Balikkan kartu identitas Anda ke sisi yang lain";
 
-"Front %@ photo successfully uploaded" = "Bagian depan %@ foto berhasil diunggah";
+"b57ad" = "Bagian depan %@ foto berhasil diunggah";
 
-"Front identity document photo successfully uploaded" = "Bagian depan foto dokumen identitas berhasil diunggah";
+"3a9fd" = "Bagian depan foto dokumen identitas berhasil diunggah";
 
-"Front of %@" = "Bagian depan %@";
+"73fc5" = "Bagian depan %@";
 
-"Front of driver's license or government-issued photo ID" = "Bagian depan SIM atau identitas berfoto yang dikeluarkan pemerintah";
+"b3d9a" = "Bagian depan SIM atau identitas berfoto yang dikeluarkan pemerintah";
 
-"Front of driver's license or passport" = "Bagian depan SIM atau paspor";
+"8d188" = "Bagian depan SIM atau paspor";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Bagian depan SIM, paspor, atau identitas berfoto yang dikeluarkan pemerintah";
+"070b5" = "Bagian depan SIM, paspor, atau identitas berfoto yang dikeluarkan pemerintah";
 
-"Front of identity document" = "Bagian depan dokumen identitas";
+"8562c" = "Bagian depan dokumen identitas";
 
-"Front of passport or government-issued photo ID" = "Bagian depan paspor atau identitas berfoto yang dikeluarkan pemerintah";
+"bb2ee" = "Bagian depan paspor atau identitas berfoto yang dikeluarkan pemerintah";
 
-"Get ready to scan your photo ID" = "Siapkan pemindaian identitas berfoto Anda";
+"83016" = "Siapkan pemindaian identitas berfoto Anda";
 
-"Get ready to take a selfie" = "Bersiaplah untuk mengambil swafoto";
+"9e29f" = "Bersiaplah untuk mengambil swafoto";
 
-"Go Back" = "Kembali";
+"b8d99" = "Kembali";
 
-"Hold still, scanning" = "Jangan bergerak, memindai";
+"b63f6" = "Jangan bergerak, memindai";
 
-"I'm ready" = "Saya siap";
+"d5b05" = "Saya siap";
 
-"ID Number" = "Nomor Identifikasi";
+"a403d" = "Nomor Identifikasi";
 
-"Individual CPF" = "CPF perorangan";
+"6212a" = "CPF perorangan";
 
-"Keep ID level" = "Sejajarkan identitas";
+"6be11" = "Sejajarkan identitas";
 
-"Last 4 of Social Security number" = "4 angka terakhir Nomor Jaminan Sosial";
+"77dd8" = "4 angka terakhir Nomor Jaminan Sosial";
 
-"Loading" = "Memuat";
+"dc3808" = "Memuat";
 
-"Make sure all details are visible and focus" = "Pastikan seluruh detail dapat dilihat dan dalam fokus.";
+"859af" = "Pastikan seluruh detail dapat dilihat dan dalam fokus.";
 
-"Make sure you're in a well lit space." = "Pastikan Anda berada di ruang yang cukup terang.";
+"6c2aa" = "Pastikan Anda berada di ruang yang cukup terang.";
 
-"Move closer" = "Mendekat";
+"1da05" = "Mendekat";
 
-"Move farther" = "Jauhkan";
+"73333" = "Jauhkan";
 
-"Move to a darker area" = "Pindah ke tempat yang lebih gelap";
+"4687a" = "Pindah ke tempat yang lebih gelap";
 
-"Move to a well-lit area" = "Pindahkan ke tempat yang cukup terang";
+"f579f" = "Pindahkan ke tempat yang cukup terang";
 
-"NRIC or FIN" = "NRIC atau FIN";
+"32e72" = "NRIC atau FIN";
 
-"No document detected" = "Tidak ada dokumen yang terdeteksi";
+"b376f" = "Tidak ada dokumen yang terdeteksi";
 
-"Personal ID number" = "Nomor identifikasi pribadi";
+"fae7d" = "Nomor identifikasi pribadi";
 
-"Personal Information" = "Informasi Pribadi";
+"c4b37" = "Informasi Pribadi";
 
-"Phone Number" = "Nomor Telepon";
+"72dba" = "Nomor Telepon";
 
-"Phone Verification" = "Verifikasi Telepon";
+"cb074" = "Verifikasi Telepon";
 
-"Photo Library" = "Pustaka Foto";
+"e0b2a" = "Pustaka Foto";
 
-"Please upload images of the front and back of your %@" = "Silakan unggah gambar bagian depan dan belakang %@ Anda";
+"03fa9" = "Silakan unggah gambar bagian depan dan belakang %@ Anda";
 
-"Please upload images of the front and back of your identity document" = "Silakan unggah gambar bagian depan dan belakang dokumen identitas Anda";
+"8c273" = "Silakan unggah gambar bagian depan dan belakang dokumen identitas Anda";
 
-"Position your %@ in the center of the frame" = "Posisikan %@ Anda di tengah bingkai";
+"ceab8" = "Posisikan %@ Anda di tengah bingkai";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Posisikan SIM atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
+"12559" = "Posisikan SIM atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
 
-"Position your driver's license or passport in the center of the frame" = "Posisikan SIM atau paspor Anda di bagian tengah bingkai";
+"453ad" = "Posisikan SIM atau paspor Anda di bagian tengah bingkai";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Posisikan SIM, paspor, atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
+"ad934" = "Posisikan SIM, paspor, atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
 
-"Position your face in the center of the frame." = "Posisikan wajah Anda di tengah bingkai.";
+"6f758" = "Posisikan wajah Anda di tengah bingkai.";
 
-"Position your identity document in the center of the frame" = "Posisikan dokumen identitas Anda di bagian tengah bingkai";
+"68f51" = "Posisikan dokumen identitas Anda di bagian tengah bingkai";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Posisikan paspor atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
+"74830" = "Posisikan paspor atau identitas berfoto yang dikeluarkan pemerintah di bagian tengah bingkai";
 
-"Retake Photos" = "Ambil Ulang Foto";
+"16681" = "Ambil Ulang Foto";
 
-"Scan" = "Pindai";
+"ea1c5" = "Pindai";
 
-"Scanned" = "Dipindai";
+"e9b3b" = "Dipindai";
 
-"Select" = "Pilih";
+"2a780" = "Pilih";
 
-"Select a location to upload the back of your identity document from" = "Pilih lokasi untuk mengunggah bagian belakang dokumen identitas Anda";
+"568f3" = "Pilih lokasi untuk mengunggah bagian belakang dokumen identitas Anda";
 
-"Select a location to upload the front of your identity document from" = "Pilih lokasi untuk mengunggah bagian depan dokumen identitas Anda";
+"a352a" = "Pilih lokasi untuk mengunggah bagian depan dokumen identitas Anda";
 
-"Select back %@ photo" = "Pilih bagian belakang %@ foto";
+"0dfa8" = "Pilih bagian belakang %@ foto";
 
-"Select back identity document photo" = "Pilih bagian belakang foto dokumen identitas";
+"38aec" = "Pilih bagian belakang foto dokumen identitas";
 
-"Select front %@ photo" = "Pilih bagian depan %@ foto";
+"1ca11" = "Pilih bagian depan %@ foto";
 
-"Select front identity document photo" = "Pilih bagian depan foto dokumen identitas";
+"5c25a" = "Pilih bagian depan foto dokumen identitas";
 
-"Selfie" = "Swafoto";
+"7891f" = "Swafoto";
 
-"Selfie captures" = "Pengambilan gambar swafoto";
+"ccd67" = "Pengambilan gambar swafoto";
 
-"Selfie captures are complete" = "Pengambilan gambar swafoto selesai";
+"a7b36" = "Pengambilan gambar swafoto selesai";
 
-"Take Photo" = "Ambil Foto";
+"1ca36" = "Ambil Foto";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Gambar dokumen identitas Anda belum disimpan. Apakah Anda ingin keluar?";
+"b6b76" = "Gambar dokumen identitas Anda belum disimpan. Apakah Anda ingin keluar?";
 
-"There was an error accessing the camera." = "Ada kesalahan saat mengakses kamera.";
+"1eda8" = "Ada kesalahan saat mengakses kamera.";
 
-"Try Again" = "Coba Lagi";
+"df0fe" = "Coba Lagi";
 
-"Try reduce glare and make ID visible" = "Coba kurangi silau cahaya dan pastikan identitas terlihat";
+"ffd3d" = "Coba kurangi silau cahaya dan pastikan identitas terlihat";
 
-"Unable to establish a connection." = "Tidak dapat membuat koneksi.";
+"77ee9" = "Tidak dapat membuat koneksi.";
 
-"Unsaved changes" = "Perubahan tak tersimpan";
+"a710c" = "Perubahan tak tersimpan";
 
-"Upload" = "Unggah";
+"865e8" = "Unggah";
 
-"Upload a Photo" = "Unggah Foto";
+"f0c8a" = "Unggah Foto";
 
-"Upload your %@" = "Unggah %@ Anda";
+"7f6c1" = "Unggah %@ Anda";
 
-"Upload your photo ID" = "Unggah ID berfoto Anda";
+"40a76" = "Unggah ID berfoto Anda";
 
-"Uploading back %@ photo" = "Mengunggah bagian belakang %@ foto";
+"eaebd" = "Mengunggah bagian belakang %@ foto";
 
-"Uploading back identity document photo" = "Mengunggah bagian belakang foto dokumen identitas";
+"e16b7" = "Mengunggah bagian belakang foto dokumen identitas";
 
-"Uploading front %@ photo" = "Mengunggah bagian depan %@ foto";
+"93af2" = "Mengunggah bagian depan %@ foto";
 
-"Uploading front identity document photo" = "Mengunggah bagian depan foto dokumen identitas";
+"5dfbf" = "Mengunggah bagian depan foto dokumen identitas";
 
-"Verify your identity" = "Verifikasikan identitas Anda";
+"ed32a" = "Verifikasikan identitas Anda";
 
-"We could not capture a high-quality image." = "Kami tidak dapat mengambil gambar berkualitas tinggi.";
+"55e29" = "Kami tidak dapat mengambil gambar berkualitas tinggi.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Kami memerlukan izin Anda untuk menggunakan kamera. Harap izinkan akses kamera di pengaturan aplikasi.";
+"a98b4" = "Kami memerlukan izin Anda untuk menggunakan kamera. Harap izinkan akses kamera di pengaturan aplikasi.";
 
-"Welcome" = "Selamat datang";
+"0e222" = "Selamat datang";
 
-"You can either try again or upload an image from your device." = "Anda dapat mencoba lagi atau mengunggah gambar dari perangkat.";
+"348a7" = "Anda dapat mencoba lagi atau mengunggah gambar dari perangkat.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Gambar swafoto Anda belum disimpan. Apakah Anda ingin keluar?";
+"b892f" = "Gambar swafoto Anda belum disimpan. Apakah Anda ingin keluar?";
 
-"driver's license" = "izin mengemudi";
+"cadf1" = "izin mengemudi";
 
-"government-issued photo ID" = "identitas berfoto yang diterbitkan pemerintah";
+"29fd8" = "identitas berfoto yang diterbitkan pemerintah";
 
-"passport" = "paspor";
+"cbc47" = "paspor";

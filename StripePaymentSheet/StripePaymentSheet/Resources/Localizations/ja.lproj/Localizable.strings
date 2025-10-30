@@ -1,307 +1,307 @@
-"+ Add" = "+ 追加";
+"c0072" = "+ 追加";
 
-"Add US bank account" = "アメリカの銀行口座を追加";
+"1b3a4" = "アメリカの銀行口座を追加";
 
-"Add a card" = "カードを追加";
+"be8f5" = "カードを追加";
 
-"Add a payment method" = "決済手段を追加";
+"7e917" = "決済手段を追加";
 
-"Add bank account" = "銀行口座を追加する";
+"a3cc9" = "銀行口座を追加する";
 
-"Add card" = "カードを追加";
+"769c5" = "カードを追加";
 
-"Add new card" = "新しいカードを追加";
+"800f4" = "新しいカードを追加";
 
-"Add new payment method" = "新たな支払い方法を追加";
+"8130f" = "新たな支払い方法を追加";
 
-"Add your payment information" = "支払い情報を追加";
+"eaa33" = "支払い情報を追加";
 
-"Approve payment" = "支払いを承認する";
+"e70d2" = "支払いを承認する";
 
-"Are you sure you want to remove this card?" = "このカードを削除しますか？";
+"c8af7" = "このカードを削除しますか？";
 
-"Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
+"74460" = "この関連付けられた口座を削除しますか？";
 
-"Back" = "戻る";
+"76900" = "戻る";
 
-"Bank" = "銀行";
+"676c4" = "銀行";
 
-"Bank account" = "銀行口座";
+"1b427" = "銀行口座";
 
-"Bank account details cannot be changed." = "銀行口座の詳細は変更できません。";
+"12ab1" = "銀行口座の詳細は変更できません。";
 
-"Buy now or pay later with  <img/>" = "<img/> で後払い";
+"38088" = "<img/> で後払い";
 
-"Buy now or pay later with Afterpay" = "Afterpay で後払い";
+"c04b4" = "Afterpay で後払い";
 
-"Buy now or pay later with Cash App Afterpay" = "Cash App Afterpay で後払い";
+"f566d" = "Cash App Afterpay で後払い";
 
-"Buy now or pay later with Clearpay" = "Clearpay で後払い";
+"bf452" = "Clearpay で後払い";
 
-"Buy now or pay later with Klarna" = "Klarna で後払い";
+"5c41c" = "Klarna で後払い";
 
-"Buy using a UPI ID" = "UPI ID を使って購入";
+"21793" = "UPI ID を使って購入";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
+"313bb" = "PayPal による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Amazon Pay アカウントに請求することを許可することになります。";
+"c1642" = "Amazon Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Amazon Pay アカウントに請求することを許可することになります。";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Klarna への処理を続行すると、%1$@ が自社の規約と Klarna の規約に従って今後の支払いをお客様の Klarna アカウントに請求することを許可することになります。この設定はいつでも変更できます。Klarna アプリから変更するか、%2$@ までお問い合わせください。";
+"09c61" = "Klarna への処理を続行すると、%1$@ が自社の規約と Klarna の規約に従って今後の支払いをお客様の Klarna アカウントに請求することを許可することになります。この設定はいつでも変更できます。Klarna アプリから変更するか、%2$@ までお問い合わせください。";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal を継続すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
+"c6ff4" = "PayPal を継続すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Revolut Pay アカウントに請求することを許可することになります。";
+"694b5" = "Revolut Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Revolut Pay アカウントに請求することを許可することになります。";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "続行すると、<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意したことになります。";
+"8ba3b" = "続行すると、<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意したことになります。";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+"23d3e" = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "続行することで、今後の購入のために情報を保存することに同意したことになります <link>Link</link> リンク<terms>規約</terms>および<privacy>プライバシー</privacy>に従うことになります。";
+"b8e49" = "続行することで、今後の購入のために情報を保存することに同意したことになります <link>Link</link> リンク<terms>規約</terms>および<privacy>プライバシー</privacy>に従うことになります。";
 
-"By continuing, you agree to save your information for future purchases with %@." = "続行することで、あなたは、%@ での今後の購入のために情報を保存することに同意したことになります。";
+"8ca70" = "続行することで、あなたは、%@ での今後の購入のために情報を保存することに同意したことになります。";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "続行すると、%@ が購入またはサブスクリプションプランに従って、定期的に Satispay Balance から自動的に引き落とすことを許可します。";
+"d451f" = "続行すると、%@ が購入またはサブスクリプションプランに従って、定期的に Satispay Balance から自動的に引き落とすことを許可します。";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
+"97461" = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
+"225b7" = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号とメールアドレスを入力することにより、Link の<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成することに同意したとみなされます。";
+"05e15" = "電話番号とメールアドレスを入力することにより、Link の<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成することに同意したとみなされます。";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "お客様は、銀行口座の詳細を提供し、この支払いを確認することにより、この ダイレクトデビットリクエストおよび <terms>ダイレクトデビットリクエストサービス契約 </terms> に同意し、Stripe Payments Australia Pty Ltd ACN 160 180 343 ダイレクトデビッドユーザー ID 番号507156 (以下「Stripe」)が、%@ (以下「マーチャント」) に代わってバルク電子決済システム (BECS) を通じてお客様のアカウントに、マーチャントから別途通知された金額を引き落とすことを承認したことになります。お客様は、上記のアカウントの保有者または正式な署名者であることを証明します。";
+"ba265" = "お客様は、銀行口座の詳細を提供し、この支払いを確認することにより、この ダイレクトデビットリクエストおよび <terms>ダイレクトデビットリクエストサービス契約 </terms> に同意し、Stripe Payments Australia Pty Ltd ACN 160 180 343 ダイレクトデビッドユーザー ID 番号507156 (以下「Stripe」)が、%@ (以下「マーチャント」) に代わってバルク電子決済システム (BECS) を通じてお客様のアカウントに、マーチャントから別途通知された金額を引き落とすことを承認したことになります。お客様は、上記のアカウントの保有者または正式な署名者であることを証明します。";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "カード情報を提供すると、%@ がその規約に従って今後の支払いをお客様のカードに請求することを許可することになります。";
+"0cdc0" = "カード情報を提供すると、%@ がその規約に従って今後の支払いをお客様のカードに請求することを許可することになります。";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "メールアドレスを入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
+"36fad" = "メールアドレスを入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "支払い情報を提供し、この支払いを確定することで、お客様は (A) %@ および決済サービスプロバイダーである Stripe がお客様の銀行に口座引き落としの指図を送り、(B) 銀行がこの指図に従ってお客様の口座から引き落としを行うことを承認することになります。お客様の権利の一部として、銀行との契約条件に基づき、お客様は銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。お客様の権利は、銀行から得られる明細書内で説明されています。お客様は今後の引き落としに関する通知を引き落としの実行日の 2 日前までに受け取ることに同意するものとします。";
+"289c5" = "支払い情報を提供し、この支払いを確定することで、お客様は (A) %@ および決済サービスプロバイダーである Stripe がお客様の銀行に口座引き落としの指図を送り、(B) 銀行がこの指図に従ってお客様の口座から引き落としを行うことを承認することになります。お客様の権利の一部として、銀行との契約条件に基づき、お客様は銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。お客様の権利は、銀行から得られる明細書内で説明されています。お客様は今後の引き落としに関する通知を引き落としの実行日の 2 日前までに受け取ることに同意するものとします。";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号を入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
+"e3661" = "電話番号を入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
+"02d39" = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "ご注文を %1$@ および %2$@ に送信することにより、お客様は今後の購入のためにお客様の情報を %3$@ に保存することに同意し、<terms>本規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+"c041a" = "ご注文を %1$@ および %2$@ に送信することにより、お客様は今後の購入のためにお客様の情報を %3$@ に保存することに同意し、<terms>本規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ に注文を送信することにより、<terms>これらの規約</terms> に従って決済を承認することに同意したものとみなされます。";
+"532e1" = "%@ に注文を送信することにより、<terms>これらの規約</terms> に従って決済を承認することに同意したものとみなされます。";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "キャンセルして別の方法で支払う";
+"58817" = "キャンセルして別の方法で支払う";
 
-"Card details cannot be changed." = "カードの詳細は変更できません。";
+"34c44" = "カードの詳細は変更できません。";
 
-"Change" = "変更する";
+"c0bf7" = "変更する";
 
-"Choose a payment method" = "支払い方法を選択";
+"1dc8a" = "支払い方法を選択";
 
-"Close card scanner" = "カードスキャナを閉じる";
+"c0077" = "カードスキャナを閉じる";
 
-"Code sent" = "コードが送信されました";
+"f98a1" = "コードが送信されました";
 
-"Confirm" = "確定する";
+"eebdd" = "確定する";
 
-"Confirm it's you" = "本人であると確定";
+"6176e" = "本人であると確定";
 
-"Confirm payment details" = "支払い情報を確定する";
+"3a6b5" = "支払い情報を確定する";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 内で銀行または決済アプリで支払いを確定して、購入を完了します。";
+"101ef" = "%@ 内で銀行または決済アプリで支払いを確定して、購入を完了します。";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "購入を完了するには、%@ 以内に銀行のアプリで支払いを確定してください。";
+"a8c9a" = "購入を完了するには、%@ 以内に銀行のアプリで支払いを確定してください。";
 
-"Confirm your CVC" = "セキュリティコードを確定";
+"a4bdf" = "セキュリティコードを確定";
 
-"Contact information" = "連絡先情報";
+"cbc73" = "連絡先情報";
 
-"Continue another way" = "別の方法で続行";
+"c2a49" = "別の方法で続行";
 
-"Create an account with Link for faster checkout across the web" = "Link でアカウントを作成すると、ウェブ上で決済を迅速化できます";
+"b568d" = "Link でアカウントを作成すると、ウェブ上で決済を迅速化できます";
 
-"Debit or credit card" = "デビットカードまたはクレジットカード";
+"04f63" = "デビットカードまたはクレジットカード";
 
-"Default" = "デフォルト";
+"21b11" = "デフォルト";
 
-"Default payment method" = "デフォルトの決済手段";
+"4c163" = "デフォルトの決済手段";
 
-"Did you mean %@? %@." = "%1$@ のことですか？ %2$@。";
+"6d7d1" = "%1$@ のことですか？ %2$@。";
 
-"EPS Bank" = "EPS 銀行";
+"8f218" = "EPS 銀行";
 
-"Enter address manually" = "住所を手動で入力";
+"1534f" = "住所を手動で入力";
 
-"Enter the code sent to %@." = "%s に送信されたコードを入力してください。";
+"1e836" = "%s に送信されたコードを入力してください。";
 
-"FPX Bank" = "FPX 銀行";
+"8c73e" = "FPX 銀行";
 
-"Failed to connect" = "接続できませんでした";
+"46c9f" = "接続できませんでした";
 
-"Fast, secure checkout" = "迅速で安全な決済";
+"2aeb3" = "迅速で安全な決済";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "ご利用の銀行での初回支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
+"b70b0" = "ご利用の銀行での初回支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "ご利用の銀行での支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
+"332d2" = "ご利用の銀行での支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "私は、Stripe が %@ の代理として口座引き落としによる回収を行うことを理解しています。また、私が当該口座を保有しており、この口座からの引き落としを承認すべき唯一の人間であることを認めます。";
+"b751e" = "私は、Stripe が %@ の代理として口座引き落としによる回収を行うことを理解しています。また、私が当該口座を保有しており、この口座からの引き落としを承認すべき唯一の人間であることを認めます。";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "ログイン / 登録";
+"38f51" = "ログイン / 登録";
 
-"Log out of Link" = "Link からログアウト";
+"57083" = "Link からログアウト";
 
-"Manage SEPA debit" = "SEPA デビットの管理";
+"a7ff3" = "SEPA デビットの管理";
 
-"Manage US bank account" = "アメリカの銀行口座の管理";
+"0b654" = "アメリカの銀行口座の管理";
 
-"Manage bank account" = "銀行口座の管理";
+"2d4ed" = "銀行口座の管理";
 
-"Manage card" = "カードの管理";
+"49e98" = "カードの管理";
 
-"Manage cards" = "カードを管理する";
+"fe215" = "カードを管理する";
 
-"Manage payment method" = "支払い方法の管理";
+"67c16" = "支払い方法の管理";
 
-"Manage payment methods" = "決済手段を管理する";
+"cf0c9" = "決済手段を管理する";
 
-"Manage your payment methods" = "決済手段を管理する";
+"74db7" = "決済手段を管理する";
 
-"Name on card" = "カード名義人";
+"18bf0" = "カード名義人";
 
-"New card" = "新しいカード";
+"8d3ef" = "新しいカード";
 
-"New payment method" = "新しい決済手段";
+"c5f95" = "新しい決済手段";
 
-"No %@ promo" = "%@ のプロモーションはありません";
+"99d88" = "%@ のプロモーションはありません";
 
-"Not you?" = "ご本人ではありませんか？";
+"5b978" = "ご本人ではありませんか？";
 
-"Only card brand can be changed." = "カードブランドのみ変更できます。";
+"d1c0a" = "カードブランドのみ変更できます。";
 
-"Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
+"b7546" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
 
-"Or" = "または";
+"0568b" = "または";
 
-"Or pay using" = "または別の方法で支払う";
+"3c3f7" = "または別の方法で支払う";
 
-"Or pay with a card" = "または、カードで支払う";
+"682d8" = "または、カードで支払う";
 
-"Or use" = "または次を使用:";
+"4158c" = "または次を使用:";
 
-"Or use a card" = "またはカードを使用";
+"b529c" = "またはカードを使用";
 
-"Pay %@" = "%@ を支払う";
+"964f6" = "%@ を支払う";
 
-"Pay another way" = "別の方法で支払う";
+"4bb4a" = "別の方法で支払う";
 
-"Pay faster at %@ and thousands of businesses." = "%@ やその他多数のサイトで、すばやく支払うことができます。";
+"f43bb" = "%@ やその他多数のサイトで、すばやく支払うことができます。";
 
-"Pay faster everywhere Link is accepted." = "Link に対応している店舗でスピーディーに支払うことができます。";
+"d49c1" = "Link に対応している店舗でスピーディーに支払うことができます。";
 
-"Pay over time with %@" = "%@ で時間をかけて支払う";
+"77196" = "%@ で時間をかけて支払う";
 
-"Pay over time with Affirm" = "Affirm で分割払い";
+"2f870" = "Affirm で分割払い";
 
-"Pay with Link" = "Link で支払う";
+"9d81a" = "Link で支払う";
 
-"Pay with your bank account in just a few steps." = "銀行口座を使用して簡単に支払えます。";
+"bc021" = "銀行口座を使用して簡単に支払えます。";
 
-"Payment" = "決済";
+"7048f" = "決済";
 
-"Payment failed" = "支払いに失敗しました";
+"17aad" = "支払いに失敗しました";
 
-"Payment methods" = "決済手段";
+"16d26" = "決済手段";
 
-"Please choose a valid payment method." = "有効な支払い方法を選択してください。";
+"5ddb8" = "有効な支払い方法を選択してください。";
 
-"Please go back and select another payment method" = "前に戻って別の決済手段を選択してください";
+"cf6c1" = "前に戻って別の決済手段を選択してください";
 
-"Point the camera at your card." = "カメラをカードに向けてください。";
+"59a6c" = "カメラをカードに向けてください。";
 
-"Processing..." = "処理中...";
+"f40a8" = "処理中...";
 
-"Przelewy24 Bank" = "Przelewy24 銀行";
+"b0866" = "Przelewy24 銀行";
 
-"Remove card?" = "カードを削除しますか？";
+"ce640" = "カードを削除しますか？";
 
-"Remove linked account" = "関連付けられた口座を削除";
+"a545c" = "関連付けられた口座を削除";
 
-"Resend code" = "コードを再送信";
+"b9745" = "コードを再送信";
 
-"SEPA debit details cannot be changed." = "SEPA デビットの詳細は変更できません。";
+"a4f77" = "SEPA デビットの詳細は変更できません。";
 
-"Save" = "保存";
+"1509f" = "保存";
 
-"Save a new payment method" = "新しい決済手段を保存する";
+"6b6eb" = "新しい決済手段を保存する";
 
-"Save address" = "住所を保存する";
+"0cbb9" = "住所を保存する";
 
-"Save for future payments" = "今後の支払いのために保存する";
+"7990e" = "今後の支払いのために保存する";
 
-"Save my info for faster checkout with Link" = "Link で支払い情報を保存して決済をスピードアップ";
+"8e1e1" = "Link で支払い情報を保存して決済をスピードアップ";
 
-"Save payment details to %@ for future purchases" = "今後の購入のために %@ に決済情報を保存する";
+"0745e" = "今後の購入のために %@ に決済情報を保存する";
 
-"Save this account for future %@ payments" = "今後の %@ の支払いのためにこの口座を保存する";
+"e8c88" = "今後の %@ の支払いのためにこの口座を保存する";
 
-"Save your bank account in just a few steps." = "銀行口座の保存はわずか数ステップで完了します。";
+"b4042" = "銀行口座の保存はわずか数ステップで完了します。";
 
-"Save your info for secure 1-click checkout with Link" = "Link を使用して安全なワンクリック決済の情報を保存する";
+"650b1" = "Link を使用して安全なワンクリック決済の情報を保存する";
 
-"Saved" = "保存済み";
+"b5c12" = "保存済み";
 
-"Select card" = "カードを選択する";
+"59ffd" = "カードを選択する";
 
-"Select payment method" = "決済手段を選択する";
+"659d1" = "決済手段を選択する";
 
-"Select your payment method" = "支払い方法を選択してください";
+"d23e3" = "支払い方法を選択してください";
 
-"Set as default" = "デフォルトとして設定";
+"d09b4" = "デフォルトとして設定";
 
-"Set as default payment method" = "デフォルトの決済手段として設定する";
+"af056" = "デフォルトの決済手段として設定する";
 
-"Set up" = "設定";
+"4da10" = "設定";
 
-"Shipping to %@ is not supported." = "%@ への配送には対応していません。";
+"b8e46" = "%@ への配送には対応していません。";
 
-"Show menu" = "メニューを表示";
+"0b0af" = "メニューを表示";
 
-"Simple, secure one-click payments" = "シンプルで安全なワンクリック決済";
+"edd6d" = "シンプルで安全なワンクリック決済";
 
-"Something went wrong when linking your account.\nPlease try again later." = "アカウントの連携中に問題が発生しました。\n 後でもう一度お試しください。";
+"33596" = "アカウントの連携中に問題が発生しました。\n 後でもう一度お試しください。";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe は 1 ～ 2 営業日後に口座に $0.01 を入金します。その後、%@ で銀行口座の保存を完了させるための手順が記載されたメールが送信されます。";
+"822ff" = "Stripe は 1 ～ 2 営業日後に口座に $0.01 を入金します。その後、%@ で銀行口座の保存を完了させるための手順が記載されたメールが送信されます。";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
+"72fd8" = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
 
-"Tap to close" = "タップして閉じます";
+"e263d" = "タップして閉じます";
 
-"Tap to expand" = "タップして展開します";
+"1cbaf" = "タップして展開します";
 
-"The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
+"477cb" = "入力した IBAN に不備があります。";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN は無効です。\"%@\" がサポートされている国コードではありません。";
+"a70c6" = "入力した IBAN は無効です。\"%@\" がサポートされている国コードではありません。";
 
-"The provided verification code has expired." = "入力された確認コードは期限が切れています。";
+"e32a6" = "入力された確認コードは期限が切れています。";
 
-"The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
+"e8cb8" = "入力された確認コードは正しくありません。";
 
-"This is your default" = "これはデフォルトです";
+"f3c56" = "これはデフォルトです";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "この決済手段は削除されますが、%@ のサブスクリプションでは引き続き使用できます。";
+"478c1" = "この決済手段は削除されますが、%@ のサブスクリプションでは引き続き使用できます。";
 
-"Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
+"4a754" = "試行回数が多すぎます。数分後に再度お試しください。";
 
-"Unavailable for this purchase" = "この購入には利用できません";
+"19202" = "この購入には利用できません";
 
-"Update card" = "カードを更新";
+"e28b5" = "カードを更新";
 
-"Update payment method" = "決済手段の更新";
+"fa7bf" = "決済手段の更新";
 
-"Use billing address for shipping" = "請求先住所を配送先として使用";
+"4a82d" = "請求先住所を配送先として使用";
 
-"View more" = "さらに表示";
+"267e5" = "さらに表示";
 
-"Yes, update" = "はい、更新します";
+"fa298" = "はい、更新します";
 
-"Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
+"42ef0" = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 
-"iDEAL Bank" = "iDEAL銀行";
+"460cb" = "iDEAL銀行";

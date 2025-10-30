@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Det uppstod ett fel. Försök igen.";
+"9c170" = "Det uppstod ett fel. Försök igen.";
 
-"Card brand was not updated. Please try again." = "Kortmärket uppdaterades inte. Försök igen.";
+"4bc73" = "Kortmärket uppdaterades inte. Försök igen.";
 
-"Close" = "Stäng";
+"7d9eb" = "Stäng";
 
-"Default payment method was not updated. Please try again." = "Standardbetalningsmetoden uppdaterades inte. Försök igen.";
+"3048d" = "Standardbetalningsmetoden uppdaterades inte. Försök igen.";
 
-"Scan Card" = "Skanna kort";
+"b60b5" = "Skanna kort";
 
-"Scan card" = "Skanna kort";
+"ea2fe" = "Skanna kort";
 
-"The IBAN you entered is invalid." = "Angivet IBAN är ogiltigt.";
+"ee81e" = "Angivet IBAN är ogiltigt.";
 
-"There was an error processing your card -- try again in a few seconds" = "Ett fel uppstod vid behandlingen av ditt kort - försök igen om ett par sekunder";
+"fa47c" = "Ett fel uppstod vid behandlingen av ditt kort - försök igen om ett par sekunder";
 
-"There was an unexpected error -- try again in a few seconds" = "Ett oväntat fel uppstod - försök igen om ett par sekunder";
+"c98a4" = "Ett oväntat fel uppstod - försök igen om ett par sekunder";
 
-"Try again" = "Försök igen";
+"d8b83" = "Försök igen";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Vi använder Stripe för att verifiera dina kortuppgifter. Stripe kan komma att använda och lagra dina uppgifter i enlighet med sin integritetspolicy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Läs mer</u></a>";
+"96fe7" = "Vi använder Stripe för att verifiera dina kortuppgifter. Stripe kan komma att använda och lagra dina uppgifter i enlighet med sin integritetspolicy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Läs mer</u></a>";
 
-"Your card has expired" = "Kortet har löpt ut";
+"f5c35" = "Kortet har löpt ut";
 
-"Your card was declined" = "Ditt kort nekades";
+"b9821" = "Ditt kort nekades";
 
-"Your card's expiration month is invalid" = "Kortets utgångsmånad är ogiltig";
+"e02cf" = "Kortets utgångsmånad är ogiltig";
 
-"Your card's expiration year is invalid" = "Kortets utgångsår är ogiltigt";
+"53311" = "Kortets utgångsår är ogiltigt";
 
-"Your card's number is invalid" = "Kortnumret är ogiltigt";
+"c433c" = "Kortnumret är ogiltigt";
 
-"Your card's security code is invalid" = "Kortets säkerhetskod är ogiltig";
+"15f5b" = "Kortets säkerhetskod är ogiltig";
 
-"Your name is invalid." = "Ditt namn är ogiltigt.";
+"b1d57" = "Ditt namn är ogiltigt.";
 
-"Your payment method was declined." = "Din betalningsmetod godkändes inte.";
+"3209d" = "Din betalningsmetod godkändes inte.";

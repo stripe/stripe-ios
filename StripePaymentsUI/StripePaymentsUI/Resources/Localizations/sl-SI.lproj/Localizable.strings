@@ -1,75 +1,75 @@
-"%1$@ Card" = "Kartica %1$@";
+"fbfa6" = "Kartica %1$@";
 
-"%1$@ Credit" = "Kreditna kartica %1$@";
+"a11b0" = "Kreditna kartica %1$@";
 
-"%1$@ Debit" = "Debetna kartica %1$@";
+"95233" = "Debetna kartica %1$@";
 
-"%1$@ Prepaid" = "Predplačniška kartica %1$@";
+"c90ba" = "Predplačniška kartica %1$@";
 
-"%1$@ account ending in %2$@" = "Račun za %1$@, ki se konča s števkami %2$@";
+"3b24a" = "Račun za %1$@, ki se konča s števkami %2$@";
 
-"%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
+"f5b21" = "%1$@, ki se konča s/z %2$@";
 
-"%1$@ is not accepted" = "Kartica %1$@ ni sprejeta";
+"29adf" = "Kartica %1$@ ni sprejeta";
 
-"Address line 2 (optional)" = "Naslov 2 (izbirno)";
+"9ada7" = "Naslov 2 (izbirno)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bančni račun";
+"c6f64" = "Bančni račun";
 
-"Billing address" = "Naslov plačnika računa";
+"1f516" = "Naslov plačnika računa";
 
-"Billing details" = "Podrobnosti za izstavljanje računov";
+"7c928" = "Podrobnosti za izstavljanje računov";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Podatki o kartici";
+"fca47" = "Podatki o kartici";
 
-"Card number" = "Številka kartice";
+"816fc" = "Številka kartice";
 
-"Confirm your %@" = "Potrdite svojo kodo %@";
+"002d7" = "Potrdite svojo kodo %@";
 
-"Invalid data." = "Neveljavni podatki.";
+"da175" = "Neveljavni podatki.";
 
-"MM / YY" = "MM/LL";
+"58f4a" = "MM/LL";
 
-"MM/YY" = "MM/LL";
+"1b5f6" = "MM/LL";
 
-"Postal Code" = "Poštna številka";
+"8198b" = "Poštna številka";
 
-"Shipping Address" = "Dostavni naslov";
+"6e244" = "Dostavni naslov";
 
-"State / Province / Region" = "Zvezna država/provinca/regija";
+"649f1" = "Zvezna država/provinca/regija";
 
-"The BSB you entered is invalid." = "Vneseni BSB ni veljaven.";
+"dfa21" = "Vneseni BSB ni veljaven.";
 
-"The selected brand is not allowed" = "Izbrana blagovna znamka ni dovoljena";
+"aaf53" = "Izbrana blagovna znamka ni dovoljena";
 
-"To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
+"9f2d9" = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
 
-"Your card has expired." = "Vaša kartica je potekla.";
+"393e6" = "Vaša kartica je potekla.";
 
-"Your card number is incomplete." = "Številka vaše kartice ni popolna.";
+"7e5ae" = "Številka vaše kartice ni popolna.";
 
-"Your card number is invalid." = "Številka vaše kartice ni veljavna.";
+"3c122" = "Številka vaše kartice ni veljavna.";
 
-"Your card's expiration date is incomplete." = "Datum poteka vaše kartice ni popoln.";
+"a2036" = "Datum poteka vaše kartice ni popoln.";
 
-"Your card's expiration date is invalid." = "Datum poteka vaše kartice ni veljaven.";
+"6a457" = "Datum poteka vaše kartice ni veljaven.";
 
-"Your card's expiration month is invalid." = "Mesec poteka vaše kartice ni veljaven.";
+"e47c0" = "Mesec poteka vaše kartice ni veljaven.";
 
-"Your card's expiration year is invalid." = "Leto poteka vaše kartice ni veljavno.";
+"36ae2" = "Leto poteka vaše kartice ni veljavno.";
 
-"Your card's security code is incomplete." = "Varnostna koda vaše kartice ni popolna.";
+"300dd" = "Varnostna koda vaše kartice ni popolna.";
 
-"Your card's security code is invalid." = "Varnostna koda vaše kartice ni veljavna.";
+"394fd" = "Varnostna koda vaše kartice ni veljavna.";
 
-"card number" = "številka kartice";
+"58da6" = "številka kartice";
 
-"example@example.com" = "primer@primer.com";
+"31c55" = "primer@primer.com";
 
-"expiration date" = "datum poteka";
+"b34dd" = "datum poteka";

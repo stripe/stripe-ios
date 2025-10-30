@@ -1,307 +1,307 @@
-"+ Add" = "+ Afegir";
+"c0072" = "+ Afegir";
 
-"Add US bank account" = "Afegeix un compte bancari dels EUA";
+"1b3a4" = "Afegeix un compte bancari dels EUA";
 
-"Add a card" = "Afegir una targeta";
+"be8f5" = "Afegir una targeta";
 
-"Add a payment method" = "Afegeix un mètode de pagament";
+"7e917" = "Afegeix un mètode de pagament";
 
-"Add bank account" = "Afegir compte bancari";
+"a3cc9" = "Afegir compte bancari";
 
-"Add card" = "Afegir targeta";
+"769c5" = "Afegir targeta";
 
-"Add new card" = "Afegeix una targeta nova";
+"800f4" = "Afegeix una targeta nova";
 
-"Add new payment method" = "Afegir nou mètode de pagament";
+"8130f" = "Afegir nou mètode de pagament";
 
-"Add your payment information" = "Afegir la teva informació de pagament";
+"eaa33" = "Afegir la teva informació de pagament";
 
-"Approve payment" = "Aprova el pagament";
+"e70d2" = "Aprova el pagament";
 
-"Are you sure you want to remove this card?" = "Segur que vols eliminar aquesta targeta?";
+"c8af7" = "Segur que vols eliminar aquesta targeta?";
 
-"Are you sure you want to remove this linked account?" = "Segur que vols eliminar aquest compte vinculat?";
+"74460" = "Segur que vols eliminar aquest compte vinculat?";
 
-"Back" = "Tornar";
+"76900" = "Tornar";
 
-"Bank" = "Banc";
+"676c4" = "Banc";
 
-"Bank account" = "Compte bancari";
+"1b427" = "Compte bancari";
 
-"Bank account details cannot be changed." = "Les dades del compte bancari no es poden canviar.";
+"12ab1" = "Les dades del compte bancari no es poden canviar.";
 
-"Buy now or pay later with  <img/>" = "Compra ara o paga més endavant amb <img/>";
+"38088" = "Compra ara o paga més endavant amb <img/>";
 
-"Buy now or pay later with Afterpay" = "Compra ara o paga més endavant amb Afterpay";
+"c04b4" = "Compra ara o paga més endavant amb Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Compra ara o paga més endavant amb Cash App Afterpay";
+"f566d" = "Compra ara o paga més endavant amb Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Compra ara o paga més endavant amb Clearpay";
+"bf452" = "Compra ara o paga més endavant amb Clearpay";
 
-"Buy now or pay later with Klarna" = "Compra ara o paga més endavant amb Klarna";
+"5c41c" = "Compra ara o paga més endavant amb Klarna";
 
-"Buy using a UPI ID" = "Compra amb un ID d'UPI";
+"21793" = "Compra amb un ID d'UPI";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si confirmeu el pagament amb PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
+"313bb" = "Si confirmeu el pagament amb PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En continuar a Amazon Pay, permeteu que %@ cobri pagaments futurs al vostre compte de d'Amazon Pay d'acord amb les seves condicions.";
+"c1642" = "En continuar a Amazon Pay, permeteu que %@ cobri pagaments futurs al vostre compte de d'Amazon Pay d'acord amb les seves condicions.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "En continuar a Klarna, permeteu que %1$@ cobri pagaments futurs al vostre compte de Klarna d'acord amb les seves condicions. Podeu canviar aquesta opció en qualsevol moment a l'aplicació Klarna o posant-vos en contacte amb %2$@.";
+"09c61" = "En continuar a Klarna, permeteu que %1$@ cobri pagaments futurs al vostre compte de Klarna d'acord amb les seves condicions. Podeu canviar aquesta opció en qualsevol moment a l'aplicació Klarna o posant-vos en contacte amb %2$@.";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si continueu a PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
+"c6ff4" = "Si continueu a PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Si continueu a Revolut Pay, permeteu que %@ faci càrrecs al vostre compte de Revolut Pay per a pagaments en el futur d'acord amb les seves condicions.";
+"694b5" = "Si continueu a Revolut Pay, permeteu que %@ faci càrrecs al vostre compte de Revolut Pay per a pagaments en el futur d'acord amb les seves condicions.";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En continuar, accepteu els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
+"8ba3b" = "En continuar, accepteu els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons <terms>aquests termes</terms>.";
+"23d3e" = "En continuar, accepteu autoritzar aquests pagaments segons <terms>aquests termes</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "En continuar, accepteu desar la vostra informació per a futures compres amb %@ i <link>Link,</link> d'acord amb les <terms>Condicions</terms> i la <privacy>Privacitat</privacy> de Link.";
+"b8e49" = "En continuar, accepteu desar la vostra informació per a futures compres amb %@ i <link>Link,</link> d'acord amb les <terms>Condicions</terms> i la <privacy>Privacitat</privacy> de Link.";
 
-"By continuing, you agree to save your information for future purchases with %@." = "En continuar, accepteu desar la vostra informació per a futures compres amb %@.";
+"8ca70" = "En continuar, accepteu desar la vostra informació per a futures compres amb %@.";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "En continuar, autoritzeu a %@ a debitar automàticament el vostre Saldo Satispay de manera periòdica, d'acord amb el vostre pla de compra o subscripció.";
+"d451f" = "En continuar, autoritzeu a %@ a debitar automàticament el vostre Saldo Satispay de manera periòdica, d'acord amb el vostre pla de compra o subscripció.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuar, autoritzeu %1$@ a carregar aquest pagament i els pagaments futurs al compte de Cash App segons les condicions de %2$@ fins que es revoqui l'autorització. Podeu canviar això en qualsevol moment a la configuració de Cash App.";
+"97461" = "En continuar, autoritzeu %1$@ a carregar aquest pagament i els pagaments futurs al compte de Cash App segons les condicions de %2$@ fins que es revoqui l'autorització. Podeu canviar això en qualsevol moment a la configuració de Cash App.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Quan t'incorpores a Link, acceptes els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
+"225b7" = "Quan t'incorpores a Link, acceptes els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En proporcionar el número de telèfon i el correu electrònic, accepteu crear un compte de Link subjecte a les <terms>condicions</terms> i la <privacy>política de privadesa</privacy> de Link.";
+"05e15" = "En proporcionar el número de telèfon i el correu electrònic, accepteu crear un compte de Link subjecte a les <terms>condicions</terms> i la <privacy>política de privadesa</privacy> de Link.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "En proporcionar les vostres dades bancàries i confirmar aquest pagament, accepteu aquesta Sol·licitud de Dèbit Directe i <terms>l'acord de servei de la Sol·licitud de Dèbit Directe</terms>, i autoritzeu Stripe Payments Australia Pty Ltd ACN 160 180 343 amb ID d'usuari de Dèbit Directe número 507156 (“Stripe”) a carregar el vostre compte mitjançant el Dèbit Directe BECS (sigles en anglès de Bulk Electronic Clearing System) en nom de %@ (el \"Comerciant\") per qualsevol import que el Comerciant us comuniqui per separat. Certifiqueu que sou el titular del compte o un signatari autoritzat del compte esmentat.";
+"ba265" = "En proporcionar les vostres dades bancàries i confirmar aquest pagament, accepteu aquesta Sol·licitud de Dèbit Directe i <terms>l'acord de servei de la Sol·licitud de Dèbit Directe</terms>, i autoritzeu Stripe Payments Australia Pty Ltd ACN 160 180 343 amb ID d'usuari de Dèbit Directe número 507156 (“Stripe”) a carregar el vostre compte mitjançant el Dèbit Directe BECS (sigles en anglès de Bulk Electronic Clearing System) en nom de %@ (el \"Comerciant\") per qualsevol import que el Comerciant us comuniqui per separat. Certifiqueu que sou el titular del compte o un signatari autoritzat del compte esmentat.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Si proporcioneu la informació de la targeta, permeteu que %@ hi faci càrrecs per a pagaments en el futur d'acord amb les seves condicions.";
+"0cdc0" = "Si proporcioneu la informació de la targeta, permeteu que %@ hi faci càrrecs per a pagaments en el futur d'acord amb les seves condicions.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En proporcionar el correu electrònic, accepteu crear un compte de Link i desar la vostra informació de pagament a Link d'acord amb els <terms>Termes</terms> i <privacy>Política de privadesa</privacy> de Link.";
+"36fad" = "En proporcionar el correu electrònic, accepteu crear un compte de Link i desar la vostra informació de pagament a Link d'acord amb els <terms>Termes</terms> i <privacy>Política de privadesa</privacy> de Link.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Proporcionant la informació de pagament i confirmant aquest pagament, estàs autoritzant (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar ordres al teu banc per tal de carregar des del teu compte i (B) carregar el teu compte en conformitat amb aquestes ordres. Tens dret a un reembolsament per part del teu banc sota els termes i condicions que s'hagin acordat amb aquest. El reembolsament s'ha de sol·licitar en un termini de 8 setmanes des de la data en que es va carregar el compte. Els teus drets estan explicats en un extracte que pots demanar al teu banc. Estàs acceptant rebre notificacions per pròxims dèbits fins a dos dies abans de que es portin a terme.";
+"289c5" = "Proporcionant la informació de pagament i confirmant aquest pagament, estàs autoritzant (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar ordres al teu banc per tal de carregar des del teu compte i (B) carregar el teu compte en conformitat amb aquestes ordres. Tens dret a un reembolsament per part del teu banc sota els termes i condicions que s'hagin acordat amb aquest. El reembolsament s'ha de sol·licitar en un termini de 8 setmanes des de la data en que es va carregar el compte. Els teus drets estan explicats en un extracte que pots demanar al teu banc. Estàs acceptant rebre notificacions per pròxims dèbits fins a dos dies abans de que es portin a terme.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En proporcionar el número de telèfon, accepteu crear un compte de Link i desar la vostra informació de pagament a Link d'acord amb els <terms>Termes</terms> i <privacy>Política de privadesa</privacy> de Link.";
+"e3661" = "En proporcionar el número de telèfon, accepteu crear un compte de Link i desar la vostra informació de pagament a Link d'acord amb els <terms>Termes</terms> i <privacy>Política de privadesa</privacy> de Link.";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
+"02d39" = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Si envieu la comanda a %1$@ i %2$@, accepteu desar la vostra informació amb %3$@ per a compres futures i accepteu autoritzar els pagaments d'acord amb <terms>aquestes condicions</terms>.";
+"c041a" = "Si envieu la comanda a %1$@ i %2$@, accepteu desar la vostra informació amb %3$@ per a compres futures i accepteu autoritzar els pagaments d'acord amb <terms>aquestes condicions</terms>.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En enviar la comanda a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquestes condicions</terms>.";
+"532e1" = "En enviar la comanda a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquestes condicions</terms>.";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "Cancel·la i paga d'una altra manera";
+"58817" = "Cancel·la i paga d'una altra manera";
 
-"Card details cannot be changed." = "Les dades de la targeta no es poden canviar.";
+"34c44" = "Les dades de la targeta no es poden canviar.";
 
-"Change" = "Canvia";
+"c0bf7" = "Canvia";
 
-"Choose a payment method" = "Escull un mètode de pagament";
+"1dc8a" = "Escull un mètode de pagament";
 
-"Close card scanner" = "Tancar l'escàner de la targeta";
+"c0077" = "Tancar l'escàner de la targeta";
 
-"Code sent" = "Codi enviat";
+"f98a1" = "Codi enviat";
 
-"Confirm" = "Confirma";
+"eebdd" = "Confirma";
 
-"Confirm it's you" = "Confirmeu la vostra identitat";
+"6176e" = "Confirmeu la vostra identitat";
 
-"Confirm payment details" = "Confirmació de les dades de pagament";
+"3a6b5" = "Confirmació de les dades de pagament";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmeu el pagament al vostre banc o a l'aplicació de pagament en un termini de %@ per completar la compra.";
+"101ef" = "Confirmeu el pagament al vostre banc o a l'aplicació de pagament en un termini de %@ per completar la compra.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmeu el pagament a l'aplicació del vostre banc en un termini de %@ per completar la compra.";
+"a8c9a" = "Confirmeu el pagament a l'aplicació del vostre banc en un termini de %@ per completar la compra.";
 
-"Confirm your CVC" = "Confirmeu el vostre CVC";
+"a4bdf" = "Confirmeu el vostre CVC";
 
-"Contact information" = "Informació de contacte";
+"cbc73" = "Informació de contacte";
 
-"Continue another way" = "Continua d'una altra manera";
+"c2a49" = "Continua d'una altra manera";
 
-"Create an account with Link for faster checkout across the web" = "Creeu un compte amb Link per a una finalització de la compra més ràpida a tot el lloc web";
+"b568d" = "Creeu un compte amb Link per a una finalització de la compra més ràpida a tot el lloc web";
 
-"Debit or credit card" = "Targeta de crèdit o dèbit";
+"04f63" = "Targeta de crèdit o dèbit";
 
-"Default" = "Per defecte";
+"21b11" = "Per defecte";
 
-"Default payment method" = "Mètode de pagament per defecte";
+"4c163" = "Mètode de pagament per defecte";
 
-"Did you mean %@? %@." = "Volíeu dir %1$@? %2$@.";
+"6d7d1" = "Volíeu dir %1$@? %2$@.";
 
-"EPS Bank" = "Banc EPS";
+"8f218" = "Banc EPS";
 
-"Enter address manually" = "Introduir l'adreça manualment";
+"1534f" = "Introduir l'adreça manualment";
 
-"Enter the code sent to %@." = "Introduïu el codi que us hem enviat a %s.";
+"1e836" = "Introduïu el codi que us hem enviat a %s.";
 
-"FPX Bank" = "Banc FPX";
+"8c73e" = "Banc FPX";
 
-"Failed to connect" = "No s'ha pogut connectar";
+"46c9f" = "No s'ha pogut connectar";
 
-"Fast, secure checkout" = "Finalització de la compra ràpida i segura";
+"2aeb3" = "Finalització de la compra ràpida i segura";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Obteniu %@ de reembossament quan pagueu per primera vegada amb el compte bancari. <terms>Consulteu les condicions</terms>";
+"b70b0" = "Obteniu %@ de reembossament quan pagueu per primera vegada amb el compte bancari. <terms>Consulteu les condicions</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Recupereu %@ en pagar amb el compte bancari. <terms>Consulteu les condicions</terms>";
+"332d2" = "Recupereu %@ en pagar amb el compte bancari. <terms>Consulteu les condicions</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
+"b751e" = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "Inicia sessió o registra't";
+"38f51" = "Inicia sessió o registra't";
 
-"Log out of Link" = "Tanca la sessió a Link";
+"57083" = "Tanca la sessió a Link";
 
-"Manage SEPA debit" = "Administra la domiciliació SEPA";
+"a7ff3" = "Administra la domiciliació SEPA";
 
-"Manage US bank account" = "Administra el compte bancari dels EUA";
+"0b654" = "Administra el compte bancari dels EUA";
 
-"Manage bank account" = "Administra el compte bancari";
+"2d4ed" = "Administra el compte bancari";
 
-"Manage card" = "Administra la targeta";
+"49e98" = "Administra la targeta";
 
-"Manage cards" = "Administrar les targetes";
+"fe215" = "Administrar les targetes";
 
-"Manage payment method" = "Gestiona el mètode de pagament";
+"67c16" = "Gestiona el mètode de pagament";
 
-"Manage payment methods" = "Administra els mètodes de pagament";
+"cf0c9" = "Administra els mètodes de pagament";
 
-"Manage your payment methods" = "Administreu els vostres mètodes de pagament";
+"74db7" = "Administreu els vostres mètodes de pagament";
 
-"Name on card" = "Nom a la targeta";
+"18bf0" = "Nom a la targeta";
 
-"New card" = "Nova targeta";
+"8d3ef" = "Nova targeta";
 
-"New payment method" = "Nou mètode de pagament";
+"c5f95" = "Nou mètode de pagament";
 
-"No %@ promo" = "Sense promoció de %@";
+"99d88" = "Sense promoció de %@";
 
-"Not you?" = "No ets tu?";
+"5b978" = "No ets tu?";
 
-"Only card brand can be changed." = "Només es pot canviar la marca de la targeta.";
+"d1c0a" = "Només es pot canviar la marca de la targeta.";
 
-"Open your UPI app to approve your payment within %@" = "Obriu l'aplicació UPI per aprovar el pagament en un termini de %@";
+"b7546" = "Obriu l'aplicació UPI per aprovar el pagament en un termini de %@";
 
-"Or" = "O";
+"0568b" = "O";
 
-"Or pay using" = "O pagar fent servir";
+"3c3f7" = "O pagar fent servir";
 
-"Or pay with a card" = "O pagar amb una targeta";
+"682d8" = "O pagar amb una targeta";
 
-"Or use" = "O utilitzeu";
+"4158c" = "O utilitzeu";
 
-"Or use a card" = "O utilitzeu una targeta";
+"b529c" = "O utilitzeu una targeta";
 
-"Pay %@" = "Pagar %@";
+"964f6" = "Pagar %@";
 
-"Pay another way" = "Paga d'una altra manera";
+"4bb4a" = "Paga d'una altra manera";
 
-"Pay faster at %@ and thousands of businesses." = "Pagueu més ràpidament a %@ i a milers de negocis.";
+"f43bb" = "Pagueu més ràpidament a %@ i a milers de negocis.";
 
-"Pay faster everywhere Link is accepted." = "Pagueu més ràpid als llocs on s'accepta Link.";
+"d49c1" = "Pagueu més ràpid als llocs on s'accepta Link.";
 
-"Pay over time with %@" = "Pagueu a terminis amb %@";
+"77196" = "Pagueu a terminis amb %@";
 
-"Pay over time with Affirm" = "Paga a terminis amb Affirm";
+"2f870" = "Paga a terminis amb Affirm";
 
-"Pay with Link" = "Pagar amb Link";
+"9d81a" = "Pagar amb Link";
 
-"Pay with your bank account in just a few steps." = "Pagueu amb el compte bancari en uns pocs passos.";
+"bc021" = "Pagueu amb el compte bancari en uns pocs passos.";
 
-"Payment" = "Pagament";
+"7048f" = "Pagament";
 
-"Payment failed" = "S'ha produït un error en el pagament";
+"17aad" = "S'ha produït un error en el pagament";
 
-"Payment methods" = "Mètodes de pagament";
+"16d26" = "Mètodes de pagament";
 
-"Please choose a valid payment method." = "Trieu un mètode de pagament vàlid.";
+"5ddb8" = "Trieu un mètode de pagament vàlid.";
 
-"Please go back and select another payment method" = "Torneu enrere i seleccioneu un altre mètode de pagament";
+"cf6c1" = "Torneu enrere i seleccioneu un altre mètode de pagament";
 
-"Point the camera at your card." = "Apunta a la targeta amb la càmera.";
+"59a6c" = "Apunta a la targeta amb la càmera.";
 
-"Processing..." = "Processant...";
+"f40a8" = "Processant...";
 
-"Przelewy24 Bank" = "Banc Przelewy24";
+"b0866" = "Banc Przelewy24";
 
-"Remove card?" = "Voleu eliminar la targeta?";
+"ce640" = "Voleu eliminar la targeta?";
 
-"Remove linked account" = "Elimina el compte vinculat";
+"a545c" = "Elimina el compte vinculat";
 
-"Resend code" = "Reenvia'm el codi";
+"b9745" = "Reenvia'm el codi";
 
-"SEPA debit details cannot be changed." = "Les dades de la domiciliació SEPA no es poden canviar.";
+"a4f77" = "Les dades de la domiciliació SEPA no es poden canviar.";
 
-"Save" = "Desa";
+"1509f" = "Desa";
 
-"Save a new payment method" = "Deseu un nou mètode de pagament";
+"6b6eb" = "Deseu un nou mètode de pagament";
 
-"Save address" = "Desar adreça";
+"0cbb9" = "Desar adreça";
 
-"Save for future payments" = "Guardar per a futurs pagaments";
+"7990e" = "Guardar per a futurs pagaments";
 
-"Save my info for faster checkout with Link" = "Desa la meva informació per pagar més de pressa amb Link";
+"8e1e1" = "Desa la meva informació per pagar més de pressa amb Link";
 
-"Save payment details to %@ for future purchases" = "Desa les dades de pagament a %@ per a compres futures";
+"0745e" = "Desa les dades de pagament a %@ per a compres futures";
 
-"Save this account for future %@ payments" = "Desa aquest compte per a pagaments a %@ en el futur";
+"e8c88" = "Desa aquest compte per a pagaments a %@ en el futur";
 
-"Save your bank account in just a few steps." = "Deseu el compte bancari en uns pocs passos.";
+"b4042" = "Deseu el compte bancari en uns pocs passos.";
 
-"Save your info for secure 1-click checkout with Link" = "Deseu la vostra informació per al pagament segur amb 1 clic amb Link";
+"650b1" = "Deseu la vostra informació per al pagament segur amb 1 clic amb Link";
 
-"Saved" = "Desat";
+"b5c12" = "Desat";
 
-"Select card" = "Selecciona una targeta";
+"59ffd" = "Selecciona una targeta";
 
-"Select payment method" = "Selecciona el mètode de pagament";
+"659d1" = "Selecciona el mètode de pagament";
 
-"Select your payment method" = "Selecciona el teu mètode de pagament";
+"d23e3" = "Selecciona el teu mètode de pagament";
 
-"Set as default" = "Targeta per defecte";
+"d09b4" = "Targeta per defecte";
 
-"Set as default payment method" = "Configura com a mètode de pagament per defecte";
+"af056" = "Configura com a mètode de pagament per defecte";
 
-"Set up" = "Configuració";
+"4da10" = "Configuració";
 
-"Shipping to %@ is not supported." = "L'enviament a %@ no s'admet.";
+"b8e46" = "L'enviament a %@ no s'admet.";
 
-"Show menu" = "Mostra el menú";
+"0b0af" = "Mostra el menú";
 
-"Simple, secure one-click payments" = "Pagaments senzills i segurs amb un toc";
+"edd6d" = "Pagaments senzills i segurs amb un toc";
 
-"Something went wrong when linking your account.\nPlease try again later." = "S'ha produït un error en vincular el compte.\nTorneu-ho a provar més tard.";
+"33596" = "S'ha produït un error en vincular el compte.\nTorneu-ho a provar més tard.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per acabar de desar el vostre compte bancari amb %@.";
+"822ff" = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per acabar de desar el vostre compte bancari amb %@.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per completar el pagament a %@.";
+"72fd8" = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per completar el pagament a %@.";
 
-"Tap to close" = "Toca per tancar";
+"e263d" = "Toca per tancar";
 
-"Tap to expand" = "Toca per ampliar";
+"1cbaf" = "Toca per ampliar";
 
-"The IBAN you entered is incomplete." = "L'BAN és incomplet.";
+"477cb" = "L'BAN és incomplet.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L'IBAN que heu introduït no és vàlid, \"%@\" no és un codi de país compatible.";
+"a70c6" = "L'IBAN que heu introduït no és vàlid, \"%@\" no és un codi de país compatible.";
 
-"The provided verification code has expired." = "El codi de verificació proporcionat ha caducat.";
+"e32a6" = "El codi de verificació proporcionat ha caducat.";
 
-"The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
+"e8cb8" = "El codi de verificació proporcionat no és correcte.";
 
-"This is your default" = "Aquesta és l'opció per defecte";
+"f3c56" = "Aquesta és l'opció per defecte";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Aquesta forma de pagament se suprimirà, però continuarà disponible per a les subscripcions del %@.";
+"478c1" = "Aquesta forma de pagament se suprimirà, però continuarà disponible per a les subscripcions del %@.";
 
-"Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
+"4a754" = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
 
-"Unavailable for this purchase" = "No disponible per a aquesta compra";
+"19202" = "No disponible per a aquesta compra";
 
-"Update card" = "Actualitza la targeta";
+"e28b5" = "Actualitza la targeta";
 
-"Update payment method" = "Actualitza el mètode de pagament";
+"fa7bf" = "Actualitza el mètode de pagament";
 
-"Use billing address for shipping" = "Utilitzar l'adreça de facturació per a l'enviament";
+"4a82d" = "Utilitzar l'adreça de facturació per a l'enviament";
 
-"View more" = "Visualitza més";
+"267e5" = "Visualitza més";
 
-"Yes, update" = "Sí, actualitzar";
+"fa298" = "Sí, actualitzar";
 
-"Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
+"42ef0" = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 
-"iDEAL Bank" = "Bank iDeal";
+"460cb" = "Bank iDeal";

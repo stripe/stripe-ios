@@ -105,63 +105,62 @@ import Foundation
     @_spi(STP) public var displayName: String {
         switch self {
         case .alipay:
-            return STPLocalizedString("Alipay", "Payment Method type brand name")
+            return STPLocalizedString("d5b72", "Payment Method type brand name")
         case .card:
-            return STPLocalizedString("Card", "Payment Method for credit card")
+            return STPLocalizedString("be370", "Payment Method for credit card")
         case .iDEAL:
-            return STPLocalizedString("iDEAL", "Source type brand name")
+            return STPLocalizedString("f54ab", "Source type brand name")
         case .FPX:
-            return STPLocalizedString("FPX", "Payment Method type brand name")
+            return STPLocalizedString("fed44", "Payment Method type brand name")
         case .SEPADebit:
-            return STPLocalizedString("SEPA Debit", "Payment method brand name")
+            return STPLocalizedString("b5dc7", "Payment method brand name")
         case .AUBECSDebit:
-            return STPLocalizedString("AU Direct Debit", "Payment Method type brand name.")
+            return STPLocalizedString("c1188", "Payment Method type brand name.")
         case .grabPay:
-            return STPLocalizedString("GrabPay", "Payment Method type brand name.")
+            return STPLocalizedString("09996", "Payment Method type brand name.")
         case .giropay:
-            return STPLocalizedString("giropay", "Payment Method type brand name.")
+            return STPLocalizedString("83eee", "Payment Method type brand name.")
         case .EPS:
-            return STPLocalizedString("EPS", "Payment Method type brand name.")
+            return STPLocalizedString("6d9d7", "Payment Method type brand name.")
         case .przelewy24:
-            return STPLocalizedString("Przelewy24", "Payment Method type brand name.")
+            return STPLocalizedString("0a7ad", "Payment Method type brand name.")
         case .bancontact:
-            return STPLocalizedString("Bancontact", "Payment Method type brand name")
+            return STPLocalizedString("84e7c", "Payment Method type brand name")
         case .netBanking:
-            return STPLocalizedString("NetBanking", "Payment Method type brand name")
+            return STPLocalizedString("3aba6", "Payment Method type brand name")
         case .OXXO:
-            return STPLocalizedString("OXXO", "Payment Method type brand name")
+            return STPLocalizedString("71ecf", "Payment Method type brand name")
         case .sofort:
-            return STPLocalizedString("Sofort", "Payment Method type brand name")
+            return STPLocalizedString("02f19", "Payment Method type brand name")
         case .UPI:
-            return STPLocalizedString("UPI", "Payment Method type brand name")
+            return STPLocalizedString("7b06e", "Payment Method type brand name")
         case .payPal:
-            return STPLocalizedString("PayPal", "Payment Method type brand name")
+            return STPLocalizedString("ab8a4", "Payment Method type brand name")
         case .afterpayClearpay:
             return Locale.current.stp_regionCode == "GB" || Locale.current.stp_regionCode == "FR"
                 || Locale.current.stp_regionCode == "ES" || Locale.current.stp_regionCode == "IT"
-                ? STPLocalizedString("Clearpay", "Payment Method type brand name")
-                : STPLocalizedString("Afterpay", "Payment Method type brand name")
+                ? STPLocalizedString("268da", "Payment Method type brand name")
+                : STPLocalizedString("032a2", "Payment Method type brand name")
         case .blik:
-            return STPLocalizedString("BLIK", "Payment Method type brand name")
+            return STPLocalizedString("354ad", "Payment Method type brand name")
         case .weChatPay:
-            return STPLocalizedString("WeChat Pay", "Payment Method type brand name")
+            return STPLocalizedString("a39c6", "Payment Method type brand name")
         case .boleto:
-            return STPLocalizedString("Boleto", "Payment Method type brand name")
+            return STPLocalizedString("3a3c9", "Payment Method type brand name")
         case .link:
-            return STPLocalizedString("Link", "Link Payment Method type brand name")
+            return STPLocalizedString("a6a32", "Link Payment Method type brand name")
         case .klarna:
-            return STPLocalizedString("Klarna", "Payment Method type brand name")
+            return STPLocalizedString("a2e77", "Payment Method type brand name")
         case .affirm:
-            return STPLocalizedString("Affirm", "Payment Method type brand name")
+            return STPLocalizedString("07b9f", "Payment Method type brand name")
         case .USBankAccount:
-            return STPLocalizedString(
-                "US bank account",
+            return STPLocalizedString("40d8d",
                 "Payment Method type name for US bank account payments."
             )
         case .cashApp:
-            return STPLocalizedString("Cash App Pay", "Payment Method type brand name")
+            return STPLocalizedString("35d08", "Payment Method type brand name")
         case .bacsDebit:
-            return STPLocalizedString("Bacs Direct Debit", "Payment Method type brand name")
+            return STPLocalizedString("0b4ee", "Payment Method type brand name")
         case .paynow:
             return "PayNow"
         case .zip:
@@ -183,11 +182,11 @@ import Foundation
         case .mobilePay:
             return "MobilePay"
         case .konbini:
-            return STPLocalizedString("Konbini", "Payment Method type brand name")
+            return STPLocalizedString("3f752", "Payment Method type brand name")
         case .promptPay:
             return "PromptPay"
         case .swish:
-            return STPLocalizedString("Swish", "Payment Method type brand name")
+            return STPLocalizedString("1e736", "Payment Method type brand name")
         case .twint:
             return "TWINT"
         case .multibanco:
@@ -196,9 +195,9 @@ import Foundation
             return "ShopPay"
         case .cardPresent,
             .unknown:
-            return STPLocalizedString("Unknown", "Default missing source type label")
+            return STPLocalizedString("b764c", "Default missing source type label")
         @unknown default:
-            return STPLocalizedString("Unknown", "Default missing source type label")
+            return STPLocalizedString("b764c", "Default missing source type label")
         }
     }
 

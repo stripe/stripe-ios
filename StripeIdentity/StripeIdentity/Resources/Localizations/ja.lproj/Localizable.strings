@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "次のステップで写真が数枚撮影され、本人確認が行われます。";
+"40b57" = "次のステップで写真が数枚撮影され、本人確認が行われます。";
 
-"Accepted forms of ID include" = "身分証明書として受け付けられる書式は次のとおりです";
+"a9934" = "身分証明書として受け付けられる書式は次のとおりです";
 
-"Alternatively, you may manually upload a photo of your identity document." = "または、身分証明書の写真を手動でアップロードすることもできます。";
+"a570c" = "または、身分証明書の写真を手動でアップロードすることもできます。";
 
-"App Settings" = "アプリの設定";
+"da645" = "アプリの設定";
 
-"Back %@ photo successfully uploaded" = "%@ 裏面の写真が正常にアップロードされました";
+"31438" = "%@ 裏面の写真が正常にアップロードされました";
 
-"Back identity document photo successfully uploaded" = "身分証明書裏面の写真が正常にアップロードされました";
+"3253a" = "身分証明書裏面の写真が正常にアップロードされました";
 
-"Back of %@" = "%@ 裏面";
+"128b0" = "%@ 裏面";
 
-"Back of driver's license or government-issued photo ID" = "運転免許証の裏面、または政府発行の写真付き身分証明書の裏面";
+"37929" = "運転免許証の裏面、または政府発行の写真付き身分証明書の裏面";
 
-"Back of identity document" = "本人確認書類の裏面";
+"3229d" = "本人確認書類の裏面";
 
-"Camera permission" = "カメラの使用許可";
+"51e72" = "カメラの使用許可";
 
-"Camera unavailable" = "カメラを利用できません";
+"06cc3" = "カメラを利用できません";
 
-"Capturing…" = "キャプチャーしています...";
+"806e3" = "キャプチャーしています...";
 
-"Choose File" = "ファイルを選択";
+"d7042" = "ファイルを選択";
 
-"Consent" = "同意する";
+"d37e0" = "同意する";
 
-"Could not capture image" = "画像をキャプチャーできませんでした";
+"bf6e9" = "画像をキャプチャーできませんでした";
 
-"Date of Birth" = "生年月日";
+"fdc73" = "生年月日";
 
-"Date of birth does not look valid" = "生年月日が無効のようです";
+"2baa1" = "生年月日が無効のようです";
 
-"Details not visible" = "詳細が見えません";
+"687cd" = "詳細が見えません";
 
-"Flip your %@ over to the other side" = "%@ を裏返してください";
+"e3292" = "%@ を裏返してください";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "運転免許証または政府発行の写真付き身分証明書を裏返してください";
+"dd41b" = "運転免許証または政府発行の写真付き身分証明書を裏返してください";
 
-"Flip your identity card over to the other side" = "身分証明書を裏返してください";
+"87346" = "身分証明書を裏返してください";
 
-"Front %@ photo successfully uploaded" = "%@ 表面の写真が正常にアップロードされました";
+"b57ad" = "%@ 表面の写真が正常にアップロードされました";
 
-"Front identity document photo successfully uploaded" = "身分証明書表面の写真が正常にアップロードされました";
+"3a9fd" = "身分証明書表面の写真が正常にアップロードされました";
 
-"Front of %@" = "%@ 表面";
+"73fc5" = "%@ 表面";
 
-"Front of driver's license or government-issued photo ID" = "運転免許証、または政府発行の写真付き身分証明書の表面";
+"b3d9a" = "運転免許証、または政府発行の写真付き身分証明書の表面";
 
-"Front of driver's license or passport" = "運転免許証の表面、またはパスポートの写真ページ";
+"8d188" = "運転免許証の表面、またはパスポートの写真ページ";
 
-"Front of driver's license, passport, or government-issued photo ID" = "運転免許証、政府発行の写真付き身分証明書の表面、またはパスポートの写真ページ";
+"070b5" = "運転免許証、政府発行の写真付き身分証明書の表面、またはパスポートの写真ページ";
 
-"Front of identity document" = "本人確認書類の表面";
+"8562c" = "本人確認書類の表面";
 
-"Front of passport or government-issued photo ID" = "パスポートの写真ページ、または政府発行の写真付き身分証明書の表面";
+"bb2ee" = "パスポートの写真ページ、または政府発行の写真付き身分証明書の表面";
 
-"Get ready to scan your photo ID" = "写真付き身分証明書の直接撮影を準備する";
+"83016" = "写真付き身分証明書の直接撮影を準備する";
 
-"Get ready to take a selfie" = "顔写真の撮影準備をする";
+"9e29f" = "顔写真の撮影準備をする";
 
-"Go Back" = "戻る";
+"b8d99" = "戻る";
 
-"Hold still, scanning" = "動かさないでください、スキャンしています";
+"b63f6" = "動かさないでください、スキャンしています";
 
-"I'm ready" = "準備完了";
+"d5b05" = "準備完了";
 
-"ID Number" = "ID 番号";
+"a403d" = "ID 番号";
 
-"Individual CPF" = "個人 CPF";
+"6212a" = "個人 CPF";
 
-"Keep ID level" = "身分証明書を水平に保持してください";
+"6be11" = "身分証明書を水平に保持してください";
 
-"Last 4 of Social Security number" = "社会保障番号の末尾 4 桁";
+"77dd8" = "社会保障番号の末尾 4 桁";
 
-"Loading" = "読み込み中";
+"dc3808" = "読み込み中";
 
-"Make sure all details are visible and focus" = "すべての詳細が表示され、焦点が合っていることを確認してください";
+"859af" = "すべての詳細が表示され、焦点が合っていることを確認してください";
 
-"Make sure you're in a well lit space." = "明るい場所にいることを確認してください。";
+"6c2aa" = "明るい場所にいることを確認してください。";
 
-"Move closer" = "近付けてください";
+"1da05" = "近付けてください";
 
-"Move farther" = "少し遠ざけてください";
+"73333" = "少し遠ざけてください";
 
-"Move to a darker area" = "もっと暗い場所に移動してください";
+"4687a" = "もっと暗い場所に移動してください";
 
-"Move to a well-lit area" = "明るい場所に移動してください";
+"f579f" = "明るい場所に移動してください";
 
-"NRIC or FIN" = "NRIC または FIN";
+"32e72" = "NRIC または FIN";
 
-"No document detected" = "書類を検出できませんでした";
+"b376f" = "書類を検出できませんでした";
 
-"Personal ID number" = "身分証明書番号";
+"fae7d" = "身分証明書番号";
 
-"Personal Information" = "個人情報";
+"c4b37" = "個人情報";
 
-"Phone Number" = "電話番号";
+"72dba" = "電話番号";
 
-"Phone Verification" = "電話番号の確認";
+"cb074" = "電話番号の確認";
 
-"Photo Library" = "フォトライブラリー";
+"e0b2a" = "フォトライブラリー";
 
-"Please upload images of the front and back of your %@" = "%@ 表裏両面の画像をアップロードしてください";
+"03fa9" = "%@ 表裏両面の画像をアップロードしてください";
 
-"Please upload images of the front and back of your identity document" = "本人確認書類の両面画像をアップロードしてください";
+"8c273" = "本人確認書類の両面画像をアップロードしてください";
 
-"Position your %@ in the center of the frame" = "フレームの中央に %@ を置いてください";
+"ceab8" = "フレームの中央に %@ を置いてください";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "運転免許証または政府発行の写真付き身分証明書をフレームの中央に配置してください";
+"12559" = "運転免許証または政府発行の写真付き身分証明書をフレームの中央に配置してください";
 
-"Position your driver's license or passport in the center of the frame" = "運転免許証またはパスポートの写真ページをフレームの中央に配置してください";
+"453ad" = "運転免許証またはパスポートの写真ページをフレームの中央に配置してください";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "運転免許証、パスポートの写真ページ、または政府発行の写真付き身分証明書をフレームの中央に配置してください";
+"ad934" = "運転免許証、パスポートの写真ページ、または政府発行の写真付き身分証明書をフレームの中央に配置してください";
 
-"Position your face in the center of the frame." = "フレームの中央に顔を置いてください。";
+"6f758" = "フレームの中央に顔を置いてください。";
 
-"Position your identity document in the center of the frame" = "身分証明書をフレームの中央に配置してください";
+"68f51" = "身分証明書をフレームの中央に配置してください";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "パスポートの写真ページ、または政府発行の写真付き身分証明書をフレームの中央に配置してください";
+"74830" = "パスポートの写真ページ、または政府発行の写真付き身分証明書をフレームの中央に配置してください";
 
-"Retake Photos" = "写真を撮り直す";
+"16681" = "写真を撮り直す";
 
-"Scan" = "スキャン";
+"ea1c5" = "スキャン";
 
-"Scanned" = "スキャン終了";
+"e9b3b" = "スキャン終了";
 
-"Select" = "選択";
+"2a780" = "選択";
 
-"Select a location to upload the back of your identity document from" = "身分証明書の裏面をどこからアップロードするのかを選択してください";
+"568f3" = "身分証明書の裏面をどこからアップロードするのかを選択してください";
 
-"Select a location to upload the front of your identity document from" = "身分証明書の表面をどこからアップロードするのかを選択してください";
+"a352a" = "身分証明書の表面をどこからアップロードするのかを選択してください";
 
-"Select back %@ photo" = "%@ 裏面の写真を選択";
+"0dfa8" = "%@ 裏面の写真を選択";
 
-"Select back identity document photo" = "身分証明書裏面の写真を選択";
+"38aec" = "身分証明書裏面の写真を選択";
 
-"Select front %@ photo" = "%@ 表面の写真を選択";
+"1ca11" = "%@ 表面の写真を選択";
 
-"Select front identity document photo" = "身分証明書表面の写真を選択";
+"5c25a" = "身分証明書表面の写真を選択";
 
-"Selfie" = "顔写真";
+"7891f" = "顔写真";
 
-"Selfie captures" = "顔写真の記録";
+"ccd67" = "顔写真の記録";
 
-"Selfie captures are complete" = "顔写真の記録が完了しました";
+"a7b36" = "顔写真の記録が完了しました";
 
-"Take Photo" = "写真を撮る";
+"1ca36" = "写真を撮る";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "身分証明書の画像が保存されていません。終了しますか？";
+"b6b76" = "身分証明書の画像が保存されていません。終了しますか？";
 
-"There was an error accessing the camera." = "カメラへのアクセス中にエラーが発生しました。";
+"1eda8" = "カメラへのアクセス中にエラーが発生しました。";
 
-"Try Again" = "やり直す";
+"df0fe" = "やり直す";
 
-"Try reduce glare and make ID visible" = "光の反射を抑えて、身分証明書が見えるようにしてください";
+"ffd3d" = "光の反射を抑えて、身分証明書が見えるようにしてください";
 
-"Unable to establish a connection." = "接続を確立できません";
+"77ee9" = "接続を確立できません";
 
-"Unsaved changes" = "保存されていない変更";
+"a710c" = "保存されていない変更";
 
-"Upload" = "アップロード";
+"865e8" = "アップロード";
 
-"Upload a Photo" = "写真をアップロード";
+"f0c8a" = "写真をアップロード";
 
-"Upload your %@" = "%@ をアップロードしてください";
+"7f6c1" = "%@ をアップロードしてください";
 
-"Upload your photo ID" = "写真付き身分証明書をアップロードする";
+"40a76" = "写真付き身分証明書をアップロードする";
 
-"Uploading back %@ photo" = "%@ 裏面の写真をアップロードしています";
+"eaebd" = "%@ 裏面の写真をアップロードしています";
 
-"Uploading back identity document photo" = "身分証明書裏面の写真をアップロードしています";
+"e16b7" = "身分証明書裏面の写真をアップロードしています";
 
-"Uploading front %@ photo" = "%@ 表面の写真をアップロードしています";
+"93af2" = "%@ 表面の写真をアップロードしています";
 
-"Uploading front identity document photo" = "身分証明書表面の写真をアップロードしています";
+"5dfbf" = "身分証明書表面の写真をアップロードしています";
 
-"Verify your identity" = "本人確認を行う";
+"ed32a" = "本人確認を行う";
 
-"We could not capture a high-quality image." = "高画質の画像をキャプチャーできませんでした。";
+"55e29" = "高画質の画像をキャプチャーできませんでした。";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "カメラへのアクセス許可が必要です。アプリの設定でカメラへのアクセスを許可してください。";
+"a98b4" = "カメラへのアクセス許可が必要です。アプリの設定でカメラへのアクセスを許可してください。";
 
-"Welcome" = "初期画面";
+"0e222" = "初期画面";
 
-"You can either try again or upload an image from your device." = "もう一度お試しいただくか、デバイスから画像をアプロードしてください。";
+"348a7" = "もう一度お試しいただくか、デバイスから画像をアプロードしてください。";
 
-"Your selfie images have not been saved. Do you want to leave?" = "顔写真の画像が保存されていません。終了しますか？";
+"b892f" = "顔写真の画像が保存されていません。終了しますか？";
 
-"driver's license" = "運転免許証";
+"cadf1" = "運転免許証";
 
-"government-issued photo ID" = "政府発行の写真付き身分証明書";
+"29fd8" = "政府発行の写真付き身分証明書";
 
-"passport" = "パスポート";
+"cbc47" = "パスポート";

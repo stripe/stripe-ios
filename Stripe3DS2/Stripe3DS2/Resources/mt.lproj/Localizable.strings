@@ -1,39 +1,38 @@
 /* The text for warning when a debugger is currently attached to the process. */
-"A debugger is attached to the App." = "Debugger huwa mqabbad mal-Applikazzjoni.";
+"028f7" = "Debugger huwa mqabbad mal-Applikazzjoni.";
 
 /* The text for warning when an emulator is being used to run the application. */
-"An emulator is being used to run the App." = "Qed jintuża emulatur biex iħaddem l-Applikazzjoni.";
+"8bcbe" = "Qed jintuża emulatur biex iħaddem l-Applikazzjoni.";
 
 /* The text for the button that cancels the current challenge process. */
-"Cancel" = "Ikkanċella";
+"19766" = "Ikkanċella";
 
 /* Spoken by VoiceOver when the screen is loading. */
-"Loading" = "Qed jillowdja";
+"dc380" = "Qed jillowdja";
 
 /* The no answer to a yes or no question. */
-"No" = "Le";
+"1ea44" = "Le";
 
 /* The title for the challenge response step of an authenticated checkout. */
-"Secure checkout" = "Checkout sigur";
+"58f32" = "Checkout sigur";
 
 /* Indicates that a button is selected. */
-"Selected" = "Attivata";
+"57fd7" = "Attivata";
 
 /* The text for warning when a device is jailbroken */
-"The device is jailbroken." = "L-apparat huwa mmodifikat (jailbroken).";
+"0eb49" = "L-apparat huwa mmodifikat (jailbroken).";
 
 /* The text for warning when the integrity of the SDK has been tampered with */
-"The integrity of the SDK has been tampered." = "L-integrità tal-SDK ġiet imbagħbsa.";
+"29abb" = "L-integrità tal-SDK ġiet imbagħbsa.";
 
 /* The text for warning when the SDK is running on an unsupported OS or OS version. */
-"The OS or the OS Version is not supported." = "Is-Sistema Operattiva (OS) jew il-Verżjoni tas-Sistema Operattiva (OS) mhijiex appoġġjata.";
+"79d01" = "Is-Sistema Operattiva (OS) jew il-Verżjoni tas-Sistema Operattiva (OS) mhijiex appoġġjata.";
 
 /* Error description for when a network request times out. English value is as required by UL certification. */
-"Timeout" = "Waqfa qasira";
+"70594" = "Waqfa qasira";
 
 /* Indicates that a button is not selected. */
-"Unselected" = "Mhijiex attivata";
+"26118" = "Mhijiex attivata";
 
 /* The yes answer to a yes or no question. */
-"Yes" = "Iva";
-
+"85a39" = "Iva";

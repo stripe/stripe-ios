@@ -1,75 +1,75 @@
-"%1$@ Card" = "Karta %1$@";
+"fbfa6" = "Karta %1$@";
 
-"%1$@ Credit" = "Kredit %1$@";
+"a11b0" = "Kredit %1$@";
 
-"%1$@ Debit" = "Debet %1$@";
+"95233" = "Debet %1$@";
 
-"%1$@ Prepaid" = "Předplaceno %1$@";
+"c90ba" = "Předplaceno %1$@";
 
-"%1$@ account ending in %2$@" = "Účet %1$@ končící na %2$@";
+"3b24a" = "Účet %1$@ končící na %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ končící za %2$@";
+"f5b21" = "%1$@ končící za %2$@";
 
-"%1$@ is not accepted" = "%1$@ se neakceptuje.";
+"29adf" = "%1$@ se neakceptuje.";
 
-"Address line 2 (optional)" = "2. řádek adresy (volitelně)";
+"9ada7" = "2. řádek adresy (volitelně)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bankovní účet";
+"c6f64" = "Bankovní účet";
 
-"Billing address" = "Fakturační adresa";
+"1f516" = "Fakturační adresa";
 
-"Billing details" = "Fakturační údaje";
+"7c928" = "Fakturační údaje";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Informace o kartě";
+"fca47" = "Informace o kartě";
 
-"Card number" = "Číslo karty";
+"816fc" = "Číslo karty";
 
-"Confirm your %@" = "Potvrďte svoje %@";
+"002d7" = "Potvrďte svoje %@";
 
-"Invalid data." = "Neplatná data.";
+"da175" = "Neplatná data.";
 
-"MM / YY" = "MM / RR";
+"58f4a" = "MM / RR";
 
-"MM/YY" = "MM/RR";
+"1b5f6" = "MM/RR";
 
-"Postal Code" = "Poštovní směrovací číslo";
+"8198b" = "Poštovní směrovací číslo";
 
-"Shipping Address" = "Dodací adresa";
+"6e244" = "Dodací adresa";
 
-"State / Province / Region" = "Stát / provincie / region";
+"649f1" = "Stát / provincie / region";
 
-"The BSB you entered is invalid." = "Zadaný BSB je neplatný.";
+"dfa21" = "Zadaný BSB je neplatný.";
 
-"The selected brand is not allowed" = "Vybraná značka není povolena";
+"aaf53" = "Vybraná značka není povolena";
 
-"To scan your card, allow camera access in Settings." = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
+"9f2d9" = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
 
-"Your card has expired." = "Platnost vaší karty vypršela.";
+"393e6" = "Platnost vaší karty vypršela.";
 
-"Your card number is incomplete." = "Číslo karty je neúplné.";
+"7e5ae" = "Číslo karty je neúplné.";
 
-"Your card number is invalid." = "Číslo karty je neplatné.";
+"3c122" = "Číslo karty je neplatné.";
 
-"Your card's expiration date is incomplete." = "Datum konce platnosti vaší karty je neúplné.";
+"a2036" = "Datum konce platnosti vaší karty je neúplné.";
 
-"Your card's expiration date is invalid." = "Datum konce platnosti karty je neplatné.";
+"6a457" = "Datum konce platnosti karty je neplatné.";
 
-"Your card's expiration month is invalid." = "Rok konce platnosti vaší karty je neplatný.";
+"e47c0" = "Rok konce platnosti vaší karty je neplatný.";
 
-"Your card's expiration year is invalid." = "Rok konce platnosti vaší karty je neplatný.";
+"36ae2" = "Rok konce platnosti vaší karty je neplatný.";
 
-"Your card's security code is incomplete." = "Bezpečnostní kód karty je neúplný.";
+"300dd" = "Bezpečnostní kód karty je neúplný.";
 
-"Your card's security code is invalid." = "Bezpečnostní kód vaší karty je neplatný.";
+"394fd" = "Bezpečnostní kód vaší karty je neplatný.";
 
-"card number" = "číslo karty";
+"58da6" = "číslo karty";
 
-"example@example.com" = "příklad@příklad.com";
+"31c55" = "příklad@příklad.com";
 
-"expiration date" = "datum konce platnosti";
+"b34dd" = "datum konce platnosti";

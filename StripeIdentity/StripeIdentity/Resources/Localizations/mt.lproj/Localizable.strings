@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Fil-pass li jmiss se niġbdu ftit ritratti awtomatikament biex nivverifikaw li int min qed tgħid li int";
+"40b57" = "Fil-pass li jmiss se niġbdu ftit ritratti awtomatikament biex nivverifikaw li int min qed tgħid li int";
 
-"Accepted forms of ID include" = "Ix-xorta ta' dokumenti tal-identità aċċettati";
+"a9934" = "Ix-xorta ta' dokumenti tal-identità aċċettati";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Inkella tista' ttella' ritratt tad-dokument tal-identità tiegħek int stess.";
+"a570c" = "Inkella tista' ttella' ritratt tad-dokument tal-identità tiegħek int stess.";
 
-"App Settings" = "Għażliet tal-App";
+"da645" = "Għażliet tal-App";
 
-"Back %@ photo successfully uploaded" = "Ir-ritratt ta' wara ta’ %@ ġie mtella' b'suċċess";
+"31438" = "Ir-ritratt ta' wara ta’ %@ ġie mtella' b'suċċess";
 
-"Back identity document photo successfully uploaded" = "Ir-ritratt ta' wara tad-dokument tal-identità ġie mtella' b'suċċess";
+"3253a" = "Ir-ritratt ta' wara tad-dokument tal-identità ġie mtella' b'suċċess";
 
-"Back of %@" = "Wara ta' %@";
+"128b0" = "Wara ta' %@";
 
-"Back of driver's license or government-issued photo ID" = "In-naħa ta’ wara tal-liċenzja tas-sewqan jew ID bir-ritratt maħruġa mill-gvern";
+"37929" = "In-naħa ta’ wara tal-liċenzja tas-sewqan jew ID bir-ritratt maħruġa mill-gvern";
 
-"Back of identity document" = "In-naħa ta' wara tad-dokument tal-identità";
+"3229d" = "In-naħa ta' wara tad-dokument tal-identità";
 
-"Camera permission" = "Permess għall-kamera";
+"51e72" = "Permess għall-kamera";
 
-"Camera unavailable" = "Il-kamera mhux disponibbli";
+"06cc3" = "Il-kamera mhux disponibbli";
 
-"Capturing…" = "Qed nieħdu l-istessi...";
+"806e3" = "Qed nieħdu l-istessi...";
 
-"Choose File" = "Agħżel Fajl";
+"d7042" = "Agħżel Fajl";
 
-"Consent" = "Kunsens";
+"d37e0" = "Kunsens";
 
-"Could not capture image" = "Ma stajniex nieħdu r-ritratt";
+"bf6e9" = "Ma stajniex nieħdu r-ritratt";
 
-"Date of Birth" = "Data tat-twelid";
+"fdc73" = "Data tat-twelid";
 
-"Date of birth does not look valid" = "Id-data tat-twelid ma tidhirx li hija tajba";
+"2baa1" = "Id-data tat-twelid ma tidhirx li hija tajba";
 
-"Details not visible" = "Id-dettalji ma jidhrux";
+"687cd" = "Id-dettalji ma jidhrux";
 
-"Flip your %@ over to the other side" = "Dawwar il-%@ tiegħek għan-naħa l-oħra";
+"e3292" = "Dawwar il-%@ tiegħek għan-naħa l-oħra";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Aqleb il-liċenzja tas-sewqan tiegħek jew l-ID bir-ritratt maħruġa mill-gvern bil-maqlub għan-naħa l-oħra";
+"dd41b" = "Aqleb il-liċenzja tas-sewqan tiegħek jew l-ID bir-ritratt maħruġa mill-gvern bil-maqlub għan-naħa l-oħra";
 
-"Flip your identity card over to the other side" = "Dawwar il-karta tal-identità tiegħek";
+"87346" = "Dawwar il-karta tal-identità tiegħek";
 
-"Front %@ photo successfully uploaded" = "Ir-ritratt ta' quddiem ta’ %@ ġie mtella' b'suċċess";
+"b57ad" = "Ir-ritratt ta' quddiem ta’ %@ ġie mtella' b'suċċess";
 
-"Front identity document photo successfully uploaded" = "Ir-ritratt ta' quddiem tad-dokument tal-identità ġie mtella' b'suċċess";
+"3a9fd" = "Ir-ritratt ta' quddiem tad-dokument tal-identità ġie mtella' b'suċċess";
 
-"Front of %@" = "Quddiem ta' %@";
+"73fc5" = "Quddiem ta' %@";
 
-"Front of driver's license or government-issued photo ID" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan jew ID bir-ritratt maħruġa mill-gvern";
+"b3d9a" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan jew ID bir-ritratt maħruġa mill-gvern";
 
-"Front of driver's license or passport" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan jew il-passaport";
+"8d188" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan jew il-passaport";
 
-"Front of driver's license, passport, or government-issued photo ID" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan, il-passaport, jew ID bir-ritratt maħruġa mill-gvern";
+"070b5" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan, il-passaport, jew ID bir-ritratt maħruġa mill-gvern";
 
-"Front of identity document" = "In-naħa ta' quddiem tad-dokument tal-identità";
+"8562c" = "In-naħa ta' quddiem tad-dokument tal-identità";
 
-"Front of passport or government-issued photo ID" = "In-naħa ta’ quddiem tal-passaport jew tal-ID bir-ritratt maħruġa mill-gvern";
+"bb2ee" = "In-naħa ta’ quddiem tal-passaport jew tal-ID bir-ritratt maħruġa mill-gvern";
 
-"Get ready to scan your photo ID" = "Ħejji ruħek biex tiskennja d-dokument tal-identità bir-ritratt tiegħek";
+"83016" = "Ħejji ruħek biex tiskennja d-dokument tal-identità bir-ritratt tiegħek";
 
-"Get ready to take a selfie" = "Ħejji ruħek għall-istessu";
+"9e29f" = "Ħejji ruħek għall-istessu";
 
-"Go Back" = "Mur Lura";
+"b8d99" = "Mur Lura";
 
-"Hold still, scanning" = "Tiċċaqlaqx, qed niskennjaw";
+"b63f6" = "Tiċċaqlaqx, qed niskennjaw";
 
-"I'm ready" = "Jien lest/a";
+"d5b05" = "Jien lest/a";
 
-"ID Number" = "In-Numru tal-ID";
+"a403d" = "In-Numru tal-ID";
 
-"Individual CPF" = "CPF personali";
+"6212a" = "CPF personali";
 
-"Keep ID level" = "Żomm id-dokument tal-identità ċatt";
+"6be11" = "Żomm id-dokument tal-identità ċatt";
 
-"Last 4 of Social Security number" = "L-aħħar 4 ċifri tan-numru tas-Sigurtà Soċjali";
+"77dd8" = "L-aħħar 4 ċifri tan-numru tas-Sigurtà Soċjali";
 
-"Loading" = "Tielgħa";
+"dc3808" = "Tielgħa";
 
-"Make sure all details are visible and focus" = "Ara li d-dettalji kollha jidhru sewwa u huma ffukati";
+"859af" = "Ara li d-dettalji kollha jidhru sewwa u huma ffukati";
 
-"Make sure you're in a well lit space." = "Ara li tinsab f'post imdawwal sew.";
+"6c2aa" = "Ara li tinsab f'post imdawwal sew.";
 
-"Move closer" = "Mexxih eqreb";
+"1da05" = "Mexxih eqreb";
 
-"Move farther" = "Ersaq lura";
+"73333" = "Ersaq lura";
 
-"Move to a darker area" = "Ersaq f'post iktar mudlam";
+"4687a" = "Ersaq f'post iktar mudlam";
 
-"Move to a well-lit area" = "Mur f'post imdawwal sew";
+"f579f" = "Mur f'post imdawwal sew";
 
-"NRIC or FIN" = "NRIC jew FIN";
+"32e72" = "NRIC jew FIN";
 
-"No document detected" = "Ma nstab l-ebda dokument";
+"b376f" = "Ma nstab l-ebda dokument";
 
-"Personal ID number" = "In-numru tal-ID personali";
+"fae7d" = "In-numru tal-ID personali";
 
-"Personal Information" = "Dettalji personali";
+"c4b37" = "Dettalji personali";
 
-"Phone Number" = "Numru tal-Mowbajl";
+"72dba" = "Numru tal-Mowbajl";
 
-"Phone Verification" = "Verifika bil-Mowbajl";
+"cb074" = "Verifika bil-Mowbajl";
 
-"Photo Library" = "Ġabra tar-Ritratti";
+"e0b2a" = "Ġabra tar-Ritratti";
 
-"Please upload images of the front and back of your %@" = "Jekk jogħġbok tella' l-immaġini ta' quddiem u ta' wara ta' %@ tiegħek";
+"03fa9" = "Jekk jogħġbok tella' l-immaġini ta' quddiem u ta' wara ta' %@ tiegħek";
 
-"Please upload images of the front and back of your identity document" = "Jekk jogħġbok tella' l-immaġnijiet ta' quddiem u ta' wara tad-dokument tal-identità tiegħek";
+"8c273" = "Jekk jogħġbok tella' l-immaġnijiet ta' quddiem u ta' wara tad-dokument tal-identità tiegħek";
 
-"Position your %@ in the center of the frame" = "Poġġi l-%@ tiegħek fiċ-ċentru tal-qafas";
+"ceab8" = "Poġġi l-%@ tiegħek fiċ-ċentru tal-qafas";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Poġġi l-liċenzja tas-sewqan tiegħek jew l-ID bir-ritratt maħruġa mill-gvern fiċ-ċentru tal-frejm";
+"12559" = "Poġġi l-liċenzja tas-sewqan tiegħek jew l-ID bir-ritratt maħruġa mill-gvern fiċ-ċentru tal-frejm";
 
-"Position your driver's license or passport in the center of the frame" = "Poġġi l-liċenzja tas-sewqan tiegħek jew il-passaport fiċ-ċentru tal-frejm";
+"453ad" = "Poġġi l-liċenzja tas-sewqan tiegħek jew il-passaport fiċ-ċentru tal-frejm";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Poġġi l-liċenzja tas-sewqan, il-passaport, jew l-ID bir-ritratt maħruġa mill-gvern tiegħek fiċ-ċentru tal-frejm";
+"ad934" = "Poġġi l-liċenzja tas-sewqan, il-passaport, jew l-ID bir-ritratt maħruġa mill-gvern tiegħek fiċ-ċentru tal-frejm";
 
-"Position your face in the center of the frame." = "Qiegħed wiċċek f'nofs il-gwarniċ.";
+"6f758" = "Qiegħed wiċċek f'nofs il-gwarniċ.";
 
-"Position your identity document in the center of the frame" = "Poġġi d-dokument tal-identità tiegħek fiċ-ċentru tal-qafas";
+"68f51" = "Poġġi d-dokument tal-identità tiegħek fiċ-ċentru tal-qafas";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Poġġi l-passaport tiegħek jew l-ID bir-ritratt maħruġa mill-gvern fiċ-ċentru tal-frejm";
+"74830" = "Poġġi l-passaport tiegħek jew l-ID bir-ritratt maħruġa mill-gvern fiċ-ċentru tal-frejm";
 
-"Retake Photos" = "Erġa' ħu r-ritratti";
+"16681" = "Erġa' ħu r-ritratti";
 
-"Scan" = "Skennja";
+"ea1c5" = "Skennja";
 
-"Scanned" = "Skennjat";
+"e9b3b" = "Skennjat";
 
-"Select" = "Agħżel";
+"2a780" = "Agħżel";
 
-"Select a location to upload the back of your identity document from" = "Agħżel il-post minn fejn tixtieq ittella' n-naħa ta' wara tad-dokument tal-identità";
+"568f3" = "Agħżel il-post minn fejn tixtieq ittella' n-naħa ta' wara tad-dokument tal-identità";
 
-"Select a location to upload the front of your identity document from" = "Agħżel il-post minn fejn tixtieq ittella' n-naħa ta' quddiem tad-dokument tal-identità";
+"a352a" = "Agħżel il-post minn fejn tixtieq ittella' n-naħa ta' quddiem tad-dokument tal-identità";
 
-"Select back %@ photo" = "Agħżel ir-ritratt ta’ wara ta’ %@";
+"0dfa8" = "Agħżel ir-ritratt ta’ wara ta’ %@";
 
-"Select back identity document photo" = "Agħżel ir-ritratt ta' wara tad-dokument tal-identità";
+"38aec" = "Agħżel ir-ritratt ta' wara tad-dokument tal-identità";
 
-"Select front %@ photo" = "Agħżel ir-ritratt ta' quddiem ta’ %@";
+"1ca11" = "Agħżel ir-ritratt ta' quddiem ta’ %@";
 
-"Select front identity document photo" = "Agħżel ir-ritratt ta' quddiem tad-dokument tal-identità";
+"5c25a" = "Agħżel ir-ritratt ta' quddiem tad-dokument tal-identità";
 
-"Selfie" = "Stessu";
+"7891f" = "Stessu";
 
-"Selfie captures" = "Ġbid tal-istessu";
+"ccd67" = "Ġbid tal-istessu";
 
-"Selfie captures are complete" = "L-istessi nġibdu";
+"a7b36" = "L-istessi nġibdu";
 
-"Take Photo" = "Ħu Ritratt";
+"1ca36" = "Ħu Ritratt";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Ir-ritratti tad-dokument tal-identità tiegħek ma ġewx issejvjati. Trid toħroġ xorta waħda?";
+"b6b76" = "Ir-ritratti tad-dokument tal-identità tiegħek ma ġewx issejvjati. Trid toħroġ xorta waħda?";
 
-"There was an error accessing the camera." = "Seħħ żball meta aċċessajna l-kamera.";
+"1eda8" = "Seħħ żball meta aċċessajna l-kamera.";
 
-"Try Again" = "Erġa' Pprova";
+"df0fe" = "Erġa' Pprova";
 
-"Try reduce glare and make ID visible" = "Ipprova naqqas id-dija u ara li d-dokument  tal-identitá jidher sewwa";
+"ffd3d" = "Ipprova naqqas id-dija u ara li d-dokument  tal-identitá jidher sewwa";
 
-"Unable to establish a connection." = "Ma nistgħux nagħmlu konnessjoni.";
+"77ee9" = "Ma nistgħux nagħmlu konnessjoni.";
 
-"Unsaved changes" = "Il-bidliet ma ġewx issejvjati";
+"a710c" = "Il-bidliet ma ġewx issejvjati";
 
-"Upload" = "Tella'";
+"865e8" = "Tella'";
 
-"Upload a Photo" = "Tella' Ritratt";
+"f0c8a" = "Tella' Ritratt";
 
-"Upload your %@" = "Tella' l-%@ tiegħek";
+"7f6c1" = "Tella' l-%@ tiegħek";
 
-"Upload your photo ID" = "Tella' d-dokument tal-identità b'ritratt tiegħek";
+"40a76" = "Tella' d-dokument tal-identità b'ritratt tiegħek";
 
-"Uploading back %@ photo" = "Tella' r-ritratt ta’ wara ta’ %@";
+"eaebd" = "Tella' r-ritratt ta’ wara ta’ %@";
 
-"Uploading back identity document photo" = "Tella' r-ritratt ta’ wara tad-dokument tal-identità";
+"e16b7" = "Tella' r-ritratt ta’ wara tad-dokument tal-identità";
 
-"Uploading front %@ photo" = "Tella' r-ritratt ta’ quddiem ta’ %@";
+"93af2" = "Tella' r-ritratt ta’ quddiem ta’ %@";
 
-"Uploading front identity document photo" = "Tella' r-ritratt ta’ quddiem tad-dokument tal-identità";
+"5dfbf" = "Tella' r-ritratt ta’ quddiem tad-dokument tal-identità";
 
-"Verify your identity" = "Ivverifika l-identità tiegħek";
+"ed32a" = "Ivverifika l-identità tiegħek";
 
-"We could not capture a high-quality image." = "Ma stajniex nieħdu ritratt ta' kwalità tajba.";
+"55e29" = "Ma stajniex nieħdu ritratt ta' kwalità tajba.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Neħtieġu l-permess biex nużaw il-kamera tiegħek. Jekk jogħġbok agħti aċċess għall-kamera mill-għażliet tal-apps.";
+"a98b4" = "Neħtieġu l-permess biex nużaw il-kamera tiegħek. Jekk jogħġbok agħti aċċess għall-kamera mill-għażliet tal-apps.";
 
-"Welcome" = "Merħba";
+"0e222" = "Merħba";
 
-"You can either try again or upload an image from your device." = "Tista' terġa' tipprova jew tagħżel li ttella' ritratt mit-tagħmir tiegħek.";
+"348a7" = "Tista' terġa' tipprova jew tagħżel li ttella' ritratt mit-tagħmir tiegħek.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "L-istessi tiegħek għadhom ma ntrefgħux. Tixtieq toħroġ?";
+"b892f" = "L-istessi tiegħek għadhom ma ntrefgħux. Tixtieq toħroġ?";
 
-"driver's license" = "liċenzja tas-sewqan";
+"cadf1" = "liċenzja tas-sewqan";
 
-"government-issued photo ID" = "dokument tal-identità bir-ritratt maħruġ mill-gvern";
+"29fd8" = "dokument tal-identità bir-ritratt maħruġ mill-gvern";
 
-"passport" = "passaport";
+"cbc47" = "passaport";

@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (オプション)";
+"224e3" = "%@ (オプション)";
 
-"(not accepted)" = "(受け付けられません)";
+"f676f" = "(受け付けられません)";
 
-"Account number" = "アカウント番号";
+"f7573" = "アカウント番号";
 
-"Address" = "住所";
+"56ef8" = "住所";
 
-"Address line 1" = "住所 (1 行目)";
+"ee760" = "住所 (1 行目)";
 
-"Address line 2" = "住所 (2 行目)";
+"350b2" = "住所 (2 行目)";
 
-"Area" = "地域";
+"024dc" = "地域";
 
-"BLIK code" = "BLIK コード";
+"35cc2" = "BLIK コード";
 
-"BSB number" = "BSB 番号";
+"88a06" = "BSB 番号";
 
-"Bank account •••• %@" = "銀行口座 •••• %@";
+"7a614" = "銀行口座 •••• %@";
 
-"Billing address is same as shipping" = "請求先住所は配送先住所と同じ";
+"a03f3" = "請求先住所は配送先住所と同じ";
 
-"Cancel" = "キャンセル";
+"19766e" = "キャンセル";
 
-"Card brand" = "カードブランド";
+"45022" = "カードブランド";
 
-"City" = "市";
+"fc33f" = "市";
 
-"Code field" = "コードフィールド";
+"2b743" = "コードフィールド";
 
-"Company" = "会社";
+"de474" = "会社";
 
-"Continue" = "続ける";
+"31fbe" = "続ける";
 
-"Country" = "国";
+"701d0" = "国";
 
-"Country or region" = "国または地域";
+"8d236" = "国または地域";
 
-"County" = "群";
+"136c8" = "群";
 
-"Department" = "県";
+"5304a" = "県";
 
-"District" = "地区";
+"50f18" = "地区";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "このフォームを閉じてもよいですか？";
+"6ebfc" = "このフォームを閉じてもよいですか？";
 
-"Done" = "完了";
+"11a67" = "完了";
 
-"Double tap to edit" = "ダブルタップして編集します";
+"f5dd0" = "ダブルタップして編集します";
 
-"Edit" = "編集";
+"464c4" = "編集";
 
-"Eircode" = "郵便番号 (アイルランド)";
+"113d9" = "郵便番号 (アイルランド)";
 
-"Email" = "メールアドレス";
+"969cc" = "メールアドレス";
 
-"Emirate" = "首長国";
+"4309c" = "首長国";
 
-"Error" = "エラー";
+"54a0e" = "エラー";
 
-"First" = "名";
+"a151c" = "名";
 
-"Full name" = "名前";
+"f13a6" = "名前";
 
-"Incomplete phone number" = "電話番号の不備";
+"6d2d3" = "電話番号の不備";
 
-"Invalid UPI ID" = "UPI ID が無効です";
+"14cf3" = "UPI ID が無効です";
 
-"Island" = "島しょ";
+"730f5" = "島しょ";
 
-"Last" = "姓";
+"eb970" = "姓";
 
-"Name" = "名前";
+"dcd1d" = "名前";
 
-"Name on account" = "口座名義人";
+"59f3a" = "口座名義人";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "州 (ロシア)";
+"2ba5c" = "州 (ロシア)";
 
-"Other" = "その他";
+"f97e9" = "その他";
 
-"Parish" = "郡";
+"45ab6" = "郡";
 
-"Phone number" = "電話番号";
+"306f1" = "電話番号";
 
-"Postal code" = "郵便番号";
+"ae53c" = "郵便番号";
 
-"Prefecture" = "都道府県";
+"50571" = "都道府県";
 
-"Province" = "都道府県";
+"abfce" = "都道府県";
 
-"Remove" = "削除";
+"c3812" = "削除";
 
-"Remove bank account?" = "銀行口座を削除しますか？";
+"05b2c" = "銀行口座を削除しますか？";
 
-"Remove card" = "カードを削除";
+"dcf7d" = "カードを削除";
 
-"Search" = "検索";
+"49c26" = "検索";
 
-"Select card brand (optional)" = "カードブランドを選択 (任意)";
+"4dc47" = "カードブランドを選択 (任意)";
 
-"Selection is empty." = "項目が選択されていません。";
+"4d6f0" = "項目が選択されていません。";
 
-"Sort code" = "銀行コード";
+"a9002" = "銀行コード";
 
-"State" = "都道府県";
+"a3b50" = "都道府県";
 
-"Suburb" = "近郊";
+"9e843" = "近郊";
 
-"Suburb or city" = "市外または市内";
+"c3273" = "市外または市内";
 
-"The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
+"d5ad2" = "入力した BSB コードに不備があります。";
 
-"The ID number you entered is incomplete." = "入力した ID 番号に不備があります。";
+"0f9bf" = "入力した ID 番号に不備があります。";
 
-"The account number you entered is incomplete." = "入力した口座番号に不備があります。";
+"e10dd" = "入力した口座番号に不備があります。";
 
-"The sort code you entered is invalid." = "入力したソートコードが無効です。";
+"ac7db" = "入力したソートコードが無効です。";
 
-"Town or city" = "市区町村";
+"9ce56" = "市区町村";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "電話番号を解析できません";
+"72356" = "電話番号を解析できません";
 
-"Use rotor to access links" = "ローターを使用してリンクにアクセスします";
+"11480" = "ローターを使用してリンクにアクセスします";
 
-"Your BLIK code is incomplete." = "BLIK コードの入力に不備があります。";
+"6c0af" = "BLIK コードの入力に不備があります。";
 
-"Your BLIK code is invalid." = "BLIK コードが無効です。";
+"224bb" = "BLIK コードが無効です。";
 
-"Your ZIP code is incomplete." = "郵便番号が不完全です。";
+"3e686" = "郵便番号が不完全です。";
 
-"Your ZIP code is invalid." = "あなたの郵便番号は無効です。";
+"f029b" = "あなたの郵便番号は無効です。";
 
-"Your email is invalid." = "メールアドレスが無効です。";
+"57c28" = "メールアドレスが無効です。";
 
-"Your payment information will not be saved." = "支払い情報は保存されません。";
+"cc532" = "支払い情報は保存されません。";
 
-"Your postal code is incomplete." = "郵便番号の入力に不備があります。";
+"52c55" = "郵便番号の入力に不備があります。";
 
-"Your postal code is invalid." = "郵便番号が無効です";
+"037ec" = "郵便番号が無効です";
 
-"ZIP" = "郵便番号";
+"eaca4" = "郵便番号";

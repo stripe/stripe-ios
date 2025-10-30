@@ -1,39 +1,38 @@
 /* The text for warning when a debugger is currently attached to the process. */
-"A debugger is attached to the App." = "Se ha asociado un depurador a la aplicación.";
+"028f7" = "Se ha asociado un depurador a la aplicación.";
 
 /* The text for warning when an emulator is being used to run the application. */
-"An emulator is being used to run the App." = "Se está usando un emulador para ejecutar la aplicación.";
+"8bcbe" = "Se está usando un emulador para ejecutar la aplicación.";
 
 /* The text for the button that cancels the current challenge process. */
-"Cancel" = "Cancelar";
+"19766" = "Cancelar";
 
 /* Spoken by VoiceOver when the screen is loading. */
-"Loading" = "Cargando";
+"dc380" = "Cargando";
 
 /* The no answer to a yes or no question. */
-"No" = "No";
+"1ea44" = "No";
 
 /* The title for the challenge response step of an authenticated checkout. */
-"Secure checkout" = "Proceso de compra seguro";
+"58f32" = "Proceso de compra seguro";
 
 /* Indicates that a button is selected. */
-"Selected" = "Seleccionado";
+"57fd7" = "Seleccionado";
 
 /* The text for warning when a device is jailbroken */
-"The device is jailbroken." = "El dispositivo ha sido liberado.";
+"0eb49" = "El dispositivo ha sido liberado.";
 
 /* The text for warning when the integrity of the SDK has been tampered with */
-"The integrity of the SDK has been tampered." = "Se ha alterado la integridad del SDK.";
+"29abb" = "Se ha alterado la integridad del SDK.";
 
 /* The text for warning when the SDK is running on an unsupported OS or OS version. */
-"The OS or the OS Version is not supported." = "El OS o la versión del OS no son compatibles.";
+"79d01" = "El OS o la versión del OS no son compatibles.";
 
 /* Error description for when a network request times out. English value is as required by UL certification. */
-"Timeout" = "Tiempo de espera agotado";
+"70594" = "Tiempo de espera agotado";
 
 /* Indicates that a button is not selected. */
-"Unselected" = "No seleccionado";
+"26118" = "No seleccionado";
 
 /* The yes answer to a yes or no question. */
-"Yes" = "Sí";
-
+"85a39" = "Sí";

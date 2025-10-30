@@ -30,8 +30,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             .timeout(.back):
             return .init(
                 titleText: .Localized.unsavedChanges,
-                messageText: STPLocalizedString(
-                    "The images of your identity document have not been saved. Do you want to leave?",
+                messageText: STPLocalizedString("b6b76",
                     "Text for message of warning alert"
                 ),
                 acceptButtonText: String.Localized.continue,
@@ -366,8 +365,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     func updateUI() {
         configure(
-            backButtonTitle: STPLocalizedString(
-                "Scan",
+            backButtonTitle: STPLocalizedString("ea1c5",
                 "Back button title for returning to the document scan screen"
             ),
             viewModel: flowViewModel

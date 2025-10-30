@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Ocorreu um erro. Tente outra vez.";
+"9c170" = "Ocorreu um erro. Tente outra vez.";
 
-"Card brand was not updated. Please try again." = "A bandeira do cartão não foi atualizada. Tente novamente.";
+"4bc73" = "A bandeira do cartão não foi atualizada. Tente novamente.";
 
-"Close" = "Fechar";
+"7d9eb" = "Fechar";
 
-"Default payment method was not updated. Please try again." = "A forma de pagamento padrão não foi atualizada. Tente novamente.";
+"3048d" = "A forma de pagamento padrão não foi atualizada. Tente novamente.";
 
-"Scan Card" = "Digitalizar cartão";
+"b60b5" = "Digitalizar cartão";
 
-"Scan card" = "Ler cartão";
+"ea2fe" = "Ler cartão";
 
-"The IBAN you entered is invalid." = "O IBAN inserido é inválido.";
+"ee81e" = "O IBAN inserido é inválido.";
 
-"There was an error processing your card -- try again in a few seconds" = "Erro ao processar o cartão – tente novamente em alguns segundos";
+"fa47c" = "Erro ao processar o cartão – tente novamente em alguns segundos";
 
-"There was an unexpected error -- try again in a few seconds" = "Erro inesperado – tente novamente em alguns segundos";
+"c98a4" = "Erro inesperado – tente novamente em alguns segundos";
 
-"Try again" = "Tentar novamente";
+"d8b83" = "Tentar novamente";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Usamos a Stripe para verificar os dados do seu cartão. A Stripe pode usar e armazenar seus dados de acordo com a política de privacidade da empresa. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Saiba mais</u></a>";
+"96fe7" = "Usamos a Stripe para verificar os dados do seu cartão. A Stripe pode usar e armazenar seus dados de acordo com a política de privacidade da empresa. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Saiba mais</u></a>";
 
-"Your card has expired" = "O cartão expirou";
+"f5c35" = "O cartão expirou";
 
-"Your card was declined" = "O cartão foi recusado";
+"b9821" = "O cartão foi recusado";
 
-"Your card's expiration month is invalid" = "O mês de expiração doi cartão é inválido";
+"e02cf" = "O mês de expiração doi cartão é inválido";
 
-"Your card's expiration year is invalid" = "O ano de expiração do cartão é inválido";
+"53311" = "O ano de expiração do cartão é inválido";
 
-"Your card's number is invalid" = "O número do cartão é inválido";
+"c433c" = "O número do cartão é inválido";
 
-"Your card's security code is invalid" = "O código de segurança do cartão é inválido";
+"15f5b" = "O código de segurança do cartão é inválido";
 
-"Your name is invalid." = "Nome inválido.";
+"b1d57" = "Nome inválido.";
 
-"Your payment method was declined." = "A forma de pagamento foi recusada.";
+"3209d" = "A forma de pagamento foi recusada.";

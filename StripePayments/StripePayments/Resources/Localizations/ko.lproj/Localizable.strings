@@ -1,63 +1,63 @@
-"AU Direct Debit" = "AU 자동 이체";
+"c1188" = "AU 자동 이체";
 
-"Affirm" = "Affirm";
+"07b9f" = "Affirm";
 
-"Afterpay" = "Afterpay";
+"032a2" = "Afterpay";
 
-"Alipay" = "Alipay";
+"d5b72" = "Alipay";
 
-"BLIK" = "BLIK";
+"354ad" = "BLIK";
 
-"Bacs Direct Debit" = "Bacs 자동 이체";
+"0b4ee" = "Bacs 자동 이체";
 
-"Bancontact" = "Bancontact";
+"84e7c" = "Bancontact";
 
-"Boleto" = "Boleto";
+"3a3c9" = "Boleto";
 
-"Card" = "카드";
+"be370" = "카드";
 
-"Cash App Pay" = "Cash App Pay";
+"35d08" = "Cash App Pay";
 
-"Clearpay" = "Clearpay";
+"268da" = "Clearpay";
 
-"EPS" = "EPS";
+"6d9d7" = "EPS";
 
-"FPX" = "FPX";
+"fed44" = "FPX";
 
-"GrabPay" = "GrabPay";
+"09996" = "GrabPay";
 
-"Klarna" = "Klarna";
+"a2e77" = "Klarna";
 
-"Konbini" = "Konbini";
+"3f752" = "Konbini";
 
-"Link" = "Link";
+"a6a32" = "Link";
 
-"NetBanking" = "NetBanking";
+"3aba6" = "NetBanking";
 
-"OXXO" = "OXXO";
+"71ecf" = "OXXO";
 
-"PayPal" = "PayPal";
+"ab8a4" = "PayPal";
 
-"Przelewy24" = "Przelewy24";
+"0a7ad" = "Przelewy24";
 
-"SEPA Debit" = "SEPA Debit";
+"b5dc7" = "SEPA Debit";
 
-"Sofort" = "Sofort";
+"02f19" = "Sofort";
 
-"Swish" = "Swish";
+"1e736" = "Swish";
 
-"Timed out authenticating your payment method -- try again" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
+"37fc6" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
 
-"UPI" = "UPI";
+"7b06e" = "UPI";
 
-"US bank account" = "미국 은행 계좌";
+"40d8d" = "미국 은행 계좌";
 
-"Unknown" = "알 수 없음";
+"b764c" = "알 수 없음";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 수단을 인증할 수 없습니다. 다른 결제 수단을 선택하고 다시 시도하십시오.";
+"f2763" = "결제 수단을 인증할 수 없습니다. 다른 결제 수단을 선택하고 다시 시도하십시오.";
 
-"WeChat Pay" = "WeChat Pay";
+"a39c6" = "WeChat Pay";
 
-"giropay" = "giropay";
+"83eee" = "giropay";
 
-"iDEAL" = "iDEAL";
+"f54ab" = "iDEAL";

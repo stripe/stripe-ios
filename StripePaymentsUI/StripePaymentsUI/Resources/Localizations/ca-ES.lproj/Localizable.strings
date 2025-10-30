@@ -1,75 +1,75 @@
-"%1$@ Card" = "Targeta %1$@";
+"fbfa6" = "Targeta %1$@";
 
-"%1$@ Credit" = "%1$@ de crèdit";
+"a11b0" = "%1$@ de crèdit";
 
-"%1$@ Debit" = "%1$@ de dèbit";
+"95233" = "%1$@ de dèbit";
 
-"%1$@ Prepaid" = "%1$@ de prepagament";
+"c90ba" = "%1$@ de prepagament";
 
-"%1$@ account ending in %2$@" = "Compte bancari de %1$@ que acaba en %2$@";
+"3b24a" = "Compte bancari de %1$@ que acaba en %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
+"f5b21" = "%1$@ que acaba en %2$@";
 
-"%1$@ is not accepted" = "No s'accepta %1$@";
+"29adf" = "No s'accepta %1$@";
 
-"Address line 2 (optional)" = "Línia de l'adreça 2 (opcional)";
+"9ada7" = "Línia de l'adreça 2 (opcional)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Compte bancari";
+"c6f64" = "Compte bancari";
 
-"Billing address" = "Adreça de facturació";
+"1f516" = "Adreça de facturació";
 
-"Billing details" = "Dades de facturació";
+"7c928" = "Dades de facturació";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Informació de targeta";
+"fca47" = "Informació de targeta";
 
-"Card number" = "Número de targeta";
+"816fc" = "Número de targeta";
 
-"Confirm your %@" = "Confirmeu el vostre %@";
+"002d7" = "Confirmeu el vostre %@";
 
-"Invalid data." = "Dades no vàlides.";
+"da175" = "Dades no vàlides.";
 
-"MM / YY" = "MM / AA";
+"58f4a" = "MM / AA";
 
-"MM/YY" = "MM / AA";
+"1b5f6" = "MM / AA";
 
-"Postal Code" = "Codi postal";
+"8198b" = "Codi postal";
 
-"Shipping Address" = "Adreça d'enviament";
+"6e244" = "Adreça d'enviament";
 
-"State / Province / Region" = "País / Província / Regió";
+"649f1" = "País / Província / Regió";
 
-"The BSB you entered is invalid." = "El BSB que has introduït no és vàlid.";
+"dfa21" = "El BSB que has introduït no és vàlid.";
 
-"The selected brand is not allowed" = "La marca seleccionada no està permesa";
+"aaf53" = "La marca seleccionada no està permesa";
 
-"To scan your card, allow camera access in Settings." = "Per escanejar la teva targeta, permet l'accès a la càmera a Ajusts.";
+"9f2d9" = "Per escanejar la teva targeta, permet l'accès a la càmera a Ajusts.";
 
-"Your card has expired." = "La targeta ha caducat.";
+"393e6" = "La targeta ha caducat.";
 
-"Your card number is incomplete." = "El número de la teva targeta no està complet.";
+"7e5ae" = "El número de la teva targeta no està complet.";
 
-"Your card number is invalid." = "El número de la teva targeta no és vàlid.";
+"3c122" = "El número de la teva targeta no és vàlid.";
 
-"Your card's expiration date is incomplete." = "La data de caducitat de la teva targeta no està completa.";
+"a2036" = "La data de caducitat de la teva targeta no està completa.";
 
-"Your card's expiration date is invalid." = "La data de caducitat de la teva targeta no és vàlida.";
+"6a457" = "La data de caducitat de la teva targeta no és vàlida.";
 
-"Your card's expiration month is invalid." = "El mes de caducitat de la teva targeta no és vàlid.";
+"e47c0" = "El mes de caducitat de la teva targeta no és vàlid.";
 
-"Your card's expiration year is invalid." = "L'any de caducitat de la teva targeta no és vàlid.";
+"36ae2" = "L'any de caducitat de la teva targeta no és vàlid.";
 
-"Your card's security code is incomplete." = "El codi de seguretat de la teva targeta no està complet.";
+"300dd" = "El codi de seguretat de la teva targeta no està complet.";
 
-"Your card's security code is invalid." = "El codi de seguretat de la teva targeta no és vàlid";
+"394fd" = "El codi de seguretat de la teva targeta no és vàlid";
 
-"card number" = "número de targeta";
+"58da6" = "número de targeta";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "data de caducitat";
+"b34dd" = "data de caducitat";

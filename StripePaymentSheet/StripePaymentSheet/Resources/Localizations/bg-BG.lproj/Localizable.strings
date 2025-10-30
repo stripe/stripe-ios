@@ -1,307 +1,307 @@
-"+ Add" = "+ Добавяне";
+"c0072" = "+ Добавяне";
 
-"Add US bank account" = "Добавяне на банкова сметка в САЩ";
+"1b3a4" = "Добавяне на банкова сметка в САЩ";
 
-"Add a card" = "Добавяне на карта";
+"be8f5" = "Добавяне на карта";
 
-"Add a payment method" = "Добавяне на начин на плащане";
+"7e917" = "Добавяне на начин на плащане";
 
-"Add bank account" = "Добавяне на банкова сметка";
+"a3cc9" = "Добавяне на банкова сметка";
 
-"Add card" = "Добавяне на карта";
+"769c5" = "Добавяне на карта";
 
-"Add new card" = "Добавяне на нова банкова карта";
+"800f4" = "Добавяне на нова банкова карта";
 
-"Add new payment method" = "Добавяне на нов метод на плащане";
+"8130f" = "Добавяне на нов метод на плащане";
 
-"Add your payment information" = "Добавете своята информация за плащането";
+"eaa33" = "Добавете своята информация за плащането";
 
-"Approve payment" = "Одобряване на плащането";
+"e70d2" = "Одобряване на плащането";
 
-"Are you sure you want to remove this card?" = "Сигурни ли сте, че желаете да премахнете тази банкова карта?";
+"c8af7" = "Сигурни ли сте, че желаете да премахнете тази банкова карта?";
 
-"Are you sure you want to remove this linked account?" = "Сигурни ли сте, че желаете да премахнете този свързан акаунт?";
+"74460" = "Сигурни ли сте, че желаете да премахнете този свързан акаунт?";
 
-"Back" = "Назад";
+"76900" = "Назад";
 
-"Bank" = "Банка";
+"676c4" = "Банка";
 
-"Bank account" = "Банкова сметка";
+"1b427" = "Банкова сметка";
 
-"Bank account details cannot be changed." = "Данните на банковата сметка не могат да бъдат променяни.";
+"12ab1" = "Данните на банковата сметка не могат да бъдат променяни.";
 
-"Buy now or pay later with  <img/>" = "Купете сега или платете по-късно чрез <img/>";
+"38088" = "Купете сега или платете по-късно чрез <img/>";
 
-"Buy now or pay later with Afterpay" = "Платете сега или платете по-късно чрез Afterpay";
+"c04b4" = "Платете сега или платете по-късно чрез Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Купете сега или платете по-късно чрез Cash App Afterpay";
+"f566d" = "Купете сега или платете по-късно чрез Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Платете сега или платете по-късно чрез Clearpay";
+"bf452" = "Платете сега или платете по-късно чрез Clearpay";
 
-"Buy now or pay later with Klarna" = "Платете сега или платете по-късно чрез Klarna";
+"5c41c" = "Платете сега или платете по-късно чрез Klarna";
 
-"Buy using a UPI ID" = "Купуване с помощта на UPI ID";
+"21793" = "Купуване с помощта на UPI ID";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Потвърждавайки плащането си в PayPal, разрешавате на %@ да таксува Вашия PayPal акаунт при бъдещи плащания съгласно условията му.";
+"313bb" = "Потвърждавайки плащането си в PayPal, разрешавате на %@ да таксува Вашия PayPal акаунт при бъдещи плащания съгласно условията му.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Продължавайки към Amazon Pay, разрешавате на %@ да таксува Вашия акаунт в Amazon Pay за бъдещи плащания съгласно условията му.";
+"c1642" = "Продължавайки към Amazon Pay, разрешавате на %@ да таксува Вашия акаунт в Amazon Pay за бъдещи плащания съгласно условията му.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Продължавайки към Klarna, позволявате на %1$@ да таксува вашия акаунт в Klarna за бъдещи плащания, в съответствие с техните условия и условията на Klarna. Можете да промените това по всяко време във вашето приложение Klarna или като се свържете с %2$@.";
+"09c61" = "Продължавайки към Klarna, позволявате на %1$@ да таксува вашия акаунт в Klarna за бъдещи плащания, в съответствие с техните условия и условията на Klarna. Можете да промените това по всяко време във вашето приложение Klarna или като се свържете с %2$@.";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Продължавайки към PayPal, разрешавате на %@ да таксува Вашия акаунт в PayPal при бъдещи плащания съгласно условията му.";
+"c6ff4" = "Продължавайки към PayPal, разрешавате на %@ да таксува Вашия акаунт в PayPal при бъдещи плащания съгласно условията му.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Продължавайки към Revolut Pay, разрешавате на %@ да таксува Вашия акаунт в Revolut Pay при бъдещи плащания съгласно условията му.";
+"694b5" = "Продължавайки към Revolut Pay, разрешавате на %@ да таксува Вашия акаунт в Revolut Pay при бъдещи плащания съгласно условията му.";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Продължавайки, вие се съгласявате с <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy>.";
+"8ba3b" = "Продължавайки, вие се съгласявате с <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy>.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
+"23d3e" = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Продължавайки, Вие се съгласявате да запазите информацията си за бъдещи покупки с %@ и <link>Link</link> според <terms>Условията</terms> и <privacy>Правилата</privacy> на Link.";
+"b8e49" = "Продължавайки, Вие се съгласявате да запазите информацията си за бъдещи покупки с %@ и <link>Link</link> според <terms>Условията</terms> и <privacy>Правилата</privacy> на Link.";
 
-"By continuing, you agree to save your information for future purchases with %@." = "Продължавайки, вие се съгласявате да запазите информацията си за бъдещи покупки с %@.";
+"8ca70" = "Продължавайки, вие се съгласявате да запазите информацията си за бъдещи покупки с %@.";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ако продължите, вие разрешавате на %@ автоматично да дебитира вашия баланс в Satispay на периодична основа в съответствие с вашата покупка или абонаментен план.";
+"d451f" = "Ако продължите, вие разрешавате на %@ автоматично да дебитира вашия баланс в Satispay на периодична основа в съответствие с вашата покупка или абонаментен план.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продължавайки, Вие упълномощавате %1$@ да дебитира Вашата сметка в Cash App за това плащане и за бъдещи плащания в съответствие с условията на %2$@, докато това упълномощаване не бъде оттеглено. Можете да промените това по всяко време в настройките на Cash App.";
+"97461" = "Продължавайки, Вие упълномощавате %1$@ да дебитира Вашата сметка в Cash App за това плащане и за бъдещи плащания в съответствие с условията на %2$@, докато това упълномощаване не бъде оттеглено. Можете да промените това по всяко време в настройките на Cash App.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С присъединяването към Link Вие се съгласявате с <terms>Условията</terms> и с <privacy>Правилата за защита на личните данни</privacy>.";
+"225b7" = "С присъединяването към Link Вие се съгласявате с <terms>Условията</terms> и с <privacy>Правилата за защита на личните данни</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставяйки телефонен номер и имейл, се съгласявате да създадете акаунт в Link в съответствие с <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy> на Link.";
+"05e15" = "Предоставяйки телефонен номер и имейл, се съгласявате да създадете акаунт в Link в съответствие с <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy> на Link.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "С предоставянето на данните за банковата си сметка и потвърждаването на това плащане вие се съгласявате с това искане за директен дебит и с <terms>договора за обслужване за искания за директен дебит</terms> и упълномощавате Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 („Stripe“) да дебитира сметката ви чрез системата за масов електронен (BECS) от името на %@ („Търговец“) за всички суми, които Търговецът ви съобщи отделно. Удостоверявате, че сте титуляр на сметката или упълномощено лице за подписване за сметката, посочена по-горе.";
+"ba265" = "С предоставянето на данните за банковата си сметка и потвърждаването на това плащане вие се съгласявате с това искане за директен дебит и с <terms>договора за обслужване за искания за директен дебит</terms> и упълномощавате Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 („Stripe“) да дебитира сметката ви чрез системата за масов електронен (BECS) от името на %@ („Търговец“) за всички суми, които Търговецът ви съобщи отделно. Удостоверявате, че сте титуляр на сметката или упълномощено лице за подписване за сметката, посочена по-горе.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Предоставяйки информацията за Вашата карта, позволявате на %@ да дебитира картата Ви при бъдещи плащания съгласно условията им.";
+"0cdc0" = "Предоставяйки информацията за Вашата карта, позволявате на %@ да дебитира картата Ви при бъдещи плащания съгласно условията им.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С предоставяне на имейла си, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy>на Link.";
+"36fad" = "С предоставяне на имейла си, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy>на Link.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "С предоставянето на информация за плащания и с потвърждаването на това плащане Вие упълномощавате (A) %@ и Stripe, нашия доставчик на платежни услуги, да изпращат инструкции до Вашата банка за дебитиране на сметката Ви и (B) Вашата банка да дебитира сметката Ви в съответствие с тези инструкции. Като част от Вашите права имате право на възстановяване на суми от Вашата банка при условията и реда на споразумението с Вашата банка. Възстановяването на сума трябва да бъде поискано в рамките на 8 седмици, считано от датата, на която сметката Ви е била дебитирана. Вашите права са обяснени в извлечение, което можете да получите от Вашата банка. Вие давате своето съгласие да получавате известия за бъдещи дебитирания до 2 дни преди изпълнението им.";
+"289c5" = "С предоставянето на информация за плащания и с потвърждаването на това плащане Вие упълномощавате (A) %@ и Stripe, нашия доставчик на платежни услуги, да изпращат инструкции до Вашата банка за дебитиране на сметката Ви и (B) Вашата банка да дебитира сметката Ви в съответствие с тези инструкции. Като част от Вашите права имате право на възстановяване на суми от Вашата банка при условията и реда на споразумението с Вашата банка. Възстановяването на сума трябва да бъде поискано в рамките на 8 седмици, считано от датата, на която сметката Ви е била дебитирана. Вашите права са обяснени в извлечение, което можете да получите от Вашата банка. Вие давате своето съгласие да получавате известия за бъдещи дебитирания до 2 дни преди изпълнението им.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С предоставяне на телефонния си номер, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правила за защита на личните данни</privacy>на Link.";
+"e3661" = "С предоставяне на телефонния си номер, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правила за защита на личните данни</privacy>на Link.";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да оторизирате плащания съгласно <terms>тези условия</terms>.";
+"02d39" = "Като запазвате банковата си сметка за %@, Вие се съгласявате да оторизирате плащания съгласно <terms>тези условия</terms>.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %1$@ и %2$@ се съгласявате да запазите информацията си в %3$@ за бъдещи покупки и се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
+"c041a" = "С изпращането на поръчката си до %1$@ и %2$@ се съгласявате да запазите информацията си в %3$@ за бъдещи покупки и се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "С изпращането на поръчката си до %@ Вие се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
+"532e1" = "С изпращането на поръчката си до %@ Вие се съгласявате да разрешите плащания съгласно <terms>тези условия</terms>.";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "Анулиране или плащане по друг начин";
+"58817" = "Анулиране или плащане по друг начин";
 
-"Card details cannot be changed." = "Данните на картата не могат да бъдат променяни.";
+"34c44" = "Данните на картата не могат да бъдат променяни.";
 
-"Change" = "Промяна";
+"c0bf7" = "Промяна";
 
-"Choose a payment method" = "Избор на метод на плащане";
+"1dc8a" = "Избор на метод на плащане";
 
-"Close card scanner" = "Затваряне на скенера за карти";
+"c0077" = "Затваряне на скенера за карти";
 
-"Code sent" = "Изпратен е код";
+"f98a1" = "Изпратен е код";
 
-"Confirm" = "Потвърждаване";
+"eebdd" = "Потвърждаване";
 
-"Confirm it's you" = "Потвърдете, че сте вие";
+"6176e" = "Потвърдете, че сте вие";
 
-"Confirm payment details" = "Потвърждаване на данните за плащане";
+"3a6b5" = "Потвърждаване на данните за плащане";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Потвърдете плащането във Вашата банка или приложение за плащане в рамките на %@, за да завършите покупката.";
+"101ef" = "Потвърдете плащането във Вашата банка или приложение за плащане в рамките на %@, за да завършите покупката.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "Потвърдете плащането в приложението на Вашата банка в рамките на %@, за да завършите покупката.";
+"a8c9a" = "Потвърдете плащането в приложението на Вашата банка в рамките на %@, за да завършите покупката.";
 
-"Confirm your CVC" = "Потвърдете своя CVC";
+"a4bdf" = "Потвърдете своя CVC";
 
-"Contact information" = "Информация за контакт";
+"cbc73" = "Информация за контакт";
 
-"Continue another way" = "Продължете по друг начин";
+"c2a49" = "Продължете по друг начин";
 
-"Create an account with Link for faster checkout across the web" = "Създаване на акаунт с Link за по-бързо финализиране на плащане в мрежата";
+"b568d" = "Създаване на акаунт с Link за по-бързо финализиране на плащане в мрежата";
 
-"Debit or credit card" = "Дебитна или кредитна карта";
+"04f63" = "Дебитна или кредитна карта";
 
-"Default" = "По подразбиране";
+"21b11" = "По подразбиране";
 
-"Default payment method" = "Начин на плащане по подразбиране";
+"4c163" = "Начин на плащане по подразбиране";
 
-"Did you mean %@? %@." = "Имахте предвид %1$@? %2$@.";
+"6d7d1" = "Имахте предвид %1$@? %2$@.";
 
-"EPS Bank" = "Банка EPS";
+"8f218" = "Банка EPS";
 
-"Enter address manually" = "Ръчно въвеждане на адрес";
+"1534f" = "Ръчно въвеждане на адрес";
 
-"Enter the code sent to %@." = "Въведете кода, изпратен на %s.";
+"1e836" = "Въведете кода, изпратен на %s.";
 
-"FPX Bank" = "Банка FPX";
+"8c73e" = "Банка FPX";
 
-"Failed to connect" = "Неуспешно свързване";
+"46c9f" = "Неуспешно свързване";
 
-"Fast, secure checkout" = "Бързо и сигурно финализиране на плащане";
+"2aeb3" = "Бързо и сигурно финализиране на плащане";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Получете %@ обратно при първо плащане по банков път. <terms>Вижте условията</terms>";
+"b70b0" = "Получете %@ обратно при първо плащане по банков път. <terms>Вижте условията</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Получете %@ обратно при плащане по банков път. <terms>Вижте условията</terms>";
+"332d2" = "Получете %@ обратно при плащане по банков път. <terms>Вижте условията</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Разбирам, че Stripe ще взима директен дебит от името на %@ и потвърждавам, че съм титуляр на сметката и единственото лице, необходимо за оправомощаване на дебитиране от тази сметка.";
+"b751e" = "Разбирам, че Stripe ще взима директен дебит от името на %@ и потвърждавам, че съм титуляр на сметката и единственото лице, необходимо за оправомощаване на дебитиране от тази сметка.";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "Вход или регистриране";
+"38f51" = "Вход или регистриране";
 
-"Log out of Link" = "Излизане от Link";
+"57083" = "Излизане от Link";
 
-"Manage SEPA debit" = "Управление на SEPA дебит";
+"a7ff3" = "Управление на SEPA дебит";
 
-"Manage US bank account" = "Управление на банкова сметка в САЩ";
+"0b654" = "Управление на банкова сметка в САЩ";
 
-"Manage bank account" = "Управляване на банковата сметка";
+"2d4ed" = "Управляване на банковата сметка";
 
-"Manage card" = "Управление на карта";
+"49e98" = "Управление на карта";
 
-"Manage cards" = "Управление на карти";
+"fe215" = "Управление на карти";
 
-"Manage payment method" = "Управляване на начина на плащане";
+"67c16" = "Управляване на начина на плащане";
 
-"Manage payment methods" = "Управление на начини на плащане";
+"cf0c9" = "Управление на начини на плащане";
 
-"Manage your payment methods" = "Управление на начините Ви на плащане";
+"74db7" = "Управление на начините Ви на плащане";
 
-"Name on card" = "Име върху картата";
+"18bf0" = "Име върху картата";
 
-"New card" = "Нова банкова карта";
+"8d3ef" = "Нова банкова карта";
 
-"New payment method" = "Нов начин на плащане";
+"c5f95" = "Нов начин на плащане";
 
-"No %@ promo" = "Няма %@ промо код";
+"99d88" = "Няма %@ промо код";
 
-"Not you?" = "Не сте вие?";
+"5b978" = "Не сте вие?";
 
-"Only card brand can be changed." = "Може да се променя само марката на картата.";
+"d1c0a" = "Може да се променя само марката на картата.";
 
-"Open your UPI app to approve your payment within %@" = "Отворете Вашето UPI приложение, за да одобрите плащане си в рамките на %@";
+"b7546" = "Отворете Вашето UPI приложение, за да одобрите плащане си в рамките на %@";
 
-"Or" = "Или";
+"0568b" = "Или";
 
-"Or pay using" = "Или платете чрез";
+"3c3f7" = "Или платете чрез";
 
-"Or pay with a card" = "Или платете с карта";
+"682d8" = "Или платете с карта";
 
-"Or use" = "Или използвайте";
+"4158c" = "Или използвайте";
 
-"Or use a card" = "Или използвайте банкова карта";
+"b529c" = "Или използвайте банкова карта";
 
-"Pay %@" = "Плащане %@";
+"964f6" = "Плащане %@";
 
-"Pay another way" = "Плащане по друг начин";
+"4bb4a" = "Плащане по друг начин";
 
-"Pay faster at %@ and thousands of businesses." = "Плащайте по-бързо в %@ и хиляди други фирми.";
+"f43bb" = "Плащайте по-бързо в %@ и хиляди други фирми.";
 
-"Pay faster everywhere Link is accepted." = "Плащайте по-бързо навсякъде, където се приема Link.";
+"d49c1" = "Плащайте по-бързо навсякъде, където се приема Link.";
 
-"Pay over time with %@" = "Плащане на разсрочени вноски с %@";
+"77196" = "Плащане на разсрочени вноски с %@";
 
-"Pay over time with Affirm" = "Плащане на разсрочени вноски с Affirm";
+"2f870" = "Плащане на разсрочени вноски с Affirm";
 
-"Pay with Link" = "Плащане с Link";
+"9d81a" = "Плащане с Link";
 
-"Pay with your bank account in just a few steps." = "Платете с банковата си сметка само с няколко стъпки.";
+"bc021" = "Платете с банковата си сметка само с няколко стъпки.";
 
-"Payment" = "Плащане";
+"7048f" = "Плащане";
 
-"Payment failed" = "Неуспешно плащане";
+"17aad" = "Неуспешно плащане";
 
-"Payment methods" = "Начини на плащане";
+"16d26" = "Начини на плащане";
 
-"Please choose a valid payment method." = "Моля, изберете валиден начин на плащане.";
+"5ddb8" = "Моля, изберете валиден начин на плащане.";
 
-"Please go back and select another payment method" = "Моля, върнете се и изберете друг начин на плащане";
+"cf6c1" = "Моля, върнете се и изберете друг начин на плащане";
 
-"Point the camera at your card." = "Насочете камерата към картата си.";
+"59a6c" = "Насочете камерата към картата си.";
 
-"Processing..." = "Обработване...";
+"f40a8" = "Обработване...";
 
-"Przelewy24 Bank" = "Банка Przelewy24";
+"b0866" = "Банка Przelewy24";
 
-"Remove card?" = "Премахване на банковата карта?";
+"ce640" = "Премахване на банковата карта?";
 
-"Remove linked account" = "Премахване на свързан акаунт";
+"a545c" = "Премахване на свързан акаунт";
 
-"Resend code" = "Повторно изпращане на кода";
+"b9745" = "Повторно изпращане на кода";
 
-"SEPA debit details cannot be changed." = "Данните на SEPA дебит не могат да бъдат променяни.";
+"a4f77" = "Данните на SEPA дебит не могат да бъдат променяни.";
 
-"Save" = "Запазване";
+"1509f" = "Запазване";
 
-"Save a new payment method" = "Запазете нов метод на плащане";
+"6b6eb" = "Запазете нов метод на плащане";
 
-"Save address" = "Запазване на адреса";
+"0cbb9" = "Запазване на адреса";
 
-"Save for future payments" = "Запазване за бъдещи плащания";
+"7990e" = "Запазване за бъдещи плащания";
 
-"Save my info for faster checkout with Link" = "Запази моята информация за по-бързо финализиране на плащане с Link";
+"8e1e1" = "Запази моята информация за по-бързо финализиране на плащане с Link";
 
-"Save payment details to %@ for future purchases" = "Запазване на платежните данни в %@ за бъдещи покупки";
+"0745e" = "Запазване на платежните данни в %@ за бъдещи покупки";
 
-"Save this account for future %@ payments" = "Запазете тази сметка за следващи %@ плащания";
+"e8c88" = "Запазете тази сметка за следващи %@ плащания";
 
-"Save your bank account in just a few steps." = "Запазете банковата си сметка само с няколко стъпки.";
+"b4042" = "Запазете банковата си сметка само с няколко стъпки.";
 
-"Save your info for secure 1-click checkout with Link" = "Запазете Вашата информация за сигурно плащане с едно щракване с Link";
+"650b1" = "Запазете Вашата информация за сигурно плащане с едно щракване с Link";
 
-"Saved" = "Запазено";
+"b5c12" = "Запазено";
 
-"Select card" = "Избор на карта";
+"59ffd" = "Избор на карта";
 
-"Select payment method" = "Избор на начин на плащане";
+"659d1" = "Избор на начин на плащане";
 
-"Select your payment method" = "Изберете метод на плащане";
+"d23e3" = "Изберете метод на плащане";
 
-"Set as default" = "Задаване по подразбиране";
+"d09b4" = "Задаване по подразбиране";
 
-"Set as default payment method" = "Задаване на начин на плащане по подразбиране";
+"af056" = "Задаване на начин на плащане по подразбиране";
 
-"Set up" = "Създаване";
+"4da10" = "Създаване";
 
-"Shipping to %@ is not supported." = "Доставки до %@ не се поддържат.";
+"b8e46" = "Доставки до %@ не се поддържат.";
 
-"Show menu" = "Показване на менюто";
+"0b0af" = "Показване на менюто";
 
-"Simple, secure one-click payments" = "Лесни и сигурни плащания с едно щракане";
+"edd6d" = "Лесни и сигурни плащания с едно щракане";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Нещо се обърка при свързването на профила ви.\nМоля, опитайте отново по-късно.";
+"33596" = "Нещо се обърка при свързването на профила ви.\nМоля, опитайте отново по-късно.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0,01 USD. След това ще получите имейл с инструкции за завършване на запазването на банковата ви сметка с %@.";
+"822ff" = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0,01 USD. След това ще получите имейл с инструкции за завършване на запазването на банковата ви сметка с %@.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0.01 USD. След това ще получите имейл с инструкции за завършване на плащането към %@.";
+"72fd8" = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0.01 USD. След това ще получите имейл с инструкции за завършване на плащането към %@.";
 
-"Tap to close" = "Докоснете, за да затворите";
+"e263d" = "Докоснете, за да затворите";
 
-"Tap to expand" = "Докоснете, за да разширите";
+"1cbaf" = "Докоснете, за да разширите";
 
-"The IBAN you entered is incomplete." = "Въведеният IBAN е непълен.";
+"477cb" = "Въведеният IBAN е непълен.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Въведеният IBAN е невалиден, \"%@\" не е поддържан код на държава.";
+"a70c6" = "Въведеният IBAN е невалиден, \"%@\" не е поддържан код на държава.";
 
-"The provided verification code has expired." = "Предоставеният код за потвърждаване е изтекъл.";
+"e32a6" = "Предоставеният код за потвърждаване е изтекъл.";
 
-"The provided verification code is incorrect." = "Предоставеният код за потвърждаване е неправилен.";
+"e8cb8" = "Предоставеният код за потвърждаване е неправилен.";
 
-"This is your default" = "Това е настройката по подразбиране.";
+"f3c56" = "Това е настройката по подразбиране.";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Този метод на плащане ще бъде премахнат, но ще остане наличен за абонаменти %@.";
+"478c1" = "Този метод на плащане ще бъде премахнат, но ще остане наличен за абонаменти %@.";
 
-"Too many attempts. Please try again in a few minutes." = "Твърде много опити. Моля, опитайте отново след няколко минути.";
+"4a754" = "Твърде много опити. Моля, опитайте отново след няколко минути.";
 
-"Unavailable for this purchase" = "Недостъпно за тази покупка";
+"19202" = "Недостъпно за тази покупка";
 
-"Update card" = "Актуализиране на банкова карта";
+"e28b5" = "Актуализиране на банкова карта";
 
-"Update payment method" = "Актуализиране на начина на плащане";
+"fa7bf" = "Актуализиране на начина на плащане";
 
-"Use billing address for shipping" = "Използвайте адреса за фактуриране за доставка";
+"4a82d" = "Използвайте адреса за фактуриране за доставка";
 
-"View more" = "Вижте повече";
+"267e5" = "Вижте повече";
 
-"Yes, update" = "Да, актуализиране";
+"fa298" = "Да, актуализиране";
 
-"Your IBAN should start with a two-letter country code." = "Вашият IBAN трябва да започва с двубуквен код на държава.";
+"42ef0" = "Вашият IBAN трябва да започва с двубуквен код на държава.";
 
-"iDEAL Bank" = "iDEAL Bank";
+"460cb" = "iDEAL Bank";

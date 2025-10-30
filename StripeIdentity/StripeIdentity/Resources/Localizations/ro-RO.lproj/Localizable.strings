@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Câteva fotografii vor fi efectuate automat la următorul pas pentru a verifica dacă sunteți dvs.";
+"40b57" = "Câteva fotografii vor fi efectuate automat la următorul pas pentru a verifica dacă sunteți dvs.";
 
-"Accepted forms of ID include" = "Formele de identificare acceptate includ";
+"a9934" = "Formele de identificare acceptate includ";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Alternativ, puteți încărca manual o fotografie a documentului dvs. de identitate.";
+"a570c" = "Alternativ, puteți încărca manual o fotografie a documentului dvs. de identitate.";
 
-"App Settings" = "Setările aplicației";
+"da645" = "Setările aplicației";
 
-"Back %@ photo successfully uploaded" = "Fotografia cu spatele %@ a fost încărcată cu succes";
+"31438" = "Fotografia cu spatele %@ a fost încărcată cu succes";
 
-"Back identity document photo successfully uploaded" = "Fotografia cu spatele documentului de identitate a fost încărcată cu succes";
+"3253a" = "Fotografia cu spatele documentului de identitate a fost încărcată cu succes";
 
-"Back of %@" = "Spatele %@";
+"128b0" = "Spatele %@";
 
-"Back of driver's license or government-issued photo ID" = "Spatele permisului de conducere sau al documentului de identitate cu fotografie emis de guvern";
+"37929" = "Spatele permisului de conducere sau al documentului de identitate cu fotografie emis de guvern";
 
-"Back of identity document" = "Spatele documentului de identitate";
+"3229d" = "Spatele documentului de identitate";
 
-"Camera permission" = "Permisiune cameră";
+"51e72" = "Permisiune cameră";
 
-"Camera unavailable" = "Cameră indisponibilă";
+"06cc3" = "Cameră indisponibilă";
 
-"Capturing…" = "Se captează…";
+"806e3" = "Se captează…";
 
-"Choose File" = "Selectare fișier";
+"d7042" = "Selectare fișier";
 
-"Consent" = "Consimțământ";
+"d37e0" = "Consimțământ";
 
-"Could not capture image" = "Nu s-a putut capta imaginea";
+"bf6e9" = "Nu s-a putut capta imaginea";
 
-"Date of Birth" = "Data nașterii";
+"fdc73" = "Data nașterii";
 
-"Date of birth does not look valid" = "Data nașterii pare a nu fi validă";
+"2baa1" = "Data nașterii pare a nu fi validă";
 
-"Details not visible" = "Datele nu sunt vizibile";
+"687cd" = "Datele nu sunt vizibile";
 
-"Flip your %@ over to the other side" = "Întoarceți %@ pe cealaltă parte";
+"e3292" = "Întoarceți %@ pe cealaltă parte";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Întoarceți permisul de conducere sau documentul de identitate cu fotografie emis de guvern pe cealaltă parte";
+"dd41b" = "Întoarceți permisul de conducere sau documentul de identitate cu fotografie emis de guvern pe cealaltă parte";
 
-"Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
+"87346" = "Întoarceți cartea de identitate pe partea cealaltă";
 
-"Front %@ photo successfully uploaded" = "Fotografia cu fața %@ a fost încărcată cu succes";
+"b57ad" = "Fotografia cu fața %@ a fost încărcată cu succes";
 
-"Front identity document photo successfully uploaded" = "Fotografia cu fața documentului de identitate a fost încărcată cu succes";
+"3a9fd" = "Fotografia cu fața documentului de identitate a fost încărcată cu succes";
 
-"Front of %@" = "Fața %@";
+"73fc5" = "Fața %@";
 
-"Front of driver's license or government-issued photo ID" = "Partea frontală a permisului de conducere sau a documentului de identitate cu fotografie emis de guvern";
+"b3d9a" = "Partea frontală a permisului de conducere sau a documentului de identitate cu fotografie emis de guvern";
 
-"Front of driver's license or passport" = "Partea frontală a permisului de conducere sau a pașaportului";
+"8d188" = "Partea frontală a permisului de conducere sau a pașaportului";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Partea frontală a permisului de conducere, a pașaportului sau a documentului de identitate cu fotografie emis de guvern";
+"070b5" = "Partea frontală a permisului de conducere, a pașaportului sau a documentului de identitate cu fotografie emis de guvern";
 
-"Front of identity document" = "Partea frontală a documentului de identitate";
+"8562c" = "Partea frontală a documentului de identitate";
 
-"Front of passport or government-issued photo ID" = "Partea frontală a pașaportului sau a documentului de identitate cu fotografie emis de guvern";
+"bb2ee" = "Partea frontală a pașaportului sau a documentului de identitate cu fotografie emis de guvern";
 
-"Get ready to scan your photo ID" = "Pregătiți-vă să vă scanați documentul de identitate cu fotografie";
+"83016" = "Pregătiți-vă să vă scanați documentul de identitate cu fotografie";
 
-"Get ready to take a selfie" = "Pregătiți-vă pentru a efectua un selfie";
+"9e29f" = "Pregătiți-vă pentru a efectua un selfie";
 
-"Go Back" = "Înapoi";
+"b8d99" = "Înapoi";
 
-"Hold still, scanning" = "Nu mișcați, se scanează";
+"b63f6" = "Nu mișcați, se scanează";
 
-"I'm ready" = "Sunt gata";
+"d5b05" = "Sunt gata";
 
-"ID Number" = "Număr de identificare";
+"a403d" = "Număr de identificare";
 
-"Individual CPF" = "CPF persoană fizică";
+"6212a" = "CPF persoană fizică";
 
-"Keep ID level" = "Țineți documentul de identitate drept";
+"6be11" = "Țineți documentul de identitate drept";
 
-"Last 4 of Social Security number" = "Ultimele 4 cifre ale numărului de securitate socială";
+"77dd8" = "Ultimele 4 cifre ale numărului de securitate socială";
 
-"Loading" = "Se încarcă";
+"dc3808" = "Se încarcă";
 
-"Make sure all details are visible and focus" = "Asigurați-vă că toate detaliile sunt vizibile și focalizați";
+"859af" = "Asigurați-vă că toate detaliile sunt vizibile și focalizați";
 
-"Make sure you're in a well lit space." = "Asigurați-vă că vă aflați într-un spațiu bine luminat.";
+"6c2aa" = "Asigurați-vă că vă aflați într-un spațiu bine luminat.";
 
-"Move closer" = "Apropiați";
+"1da05" = "Apropiați";
 
-"Move farther" = "Depărtați";
+"73333" = "Depărtați";
 
-"Move to a darker area" = "Mutați-vă într-o zonă mai întunecată";
+"4687a" = "Mutați-vă într-o zonă mai întunecată";
 
-"Move to a well-lit area" = "Mutați-vă într-o zonă bine luminată";
+"f579f" = "Mutați-vă într-o zonă bine luminată";
 
-"NRIC or FIN" = "NRIC sau FIN";
+"32e72" = "NRIC sau FIN";
 
-"No document detected" = "Nu s-a detectat niciun document";
+"b376f" = "Nu s-a detectat niciun document";
 
-"Personal ID number" = "Număr de identificare personal";
+"fae7d" = "Număr de identificare personal";
 
-"Personal Information" = "Informații cu caracter personal";
+"c4b37" = "Informații cu caracter personal";
 
-"Phone Number" = "Număr de telefon";
+"72dba" = "Număr de telefon";
 
-"Phone Verification" = "Verificare număr de telefon";
+"cb074" = "Verificare număr de telefon";
 
-"Photo Library" = "Galerie foto";
+"e0b2a" = "Galerie foto";
 
-"Please upload images of the front and back of your %@" = "Vă rugăm să încărcați imagini cu fața și spatele %@";
+"03fa9" = "Vă rugăm să încărcați imagini cu fața și spatele %@";
 
-"Please upload images of the front and back of your identity document" = "Vă rugăm să încărcați imagini cu fața și spatele documentului de identitate";
+"8c273" = "Vă rugăm să încărcați imagini cu fața și spatele documentului de identitate";
 
-"Position your %@ in the center of the frame" = "Poziționați %@ în centrul cadrului";
+"ceab8" = "Poziționați %@ în centrul cadrului";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Poziționați permisul de conducere sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
+"12559" = "Poziționați permisul de conducere sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
 
-"Position your driver's license or passport in the center of the frame" = "Poziționați permisul de conducere sau pașaportul în centrul cadrului";
+"453ad" = "Poziționați permisul de conducere sau pașaportul în centrul cadrului";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Poziționați permisul de conducere, pașaportul sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
+"ad934" = "Poziționați permisul de conducere, pașaportul sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
 
-"Position your face in the center of the frame." = "Poziționați-vă fața în centrul cadrului.";
+"6f758" = "Poziționați-vă fața în centrul cadrului.";
 
-"Position your identity document in the center of the frame" = "Poziționați documentul de identitate în centrul cadrului";
+"68f51" = "Poziționați documentul de identitate în centrul cadrului";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Poziționați pașaportul sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
+"74830" = "Poziționați pașaportul sau documentul de identitate cu fotografie emis de guvern în centrul cadrului";
 
-"Retake Photos" = "Faceți din nou fotografii";
+"16681" = "Faceți din nou fotografii";
 
-"Scan" = "Scanare";
+"ea1c5" = "Scanare";
 
-"Scanned" = "Scanat";
+"e9b3b" = "Scanat";
 
-"Select" = "Selectare";
+"2a780" = "Selectare";
 
-"Select a location to upload the back of your identity document from" = "Selectați o locație din care să încărcați verso-ului documentului dvs. de identitate";
+"568f3" = "Selectați o locație din care să încărcați verso-ului documentului dvs. de identitate";
 
-"Select a location to upload the front of your identity document from" = "Selectați o locație din care să încărcați partea frontală a documentului dvs. de identitate";
+"a352a" = "Selectați o locație din care să încărcați partea frontală a documentului dvs. de identitate";
 
-"Select back %@ photo" = "Selectați fotografia cu spatele %@";
+"0dfa8" = "Selectați fotografia cu spatele %@";
 
-"Select back identity document photo" = "Selectați fotografia cu spatele documentului de identitate";
+"38aec" = "Selectați fotografia cu spatele documentului de identitate";
 
-"Select front %@ photo" = "Selectați fotografia cu fața %@";
+"1ca11" = "Selectați fotografia cu fața %@";
 
-"Select front identity document photo" = "Selectați fotografia cu fața documentului de identitate";
+"5c25a" = "Selectați fotografia cu fața documentului de identitate";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Capturi de tip selfie";
+"ccd67" = "Capturi de tip selfie";
 
-"Selfie captures are complete" = "Capturile de tip selfie sunt complete";
+"a7b36" = "Capturile de tip selfie sunt complete";
 
-"Take Photo" = "Faceți o fotografie";
+"1ca36" = "Faceți o fotografie";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Imaginile documentului dvs. de identitate nu au fost salvate. Doriți să ieșiți?";
+"b6b76" = "Imaginile documentului dvs. de identitate nu au fost salvate. Doriți să ieșiți?";
 
-"There was an error accessing the camera." = "A apărut o eroare la accesarea camerei.";
+"1eda8" = "A apărut o eroare la accesarea camerei.";
 
-"Try Again" = "Încercați din nou";
+"df0fe" = "Încercați din nou";
 
-"Try reduce glare and make ID visible" = "Încercați să reduceți strălucirea și să faceți vizibil documentul de identitate";
+"ffd3d" = "Încercați să reduceți strălucirea și să faceți vizibil documentul de identitate";
 
-"Unable to establish a connection." = "Nu s-a putut stabili o conexiune.";
+"77ee9" = "Nu s-a putut stabili o conexiune.";
 
-"Unsaved changes" = "Modificări nesalvate";
+"a710c" = "Modificări nesalvate";
 
-"Upload" = "Încărcare";
+"865e8" = "Încărcare";
 
-"Upload a Photo" = "Încărcați o fotografie";
+"f0c8a" = "Încărcați o fotografie";
 
-"Upload your %@" = "Încărcați %@";
+"7f6c1" = "Încărcați %@";
 
-"Upload your photo ID" = "Încărcați documentul de identitate cu fotografie";
+"40a76" = "Încărcați documentul de identitate cu fotografie";
 
-"Uploading back %@ photo" = "Se încarcă fotografia cu spatele %@";
+"eaebd" = "Se încarcă fotografia cu spatele %@";
 
-"Uploading back identity document photo" = "Se încarcă fotografia cu spatele documentului de identitate";
+"e16b7" = "Se încarcă fotografia cu spatele documentului de identitate";
 
-"Uploading front %@ photo" = "Se încarcă fotografia cu fața %@";
+"93af2" = "Se încarcă fotografia cu fața %@";
 
-"Uploading front identity document photo" = "Se încarcă fotografia cu fața documentului de identitate";
+"5dfbf" = "Se încarcă fotografia cu fața documentului de identitate";
 
-"Verify your identity" = "Verificați-vă identitatea";
+"ed32a" = "Verificați-vă identitatea";
 
-"We could not capture a high-quality image." = "Nu am putut captura o imagine de înaltă calitate.";
+"55e29" = "Nu am putut captura o imagine de înaltă calitate.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Avem nevoie de permisiunea de a utiliza camera dvs. Vă rugăm să permiteți accesul la cameră în setările aplicației.";
+"a98b4" = "Avem nevoie de permisiunea de a utiliza camera dvs. Vă rugăm să permiteți accesul la cameră în setările aplicației.";
 
-"Welcome" = "Bine ați venit";
+"0e222" = "Bine ați venit";
 
-"You can either try again or upload an image from your device." = "Puteți să încercați din nou sau să încărcați o imagine de pe dispozitivul dvs.";
+"348a7" = "Puteți să încercați din nou sau să încărcați o imagine de pe dispozitivul dvs.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Fotografiile dvs. de tip selfie nu au fost salvate. Doriți să ieșiți?";
+"b892f" = "Fotografiile dvs. de tip selfie nu au fost salvate. Doriți să ieșiți?";
 
-"driver's license" = "permis de conducere";
+"cadf1" = "permis de conducere";
 
-"government-issued photo ID" = "document de identitate cu fotografie emis de guvern";
+"29fd8" = "document de identitate cu fotografie emis de guvern";
 
-"passport" = "pașaport";
+"cbc47" = "pașaport";

@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Vyskytla sa chyba. Skúste to znova.";
+"9c170" = "Vyskytla sa chyba. Skúste to znova.";
 
-"Card brand was not updated. Please try again." = "Značka karty nebola aktualizovaná. Skúste to znova.";
+"4bc73" = "Značka karty nebola aktualizovaná. Skúste to znova.";
 
-"Close" = "Zatvoriť";
+"7d9eb" = "Zatvoriť";
 
-"Default payment method was not updated. Please try again." = "Predvolený spôsob platby nebol aktualizovaný. Skúste to znova.";
+"3048d" = "Predvolený spôsob platby nebol aktualizovaný. Skúste to znova.";
 
-"Scan Card" = "Naskenovať kartu";
+"b60b5" = "Naskenovať kartu";
 
-"Scan card" = "Naskenovať kartu";
+"ea2fe" = "Naskenovať kartu";
 
-"The IBAN you entered is invalid." = "Zadaný IBAN je neplatný.";
+"ee81e" = "Zadaný IBAN je neplatný.";
 
-"There was an error processing your card -- try again in a few seconds" = "Pri spracovaní vašej karty sa vyskytla chyba -- skúste znova o niekoľko sekúnd";
+"fa47c" = "Pri spracovaní vašej karty sa vyskytla chyba -- skúste znova o niekoľko sekúnd";
 
-"There was an unexpected error -- try again in a few seconds" = "Vyskytla sa neočakávaná chyba -- skúste znova o niekoľko sekúnd";
+"c98a4" = "Vyskytla sa neočakávaná chyba -- skúste znova o niekoľko sekúnd";
 
-"Try again" = "Skúsiť znova";
+"d8b83" = "Skúsiť znova";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Na overenie údajov o vašej karte používame službu Stripe. Spoločnosť Stripe môže používať a uchovávať vaše údaje v súlade so zásadami ochrany osobných údajov. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ďalšie informácie</u></a>";
+"96fe7" = "Na overenie údajov o vašej karte používame službu Stripe. Spoločnosť Stripe môže používať a uchovávať vaše údaje v súlade so zásadami ochrany osobných údajov. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ďalšie informácie</u></a>";
 
-"Your card has expired" = "Platnosť vašej karty vypršala";
+"f5c35" = "Platnosť vašej karty vypršala";
 
-"Your card was declined" = "Vaša karta bola odmietnutá";
+"b9821" = "Vaša karta bola odmietnutá";
 
-"Your card's expiration month is invalid" = "Mesiac ukončenia platnosti vašej karty je neplatný";
+"e02cf" = "Mesiac ukončenia platnosti vašej karty je neplatný";
 
-"Your card's expiration year is invalid" = "Rok ukončenia platnosti vašej karty je neplatný";
+"53311" = "Rok ukončenia platnosti vašej karty je neplatný";
 
-"Your card's number is invalid" = "Číslo vašej karty je neplatné";
+"c433c" = "Číslo vašej karty je neplatné";
 
-"Your card's security code is invalid" = "Bezpečnostný kód vašej karty je neplatný";
+"15f5b" = "Bezpečnostný kód vašej karty je neplatný";
 
-"Your name is invalid." = "Vaše meno je neplatné.";
+"b1d57" = "Vaše meno je neplatné.";
 
-"Your payment method was declined." = "Váš spôsob platby bol odmietnutý.";
+"3209d" = "Váš spôsob platby bol odmietnutý.";

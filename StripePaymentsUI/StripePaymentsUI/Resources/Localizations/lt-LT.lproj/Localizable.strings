@@ -1,75 +1,75 @@
-"%1$@ Card" = "„%1$@“ kortelė";
+"fbfa6" = "„%1$@“ kortelė";
 
-"%1$@ Credit" = "„%1$@“ kredito";
+"a11b0" = "„%1$@“ kredito";
 
-"%1$@ Debit" = "„%1$@“ debeto";
+"95233" = "„%1$@“ debeto";
 
-"%1$@ Prepaid" = "„%1$@“ išankstinio mokėjimo";
+"c90ba" = "„%1$@“ išankstinio mokėjimo";
 
-"%1$@ account ending in %2$@" = "%1$@ sąskaita, kurios paskutiniai skaičiai %2$@";
+"3b24a" = "%1$@ sąskaita, kurios paskutiniai skaičiai %2$@";
 
-"%1$@ ending in %2$@" = "%1$@, kuri baigiasi %2$@";
+"f5b21" = "%1$@, kuri baigiasi %2$@";
 
-"%1$@ is not accepted" = "\"%1$@\" nepriimamas";
+"29adf" = "\"%1$@\" nepriimamas";
 
-"Address line 2 (optional)" = "2 adreso eilutė (pasirenkama)";
+"9ada7" = "2 adreso eilutė (pasirenkama)";
 
-"Apple Pay" = "\"Apple Pay\"";
+"9bb3a" = "\"Apple Pay\"";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Banko sąskaita";
+"c6f64" = "Banko sąskaita";
 
-"Billing address" = "Atsiskaitymo adresas";
+"1f516" = "Atsiskaitymo adresas";
 
-"Billing details" = "Sąskaitų faktūrų išrašymo informacija";
+"7c928" = "Sąskaitų faktūrų išrašymo informacija";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Kortelės duomenys";
+"fca47" = "Kortelės duomenys";
 
-"Card number" = "Kortelės numeris";
+"816fc" = "Kortelės numeris";
 
-"Confirm your %@" = "Patvirtinkite savo %@";
+"002d7" = "Patvirtinkite savo %@";
 
-"Invalid data." = "Netinkami duomenys.";
+"da175" = "Netinkami duomenys.";
 
-"MM / YY" = "mm / MM";
+"58f4a" = "mm / MM";
 
-"MM/YY" = "mm / MM";
+"1b5f6" = "mm / MM";
 
-"Postal Code" = "Pašto kodas";
+"8198b" = "Pašto kodas";
 
-"Shipping Address" = "Siuntimo adresas";
+"6e244" = "Siuntimo adresas";
 
-"State / Province / Region" = "Valstija / provincija / regionas";
+"649f1" = "Valstija / provincija / regionas";
 
-"The BSB you entered is invalid." = "Įvestas netinkamas BSB numeris.";
+"dfa21" = "Įvestas netinkamas BSB numeris.";
 
-"The selected brand is not allowed" = "Pasirinktas prekės ženklas neleidžiamas";
+"aaf53" = "Pasirinktas prekės ženklas neleidžiamas";
 
-"To scan your card, allow camera access in Settings." = "Kad nuskaitytumėte kortelę, nustatymuose suteikite prieigą fotoaparatui.";
+"9f2d9" = "Kad nuskaitytumėte kortelę, nustatymuose suteikite prieigą fotoaparatui.";
 
-"Your card has expired." = "Jūsų kortelė baigė galioti.";
+"393e6" = "Jūsų kortelė baigė galioti.";
 
-"Your card number is incomplete." = "Neišsamus kortelės numeris.";
+"7e5ae" = "Neišsamus kortelės numeris.";
 
-"Your card number is invalid." = "Netinkamas kortelės numeris.";
+"3c122" = "Netinkamas kortelės numeris.";
 
-"Your card's expiration date is incomplete." = "Neišsami kortelės galiojimo pabaigos data.";
+"a2036" = "Neišsami kortelės galiojimo pabaigos data.";
 
-"Your card's expiration date is invalid." = "Netinkama kortelės galiojimo pabaigos data.";
+"6a457" = "Netinkama kortelės galiojimo pabaigos data.";
 
-"Your card's expiration month is invalid." = "Negaliojantis kortelės galiojimo pabaigos mėnuo.";
+"e47c0" = "Negaliojantis kortelės galiojimo pabaigos mėnuo.";
 
-"Your card's expiration year is invalid." = "Kortelės galiojimo pabaigos metai neteisingi.";
+"36ae2" = "Kortelės galiojimo pabaigos metai neteisingi.";
 
-"Your card's security code is incomplete." = "Neišsamus kortelės saugos kodas.";
+"300dd" = "Neišsamus kortelės saugos kodas.";
 
-"Your card's security code is invalid." = "Kortelės saugos kodas negalioja.";
+"394fd" = "Kortelės saugos kodas negalioja.";
 
-"card number" = "kortelės numeris";
+"58da6" = "kortelės numeris";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "galiojimo pabaigos data";
+"b34dd" = "galiojimo pabaigos data";

@@ -201,8 +201,7 @@ extension BiometricConsentViewController {
 
     fileprivate func updateUI() {
         configure(
-            backButtonTitle: STPLocalizedString(
-                "Consent",
+            backButtonTitle: STPLocalizedString("d37e0",
                 "Back button title for returning to consent screen of Identity verification"
             ),
             viewModel: flowViewModel

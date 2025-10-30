@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Awtomatikong kukunin ang ilang larawan sa susunod na hakbang upang patunayan na ikaw nga ito";
+"40b57" = "Awtomatikong kukunin ang ilang larawan sa susunod na hakbang upang patunayan na ikaw nga ito";
 
-"Accepted forms of ID include" = "Kasama sa mga tinatanggap na uri ng ID";
+"a9934" = "Kasama sa mga tinatanggap na uri ng ID";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Bilang alternatibo, maaari kang manu-manong mag-upload ng larawan ng dokumento ng iyong pagkakakilanlan.";
+"a570c" = "Bilang alternatibo, maaari kang manu-manong mag-upload ng larawan ng dokumento ng iyong pagkakakilanlan.";
 
-"App Settings" = "Mga Setting ng App";
+"da645" = "Mga Setting ng App";
 
-"Back %@ photo successfully uploaded" = "Matagumpay na na-upload ang likod ng %@ larawan";
+"31438" = "Matagumpay na na-upload ang likod ng %@ larawan";
 
-"Back identity document photo successfully uploaded" = "Matagumpay na na-upload ang larawan sa likod ng dokumento ng pagkakakilanlan";
+"3253a" = "Matagumpay na na-upload ang larawan sa likod ng dokumento ng pagkakakilanlan";
 
-"Back of %@" = "Likod ng %@";
+"128b0" = "Likod ng %@";
 
-"Back of driver's license or government-issued photo ID" = "Likod ng lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno";
+"37929" = "Likod ng lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno";
 
-"Back of identity document" = "Likod ng dokumento ng pagkakakilanlan";
+"3229d" = "Likod ng dokumento ng pagkakakilanlan";
 
-"Camera permission" = "Pahintulot ng kamera";
+"51e72" = "Pahintulot ng kamera";
 
-"Camera unavailable" = "Hindi magamit ang kamera";
+"06cc3" = "Hindi magamit ang kamera";
 
-"Capturing…" = "Kinukunan...";
+"806e3" = "Kinukunan...";
 
-"Choose File" = "Pumili ng File";
+"d7042" = "Pumili ng File";
 
-"Consent" = "Pahintulot";
+"d37e0" = "Pahintulot";
 
-"Could not capture image" = "Hindi makunan ng imahe";
+"bf6e9" = "Hindi makunan ng imahe";
 
-"Date of Birth" = "Petsa ng Kapanganakan";
+"fdc73" = "Petsa ng Kapanganakan";
 
-"Date of birth does not look valid" = "Mukhang hindi balido ang petsa ng kapanganakan";
+"2baa1" = "Mukhang hindi balido ang petsa ng kapanganakan";
 
-"Details not visible" = "Hindi nakikita ang mga detalye";
+"687cd" = "Hindi nakikita ang mga detalye";
 
-"Flip your %@ over to the other side" = "I-flip ang %@ sa kabilang side";
+"e3292" = "I-flip ang %@ sa kabilang side";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "I-flip ang iyong lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno sa kabilang panig";
+"dd41b" = "I-flip ang iyong lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno sa kabilang panig";
 
-"Flip your identity card over to the other side" = "Baliktarin ang iyong kard ng pagkakakilanlan";
+"87346" = "Baliktarin ang iyong kard ng pagkakakilanlan";
 
-"Front %@ photo successfully uploaded" = "Matagumpay na na-upload ang harap ng %@ larawan";
+"b57ad" = "Matagumpay na na-upload ang harap ng %@ larawan";
 
-"Front identity document photo successfully uploaded" = "Matagumpay na na-upload ang larawan sa harap ng dokumento ng pagkakakilanlan";
+"3a9fd" = "Matagumpay na na-upload ang larawan sa harap ng dokumento ng pagkakakilanlan";
 
-"Front of %@" = "Harap ng %@";
+"73fc5" = "Harap ng %@";
 
-"Front of driver's license or government-issued photo ID" = "Harap ng lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno";
+"b3d9a" = "Harap ng lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno";
 
-"Front of driver's license or passport" = "Harap ng lisensya sa pagmamaneho o pasaporte";
+"8d188" = "Harap ng lisensya sa pagmamaneho o pasaporte";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Harap ng lisensya sa pagmamaneho, pasaporte, o photo ID na inisyu ng gobyerno";
+"070b5" = "Harap ng lisensya sa pagmamaneho, pasaporte, o photo ID na inisyu ng gobyerno";
 
-"Front of identity document" = "Harap ng dokumento ng pagkakakilanlan";
+"8562c" = "Harap ng dokumento ng pagkakakilanlan";
 
-"Front of passport or government-issued photo ID" = "Harap ng pasaporte o photo ID na inisyu ng gobyerno";
+"bb2ee" = "Harap ng pasaporte o photo ID na inisyu ng gobyerno";
 
-"Get ready to scan your photo ID" = "Maghandang i-scan ang iyong photo ID";
+"83016" = "Maghandang i-scan ang iyong photo ID";
 
-"Get ready to take a selfie" = "Maghanda na kumuha ng selfie";
+"9e29f" = "Maghanda na kumuha ng selfie";
 
-"Go Back" = "Bumalik";
+"b8d99" = "Bumalik";
 
-"Hold still, scanning" = "Huwag gumalaw, ini-iscan";
+"b63f6" = "Huwag gumalaw, ini-iscan";
 
-"I'm ready" = "Handa na ako";
+"d5b05" = "Handa na ako";
 
-"ID Number" = "Numero ng ID";
+"a403d" = "Numero ng ID";
 
-"Individual CPF" = "Indibidwal na CPF";
+"6212a" = "Indibidwal na CPF";
 
-"Keep ID level" = "Panatilihin ang lebel ng ID";
+"6be11" = "Panatilihin ang lebel ng ID";
 
-"Last 4 of Social Security number" = "Huling 4 ng numero ng Social Security";
+"77dd8" = "Huling 4 ng numero ng Social Security";
 
-"Loading" = "Niloload";
+"dc3808" = "Niloload";
 
-"Make sure all details are visible and focus" = "Siguraduhing nakikita at nakapokus ang lahat ng mga detalye";
+"859af" = "Siguraduhing nakikita at nakapokus ang lahat ng mga detalye";
 
-"Make sure you're in a well lit space." = "Siguraduhing ikaw ay nasa maliwanag na lugar.";
+"6c2aa" = "Siguraduhing ikaw ay nasa maliwanag na lugar.";
 
-"Move closer" = "Ilapit";
+"1da05" = "Ilapit";
 
-"Move farther" = "Ilayo pa";
+"73333" = "Ilayo pa";
 
-"Move to a darker area" = "Lumipat sa mas madilim na lugar";
+"4687a" = "Lumipat sa mas madilim na lugar";
 
-"Move to a well-lit area" = "Lumipat sa maliwanag na lugar";
+"f579f" = "Lumipat sa maliwanag na lugar";
 
-"NRIC or FIN" = "NRIC o FIN";
+"32e72" = "NRIC o FIN";
 
-"No document detected" = "Walang nakitang dokumento";
+"b376f" = "Walang nakitang dokumento";
 
-"Personal ID number" = "Numero ng Personal na ID";
+"fae7d" = "Numero ng Personal na ID";
 
-"Personal Information" = "Personal na Impormasyon";
+"c4b37" = "Personal na Impormasyon";
 
-"Phone Number" = "Numero ng Telepono";
+"72dba" = "Numero ng Telepono";
 
-"Phone Verification" = "Pag-verify sa Telepono";
+"cb074" = "Pag-verify sa Telepono";
 
-"Photo Library" = "Library ng Larawan";
+"e0b2a" = "Library ng Larawan";
 
-"Please upload images of the front and back of your %@" = "I-upload ang mga imahe ng harap at likod ng %@ mo";
+"03fa9" = "I-upload ang mga imahe ng harap at likod ng %@ mo";
 
-"Please upload images of the front and back of your identity document" = "Mangyaring mag-upload ng mga larawan ng harap at likod ng iyong dokumento ng pagkakakilanlan";
+"8c273" = "Mangyaring mag-upload ng mga larawan ng harap at likod ng iyong dokumento ng pagkakakilanlan";
 
-"Position your %@ in the center of the frame" = "Ilagay ang %@ mo sa gitna ng frame";
+"ceab8" = "Ilagay ang %@ mo sa gitna ng frame";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Ilagay ang iyong lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno sa gitna ng frame";
+"12559" = "Ilagay ang iyong lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno sa gitna ng frame";
 
-"Position your driver's license or passport in the center of the frame" = "Ilagay ang iyong lisensya sa pagmamaneho o pasaporte sa gitna ng frame";
+"453ad" = "Ilagay ang iyong lisensya sa pagmamaneho o pasaporte sa gitna ng frame";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Ilagay ang iyong lisensya sa pagmamaneho, pasaporte, o photo ID na inisyu ng gobyerno sa gitna ng frame";
+"ad934" = "Ilagay ang iyong lisensya sa pagmamaneho, pasaporte, o photo ID na inisyu ng gobyerno sa gitna ng frame";
 
-"Position your face in the center of the frame." = "Iposisyon ang iyong mukha sa gitna ng frame.";
+"6f758" = "Iposisyon ang iyong mukha sa gitna ng frame.";
 
-"Position your identity document in the center of the frame" = "Ilagay ang iyong dokumento ng pagkakakilanlan sa gitna ng frame";
+"68f51" = "Ilagay ang iyong dokumento ng pagkakakilanlan sa gitna ng frame";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Ilagay ang iyong pasaporte o photo ID na inisyu ng gobyerno sa gitna ng frame";
+"74830" = "Ilagay ang iyong pasaporte o photo ID na inisyu ng gobyerno sa gitna ng frame";
 
-"Retake Photos" = "Kunan Muli Ang Mga Larawan";
+"16681" = "Kunan Muli Ang Mga Larawan";
 
-"Scan" = "I-scan";
+"ea1c5" = "I-scan";
 
-"Scanned" = "Na-scan na";
+"e9b3b" = "Na-scan na";
 
-"Select" = "Piliin";
+"2a780" = "Piliin";
 
-"Select a location to upload the back of your identity document from" = "Pumili ng lokasyon kung saan i-a-upload ang likod ng iyong dokumento ng pagkakakilanlan";
+"568f3" = "Pumili ng lokasyon kung saan i-a-upload ang likod ng iyong dokumento ng pagkakakilanlan";
 
-"Select a location to upload the front of your identity document from" = "Pumili ng lokasyon kung saan i-a-upload ang harap ng iyong dokumento ng pagkakakilanlan";
+"a352a" = "Pumili ng lokasyon kung saan i-a-upload ang harap ng iyong dokumento ng pagkakakilanlan";
 
-"Select back %@ photo" = "Piliin ang larawan sa likod ng %@";
+"0dfa8" = "Piliin ang larawan sa likod ng %@";
 
-"Select back identity document photo" = "Piliin ang larawan sa likod ng dokumento ng pagkakakilanlan";
+"38aec" = "Piliin ang larawan sa likod ng dokumento ng pagkakakilanlan";
 
-"Select front %@ photo" = "Piliin ang larawan sa harap ng %@";
+"1ca11" = "Piliin ang larawan sa harap ng %@";
 
-"Select front identity document photo" = "Piliin ang larawan sa harap ng dokumento ng pagkakakilanlan";
+"5c25a" = "Piliin ang larawan sa harap ng dokumento ng pagkakakilanlan";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Mga pagkuha ng selfie";
+"ccd67" = "Mga pagkuha ng selfie";
 
-"Selfie captures are complete" = "Kumpleto na ang mga pagkuha ng selfie";
+"a7b36" = "Kumpleto na ang mga pagkuha ng selfie";
 
-"Take Photo" = "Kumuha ng larawan";
+"1ca36" = "Kumuha ng larawan";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Hindi na-save ang mga imahe ng iyong dokumento ng pagkakakilanlan. Gusto mo bang umalis?";
+"b6b76" = "Hindi na-save ang mga imahe ng iyong dokumento ng pagkakakilanlan. Gusto mo bang umalis?";
 
-"There was an error accessing the camera." = "Nagkaroon ng error sa pag-access sa kamera";
+"1eda8" = "Nagkaroon ng error sa pag-access sa kamera";
 
-"Try Again" = "Subukan Muli";
+"df0fe" = "Subukan Muli";
 
-"Try reduce glare and make ID visible" = "Subukang bawasan ang pagkasilaw at gawing nakikita ang ID";
+"ffd3d" = "Subukang bawasan ang pagkasilaw at gawing nakikita ang ID";
 
-"Unable to establish a connection." = "Hindi mapagtibay ang koneksiyon.";
+"77ee9" = "Hindi mapagtibay ang koneksiyon.";
 
-"Unsaved changes" = "Mga hindi na-save na pagbabago";
+"a710c" = "Mga hindi na-save na pagbabago";
 
-"Upload" = "I-upload";
+"865e8" = "I-upload";
 
-"Upload a Photo" = "Mag-upload ng Larawan";
+"f0c8a" = "Mag-upload ng Larawan";
 
-"Upload your %@" = "I-upload ang %@ mo";
+"7f6c1" = "I-upload ang %@ mo";
 
-"Upload your photo ID" = "I-upload ang iyong photo ID";
+"40a76" = "I-upload ang iyong photo ID";
 
-"Uploading back %@ photo" = "Ina-upload ang larawan sa likod ng %@";
+"eaebd" = "Ina-upload ang larawan sa likod ng %@";
 
-"Uploading back identity document photo" = "Ina-upload ang larawan sa likod ng dokumento ng pagkakakilanlan";
+"e16b7" = "Ina-upload ang larawan sa likod ng dokumento ng pagkakakilanlan";
 
-"Uploading front %@ photo" = "Ina-upload ang larawan sa harap ng %@";
+"93af2" = "Ina-upload ang larawan sa harap ng %@";
 
-"Uploading front identity document photo" = "Ina-upload ang larawan sa harap ng dokumento ng pagkakakilanlan";
+"5dfbf" = "Ina-upload ang larawan sa harap ng dokumento ng pagkakakilanlan";
 
-"Verify your identity" = "Patunayan ang iyong pagkakakilanlan";
+"ed32a" = "Patunayan ang iyong pagkakakilanlan";
 
-"We could not capture a high-quality image." = "Hindi kami makakuha ng mataas na kalidad na imahe.";
+"55e29" = "Hindi kami makakuha ng mataas na kalidad na imahe.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Kailangan namin ng pahintulot na gamitin ang iyong kamera. Mangyaring payagan ang pag-access ng kamera sa mga setting ng app.";
+"a98b4" = "Kailangan namin ng pahintulot na gamitin ang iyong kamera. Mangyaring payagan ang pag-access ng kamera sa mga setting ng app.";
 
-"Welcome" = "Maligayang bati";
+"0e222" = "Maligayang bati";
 
-"You can either try again or upload an image from your device." = "Puwede mong subukan muli o mag-upload ng imahe mula sa iyong device.";
+"348a7" = "Puwede mong subukan muli o mag-upload ng imahe mula sa iyong device.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Hindi pa na-save Ang iyong mga imaheng selfie. Gusto mo bang umalis?";
+"b892f" = "Hindi pa na-save Ang iyong mga imaheng selfie. Gusto mo bang umalis?";
 
-"driver's license" = "lisensya sa pagmamaneho";
+"cadf1" = "lisensya sa pagmamaneho";
 
-"government-issued photo ID" = "inisyu ng gobyerno na photo ID";
+"29fd8" = "inisyu ng gobyerno na photo ID";
 
-"passport" = "pasaporte";
+"cbc47" = "pasaporte";

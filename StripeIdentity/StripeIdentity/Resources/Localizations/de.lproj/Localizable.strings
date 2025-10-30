@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Im nächsten Schritt werden automatisch einige Fotos gemacht, um Ihre Identität zu verifizieren";
+"40b57" = "Im nächsten Schritt werden automatisch einige Fotos gemacht, um Ihre Identität zu verifizieren";
 
-"Accepted forms of ID include" = "Zulässige Ausweisdokumente sind";
+"a9934" = "Zulässige Ausweisdokumente sind";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Alternativ können Sie manuell ein Foto Ihres Ausweisdokuments hochladen.";
+"a570c" = "Alternativ können Sie manuell ein Foto Ihres Ausweisdokuments hochladen.";
 
-"App Settings" = "App-Einstellungen";
+"da645" = "App-Einstellungen";
 
-"Back %@ photo successfully uploaded" = "Foto der Rückseite Ihres %@ erfolgreich hochgeladen";
+"31438" = "Foto der Rückseite Ihres %@ erfolgreich hochgeladen";
 
-"Back identity document photo successfully uploaded" = "Foto der Rückseite Ihres Ausweisdokuments erfolgreich hochgeladen";
+"3253a" = "Foto der Rückseite Ihres Ausweisdokuments erfolgreich hochgeladen";
 
-"Back of %@" = "Rückseite Ihres %@";
+"128b0" = "Rückseite Ihres %@";
 
-"Back of driver's license or government-issued photo ID" = "Rückseite des Führerscheins oder des amtlichen Lichtbildausweises";
+"37929" = "Rückseite des Führerscheins oder des amtlichen Lichtbildausweises";
 
-"Back of identity document" = "Rückseite des Ausweisdokuments";
+"3229d" = "Rückseite des Ausweisdokuments";
 
-"Camera permission" = "Kameraberechtigung";
+"51e72" = "Kameraberechtigung";
 
-"Camera unavailable" = "Kamera nicht verfügbar";
+"06cc3" = "Kamera nicht verfügbar";
 
-"Capturing…" = "Aufnahme läuft ...";
+"806e3" = "Aufnahme läuft ...";
 
-"Choose File" = "Datei auswählen";
+"d7042" = "Datei auswählen";
 
-"Consent" = "Zustimmen";
+"d37e0" = "Zustimmen";
 
-"Could not capture image" = "Aufnahme nicht möglich";
+"bf6e9" = "Aufnahme nicht möglich";
 
-"Date of Birth" = "Geburtsdatum";
+"fdc73" = "Geburtsdatum";
 
-"Date of birth does not look valid" = "Das Geburtsdatum scheint ungültig zu sein";
+"2baa1" = "Das Geburtsdatum scheint ungültig zu sein";
 
-"Details not visible" = "Details sind nicht erkennbar";
+"687cd" = "Details sind nicht erkennbar";
 
-"Flip your %@ over to the other side" = "Drehen Sie Ihr %@ auf die andere Seite";
+"e3292" = "Drehen Sie Ihr %@ auf die andere Seite";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Führerschein oder amtlichen Lichtbildausweis auf die andere Seite umdrehen";
+"dd41b" = "Führerschein oder amtlichen Lichtbildausweis auf die andere Seite umdrehen";
 
-"Flip your identity card over to the other side" = "Drehen Sie Ihr Ausweisdokument um";
+"87346" = "Drehen Sie Ihr Ausweisdokument um";
 
-"Front %@ photo successfully uploaded" = "Foto der Vorderseite Ihres %@ erfolgreich hochgeladen";
+"b57ad" = "Foto der Vorderseite Ihres %@ erfolgreich hochgeladen";
 
-"Front identity document photo successfully uploaded" = "Foto der Vorderseite Ihres Ausweisdokuments erfolgreich hochgeladen";
+"3a9fd" = "Foto der Vorderseite Ihres Ausweisdokuments erfolgreich hochgeladen";
 
-"Front of %@" = "Vorderseite Ihres %@";
+"73fc5" = "Vorderseite Ihres %@";
 
-"Front of driver's license or government-issued photo ID" = "Vorderseite des Führerscheins oder amtlicher Lichtbildausweis";
+"b3d9a" = "Vorderseite des Führerscheins oder amtlicher Lichtbildausweis";
 
-"Front of driver's license or passport" = "Vorderseite des Führerscheins oder Reisepasses";
+"8d188" = "Vorderseite des Führerscheins oder Reisepasses";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Vorderseite des Führerscheins, Reisepasses oder amtlichen Lichtbildausweises";
+"070b5" = "Vorderseite des Führerscheins, Reisepasses oder amtlichen Lichtbildausweises";
 
-"Front of identity document" = "Vorderseite des Ausweisdokuments";
+"8562c" = "Vorderseite des Ausweisdokuments";
 
-"Front of passport or government-issued photo ID" = "Vorderseite des Reisepasses oder amtlichen Lichtbildausweises";
+"bb2ee" = "Vorderseite des Reisepasses oder amtlichen Lichtbildausweises";
 
-"Get ready to scan your photo ID" = "Machen Sie sich zum Scannen Ihres Lichtbildausweises bereit";
+"83016" = "Machen Sie sich zum Scannen Ihres Lichtbildausweises bereit";
 
-"Get ready to take a selfie" = "Machen Sie sich für ein Selfie bereit";
+"9e29f" = "Machen Sie sich für ein Selfie bereit";
 
-"Go Back" = "Zurück";
+"b8d99" = "Zurück";
 
-"Hold still, scanning" = "Bitte nicht bewegen, Scanvorgang läuft";
+"b63f6" = "Bitte nicht bewegen, Scanvorgang läuft";
 
-"I'm ready" = "Ich bin bereit";
+"d5b05" = "Ich bin bereit";
 
-"ID Number" = "Ausweisnummer";
+"a403d" = "Ausweisnummer";
 
-"Individual CPF" = "Individuelle CPF";
+"6212a" = "Individuelle CPF";
 
-"Keep ID level" = "Ausweisdokument gerade halten";
+"6be11" = "Ausweisdokument gerade halten";
 
-"Last 4 of Social Security number" = "Letzte vier Ziffern der Sozialversicherungsnummer";
+"77dd8" = "Letzte vier Ziffern der Sozialversicherungsnummer";
 
-"Loading" = "Wird geladen";
+"dc3808" = "Wird geladen";
 
-"Make sure all details are visible and focus" = "Vergewissern Sie sich, dass alle Details sichtbar und scharf sind";
+"859af" = "Vergewissern Sie sich, dass alle Details sichtbar und scharf sind";
 
-"Make sure you're in a well lit space." = "Sorgen Sie für ausreichende Beleuchtung.";
+"6c2aa" = "Sorgen Sie für ausreichende Beleuchtung.";
 
-"Move closer" = "Abstand verringern";
+"1da05" = "Abstand verringern";
 
-"Move farther" = "Mehr Abstand halten";
+"73333" = "Mehr Abstand halten";
 
-"Move to a darker area" = "Begeben Sie sich in eine dunklere Umgebung";
+"4687a" = "Begeben Sie sich in eine dunklere Umgebung";
 
-"Move to a well-lit area" = "Begeben Sie sich in eine gut beleuchtete Umgebung";
+"f579f" = "Begeben Sie sich in eine gut beleuchtete Umgebung";
 
-"NRIC or FIN" = "NRIC oder FIN";
+"32e72" = "NRIC oder FIN";
 
-"No document detected" = "Kein Dokument erkannt";
+"b376f" = "Kein Dokument erkannt";
 
-"Personal ID number" = "Personalausweisnummer";
+"fae7d" = "Personalausweisnummer";
 
-"Personal Information" = "Persönliche Angaben";
+"c4b37" = "Persönliche Angaben";
 
-"Phone Number" = "Telefonnummer";
+"72dba" = "Telefonnummer";
 
-"Phone Verification" = "Telefonische Überprüfung";
+"cb074" = "Telefonische Überprüfung";
 
-"Photo Library" = "Fotobibliothek";
+"e0b2a" = "Fotobibliothek";
 
-"Please upload images of the front and back of your %@" = "Bitte laden Sie Bilder von der Vorder- und Rückseite Ihres %@ hoch";
+"03fa9" = "Bitte laden Sie Bilder von der Vorder- und Rückseite Ihres %@ hoch";
 
-"Please upload images of the front and back of your identity document" = "Bitte laden Sie Bilder der Vorder- und Rückseite Ihre Ausweisdokuments hoch";
+"8c273" = "Bitte laden Sie Bilder der Vorder- und Rückseite Ihre Ausweisdokuments hoch";
 
-"Position your %@ in the center of the frame" = "Positionieren Sie Ihren %@ in der Mitte des Ausschnitts";
+"ceab8" = "Positionieren Sie Ihren %@ in der Mitte des Ausschnitts";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Positionieren Sie Ihren Führerschein oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
+"12559" = "Positionieren Sie Ihren Führerschein oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
 
-"Position your driver's license or passport in the center of the frame" = "Positionieren Sie Ihren Führerschein oder Reisepass in der Mitte des Rahmens";
+"453ad" = "Positionieren Sie Ihren Führerschein oder Reisepass in der Mitte des Rahmens";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Positionieren Sie Ihren Führerschein, Reisepass oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
+"ad934" = "Positionieren Sie Ihren Führerschein, Reisepass oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
 
-"Position your face in the center of the frame." = "Platzieren Sie Ihr Gesicht genau in der Mitte des Rahmens.";
+"6f758" = "Platzieren Sie Ihr Gesicht genau in der Mitte des Rahmens.";
 
-"Position your identity document in the center of the frame" = "Platzieren Sie Ihr Ausweisdokument genau in der Mitte des Rahmens";
+"68f51" = "Platzieren Sie Ihr Ausweisdokument genau in der Mitte des Rahmens";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Positionieren Sie Ihren Reisepass oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
+"74830" = "Positionieren Sie Ihren Reisepass oder amtlichen Lichtbildausweis in der Mitte des Rahmens";
 
-"Retake Photos" = "Foto erneut aufnehmen";
+"16681" = "Foto erneut aufnehmen";
 
-"Scan" = "Scannen";
+"ea1c5" = "Scannen";
 
-"Scanned" = "Eingescannt";
+"e9b3b" = "Eingescannt";
 
-"Select" = "Auswählen";
+"2a780" = "Auswählen";
 
-"Select a location to upload the back of your identity document from" = "Wählen Sie einen Ort zum Hochladen der Rückseite Ihres Ausweisdokuments aus";
+"568f3" = "Wählen Sie einen Ort zum Hochladen der Rückseite Ihres Ausweisdokuments aus";
 
-"Select a location to upload the front of your identity document from" = "Wählen Sie einen Ort zum Hochladen der Vorderseite Ihres Ausweisdokuments aus";
+"a352a" = "Wählen Sie einen Ort zum Hochladen der Vorderseite Ihres Ausweisdokuments aus";
 
-"Select back %@ photo" = "Wählen Sie Foto der Rückseite Ihres %@ aus";
+"0dfa8" = "Wählen Sie Foto der Rückseite Ihres %@ aus";
 
-"Select back identity document photo" = "Wählen Sie das Foto der Rückseite Ihres Ausweisdokuments aus";
+"38aec" = "Wählen Sie das Foto der Rückseite Ihres Ausweisdokuments aus";
 
-"Select front %@ photo" = "Wählen Sie Foto der Vorderseite Ihres %@ aus";
+"1ca11" = "Wählen Sie Foto der Vorderseite Ihres %@ aus";
 
-"Select front identity document photo" = "Wählen Sie das Foto der Vorderseite Ihres Ausweisdokuments aus";
+"5c25a" = "Wählen Sie das Foto der Vorderseite Ihres Ausweisdokuments aus";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Selfie-Aufnahmen";
+"ccd67" = "Selfie-Aufnahmen";
 
-"Selfie captures are complete" = "Die Selfie-Aufnahmen sind abgeschlossen.";
+"a7b36" = "Die Selfie-Aufnahmen sind abgeschlossen.";
 
-"Take Photo" = "Aufnahme machen";
+"1ca36" = "Aufnahme machen";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Die Bilder Ihres Ausweisdokuments wurden nicht gespeichert. Möchten Sie die Seite verlassen?";
+"b6b76" = "Die Bilder Ihres Ausweisdokuments wurden nicht gespeichert. Möchten Sie die Seite verlassen?";
 
-"There was an error accessing the camera." = "Beim Zugriff auf die Kamera ist ein Fehler aufgetreten.";
+"1eda8" = "Beim Zugriff auf die Kamera ist ein Fehler aufgetreten.";
 
-"Try Again" = "Erneut versuchen";
+"df0fe" = "Erneut versuchen";
 
-"Try reduce glare and make ID visible" = "Verringern Sie Blendeffekte und achten Sie auf die Sichtbarkeit des Ausweisdokuments";
+"ffd3d" = "Verringern Sie Blendeffekte und achten Sie auf die Sichtbarkeit des Ausweisdokuments";
 
-"Unable to establish a connection." = "Es kann keine Verbindung hergestellt werden.";
+"77ee9" = "Es kann keine Verbindung hergestellt werden.";
 
-"Unsaved changes" = "Nicht gespeicherte Änderungen";
+"a710c" = "Nicht gespeicherte Änderungen";
 
-"Upload" = "Hochladen";
+"865e8" = "Hochladen";
 
-"Upload a Photo" = "Foto hochladen";
+"f0c8a" = "Foto hochladen";
 
-"Upload your %@" = "Laden Sie Ihr %@ hoch";
+"7f6c1" = "Laden Sie Ihr %@ hoch";
 
-"Upload your photo ID" = "Lichtbildausweis hochladen";
+"40a76" = "Lichtbildausweis hochladen";
 
-"Uploading back %@ photo" = "Hochladen des Fotos der Rückseite Ihres %@";
+"eaebd" = "Hochladen des Fotos der Rückseite Ihres %@";
 
-"Uploading back identity document photo" = "Hochladen des Fotos der Rückseite Ihres Ausweisdokuments";
+"e16b7" = "Hochladen des Fotos der Rückseite Ihres Ausweisdokuments";
 
-"Uploading front %@ photo" = "Hochladen des Fotos der Vorderseite Ihres %@";
+"93af2" = "Hochladen des Fotos der Vorderseite Ihres %@";
 
-"Uploading front identity document photo" = "Hochladen des Fotos der Vorderseite Ihres Ausweisdokuments";
+"5dfbf" = "Hochladen des Fotos der Vorderseite Ihres Ausweisdokuments";
 
-"Verify your identity" = "Identität verifizieren";
+"ed32a" = "Identität verifizieren";
 
-"We could not capture a high-quality image." = "Wir konnten kein qualitativ hochwertiges Bild aufnehmen.";
+"55e29" = "Wir konnten kein qualitativ hochwertiges Bild aufnehmen.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Wir benötigen die Erlaubnis, Ihre Kamera zu verwenden. Bitte gewähren Sie den Kamerazugriff in den App-Einstellungen.";
+"a98b4" = "Wir benötigen die Erlaubnis, Ihre Kamera zu verwenden. Bitte gewähren Sie den Kamerazugriff in den App-Einstellungen.";
 
-"Welcome" = "Willkommen";
+"0e222" = "Willkommen";
 
-"You can either try again or upload an image from your device." = "Sie können es noch einmal versuchen oder ein Bild von Ihrem Endgerät hochladen.";
+"348a7" = "Sie können es noch einmal versuchen oder ein Bild von Ihrem Endgerät hochladen.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Ihre Selfie-Aufnahmen wurden nicht gespeichert. Möchten Sie die Seite verlassen?";
+"b892f" = "Ihre Selfie-Aufnahmen wurden nicht gespeichert. Möchten Sie die Seite verlassen?";
 
-"driver's license" = "Führerschein";
+"cadf1" = "Führerschein";
 
-"government-issued photo ID" = "Behördlich ausgestellter Lichtbildausweis";
+"29fd8" = "Behördlich ausgestellter Lichtbildausweis";
 
-"passport" = "Reisepass";
+"cbc47" = "Reisepass";

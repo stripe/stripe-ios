@@ -1,307 +1,307 @@
-"+ Add" = "+ Lisää";
+"c0072" = "+ Lisää";
 
-"Add US bank account" = "Lisää yhdysvaltalainen pankkitili";
+"1b3a4" = "Lisää yhdysvaltalainen pankkitili";
 
-"Add a card" = "Lisää kortti";
+"be8f5" = "Lisää kortti";
 
-"Add a payment method" = "Lisää maksutapa";
+"7e917" = "Lisää maksutapa";
 
-"Add bank account" = "Lisää pankkitili";
+"a3cc9" = "Lisää pankkitili";
 
-"Add card" = "Lisää kortti";
+"769c5" = "Lisää kortti";
 
-"Add new card" = "Lisää uusi kortti";
+"800f4" = "Lisää uusi kortti";
 
-"Add new payment method" = "Lisää uusi maksutapa";
+"8130f" = "Lisää uusi maksutapa";
 
-"Add your payment information" = "Lisää maksutiedot";
+"eaa33" = "Lisää maksutiedot";
 
-"Approve payment" = "Hyväksy maksu";
+"e70d2" = "Hyväksy maksu";
 
-"Are you sure you want to remove this card?" = "Haluatko varmasti poistaa tämän kortin?";
+"c8af7" = "Haluatko varmasti poistaa tämän kortin?";
 
-"Are you sure you want to remove this linked account?" = "Haluatko varmasti poistaa tämän linkitetyn tilin?";
+"74460" = "Haluatko varmasti poistaa tämän linkitetyn tilin?";
 
-"Back" = "Takaisin";
+"76900" = "Takaisin";
 
-"Bank" = "Pankki";
+"676c4" = "Pankki";
 
-"Bank account" = "Pankkitili";
+"1b427" = "Pankkitili";
 
-"Bank account details cannot be changed." = "Pankkitilin tietoja ei voi muuttaa.";
+"12ab1" = "Pankkitilin tietoja ei voi muuttaa.";
 
-"Buy now or pay later with  <img/>" = "Osta nyt tai maksa myöhemmin Afterpaylla/Clearpaylla <img/>";
+"38088" = "Osta nyt tai maksa myöhemmin Afterpaylla/Clearpaylla <img/>";
 
-"Buy now or pay later with Afterpay" = "Osta nyt tai maksa myöhemmin Afterpaylla";
+"c04b4" = "Osta nyt tai maksa myöhemmin Afterpaylla";
 
-"Buy now or pay later with Cash App Afterpay" = "Osta nyt tai maksa myöhemmin Cash App Afterpaylla";
+"f566d" = "Osta nyt tai maksa myöhemmin Cash App Afterpaylla";
 
-"Buy now or pay later with Clearpay" = "Osta nyt tai maksa myöhemmin Clearpaylla";
+"bf452" = "Osta nyt tai maksa myöhemmin Clearpaylla";
 
-"Buy now or pay later with Klarna" = "Osta nyt tai maksa myöhemmin Klarnalla";
+"5c41c" = "Osta nyt tai maksa myöhemmin Klarnalla";
 
-"Buy using a UPI ID" = "Osta käyttämällä UPI-tunnusta";
+"21793" = "Osta käyttämällä UPI-tunnusta";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Vahvistamalla maksusi PayPalin kanssa valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
+"313bb" = "Vahvistamalla maksusi PayPalin kanssa valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Jatkamalla Amazon Payhin valtuutat %@ veloittamaan tulevia maksuja Amazon Pay -tililtäsi heidän ehtojensa mukaisesti.";
+"c1642" = "Jatkamalla Amazon Payhin valtuutat %@ veloittamaan tulevia maksuja Amazon Pay -tililtäsi heidän ehtojensa mukaisesti.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Jatkamalla Klarnaan valtuutat %1$@ veloittamaan tulevia maksuja Klarna-tililtäsi heidän ehtojensa mukaisesti. Voit muuttaa tämän koska tahansa Klarna-sovelluksessa tai ottamalla yhteyttä kohteeseen %2$@.";
+"09c61" = "Jatkamalla Klarnaan valtuutat %1$@ veloittamaan tulevia maksuja Klarna-tililtäsi heidän ehtojensa mukaisesti. Voit muuttaa tämän koska tahansa Klarna-sovelluksessa tai ottamalla yhteyttä kohteeseen %2$@.";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Jatkamalla PayPaliin valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
+"c6ff4" = "Jatkamalla PayPaliin valtuutat %@ veloittamaan tulevia maksuja PayPal-tililtäsi heidän ehtojensa mukaisesti.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Jatkamalla Revolut Payhin valtuutat %@ veloittamaan tulevia maksuja Revolut Pay -tililtäsi heidän ehtojensa mukaisesti.";
+"694b5" = "Jatkamalla Revolut Payhin valtuutat %@ veloittamaan tulevia maksuja Revolut Pay -tililtäsi heidän ehtojensa mukaisesti.";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jatkamalla hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";
+"8ba3b" = "Jatkamalla hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jatkamalla hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
+"23d3e" = "Jatkamalla hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ ja <link>Linkin kanssa</link> Linkin <terms>ehtojen</terms> ja <privacy>tietosuojakäytännön</privacy> mukaisesti.";
+"b8e49" = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ ja <link>Linkin kanssa</link> Linkin <terms>ehtojen</terms> ja <privacy>tietosuojakäytännön</privacy> mukaisesti.";
 
-"By continuing, you agree to save your information for future purchases with %@." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ kanssa.";
+"8ca70" = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ kanssa.";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Kun jatkat, %@ voi veloittaa Satispay-saldoasi automaattisesti ja toistuvasti osto- tai tilaussuunnitelmasi mukaisesti.";
+"d451f" = "Kun jatkat, %@ voi veloittaa Satispay-saldoasi automaattisesti ja toistuvasti osto- tai tilaussuunnitelmasi mukaisesti.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jatkamalla valtuutat kauppiaan %1$@ veloittamaan Cash App -tiliäsi tälle ja tuleville maksuille kauppiaan %2$@ ehtojen mukaisesti, kunnes tämä todennus peruutetaan. Voit muuttaa tätä milloin tahansa Cash App -asetuksista.";
+"97461" = "Jatkamalla valtuutat kauppiaan %1$@ veloittamaan Cash App -tiliäsi tälle ja tuleville maksuille kauppiaan %2$@ ehtojen mukaisesti, kunnes tämä todennus peruutetaan. Voit muuttaa tätä milloin tahansa Cash App -asetuksista.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Liittymällä Linkiin hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";
+"225b7" = "Liittymällä Linkiin hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Antamalla puhelinnumeron ja sähköpostin hyväksyt Link-tilin, joka noudattaa Link-palvelun <terms>ehtoja</terms> ja <privacy>tietosuojaselostetta</privacy>, luomisen.";
+"05e15" = "Antamalla puhelinnumeron ja sähköpostin hyväksyt Link-tilin, joka noudattaa Link-palvelun <terms>ehtoja</terms> ja <privacy>tietosuojaselostetta</privacy>, luomisen.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Antamalla pankkitilisi tiedot ja vahvistamalla tämän maksun hyväksyt tämän suoraveloituspyynnön ja <terms>suoraveloituspyyntöjen palvelusopimuksen</terms> sekä valtuutat Stripe Payments Australia Pty Ltd:n, ACN 160 180 343, Direct Debit User ID -numero 507156 (”Stripe”), veloittamaan tiliäsi BECS-järjestelmän kautta tahon %@ (”kauppias”) puolesta kaikista kauppiaan sinulle erikseen ilmoittamista summista. Vahvistat, että olet joko yllä mainitun tilin tilinomistaja tai sen valtuutettu allekirjoittaja.";
+"ba265" = "Antamalla pankkitilisi tiedot ja vahvistamalla tämän maksun hyväksyt tämän suoraveloituspyynnön ja <terms>suoraveloituspyyntöjen palvelusopimuksen</terms> sekä valtuutat Stripe Payments Australia Pty Ltd:n, ACN 160 180 343, Direct Debit User ID -numero 507156 (”Stripe”), veloittamaan tiliäsi BECS-järjestelmän kautta tahon %@ (”kauppias”) puolesta kaikista kauppiaan sinulle erikseen ilmoittamista summista. Vahvistat, että olet joko yllä mainitun tilin tilinomistaja tai sen valtuutettu allekirjoittaja.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Antamalla korttisi tiedot annat yrityksen %@ veloittaa kortiltasi tulevia maksuja yrityksen ehtojen mukaisesti.";
+"0cdc0" = "Antamalla korttisi tiedot annat yrityksen %@ veloittaa kortiltasi tulevia maksuja yrityksen ehtojen mukaisesti.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Antamalla sähköpostisi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
+"36fad" = "Antamalla sähköpostisi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Antamalla maksutiedot ja vahvistamalla tämän maksun, valtuutat (A) %@ ja Stripen, maksupalvelun tarjoajamme, lähettämään ohjeita pankillesi tilisi veloittamiseksi ja (B) pankkisi veloittamaan tiliäsi annettujen ohjeiden mukaisesti. Oikeuksiesi mukaisesti olet oikeutettu maksun palautukseen pankiltasi heidän kanssaan tekemäsi sopimuksen mukaisesti. Maksun palautus on lunastettava kahdeksan viikon kuluessa tilisi veloituksesta. Oikeutesi kerrotaan lausunnossa, jonka voit hankkia pankiltasi. Hyväksyt vastaanottamaan ilmoituksia tulevista veloituksista kaksi päivää ennen niiden tapahtumista.";
+"289c5" = "Antamalla maksutiedot ja vahvistamalla tämän maksun, valtuutat (A) %@ ja Stripen, maksupalvelun tarjoajamme, lähettämään ohjeita pankillesi tilisi veloittamiseksi ja (B) pankkisi veloittamaan tiliäsi annettujen ohjeiden mukaisesti. Oikeuksiesi mukaisesti olet oikeutettu maksun palautukseen pankiltasi heidän kanssaan tekemäsi sopimuksen mukaisesti. Maksun palautus on lunastettava kahdeksan viikon kuluessa tilisi veloituksesta. Oikeutesi kerrotaan lausunnossa, jonka voit hankkia pankiltasi. Hyväksyt vastaanottamaan ilmoituksia tulevista veloituksista kaksi päivää ennen niiden tapahtumista.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Antamalla puhelinnumerosi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
+"e3661" = "Antamalla puhelinnumerosi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
+"02d39" = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi kohteille %1$@ ja %2$@ valtuutat tallentamaan tietosi kohteen %3$@ kanssa tulevia ostoksia varten, ja valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
+"c041a" = "Lähettämällä tilauksesi kohteille %1$@ ja %2$@ valtuutat tallentamaan tietosi kohteen %3$@ kanssa tulevia ostoksia varten, ja valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi yritykselle %@, valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
+"532e1" = "Lähettämällä tilauksesi yritykselle %@, valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "Peruuta ja maksa toisella tavalla";
+"58817" = "Peruuta ja maksa toisella tavalla";
 
-"Card details cannot be changed." = "Kortin tietoja ei voi muuttaa.";
+"34c44" = "Kortin tietoja ei voi muuttaa.";
 
-"Change" = "Vaihda";
+"c0bf7" = "Vaihda";
 
-"Choose a payment method" = "Valitse maksutapa";
+"1dc8a" = "Valitse maksutapa";
 
-"Close card scanner" = "Sulje korttiskanneri";
+"c0077" = "Sulje korttiskanneri";
 
-"Code sent" = "Koodi lähetetty";
+"f98a1" = "Koodi lähetetty";
 
-"Confirm" = "Vahvista";
+"eebdd" = "Vahvista";
 
-"Confirm it's you" = "Vahvista, että se olet sinä";
+"6176e" = "Vahvista, että se olet sinä";
 
-"Confirm payment details" = "Vahvista maksutiedot";
+"3a6b5" = "Vahvista maksutiedot";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
+"101ef" = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi sovelluksessa %@.";
+"a8c9a" = "Suorita osto vahvistamalla maksu pankkisi sovelluksessa %@.";
 
-"Confirm your CVC" = "Vahvista CVC";
+"a4bdf" = "Vahvista CVC";
 
-"Contact information" = "Yhteystiedot";
+"cbc73" = "Yhteystiedot";
 
-"Continue another way" = "Jatka toisella tavalla";
+"c2a49" = "Jatka toisella tavalla";
 
-"Create an account with Link for faster checkout across the web" = "Luo tili Link-palvelulla nopeampaa verkkomaksamista varten";
+"b568d" = "Luo tili Link-palvelulla nopeampaa verkkomaksamista varten";
 
-"Debit or credit card" = "Pankki- tai luottokortti";
+"04f63" = "Pankki- tai luottokortti";
 
-"Default" = "Oletus";
+"21b11" = "Oletus";
 
-"Default payment method" = "Oletusmaksutapa";
+"4c163" = "Oletusmaksutapa";
 
-"Did you mean %@? %@." = "Tarkoititko %1$@? %2$@.";
+"6d7d1" = "Tarkoititko %1$@? %2$@.";
 
-"EPS Bank" = "EPS-pankki";
+"8f218" = "EPS-pankki";
 
-"Enter address manually" = "Syötä osoite manuaalisesti";
+"1534f" = "Syötä osoite manuaalisesti";
 
-"Enter the code sent to %@." = "Syötä koodi, joka lähetettiin numeroon %s.";
+"1e836" = "Syötä koodi, joka lähetettiin numeroon %s.";
 
-"FPX Bank" = "FPX-pankki";
+"8c73e" = "FPX-pankki";
 
-"Failed to connect" = "Yhteyden muodostaminen epäonnistui";
+"46c9f" = "Yhteyden muodostaminen epäonnistui";
 
-"Fast, secure checkout" = "Nopea, turvallinen maksaminen";
+"2aeb3" = "Nopea, turvallinen maksaminen";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saat %@ takaisin, kun maksat ensimmäistä kertaa pankillasi. <terms>Katso ehdot</terms>";
+"b70b0" = "Saat %@ takaisin, kun maksat ensimmäistä kertaa pankillasi. <terms>Katso ehdot</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Saat %@ takaisin, kun maksat pankillasi. <terms>Katso ehdot</terms>";
+"332d2" = "Saat %@ takaisin, kun maksat pankillasi. <terms>Katso ehdot</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
+"b751e" = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "Kirjaudu sisään tai rekisteröidy";
+"38f51" = "Kirjaudu sisään tai rekisteröidy";
 
-"Log out of Link" = "Kirjaudu ulos Link-palvelusta";
+"57083" = "Kirjaudu ulos Link-palvelusta";
 
-"Manage SEPA debit" = "Hallinnoi SEPA-pankkiveloitusta";
+"a7ff3" = "Hallinnoi SEPA-pankkiveloitusta";
 
-"Manage US bank account" = "Hallinnoi yhdysvaltalaista pankkitiliä";
+"0b654" = "Hallinnoi yhdysvaltalaista pankkitiliä";
 
-"Manage bank account" = "Hallinnoi pankkitiliä";
+"2d4ed" = "Hallinnoi pankkitiliä";
 
-"Manage card" = "Hallinnoi korttia";
+"49e98" = "Hallinnoi korttia";
 
-"Manage cards" = "Hallinnoi kortteja";
+"fe215" = "Hallinnoi kortteja";
 
-"Manage payment method" = "Hallinnoi maksutapaa";
+"67c16" = "Hallinnoi maksutapaa";
 
-"Manage payment methods" = "Hallitse maksutapoja";
+"cf0c9" = "Hallitse maksutapoja";
 
-"Manage your payment methods" = "Hallitse maksutapojasi";
+"74db7" = "Hallitse maksutapojasi";
 
-"Name on card" = "Kortissa oleva nimi";
+"18bf0" = "Kortissa oleva nimi";
 
-"New card" = "Uusi kortti";
+"8d3ef" = "Uusi kortti";
 
-"New payment method" = "Uusi maksutapa";
+"c5f95" = "Uusi maksutapa";
 
-"No %@ promo" = "Ei kampanjaa %@";
+"99d88" = "Ei kampanjaa %@";
 
-"Not you?" = "Onko kyseessä joku muu?";
+"5b978" = "Onko kyseessä joku muu?";
 
-"Only card brand can be changed." = "Vain kortin brändi voidaan vaihtaa.";
+"d1c0a" = "Vain kortin brändi voidaan vaihtaa.";
 
-"Open your UPI app to approve your payment within %@" = "Avaa UPI-sovellus ja hyväksy maksu kohteessa %@";
+"b7546" = "Avaa UPI-sovellus ja hyväksy maksu kohteessa %@";
 
-"Or" = "Tai";
+"0568b" = "Tai";
 
-"Or pay using" = "Tai käytä maksutapaa";
+"3c3f7" = "Tai käytä maksutapaa";
 
-"Or pay with a card" = "Tai maksa kortilla";
+"682d8" = "Tai maksa kortilla";
 
-"Or use" = "Tai käytä";
+"4158c" = "Tai käytä";
 
-"Or use a card" = "Tai käytä korttia";
+"b529c" = "Tai käytä korttia";
 
-"Pay %@" = "Maksa %@";
+"964f6" = "Maksa %@";
 
-"Pay another way" = "Maksa toisella tavalla";
+"4bb4a" = "Maksa toisella tavalla";
 
-"Pay faster at %@ and thousands of businesses." = "Maksa nopeammin kohteessa %@ ja tuhansissa muissa paikoissa.";
+"f43bb" = "Maksa nopeammin kohteessa %@ ja tuhansissa muissa paikoissa.";
 
-"Pay faster everywhere Link is accepted." = "Maksa nopeammin kaikkialla, missä Link hyväksytään.";
+"d49c1" = "Maksa nopeammin kaikkialla, missä Link hyväksytään.";
 
-"Pay over time with %@" = "Maksa aikanaan kohteella %@";
+"77196" = "Maksa aikanaan kohteella %@";
 
-"Pay over time with Affirm" = "Maksa aikanaan Affirmilla";
+"2f870" = "Maksa aikanaan Affirmilla";
 
-"Pay with Link" = "Maksa Link-palvelulla";
+"9d81a" = "Maksa Link-palvelulla";
 
-"Pay with your bank account in just a few steps." = "Maksa pankkitiliäsi käyttäen vain muutamassa vaiheessa.";
+"bc021" = "Maksa pankkitiliäsi käyttäen vain muutamassa vaiheessa.";
 
-"Payment" = "Maksu";
+"7048f" = "Maksu";
 
-"Payment failed" = "Maksu epäonnistui";
+"17aad" = "Maksu epäonnistui";
 
-"Payment methods" = "Maksutavat";
+"16d26" = "Maksutavat";
 
-"Please choose a valid payment method." = "Valitse kelvollinen maksutapa.";
+"5ddb8" = "Valitse kelvollinen maksutapa.";
 
-"Please go back and select another payment method" = "Palaa takaisin ja valitse toinen maksutapa";
+"cf6c1" = "Palaa takaisin ja valitse toinen maksutapa";
 
-"Point the camera at your card." = "Osoita kamera korttia kohti.";
+"59a6c" = "Osoita kamera korttia kohti.";
 
-"Processing..." = "Käsitellään...";
+"f40a8" = "Käsitellään...";
 
-"Przelewy24 Bank" = "Przelewy24 Bank";
+"b0866" = "Przelewy24 Bank";
 
-"Remove card?" = "Poista kortti?";
+"ce640" = "Poista kortti?";
 
-"Remove linked account" = "Poista linkitetty tili";
+"a545c" = "Poista linkitetty tili";
 
-"Resend code" = "Lähetä koodi uudelleen";
+"b9745" = "Lähetä koodi uudelleen";
 
-"SEPA debit details cannot be changed." = "SEPA-pankkimaksun tietoja ei voi muuttaa.";
+"a4f77" = "SEPA-pankkimaksun tietoja ei voi muuttaa.";
 
-"Save" = "Tallenna";
+"1509f" = "Tallenna";
 
-"Save a new payment method" = "Tallenna uusi maksutapa";
+"6b6eb" = "Tallenna uusi maksutapa";
 
-"Save address" = "Tallenna osoite";
+"0cbb9" = "Tallenna osoite";
 
-"Save for future payments" = "Tallenna tulevia maksuja varten";
+"7990e" = "Tallenna tulevia maksuja varten";
 
-"Save my info for faster checkout with Link" = "Tallenna tietoni nopeammalle maksamiselle Link-palvelulla";
+"8e1e1" = "Tallenna tietoni nopeammalle maksamiselle Link-palvelulla";
 
-"Save payment details to %@ for future purchases" = "Tallenna maksutiedot yritykselle %@ tulevia ostoksia varten";
+"0745e" = "Tallenna maksutiedot yritykselle %@ tulevia ostoksia varten";
 
-"Save this account for future %@ payments" = "Tallenna tämä tili tulevia maksuja %@ varten";
+"e8c88" = "Tallenna tämä tili tulevia maksuja %@ varten";
 
-"Save your bank account in just a few steps." = "Tallenna pankkitilisi vain muutamassa vaiheessa.";
+"b4042" = "Tallenna pankkitilisi vain muutamassa vaiheessa.";
 
-"Save your info for secure 1-click checkout with Link" = "Tallenna tiedot turvalliselle yhden napsautuksen maksamiselle Link-palvelulla";
+"650b1" = "Tallenna tiedot turvalliselle yhden napsautuksen maksamiselle Link-palvelulla";
 
-"Saved" = "Tallennettu";
+"b5c12" = "Tallennettu";
 
-"Select card" = "Valitse kortti";
+"59ffd" = "Valitse kortti";
 
-"Select payment method" = "Valitse maksutapa";
+"659d1" = "Valitse maksutapa";
 
-"Select your payment method" = "Valitse maksutapa";
+"d23e3" = "Valitse maksutapa";
 
-"Set as default" = "Aseta oletusarvoiseksi";
+"d09b4" = "Aseta oletusarvoiseksi";
 
-"Set as default payment method" = "Aseta oletusarvoiseksi maksutavaksi";
+"af056" = "Aseta oletusarvoiseksi maksutavaksi";
 
-"Set up" = "Määritä";
+"4da10" = "Määritä";
 
-"Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
+"b8e46" = "Toimitusta kohteeseen %@ ei tueta.";
 
-"Show menu" = "Näytä valikko";
+"0b0af" = "Näytä valikko";
 
-"Simple, secure one-click payments" = "Yksinkertaiset turvalliset kerran napsautettavat maksut";
+"edd6d" = "Yksinkertaiset turvalliset kerran napsautettavat maksut";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Jotain meni vikaan tilisi yhdistämisessä.\nYritä myöhemmin uudelleen.";
+"33596" = "Jotain meni vikaan tilisi yhdistämisessä.\nYritä myöhemmin uudelleen.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe tallettaa 0,01 dollaria tilillesi 1–2 arkipäivän kuluessa. Saat myös ohjeet pankkitilisi ja kauppiaan yrityksen %@ tallentamisen suorittamiseksi.";
+"822ff" = "Stripe tallettaa 0,01 dollaria tilillesi 1–2 arkipäivän kuluessa. Saat myös ohjeet pankkitilisi ja kauppiaan yrityksen %@ tallentamisen suorittamiseksi.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe tallettaa 0,01 dollaria tilillesi 1–2 arkipäivän kuluessa. Saat myös sähköpostiisi ohjeet maksun suorittamiseksi loppuun yritykselle %@.";
+"72fd8" = "Stripe tallettaa 0,01 dollaria tilillesi 1–2 arkipäivän kuluessa. Saat myös sähköpostiisi ohjeet maksun suorittamiseksi loppuun yritykselle %@.";
 
-"Tap to close" = "Suljet napauttamalla";
+"e263d" = "Suljet napauttamalla";
 
-"Tap to expand" = "Laajenna napauttamalla";
+"1cbaf" = "Laajenna napauttamalla";
 
-"The IBAN you entered is incomplete." = "IBAN on puutteellinen.";
+"477cb" = "IBAN on puutteellinen.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Antamasi IBAN-numero on virheellinen, ”%@” ei ole tuettu maakoodi.";
+"a70c6" = "Antamasi IBAN-numero on virheellinen, ”%@” ei ole tuettu maakoodi.";
 
-"The provided verification code has expired." = "Annettu vahvistuskoodi on vanhentunut.";
+"e32a6" = "Annettu vahvistuskoodi on vanhentunut.";
 
-"The provided verification code is incorrect." = "Annettu vahvistuskoodi on virheellinen.";
+"e8cb8" = "Annettu vahvistuskoodi on virheellinen.";
 
-"This is your default" = "Tämä on oletusarvoinen";
+"f3c56" = "Tämä on oletusarvoinen";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Tämä maksutapa poistetaan, mutta se on edelleen käytettävissä %@ tilauksissa.";
+"478c1" = "Tämä maksutapa poistetaan, mutta se on edelleen käytettävissä %@ tilauksissa.";
 
-"Too many attempts. Please try again in a few minutes." = "Liian monta yritystä. Kokeile uudelleen muutaman minuutin kuluttua.";
+"4a754" = "Liian monta yritystä. Kokeile uudelleen muutaman minuutin kuluttua.";
 
-"Unavailable for this purchase" = "Ei käytettävissä tälle ostolle";
+"19202" = "Ei käytettävissä tälle ostolle";
 
-"Update card" = "Päivitä kortti";
+"e28b5" = "Päivitä kortti";
 
-"Update payment method" = "Päivitä maksutapa";
+"fa7bf" = "Päivitä maksutapa";
 
-"Use billing address for shipping" = "Käytä laskutusosoitetta toimituksessa";
+"4a82d" = "Käytä laskutusosoitetta toimituksessa";
 
-"View more" = "Näytä lisää";
+"267e5" = "Näytä lisää";
 
-"Yes, update" = "Kyllä, päivitä";
+"fa298" = "Kyllä, päivitä";
 
-"Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
+"42ef0" = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
 
-"iDEAL Bank" = "iDEAL-pankki";
+"460cb" = "iDEAL-pankki";

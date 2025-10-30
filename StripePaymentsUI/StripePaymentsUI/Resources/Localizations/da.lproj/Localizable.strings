@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Kort";
+"fbfa6" = "%1$@ Kort";
 
-"%1$@ Credit" = "%1$@ Kredit";
+"a11b0" = "%1$@ Kredit";
 
-"%1$@ Debit" = "%1$@ Debet";
+"95233" = "%1$@ Debet";
 
-"%1$@ Prepaid" = "%1$@ Forudbetalt";
+"c90ba" = "%1$@ Forudbetalt";
 
-"%1$@ account ending in %2$@" = "%1$@-konto, der ender på %2$@";
+"3b24a" = "%1$@-konto, der ender på %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ slutter på %2$@";
+"f5b21" = "%1$@ slutter på %2$@";
 
-"%1$@ is not accepted" = "%1$@ accepteres ikke";
+"29adf" = "%1$@ accepteres ikke";
 
-"Address line 2 (optional)" = "Adresselinje 2 (valgfrit)";
+"9ada7" = "Adresselinje 2 (valgfrit)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bankkonto";
+"c6f64" = "Bankkonto";
 
-"Billing address" = "Faktureringsadresse";
+"1f516" = "Faktureringsadresse";
 
-"Billing details" = "Faktureringsoplysninger";
+"7c928" = "Faktureringsoplysninger";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Kortoplysninger";
+"fca47" = "Kortoplysninger";
 
-"Card number" = "Kortnummer";
+"816fc" = "Kortnummer";
 
-"Confirm your %@" = "Bekræft dit %@";
+"002d7" = "Bekræft dit %@";
 
-"Invalid data." = "Ugyldige data";
+"da175" = "Ugyldige data";
 
-"MM / YY" = "MM/ÅÅ";
+"58f4a" = "MM/ÅÅ";
 
-"MM/YY" = "MM/ÅÅ";
+"1b5f6" = "MM/ÅÅ";
 
-"Postal Code" = "Postnummer";
+"8198b" = "Postnummer";
 
-"Shipping Address" = "Forsendelsesadresse";
+"6e244" = "Forsendelsesadresse";
 
-"State / Province / Region" = "Region";
+"649f1" = "Region";
 
-"The BSB you entered is invalid." = "Den BSB, du angav, er ugyldig.";
+"dfa21" = "Den BSB, du angav, er ugyldig.";
 
-"The selected brand is not allowed" = "Det valgte brand er ikke tilladt";
+"aaf53" = "Det valgte brand er ikke tilladt";
 
-"To scan your card, allow camera access in Settings." = "Tillad kameraadgang i Indstillinger for at scanne dit kort.";
+"9f2d9" = "Tillad kameraadgang i Indstillinger for at scanne dit kort.";
 
-"Your card has expired." = "Dit kort er udløbet.";
+"393e6" = "Dit kort er udløbet.";
 
-"Your card number is incomplete." = "Dit kortnummer er ikke fuldendt.";
+"7e5ae" = "Dit kortnummer er ikke fuldendt.";
 
-"Your card number is invalid." = "Dit kortnummer er ugyldigt.";
+"3c122" = "Dit kortnummer er ugyldigt.";
 
-"Your card's expiration date is incomplete." = "Dit korts udløbsdato er ikke fuldendt.";
+"a2036" = "Dit korts udløbsdato er ikke fuldendt.";
 
-"Your card's expiration date is invalid." = "Dit korts udløbsdato er ugyldig.";
+"6a457" = "Dit korts udløbsdato er ugyldig.";
 
-"Your card's expiration month is invalid." = "Kortets udløbsmåned er ugyldig.";
+"e47c0" = "Kortets udløbsmåned er ugyldig.";
 
-"Your card's expiration year is invalid." = "Dit korts udløbsår er ugyldigt.";
+"36ae2" = "Dit korts udløbsår er ugyldigt.";
 
-"Your card's security code is incomplete." = "Dit korts sikkerhedskode er ufuldstændig.";
+"300dd" = "Dit korts sikkerhedskode er ufuldstændig.";
 
-"Your card's security code is invalid." = "Dit korts sikkerhedskode er ugyldig.";
+"394fd" = "Dit korts sikkerhedskode er ugyldig.";
 
-"card number" = "kortnummer";
+"58da6" = "kortnummer";
 
-"example@example.com" = "eksempel@eksempel.dk";
+"31c55" = "eksempel@eksempel.dk";
 
-"expiration date" = "udløbsdato";
+"b34dd" = "udløbsdato";

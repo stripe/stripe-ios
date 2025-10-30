@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@（可選）";
+"224e3" = "%@（可選）";
 
-"(not accepted)" = "（未接受）";
+"f676f" = "（未接受）";
 
-"Account number" = "賬號";
+"f7573" = "賬號";
 
-"Address" = "地址";
+"56ef8" = "地址";
 
-"Address line 1" = "地址第 1 行";
+"ee760" = "地址第 1 行";
 
-"Address line 2" = "地址第 2 行";
+"350b2" = "地址第 2 行";
 
-"Area" = "地區";
+"024dc" = "地區";
 
-"BLIK code" = "BLIK 代碼";
+"35cc2" = "BLIK 代碼";
 
-"BSB number" = "BSB 號碼";
+"88a06" = "BSB 號碼";
 
-"Bank account •••• %@" = "銀行賬戶 •••• %@";
+"7a614" = "銀行賬戶 •••• %@";
 
-"Billing address is same as shipping" = "賬單地址與收貨地址相同";
+"a03f3" = "賬單地址與收貨地址相同";
 
-"Cancel" = "取消";
+"19766e" = "取消";
 
-"Card brand" = "銀行卡品牌";
+"45022" = "銀行卡品牌";
 
-"City" = "城市";
+"fc33f" = "城市";
 
-"Code field" = "驗證碼欄位";
+"2b743" = "驗證碼欄位";
 
-"Company" = "公司";
+"de474" = "公司";
 
-"Continue" = "繼續";
+"31fbe" = "繼續";
 
-"Country" = "國家";
+"701d0" = "國家";
 
-"Country or region" = "國家或地區";
+"8d236" = "國家或地區";
 
-"County" = "縣";
+"136c8" = "縣";
 
-"Department" = "部門";
+"5304a" = "部門";
 
-"District" = "地區";
+"50f18" = "地區";
 
-"Do Si" = "道/縣";
+"32c9d" = "道/縣";
 
-"Do you want to close this form?" = "您確定要儲存此表單嗎？";
+"6ebfc" = "您確定要儲存此表單嗎？";
 
-"Done" = "完成";
+"11a67" = "完成";
 
-"Double tap to edit" = "按兩下可編輯";
+"f5dd0" = "按兩下可編輯";
 
-"Edit" = "編輯";
+"464c4" = "編輯";
 
-"Eircode" = "愛爾蘭郵區編號";
+"113d9" = "愛爾蘭郵區編號";
 
-"Email" = "電郵地址";
+"969cc" = "電郵地址";
 
-"Emirate" = "酋長國";
+"4309c" = "酋長國";
 
-"Error" = "錯誤";
+"54a0e" = "錯誤";
 
-"First" = "名字";
+"a151c" = "名字";
 
-"Full name" = "全名";
+"f13a6" = "全名";
 
-"Incomplete phone number" = "電話號碼不完整";
+"6d2d3" = "電話號碼不完整";
 
-"Invalid UPI ID" = "UPI ID 無效";
+"14cf3" = "UPI ID 無效";
 
-"Island" = "島";
+"730f5" = "島";
 
-"Last" = "姓氏";
+"eb970" = "姓氏";
 
-"Name" = "姓名";
+"dcd1d" = "姓名";
 
-"Name on account" = "賬戶上的姓名";
+"59f3a" = "賬戶上的姓名";
 
-"OK" = "確定";
+"56533" = "確定";
 
-"Oblast" = "州";
+"2ba5c" = "州";
 
-"Other" = "其他";
+"f97e9" = "其他";
 
-"Parish" = "堂區";
+"45ab6" = "堂區";
 
-"Phone number" = "手機號碼";
+"306f1" = "手機號碼";
 
-"Postal code" = "郵區編號";
+"ae53c" = "郵區編號";
 
-"Prefecture" = "轄區";
+"50571" = "轄區";
 
-"Province" = "省";
+"abfce" = "省";
 
-"Remove" = "移除";
+"c3812" = "移除";
 
-"Remove bank account?" = "移除銀行賬戶？";
+"05b2c" = "移除銀行賬戶？";
 
-"Remove card" = "解除綁定";
+"dcf7d" = "解除綁定";
 
-"Search" = "搜尋";
+"49c26" = "搜尋";
 
-"Select card brand (optional)" = "選擇銀行卡品牌（可選）";
+"4dc47" = "選擇銀行卡品牌（可選）";
 
-"Selection is empty." = "選擇為空。";
+"4d6f0" = "選擇為空。";
 
-"Sort code" = "分類代碼";
+"a9002" = "分類代碼";
 
-"State" = "州";
+"a3b50" = "州";
 
-"Suburb" = "郊區";
+"9e843" = "郊區";
 
-"Suburb or city" = "市郊或城市";
+"c3273" = "市郊或城市";
 
-"The BSB you entered is incomplete." = "您輸入的 BSB 不完整。";
+"d5ad2" = "您輸入的 BSB 不完整。";
 
-"The ID number you entered is incomplete." = "您輸入的證件號碼不完整。";
+"0f9bf" = "您輸入的證件號碼不完整。";
 
-"The account number you entered is incomplete." = "您輸入的賬號不完整。";
+"e10dd" = "您輸入的賬號不完整。";
 
-"The sort code you entered is invalid." = "您輸入的分類代碼無效。";
+"ac7db" = "您輸入的分類代碼無效。";
 
-"Town or city" = "城鎮或城市";
+"9ce56" = "城鎮或城市";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "無法粘貼手機號碼";
+"72356" = "無法粘貼手機號碼";
 
-"Use rotor to access links" = "用轉子訪問連結";
+"11480" = "用轉子訪問連結";
 
-"Your BLIK code is incomplete." = "您的 BLIK 代碼不完整。";
+"6c0af" = "您的 BLIK 代碼不完整。";
 
-"Your BLIK code is invalid." = "您的 BLIK 代碼無效。";
+"224bb" = "您的 BLIK 代碼無效。";
 
-"Your ZIP code is incomplete." = "您的郵遞區號不完整。";
+"3e686" = "您的郵遞區號不完整。";
 
-"Your ZIP code is invalid." = "您的郵遞區號是無效的。";
+"f029b" = "您的郵遞區號是無效的。";
 
-"Your email is invalid." = "您的電郵地址無效。";
+"57c28" = "您的電郵地址無效。";
 
-"Your payment information will not be saved." = "不會儲存您的付款資訊。";
+"cc532" = "不會儲存您的付款資訊。";
 
-"Your postal code is incomplete." = "您的郵區編號不完整。";
+"52c55" = "您的郵區編號不完整。";
 
-"Your postal code is invalid." = "您的郵區編號無效。";
+"037ec" = "您的郵區編號無效。";
 
-"ZIP" = "郵區編號";
+"eaca4" = "郵區編號";

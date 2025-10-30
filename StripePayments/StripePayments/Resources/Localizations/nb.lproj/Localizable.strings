@@ -1,63 +1,63 @@
-"AU Direct Debit" = "AU-direkteoverføringer";
+"c1188" = "AU-direkteoverføringer";
 
-"Affirm" = "Affirm";
+"07b9f" = "Affirm";
 
-"Afterpay" = "Afterpay";
+"032a2" = "Afterpay";
 
-"Alipay" = "Alipay";
+"d5b72" = "Alipay";
 
-"BLIK" = "BLIK";
+"354ad" = "BLIK";
 
-"Bacs Direct Debit" = "Bacs-direktedebitering";
+"0b4ee" = "Bacs-direktedebitering";
 
-"Bancontact" = "Bancontact";
+"84e7c" = "Bancontact";
 
-"Boleto" = "Boleto";
+"3a3c9" = "Boleto";
 
-"Card" = "Kort";
+"be370" = "Kort";
 
-"Cash App Pay" = "Cash App Pay";
+"35d08" = "Cash App Pay";
 
-"Clearpay" = "Clearpay";
+"268da" = "Clearpay";
 
-"EPS" = "EPS";
+"6d9d7" = "EPS";
 
-"FPX" = "FPX";
+"fed44" = "FPX";
 
-"GrabPay" = "GrabPay";
+"09996" = "GrabPay";
 
-"Klarna" = "Klarna";
+"a2e77" = "Klarna";
 
-"Konbini" = "Konbini";
+"3f752" = "Konbini";
 
-"Link" = "Link";
+"a6a32" = "Link";
 
-"NetBanking" = "NetBanking";
+"3aba6" = "NetBanking";
 
-"OXXO" = "OXXO";
+"71ecf" = "OXXO";
 
-"PayPal" = "PayPal";
+"ab8a4" = "PayPal";
 
-"Przelewy24" = "Przelewy24";
+"0a7ad" = "Przelewy24";
 
-"SEPA Debit" = "SEPA Debit";
+"b5dc7" = "SEPA Debit";
 
-"Sofort" = "Sofort";
+"02f19" = "Sofort";
 
-"Swish" = "Swish";
+"1e736" = "Swish";
 
-"Timed out authenticating your payment method -- try again" = "Tidsavbrudd ved godkjennelse av betalingsmåten din - prøv igjen";
+"37fc6" = "Tidsavbrudd ved godkjennelse av betalingsmåten din - prøv igjen";
 
-"UPI" = "UPI";
+"7b06e" = "UPI";
 
-"US bank account" = "Bankkonto i USA";
+"40d8d" = "Bankkonto i USA";
 
-"Unknown" = "Ukjent";
+"b764c" = "Ukjent";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan ikke godkjenne betalingsmåten din. Vennligst velg en annen betalingsmetode og prøv igjen.";
+"f2763" = "Vi kan ikke godkjenne betalingsmåten din. Vennligst velg en annen betalingsmetode og prøv igjen.";
 
-"WeChat Pay" = "WeChat Pay";
+"a39c6" = "WeChat Pay";
 
-"giropay" = "giropay";
+"83eee" = "giropay";
 
-"iDEAL" = "iDEAL";
+"f54ab" = "iDEAL";

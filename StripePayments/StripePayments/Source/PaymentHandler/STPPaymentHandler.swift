@@ -2203,13 +2203,13 @@ public class STPPaymentHandler: NSObject {
         // 3DS(2) flow expected user errors
         case .notAuthenticatedErrorCode:
             userInfo[NSLocalizedDescriptionKey] = STPLocalizedString(
-                "We are unable to authenticate your payment method. Please choose a different payment method and try again.",
+                "f2763",
                 "Error when 3DS2 authentication failed (e.g. customer entered the wrong code)"
             )
 
         case .timedOutErrorCode:
             userInfo[NSLocalizedDescriptionKey] = STPLocalizedString(
-                "Timed out authenticating your payment method -- try again",
+                "37fc6",
                 "Error when 3DS2 authentication timed out."
             )
 

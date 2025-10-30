@@ -79,8 +79,7 @@ final class VerificationFlowWebView: UIView {
 
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
-        label.text = STPLocalizedString(
-            "Unable to establish a connection.",
+        label.text = STPLocalizedString("77ee9",
             "Error message that displays when we're unable to connect to the server."
         )
         label.textAlignment = .center

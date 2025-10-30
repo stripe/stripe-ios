@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (valfritt)";
+"224e3" = "%@ (valfritt)";
 
-"(not accepted)" = "(accepteras inte)";
+"f676f" = "(accepteras inte)";
 
-"Account number" = "Kontonummer";
+"f7573" = "Kontonummer";
 
-"Address" = "Adress";
+"56ef8" = "Adress";
 
-"Address line 1" = "Adressrad 1";
+"ee760" = "Adressrad 1";
 
-"Address line 2" = "Adressrad 2";
+"350b2" = "Adressrad 2";
 
-"Area" = "Område";
+"024dc" = "Område";
 
-"BLIK code" = "BLIK-kod";
+"35cc2" = "BLIK-kod";
 
-"BSB number" = "BSB-nummer";
+"88a06" = "BSB-nummer";
 
-"Bank account •••• %@" = "Bankkonto •••• %@";
+"7a614" = "Bankkonto •••• %@";
 
-"Billing address is same as shipping" = "Faktureringsadress är samma som leveransadress";
+"a03f3" = "Faktureringsadress är samma som leveransadress";
 
-"Cancel" = "Avbryt";
+"19766e" = "Avbryt";
 
-"Card brand" = "Kortmärke";
+"45022" = "Kortmärke";
 
-"City" = "Ort";
+"fc33f" = "Ort";
 
-"Code field" = "Fält för kod";
+"2b743" = "Fält för kod";
 
-"Company" = "Företag";
+"de474" = "Företag";
 
-"Continue" = "Fortsätt";
+"31fbe" = "Fortsätt";
 
-"Country" = "Land";
+"701d0" = "Land";
 
-"Country or region" = "Land eller region";
+"8d236" = "Land eller region";
 
-"County" = "Landskap";
+"136c8" = "Landskap";
 
-"Department" = "Departement";
+"5304a" = "Departement";
 
-"District" = "Distrikt";
+"50f18" = "Distrikt";
 
-"Do Si" = "Provins och stad";
+"32c9d" = "Provins och stad";
 
-"Do you want to close this form?" = "Vill du stänga det här formuläret?";
+"6ebfc" = "Vill du stänga det här formuläret?";
 
-"Done" = "Klar";
+"11a67" = "Klar";
 
-"Double tap to edit" = "Dubbelklicka för att redigera";
+"f5dd0" = "Dubbelklicka för att redigera";
 
-"Edit" = "Redigera";
+"464c4" = "Redigera";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "E-post";
+"969cc" = "E-post";
 
-"Emirate" = "Emirat";
+"4309c" = "Emirat";
 
-"Error" = "Fel";
+"54a0e" = "Fel";
 
-"First" = "Förnamn";
+"a151c" = "Förnamn";
 
-"Full name" = "Fullständigt namn";
+"f13a6" = "Fullständigt namn";
 
-"Incomplete phone number" = "Ofullständigt telefonnummer";
+"6d2d3" = "Ofullständigt telefonnummer";
 
-"Invalid UPI ID" = "Ogiltigt UPI ID";
+"14cf3" = "Ogiltigt UPI ID";
 
-"Island" = "Ö";
+"730f5" = "Ö";
 
-"Last" = "Efternamn";
+"eb970" = "Efternamn";
 
-"Name" = "Namn";
+"dcd1d" = "Namn";
 
-"Name on account" = "Namn på kontot";
+"59f3a" = "Namn på kontot";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Annan";
+"f97e9" = "Annan";
 
-"Parish" = "Parish";
+"45ab6" = "Parish";
 
-"Phone number" = "Telefonnummer";
+"306f1" = "Telefonnummer";
 
-"Postal code" = "Postnummer";
+"ae53c" = "Postnummer";
 
-"Prefecture" = "Prefektur";
+"50571" = "Prefektur";
 
-"Province" = "Provins";
+"abfce" = "Provins";
 
-"Remove" = "Ta bort";
+"c3812" = "Ta bort";
 
-"Remove bank account?" = "Ta bort bankkonto?";
+"05b2c" = "Ta bort bankkonto?";
 
-"Remove card" = "Ta bort kort";
+"dcf7d" = "Ta bort kort";
 
-"Search" = "Sök";
+"49c26" = "Sök";
 
-"Select card brand (optional)" = "Välj korttyp (valfritt)";
+"4dc47" = "Välj korttyp (valfritt)";
 
-"Selection is empty." = "Urvalet är tomt.";
+"4d6f0" = "Urvalet är tomt.";
 
-"Sort code" = "Clearingnummer";
+"a9002" = "Clearingnummer";
 
-"State" = "Delstat";
+"a3b50" = "Delstat";
 
-"Suburb" = "Förort";
+"9e843" = "Förort";
 
-"Suburb or city" = "Förort eller stad";
+"c3273" = "Förort eller stad";
 
-"The BSB you entered is incomplete." = "Det BSB du angav är ofullständigt.";
+"d5ad2" = "Det BSB du angav är ofullständigt.";
 
-"The ID number you entered is incomplete." = "ID-numret du angav är ofullständigt.";
+"0f9bf" = "ID-numret du angav är ofullständigt.";
 
-"The account number you entered is incomplete." = "Kontonumret du angav är ofullständigt.";
+"e10dd" = "Kontonumret du angav är ofullständigt.";
 
-"The sort code you entered is invalid." = "Det angivna clearingnumret (sort code) är ogiltigt.";
+"ac7db" = "Det angivna clearingnumret (sort code) är ogiltigt.";
 
-"Town or city" = "Stad";
+"9ce56" = "Stad";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Det gick inte att analysera telefonnumret";
+"72356" = "Det gick inte att analysera telefonnumret";
 
-"Use rotor to access links" = "Använd rotorn för att komma åt länkar";
+"11480" = "Använd rotorn för att komma åt länkar";
 
-"Your BLIK code is incomplete." = "Din BLIK-kod är ofullständig.";
+"6c0af" = "Din BLIK-kod är ofullständig.";
 
-"Your BLIK code is invalid." = "Din BLIK-kod är ogiltig.";
+"224bb" = "Din BLIK-kod är ogiltig.";
 
-"Your ZIP code is incomplete." = "Ditt postnummer är ofullständigt.";
+"3e686" = "Ditt postnummer är ofullständigt.";
 
-"Your ZIP code is invalid." = "Ditt postnummer är ogiltigt.";
+"f029b" = "Ditt postnummer är ogiltigt.";
 
-"Your email is invalid." = "Din e-postadress är ogiltig.";
+"57c28" = "Din e-postadress är ogiltig.";
 
-"Your payment information will not be saved." = "Din betalningsinformation kommer inte att sparas.";
+"cc532" = "Din betalningsinformation kommer inte att sparas.";
 
-"Your postal code is incomplete." = "Ditt postnummer är ofullständigt.";
+"52c55" = "Ditt postnummer är ofullständigt.";
 
-"Your postal code is invalid." = "Ditt postnummer är ogiltigt.";
+"037ec" = "Ditt postnummer är ogiltigt.";
 
-"ZIP" = "Postkod";
+"eaca4" = "Postkod";

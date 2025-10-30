@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (valikuline)";
+"224e3" = "%@ (valikuline)";
 
-"(not accepted)" = "(pole aktsepteeritud)";
+"f676f" = "(pole aktsepteeritud)";
 
-"Account number" = "Kontonumber";
+"f7573" = "Kontonumber";
 
-"Address" = "Aadress";
+"56ef8" = "Aadress";
 
-"Address line 1" = "Aadressirida 1";
+"ee760" = "Aadressirida 1";
 
-"Address line 2" = "Aadressirida 2";
+"350b2" = "Aadressirida 2";
 
-"Area" = "Piirkond";
+"024dc" = "Piirkond";
 
-"BLIK code" = "BLIK-kood";
+"35cc2" = "BLIK-kood";
 
-"BSB number" = "BSB-number";
+"88a06" = "BSB-number";
 
-"Bank account •••• %@" = "Pangakonto •••• %@";
+"7a614" = "Pangakonto •••• %@";
 
-"Billing address is same as shipping" = "Arveldusaadress on sama mis tarneaadress";
+"a03f3" = "Arveldusaadress on sama mis tarneaadress";
 
-"Cancel" = "Tühista";
+"19766e" = "Tühista";
 
-"Card brand" = "Kaardi bränd";
+"45022" = "Kaardi bränd";
 
-"City" = "Linn";
+"fc33f" = "Linn";
 
-"Code field" = "Koodi väli";
+"2b743" = "Koodi väli";
 
-"Company" = "Ettevõte";
+"de474" = "Ettevõte";
 
-"Continue" = "Jätka";
+"31fbe" = "Jätka";
 
-"Country" = "Riik";
+"701d0" = "Riik";
 
-"Country or region" = "Riik või regioon";
+"8d236" = "Riik või regioon";
 
-"County" = "Maakond";
+"136c8" = "Maakond";
 
-"Department" = "Departemang";
+"5304a" = "Departemang";
 
-"District" = "Regioon";
+"50f18" = "Regioon";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Kas soovite selle vormi sulgeda?";
+"6ebfc" = "Kas soovite selle vormi sulgeda?";
 
-"Done" = "Valmis";
+"11a67" = "Valmis";
 
-"Double tap to edit" = "Redigeerimiseks topeltklõpsake";
+"f5dd0" = "Redigeerimiseks topeltklõpsake";
 
-"Edit" = "Muutmine";
+"464c4" = "Muutmine";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "Meiliaadress";
+"969cc" = "Meiliaadress";
 
-"Emirate" = "Emiraat";
+"4309c" = "Emiraat";
 
-"Error" = "Viga";
+"54a0e" = "Viga";
 
-"First" = "Esimene";
+"a151c" = "Esimene";
 
-"Full name" = "Täisnimi";
+"f13a6" = "Täisnimi";
 
-"Incomplete phone number" = "Telefoninumber puudulik";
+"6d2d3" = "Telefoninumber puudulik";
 
-"Invalid UPI ID" = "Kehtetu UPI ID";
+"14cf3" = "Kehtetu UPI ID";
 
-"Island" = "Saar";
+"730f5" = "Saar";
 
-"Last" = "Viimane";
+"eb970" = "Viimane";
 
-"Name" = "Nimi";
+"dcd1d" = "Nimi";
 
-"Name on account" = "Nimi kontol";
+"59f3a" = "Nimi kontol";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Muu";
+"f97e9" = "Muu";
 
-"Parish" = "Vald";
+"45ab6" = "Vald";
 
-"Phone number" = "Telefoninumber";
+"306f1" = "Telefoninumber";
 
-"Postal code" = "Sihtnumber";
+"ae53c" = "Sihtnumber";
 
-"Prefecture" = "Prefektuur";
+"50571" = "Prefektuur";
 
-"Province" = "Maakond";
+"abfce" = "Maakond";
 
-"Remove" = "Eemalda";
+"c3812" = "Eemalda";
 
-"Remove bank account?" = "Kas soovite pangakonto eemaldada?";
+"05b2c" = "Kas soovite pangakonto eemaldada?";
 
-"Remove card" = "Eemalda kaart";
+"dcf7d" = "Eemalda kaart";
 
-"Search" = "Otsing";
+"49c26" = "Otsing";
 
-"Select card brand (optional)" = "Valige kaardi kaubamärk (valikuline)";
+"4dc47" = "Valige kaardi kaubamärk (valikuline)";
 
-"Selection is empty." = "Valik on tühi.";
+"4d6f0" = "Valik on tühi.";
 
-"Sort code" = "Sorteerimiskood";
+"a9002" = "Sorteerimiskood";
 
-"State" = "Osariik";
+"a3b50" = "Osariik";
 
-"Suburb" = "Eeslinn";
+"9e843" = "Eeslinn";
 
-"Suburb or city" = "Eeslinn või linn";
+"c3273" = "Eeslinn või linn";
 
-"The BSB you entered is incomplete." = "Sisestatud BSB-number on puudulik.";
+"d5ad2" = "Sisestatud BSB-number on puudulik.";
 
-"The ID number you entered is incomplete." = "Sisestatud isikukood on puudulik.";
+"0f9bf" = "Sisestatud isikukood on puudulik.";
 
-"The account number you entered is incomplete." = "Sisestatud kontonumber on puudulik.";
+"e10dd" = "Sisestatud kontonumber on puudulik.";
 
-"The sort code you entered is invalid." = "Sisestatud sorteerimiskood ei ole kehtiv.";
+"ac7db" = "Sisestatud sorteerimiskood ei ole kehtiv.";
 
-"Town or city" = "Linn";
+"9ce56" = "Linn";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Telefoninumbri parsimine ebaõnnestus";
+"72356" = "Telefoninumbri parsimine ebaõnnestus";
 
-"Use rotor to access links" = "Kasutage linkidele juurdepääsuks rootorit";
+"11480" = "Kasutage linkidele juurdepääsuks rootorit";
 
-"Your BLIK code is incomplete." = "Teie BLIK-kood on puudulik.";
+"6c0af" = "Teie BLIK-kood on puudulik.";
 
-"Your BLIK code is invalid." = "Teie BLIK-kood on kehtetu.";
+"224bb" = "Teie BLIK-kood on kehtetu.";
 
-"Your ZIP code is incomplete." = "Teie postiindeks on puudulik.";
+"3e686" = "Teie postiindeks on puudulik.";
 
-"Your ZIP code is invalid." = "Teie postiindeks on vigane.";
+"f029b" = "Teie postiindeks on vigane.";
 
-"Your email is invalid." = "Teie meiliaadress on kehtetu.";
+"57c28" = "Teie meiliaadress on kehtetu.";
 
-"Your payment information will not be saved." = "Teie makseteavet ei salvestata.";
+"cc532" = "Teie makseteavet ei salvestata.";
 
-"Your postal code is incomplete." = "Sihtnumber on puudulik.";
+"52c55" = "Sihtnumber on puudulik.";
 
-"Your postal code is invalid." = "Teie sihtnumber on kehtetu.";
+"037ec" = "Teie sihtnumber on kehtetu.";
 
-"ZIP" = "Sihtnr";
+"eaca4" = "Sihtnr";

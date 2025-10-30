@@ -55,8 +55,7 @@ final class ErrorViewController: IdentityFlowViewController {
         case .error:
             buttons.append(
                 .init(
-                    text: isFirstViewController ? String.Localized.close : STPLocalizedString(
-                        "Go Back",
+                    text: isFirstViewController ? String.Localized.close : STPLocalizedString("b8d99",
                         "Button to go back to the previous screen"
                     ),
                     state: .enabled,
@@ -215,8 +214,7 @@ extension ErrorViewController.Model {
             if isFirstViewController {
                 return String.Localized.close
             } else {
-                return STPLocalizedString(
-                    "Go Back",
+                return STPLocalizedString("b8d99",
                     "Button to go back to the previous screen"
                 )
             }

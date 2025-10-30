@@ -154,8 +154,7 @@ final class SelfieScanningView: UIView {
     private(set) lazy var retakeSelfieButton: Button = {
         var retakeSelfieButtonConfiguration = Button.Configuration.plain()
         retakeSelfieButtonConfiguration.font = IdentityUI.instructionsFont
-        let retakeSelfieButton = Button(configuration: retakeSelfieButtonConfiguration, title: STPLocalizedString(
-            "Retake Photos",
+        let retakeSelfieButton = Button(configuration: retakeSelfieButtonConfiguration, title: STPLocalizedString("16681",
             "Button text displayed to the user to retake photo"
         ))
         retakeSelfieButton.addTarget(self, action: #selector(didTapRetakeSelfie), for: .touchUpInside)
@@ -405,8 +404,7 @@ extension SelfieScanningView {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill
             imageView.isAccessibilityElement = true
-            imageView.accessibilityLabel = STPLocalizedString(
-                "Selfie",
+            imageView.accessibilityLabel = STPLocalizedString("7891f",
                 "Accessibility label of captured selfie images"
             )
 

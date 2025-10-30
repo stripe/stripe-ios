@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "出错了，请重试。";
+"9c170" = "出错了，请重试。";
 
-"Card brand was not updated. Please try again." = "银行卡品牌未更新，请重试。";
+"4bc73" = "银行卡品牌未更新，请重试。";
 
-"Close" = "关闭";
+"7d9eb" = "关闭";
 
-"Default payment method was not updated. Please try again." = "未更新默认支付方式，请重试。";
+"3048d" = "未更新默认支付方式，请重试。";
 
-"Scan Card" = "扫描银行卡";
+"b60b5" = "扫描银行卡";
 
-"Scan card" = "扫描卡";
+"ea2fe" = "扫描卡";
 
-"The IBAN you entered is invalid." = "您输入的 IBAN 无效。";
+"ee81e" = "您输入的 IBAN 无效。";
 
-"There was an error processing your card -- try again in a few seconds" = "处理您的卡时发生错误 —— 请稍后再试";
+"fa47c" = "处理您的卡时发生错误 —— 请稍后再试";
 
-"There was an unexpected error -- try again in a few seconds" = "发生了意外错误 —— 请过几秒钟再试";
+"c98a4" = "发生了意外错误 —— 请过几秒钟再试";
 
-"Try again" = "重试";
+"d8b83" = "重试";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "我们用 Stripe 来验证您的银行卡信息。Stripe 可能会根据其隐私政策使用并存储您的数据。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>了解更多</u></a>";
+"96fe7" = "我们用 Stripe 来验证您的银行卡信息。Stripe 可能会根据其隐私政策使用并存储您的数据。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>了解更多</u></a>";
 
-"Your card has expired" = "您的银行卡已过期";
+"f5c35" = "您的银行卡已过期";
 
-"Your card was declined" = "您的卡已被拒绝";
+"b9821" = "您的卡已被拒绝";
 
-"Your card's expiration month is invalid" = "您的银行卡的到期月份无效";
+"e02cf" = "您的银行卡的到期月份无效";
 
-"Your card's expiration year is invalid" = "您的银行卡的到期年份无效。";
+"53311" = "您的银行卡的到期年份无效。";
 
-"Your card's number is invalid" = "您的卡号无效";
+"c433c" = "您的卡号无效";
 
-"Your card's security code is invalid" = "您的银行卡的安全码无效";
+"15f5b" = "您的银行卡的安全码无效";
 
-"Your name is invalid." = "您的姓名无效。";
+"b1d57" = "您的姓名无效。";
 
-"Your payment method was declined." = "您的支付方式被拒绝了。";
+"3209d" = "您的支付方式被拒绝了。";

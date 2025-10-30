@@ -1,0 +1,3514 @@
+[
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "A debugger is attached to the App.",
+    "newKey": "028f7",
+    "comment": "The text for warning when a debugger is currently attached to the process.",
+    "value": "A debugger is attached to the App.",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "An emulator is being used to run the App.",
+    "newKey": "8bcbe",
+    "comment": "The text for warning when an emulator is being used to run the application.",
+    "value": "An emulator is being used to run the App.",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Cancel",
+    "newKey": "19766",
+    "comment": "The text for the button that cancels the current challenge process.",
+    "value": "Cancel",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Collapsed",
+    "newKey": "b322b",
+    "comment": "Accessibility label for expandandable text control to indicate text is hidden.",
+    "value": "Collapsed",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Expanded",
+    "newKey": "e72d5",
+    "comment": "Accessibility label for expandandable text control to indicate that the UI has been expanded and additional text is available.",
+    "value": "Expanded",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Loading",
+    "newKey": "dc380",
+    "comment": "Spoken by VoiceOver when the challenge is loading.",
+    "value": "Loading",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "No",
+    "newKey": "1ea44",
+    "comment": "The no answer to a yes or no question.",
+    "value": "No",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Secure checkout",
+    "newKey": "58f32",
+    "comment": "The title for the challenge response step of an authenticated checkout.",
+    "value": "Secure checkout",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Selected",
+    "newKey": "57fd7",
+    "comment": "Indicates that a button is selected.",
+    "value": "Selected",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "The device is jailbroken.",
+    "newKey": "0eb49",
+    "comment": "The text for warning when a device is jailbroken",
+    "value": "The device is jailbroken.",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "The integrity of the SDK has been tampered.",
+    "newKey": "29abb",
+    "comment": "The text for warning when the integrity of the SDK has been tampered with",
+    "value": "The integrity of the SDK has been tampered.",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "The OS or the OS Version is not supported.",
+    "newKey": "79d01",
+    "comment": "The text for warning when the SDK is running on an unsupported OS or OS version.",
+    "value": "The OS or the OS Version is not supported.",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Timeout",
+    "newKey": "70594",
+    "comment": "Error description for when a network request times out. English value is as required by UL certification.",
+    "value": "Timeout",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Unselected",
+    "newKey": "26118",
+    "comment": "Indicates that a button is not selected.",
+    "value": "Unselected",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "Stripe3DS2",
+    "oldKey": "Yes",
+    "newKey": "85a39",
+    "comment": "The yes answer to a yes or no question.",
+    "value": "Yes",
+    "file": "Stripe3DS2/Stripe3DS2/Resources/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCardScan",
+    "oldKey": "Card doesn't match",
+    "newKey": "3c701",
+    "comment": "Label of the error message when the scanned card mismatches the card on file",
+    "value": "Card doesn't match",
+    "file": "StripeCardScan/StripeCardScan/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCardScan",
+    "oldKey": "Enable camera access",
+    "newKey": "22df6",
+    "comment": "Label for button to take customer to camera settings",
+    "value": "Enable camera access",
+    "file": "StripeCardScan/StripeCardScan/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCardScan",
+    "oldKey": "Enter card details manually",
+    "newKey": "3fde0",
+    "comment": "Label for button to enter card details manually instead of scanning",
+    "value": "Enter card details manually",
+    "file": "StripeCardScan/StripeCardScan/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCardScan",
+    "oldKey": "To scan your card you'll need to update your phone settings",
+    "newKey": "6fa8c",
+    "comment": "Label to explain that they need to update phone settings to scan",
+    "value": "To scan your card you'll need to update your phone settings",
+    "file": "StripeCardScan/StripeCardScan/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCardScan",
+    "oldKey": "Torch",
+    "newKey": "dcc57",
+    "comment": "Label for the button that toggles the camera's torch",
+    "value": "Torch",
+    "file": "StripeCardScan/StripeCardScan/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeConnect",
+    "oldKey": "Please check your connection or try again later.",
+    "newKey": "a52e2",
+    "comment": "Subtitle for error message when component fails to load indicating there may be an issue with the internet connection.",
+    "value": "Please check your connection or try again later.",
+    "file": "StripeConnect/StripeConnect/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeConnect",
+    "oldKey": "Something went wrong.",
+    "newKey": "0c953",
+    "comment": "Title for error message when component fails to load",
+    "value": "Something went wrong.",
+    "file": "StripeConnect/StripeConnect/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "An error occurred. Please try again.",
+    "newKey": "9c170",
+    "comment": "A generic error message displayed when an error occurs.",
+    "value": "An error occurred. Please try again.",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Card brand was not updated. Please try again.",
+    "newKey": "4bc73",
+    "comment": "An error message displayed when updating a card brand fails.",
+    "value": "Card brand was not updated. Please try again.",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Close",
+    "newKey": "7d9eb",
+    "comment": "Text for close button",
+    "value": "Close",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Default payment method was not updated. Please try again.",
+    "newKey": "3048d",
+    "comment": "An error message displayed when setting a default payment method fails.",
+    "value": "Default payment method was not updated. Please try again.",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Scan Card",
+    "newKey": "b60b5",
+    "comment": "Text for button to scan a credit card",
+    "value": "Scan Card",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Scan card",
+    "newKey": "ea2fe",
+    "comment": "Button title to open camera to scan credit/debit card",
+    "value": "Scan card",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "The IBAN you entered is invalid.",
+    "newKey": "ee81e",
+    "comment": "An error message displayed when the customer's iban is invalid.",
+    "value": "The IBAN you entered is invalid.",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "There was an error processing your card -- try again in a few seconds",
+    "newKey": "fa47c",
+    "comment": "Error when there is a problem processing the credit card",
+    "value": "There was an error processing your card -- try again in a few seconds",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "There was an unexpected error -- try again in a few seconds",
+    "newKey": "c98a4",
+    "comment": "Unexpected error, such as a 500 from Stripe or a JSON parse error",
+    "value": "There was an unexpected error -- try again in a few seconds",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Try again",
+    "newKey": "d8b83",
+    "comment": "Text for a retry button",
+    "value": "Try again",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>",
+    "newKey": "96fe7",
+    "comment": "Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy",
+    "value": "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Your card has expired",
+    "newKey": "f5c35",
+    "comment": "Error when the card has already expired",
+    "value": "Your card has expired",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Your card was declined",
+    "newKey": "b9821",
+    "comment": "Error when the card was declined by the credit card networks",
+    "value": "Your card was declined",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Your card's expiration month is invalid",
+    "newKey": "e02cf",
+    "comment": "Error when the card's expiration month is not valid",
+    "value": "Your card's expiration month is invalid",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Your card's expiration year is invalid",
+    "newKey": "53311",
+    "comment": "Error when the card's expiration year is not valid",
+    "value": "Your card's expiration year is invalid",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Your card's number is invalid",
+    "newKey": "c433c",
+    "comment": "Error when the card number is not valid",
+    "value": "Your card's number is invalid",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Your card's security code is invalid",
+    "newKey": "15f5b",
+    "comment": "Error when the card's CVC is not valid",
+    "value": "Your card's security code is invalid",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Your name is invalid.",
+    "newKey": "b1d57",
+    "comment": "Error when customer's name is invalid",
+    "value": "Your name is invalid.",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCore",
+    "oldKey": "Your payment method was declined.",
+    "newKey": "3209d",
+    "comment": "Error message when a payment method gets declined.",
+    "value": "Your payment method was declined.",
+    "file": "StripeCore/StripeCore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeCryptoOnramp",
+    "oldKey": "Debit cards are most likely to be accepted.",
+    "newKey": "ec924",
+    "comment": "Label shown in the Link UI indicating that debit cards are more likely to be accepted",
+    "value": "Debit cards are most likely to be accepted.",
+    "file": "StripeCryptoOnramp/StripeCryptoOnramp/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "A few photos will be taken automatically on the next step to verify it's you",
+    "newKey": "40b57",
+    "comment": "Body for selfie warmup page",
+    "value": "A few photos will be taken automatically on the next step to verify it's you",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Accepted forms of ID include",
+    "newKey": "a9934",
+    "comment": "Title for accepted types of ids",
+    "value": "Accepted forms of ID include",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Alternatively, you may manually upload a photo of your identity document.",
+    "newKey": "a570c",
+    "comment": "Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed",
+    "value": "Alternatively, you may manually upload a photo of your identity document.",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "App Settings",
+    "newKey": "da645",
+    "comment": "Opens the app's settings in the Settings app",
+    "value": "App Settings",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Back %@ photo successfully uploaded",
+    "newKey": "31438",
+    "comment": "Accessibility label when back driver's license, passport, or government issued photo id photo has successfully uploaded",
+    "value": "Back %@ photo successfully uploaded",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Back identity document photo successfully uploaded",
+    "newKey": "3253a",
+    "comment": "Accessibility label when back identity document photo has successfully uploaded",
+    "value": "Back identity document photo successfully uploaded",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Back of %@",
+    "newKey": "128b0",
+    "comment": "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id",
+    "value": "Back of %@",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Back of driver's license or government-issued photo ID",
+    "newKey": "37929",
+    "comment": "Back of driver's license or government-issued photo ID",
+    "value": "Back of driver's license or government-issued photo ID",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Back of identity document",
+    "newKey": "3229d",
+    "comment": "Title of ID document scanning screen when scanning the back of an identity card",
+    "value": "Back of identity document",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Camera permission",
+    "newKey": "51e72",
+    "comment": "Error title displayed to the user when camera permissions have been denied Title displayed when requesting camera permissions",
+    "value": "Camera permission",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Camera unavailable",
+    "newKey": "06cc3",
+    "comment": "Error title displayed to the user when the device's camera is not available",
+    "value": "Camera unavailable",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Capturing…",
+    "newKey": "806e3",
+    "comment": "Instructional text for scanning selfies",
+    "value": "Capturing…",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Choose File",
+    "newKey": "d7042",
+    "comment": "When selected in an action sheet, opens the device's file system browser",
+    "value": "Choose File",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Consent",
+    "newKey": "d37e0",
+    "comment": "Back button title for returning to consent screen of Identity verification",
+    "value": "Consent",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Could not capture image",
+    "newKey": "bf6e9",
+    "comment": "Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time",
+    "value": "Could not capture image",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Date of Birth",
+    "newKey": "fdc73",
+    "comment": "Label for Date of birth field",
+    "value": "Date of Birth",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Date of birth does not look valid",
+    "newKey": "2baa1",
+    "comment": "Message for invalid Date of birth field",
+    "value": "Date of birth does not look valid",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Details not visible",
+    "newKey": "687cd",
+    "comment": "Instructional text when environement is too bright Instructional text when the document is too glarry Instructional text when user needs remove anything blocking the document",
+    "value": "Details not visible",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "driver's license",
+    "newKey": "cadf1",
+    "comment": "driver's license",
+    "value": "driver's license",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Flip your %@ over to the other side",
+    "newKey": "e3292",
+    "comment": "Instructional text for scanning back of a driver's license, passport, or government issued photo id",
+    "value": "Flip your %@ over to the other side",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Flip your driver's license or government-issued photo ID over to the other side",
+    "newKey": "dd41b",
+    "comment": "Flip your driver's license or government-issued photo ID over to the other side",
+    "value": "Flip your driver's license or government-issued photo ID over to the other side",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Flip your identity card over to the other side",
+    "newKey": "87346",
+    "comment": "Instructional text for scanning back of a identity card",
+    "value": "Flip your identity card over to the other side",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Front %@ photo successfully uploaded",
+    "newKey": "b57ad",
+    "comment": "Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded",
+    "value": "Front %@ photo successfully uploaded",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Front identity document photo successfully uploaded",
+    "newKey": "3a9fd",
+    "comment": "Accessibility label when front identity document photo has successfully uploaded",
+    "value": "Front identity document photo successfully uploaded",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Front of %@",
+    "newKey": "73fc5",
+    "comment": "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id",
+    "value": "Front of %@",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Front of driver's license or government-issued photo ID",
+    "newKey": "b3d9a",
+    "comment": "Front of driver's license or government-issued photo ID",
+    "value": "Front of driver's license or government-issued photo ID",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Front of driver's license or passport",
+    "newKey": "8d188",
+    "comment": "Front of driver's license or passport",
+    "value": "Front of driver's license or passport",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Front of driver's license, passport, or government-issued photo ID",
+    "newKey": "070b5",
+    "comment": "Front of driver's license, passport, or government-issued photo ID",
+    "value": "Front of driver's license, passport, or government-issued photo ID",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Front of identity document",
+    "newKey": "8562c",
+    "comment": "Title of ID document scanning screen when scanning the front of an identity card",
+    "value": "Front of identity document",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Front of passport or government-issued photo ID",
+    "newKey": "bb2ee",
+    "comment": "Front of passport or government-issued photo ID",
+    "value": "Front of passport or government-issued photo ID",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Get ready to scan your photo ID",
+    "newKey": "83016",
+    "comment": "Title for document front warmup page",
+    "value": "Get ready to scan your photo ID",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Get ready to take a selfie",
+    "newKey": "9e29f",
+    "comment": "Title for selfie warmup page",
+    "value": "Get ready to take a selfie",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Go Back",
+    "newKey": "b8d99",
+    "comment": "Button to go back to the previous screen",
+    "value": "Go Back",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "government-issued photo ID",
+    "newKey": "29fd8",
+    "comment": "id issued by government",
+    "value": "government-issued photo ID",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Hold still, scanning",
+    "newKey": "b63f6",
+    "comment": "Instructional text when camera is focusing on a document while scanning it",
+    "value": "Hold still, scanning",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "I'm ready",
+    "newKey": "d5b05",
+    "comment": "Ready button text on warmup screen",
+    "value": "I'm ready",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "ID Number",
+    "newKey": "a403d",
+    "comment": "Label for ID number section",
+    "value": "ID Number",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Individual CPF",
+    "newKey": "6212a",
+    "comment": "Label for the ID field to collect individual CPF for Brazilian ID",
+    "value": "Individual CPF",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Keep ID level",
+    "newKey": "6be11",
+    "comment": "Instructional text when user align the edge with camera Instructional text when user needs to rorate to document to align with camera",
+    "value": "Keep ID level",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Last 4 of Social Security number",
+    "newKey": "77dd8",
+    "comment": "Label for the ID field to collect last 4 of social security number for US ID",
+    "value": "Last 4 of Social Security number",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Loading",
+    "newKey": "dc3808",
+    "comment": "Status while screen is loading",
+    "value": "Loading",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Make sure all details are visible and focus",
+    "newKey": "859af",
+    "comment": "Instructional text when the document is too blurry",
+    "value": "Make sure all details are visible and focus",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Make sure you're in a well lit space.",
+    "newKey": "6c2aa",
+    "comment": "Body for selfie warmup page",
+    "value": "Make sure you're in a well lit space.",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Move closer",
+    "newKey": "1da05",
+    "comment": "Instructional text when camera is too far from a document",
+    "value": "Move closer",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Move farther",
+    "newKey": "73333",
+    "comment": "Instructional text when camera is too close to a document",
+    "value": "Move farther",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Move to a darker area",
+    "newKey": "4687a",
+    "comment": "Instructional text when environement is too bright",
+    "value": "Move to a darker area",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Move to a well-lit area",
+    "newKey": "f579f",
+    "comment": "Instructional text when environement is too dark",
+    "value": "Move to a well-lit area",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "No document detected",
+    "newKey": "b376f",
+    "comment": "Instructional text when there is no document in camera frame",
+    "value": "No document detected",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "NRIC or FIN",
+    "newKey": "32e72",
+    "comment": "Label for the ID field to collect NRIC or FIN for Singaporean ID",
+    "value": "NRIC or FIN",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "passport",
+    "newKey": "cbc47",
+    "comment": "passport",
+    "value": "passport",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Personal ID number",
+    "newKey": "fae7d",
+    "comment": "Label for the personal id number field in the hosted verification details collection form for countries without an exception",
+    "value": "Personal ID number",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Personal Information",
+    "newKey": "c4b37",
+    "comment": "Back button title for returning to the individual's perssonal infomation screen",
+    "value": "Personal Information",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Phone Number",
+    "newKey": "72dba",
+    "comment": "Section title for collection phone number",
+    "value": "Phone Number",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Phone Verification",
+    "newKey": "cb074",
+    "comment": "Back button title for returning to the phone verification page",
+    "value": "Phone Verification",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Photo Library",
+    "newKey": "e0b2a",
+    "comment": "When selected in an action sheet, opens the device's photo library",
+    "value": "Photo Library",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Please upload images of the front and back of your %@",
+    "newKey": "03fa9",
+    "comment": "Instructions for uploading images of a driver's license, government issued photo id, or passport",
+    "value": "Please upload images of the front and back of your %@",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Please upload images of the front and back of your identity document",
+    "newKey": "8c273",
+    "comment": "Instructions for uploading images of identity document",
+    "value": "Please upload images of the front and back of your identity document",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Position your %@ in the center of the frame",
+    "newKey": "ceab8",
+    "comment": "Instructional text for scanning front of a driver's license, passport, or government issued photo id",
+    "value": "Position your %@ in the center of the frame",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Position your driver's license or government-issued photo ID in the center of the frame",
+    "newKey": "12559",
+    "comment": "Position your driver's license or government-issued photo ID in the center of the frame",
+    "value": "Position your driver's license or government-issued photo ID in the center of the frame",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Position your driver's license or passport in the center of the frame",
+    "newKey": "453ad",
+    "comment": "Position your driver's license or passport in the center of the frame",
+    "value": "Position your driver's license or passport in the center of the frame",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Position your driver's license, passport, or government-issued photo ID in the center of the frame",
+    "newKey": "ad934",
+    "comment": "Position your driver's license, passport, or government-issued photo ID in the center of the frame",
+    "value": "Position your driver's license, passport, or government-issued photo ID in the center of the frame",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Position your face in the center of the frame.",
+    "newKey": "6f758",
+    "comment": "Instructional text for scanning selfies",
+    "value": "Position your face in the center of the frame.",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Position your identity document in the center of the frame",
+    "newKey": "68f51",
+    "comment": "Instructional text for scanning front of a identity document",
+    "value": "Position your identity document in the center of the frame",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Position your passport or government-issued photo ID in the center of the frame",
+    "newKey": "74830",
+    "comment": "Position your passport or government-issued photo ID in the center of the frame",
+    "value": "Position your passport or government-issued photo ID in the center of the frame",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Retake Photos",
+    "newKey": "16681",
+    "comment": "Button text displayed to the user to retake photo",
+    "value": "Retake Photos",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Scan",
+    "newKey": "ea1c5",
+    "comment": "Back button title for returning to the document scan screen",
+    "value": "Scan",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Scanned",
+    "newKey": "e9b3b",
+    "comment": "State when identity document has been successfully scanned",
+    "value": "Scanned",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Select",
+    "newKey": "2a780",
+    "comment": "Button to select a file to upload",
+    "value": "Select",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Select a location to upload the back of your identity document from",
+    "newKey": "568f3",
+    "comment": "Help text for action sheet that presents ways to upload the back of an identity document image",
+    "value": "Select a location to upload the back of your identity document from",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Select a location to upload the front of your identity document from",
+    "newKey": "a352a",
+    "comment": "Help text for action sheet that presents ways to upload the front of an identity document image",
+    "value": "Select a location to upload the front of your identity document from",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Select back %@ photo",
+    "newKey": "0dfa8",
+    "comment": "Accessibility label to select a photo of back of driver's license, passport, or government issued photo id",
+    "value": "Select back %@ photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Select back identity document photo",
+    "newKey": "38aec",
+    "comment": "Accessibility label to select a photo of back of identity document",
+    "value": "Select back identity document photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Select front %@ photo",
+    "newKey": "1ca11",
+    "comment": "Accessibility label to select a photo of front of driver's license, passport, or government issued photo id",
+    "value": "Select front %@ photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Select front identity document photo",
+    "newKey": "5c25a",
+    "comment": "Accessibility label to select a photo of front of identity document",
+    "value": "Select front identity document photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Selfie",
+    "newKey": "7891f",
+    "comment": "Accessibility label of captured selfie images Back button title for returning to the selfie screen",
+    "value": "Selfie",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Selfie captures",
+    "newKey": "ccd67",
+    "comment": "Title of selfie capture screen",
+    "value": "Selfie captures",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Selfie captures are complete",
+    "newKey": "a7b36",
+    "comment": "Status text when selfie images have been captured",
+    "value": "Selfie captures are complete",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Take Photo",
+    "newKey": "1ca36",
+    "comment": "When selected in an action sheet, opens the device's camera interface",
+    "value": "Take Photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "The images of your identity document have not been saved. Do you want to leave?",
+    "newKey": "b6b76",
+    "comment": "Text for message of warning alert",
+    "value": "The images of your identity document have not been saved. Do you want to leave?",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "There was an error accessing the camera.",
+    "newKey": "1eda8",
+    "comment": "Error text displayed to the user when the device's camera is not available",
+    "value": "There was an error accessing the camera.",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Try Again",
+    "newKey": "df0fe",
+    "comment": "Button to attempt to re-scan identity document image",
+    "value": "Try Again",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Try reduce glare and make ID visible",
+    "newKey": "ffd3d",
+    "comment": "Instructional text when the document is too glarry",
+    "value": "Try reduce glare and make ID visible",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Unable to establish a connection.",
+    "newKey": "77ee9",
+    "comment": "Error message that displays when we're unable to connect to the server.",
+    "value": "Unable to establish a connection.",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Unsaved changes",
+    "newKey": "a710c",
+    "comment": "Title for warning alert",
+    "value": "Unsaved changes",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Upload",
+    "newKey": "865e8",
+    "comment": "Back button label for the identity document file upload screen",
+    "value": "Upload",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Upload a Photo",
+    "newKey": "f0c8a",
+    "comment": "Button that opens file upload screen Button to upload a photo",
+    "value": "Upload a Photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Upload your %@",
+    "newKey": "7f6c1",
+    "comment": "Title of document upload screen",
+    "value": "Upload your %@",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Upload your photo ID",
+    "newKey": "40a76",
+    "comment": "Title of document upload screen",
+    "value": "Upload your photo ID",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Uploading back %@ photo",
+    "newKey": "eaebd",
+    "comment": "Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading",
+    "value": "Uploading back %@ photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Uploading back identity document photo",
+    "newKey": "e16b7",
+    "comment": "Accessibility label while photo of back of identity document is uploading",
+    "value": "Uploading back identity document photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Uploading front %@ photo",
+    "newKey": "93af2",
+    "comment": "Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading",
+    "value": "Uploading front %@ photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Uploading front identity document photo",
+    "newKey": "5dfbf",
+    "comment": "Accessibility label while photo of front of identity document is uploading",
+    "value": "Uploading front identity document photo",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Verify your identity",
+    "newKey": "ed32a",
+    "comment": "Displays in the navigation bar title of the Identity Verification Sheet",
+    "value": "Verify your identity",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "We could not capture a high-quality image.",
+    "newKey": "55e29",
+    "comment": "Error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time",
+    "value": "We could not capture a high-quality image.",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "We need permission to use your camera. Please allow camera access in app settings.",
+    "newKey": "a98b4",
+    "comment": "Line 1 of error text displayed to the user when camera permissions have been denied Text displayed when requesting camera permissions",
+    "value": "We need permission to use your camera. Please allow camera access in app settings.",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Welcome",
+    "newKey": "0e222",
+    "comment": "Back button title for returning to welcome screen of Identity verification",
+    "value": "Welcome",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "You can either try again or upload an image from your device.",
+    "newKey": "348a7",
+    "comment": "Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed",
+    "value": "You can either try again or upload an image from your device.",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeIdentity",
+    "oldKey": "Your selfie images have not been saved. Do you want to leave?",
+    "newKey": "b892f",
+    "comment": "Text for message of warning alert",
+    "value": "Your selfie images have not been saved. Do you want to leave?",
+    "file": "StripeIdentity/StripeIdentity/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "+ Add",
+    "newKey": "c0072",
+    "comment": "Text for a button that, when tapped, displays another screen where the customer can add payment method details",
+    "value": "+ Add",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Add a card",
+    "newKey": "be8f5",
+    "comment": "Title shown above a card entry form",
+    "value": "Add a card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Add a payment method",
+    "newKey": "7e917",
+    "comment": "Text for a button that, when tapped, displays another screen where the customer can add a new payment method",
+    "value": "Add a payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Add bank account",
+    "newKey": "a3cc9",
+    "comment": "Button prompt to add a bank account as a payment method.",
+    "value": "Add bank account",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Add card",
+    "newKey": "769c5",
+    "comment": "Title shown above a view allowing the customer to save their first card.",
+    "value": "Add card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Add new card",
+    "newKey": "800f4",
+    "comment": "Title shown above a view allowing the customer to save a card.",
+    "value": "Add new card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Add new payment method",
+    "newKey": "8130f",
+    "comment": "Text for a button that, when tapped, displays another screen where the customer can add payment method details",
+    "value": "Add new payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Add US bank account",
+    "newKey": "1b3a4",
+    "comment": "Title shown above a view allowing the customer to add a US bank account.",
+    "value": "Add US bank account",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Add your payment information",
+    "newKey": "eaa33",
+    "comment": "Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc.",
+    "value": "Add your payment information",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Approve payment",
+    "newKey": "e70d2",
+    "comment": "Text on a screen asking the user to approve a payment",
+    "value": "Approve payment",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Are you sure you want to remove this card?",
+    "newKey": "c8af7",
+    "comment": "Title of confirmation prompt when removing a saved card.",
+    "value": "Are you sure you want to remove this card?",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Are you sure you want to remove this linked account?",
+    "newKey": "74460",
+    "comment": "Title of confirmation prompt when removing a linked bank account.",
+    "value": "Are you sure you want to remove this linked account?",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Back",
+    "newKey": "76900",
+    "comment": "Text for back button",
+    "value": "Back",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Bank",
+    "newKey": "676c4",
+    "comment": "A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card. Label shown in the payment type picker describing a bank payment",
+    "value": "Bank",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Bank account",
+    "newKey": "1b427",
+    "comment": "Title for collected bank account information",
+    "value": "Bank account",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Bank account details cannot be changed.",
+    "newKey": "12ab1",
+    "comment": "Text on a screen that indicates bank account details cannot be changed.",
+    "value": "Bank account details cannot be changed.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Buy now or pay later with  <img/>",
+    "newKey": "38088",
+    "comment": "Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay",
+    "value": "Buy now or pay later with  <img/>",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Buy now or pay later with Afterpay",
+    "newKey": "c04b4",
+    "comment": "Subtitle shown on a button allowing a user to select to pay with Afterpay.",
+    "value": "Buy now or pay later with Afterpay",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Buy now or pay later with Cash App Afterpay",
+    "newKey": "f566d",
+    "comment": "Subtitle shown on a button allowing a user to select to pay with Afterpay.",
+    "value": "Buy now or pay later with Cash App Afterpay",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Buy now or pay later with Clearpay",
+    "newKey": "bf452",
+    "comment": "Subtitle shown on a button allowing a user to select to pay with Clearpay.",
+    "value": "Buy now or pay later with Clearpay",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Buy now or pay later with Klarna",
+    "newKey": "5c41c",
+    "comment": "Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna",
+    "value": "Buy now or pay later with Klarna",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Buy using a UPI ID",
+    "newKey": "21793",
+    "comment": "Header text shown above a UPI ID text field",
+    "value": "Buy using a UPI ID",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",
+    "newKey": "313bb",
+    "comment": "Paypal mandate text",
+    "value": "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.",
+    "newKey": "c1642",
+    "comment": "Amazon Pay mandate text",
+    "value": "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@.",
+    "newKey": "09c61",
+    "comment": "Klarna mandate text",
+    "value": "By continuing to Klarna, you allow %1$@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %2$@.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",
+    "newKey": "c6ff4",
+    "comment": "Paypal mandate text",
+    "value": "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.",
+    "newKey": "694b5",
+    "comment": "Revolut Pay mandate text",
+    "value": "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "newKey": "8ba3b",
+    "comment": "Legal text shown when creating a Link account.",
+    "value": "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.",
+    "newKey": "23d3e",
+    "comment": "Text providing link to terms for ACH payments",
+    "value": "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.",
+    "newKey": "b8e49",
+    "comment": "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link.",
+    "value": "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing, you agree to save your information for future purchases with %@.",
+    "newKey": "8ca70",
+    "comment": "Text displayed below a credit card entry form when the card will be saved with the merchant.",
+    "value": "By continuing, you agree to save your information for future purchases with %@.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.",
+    "newKey": "d451f",
+    "comment": "Satispay mandate text",
+    "value": "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.",
+    "newKey": "97461",
+    "comment": "Cash App mandate text",
+    "value": "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "newKey": "225b7",
+    "comment": "Legal text shown when creating a Link account.",
+    "value": "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "newKey": "05e15",
+    "comment": "Legal text shown when creating a Link account.",
+    "value": "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \\\"Merchant\\\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.",
+    "newKey": "ba265",
+    "comment": "Legal text shown when using AUBECS.",
+    "value": "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \\\"Merchant\\\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
+    "newKey": "0cdc0",
+    "comment": "Text displayed below a credit card entry form when the card will be saved to make future payments.",
+    "value": "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "newKey": "36fad",
+    "comment": "Legal text shown when creating a Link account.",
+    "value": "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.",
+    "newKey": "289c5",
+    "comment": "SEPA mandate text",
+    "value": "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "newKey": "e3661",
+    "comment": "Legal text shown when creating a Link account.",
+    "value": "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.",
+    "newKey": "02d39",
+    "comment": "Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@).",
+    "value": "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.",
+    "newKey": "c041a",
+    "comment": "Text providing link to terms for bank payments when seller information is provided",
+    "value": "By submitting your order to %1$@ and %2$@, you agree to save your information with %3$@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.",
+    "newKey": "532e1",
+    "comment": "Text providing link to terms for bank payments",
+    "value": "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Cancel and pay another way",
+    "newKey": "58817",
+    "comment": "Button text on a screen asking the user to approve a payment",
+    "value": "Cancel and pay another way",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Card details cannot be changed.",
+    "newKey": "34c44",
+    "comment": "Text on a screen that indicates card details cannot be changed.",
+    "value": "Card details cannot be changed.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Change",
+    "newKey": "c0bf7",
+    "comment": "Label for a button that lets you change the details of a payment method",
+    "value": "Change",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Choose a payment method",
+    "newKey": "1dc8a",
+    "comment": "TODO",
+    "value": "Choose a payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Close card scanner",
+    "newKey": "c0077",
+    "comment": "Accessibility label for the button to close the card scanner.",
+    "value": "Close card scanner",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Code sent",
+    "newKey": "f98a1",
+    "comment": "Text of a notification shown to the user when a login code is successfully sent via SMS.",
+    "value": "Code sent",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Confirm",
+    "newKey": "eebdd",
+    "comment": "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.",
+    "value": "Confirm",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Confirm it's you",
+    "newKey": "6176e",
+    "comment": "Two factor authentication screen heading",
+    "value": "Confirm it's you",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Confirm payment details",
+    "newKey": "3a6b5",
+    "comment": "Title of a screen where the user can update their payment method before continuing with the transaction.",
+    "value": "Confirm payment details",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Confirm the payment in your bank or payment app within %@ to complete the purchase.",
+    "newKey": "101ef",
+    "comment": "Text for alert message when user needs to confirm payment in their banking app",
+    "value": "Confirm the payment in your bank or payment app within %@ to complete the purchase.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Confirm the payment in your bank's app within %@ to complete the purchase.",
+    "newKey": "a8c9a",
+    "comment": "Text for alert message when user needs to confirm payment in their banking app",
+    "value": "Confirm the payment in your bank's app within %@ to complete the purchase.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Confirm your CVC",
+    "newKey": "a4bdf",
+    "comment": "Title for prompting for a card's CVC on confirming the payment",
+    "value": "Confirm your CVC",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Contact information",
+    "newKey": "cbc73",
+    "comment": "Title for the contact information section",
+    "value": "Contact information",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Continue another way",
+    "newKey": "c2a49",
+    "comment": "Label of a button that when tapped allows the user to select a different form of payment.",
+    "value": "Continue another way",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "CPF/CPNJ",
+    "newKey": "71187",
+    "comment": "Label for CPF/CPNJ (Brazil tax ID) field",
+    "value": "CPF/CPNJ",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Create an account with Link for faster checkout across the web",
+    "newKey": "b568d",
+    "comment": "Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions.",
+    "value": "Create an account with Link for faster checkout across the web",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Debit or credit card",
+    "newKey": "04f63",
+    "comment": "Label shown in the payment type picker describing a card payment",
+    "value": "Debit or credit card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Default",
+    "newKey": "21b11",
+    "comment": "Label for identifying the default payment method.",
+    "value": "Default",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Default payment method",
+    "newKey": "4c163",
+    "comment": "Label for a disabled checked checkbox identifying the default payment method.",
+    "value": "Default payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Did you mean %@? %@.",
+    "newKey": "6d7d1",
+    "comment": "Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link.",
+    "value": "Did you mean %1$@? %2$@.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Enter address manually",
+    "newKey": "1534f",
+    "comment": "Text for a button that allows manual entry of an address",
+    "value": "Enter address manually",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Enter the code sent to %@.",
+    "newKey": "1e836",
+    "comment": "Instructs the user to enter the code sent to their phone number in order to login to Link",
+    "value": "Enter the code sent to %@.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "EPS Bank",
+    "newKey": "8f218",
+    "comment": "Label title for EPS Bank",
+    "value": "EPS Bank",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Failed to connect",
+    "newKey": "46c9f",
+    "comment": "Label shown when a network-related error has occured.",
+    "value": "Failed to connect",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Fast, secure checkout",
+    "newKey": "2aeb3",
+    "comment": "Title for the Link signup screen",
+    "value": "Fast, secure checkout",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "FPX Bank",
+    "newKey": "8c73e",
+    "comment": "Select a bank dropdown for FPX",
+    "value": "FPX Bank",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>",
+    "newKey": "b70b0",
+    "comment": "Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]'",
+    "value": "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Get %@ back when you pay with your bank. <terms>See terms</terms>",
+    "newKey": "332d2",
+    "comment": "Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]'",
+    "value": "Get %@ back when you pay with your bank. <terms>See terms</terms>",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.",
+    "newKey": "b751e",
+    "comment": "Bacs Debit mandate text",
+    "value": "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "IBAN",
+    "newKey": "7e345",
+    "comment": "Label for an IBAN field",
+    "value": "IBAN",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "iDEAL Bank",
+    "newKey": "460cb",
+    "comment": "iDEAL bank section title for iDEAL form entry.",
+    "value": "iDEAL Bank",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Log in or sign up",
+    "newKey": "38f51",
+    "comment": "Title for a button that indicates a user can log in or sign up.",
+    "value": "Log in or sign up",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Log out of Link",
+    "newKey": "57083",
+    "comment": "Title of the logout action.",
+    "value": "Log out of Link",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Manage bank account",
+    "newKey": "2d4ed",
+    "comment": "Title shown above a view containing the customer's bank account that they can delete",
+    "value": "Manage bank account",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Manage card",
+    "newKey": "49e98",
+    "comment": "Title shown above a view containing the customer's card that they can delete or update",
+    "value": "Manage card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Manage cards",
+    "newKey": "fe215",
+    "comment": "Title shown above a view containing a list of the customer's cards that they can delete or update",
+    "value": "Manage cards",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Manage payment method",
+    "newKey": "67c16",
+    "comment": "Title shown above a view containing the customer's payment method that they can delete or update",
+    "value": "Manage payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Manage payment methods",
+    "newKey": "cf0c9",
+    "comment": "Title shown above a view containing the customer's payment methods that they can delete or update",
+    "value": "Manage payment methods",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Manage SEPA debit",
+    "newKey": "a7ff3",
+    "comment": "Title shown above a view containing the customer's SEPA debit that they can delete or update",
+    "value": "Manage SEPA debit",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Manage US bank account",
+    "newKey": "0b654",
+    "comment": "Title shown above a view containing the customer's bank account that they can delete or update",
+    "value": "Manage US bank account",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Manage your payment methods",
+    "newKey": "74db7",
+    "comment": "Title shown above a carousel containing the customer's payment methods",
+    "value": "Manage your payment methods",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Name on card",
+    "newKey": "18bf0",
+    "comment": "Label for name on card field",
+    "value": "Name on card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "New card",
+    "newKey": "8d3ef",
+    "comment": "Label of a button that appears on a checkout screen. When tapped, it displays a credit card form. This button is shown next to another button representing the customer's saved card; the word 'new' is meant to differentiate this button's action with the saved card button.",
+    "value": "New card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "New payment method",
+    "newKey": "c5f95",
+    "comment": "Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc.",
+    "value": "New payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "No %@ promo",
+    "newKey": "99d88",
+    "comment": "Label for when the user is not eligible for a promo.",
+    "value": "No %@ promo",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Not you?",
+    "newKey": "5b978",
+    "comment": "Title for a button that allows the user to use a different email in the signup flow.",
+    "value": "Not you?",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Only card brand can be changed.",
+    "newKey": "d1c0a",
+    "comment": "Text on a screen for updating a cobranded card that indicates only card brand can be changed.",
+    "value": "Only card brand can be changed.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Open your UPI app to approve your payment within %@",
+    "newKey": "b7546",
+    "comment": "Countdown timer text on a screen asking the user to approve a payment",
+    "value": "Open your UPI app to approve your payment within %@",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Or",
+    "newKey": "0568b",
+    "comment": "Separator label between two options",
+    "value": "Or",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Or pay using",
+    "newKey": "3c3f7",
+    "comment": "Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay.",
+    "value": "Or pay using",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Or pay with a card",
+    "newKey": "682d8",
+    "comment": "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay.",
+    "value": "Or pay with a card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Or use",
+    "newKey": "4158c",
+    "comment": "Title of a section displayed below an Apple Pay button. The section contains alternative ways to set up.",
+    "value": "Or use",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Or use a card",
+    "newKey": "b529c",
+    "comment": "Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to set up.",
+    "value": "Or use a card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Pay %@",
+    "newKey": "964f6",
+    "comment": "Label of a button that initiates payment when tapped",
+    "value": "Pay %@",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Pay another way",
+    "newKey": "4bb4a",
+    "comment": "Label of a button that when tapped allows the user to select a different form of payment.",
+    "value": "Pay another way",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Pay faster at %@ and thousands of businesses.",
+    "newKey": "f43bb",
+    "comment": "Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of businesses e.g, 'Pay faster at Example, Inc. and thousands of businesses.'",
+    "value": "Pay faster at %@ and thousands of businesses.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Pay faster everywhere Link is accepted.",
+    "newKey": "d49c1",
+    "comment": "Subtitle for the Link signup screen",
+    "value": "Pay faster everywhere Link is accepted.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Pay over time with %@",
+    "newKey": "77196",
+    "comment": "Pay over time with Affirm copy",
+    "value": "Pay over time with %@",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Pay over time with Affirm",
+    "newKey": "2f870",
+    "comment": "Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm",
+    "value": "Pay over time with Affirm",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Pay with Link",
+    "newKey": "9d81a",
+    "comment": "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.",
+    "value": "Pay with Link",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Pay with your bank account in just a few steps.",
+    "newKey": "bc021",
+    "comment": "US Bank Account copy title for Mobile payment element form",
+    "value": "Pay with your bank account in just a few steps.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Payment",
+    "newKey": "7048f",
+    "comment": "Label for a section displaying payment details.",
+    "value": "Payment",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Payment failed",
+    "newKey": "17aad",
+    "comment": "Text on a screen that indicates a payment has failed",
+    "value": "Payment failed",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Payment methods",
+    "newKey": "16d26",
+    "comment": "Title for a section listing one or more payment methods.",
+    "value": "Payment methods",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Please choose a valid payment method.",
+    "newKey": "5ddb8",
+    "comment": "Error message that's displayed when you try to confirm a payment without a valid payment method",
+    "value": "Please choose a valid payment method.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Please go back and select another payment method",
+    "newKey": "cf6c1",
+    "comment": "Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method",
+    "value": "Please go back and select another payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Point the camera at your card.",
+    "newKey": "59a6c",
+    "comment": "Accessibility instructions for card scanning.",
+    "value": "Point the camera at your card.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Processing...",
+    "newKey": "f40a8",
+    "comment": "Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text",
+    "value": "Processing...",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Przelewy24 Bank",
+    "newKey": "b0866",
+    "comment": "Label title for Przelewy24 Bank",
+    "value": "Przelewy24 Bank",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Remove card?",
+    "newKey": "ce640",
+    "comment": "Title for confirmation alert to remove a card",
+    "value": "Remove card?",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Remove linked account",
+    "newKey": "a545c",
+    "comment": "Title for a button that when tapped removes a linked bank account.",
+    "value": "Remove linked account",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Resend code",
+    "newKey": "b9745",
+    "comment": "Label for a button that re-sends the a login code when tapped",
+    "value": "Resend code",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save",
+    "newKey": "1509f",
+    "comment": "A button used for saving a new payment method Label on a button that when tapped, updates a card brand.",
+    "value": "Save",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save a new payment method",
+    "newKey": "6b6eb",
+    "comment": "Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc.",
+    "value": "Save a new payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save address",
+    "newKey": "0cbb9",
+    "comment": "Title for address entry section",
+    "value": "Save address",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save for future payments",
+    "newKey": "7990e",
+    "comment": "The label of a switch indicating whether to save the payment method for future payments.",
+    "value": "Save for future payments",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save my info for faster checkout with Link",
+    "newKey": "8e1e1",
+    "comment": "Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions.",
+    "value": "Save my info for faster checkout with Link",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save payment details to %@ for future purchases",
+    "newKey": "0745e",
+    "comment": "The label of a switch indicating whether to save the user's payment details for future payment",
+    "value": "Save payment details to %@ for future purchases",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save this account for future %@ payments",
+    "newKey": "e8c88",
+    "comment": "Prompt next to checkbox to save bank account.",
+    "value": "Save this account for future %@ payments",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save your bank account in just a few steps.",
+    "newKey": "b4042",
+    "comment": "US Bank Account copy title for Mobile payment element form",
+    "value": "Save your bank account in just a few steps.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Save your info for secure 1-click checkout with Link",
+    "newKey": "650b1",
+    "comment": "Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions.",
+    "value": "Save your info for secure 1-click checkout with Link",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Saved",
+    "newKey": "b5c12",
+    "comment": "Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account.",
+    "value": "Saved",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Select card",
+    "newKey": "59ffd",
+    "comment": "Title shown above a view containing the customer's card payment methods",
+    "value": "Select card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Select payment method",
+    "newKey": "659d1",
+    "comment": "Title shown above a view containing the customer's payment methods",
+    "value": "Select payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Select your payment method",
+    "newKey": "d23e3",
+    "comment": "Title shown above a carousel containing the customer's payment methods",
+    "value": "Select your payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "SEPA debit details cannot be changed.",
+    "newKey": "a4f77",
+    "comment": "Text on a screen that indicates SEPA debit details cannot be changed.",
+    "value": "SEPA debit details cannot be changed.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Set as default",
+    "newKey": "d09b4",
+    "comment": "Label for a button or menu item that sets a payment method as default when tapped.",
+    "value": "Set as default",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Set as default payment method",
+    "newKey": "af056",
+    "comment": "Label of a checkbox that when checked makes a payment method as the default one.",
+    "value": "Set as default payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Set up",
+    "newKey": "4da10",
+    "comment": "Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use",
+    "value": "Set up",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Shipping to %@ is not supported.",
+    "newKey": "b8e46",
+    "comment": "Text for an error that is shown when a user selects a shipping address that is not supported by the merchant",
+    "value": "Shipping to %@ is not supported.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Show menu",
+    "newKey": "0b0af",
+    "comment": "Accessibility label for an action or a button that shows a menu.",
+    "value": "Show menu",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Simple, secure one-click payments",
+    "newKey": "edd6d",
+    "comment": "Subtitle shown on a button allowing a user to select to pay with Link.",
+    "value": "Simple, secure one-click payments",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Something went wrong when linking your account.\\nPlease try again later.",
+    "newKey": "33596",
+    "comment": "Error message when an error case happens when linking your account",
+    "value": "Something went wrong when linking your account.\\nPlease try again later.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@.",
+    "newKey": "822ff",
+    "comment": "Prompt for microdeposit verification before completing saving payment method with merchant. %@ will be replaced by merchant business name",
+    "value": "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.",
+    "newKey": "72fd8",
+    "comment": "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name",
+    "value": "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Tap to close",
+    "newKey": "e263d",
+    "comment": "Accessibility hint to tell the user that they can tap to hide additional content.",
+    "value": "Tap to close",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Tap to expand",
+    "newKey": "1cbaf",
+    "comment": "Accessibility hint to tell the user that they can tap to reveal additional content.",
+    "value": "Tap to expand",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "The IBAN you entered is incomplete.",
+    "newKey": "477cb",
+    "comment": "An error message.",
+    "value": "The IBAN you entered is incomplete.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "The IBAN you entered is invalid, \\\"%@\\\" is not a supported country code.",
+    "newKey": "a70c6",
+    "comment": "An error message.",
+    "value": "The IBAN you entered is invalid, \\\"%@\\\" is not a supported country code.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "The provided verification code has expired.",
+    "newKey": "e32a6",
+    "comment": "Error message shown when the user enters an expired verification code.",
+    "value": "The provided verification code has expired.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "The provided verification code is incorrect.",
+    "newKey": "e8cb8",
+    "comment": "Error message shown when the user enters an incorrect verification code.",
+    "value": "The provided verification code is incorrect.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "This is your default",
+    "newKey": "f3c56",
+    "comment": "Text of a label indicating that a payment method is the default.",
+    "value": "This is your default",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "This payment method will be removed but will remain available for %@ subscriptions.",
+    "newKey": "478c1",
+    "comment": "Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name",
+    "value": "This payment method will be removed but will remain available for %@ subscriptions.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Too many attempts. Please try again in a few minutes.",
+    "newKey": "4a754",
+    "comment": "Error message shown when the user enters an incorrect verification code too many times.",
+    "value": "Too many attempts. Please try again in a few minutes.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Unavailable for this purchase",
+    "newKey": "19202",
+    "comment": "Label shown when a payment method cannot be used for the current transaction.",
+    "value": "Unavailable for this purchase",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Update card",
+    "newKey": "e28b5",
+    "comment": "Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself.",
+    "value": "Update card",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Update payment method",
+    "newKey": "fa7bf",
+    "comment": "Accessibility label for a button that leads to a screen for updating a payment method.",
+    "value": "Update payment method",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Use billing address for shipping",
+    "newKey": "4a82d",
+    "comment": "Label for checkbox in address form allowing user to use billing address",
+    "value": "Use billing address for shipping",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "View more",
+    "newKey": "267e5",
+    "comment": "Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods.",
+    "value": "View more",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Yes, update",
+    "newKey": "fa298",
+    "comment": "Text for a tappable link that will update the email field with a suggested email address.",
+    "value": "Yes, update",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentSheet",
+    "oldKey": "Your IBAN should start with a two-letter country code.",
+    "newKey": "42ef0",
+    "comment": "An error message.",
+    "value": "Your IBAN should start with a two-letter country code.",
+    "file": "StripePaymentSheet/StripePaymentSheet/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Affirm",
+    "newKey": "07b9f",
+    "comment": "Payment Method type brand name",
+    "value": "Affirm",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Afterpay",
+    "newKey": "032a2",
+    "comment": "Payment Method type brand name",
+    "value": "Afterpay",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Alipay",
+    "newKey": "d5b72",
+    "comment": "Payment Method type brand name",
+    "value": "Alipay",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "AU Direct Debit",
+    "newKey": "c1188",
+    "comment": "Payment Method type brand name.",
+    "value": "AU Direct Debit",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Bacs Direct Debit",
+    "newKey": "0b4ee",
+    "comment": "Payment Method type brand name",
+    "value": "Bacs Direct Debit",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Bancontact",
+    "newKey": "84e7c",
+    "comment": "Payment Method type brand name",
+    "value": "Bancontact",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "BLIK",
+    "newKey": "354ad",
+    "comment": "Payment Method type brand name",
+    "value": "BLIK",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Boleto",
+    "newKey": "3a3c9",
+    "comment": "Payment Method type brand name",
+    "value": "Boleto",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Card",
+    "newKey": "be370",
+    "comment": "Payment Method for credit card",
+    "value": "Card",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Cash App Pay",
+    "newKey": "35d08",
+    "comment": "Payment Method type brand name",
+    "value": "Cash App Pay",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Clearpay",
+    "newKey": "268da",
+    "comment": "Payment Method type brand name",
+    "value": "Clearpay",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "EPS",
+    "newKey": "6d9d7",
+    "comment": "Payment Method type brand name.",
+    "value": "EPS",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "FPX",
+    "newKey": "fed44",
+    "comment": "Payment Method type brand name",
+    "value": "FPX",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "giropay",
+    "newKey": "83eee",
+    "comment": "Payment Method type brand name.",
+    "value": "giropay",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "GrabPay",
+    "newKey": "09996",
+    "comment": "Payment Method type brand name.",
+    "value": "GrabPay",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "iDEAL",
+    "newKey": "f54ab",
+    "comment": "Source type brand name",
+    "value": "iDEAL",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Klarna",
+    "newKey": "a2e77",
+    "comment": "Payment Method type brand name",
+    "value": "Klarna",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Konbini",
+    "newKey": "3f752",
+    "comment": "Payment Method type brand name",
+    "value": "Konbini",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Link",
+    "newKey": "a6a32",
+    "comment": "Link Payment Method type brand name",
+    "value": "Link",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "NetBanking",
+    "newKey": "3aba6",
+    "comment": "Payment Method type brand name",
+    "value": "NetBanking",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "OXXO",
+    "newKey": "71ecf",
+    "comment": "Payment Method type brand name",
+    "value": "OXXO",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "PayPal",
+    "newKey": "ab8a4",
+    "comment": "Payment Method type brand name",
+    "value": "PayPal",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Przelewy24",
+    "newKey": "0a7ad",
+    "comment": "Payment Method type brand name.",
+    "value": "Przelewy24",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "SEPA Debit",
+    "newKey": "b5dc7",
+    "comment": "Payment method brand name",
+    "value": "SEPA Debit",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Sofort",
+    "newKey": "02f19",
+    "comment": "Payment Method type brand name",
+    "value": "Sofort",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Swish",
+    "newKey": "1e736",
+    "comment": "Payment Method type brand name",
+    "value": "Swish",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Timed out authenticating your payment method -- try again",
+    "newKey": "37fc6",
+    "comment": "Error when 3DS2 authentication timed out.",
+    "value": "Timed out authenticating your payment method -- try again",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "Unknown",
+    "newKey": "b764c",
+    "comment": "Default missing source type label",
+    "value": "Unknown",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "UPI",
+    "newKey": "7b06e",
+    "comment": "Payment Method type brand name",
+    "value": "UPI",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "US bank account",
+    "newKey": "40d8d",
+    "comment": "Payment Method type name for US bank account payments.",
+    "value": "US bank account",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "We are unable to authenticate your payment method. Please choose a different payment method and try again.",
+    "newKey": "f2763",
+    "comment": "Error when 3DS2 authentication failed (e.g. customer entered the wrong code)",
+    "value": "We are unable to authenticate your payment method. Please choose a different payment method and try again.",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePayments",
+    "oldKey": "WeChat Pay",
+    "newKey": "a39c6",
+    "comment": "Payment Method type brand name",
+    "value": "WeChat Pay",
+    "file": "StripePayments/StripePayments/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "%1$@ account ending in %2$@",
+    "newKey": "3b24a",
+    "comment": "Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242'",
+    "value": "%1$@ account ending in %2$@",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "%1$@ Card",
+    "newKey": "fbfa6",
+    "comment": "Label a default funding source, which we treat as a generic card. E.g. 'Visa Card'",
+    "value": "%1$@ Card",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "%1$@ Credit",
+    "newKey": "a11b0",
+    "comment": "Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte'",
+    "value": "%1$@ Credit",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "%1$@ Debit",
+    "newKey": "95233",
+    "comment": "Label a debit funding source. E.g. 'Visa Debit'",
+    "value": "%1$@ Debit",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "%1$@ ending in %2$@",
+    "newKey": "f5b21",
+    "comment": "Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242'",
+    "value": "%1$@ ending in %2$@",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "%1$@ is not accepted",
+    "newKey": "29adf",
+    "comment": "String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted",
+    "value": "%1$@ is not accepted",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "%1$@ Prepaid",
+    "newKey": "c90ba",
+    "comment": "Label a prepaid funding source. E.g. 'Visa Prepaid'",
+    "value": "%1$@ Prepaid",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Address line 2 (optional)",
+    "newKey": "9ada7",
+    "comment": "Address line 2 placeholder for billing address form.",
+    "value": "Address line 2 (optional)",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Apple Pay",
+    "newKey": "9bb3a",
+    "comment": "Text for Apple Pay payment method",
+    "value": "Apple Pay",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Bank Account",
+    "newKey": "c6f64",
+    "comment": "Label for Bank Account selection or detail entry form",
+    "value": "Bank Account",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Billing address",
+    "newKey": "1f516",
+    "comment": "Billing address section title for card form entry.",
+    "value": "Billing address",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Billing details",
+    "newKey": "7c928",
+    "comment": "Billing details section title for card form entry.",
+    "value": "Billing details",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "BSB",
+    "newKey": "7d8c3",
+    "comment": "Placeholder text for BSB Number entry field for BECS Debit.",
+    "value": "BSB",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Card information",
+    "newKey": "fca47",
+    "comment": "Card details entry form header title",
+    "value": "Card information",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "card number",
+    "newKey": "58da6",
+    "comment": "accessibility label for text field",
+    "value": "card number",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Card number",
+    "newKey": "816fc",
+    "comment": "Label for card number entry text field",
+    "value": "Card number",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Confirm your %@",
+    "newKey": "002d7",
+    "comment": "Section title for entering your CVC. e.g. 'Confirm your CVC'",
+    "value": "Confirm your %@",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "CVC",
+    "newKey": "19e9b",
+    "comment": "Label for entering CVC in text field",
+    "value": "CVC",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "example@example.com",
+    "newKey": "31c55",
+    "comment": "Placeholder string for email entry field.",
+    "value": "example@example.com",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "expiration date",
+    "newKey": "b34dd",
+    "comment": "accessibility label for text field",
+    "value": "expiration date",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Invalid data.",
+    "newKey": "da175",
+    "comment": "Spoken during VoiceOver when a form field has failed validation.",
+    "value": "Invalid data.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "MM / YY",
+    "newKey": "58f4a",
+    "comment": "label for text field to enter card expiry",
+    "value": "MM / YY",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "MM/YY",
+    "newKey": "1b5f6",
+    "comment": "label for text field to enter card expiry",
+    "value": "MM/YY",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Postal Code",
+    "newKey": "8198b",
+    "comment": "Postal code placeholder",
+    "value": "Postal Code",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Shipping Address",
+    "newKey": "6e244",
+    "comment": "Title for shipping address entry section",
+    "value": "Shipping Address",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "State / Province / Region",
+    "newKey": "649f1",
+    "comment": "Caption for generalized state/province/region field on address form (not tied to a specific country's format)",
+    "value": "State / Province / Region",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "The BSB you entered is invalid.",
+    "newKey": "dfa21",
+    "comment": "Error string displayed to user when they enter in an invalid BSB number.",
+    "value": "The BSB you entered is invalid.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "The selected brand is not allowed",
+    "newKey": "aaf53",
+    "comment": "String to inform a user that specific card brands are not accepted.",
+    "value": "The selected brand is not allowed",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "To scan your card, allow camera access in Settings.",
+    "newKey": "9f2d9",
+    "comment": "Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app.",
+    "value": "To scan your card, allow camera access in Settings.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card has expired.",
+    "newKey": "393e6",
+    "comment": "Error message for card details form when expiration date has passed",
+    "value": "Your card has expired.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card number is incomplete.",
+    "newKey": "7e5ae",
+    "comment": "Error message for card form when card number is incomplete",
+    "value": "Your card number is incomplete.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card number is invalid.",
+    "newKey": "3c122",
+    "comment": "Error message for card form when card number is invalid",
+    "value": "Your card number is invalid.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card's expiration date is incomplete.",
+    "newKey": "a2036",
+    "comment": "Error message for card details form when expiration date isn't entered completely",
+    "value": "Your card's expiration date is incomplete.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card's expiration date is invalid.",
+    "newKey": "6a457",
+    "comment": "Error message for card details form when expiration date is invalid",
+    "value": "Your card's expiration date is invalid.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card's expiration month is invalid.",
+    "newKey": "e47c0",
+    "comment": "String to describe an invalid month in expiry date.",
+    "value": "Your card's expiration month is invalid.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card's expiration year is invalid.",
+    "newKey": "36ae2",
+    "comment": "String to describe an invalid year in expiry date.",
+    "value": "Your card's expiration year is invalid.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card's security code is incomplete.",
+    "newKey": "300dd",
+    "comment": "Error message for card entry form when CVC is incomplete.",
+    "value": "Your card's security code is incomplete.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripePaymentsUI",
+    "oldKey": "Your card's security code is invalid.",
+    "newKey": "394fd",
+    "comment": "Error message for card entry form when CVC is invalid",
+    "value": "Your card's security code is invalid.",
+    "file": "StripePaymentsUI/StripePaymentsUI/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "%1$@ •••• %2$@",
+    "newKey": "aab74",
+    "comment": "Card preview details displaying the last four digits: {card brand} •••• {last 4} e.g. 'Visa •••• 3155'",
+    "value": "%1$@ •••• %2$@",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "%@ (optional)",
+    "newKey": "224e3",
+    "comment": "The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional)",
+    "value": "%@ (optional)",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "(not accepted)",
+    "newKey": "f676f",
+    "comment": "Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \\\"Visa (not accepted)\\\"",
+    "value": "(not accepted)",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Account number",
+    "newKey": "f7573",
+    "comment": "Caption for account number",
+    "value": "Account number",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Address",
+    "newKey": "56ef8",
+    "comment": "Caption for Address field on address form Section header for address fields",
+    "value": "Address",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Address line 1",
+    "newKey": "ee760",
+    "comment": "Address line 1 placeholder for billing address form.\\nLabel for address line 1 field",
+    "value": "Address line 1",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Address line 2",
+    "newKey": "350b2",
+    "comment": "Label for address line 2 field",
+    "value": "Address line 2",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Area",
+    "newKey": "024dc",
+    "comment": "Label of an address field",
+    "value": "Area",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Bank account •••• %@",
+    "newKey": "7a614",
+    "comment": "Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242'",
+    "value": "Bank account •••• %@",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Billing address is same as shipping",
+    "newKey": "a03f3",
+    "comment": "Label for a checkbox that makes customers billing address same as their shipping address",
+    "value": "Billing address is same as shipping",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "BLIK code",
+    "newKey": "35cc2",
+    "comment": "Label for BLIK code number field on form",
+    "value": "BLIK code",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "BSB number",
+    "newKey": "88a06",
+    "comment": "Placeholder for AU BECS BSB number",
+    "value": "BSB number",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Cancel",
+    "newKey": "19766e",
+    "comment": "Button title to cancel action in an alert",
+    "value": "Cancel",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Card brand",
+    "newKey": "45022",
+    "comment": "Label an input field to update card brand",
+    "value": "Card brand",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "City",
+    "newKey": "fc33f",
+    "comment": "Caption for City field on address form",
+    "value": "City",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Code field",
+    "newKey": "2b743",
+    "comment": "Accessibility label describing a field for entering a login code",
+    "value": "Code field",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Company",
+    "newKey": "de474",
+    "comment": "Label for Company field on form",
+    "value": "Company",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Continue",
+    "newKey": "31fbe",
+    "comment": "Text for continue button",
+    "value": "Continue",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Country",
+    "newKey": "701d0",
+    "comment": "Caption for Country field on address form",
+    "value": "Country",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Country or region",
+    "newKey": "8d236",
+    "comment": "Country selector and postal code entry form header title\\nLabel of an address field",
+    "value": "Country or region",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "County",
+    "newKey": "136c8",
+    "comment": "Caption for County field on address form (only countries that use county, like United Kingdom) Label of an address field",
+    "value": "County",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Department",
+    "newKey": "5304a",
+    "comment": "Label of an address field",
+    "value": "Department",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "District",
+    "newKey": "50f18",
+    "comment": "Label for the district field on an address form",
+    "value": "District",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Do Si",
+    "newKey": "32c9d",
+    "comment": "Label of an address field",
+    "value": "Do Si",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Do you want to close this form?",
+    "newKey": "6ebfc",
+    "comment": "Used as the title for prompting the user if they want to close the sheet",
+    "value": "Do you want to close this form?",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Done",
+    "newKey": "11a67",
+    "comment": "Done button title",
+    "value": "Done",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Double tap to edit",
+    "newKey": "f5dd0",
+    "comment": "Accessibility hint for a text field",
+    "value": "Double tap to edit",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Edit",
+    "newKey": "464c4",
+    "comment": "Button title to enter editing mode",
+    "value": "Edit",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Eircode",
+    "newKey": "113d9",
+    "comment": "Label of an address field",
+    "value": "Eircode",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Email",
+    "newKey": "969cc",
+    "comment": "Label for Email field on form",
+    "value": "Email",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Emirate",
+    "newKey": "4309c",
+    "comment": "Label of an address field",
+    "value": "Emirate",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Error",
+    "newKey": "54a0e",
+    "comment": "Text for error labels",
+    "value": "Error",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "First",
+    "newKey": "a151c",
+    "comment": "Label for first (given) name field",
+    "value": "First",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Full name",
+    "newKey": "f13a6",
+    "comment": "Label for Full name field on form",
+    "value": "Full name",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Incomplete phone number",
+    "newKey": "6d2d3",
+    "comment": "Error description for incomplete phone number",
+    "value": "Incomplete phone number",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Invalid UPI ID",
+    "newKey": "14cf3",
+    "comment": "Error message when UPI ID is invalid",
+    "value": "Invalid UPI ID",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Island",
+    "newKey": "730f5",
+    "comment": "Label of an address field",
+    "value": "Island",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Last",
+    "newKey": "eb970",
+    "comment": "Label for last (family) name field",
+    "value": "Last",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Name",
+    "newKey": "dcd1d",
+    "comment": "Label for Name field on form",
+    "value": "Name",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Name on account",
+    "newKey": "59f3a",
+    "comment": "Label for Name on account field on form",
+    "value": "Name on account",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Oblast",
+    "newKey": "2ba5c",
+    "comment": "Label of an address field",
+    "value": "Oblast",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "OK",
+    "newKey": "56533",
+    "comment": "ok button",
+    "value": "OK",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Other",
+    "newKey": "f97e9",
+    "comment": "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'",
+    "value": "Other",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Parish",
+    "newKey": "45ab6",
+    "comment": "Label of an address field",
+    "value": "Parish",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Phone number",
+    "newKey": "306f1",
+    "comment": "Caption for Phone number field on address form",
+    "value": "Phone number",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Postal code",
+    "newKey": "ae53c",
+    "comment": "Label of an address field Short string for postal code (text used in non-US countries)",
+    "value": "Postal code",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Prefecture",
+    "newKey": "50571",
+    "comment": "Label of an address field",
+    "value": "Prefecture",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Province",
+    "newKey": "abfce",
+    "comment": "Caption for Province field on address form (only countries that use province, like Canada) Label of an address field",
+    "value": "Province",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Remove",
+    "newKey": "c3812",
+    "comment": "Button title for confirmation alert to remove a saved payment method",
+    "value": "Remove",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Remove bank account?",
+    "newKey": "05b2c",
+    "comment": "Title for confirmation alert to remove a saved bank account payment method",
+    "value": "Remove bank account?",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Remove card",
+    "newKey": "dcf7d",
+    "comment": "Label on a button for removing a card",
+    "value": "Remove card",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Search",
+    "newKey": "49c26",
+    "comment": "Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped",
+    "value": "Search",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Select card brand (optional)",
+    "newKey": "4dc47",
+    "comment": "Message when a user is selecting a card brand in a dropdown",
+    "value": "Select card brand (optional)",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Selection is empty.",
+    "newKey": "4d6f0",
+    "comment": "Error message for empty dropdown selection.",
+    "value": "Selection is empty.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Sort code",
+    "newKey": "a9002",
+    "comment": "Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland)",
+    "value": "Sort code",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "State",
+    "newKey": "a3b50",
+    "comment": "Caption for State field on address form (only countries that use state , like United States) Label of an address field",
+    "value": "State",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Suburb",
+    "newKey": "9e843",
+    "comment": "Label of an address field",
+    "value": "Suburb",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Suburb or city",
+    "newKey": "c3273",
+    "comment": "Label of an address field",
+    "value": "Suburb or city",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "The account number you entered is incomplete.",
+    "newKey": "e10dd",
+    "comment": "Error description for incomplete account number",
+    "value": "The account number you entered is incomplete.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "The BSB you entered is incomplete.",
+    "newKey": "d5ad2",
+    "comment": "Error string displayed to user when they have entered an incomplete BSB number.",
+    "value": "The BSB you entered is incomplete.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "The ID number you entered is incomplete.",
+    "newKey": "0f9bf",
+    "comment": "An error message.",
+    "value": "The ID number you entered is incomplete.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "The sort code you entered is invalid.",
+    "newKey": "ac7db",
+    "comment": "Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland)",
+    "value": "The sort code you entered is invalid.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Town or city",
+    "newKey": "9ce56",
+    "comment": "Label of an address field",
+    "value": "Town or city",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Unable to parse phone number",
+    "newKey": "72356",
+    "comment": "Error string when we can't parse a phone number",
+    "value": "Unable to parse phone number",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "UPI ID",
+    "newKey": "cec4a",
+    "comment": "Label for UPI ID number field on form",
+    "value": "UPI ID",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Use rotor to access links",
+    "newKey": "11480",
+    "comment": "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783",
+    "value": "Use rotor to access links",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Your BLIK code is incomplete.",
+    "newKey": "6c0af",
+    "comment": "Error message when BLIK code is incomplete",
+    "value": "Your BLIK code is incomplete.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Your BLIK code is invalid.",
+    "newKey": "224bb",
+    "comment": "Error message when BLIK code is invalid",
+    "value": "Your BLIK code is invalid.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Your email is invalid.",
+    "newKey": "57c28",
+    "comment": "Error message when email is invalid",
+    "value": "Your email is invalid.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Your payment information will not be saved.",
+    "newKey": "cc532",
+    "comment": "Used as the title for prompting the user if they want to close the sheet",
+    "value": "Your payment information will not be saved.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Your postal code is incomplete.",
+    "newKey": "52c55",
+    "comment": "Error message for when postal code in form is incomplete",
+    "value": "Your postal code is incomplete.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Your postal code is invalid.",
+    "newKey": "037ec",
+    "comment": "Error message for when postal code in form is invalid",
+    "value": "Your postal code is invalid.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Your ZIP code is incomplete.",
+    "newKey": "3e686",
+    "comment": "Error message for when ZIP code in form is incomplete (US only)",
+    "value": "Your ZIP code is incomplete.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "Your ZIP code is invalid.",
+    "newKey": "f029b",
+    "comment": "Error message for when ZIP code in form is invalid (US only)",
+    "value": "Your ZIP code is invalid.",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  },
+  {
+    "module": "StripeUICore",
+    "oldKey": "ZIP",
+    "newKey": "eaca4",
+    "comment": "Label of an address field Short string for zip code (United States only) Zip code placeholder US only",
+    "value": "ZIP",
+    "file": "StripeUICore/StripeUICore/Resources/Localizations/en.lproj/Localizable.strings"
+  }
+]

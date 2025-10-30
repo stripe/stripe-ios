@@ -141,8 +141,7 @@ final class VerificationFlowWebViewController: UIViewController {
 @available(iOS 14.3, *)
 extension VerificationFlowWebViewController {
     fileprivate func setupNavbar() {
-        title = STPLocalizedString(
-            "Verify your identity",
+        title = STPLocalizedString("ed32a",
             "Displays in the navigation bar title of the Identity Verification Sheet"
         )
         navigationItem.rightBarButtonItem = UIBarButtonItem(

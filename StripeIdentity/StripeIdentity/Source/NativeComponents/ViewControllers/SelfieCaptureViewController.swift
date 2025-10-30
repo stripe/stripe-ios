@@ -29,8 +29,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             .scanned:
             return .init(
                 titleText: .Localized.unsavedChanges,
-                messageText: STPLocalizedString(
-                    "Your selfie images have not been saved. Do you want to leave?",
+                messageText: STPLocalizedString("b892f",
                     "Text for message of warning alert"
                 ),
                 acceptButtonText: String.Localized.continue,
@@ -51,8 +50,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             headerViewModel: .init(
                 backgroundColor: .systemBackground,
                 headerType: .plain,
-                titleText: STPLocalizedString(
-                    "Selfie captures",
+                titleText: STPLocalizedString("ccd67",
                     "Title of selfie capture screen"
                 )
             ),
@@ -282,8 +280,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 extension SelfieCaptureViewController {
     func updateUI() {
         configure(
-            backButtonTitle: STPLocalizedString(
-                "Selfie",
+            backButtonTitle: STPLocalizedString("7891f",
                 "Back button title for returning to the selfie screen"
             ),
             viewModel: flowViewModel

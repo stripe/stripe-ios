@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@(선택 사항)";
+"224e3" = "%@(선택 사항)";
 
-"(not accepted)" = "(허용되지 않음)";
+"f676f" = "(허용되지 않음)";
 
-"Account number" = "계좌 번호";
+"f7573" = "계좌 번호";
 
-"Address" = "주소";
+"56ef8" = "주소";
 
-"Address line 1" = "주소란 1";
+"ee760" = "주소란 1";
 
-"Address line 2" = "주소란 2";
+"350b2" = "주소란 2";
 
-"Area" = "지역";
+"024dc" = "지역";
 
-"BLIK code" = "BLIK 코드";
+"35cc2" = "BLIK 코드";
 
-"BSB number" = "BSB 번호";
+"88a06" = "BSB 번호";
 
-"Bank account •••• %@" = "은행 계좌 •••• %@";
+"7a614" = "은행 계좌 •••• %@";
 
-"Billing address is same as shipping" = "청구 주소가 배송 주소와 동일함";
+"a03f3" = "청구 주소가 배송 주소와 동일함";
 
-"Cancel" = "취소";
+"19766e" = "취소";
 
-"Card brand" = "카드 브랜드";
+"45022" = "카드 브랜드";
 
-"City" = "시";
+"fc33f" = "시";
 
-"Code field" = "코드 필드";
+"2b743" = "코드 필드";
 
-"Company" = "회사";
+"de474" = "회사";
 
-"Continue" = "계속";
+"31fbe" = "계속";
 
-"Country" = "국가";
+"701d0" = "국가";
 
-"Country or region" = "국가 또는 지역";
+"8d236" = "국가 또는 지역";
 
-"County" = "구/군";
+"136c8" = "구/군";
 
-"Department" = "행정구/현";
+"5304a" = "행정구/현";
 
-"District" = "지구";
+"50f18" = "지구";
 
-"Do Si" = "도시";
+"32c9d" = "도시";
 
-"Do you want to close this form?" = "이 양식을 닫으시겠습니까?";
+"6ebfc" = "이 양식을 닫으시겠습니까?";
 
-"Done" = "완료";
+"11a67" = "완료";
 
-"Double tap to edit" = "두 번 탭하여 편집";
+"f5dd0" = "두 번 탭하여 편집";
 
-"Edit" = "편집";
+"464c4" = "편집";
 
-"Eircode" = "우편번호(Eircode)";
+"113d9" = "우편번호(Eircode)";
 
-"Email" = "이메일";
+"969cc" = "이메일";
 
-"Emirate" = "에미리트";
+"4309c" = "에미리트";
 
-"Error" = "오류";
+"54a0e" = "오류";
 
-"First" = "이름";
+"a151c" = "이름";
 
-"Full name" = "성명";
+"f13a6" = "성명";
 
-"Incomplete phone number" = "불완전한 전화번호";
+"6d2d3" = "불완전한 전화번호";
 
-"Invalid UPI ID" = "잘못된 UPI ID";
+"14cf3" = "잘못된 UPI ID";
 
-"Island" = "섬";
+"730f5" = "섬";
 
-"Last" = "성";
+"eb970" = "성";
 
-"Name" = "이름";
+"dcd1d" = "이름";
 
-"Name on account" = "계좌 명의";
+"59f3a" = "계좌 명의";
 
-"OK" = "확인";
+"56533" = "확인";
 
-"Oblast" = "주";
+"2ba5c" = "주";
 
-"Other" = "기타";
+"f97e9" = "기타";
 
-"Parish" = "교구";
+"45ab6" = "교구";
 
-"Phone number" = "전화번호";
+"306f1" = "전화번호";
 
-"Postal code" = "우편번호";
+"ae53c" = "우편번호";
 
-"Prefecture" = "도/현";
+"50571" = "도/현";
 
-"Province" = "도";
+"abfce" = "도";
 
-"Remove" = "제거";
+"c3812" = "제거";
 
-"Remove bank account?" = "은행 계좌를 삭제하시겠습니까?";
+"05b2c" = "은행 계좌를 삭제하시겠습니까?";
 
-"Remove card" = "카드 제거";
+"dcf7d" = "카드 제거";
 
-"Search" = "검색";
+"49c26" = "검색";
 
-"Select card brand (optional)" = "카드 브랜드 선택(선택 사항)";
+"4dc47" = "카드 브랜드 선택(선택 사항)";
 
-"Selection is empty." = "선택 항목이 비어 있습니다.";
+"4d6f0" = "선택 항목이 비어 있습니다.";
 
-"Sort code" = "코드 정렬";
+"a9002" = "코드 정렬";
 
-"State" = "주";
+"a3b50" = "주";
 
-"Suburb" = "교외";
+"9e843" = "교외";
 
-"Suburb or city" = "교외 또는 도시";
+"c3273" = "교외 또는 도시";
 
-"The BSB you entered is incomplete." = "입력하신 BSB가 완료되지 않았습니다.";
+"d5ad2" = "입력하신 BSB가 완료되지 않았습니다.";
 
-"The ID number you entered is incomplete." = "입력한 ID 번호가 불완전합니다.";
+"0f9bf" = "입력한 ID 번호가 불완전합니다.";
 
-"The account number you entered is incomplete." = "입력하신 계좌 번호가 불완전합니다.";
+"e10dd" = "입력하신 계좌 번호가 불완전합니다.";
 
-"The sort code you entered is invalid." = "입력하신 분류 코드가 유효하지 않습니다.";
+"ac7db" = "입력하신 분류 코드가 유효하지 않습니다.";
 
-"Town or city" = "마을 또는 도시";
+"9ce56" = "마을 또는 도시";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "전화번호 구문 분석 불가능";
+"72356" = "전화번호 구문 분석 불가능";
 
-"Use rotor to access links" = "링크 액세스에 로터 사용";
+"11480" = "링크 액세스에 로터 사용";
 
-"Your BLIK code is incomplete." = "BLIK 코드가 불완전합니다.";
+"6c0af" = "BLIK 코드가 불완전합니다.";
 
-"Your BLIK code is invalid." = "BLIK 코드가 유효하지 않습니다.";
+"224bb" = "BLIK 코드가 유효하지 않습니다.";
 
-"Your ZIP code is incomplete." = "우편 번호가 완전하지 않습니다.";
+"3e686" = "우편 번호가 완전하지 않습니다.";
 
-"Your ZIP code is invalid." = "우편번호가 유효하지 않습니다.";
+"f029b" = "우편번호가 유효하지 않습니다.";
 
-"Your email is invalid." = "이메일이 잘못되었습니다.";
+"57c28" = "이메일이 잘못되었습니다.";
 
-"Your payment information will not be saved." = "귀하의 결제 정보가 저장되지 않습니다.";
+"cc532" = "귀하의 결제 정보가 저장되지 않습니다.";
 
-"Your postal code is incomplete." = "우편번호가 불완전합니다.";
+"52c55" = "우편번호가 불완전합니다.";
 
-"Your postal code is invalid." = "우편번호가 유효하지 않습니다.";
+"037ec" = "우편번호가 유효하지 않습니다.";
 
-"ZIP" = "우편번호";
+"eaca4" = "우편번호";

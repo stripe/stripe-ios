@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Đã xảy ra lỗi. Vui lòng thử lại.";
+"9c170" = "Đã xảy ra lỗi. Vui lòng thử lại.";
 
-"Card brand was not updated. Please try again." = "Thương hiệu thẻ chưa được cập nhật. Vui lòng thử lại.";
+"4bc73" = "Thương hiệu thẻ chưa được cập nhật. Vui lòng thử lại.";
 
-"Close" = "Đóng";
+"7d9eb" = "Đóng";
 
-"Default payment method was not updated. Please try again." = "Phương thức thanh toán mặc định chưa cập nhật. Vui lòng thử lại.";
+"3048d" = "Phương thức thanh toán mặc định chưa cập nhật. Vui lòng thử lại.";
 
-"Scan Card" = "Quét thẻ";
+"b60b5" = "Quét thẻ";
 
-"Scan card" = "Quét thẻ";
+"ea2fe" = "Quét thẻ";
 
-"The IBAN you entered is invalid." = "IBAN quý vị đã nhập không hợp lệ.";
+"ee81e" = "IBAN quý vị đã nhập không hợp lệ.";
 
-"There was an error processing your card -- try again in a few seconds" = "Có lỗi bất ngờ khi xử lý thẻ -- hãy thử lại sau vài giây";
+"fa47c" = "Có lỗi bất ngờ khi xử lý thẻ -- hãy thử lại sau vài giây";
 
-"There was an unexpected error -- try again in a few seconds" = "Có lỗi bất ngờ -- hãy thử lại sau vài giây";
+"c98a4" = "Có lỗi bất ngờ -- hãy thử lại sau vài giây";
 
-"Try again" = "Thử lại";
+"d8b83" = "Thử lại";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Chúng tôi sử dụng Stripe để xác minh chi tiết thẻ của bạn. Stripe có thể sử dụng và lưu trữ dữ liệu của bạn theo chính sách quyền riêng tư của họ. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Tìm hiểu thêm</u></a>";
+"96fe7" = "Chúng tôi sử dụng Stripe để xác minh chi tiết thẻ của bạn. Stripe có thể sử dụng và lưu trữ dữ liệu của bạn theo chính sách quyền riêng tư của họ. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Tìm hiểu thêm</u></a>";
 
-"Your card has expired" = "Thẻ đã hết hạn";
+"f5c35" = "Thẻ đã hết hạn";
 
-"Your card was declined" = "Thẻ bị từ chối";
+"b9821" = "Thẻ bị từ chối";
 
-"Your card's expiration month is invalid" = "Tháng hết hạn trên thẻ không hợp lệ";
+"e02cf" = "Tháng hết hạn trên thẻ không hợp lệ";
 
-"Your card's expiration year is invalid" = "Năm hết hạn trên thẻ không hợp lệ";
+"53311" = "Năm hết hạn trên thẻ không hợp lệ";
 
-"Your card's number is invalid" = "Số thẻ không đúng";
+"c433c" = "Số thẻ không đúng";
 
-"Your card's security code is invalid" = "Mã bảo mật của thẻ không đúng";
+"15f5b" = "Mã bảo mật của thẻ không đúng";
 
-"Your name is invalid." = "Tên của quý vị không hợp lệ.";
+"b1d57" = "Tên của quý vị không hợp lệ.";
 
-"Your payment method was declined." = "Phương thức thanh toán của quý vị đã bị từ chối.";
+"3209d" = "Phương thức thanh toán của quý vị đã bị từ chối.";

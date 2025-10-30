@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Si è verificato un errore. Riprova.";
+"9c170" = "Si è verificato un errore. Riprova.";
 
-"Card brand was not updated. Please try again." = "Il circuito della carta non è stato aggiornato. Riprova.";
+"4bc73" = "Il circuito della carta non è stato aggiornato. Riprova.";
 
-"Close" = "Chiudi";
+"7d9eb" = "Chiudi";
 
-"Default payment method was not updated. Please try again." = "Il metodo di pagamento predefinito non è stato aggiornato. Riprova.";
+"3048d" = "Il metodo di pagamento predefinito non è stato aggiornato. Riprova.";
 
-"Scan Card" = "Scansiona carta";
+"b60b5" = "Scansiona carta";
 
-"Scan card" = "Scansiona carta";
+"ea2fe" = "Scansiona carta";
 
-"The IBAN you entered is invalid." = "L'IBAN inserito non è valido.";
+"ee81e" = "L'IBAN inserito non è valido.";
 
-"There was an error processing your card -- try again in a few seconds" = "Si è verificato un errore durante l'elaborazione della carta. Riprova fra qualche secondo.";
+"fa47c" = "Si è verificato un errore durante l'elaborazione della carta. Riprova fra qualche secondo.";
 
-"There was an unexpected error -- try again in a few seconds" = "Si è verificato un errore imprevisto. Riprova fra qualche secondo.";
+"c98a4" = "Si è verificato un errore imprevisto. Riprova fra qualche secondo.";
 
-"Try again" = "Riprova";
+"d8b83" = "Riprova";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Utilizziamo Stripe per verificare i dati della carta. Come stabilito nella sua informativa sulla privacy, Stripe può utilizzare e conservare i tuoi dati. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ulteriori informazioni</u></a>";
+"96fe7" = "Utilizziamo Stripe per verificare i dati della carta. Come stabilito nella sua informativa sulla privacy, Stripe può utilizzare e conservare i tuoi dati. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ulteriori informazioni</u></a>";
 
-"Your card has expired" = "La carta è scaduta";
+"f5c35" = "La carta è scaduta";
 
-"Your card was declined" = "La carta è stata rifiutata";
+"b9821" = "La carta è stata rifiutata";
 
-"Your card's expiration month is invalid" = "Il mese di scadenza della carta non è valido";
+"e02cf" = "Il mese di scadenza della carta non è valido";
 
-"Your card's expiration year is invalid" = "L'anno di scadenza della carta non è valido";
+"53311" = "L'anno di scadenza della carta non è valido";
 
-"Your card's number is invalid" = "Il numero della carta non è valido";
+"c433c" = "Il numero della carta non è valido";
 
-"Your card's security code is invalid" = "Il codice di sicurezza della carta non è valido";
+"15f5b" = "Il codice di sicurezza della carta non è valido";
 
-"Your name is invalid." = "Nome non valido.";
+"b1d57" = "Nome non valido.";
 
-"Your payment method was declined." = "Il tuo metodo di pagamento è stato rifiutato.";
+"3209d" = "Il tuo metodo di pagamento è stato rifiutato.";

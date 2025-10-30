@@ -1,39 +1,38 @@
 /* The text for warning when a debugger is currently attached to the process. */
-"A debugger is attached to the App." = "Et fejlfindingsprogram er vedhæftet appen.";
+"028f7" = "Et fejlfindingsprogram er vedhæftet appen.";
 
 /* The text for warning when an emulator is being used to run the application. */
-"An emulator is being used to run the App." = "En emulator bruges til at køre appen.";
+"8bcbe" = "En emulator bruges til at køre appen.";
 
 /* The text for the button that cancels the current challenge process. */
-"Cancel" = "Annullér";
+"19766" = "Annullér";
 
 /* Spoken by VoiceOver when the screen is loading. */
-"Loading" = "Indlæser";
+"dc380" = "Indlæser";
 
 /* The no answer to a yes or no question. */
-"No" = "Nej";
+"1ea44" = "Nej";
 
 /* The title for the challenge response step of an authenticated checkout. */
-"Secure checkout" = "Sikker betaling";
+"58f32" = "Sikker betaling";
 
 /* Indicates that a button is selected. */
-"Selected" = "Valgt";
+"57fd7" = "Valgt";
 
 /* The text for warning when a device is jailbroken */
-"The device is jailbroken." = "Enheden er jailbroken.";
+"0eb49" = "Enheden er jailbroken.";
 
 /* The text for warning when the integrity of the SDK has been tampered with */
-"The integrity of the SDK has been tampered." = "Integriteten af SDK'en er blevet ændret.";
+"29abb" = "Integriteten af SDK'en er blevet ændret.";
 
 /* The text for warning when the SDK is running on an unsupported OS or OS version. */
-"The OS or the OS Version is not supported." = "Operativsystemet eller versionen af operativsystemet understøttes ikke.";
+"79d01" = "Operativsystemet eller versionen af operativsystemet understøttes ikke.";
 
 /* Error description for when a network request times out. English value is as required by UL certification. */
-"Timeout" = "Udløb";
+"70594" = "Udløb";
 
 /* Indicates that a button is not selected. */
-"Unselected" = "Fravalgt";
+"26118" = "Fravalgt";
 
 /* The yes answer to a yes or no question. */
-"Yes" = "Ja";
-
+"85a39" = "Ja";

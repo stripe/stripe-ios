@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@-Karte";
+"fbfa6" = "%1$@-Karte";
 
-"%1$@ Credit" = "%1$@-Kreditkarte";
+"a11b0" = "%1$@-Kreditkarte";
 
-"%1$@ Debit" = "%1$@-Debitkarte";
+"95233" = "%1$@-Debitkarte";
 
-"%1$@ Prepaid" = "%1$@-Prepaidkarte";
+"c90ba" = "%1$@-Prepaidkarte";
 
-"%1$@ account ending in %2$@" = "Bankkonto %1$@ endend auf %2$@";
+"3b24a" = "Bankkonto %1$@ endend auf %2$@";
 
-"%1$@ ending in %2$@" = "%1$@, endend auf %2$@";
+"f5b21" = "%1$@, endend auf %2$@";
 
-"%1$@ is not accepted" = "%1$@ wird nicht akzeptiert";
+"29adf" = "%1$@ wird nicht akzeptiert";
 
-"Address line 2 (optional)" = "Adresszeile 2 (optional)";
+"9ada7" = "Adresszeile 2 (optional)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bankkonto";
+"c6f64" = "Bankkonto";
 
-"Billing address" = "Rechnungsadresse";
+"1f516" = "Rechnungsadresse";
 
-"Billing details" = "Abrechnungsdetails";
+"7c928" = "Abrechnungsdetails";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Kartendaten";
+"fca47" = "Kartendaten";
 
-"Card number" = "Kartennummer";
+"816fc" = "Kartennummer";
 
-"Confirm your %@" = "%@ bestätigen";
+"002d7" = "%@ bestätigen";
 
-"Invalid data." = "Ungültige Daten.";
+"da175" = "Ungültige Daten.";
 
-"MM / YY" = "MM/JJ";
+"58f4a" = "MM/JJ";
 
-"MM/YY" = "MM/JJ";
+"1b5f6" = "MM/JJ";
 
-"Postal Code" = "Postleitzahl";
+"8198b" = "Postleitzahl";
 
-"Shipping Address" = "Versandadresse";
+"6e244" = "Versandadresse";
 
-"State / Province / Region" = "Bundesland / Kanton / Region";
+"649f1" = "Bundesland / Kanton / Region";
 
-"The BSB you entered is invalid." = "Die eingegebene BSB-Nummer ist ungültig.";
+"dfa21" = "Die eingegebene BSB-Nummer ist ungültig.";
 
-"The selected brand is not allowed" = "Die ausgewählte Marke ist nicht zulässig.";
+"aaf53" = "Die ausgewählte Marke ist nicht zulässig.";
 
-"To scan your card, allow camera access in Settings." = "Um die Karte scannen zu können, müssen Sie unter „Einstellungen“ den Kamerazugriff erlauben.";
+"9f2d9" = "Um die Karte scannen zu können, müssen Sie unter „Einstellungen“ den Kamerazugriff erlauben.";
 
-"Your card has expired." = "Ihre Karte ist abgelaufen.";
+"393e6" = "Ihre Karte ist abgelaufen.";
 
-"Your card number is incomplete." = "Kartennummer ist unvollständig.";
+"7e5ae" = "Kartennummer ist unvollständig.";
 
-"Your card number is invalid." = "Kartennummer ist ungültig.";
+"3c122" = "Kartennummer ist ungültig.";
 
-"Your card's expiration date is incomplete." = "Ablaufdatum der Karte ist unvollständig.";
+"a2036" = "Ablaufdatum der Karte ist unvollständig.";
 
-"Your card's expiration date is invalid." = "Ablaufdatum der Karte ist ungültig.";
+"6a457" = "Ablaufdatum der Karte ist ungültig.";
 
-"Your card's expiration month is invalid." = "Der Ablaufmonat Ihrer Karte ist ungültig.";
+"e47c0" = "Der Ablaufmonat Ihrer Karte ist ungültig.";
 
-"Your card's expiration year is invalid." = "Das Ablaufjahr der Karte ist ungültig.";
+"36ae2" = "Das Ablaufjahr der Karte ist ungültig.";
 
-"Your card's security code is incomplete." = "Sicherheitscode der Karte ist unvollständig.";
+"300dd" = "Sicherheitscode der Karte ist unvollständig.";
 
-"Your card's security code is invalid." = "Sicherheitscode der Karte ist ungültig.";
+"394fd" = "Sicherheitscode der Karte ist ungültig.";
 
-"card number" = "Kartennummer";
+"58da6" = "Kartennummer";
 
-"example@example.com" = "beispiel@beispiel.com";
+"31c55" = "beispiel@beispiel.com";
 
-"expiration date" = "Gültig bis";
+"b34dd" = "Gültig bis";

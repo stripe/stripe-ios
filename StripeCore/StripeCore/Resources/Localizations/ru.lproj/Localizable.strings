@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Возникла ошибка. Попробуйте еще раз.";
+"9c170" = "Возникла ошибка. Попробуйте еще раз.";
 
-"Card brand was not updated. Please try again." = "Бренд карты не был обновлен. Попробуйте еще раз.";
+"4bc73" = "Бренд карты не был обновлен. Попробуйте еще раз.";
 
-"Close" = "Закрыть";
+"7d9eb" = "Закрыть";
 
-"Default payment method was not updated. Please try again." = "Способ оплаты по умолчанию не был изменен. Попробуйте еще раз.";
+"3048d" = "Способ оплаты по умолчанию не был изменен. Попробуйте еще раз.";
 
-"Scan Card" = "Сканировать карту";
+"b60b5" = "Сканировать карту";
 
-"Scan card" = "Сканировать карту";
+"ea2fe" = "Сканировать карту";
 
-"The IBAN you entered is invalid." = "Введенный код IBAN содержит ошибку.";
+"ee81e" = "Введенный код IBAN содержит ошибку.";
 
-"There was an error processing your card -- try again in a few seconds" = "При обработке карты произошла ошибка. Подождите несколько секунд и повторите попытку";
+"fa47c" = "При обработке карты произошла ошибка. Подождите несколько секунд и повторите попытку";
 
-"There was an unexpected error -- try again in a few seconds" = "Произошла непредвиденная ошибка. Подождите несколько секунд и повторите попытку.";
+"c98a4" = "Произошла непредвиденная ошибка. Подождите несколько секунд и повторите попытку.";
 
-"Try again" = "Повторите попытку";
+"d8b83" = "Повторите попытку";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Мы используем Stripe для проверки данных вашей карты. Stripe может использовать и хранить ваши данные в соответствии со своей политикой конфиденциальности. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Подробнее</u></a>";
+"96fe7" = "Мы используем Stripe для проверки данных вашей карты. Stripe может использовать и хранить ваши данные в соответствии со своей политикой конфиденциальности. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Подробнее</u></a>";
 
-"Your card has expired" = "Срок действия карты истек";
+"f5c35" = "Срок действия карты истек";
 
-"Your card was declined" = "Карта отклонена";
+"b9821" = "Карта отклонена";
 
-"Your card's expiration month is invalid" = "Недопустимый месяц окончания действия карты";
+"e02cf" = "Недопустимый месяц окончания действия карты";
 
-"Your card's expiration year is invalid" = "Недопустимый год окончания действия карты";
+"53311" = "Недопустимый год окончания действия карты";
 
-"Your card's number is invalid" = "Номер карты недействителен";
+"c433c" = "Номер карты недействителен";
 
-"Your card's security code is invalid" = "Недопустимый код CVV/CVC карты";
+"15f5b" = "Недопустимый код CVV/CVC карты";
 
-"Your name is invalid." = "Недействительное имя.";
+"b1d57" = "Недействительное имя.";
 
-"Your payment method was declined." = "Не удалось выполнить оплату этим способом.";
+"3209d" = "Не удалось выполнить оплату этим способом.";

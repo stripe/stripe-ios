@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Er is iets misgegaan. Probeer het opnieuw.";
+"9c170" = "Er is iets misgegaan. Probeer het opnieuw.";
 
-"Card brand was not updated. Please try again." = "Het merk van de betaalkaart is niet bijgewerkt. Probeer het opnieuw.";
+"4bc73" = "Het merk van de betaalkaart is niet bijgewerkt. Probeer het opnieuw.";
 
-"Close" = "Sluiten";
+"7d9eb" = "Sluiten";
 
-"Default payment method was not updated. Please try again." = "De standaardbetaalmethode is niet bijgewerkt. Probeer het opnieuw.";
+"3048d" = "De standaardbetaalmethode is niet bijgewerkt. Probeer het opnieuw.";
 
-"Scan Card" = "Kaart scannen";
+"b60b5" = "Kaart scannen";
 
-"Scan card" = "Betaalkaart scannen";
+"ea2fe" = "Betaalkaart scannen";
 
-"The IBAN you entered is invalid." = "Het opgegeven IBAN-nummer is ongeldig.";
+"ee81e" = "Het opgegeven IBAN-nummer is ongeldig.";
 
-"There was an error processing your card -- try again in a few seconds" = "Er is een fout met de verwerking van je kaart. Probeer het over enkele seconden opnieuw";
+"fa47c" = "Er is een fout met de verwerking van je kaart. Probeer het over enkele seconden opnieuw";
 
-"There was an unexpected error -- try again in a few seconds" = "Er is een onverwachte fout opgetreden. Probeer het over enkele seconden opnieuw";
+"c98a4" = "Er is een onverwachte fout opgetreden. Probeer het over enkele seconden opnieuw";
 
-"Try again" = "Opnieuw proberen";
+"d8b83" = "Opnieuw proberen";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "We gebruiken Stripe om je kaartgegevens te verifiëren. Stripe kan je gegevens gebruiken en bewaren volgens hun privacybeleid. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Meer informatie</u></a>";
+"96fe7" = "We gebruiken Stripe om je kaartgegevens te verifiëren. Stripe kan je gegevens gebruiken en bewaren volgens hun privacybeleid. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Meer informatie</u></a>";
 
-"Your card has expired" = "Je kaart is vervallen";
+"f5c35" = "Je kaart is vervallen";
 
-"Your card was declined" = "Je kaart is geweigerd";
+"b9821" = "Je kaart is geweigerd";
 
-"Your card's expiration month is invalid" = "De vervalmaand van je kaart is ongeldig";
+"e02cf" = "De vervalmaand van je kaart is ongeldig";
 
-"Your card's expiration year is invalid" = "Het vervaljaar van je kaart is ongeldig";
+"53311" = "Het vervaljaar van je kaart is ongeldig";
 
-"Your card's number is invalid" = "Je kaartnummer is ongeldig";
+"c433c" = "Je kaartnummer is ongeldig";
 
-"Your card's security code is invalid" = "De beveiligingscode van je kaart is ongeldig";
+"15f5b" = "De beveiligingscode van je kaart is ongeldig";
 
-"Your name is invalid." = "Je naam is ongeldig.";
+"b1d57" = "Je naam is ongeldig.";
 
-"Your payment method was declined." = "Je betaalmethode is geweigerd.";
+"3209d" = "Je betaalmethode is geweigerd.";

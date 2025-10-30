@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "A apărut o eroare. Încercați din nou.";
+"9c170" = "A apărut o eroare. Încercați din nou.";
 
-"Card brand was not updated. Please try again." = "Marca de card nu a fost actualizată. Încercați din nou.";
+"4bc73" = "Marca de card nu a fost actualizată. Încercați din nou.";
 
-"Close" = "Închidere";
+"7d9eb" = "Închidere";
 
-"Default payment method was not updated. Please try again." = "Metoda de plată implicită nu a fost actualizată. Încercați din nou.";
+"3048d" = "Metoda de plată implicită nu a fost actualizată. Încercați din nou.";
 
-"Scan Card" = "Scanare card";
+"b60b5" = "Scanare card";
 
-"Scan card" = "Scanare card";
+"ea2fe" = "Scanare card";
 
-"The IBAN you entered is invalid." = "Codul IBAN pe care l-ați introdus nu este valid.";
+"ee81e" = "Codul IBAN pe care l-ați introdus nu este valid.";
 
-"There was an error processing your card -- try again in a few seconds" = "A apărut o eroare la procesarea cardului dvs. -- încercați din nou în câteva secunde";
+"fa47c" = "A apărut o eroare la procesarea cardului dvs. -- încercați din nou în câteva secunde";
 
-"There was an unexpected error -- try again in a few seconds" = "A apărut o eroare neașteptată -- încercați din nou în câteva secunde";
+"c98a4" = "A apărut o eroare neașteptată -- încercați din nou în câteva secunde";
 
-"Try again" = "Încercați din nou";
+"d8b83" = "Încercați din nou";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Folosim Stripe pentru a verifica detaliile cardului dvs. Stripe poate utiliza și stoca datele dvs. în conformitate cu politica sa de confidențialitate. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Aflați mai multe</u></a>";
+"96fe7" = "Folosim Stripe pentru a verifica detaliile cardului dvs. Stripe poate utiliza și stoca datele dvs. în conformitate cu politica sa de confidențialitate. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Aflați mai multe</u></a>";
 
-"Your card has expired" = "Cardul dvs. a expirat";
+"f5c35" = "Cardul dvs. a expirat";
 
-"Your card was declined" = "Cardul dvs. a fost respins";
+"b9821" = "Cardul dvs. a fost respins";
 
-"Your card's expiration month is invalid" = "Luna de expirare a cardului nu este validă";
+"e02cf" = "Luna de expirare a cardului nu este validă";
 
-"Your card's expiration year is invalid" = "Anul de expirare al cardului dvs. nu este valid";
+"53311" = "Anul de expirare al cardului dvs. nu este valid";
 
-"Your card's number is invalid" = "Numărul cardului dvs. nu este valid";
+"c433c" = "Numărul cardului dvs. nu este valid";
 
-"Your card's security code is invalid" = "Codul de securitate al cardului dvs. nu este valid";
+"15f5b" = "Codul de securitate al cardului dvs. nu este valid";
 
-"Your name is invalid." = "Numele dvs. nu este valid.";
+"b1d57" = "Numele dvs. nu este valid.";
 
-"Your payment method was declined." = "Metoda dvs. de plată a fost respinsă.";
+"3209d" = "Metoda dvs. de plată a fost respinsă.";

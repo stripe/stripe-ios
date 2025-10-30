@@ -65,23 +65,23 @@ extension String.Localized {
     }
 
     static var ideal_bank: String {
-        STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
+        STPLocalizedString("460cb", "iDEAL bank section title for iDEAL form entry.")
     }
 
     static var bank_account_sentence_case: String {
-        STPLocalizedString("Bank account", "Title for collected bank account information")
+        STPLocalizedString("1b427", "Title for collected bank account information")
     }
 
     static var pay_with_link: String {
-        STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
+        STPLocalizedString("9d81a", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
 
     static var bank_continue_mandate_text: String {
-        STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
+        STPLocalizedString("23d3e", "Text providing link to terms for ACH payments")
     }
 
     static var bank_continue_mandate_text_with_seller: String {
-        STPLocalizedString("By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for bank payments")
+        STPLocalizedString("532e1", "Text providing link to terms for bank payments")
     }
 
     static var bank_continue_mandate_and_reuse_text_with_seller: String {
@@ -92,7 +92,7 @@ extension String.Localized {
     }
 
     static var back: String {
-        STPLocalizedString("Back", "Text for back button")
+        STPLocalizedString("76900", "Text for back button")
     }
 
     static var manage_bank_account: String {
@@ -202,7 +202,7 @@ extension String.Localized {
     }
 
     static var enter_address_manually: String {
-        STPLocalizedString("Enter address manually", "Text for a button that allows manual entry of an address")
+        STPLocalizedString("1534f", "Text for a button that allows manual entry of an address")
     }
 
     static func does_not_support_shipping_to(countryCode: String) -> String {
@@ -234,7 +234,7 @@ extension String.Localized {
     }
 
     static var save_address: String {
-        STPLocalizedString("Save address", "Title for address entry section")
+        STPLocalizedString("0cbb9", "Title for address entry section")
     }
 
     static var approve_payment: String {
@@ -322,25 +322,25 @@ extension String.Localized {
     }
 
     static var blik_confirm_payment: String {
-        STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
+        STPLocalizedString("a8c9a",
                            "Text for alert message when user needs to confirm payment in their banking app")
     }
 
     static var contact_information: String {
-        STPLocalizedString("Contact information", "Title for the contact information section")
+        STPLocalizedString("cbc73", "Title for the contact information section")
     }
 
     static var paynow_confirm_payment: String {
-        STPLocalizedString("Confirm the payment in your bank or payment app within %@ to complete the purchase.",
+        STPLocalizedString("101ef",
                            "Text for alert message when user needs to confirm payment in their banking app")
     }
 
     static var cpf_cpnj: String {
-        STPLocalizedString("CPF/CPNJ", "Label for CPF/CPNJ (Brazil tax ID) field")
+        STPLocalizedString("71187", "Label for CPF/CPNJ (Brazil tax ID) field")
     }
 
     static var buy_now_or_pay_later_with_klarna: String {
-        STPLocalizedString("Buy now or pay later with Klarna", "Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna")
+        STPLocalizedString("5c41c", "Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna")
     }
     static var klarna_mandate_text: String {
         STPLocalizedString(
@@ -497,15 +497,15 @@ extension String.Localized {
     }
 
     static var confirm_your_cvc: String {
-        STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
+        STPLocalizedString("a4bdf", "Title for prompting for a card's CVC on confirming the payment")
     }
 
     static var confirm: String {
-        STPLocalizedString("Confirm", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
+        STPLocalizedString("eebdd", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
     }
 
     static var bank: String {
-        STPLocalizedString("Bank", "A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.")
+        STPLocalizedString("676c4", "A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.")
     }
 
     static var pay_over_time_with_affirm: String {
@@ -551,6 +551,6 @@ extension String.Localized {
     }
 
     static var use_billing_address_for_shipping: String {
-        STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
+        STPLocalizedString("4a82d", "Label for checkbox in address form allowing user to use billing address")
     }
 }

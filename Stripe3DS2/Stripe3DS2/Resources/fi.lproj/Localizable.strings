@@ -1,39 +1,38 @@
 /* The text for warning when a debugger is currently attached to the process. */
-"A debugger is attached to the App." = "Sovellukseen on liitetty virheiden tarkastusohjelma.";
+"028f7" = "Sovellukseen on liitetty virheiden tarkastusohjelma.";
 
 /* The text for warning when an emulator is being used to run the application. */
-"An emulator is being used to run the App." = "Sovelluksen suorittamiseen käytetään emulaattoria.";
+"8bcbe" = "Sovelluksen suorittamiseen käytetään emulaattoria.";
 
 /* The text for the button that cancels the current challenge process. */
-"Cancel" = "Peruuta";
+"19766" = "Peruuta";
 
 /* Spoken by VoiceOver when the screen is loading. */
-"Loading" = "Ladataan";
+"dc380" = "Ladataan";
 
 /* The no answer to a yes or no question. */
-"No" = "Ei";
+"1ea44" = "Ei";
 
 /* The title for the challenge response step of an authenticated checkout. */
-"Secure checkout" = "Turvallinen maksaminen";
+"58f32" = "Turvallinen maksaminen";
 
 /* Indicates that a button is selected. */
-"Selected" = "Valittu";
+"57fd7" = "Valittu";
 
 /* The text for warning when a device is jailbroken */
-"The device is jailbroken." = "Laitteen käyttöjärjestelmän rajoitukset on poistettu.";
+"0eb49" = "Laitteen käyttöjärjestelmän rajoitukset on poistettu.";
 
 /* The text for warning when the integrity of the SDK has been tampered with */
-"The integrity of the SDK has been tampered." = "SDK:n eheyttä on peukaloitu.";
+"29abb" = "SDK:n eheyttä on peukaloitu.";
 
 /* The text for warning when the SDK is running on an unsupported OS or OS version. */
-"The OS or the OS Version is not supported." = "Käyttöjärjestelmää tai käyttöjärjestelmäversiota ei tueta.";
+"79d01" = "Käyttöjärjestelmää tai käyttöjärjestelmäversiota ei tueta.";
 
 /* Error description for when a network request times out. English value is as required by UL certification. */
-"Timeout" = "Aikakatkaisu";
+"70594" = "Aikakatkaisu";
 
 /* Indicates that a button is not selected. */
-"Unselected" = "Ei valittu";
+"26118" = "Ei valittu";
 
 /* The yes answer to a yes or no question. */
-"Yes" = "Kyllä";
-
+"85a39" = "Kyllä";

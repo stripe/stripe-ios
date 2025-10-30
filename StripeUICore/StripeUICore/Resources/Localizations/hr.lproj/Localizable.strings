@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (neobavezno)";
+"224e3" = "%@ (neobavezno)";
 
-"(not accepted)" = "(nije prihvaćena)";
+"f676f" = "(nije prihvaćena)";
 
-"Account number" = "Broj računa";
+"f7573" = "Broj računa";
 
-"Address" = "Adresa";
+"56ef8" = "Adresa";
 
-"Address line 1" = "Ulica i kućni broj 1";
+"ee760" = "Ulica i kućni broj 1";
 
-"Address line 2" = "Broj stana, kat ili poštanski pretinac";
+"350b2" = "Broj stana, kat ili poštanski pretinac";
 
-"Area" = "Područje";
+"024dc" = "Područje";
 
-"BLIK code" = "BLIK kod";
+"35cc2" = "BLIK kod";
 
-"BSB number" = "BSB broj";
+"88a06" = "BSB broj";
 
-"Bank account •••• %@" = "Bankovni račun •••• %@";
+"7a614" = "Bankovni račun •••• %@";
 
-"Billing address is same as shipping" = "Adresa računa jednaka je adresi dostave";
+"a03f3" = "Adresa računa jednaka je adresi dostave";
 
-"Cancel" = "Otkaži";
+"19766e" = "Otkaži";
 
-"Card brand" = "Robna marka kartice";
+"45022" = "Robna marka kartice";
 
-"City" = "Grad";
+"fc33f" = "Grad";
 
-"Code field" = "Polje za kod";
+"2b743" = "Polje za kod";
 
-"Company" = "Poduzeće";
+"de474" = "Poduzeće";
 
-"Continue" = "Nastavi";
+"31fbe" = "Nastavi";
 
-"Country" = "Zemlja";
+"701d0" = "Zemlja";
 
-"Country or region" = "Zemlja ili regija";
+"8d236" = "Zemlja ili regija";
 
-"County" = "Grofovija";
+"136c8" = "Grofovija";
 
-"Department" = "Administrativna jedinica";
+"5304a" = "Administrativna jedinica";
 
-"District" = "Okrug";
+"50f18" = "Okrug";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Želite li zatvoriti ovaj obrazac?";
+"6ebfc" = "Želite li zatvoriti ovaj obrazac?";
 
-"Done" = "Gotovo";
+"11a67" = "Gotovo";
 
-"Double tap to edit" = "Dodirnite dva puta za uređivanje";
+"f5dd0" = "Dodirnite dva puta za uređivanje";
 
-"Edit" = "Uredi";
+"464c4" = "Uredi";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "E-mail";
+"969cc" = "E-mail";
 
-"Emirate" = "Emirat";
+"4309c" = "Emirat";
 
-"Error" = "Greška";
+"54a0e" = "Greška";
 
-"First" = "Ime";
+"a151c" = "Ime";
 
-"Full name" = "Puno ime";
+"f13a6" = "Puno ime";
 
-"Incomplete phone number" = "Nepotpuni telefonski broj";
+"6d2d3" = "Nepotpuni telefonski broj";
 
-"Invalid UPI ID" = "Nevažeći UPI ID";
+"14cf3" = "Nevažeći UPI ID";
 
-"Island" = "Otok";
+"730f5" = "Otok";
 
-"Last" = "Prezime";
+"eb970" = "Prezime";
 
-"Name" = "Ime";
+"dcd1d" = "Ime";
 
-"Name on account" = "Ime na računu";
+"59f3a" = "Ime na računu";
 
-"OK" = "U redu";
+"56533" = "U redu";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Ostalo";
+"f97e9" = "Ostalo";
 
-"Parish" = "Župa";
+"45ab6" = "Župa";
 
-"Phone number" = "Telefonski broj";
+"306f1" = "Telefonski broj";
 
-"Postal code" = "Poštanski broj";
+"ae53c" = "Poštanski broj";
 
-"Prefecture" = "Prefektura";
+"50571" = "Prefektura";
 
-"Province" = "Provincija";
+"abfce" = "Provincija";
 
-"Remove" = "Ukloni";
+"c3812" = "Ukloni";
 
-"Remove bank account?" = "Ukloniti bankovni račun?";
+"05b2c" = "Ukloniti bankovni račun?";
 
-"Remove card" = "Ukloni karticu";
+"dcf7d" = "Ukloni karticu";
 
-"Search" = "Pretraži";
+"49c26" = "Pretraži";
 
-"Select card brand (optional)" = "Odaberite marku kartice (nije obavezno)";
+"4dc47" = "Odaberite marku kartice (nije obavezno)";
 
-"Selection is empty." = "Odabir je prazan.";
+"4d6f0" = "Odabir je prazan.";
 
-"Sort code" = "Bankovni kod za razvrstavanje (UK)";
+"a9002" = "Bankovni kod za razvrstavanje (UK)";
 
-"State" = "Država";
+"a3b50" = "Država";
 
-"Suburb" = "Predgrađe";
+"9e843" = "Predgrađe";
 
-"Suburb or city" = "Predgrađe ili grad";
+"c3273" = "Predgrađe ili grad";
 
-"The BSB you entered is incomplete." = "Uneseni BSB nije kompletan.";
+"d5ad2" = "Uneseni BSB nije kompletan.";
 
-"The ID number you entered is incomplete." = "Uneseni identifikacijski broj nije potpun.";
+"0f9bf" = "Uneseni identifikacijski broj nije potpun.";
 
-"The account number you entered is incomplete." = "Uneseni broj računa je nepotpun.";
+"e10dd" = "Uneseni broj računa je nepotpun.";
 
-"The sort code you entered is invalid." = "Bankovni kod za razvrstavanje koji ste unijeli nije važeći.";
+"ac7db" = "Bankovni kod za razvrstavanje koji ste unijeli nije važeći.";
 
-"Town or city" = "Gradić ili grad";
+"9ce56" = "Gradić ili grad";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Broj telefona nije moguće pročitati";
+"72356" = "Broj telefona nije moguće pročitati";
 
-"Use rotor to access links" = "Upotrijebite rotor za pristup poveznicama";
+"11480" = "Upotrijebite rotor za pristup poveznicama";
 
-"Your BLIK code is incomplete." = "Vaš BLIK kod je nepotpun.";
+"6c0af" = "Vaš BLIK kod je nepotpun.";
 
-"Your BLIK code is invalid." = "Vaš BLIK kod je nevažeći.";
+"224bb" = "Vaš BLIK kod je nevažeći.";
 
-"Your ZIP code is incomplete." = "Vaš poštanski broj nepotpun je.";
+"3e686" = "Vaš poštanski broj nepotpun je.";
 
-"Your ZIP code is invalid." = "Vaš poštanski broj nije valjan.";
+"f029b" = "Vaš poštanski broj nije valjan.";
 
-"Your email is invalid." = "Vaš e-mail je neispravan.";
+"57c28" = "Vaš e-mail je neispravan.";
 
-"Your payment information will not be saved." = "Vaši podaci o plaćanju neće biti spremljeni.";
+"cc532" = "Vaši podaci o plaćanju neće biti spremljeni.";
 
-"Your postal code is incomplete." = "Vaš poštanski broj nije kompletan.";
+"52c55" = "Vaš poštanski broj nije kompletan.";
 
-"Your postal code is invalid." = "Vaš poštanski broj nije valjan.";
+"037ec" = "Vaš poštanski broj nije valjan.";
 
-"ZIP" = "ZIP";
+"eaca4" = "ZIP";

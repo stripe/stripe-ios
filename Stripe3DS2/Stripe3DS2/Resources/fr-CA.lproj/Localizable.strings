@@ -1,39 +1,38 @@
 /* The text for warning when a debugger is currently attached to the process. */
-"A debugger is attached to the App." = "Un débogueur est attaché à l'application.";
+"028f7" = "Un débogueur est attaché à l'application.";
 
 /* The text for warning when an emulator is being used to run the application. */
-"An emulator is being used to run the App." = "Un émulateur est utilisé pour exécuter l'application.";
+"8bcbe" = "Un émulateur est utilisé pour exécuter l'application.";
 
 /* The text for the button that cancels the current challenge process. */
-"Cancel" = "Annuler";
+"19766" = "Annuler";
 
 /* Spoken by VoiceOver when the screen is loading. */
-"Loading" = "Chargement";
+"dc380" = "Chargement";
 
 /* The no answer to a yes or no question. */
-"No" = "Non";
+"1ea44" = "Non";
 
 /* The title for the challenge response step of an authenticated checkout. */
-"Secure checkout" = "Paiement sécurisé";
+"58f32" = "Paiement sécurisé";
 
 /* Indicates that a button is selected. */
-"Selected" = "Sélectionné";
+"57fd7" = "Sélectionné";
 
 /* The text for warning when a device is jailbroken */
-"The device is jailbroken." = "L'appareil est débridé.";
+"0eb49" = "L'appareil est débridé.";
 
 /* The text for warning when the integrity of the SDK has been tampered with */
-"The integrity of the SDK has been tampered." = "L'intégrité de SDK a été modifiée.";
+"29abb" = "L'intégrité de SDK a été modifiée.";
 
 /* The text for warning when the SDK is running on an unsupported OS or OS version. */
-"The OS or the OS Version is not supported." = "Le système d'exploitation ou la version du système d'exploitation n'est pas pris(e) en charge.";
+"79d01" = "Le système d'exploitation ou la version du système d'exploitation n'est pas pris(e) en charge.";
 
 /* Error description for when a network request times out. English value is as required by UL certification. */
-"Timeout" = "Expiration";
+"70594" = "Expiration";
 
 /* Indicates that a button is not selected. */
-"Unselected" = "Non sélectionné";
+"26118" = "Non sélectionné";
 
 /* The yes answer to a yes or no question. */
-"Yes" = "Oui";
-
+"85a39" = "Oui";

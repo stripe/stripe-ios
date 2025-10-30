@@ -1,6 +1,5 @@
 /* Subtitle for error message when component fails to load indicating there may be an issue with the internet connection. */
-"Please check your connection or try again later." = "Please check your connection or try again later.";
+"a52e2" = "Please check your connection or try again later.";
 
 /* Title for error message when component fails to load */
-"Something went wrong." = "Something went wrong.";
-
+"0c953" = "Something went wrong.";

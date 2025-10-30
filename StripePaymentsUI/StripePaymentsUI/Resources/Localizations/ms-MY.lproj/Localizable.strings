@@ -1,75 +1,75 @@
-"%1$@ Card" = "Kad %1$@";
+"fbfa6" = "Kad %1$@";
 
-"%1$@ Credit" = "Kredit %1$@";
+"a11b0" = "Kredit %1$@";
 
-"%1$@ Debit" = "Debit %1$@";
+"95233" = "Debit %1$@";
 
-"%1$@ Prepaid" = "Prabayar %1$@";
+"c90ba" = "Prabayar %1$@";
 
-"%1$@ account ending in %2$@" = "akaun %1$@ yang berakhir dengan %2$@";
+"3b24a" = "akaun %1$@ yang berakhir dengan %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ – berakhiran %2$@";
+"f5b21" = "%1$@ – berakhiran %2$@";
 
-"%1$@ is not accepted" = "%1$@ tidak diterima";
+"29adf" = "%1$@ tidak diterima";
 
-"Address line 2 (optional)" = "Alamat baris 2 (opsyenal)";
+"9ada7" = "Alamat baris 2 (opsyenal)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Akaun Bank";
+"c6f64" = "Akaun Bank";
 
-"Billing address" = "Alamat pengebilan";
+"1f516" = "Alamat pengebilan";
 
-"Billing details" = "Butiran pengebilan";
+"7c928" = "Butiran pengebilan";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Maklumat kad";
+"fca47" = "Maklumat kad";
 
-"Card number" = "Nombor kad";
+"816fc" = "Nombor kad";
 
-"Confirm your %@" = "Sahkan %@ anda";
+"002d7" = "Sahkan %@ anda";
 
-"Invalid data." = "Data tidak sah.";
+"da175" = "Data tidak sah.";
 
-"MM / YY" = "BB / TT";
+"58f4a" = "BB / TT";
 
-"MM/YY" = "BB/TT";
+"1b5f6" = "BB/TT";
 
-"Postal Code" = "Poskod";
+"8198b" = "Poskod";
 
-"Shipping Address" = "Alamat Pengiriman";
+"6e244" = "Alamat Pengiriman";
 
-"State / Province / Region" = "Negeri/Wilayah/Rantau";
+"649f1" = "Negeri/Wilayah/Rantau";
 
-"The BSB you entered is invalid." = "BSB yang anda masukkan tidak sah.";
+"dfa21" = "BSB yang anda masukkan tidak sah.";
 
-"The selected brand is not allowed" = "Jenama yang dipilih tidak dibenarkan";
+"aaf53" = "Jenama yang dipilih tidak dibenarkan";
 
-"To scan your card, allow camera access in Settings." = "Untuk mengimbas kad anda, benarkan akses kamera dalam Tetapan.";
+"9f2d9" = "Untuk mengimbas kad anda, benarkan akses kamera dalam Tetapan.";
 
-"Your card has expired." = "Kad anda telah tamat tempoh.";
+"393e6" = "Kad anda telah tamat tempoh.";
 
-"Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
+"7e5ae" = "Nombor kad anda tidak lengkap.";
 
-"Your card number is invalid." = "Nombor kad anda tidak sah.";
+"3c122" = "Nombor kad anda tidak sah.";
 
-"Your card's expiration date is incomplete." = "Tarikh tamat tempoh kad anda tidak lengkap.";
+"a2036" = "Tarikh tamat tempoh kad anda tidak lengkap.";
 
-"Your card's expiration date is invalid." = "Tarikh tamat tempoh kad anda tidak sah.";
+"6a457" = "Tarikh tamat tempoh kad anda tidak sah.";
 
-"Your card's expiration month is invalid." = "Bulan tamat tempoh kad anda tidak sah.";
+"e47c0" = "Bulan tamat tempoh kad anda tidak sah.";
 
-"Your card's expiration year is invalid." = "Tahun tamat tempoh kad anda tidak sah.";
+"36ae2" = "Tahun tamat tempoh kad anda tidak sah.";
 
-"Your card's security code is incomplete." = "Kod keselamatan kad anda tidak lengkap.";
+"300dd" = "Kod keselamatan kad anda tidak lengkap.";
 
-"Your card's security code is invalid." = "Kod keselamatan kad anda tidak sah.";
+"394fd" = "Kod keselamatan kad anda tidak sah.";
 
-"card number" = "nombor kad";
+"58da6" = "nombor kad";
 
-"example@example.com" = "contoh@example.com";
+"31c55" = "contoh@example.com";
 
-"expiration date" = "Tarikh tamat tempoh";
+"b34dd" = "Tarikh tamat tempoh";

@@ -1,63 +1,63 @@
-"AU Direct Debit" = "Debitu Dirett AU";
+"c1188" = "Debitu Dirett AU";
 
-"Affirm" = "Affirm";
+"07b9f" = "Affirm";
 
-"Afterpay" = "Afterpay";
+"032a2" = "Afterpay";
 
-"Alipay" = "Alipay";
+"d5b72" = "Alipay";
 
-"BLIK" = "BLIK";
+"354ad" = "BLIK";
 
-"Bacs Direct Debit" = "Debitu Dirett BACS";
+"0b4ee" = "Debitu Dirett BACS";
 
-"Bancontact" = "Bancontact";
+"84e7c" = "Bancontact";
 
-"Boleto" = "Boleto";
+"3a3c9" = "Boleto";
 
-"Card" = "Karta";
+"be370" = "Karta";
 
-"Cash App Pay" = "Cash App Pay";
+"35d08" = "Cash App Pay";
 
-"Clearpay" = "Clearpay";
+"268da" = "Clearpay";
 
-"EPS" = "EPS";
+"6d9d7" = "EPS";
 
-"FPX" = "FPX";
+"fed44" = "FPX";
 
-"GrabPay" = "GrabPay";
+"09996" = "GrabPay";
 
-"Klarna" = "Klarna";
+"a2e77" = "Klarna";
 
-"Konbini" = "Konbini";
+"3f752" = "Konbini";
 
-"Link" = "Link";
+"a6a32" = "Link";
 
-"NetBanking" = "NetBanking";
+"3aba6" = "NetBanking";
 
-"OXXO" = "OXXO";
+"71ecf" = "OXXO";
 
-"PayPal" = "PayPal";
+"ab8a4" = "PayPal";
 
-"Przelewy24" = "Przelewy24";
+"0a7ad" = "Przelewy24";
 
-"SEPA Debit" = "Debitu SEPA";
+"b5dc7" = "Debitu SEPA";
 
-"Sofort" = "Sofort";
+"02f19" = "Sofort";
 
-"Swish" = "Swish";
+"1e736" = "Swish";
 
-"Timed out authenticating your payment method -- try again" = "Skada l-ħin tal-awtentikazzjoni tal-metodu tal-ħlas tiegħek -- erġa' pprova";
+"37fc6" = "Skada l-ħin tal-awtentikazzjoni tal-metodu tal-ħlas tiegħek -- erġa' pprova";
 
-"UPI" = "UPI";
+"7b06e" = "UPI";
 
-"US bank account" = "Kont tal-bank fl-Istati Uniti tal-Amerka";
+"40d8d" = "Kont tal-bank fl-Istati Uniti tal-Amerka";
 
-"Unknown" = "Mhux magħruf";
+"b764c" = "Mhux magħruf";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ma nistgħux nawtentikaw il-metodu tal-ħlas tiegħek. Jekk jogħġbok agħżel metodu tal-ħlas differenti u erġa' pprova.";
+"f2763" = "Ma nistgħux nawtentikaw il-metodu tal-ħlas tiegħek. Jekk jogħġbok agħżel metodu tal-ħlas differenti u erġa' pprova.";
 
-"WeChat Pay" = "WeChat Pay";
+"a39c6" = "WeChat Pay";
 
-"giropay" = "Giropay";
+"83eee" = "Giropay";
 
-"iDEAL" = "iDEAL";
+"f54ab" = "iDEAL";

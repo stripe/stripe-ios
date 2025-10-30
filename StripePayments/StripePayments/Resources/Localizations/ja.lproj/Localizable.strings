@@ -1,63 +1,63 @@
-"AU Direct Debit" = "AU ダイレクトデビット";
+"c1188" = "AU ダイレクトデビット";
 
-"Affirm" = "Affirm";
+"07b9f" = "Affirm";
 
-"Afterpay" = "Afterpay";
+"032a2" = "Afterpay";
 
-"Alipay" = "Alipay";
+"d5b72" = "Alipay";
 
-"BLIK" = "BLIK";
+"354ad" = "BLIK";
 
-"Bacs Direct Debit" = "Bacs ダイレクトデビット";
+"0b4ee" = "Bacs ダイレクトデビット";
 
-"Bancontact" = "Bancontact";
+"84e7c" = "Bancontact";
 
-"Boleto" = "Boleto";
+"3a3c9" = "Boleto";
 
-"Card" = "クレジットカード番号";
+"be370" = "クレジットカード番号";
 
-"Cash App Pay" = "Cash App Pay";
+"35d08" = "Cash App Pay";
 
-"Clearpay" = "Clearpay";
+"268da" = "Clearpay";
 
-"EPS" = "EPS";
+"6d9d7" = "EPS";
 
-"FPX" = "FPX";
+"fed44" = "FPX";
 
-"GrabPay" = "GrabPay";
+"09996" = "GrabPay";
 
-"Klarna" = "Klarna";
+"a2e77" = "Klarna";
 
-"Konbini" = "コンビニ決済";
+"3f752" = "コンビニ決済";
 
-"Link" = "Link";
+"a6a32" = "Link";
 
-"NetBanking" = "ネットバンキング";
+"3aba6" = "ネットバンキング";
 
-"OXXO" = "OXXO";
+"71ecf" = "OXXO";
 
-"PayPal" = "PayPal";
+"ab8a4" = "PayPal";
 
-"Przelewy24" = "Przelewy24";
+"0a7ad" = "Przelewy24";
 
-"SEPA Debit" = "SEPA デビット";
+"b5dc7" = "SEPA デビット";
 
-"Sofort" = "Sofort";
+"02f19" = "Sofort";
 
-"Swish" = "Swish";
+"1e736" = "Swish";
 
-"Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
+"37fc6" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
 
-"UPI" = "UPI";
+"7b06e" = "UPI";
 
-"US bank account" = "アメリカの銀行口座";
+"40d8d" = "アメリカの銀行口座";
 
-"Unknown" = "不明";
+"b764c" = "不明";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "お客様の支払い方法を認証できませんでした。別の支払い方法を選択してもう一度お試しください。";
+"f2763" = "お客様の支払い方法を認証できませんでした。別の支払い方法を選択してもう一度お試しください。";
 
-"WeChat Pay" = "WeChat Pay";
+"a39c6" = "WeChat Pay";
 
-"giropay" = "giropay";
+"83eee" = "giropay";
 
-"iDEAL" = "iDEAL";
+"f54ab" = "iDEAL";

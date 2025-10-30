@@ -232,10 +232,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     func showErrorScreenIfNeeded() {
         guard !pageLoaded else { return }
         let errorScreen = WebViewErrorScreen(title: STPLocalizedString(
-            "Something went wrong.",
+            "0c953",
             "Title for error message when component fails to load"
         ), subtitle: STPLocalizedString(
-            "Please check your connection or try again later.",
+            "a52e2",
             "Subtitle for error message when component fails to load indicating there may be an issue with the internet connection."
         ), appearance: componentManager.appearance)
         self.view.addSubview(errorScreen)

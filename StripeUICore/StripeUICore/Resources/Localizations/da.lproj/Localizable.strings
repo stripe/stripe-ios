@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (valgfrit)";
+"224e3" = "%@ (valgfrit)";
 
-"(not accepted)" = "(ikke accepteret)";
+"f676f" = "(ikke accepteret)";
 
-"Account number" = "Kontonummer";
+"f7573" = "Kontonummer";
 
-"Address" = "Adresse";
+"56ef8" = "Adresse";
 
-"Address line 1" = "Adresselinje 1";
+"ee760" = "Adresselinje 1";
 
-"Address line 2" = "Adresselinje 2";
+"350b2" = "Adresselinje 2";
 
-"Area" = "Område";
+"024dc" = "Område";
 
-"BLIK code" = "BLIK-kode";
+"35cc2" = "BLIK-kode";
 
-"BSB number" = "BSB-nummer";
+"88a06" = "BSB-nummer";
 
-"Bank account •••• %@" = "Bankkonto •••• %@";
+"7a614" = "Bankkonto •••• %@";
 
-"Billing address is same as shipping" = "Faktureringsadresse er den samme som forsendelse";
+"a03f3" = "Faktureringsadresse er den samme som forsendelse";
 
-"Cancel" = "Annuller";
+"19766e" = "Annuller";
 
-"Card brand" = "Kortbrand";
+"45022" = "Kortbrand";
 
-"City" = "By";
+"fc33f" = "By";
 
-"Code field" = "Kodefelt";
+"2b743" = "Kodefelt";
 
-"Company" = "Virksomhed";
+"de474" = "Virksomhed";
 
-"Continue" = "Fortsæt";
+"31fbe" = "Fortsæt";
 
-"Country" = "Land";
+"701d0" = "Land";
 
-"Country or region" = "Land eller region";
+"8d236" = "Land eller region";
 
-"County" = "Amt";
+"136c8" = "Amt";
 
-"Department" = "Afdeling";
+"5304a" = "Afdeling";
 
-"District" = "Distrikt";
+"50f18" = "Distrikt";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Vil du lukke denne formular?";
+"6ebfc" = "Vil du lukke denne formular?";
 
-"Done" = "Færdig";
+"11a67" = "Færdig";
 
-"Double tap to edit" = "Tryk to gange for at redigere";
+"f5dd0" = "Tryk to gange for at redigere";
 
-"Edit" = "Rediger";
+"464c4" = "Rediger";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "E-mailadresse";
+"969cc" = "E-mailadresse";
 
-"Emirate" = "Emirat";
+"4309c" = "Emirat";
 
-"Error" = "Fejl";
+"54a0e" = "Fejl";
 
-"First" = "Første";
+"a151c" = "Første";
 
-"Full name" = "Fulde navn";
+"f13a6" = "Fulde navn";
 
-"Incomplete phone number" = "Ufuldstændigt telefonnummer";
+"6d2d3" = "Ufuldstændigt telefonnummer";
 
-"Invalid UPI ID" = "Ugyldigt UPI ID";
+"14cf3" = "Ugyldigt UPI ID";
 
-"Island" = "Ø";
+"730f5" = "Ø";
 
-"Last" = "Sidste";
+"eb970" = "Sidste";
 
-"Name" = "Navn";
+"dcd1d" = "Navn";
 
-"Name on account" = "Navn på konto";
+"59f3a" = "Navn på konto";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Andet";
+"f97e9" = "Andet";
 
-"Parish" = "Sogn";
+"45ab6" = "Sogn";
 
-"Phone number" = "Telefonnummer";
+"306f1" = "Telefonnummer";
 
-"Postal code" = "Postnummer";
+"ae53c" = "Postnummer";
 
-"Prefecture" = "Præfektur";
+"50571" = "Præfektur";
 
-"Province" = "Provins";
+"abfce" = "Provins";
 
-"Remove" = "Fjern";
+"c3812" = "Fjern";
 
-"Remove bank account?" = "Vil du fjerne bankkontoen?";
+"05b2c" = "Vil du fjerne bankkontoen?";
 
-"Remove card" = "Fjern kort";
+"dcf7d" = "Fjern kort";
 
-"Search" = "Søg";
+"49c26" = "Søg";
 
-"Select card brand (optional)" = "Vælg kortbrand (valgfrit)";
+"4dc47" = "Vælg kortbrand (valgfrit)";
 
-"Selection is empty." = "Der er ikke valgt noget.";
+"4d6f0" = "Der er ikke valgt noget.";
 
-"Sort code" = "Sort code";
+"a9002" = "Sort code";
 
-"State" = "Stat";
+"a3b50" = "Stat";
 
-"Suburb" = "Forstad";
+"9e843" = "Forstad";
 
-"Suburb or city" = "Forstad eller storby";
+"c3273" = "Forstad eller storby";
 
-"The BSB you entered is incomplete." = "Den BSB, du angav, er ufuldstændig.";
+"d5ad2" = "Den BSB, du angav, er ufuldstændig.";
 
-"The ID number you entered is incomplete." = "Det indtastede ID-nummer er ikke komplet.";
+"0f9bf" = "Det indtastede ID-nummer er ikke komplet.";
 
-"The account number you entered is incomplete." = "Det indtastede kontonummer er ikke komplet.";
+"e10dd" = "Det indtastede kontonummer er ikke komplet.";
 
-"The sort code you entered is invalid." = "Den sorteringskode, du angav, er ugyldig.";
+"ac7db" = "Den sorteringskode, du angav, er ugyldig.";
 
-"Town or city" = "Landsby eller by";
+"9ce56" = "Landsby eller by";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Kunne ikke analysere telefonnummer";
+"72356" = "Kunne ikke analysere telefonnummer";
 
-"Use rotor to access links" = "Brug hjulet til at tilgå links";
+"11480" = "Brug hjulet til at tilgå links";
 
-"Your BLIK code is incomplete." = "Din BLIK-kode er ufuldstændig.";
+"6c0af" = "Din BLIK-kode er ufuldstændig.";
 
-"Your BLIK code is invalid." = "Din BLIK-kode er ugyldig.";
+"224bb" = "Din BLIK-kode er ugyldig.";
 
-"Your ZIP code is incomplete." = "Dit postnummer er ufuldstændigt.";
+"3e686" = "Dit postnummer er ufuldstændigt.";
 
-"Your ZIP code is invalid." = "Dit postnummer er ugyldigt.";
+"f029b" = "Dit postnummer er ugyldigt.";
 
-"Your email is invalid." = "Din e-mail er ugyldig.";
+"57c28" = "Din e-mail er ugyldig.";
 
-"Your payment information will not be saved." = "Dine betalingsoplysninger gemmes ikke.";
+"cc532" = "Dine betalingsoplysninger gemmes ikke.";
 
-"Your postal code is incomplete." = "Dit postnummer er ikke fuldendt.";
+"52c55" = "Dit postnummer er ikke fuldendt.";
 
-"Your postal code is invalid." = "Dit postnummer er ikke fuldendt.";
+"037ec" = "Dit postnummer er ikke fuldendt.";
 
-"ZIP" = "ZIP";
+"eaca4" = "ZIP";

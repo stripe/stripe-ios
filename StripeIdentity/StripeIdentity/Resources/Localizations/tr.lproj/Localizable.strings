@@ -1,193 +1,193 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Gerçekten siz olduğunuzu doğrulamak için sonraki adımda otomatik olarak birkaç fotoğraf çekilecek";
+"40b57" = "Gerçekten siz olduğunuzu doğrulamak için sonraki adımda otomatik olarak birkaç fotoğraf çekilecek";
 
-"Accepted forms of ID include" = "Kabul edilen kimlik türleri kapsamı";
+"a9934" = "Kabul edilen kimlik türleri kapsamı";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Kimlik belgenizin fotoğrafını manuel olarak da yükleyebilirsiniz.";
+"a570c" = "Kimlik belgenizin fotoğrafını manuel olarak da yükleyebilirsiniz.";
 
-"App Settings" = "Uygulama Ayarları";
+"da645" = "Uygulama Ayarları";
 
-"Back %@ photo successfully uploaded" = "%@’nin arka yüzünün fotoğrafı başarıyla yüklendi";
+"31438" = "%@’nin arka yüzünün fotoğrafı başarıyla yüklendi";
 
-"Back identity document photo successfully uploaded" = "Kimlik belgesinin arka yüzünün fotoğrafı başarıyla yüklendi";
+"3253a" = "Kimlik belgesinin arka yüzünün fotoğrafı başarıyla yüklendi";
 
-"Back of %@" = "%@’nin arka yüzü";
+"128b0" = "%@’nin arka yüzü";
 
-"Back of driver's license or government-issued photo ID" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı bir kimliğin arka yüzü";
+"37929" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı bir kimliğin arka yüzü";
 
-"Back of identity document" = "Kimlik belgesinin arka yüzü";
+"3229d" = "Kimlik belgesinin arka yüzü";
 
-"Camera permission" = "Kamera izni";
+"51e72" = "Kamera izni";
 
-"Camera unavailable" = "Kamera kullanılamıyor";
+"06cc3" = "Kamera kullanılamıyor";
 
-"Capturing…" = "Çekiliyor...";
+"806e3" = "Çekiliyor...";
 
-"Choose File" = "Dosya Seç";
+"d7042" = "Dosya Seç";
 
-"Consent" = "Onay";
+"d37e0" = "Onay";
 
-"Could not capture image" = "Fotoğraf alınamadı";
+"bf6e9" = "Fotoğraf alınamadı";
 
-"Date of Birth" = "Doğum Tarihi";
+"fdc73" = "Doğum Tarihi";
 
-"Date of birth does not look valid" = "Doğum tarihi geçerli görünmüyor";
+"2baa1" = "Doğum tarihi geçerli görünmüyor";
 
-"Details not visible" = "Ayrıntılar görünmüyor";
+"687cd" = "Ayrıntılar görünmüyor";
 
-"Flip your %@ over to the other side" = "%@'nizi diğer tarafa çevirin";
+"e3292" = "%@'nizi diğer tarafa çevirin";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Ehliyetinizin veya devlet tarafından verilmiş fotoğraflı kimliğinizin diğer yüzünü çevirin";
+"dd41b" = "Ehliyetinizin veya devlet tarafından verilmiş fotoğraflı kimliğinizin diğer yüzünü çevirin";
 
-"Flip your identity card over to the other side" = "Kimliğinizin diğer yüzünü çevirin";
+"87346" = "Kimliğinizin diğer yüzünü çevirin";
 
-"Front %@ photo successfully uploaded" = "%@’nin ön yüzünün fotoğrafı başarıyla yüklendi";
+"b57ad" = "%@’nin ön yüzünün fotoğrafı başarıyla yüklendi";
 
-"Front identity document photo successfully uploaded" = "Kimlik belgesinin ön yüzünün fotoğrafı başarıyla yüklendi";
+"3a9fd" = "Kimlik belgesinin ön yüzünün fotoğrafı başarıyla yüklendi";
 
-"Front of %@" = "%@’nin ön yüzü";
+"73fc5" = "%@’nin ön yüzü";
 
-"Front of driver's license or government-issued photo ID" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
+"b3d9a" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
 
-"Front of driver's license or passport" = "Ehliyetin veya pasaportun ön yüzü";
+"8d188" = "Ehliyetin veya pasaportun ön yüzü";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Ehliyet, pasaport veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
+"070b5" = "Ehliyet, pasaport veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
 
-"Front of identity document" = "Kimlik belgesinin ön yüzü";
+"8562c" = "Kimlik belgesinin ön yüzü";
 
-"Front of passport or government-issued photo ID" = "Pasaportun veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
+"bb2ee" = "Pasaportun veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
 
-"Get ready to scan your photo ID" = "Fotoğraflı kimliğinizi taramak için hazırlanın";
+"83016" = "Fotoğraflı kimliğinizi taramak için hazırlanın";
 
-"Get ready to take a selfie" = "Selfie çekmeye hazırlanın";
+"9e29f" = "Selfie çekmeye hazırlanın";
 
-"Go Back" = "Geri Git";
+"b8d99" = "Geri Git";
 
-"Hold still, scanning" = "Bekleyin, taranıyor";
+"b63f6" = "Bekleyin, taranıyor";
 
-"I'm ready" = "Hazırım";
+"d5b05" = "Hazırım";
 
-"ID Number" = "Kimlik Numarası";
+"a403d" = "Kimlik Numarası";
 
-"Individual CPF" = "Bireysel CPF";
+"6212a" = "Bireysel CPF";
 
-"Keep ID level" = "Kimlik seviyesini koruyun";
+"6be11" = "Kimlik seviyesini koruyun";
 
-"Last 4 of Social Security number" = "Sosyal Güvenlik numarasının son 4 hanesi";
+"77dd8" = "Sosyal Güvenlik numarasının son 4 hanesi";
 
-"Loading" = "Yükleniyor";
+"dc3808" = "Yükleniyor";
 
-"Make sure all details are visible and focus" = "Tüm detayların görünür ve odak dahilinde olduğundan emin olun";
+"859af" = "Tüm detayların görünür ve odak dahilinde olduğundan emin olun";
 
-"Make sure you're in a well lit space." = "İyi ışık alan bir alanda olduğunuzdan emin olun.";
+"6c2aa" = "İyi ışık alan bir alanda olduğunuzdan emin olun.";
 
-"Move closer" = "Yakınlaştırın";
+"1da05" = "Yakınlaştırın";
 
-"Move farther" = "Uzaklaştırın";
+"73333" = "Uzaklaştırın";
 
-"Move to a darker area" = "Daha karanlık bir yere geçin";
+"4687a" = "Daha karanlık bir yere geçin";
 
-"Move to a well-lit area" = "İyi aydınlatılmış bir yere geçin";
+"f579f" = "İyi aydınlatılmış bir yere geçin";
 
-"NRIC or FIN" = "NRIC veya FIN";
+"32e72" = "NRIC veya FIN";
 
-"No document detected" = "Belge tespit edilmedi";
+"b376f" = "Belge tespit edilmedi";
 
-"Personal ID number" = "Kişisel kimlik numarası";
+"fae7d" = "Kişisel kimlik numarası";
 
-"Personal Information" = "Kişisel Bilgiler";
+"c4b37" = "Kişisel Bilgiler";
 
-"Phone Number" = "Telefon Numarası";
+"72dba" = "Telefon Numarası";
 
-"Phone Verification" = "Telefon doğrulama";
+"cb074" = "Telefon doğrulama";
 
-"Photo Library" = "Fotoğraf Kitaplığı";
+"e0b2a" = "Fotoğraf Kitaplığı";
 
-"Please upload images of the front and back of your %@" = "Lütfen %@’nizin ön ve arka yüzünün resimlerini yükleyin";
+"03fa9" = "Lütfen %@’nizin ön ve arka yüzünün resimlerini yükleyin";
 
-"Please upload images of the front and back of your identity document" = "Lütfen kimlik belgenizin ön ve arka yüzünün resimlerini yükleyin";
+"8c273" = "Lütfen kimlik belgenizin ön ve arka yüzünün resimlerini yükleyin";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Ehliyetinizi veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
+"12559" = "Ehliyetinizi veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
 
-"Position your driver's license or passport in the center of the frame" = "Ehliyetinizi veya pasaportunuzu çerçevenin ortasına yerleştirin";
+"453ad" = "Ehliyetinizi veya pasaportunuzu çerçevenin ortasına yerleştirin";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Ehliyetinizi, pasaportunuzu veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
+"ad934" = "Ehliyetinizi, pasaportunuzu veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
 
-"Position your face in the center of the frame." = "Yüzünüzü çerçevenin ortasına yerleştirin.";
+"6f758" = "Yüzünüzü çerçevenin ortasına yerleştirin.";
 
-"Position your identity document in the center of the frame" = "Kimlik belgenizi çerçevenin ortasına yerleştirin";
+"68f51" = "Kimlik belgenizi çerçevenin ortasına yerleştirin";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Pasaportunuzu veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
+"74830" = "Pasaportunuzu veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
 
-"Retake Photos" = "Fotoğrafları Tekrar Çek";
+"16681" = "Fotoğrafları Tekrar Çek";
 
-"Scan" = "Tara";
+"ea1c5" = "Tara";
 
-"Scanned" = "Tarandı";
+"e9b3b" = "Tarandı";
 
-"Select" = "Seç";
+"2a780" = "Seç";
 
-"Select a location to upload the back of your identity document from" = "Kimlik belgenizin arka yüzünü yükleyeceğiniz konumu seçin";
+"568f3" = "Kimlik belgenizin arka yüzünü yükleyeceğiniz konumu seçin";
 
-"Select a location to upload the front of your identity document from" = "Kimlik belgenizin ön yüzünü yükleyeceğiniz konumu seçin";
+"a352a" = "Kimlik belgenizin ön yüzünü yükleyeceğiniz konumu seçin";
 
-"Select back %@ photo" = "%@’nin arka yüzünün fotoğrafını seçin";
+"0dfa8" = "%@’nin arka yüzünün fotoğrafını seçin";
 
-"Select back identity document photo" = "Kimlik belgesinin arka yüzünün fotoğrafını seçin";
+"38aec" = "Kimlik belgesinin arka yüzünün fotoğrafını seçin";
 
-"Select front %@ photo" = "%@’nin ön yüzünün fotoğrafını seçin";
+"1ca11" = "%@’nin ön yüzünün fotoğrafını seçin";
 
-"Select front identity document photo" = "Kimlik belgesinin ön yüzünün fotoğrafını seçin";
+"5c25a" = "Kimlik belgesinin ön yüzünün fotoğrafını seçin";
 
-"Selfie" = "Özçekim";
+"7891f" = "Özçekim";
 
-"Selfie captures" = "Özçekim çekimleri";
+"ccd67" = "Özçekim çekimleri";
 
-"Selfie captures are complete" = "Özçekim çekimleri tamamlandı";
+"a7b36" = "Özçekim çekimleri tamamlandı";
 
-"Take Photo" = "Fotoğraf Çek";
+"1ca36" = "Fotoğraf Çek";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Kimlik belgenizin fotoğrafları kaydedilmedi. Ayrılmak istiyor musunuz?";
+"b6b76" = "Kimlik belgenizin fotoğrafları kaydedilmedi. Ayrılmak istiyor musunuz?";
 
-"There was an error accessing the camera." = "Kameraya erişilirken bir hata oluştu.";
+"1eda8" = "Kameraya erişilirken bir hata oluştu.";
 
-"Try Again" = "Tekrar Dene";
+"df0fe" = "Tekrar Dene";
 
-"Try reduce glare and make ID visible" = "Parlamayı azaltmaya ve kimlik kartını görünür hale getirmeye çalışın";
+"ffd3d" = "Parlamayı azaltmaya ve kimlik kartını görünür hale getirmeye çalışın";
 
-"Unable to establish a connection." = "Bağlantı kurulamıyor.";
+"77ee9" = "Bağlantı kurulamıyor.";
 
-"Unsaved changes" = "Kaydedilmemiş değişiklikler";
+"a710c" = "Kaydedilmemiş değişiklikler";
 
-"Upload" = "Yükle";
+"865e8" = "Yükle";
 
-"Upload a Photo" = "Fotoğraf Yükle";
+"f0c8a" = "Fotoğraf Yükle";
 
-"Upload your %@" = "%@’nizi yükleyin";
+"7f6c1" = "%@’nizi yükleyin";
 
-"Upload your photo ID" = "Fotoğraflı kimliğinizi yükleyin";
+"40a76" = "Fotoğraflı kimliğinizi yükleyin";
 
-"Uploading back %@ photo" = "%@’nin arka yüzünün fotoğrafı yükleniyor";
+"eaebd" = "%@’nin arka yüzünün fotoğrafı yükleniyor";
 
-"Uploading back identity document photo" = "Kimlik belgesinin arka yüzünün fotoğrafı yükleniyor";
+"e16b7" = "Kimlik belgesinin arka yüzünün fotoğrafı yükleniyor";
 
-"Uploading front %@ photo" = "%@’nin ön yüzünün fotoğrafı yükleniyor";
+"93af2" = "%@’nin ön yüzünün fotoğrafı yükleniyor";
 
-"Uploading front identity document photo" = "Kimlik belgesinin ön yüzünün fotoğrafı yükleniyor";
+"5dfbf" = "Kimlik belgesinin ön yüzünün fotoğrafı yükleniyor";
 
-"Verify your identity" = "Kimliğinizi doğrulayın";
+"ed32a" = "Kimliğinizi doğrulayın";
 
-"We could not capture a high-quality image." = "Yüksek kaliteli bir fotoğraf yakalayamadık.";
+"55e29" = "Yüksek kaliteli bir fotoğraf yakalayamadık.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Kameranızı kullanmamız için izniniz gerekiyor. Lütfen uygulama ayarlarından kamera erişimine izin verin.";
+"a98b4" = "Kameranızı kullanmamız için izniniz gerekiyor. Lütfen uygulama ayarlarından kamera erişimine izin verin.";
 
-"Welcome" = "Hoş Geldiniz";
+"0e222" = "Hoş Geldiniz";
 
-"You can either try again or upload an image from your device." = "Tekrar deneyebilir veya cihazınızdan bir fotoğraf yükleyebilirsiniz.";
+"348a7" = "Tekrar deneyebilir veya cihazınızdan bir fotoğraf yükleyebilirsiniz.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Özçekim görüntüleriniz kaydedilmedi. Çıkmak istiyor musunuz?";
+"b892f" = "Özçekim görüntüleriniz kaydedilmedi. Çıkmak istiyor musunuz?";
 
-"driver's license" = "ehliyet";
+"cadf1" = "ehliyet";
 
-"government-issued photo ID" = "devlet tarafından verilen fotoğraflı kimlik";
+"29fd8" = "devlet tarafından verilen fotoğraflı kimlik";
 
-"passport" = "pasaport";
+"cbc47" = "pasaport";

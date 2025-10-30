@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "May nangyaring error. Pakisubukan muli.";
+"9c170" = "May nangyaring error. Pakisubukan muli.";
 
-"Card brand was not updated. Please try again." = "Hindi na-update ang brand ng kard. Pakisubukan muli.";
+"4bc73" = "Hindi na-update ang brand ng kard. Pakisubukan muli.";
 
-"Close" = "Isara";
+"7d9eb" = "Isara";
 
-"Default payment method was not updated. Please try again." = "Hindi na-update ang default na paraan ng pagbabayad. Pakisubukan muli.";
+"3048d" = "Hindi na-update ang default na paraan ng pagbabayad. Pakisubukan muli.";
 
-"Scan Card" = "I-scan ang kard";
+"b60b5" = "I-scan ang kard";
 
-"Scan card" = "I-scan ang kard";
+"ea2fe" = "I-scan ang kard";
 
-"The IBAN you entered is invalid." = "Ang IBAN na iniligay mo ay imbalido.";
+"ee81e" = "Ang IBAN na iniligay mo ay imbalido.";
 
-"There was an error processing your card -- try again in a few seconds" = "Nagkaroon ng kamalian sa pagproseso ng iyong kard -- subukin muli sa ilang segundo";
+"fa47c" = "Nagkaroon ng kamalian sa pagproseso ng iyong kard -- subukin muli sa ilang segundo";
 
-"There was an unexpected error -- try again in a few seconds" = "Nagkaroon ng di-inaasahang kamalian -- subukin muli sa ilang segundo";
+"c98a4" = "Nagkaroon ng di-inaasahang kamalian -- subukin muli sa ilang segundo";
 
-"Try again" = "Subukan muli";
+"d8b83" = "Subukan muli";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Gumagamit kami ng Stripe para i-verify ang mga detalye ng iyong kard. Maaaring gamitin at imbakin ng Stripe ang iyong data ayon sa patakaran sa privacy nito. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Alamin ang higit pa</u></a>";
+"96fe7" = "Gumagamit kami ng Stripe para i-verify ang mga detalye ng iyong kard. Maaaring gamitin at imbakin ng Stripe ang iyong data ayon sa patakaran sa privacy nito. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Alamin ang higit pa</u></a>";
 
-"Your card has expired" = "Napaso na ang iyong kard";
+"f5c35" = "Napaso na ang iyong kard";
 
-"Your card was declined" = "Tinanggihan ang iyong kard";
+"b9821" = "Tinanggihan ang iyong kard";
 
-"Your card's expiration month is invalid" = "Ang buwan ng pagkapaso ng iyong kard ay di balido";
+"e02cf" = "Ang buwan ng pagkapaso ng iyong kard ay di balido";
 
-"Your card's expiration year is invalid" = "Ang taon ng pagkapaso ng iyong kard ay di balido";
+"53311" = "Ang taon ng pagkapaso ng iyong kard ay di balido";
 
-"Your card's number is invalid" = "Ang numero ng iyong kard ay di balido";
+"c433c" = "Ang numero ng iyong kard ay di balido";
 
-"Your card's security code is invalid" = "Ang security code ng iyong kard ay di balido";
+"15f5b" = "Ang security code ng iyong kard ay di balido";
 
-"Your name is invalid." = "Ang iyong pangalan ay imbalido.";
+"b1d57" = "Ang iyong pangalan ay imbalido.";
 
-"Your payment method was declined." = "Tinanggihan ang iyong paraan ng pagbabayad.";
+"3209d" = "Tinanggihan ang iyong paraan ng pagbabayad.";

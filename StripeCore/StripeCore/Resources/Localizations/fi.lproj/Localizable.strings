@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Tapahtui virhe. Yritä uudelleen.";
+"9c170" = "Tapahtui virhe. Yritä uudelleen.";
 
-"Card brand was not updated. Please try again." = "Korttimerkkiä ei päivitetty. Yritä uudelleen.";
+"4bc73" = "Korttimerkkiä ei päivitetty. Yritä uudelleen.";
 
-"Close" = "Sulje";
+"7d9eb" = "Sulje";
 
-"Default payment method was not updated. Please try again." = "Oletusmaksutapaa ei päivitetty. Yritä uudelleen.";
+"3048d" = "Oletusmaksutapaa ei päivitetty. Yritä uudelleen.";
 
-"Scan Card" = "Skannaa kortti";
+"b60b5" = "Skannaa kortti";
 
-"Scan card" = "Skannaa kortti";
+"ea2fe" = "Skannaa kortti";
 
-"The IBAN you entered is invalid." = "Antamasi IBAN on virheellinen.";
+"ee81e" = "Antamasi IBAN on virheellinen.";
 
-"There was an error processing your card -- try again in a few seconds" = "Kortin käsittelyssä tapahtui virhe – kokeile uudelleen muutaman sekunnin kuluttua";
+"fa47c" = "Kortin käsittelyssä tapahtui virhe – kokeile uudelleen muutaman sekunnin kuluttua";
 
-"There was an unexpected error -- try again in a few seconds" = "Odottamaton virhe – kokeile uudelleen muutaman sekunnin kuluttua";
+"c98a4" = "Odottamaton virhe – kokeile uudelleen muutaman sekunnin kuluttua";
 
-"Try again" = "Yritä uudelleen";
+"d8b83" = "Yritä uudelleen";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Käytämme Stripeä korttitietojen vahvistamiseen. Stripe voi käyttää ja säilyttää tietojasi heidän tietosuojaselosteensa mukaisesti. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Lue lisää</u></a>";
+"96fe7" = "Käytämme Stripeä korttitietojen vahvistamiseen. Stripe voi käyttää ja säilyttää tietojasi heidän tietosuojaselosteensa mukaisesti. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Lue lisää</u></a>";
 
-"Your card has expired" = "Korttisi on vanhentunut";
+"f5c35" = "Korttisi on vanhentunut";
 
-"Your card was declined" = "Korttiasi ei hyväksytty";
+"b9821" = "Korttiasi ei hyväksytty";
 
-"Your card's expiration month is invalid" = "Kortin erääntymiskuukausi ei kelpaa";
+"e02cf" = "Kortin erääntymiskuukausi ei kelpaa";
 
-"Your card's expiration year is invalid" = "Kortin erääntymisvuosi ei kelpaa";
+"53311" = "Kortin erääntymisvuosi ei kelpaa";
 
-"Your card's number is invalid" = "Kortin numero ei kelpaa";
+"c433c" = "Kortin numero ei kelpaa";
 
-"Your card's security code is invalid" = "Kortin turvakoodi ei kelpaa";
+"15f5b" = "Kortin turvakoodi ei kelpaa";
 
-"Your name is invalid." = "Nimi on virheellinen.";
+"b1d57" = "Nimi on virheellinen.";
 
-"Your payment method was declined." = "Maksutapasi on hylätty.";
+"3209d" = "Maksutapasi on hylätty.";

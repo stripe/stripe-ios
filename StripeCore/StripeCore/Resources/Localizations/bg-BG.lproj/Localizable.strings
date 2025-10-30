@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Възникна грешка. Моля, опитайте отново.";
+"9c170" = "Възникна грешка. Моля, опитайте отново.";
 
-"Card brand was not updated. Please try again." = "Брандът на картата не е актуализиран. Моля, опитайте отново.";
+"4bc73" = "Брандът на картата не е актуализиран. Моля, опитайте отново.";
 
-"Close" = "Затваряне";
+"7d9eb" = "Затваряне";
 
-"Default payment method was not updated. Please try again." = "Начинът на плащане по подразбиране не беше актуализиран. Моля, опитайте отново.";
+"3048d" = "Начинът на плащане по подразбиране не беше актуализиран. Моля, опитайте отново.";
 
-"Scan Card" = "Сканиране на картата";
+"b60b5" = "Сканиране на картата";
 
-"Scan card" = "Сканиране на карта";
+"ea2fe" = "Сканиране на карта";
 
-"The IBAN you entered is invalid." = "IBAN, който сте въвели, е невалиден.";
+"ee81e" = "IBAN, който сте въвели, е невалиден.";
 
-"There was an error processing your card -- try again in a few seconds" = "Възникна грешка при обработката на Вашата карта -- опитайте отново след няколко секунди";
+"fa47c" = "Възникна грешка при обработката на Вашата карта -- опитайте отново след няколко секунди";
 
-"There was an unexpected error -- try again in a few seconds" = "Това беше неочаквана грешка -- опитайте отново след няколко секунди";
+"c98a4" = "Това беше неочаквана грешка -- опитайте отново след няколко секунди";
 
-"Try again" = "Опитайте отново";
+"d8b83" = "Опитайте отново";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Използваме Stripe, за да потвърдим данните на картата Ви. Stripe може да използва и съхранява данните Ви в съответствие с правилата си за защита на личните данни. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Научете повече</u></a>";
+"96fe7" = "Използваме Stripe, за да потвърдим данните на картата Ви. Stripe може да използва и съхранява данните Ви в съответствие с правилата си за защита на личните данни. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Научете повече</u></a>";
 
-"Your card has expired" = "Вашата карта е изтекла";
+"f5c35" = "Вашата карта е изтекла";
 
-"Your card was declined" = "Вашата карта бе отхвърлена";
+"b9821" = "Вашата карта бе отхвърлена";
 
-"Your card's expiration month is invalid" = "Месецът на валидност на Вашата карта е невалиден";
+"e02cf" = "Месецът на валидност на Вашата карта е невалиден";
 
-"Your card's expiration year is invalid" = "Годината на валидност на Вашата карта е невалидна";
+"53311" = "Годината на валидност на Вашата карта е невалидна";
 
-"Your card's number is invalid" = "Номерът на Вашата карта е невалиден";
+"c433c" = "Номерът на Вашата карта е невалиден";
 
-"Your card's security code is invalid" = "Кодът за сигурност на Вашата карта е невалиден";
+"15f5b" = "Кодът за сигурност на Вашата карта е невалиден";
 
-"Your name is invalid." = "Името Ви е невалидно.";
+"b1d57" = "Името Ви е невалидно.";
 
-"Your payment method was declined." = "Начинът Ви на плащане беше отказан.";
+"3209d" = "Начинът Ви на плащане беше отказан.";

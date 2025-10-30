@@ -1,307 +1,307 @@
-"+ Add" = "+ Pridėti";
+"c0072" = "+ Pridėti";
 
-"Add US bank account" = "Pridėti JAV banko sąskaitą";
+"1b3a4" = "Pridėti JAV banko sąskaitą";
 
-"Add a card" = "Pridėti kortelę";
+"be8f5" = "Pridėti kortelę";
 
-"Add a payment method" = "Pridėkite mokėjimo būdą";
+"7e917" = "Pridėkite mokėjimo būdą";
 
-"Add bank account" = "Pridėti banko sąskaitą";
+"a3cc9" = "Pridėti banko sąskaitą";
 
-"Add card" = "Pridėti kortelę";
+"769c5" = "Pridėti kortelę";
 
-"Add new card" = "Pridėti naują kortelę";
+"800f4" = "Pridėti naują kortelę";
 
-"Add new payment method" = "Pridėti naują mokėjimo būdą";
+"8130f" = "Pridėti naują mokėjimo būdą";
 
-"Add your payment information" = "Pridėkite mokėjimo informaciją";
+"eaa33" = "Pridėkite mokėjimo informaciją";
 
-"Approve payment" = "Patvirtinti mokėjimą";
+"e70d2" = "Patvirtinti mokėjimą";
 
-"Are you sure you want to remove this card?" = "Ar tikrai norite pašalinti šią kortelę?";
+"c8af7" = "Ar tikrai norite pašalinti šią kortelę?";
 
-"Are you sure you want to remove this linked account?" = "Ar tikrai norite pašalinti šią susietą paskyrą?";
+"74460" = "Ar tikrai norite pašalinti šią susietą paskyrą?";
 
-"Back" = "Atgal";
+"76900" = "Atgal";
 
-"Bank" = "Bankas";
+"676c4" = "Bankas";
 
-"Bank account" = "Banko sąskaita";
+"1b427" = "Banko sąskaita";
 
-"Bank account details cannot be changed." = "Banko sąskaitos duomenų keisti negalima.";
+"12ab1" = "Banko sąskaitos duomenų keisti negalima.";
 
-"Buy now or pay later with  <img/>" = "Pirkite dabar arba mokėkite vėliau naudodami \"<img/>\"";
+"38088" = "Pirkite dabar arba mokėkite vėliau naudodami \"<img/>\"";
 
-"Buy now or pay later with Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Afterpay\"";
+"c04b4" = "Pirkite dabar arba mokėkite vėliau naudodami \"Afterpay\"";
 
-"Buy now or pay later with Cash App Afterpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Cash App Afterpay\"";
+"f566d" = "Pirkite dabar arba mokėkite vėliau naudodami \"Cash App Afterpay\"";
 
-"Buy now or pay later with Clearpay" = "Pirkite dabar arba mokėkite vėliau naudodami \"Clearpay\"";
+"bf452" = "Pirkite dabar arba mokėkite vėliau naudodami \"Clearpay\"";
 
-"Buy now or pay later with Klarna" = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\"";
+"5c41c" = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\"";
 
-"Buy using a UPI ID" = "Pirkti naudojant UPI ID";
+"21793" = "Pirkti naudojant UPI ID";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Patvirtindami savo mokėjimą \"PayPal\" leidžiate \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
+"313bb" = "Patvirtindami savo mokėjimą \"PayPal\" leidžiate \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pereidami prie \"Amazon Pay\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"Amazon Pay\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
+"c1642" = "Pereidami prie \"Amazon Pay\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"Amazon Pay\" sąskaitos vėlesniems mokėjimams pagal jų sąlygas.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Pereidami prie \"Klarna\" leidžiate \"%1$@\" nuskaityti mokestį nuo jūsų \"Klarna\" sąskaitos vėlesniems mokėjimams pagal jų ir \"Klarna\" sąlygas. Galite bet kada tai pakeisti \"Klarna\" programėlėje arba susisiekdami su \"%2$@\".";
+"09c61" = "Pereidami prie \"Klarna\" leidžiate \"%1$@\" nuskaityti mokestį nuo jūsų \"Klarna\" sąskaitos vėlesniems mokėjimams pagal jų ir \"Klarna\" sąlygas. Galite bet kada tai pakeisti \"Klarna\" programėlėje arba susisiekdami su \"%2$@\".";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Pereidami į \"PayPal\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+"c6ff4" = "Pereidami į \"PayPal\" leisite \"%@\" nuskaityti mokestį nuo jūsų \"PayPal\" sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pereidami į \"Revolut Pay\" leisite %@ nuskaityti mokestį nuo jūsų \"Revolut Pay\" sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
+"694b5" = "Pereidami į \"Revolut Pay\" leisite %@ nuskaityti mokestį nuo jūsų \"Revolut Pay\" sąskaitos vėlesniems mokėjimams pagal taikomas sąlygas.";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Tęsdami sutinkate su <terms>sąlygomis</terms> ir <privacy>privatumo politika</privacy>.";
+"8ba3b" = "Tęsdami sutinkate su <terms>sąlygomis</terms> ir <privacy>privatumo politika</privacy>.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+"23d3e" = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>„Link“</link> pagal „Link“ <terms>Sąlygas</terms> ir <privacy>Privatumo politiką</privacy>.";
+"b8e49" = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>„Link“</link> pagal „Link“ <terms>Sąlygas</terms> ir <privacy>Privatumo politiką</privacy>.";
 
-"By continuing, you agree to save your information for future purchases with %@." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkiniams naudojant %@.";
+"8ca70" = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkiniams naudojant %@.";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Tęsdami jūs suteikiate leidimą %@ automatiškai nurašyti lėšas nuo jūsų „Satispay Balance“ likučio periodiškai, pagal jūsų pirkimo arba prenumeratos planą.";
+"d451f" = "Tęsdami jūs suteikiate leidimą %@ automatiškai nurašyti lėšas nuo jūsų „Satispay Balance“ likučio periodiškai, pagal jūsų pirkimo arba prenumeratos planą.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate \"%1$@\" nurašyti mokestį nuo jūsų \"Cash App\" sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal \"%2$@\" sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti \"Cash App\" nuostatose.";
+"97461" = "Tęsdami įgaliojate \"%1$@\" nurašyti mokestį nuo jūsų \"Cash App\" sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal \"%2$@\" sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti \"Cash App\" nuostatose.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
+"225b7" = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami telefono numerį ir el. pašto adresą sutinkate susikurti „Link“ paskyrą pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
+"05e15" = "Pateikdami telefono numerį ir el. pašto adresą sutinkate susikurti „Link“ paskyrą pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Pateikdami savo banko sąskaitos duomenis ir patvirtindami šį mokėjimą, jūs sutinkate su šiuo tiesioginio nurašymo prašymu ir <terms> tiesioginio nurašymo paslaugų teikimo sutartimi </terms> bei suteikiate leidimą bendrovei „Stripe Payments Australia Pty Ltd“ (ACN 160 180 343), tiesioginio nurašymo naudotojo ID Nr. 507156 („Stripe“), nurašyti lėšas iš jūsų sąskaitos per Bendrąją elektroninių atsiskaitymų sistemą (BECS) %@ (toliau – „Prekybininko“) vardu pagal bet kokias sumas, apie kurias jums atskirai praneš Prekybininkas. Jūs patvirtinate, kad esate šios sąskaitos savininkas arba įgaliotas (-a) ją naudoti.";
+"ba265" = "Pateikdami savo banko sąskaitos duomenis ir patvirtindami šį mokėjimą, jūs sutinkate su šiuo tiesioginio nurašymo prašymu ir <terms> tiesioginio nurašymo paslaugų teikimo sutartimi </terms> bei suteikiate leidimą bendrovei „Stripe Payments Australia Pty Ltd“ (ACN 160 180 343), tiesioginio nurašymo naudotojo ID Nr. 507156 („Stripe“), nurašyti lėšas iš jūsų sąskaitos per Bendrąją elektroninių atsiskaitymų sistemą (BECS) %@ (toliau – „Prekybininko“) vardu pagal bet kokias sumas, apie kurias jums atskirai praneš Prekybininkas. Jūs patvirtinate, kad esate šios sąskaitos savininkas arba įgaliotas (-a) ją naudoti.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Pateikdami kortelės duomenis sutinkate, kad \"%@\" nuskaičiuotų nuo jūsų kortelės būsimus mokėjimus pagal jų sąlygas.";
+"0cdc0" = "Pateikdami kortelės duomenis sutinkate, kad \"%@\" nuskaičiuotų nuo jūsų kortelės būsimus mokėjimus pagal jų sąlygas.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo el. pašto adresą sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
+"36fad" = "Pateikdami savo el. pašto adresą sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Pateikdami mokėjimo duomenis ir patvirtindami šį mokėjimą, leidžiate (A) \"%@\" ir \"Stripe\" (mūsų mokėjimo paslaugų teikėjui) jūsų bankui siųsti nurodymus nurašyti pinigus iš jūsų sąskaitos ir (B) leidžiate savo bankui, gavus tokius nurodymus, nurašyti pinigus iš jūsų sąskaitos. Pagal jūsų su banku sudarytos sutarties sąlygas turite teisę iš banko reikalauti pinigų grąžinimo. Prašymą grąžinti pinigus turite pateikti per 8 savaites nuo pinigų iš jūsų sąskaitos nurašymo dienos. Jūsų teisės paaiškintos pareiškime, kurį galite gauti iš savo banko. Sutinkate gauti pranešimus apie būsimus nurašymus likus iki 2 dienų iki jų įvykdymo momento.";
+"289c5" = "Pateikdami mokėjimo duomenis ir patvirtindami šį mokėjimą, leidžiate (A) \"%@\" ir \"Stripe\" (mūsų mokėjimo paslaugų teikėjui) jūsų bankui siųsti nurodymus nurašyti pinigus iš jūsų sąskaitos ir (B) leidžiate savo bankui, gavus tokius nurodymus, nurašyti pinigus iš jūsų sąskaitos. Pagal jūsų su banku sudarytos sutarties sąlygas turite teisę iš banko reikalauti pinigų grąžinimo. Prašymą grąžinti pinigus turite pateikti per 8 savaites nuo pinigų iš jūsų sąskaitos nurašymo dienos. Jūsų teisės paaiškintos pareiškime, kurį galite gauti iš savo banko. Sutinkate gauti pranešimus apie būsimus nurašymus likus iki 2 dienų iki jų įvykdymo momento.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo telefono numerį sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
+"e3661" = "Pateikdami savo telefono numerį sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+"02d39" = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Pateikdami užsakymą %1$@ ir %2$@, sutinkate išsaugoti savo informaciją %3$@ būsimiems pirkiniams ir sutinkate pagal <terms>šias sąlygas</terms> autorizuoti mokėjimus.";
+"c041a" = "Pateikdami užsakymą %1$@ ir %2$@, sutinkate išsaugoti savo informaciją %3$@ būsimiems pirkiniams ir sutinkate pagal <terms>šias sąlygas</terms> autorizuoti mokėjimus.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pateikdami užsakymą %@, sutinkate mokėjimus autorizuoti pagal <terms>šias sąlygas</terms>.";
+"532e1" = "Pateikdami užsakymą %@, sutinkate mokėjimus autorizuoti pagal <terms>šias sąlygas</terms>.";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
+"58817" = "Atšaukti ir sumokėti kitu būdu";
 
-"Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
+"34c44" = "Kortelės duomenų keisti negalima.";
 
-"Change" = "Keisti";
+"c0bf7" = "Keisti";
 
-"Choose a payment method" = "Pasirinkite mokėjimo būdą";
+"1dc8a" = "Pasirinkite mokėjimo būdą";
 
-"Close card scanner" = "Išjungti kortelės skaitytuvą";
+"c0077" = "Išjungti kortelės skaitytuvą";
 
-"Code sent" = "Kodas išsiųstas";
+"f98a1" = "Kodas išsiųstas";
 
-"Confirm" = "Patvirtinti";
+"eebdd" = "Patvirtinti";
 
-"Confirm it's you" = "Patvirtinkite, kad tai jūs";
+"6176e" = "Patvirtinkite, kad tai jūs";
 
-"Confirm payment details" = "Patvirtinti mokėjimo duomenis";
+"3a6b5" = "Patvirtinti mokėjimo duomenis";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
+"101ef" = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
+"a8c9a" = "Patvirtinkite mokėjimą savo banko programėlėje per %@ ir užbaikite pirkimą.";
 
-"Confirm your CVC" = "Patvirtinkite savo CVC";
+"a4bdf" = "Patvirtinkite savo CVC";
 
-"Contact information" = "Kontaktinė informacija";
+"cbc73" = "Kontaktinė informacija";
 
-"Continue another way" = "Tęsti kitu būdu";
+"c2a49" = "Tęsti kitu būdu";
 
-"Create an account with Link for faster checkout across the web" = "Sukurkite paskyrą naudodami „Link”, kad galėtumėte greičiau atsiskaityti žiniatinklyje";
+"b568d" = "Sukurkite paskyrą naudodami „Link”, kad galėtumėte greičiau atsiskaityti žiniatinklyje";
 
-"Debit or credit card" = "Debeto arba kredito kortelė";
+"04f63" = "Debeto arba kredito kortelė";
 
-"Default" = "Numatytasis";
+"21b11" = "Numatytasis";
 
-"Default payment method" = "Numatytasis mokėjimo būdas";
+"4c163" = "Numatytasis mokėjimo būdas";
 
-"Did you mean %@? %@." = "Ar norėjote %1$@? %2$@.";
+"6d7d1" = "Ar norėjote %1$@? %2$@.";
 
-"EPS Bank" = "EPS bankas";
+"8f218" = "EPS bankas";
 
-"Enter address manually" = "Įvesti adresą rankiniu būdu";
+"1534f" = "Įvesti adresą rankiniu būdu";
 
-"Enter the code sent to %@." = "Įveskite kodą, išsiųstą %s.";
+"1e836" = "Įveskite kodą, išsiųstą %s.";
 
-"FPX Bank" = "FPX bankas";
+"8c73e" = "FPX bankas";
 
-"Failed to connect" = "Nepavyko prisijungti";
+"46c9f" = "Nepavyko prisijungti";
 
-"Fast, secure checkout" = "Greitas ir saugus pirkimo užbaigimas";
+"2aeb3" = "Greitas ir saugus pirkimo užbaigimas";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Atgaukite %@ pirmą kartą mokėdami per savo banką. <terms>Žr. sąlygas</terms>";
+"b70b0" = "Atgaukite %@ pirmą kartą mokėdami per savo banką. <terms>Žr. sąlygas</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Atgaukite %@ mokėdami per savo banką. <terms>Žr. sąlygas</terms>";
+"332d2" = "Atgaukite %@ mokėdami per savo banką. <terms>Žr. sąlygas</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Suprantu, kad \"Stripe\" atliks tiesioginio debeto nuskaitymus \"%@\" vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
+"b751e" = "Suprantu, kad \"Stripe\" atliks tiesioginio debeto nuskaitymus \"%@\" vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "Prisijungti arba prisiregistruoti";
+"38f51" = "Prisijungti arba prisiregistruoti";
 
-"Log out of Link" = "Atsijungti nuo \"Link\"";
+"57083" = "Atsijungti nuo \"Link\"";
 
-"Manage SEPA debit" = "Tvarkyti SEPA debetą";
+"a7ff3" = "Tvarkyti SEPA debetą";
 
-"Manage US bank account" = "Tvarkyti JAV banko sąskaitą";
+"0b654" = "Tvarkyti JAV banko sąskaitą";
 
-"Manage bank account" = "Tvarkyti banko sąskaitą";
+"2d4ed" = "Tvarkyti banko sąskaitą";
 
-"Manage card" = "Tvarkyti kortelę";
+"49e98" = "Tvarkyti kortelę";
 
-"Manage cards" = "Tvarkyti korteles";
+"fe215" = "Tvarkyti korteles";
 
-"Manage payment method" = "Tvarkyti mokėjimo būdą";
+"67c16" = "Tvarkyti mokėjimo būdą";
 
-"Manage payment methods" = "Valdyti mokėjimo būdus";
+"cf0c9" = "Valdyti mokėjimo būdus";
 
-"Manage your payment methods" = "Valdykite savo mokėjimo būdus";
+"74db7" = "Valdykite savo mokėjimo būdus";
 
-"Name on card" = "Ant kortelės nurodytas vardas ir pavardė";
+"18bf0" = "Ant kortelės nurodytas vardas ir pavardė";
 
-"New card" = "Nauja kortelė";
+"8d3ef" = "Nauja kortelė";
 
-"New payment method" = "Naujas mokėjimo būdas";
+"c5f95" = "Naujas mokėjimo būdas";
 
-"No %@ promo" = "Nėra %@ akcijos";
+"99d88" = "Nėra %@ akcijos";
 
-"Not you?" = "Ne jūs?";
+"5b978" = "Ne jūs?";
 
-"Only card brand can be changed." = "Galima keisti tik kortelės prekės ženklą.";
+"d1c0a" = "Galima keisti tik kortelės prekės ženklą.";
 
-"Open your UPI app to approve your payment within %@" = "Atidarykite savo UPI programą mokėjimui patvirtinti per %@";
+"b7546" = "Atidarykite savo UPI programą mokėjimui patvirtinti per %@";
 
-"Or" = "Arba";
+"0568b" = "Arba";
 
-"Or pay using" = "Arba mokėti naudojant";
+"3c3f7" = "Arba mokėti naudojant";
 
-"Or pay with a card" = "Arba mokėti kortele";
+"682d8" = "Arba mokėti kortele";
 
-"Or use" = "Arba naudokite";
+"4158c" = "Arba naudokite";
 
-"Or use a card" = "Arba naudokite kortelę";
+"b529c" = "Arba naudokite kortelę";
 
-"Pay %@" = "Mokėti %@";
+"964f6" = "Mokėti %@";
 
-"Pay another way" = "Mokėkite kitu būdu";
+"4bb4a" = "Mokėkite kitu būdu";
 
-"Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau \"%@\" ir daugybei kitų įmonių.";
+"f43bb" = "Mokėkite greičiau \"%@\" ir daugybei kitų įmonių.";
 
-"Pay faster everywhere Link is accepted." = "Mokėkite greičiau visur, kur priimama „Link“.";
+"d49c1" = "Mokėkite greičiau visur, kur priimama „Link“.";
 
-"Pay over time with %@" = "Mokėkite vėliau naudodami %@";
+"77196" = "Mokėkite vėliau naudodami %@";
 
-"Pay over time with Affirm" = "Mokėkite per tam tikrą laikotarpį naudodami \"Affirm\"";
+"2f870" = "Mokėkite per tam tikrą laikotarpį naudodami \"Affirm\"";
 
-"Pay with Link" = "Mokėti naudojant \"Link\"";
+"9d81a" = "Mokėti naudojant \"Link\"";
 
-"Pay with your bank account in just a few steps." = "Mokėkite naudodami savo banko sąskaitą vos keliais veiksmais.";
+"bc021" = "Mokėkite naudodami savo banko sąskaitą vos keliais veiksmais.";
 
-"Payment" = "Mokėjimas";
+"7048f" = "Mokėjimas";
 
-"Payment failed" = "Sumokėti nepavyko";
+"17aad" = "Sumokėti nepavyko";
 
-"Payment methods" = "Mokėjimo būdai";
+"16d26" = "Mokėjimo būdai";
 
-"Please choose a valid payment method." = "Pasirinkite galiojantį mokėjimo būdą.";
+"5ddb8" = "Pasirinkite galiojantį mokėjimo būdą.";
 
-"Please go back and select another payment method" = "Grįžkite atgal ir pasirinkite kitą mokėjimo būdą";
+"cf6c1" = "Grįžkite atgal ir pasirinkite kitą mokėjimo būdą";
 
-"Point the camera at your card." = "Nukreipkite fotoaparatą į kortelę.";
+"59a6c" = "Nukreipkite fotoaparatą į kortelę.";
 
-"Processing..." = "Apdorojama...";
+"f40a8" = "Apdorojama...";
 
-"Przelewy24 Bank" = "Bankas \"Przelewy24\"";
+"b0866" = "Bankas \"Przelewy24\"";
 
-"Remove card?" = "Ištraukti kortelę?";
+"ce640" = "Ištraukti kortelę?";
 
-"Remove linked account" = "Pašalinti susietą paskyrą";
+"a545c" = "Pašalinti susietą paskyrą";
 
-"Resend code" = "Pakartotinai siųsti kodą";
+"b9745" = "Pakartotinai siųsti kodą";
 
-"SEPA debit details cannot be changed." = "SEPA debeto duomenų keisti negalima.";
+"a4f77" = "SEPA debeto duomenų keisti negalima.";
 
-"Save" = "Išsaugoti";
+"1509f" = "Išsaugoti";
 
-"Save a new payment method" = "Išsaugoti naują mokėjimo būdą";
+"6b6eb" = "Išsaugoti naują mokėjimo būdą";
 
-"Save address" = "išsaugoti adresą";
+"0cbb9" = "išsaugoti adresą";
 
-"Save for future payments" = "Išsaugokite vėlesniems mokėjimams";
+"7990e" = "Išsaugokite vėlesniems mokėjimams";
 
-"Save my info for faster checkout with Link" = "Išsaugoti mano informaciją greitesniam atsiskaitymui su „Link“";
+"8e1e1" = "Išsaugoti mano informaciją greitesniam atsiskaitymui su „Link“";
 
-"Save payment details to %@ for future purchases" = "Išsaugoti mokėjimo duomenis \"%@” būsimiems pirkimams";
+"0745e" = "Išsaugoti mokėjimo duomenis \"%@” būsimiems pirkimams";
 
-"Save this account for future %@ payments" = "Išsaugoti šią sąskaitą vėlesniems %@ mokėjimams";
+"e8c88" = "Išsaugoti šią sąskaitą vėlesniems %@ mokėjimams";
 
-"Save your bank account in just a few steps." = "Vos keliais veiksmais įrašykite savo banko sąskaitą.";
+"b4042" = "Vos keliais veiksmais įrašykite savo banko sąskaitą.";
 
-"Save your info for secure 1-click checkout with Link" = "Išsaugokite savo informaciją saugiam atsiskaitymui vienu spustelėjimu su \"Link\"";
+"650b1" = "Išsaugokite savo informaciją saugiam atsiskaitymui vienu spustelėjimu su \"Link\"";
 
-"Saved" = "Įrašyta";
+"b5c12" = "Įrašyta";
 
-"Select card" = "Pasirinkti kortelę";
+"59ffd" = "Pasirinkti kortelę";
 
-"Select payment method" = "Pasirinkti mokėjimo būdą";
+"659d1" = "Pasirinkti mokėjimo būdą";
 
-"Select your payment method" = "Pasirinkite mokėjimo būdą";
+"d23e3" = "Pasirinkite mokėjimo būdą";
 
-"Set as default" = "Nustatyti kaip numatytąjį";
+"d09b4" = "Nustatyti kaip numatytąjį";
 
-"Set as default payment method" = "Nustatyti kaip numatytąjį mokėjimo būdą";
+"af056" = "Nustatyti kaip numatytąjį mokėjimo būdą";
 
-"Set up" = "Nustatyti";
+"4da10" = "Nustatyti";
 
-"Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
+"b8e46" = "Siuntimas į %@ nepalaikomas.";
 
-"Show menu" = "Rodyti meniu";
+"0b0af" = "Rodyti meniu";
 
-"Simple, secure one-click payments" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
+"edd6d" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Susiejant paskyrą kažkas nepavyko.\n Bandykite dar kartą vėliau.";
+"33596" = "Susiejant paskyrą kažkas nepavyko.\n Bandykite dar kartą vėliau.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant \"%@\".";
+"822ff" = "Per 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant \"%@\".";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
+"72fd8" = "Po 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
 
-"Tap to close" = "Bakstelėkite, kad uždarytumėte";
+"e263d" = "Bakstelėkite, kad uždarytumėte";
 
-"Tap to expand" = "Bakstelėkite, kad išplėstumėte";
+"1cbaf" = "Bakstelėkite, kad išplėstumėte";
 
-"The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
+"477cb" = "Įvedėte ne visą IBAN.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Jūsų įvestas IBAN yra neteisingas, „%@“ nėra palaikomas šalies kodas.";
+"a70c6" = "Jūsų įvestas IBAN yra neteisingas, „%@“ nėra palaikomas šalies kodas.";
 
-"The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
+"e32a6" = "Pateiktas patvirtinimo kodas nebegalioja.";
 
-"The provided verification code is incorrect." = "Nurodytas neteisingas patikrinimo kodas.";
+"e8cb8" = "Nurodytas neteisingas patikrinimo kodas.";
 
-"This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
+"f3c56" = "Tai jūsų numatytasis mokėjimo būdas";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Šis mokėjimo būdas bus pašalintas, tačiau ir toliau bus galima naudotis %@ prenumeratomis.";
+"478c1" = "Šis mokėjimo būdas bus pašalintas, tačiau ir toliau bus galima naudotis %@ prenumeratomis.";
 
-"Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
+"4a754" = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
 
-"Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
+"19202" = "Šiam pirkiniui nepasiekiama";
 
-"Update card" = "Atnaujinti kortelę";
+"e28b5" = "Atnaujinti kortelę";
 
-"Update payment method" = "Atnaujinti mokėjimo būdą";
+"fa7bf" = "Atnaujinti mokėjimo būdą";
 
-"Use billing address for shipping" = "Atsiskaitymo adresą naudoti siuntimui";
+"4a82d" = "Atsiskaitymo adresą naudoti siuntimui";
 
-"View more" = "Peržiūrėti daugiau";
+"267e5" = "Peržiūrėti daugiau";
 
-"Yes, update" = "Taip, atnaujinti";
+"fa298" = "Taip, atnaujinti";
 
-"Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
+"42ef0" = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
 
-"iDEAL Bank" = "iDEAL bankas";
+"460cb" = "iDEAL bankas";

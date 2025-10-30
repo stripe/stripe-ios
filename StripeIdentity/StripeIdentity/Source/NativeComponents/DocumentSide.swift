@@ -17,13 +17,11 @@ enum DocumentSide: String {
 
         func idDocument() -> String {
             if self == .front {
-                return STPLocalizedString(
-                    "Front of identity document",
+                return STPLocalizedString("8562c",
                     "Title of ID document scanning screen when scanning the front of an identity card"
                 )
             } else {
-                return STPLocalizedString(
-                    "Back of identity document",
+                return STPLocalizedString("3229d",
                     "Title of ID document scanning screen when scanning the back of an identity card"
                 )
             }

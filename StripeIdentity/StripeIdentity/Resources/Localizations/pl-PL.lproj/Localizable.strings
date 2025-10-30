@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "W kolejnym kroku zostanie zrobionych kilka zdjęć, aby potwierdzić Twoją tożsamość";
+"40b57" = "W kolejnym kroku zostanie zrobionych kilka zdjęć, aby potwierdzić Twoją tożsamość";
 
-"Accepted forms of ID include" = "Akceptowane formy dokumentu tożsamości to";
+"a9934" = "Akceptowane formy dokumentu tożsamości to";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Można też ręcznie przesłać zdjęcie dokumentu tożsamości.";
+"a570c" = "Można też ręcznie przesłać zdjęcie dokumentu tożsamości.";
 
-"App Settings" = "Ustawienia aplikacji";
+"da645" = "Ustawienia aplikacji";
 
-"Back %@ photo successfully uploaded" = "Zdjęcie tylnej strony dokumentu %@ zostało przesłane pomyślnie";
+"31438" = "Zdjęcie tylnej strony dokumentu %@ zostało przesłane pomyślnie";
 
-"Back identity document photo successfully uploaded" = "Zdjęcie tylnej strony dokumentu tożsamości zostało przesłane pomyślnie";
+"3253a" = "Zdjęcie tylnej strony dokumentu tożsamości zostało przesłane pomyślnie";
 
-"Back of %@" = "Tylna strona dokumentu %@";
+"128b0" = "Tylna strona dokumentu %@";
 
-"Back of driver's license or government-issued photo ID" = "Tył prawa jazdy lub dokumentu tożsamości ze zdjęciem wydanego przez organ państwowy";
+"37929" = "Tył prawa jazdy lub dokumentu tożsamości ze zdjęciem wydanego przez organ państwowy";
 
-"Back of identity document" = "Tylna strona dokumentu tożsamości";
+"3229d" = "Tylna strona dokumentu tożsamości";
 
-"Camera permission" = "Zezwolenie dla aparatu";
+"51e72" = "Zezwolenie dla aparatu";
 
-"Camera unavailable" = "Aparat niedostępny";
+"06cc3" = "Aparat niedostępny";
 
-"Capturing…" = "Przechwytywanie…";
+"806e3" = "Przechwytywanie…";
 
-"Choose File" = "Wybierz plik";
+"d7042" = "Wybierz plik";
 
-"Consent" = "Zgoda";
+"d37e0" = "Zgoda";
 
-"Could not capture image" = "Nie można wykonać zdjęcia";
+"bf6e9" = "Nie można wykonać zdjęcia";
 
-"Date of Birth" = "Data urodzenia";
+"fdc73" = "Data urodzenia";
 
-"Date of birth does not look valid" = "Data urodzenia wygląda na nieprawidłową";
+"2baa1" = "Data urodzenia wygląda na nieprawidłową";
 
-"Details not visible" = "Szczegóły nie są widoczne";
+"687cd" = "Szczegóły nie są widoczne";
 
-"Flip your %@ over to the other side" = "Odwróć swój dokument %@ na drugą stronę";
+"e3292" = "Odwróć swój dokument %@ na drugą stronę";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Odwróć swoje prawo jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na drugą stronę";
+"dd41b" = "Odwróć swoje prawo jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na drugą stronę";
 
-"Flip your identity card over to the other side" = "Obróć dowód tożsamości na drugą stronę";
+"87346" = "Obróć dowód tożsamości na drugą stronę";
 
-"Front %@ photo successfully uploaded" = "Zdjęcie przedniej strony dokumentu %@ zostało przesłane pomyślnie";
+"b57ad" = "Zdjęcie przedniej strony dokumentu %@ zostało przesłane pomyślnie";
 
-"Front identity document photo successfully uploaded" = "Zdjęcie przedniej strony dokumentu tożsamości zostało przesłane pomyślnie";
+"3a9fd" = "Zdjęcie przedniej strony dokumentu tożsamości zostało przesłane pomyślnie";
 
-"Front of %@" = "Przednia strona dokumentu %@";
+"73fc5" = "Przednia strona dokumentu %@";
 
-"Front of driver's license or government-issued photo ID" = "Przód prawa jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy";
+"b3d9a" = "Przód prawa jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy";
 
-"Front of driver's license or passport" = "Przód prawa jazdy lub paszportu";
+"8d188" = "Przód prawa jazdy lub paszportu";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Przód prawa jazdy, paszportu lub dowodu tożsamości ze zdjęciem wydanego przez organ państwowy";
+"070b5" = "Przód prawa jazdy, paszportu lub dowodu tożsamości ze zdjęciem wydanego przez organ państwowy";
 
-"Front of identity document" = "Przednia strona dokumentu tożsamości";
+"8562c" = "Przednia strona dokumentu tożsamości";
 
-"Front of passport or government-issued photo ID" = "Przód paszportu lub dokument tożsamości ze zdjęciem wydanego przez organ państwowy";
+"bb2ee" = "Przód paszportu lub dokument tożsamości ze zdjęciem wydanego przez organ państwowy";
 
-"Get ready to scan your photo ID" = "Przygotuj się na skanowanie dokumentu tożsamości ze zdjęciem";
+"83016" = "Przygotuj się na skanowanie dokumentu tożsamości ze zdjęciem";
 
-"Get ready to take a selfie" = "Przygotuj się do zrobienia selfie";
+"9e29f" = "Przygotuj się do zrobienia selfie";
 
-"Go Back" = "Wróć";
+"b8d99" = "Wróć";
 
-"Hold still, scanning" = "Zaczekaj, trwa skanowanie";
+"b63f6" = "Zaczekaj, trwa skanowanie";
 
-"I'm ready" = "Gotowe";
+"d5b05" = "Gotowe";
 
-"ID Number" = "Numer identyfikacyjny";
+"a403d" = "Numer identyfikacyjny";
 
-"Individual CPF" = "CPF osoby fizycznej";
+"6212a" = "CPF osoby fizycznej";
 
-"Keep ID level" = "Utrzymaj dokument tożsamości w poziomie";
+"6be11" = "Utrzymaj dokument tożsamości w poziomie";
 
-"Last 4 of Social Security number" = "Ostatnie 4 cyfry numeru ubezpieczenia społecznego";
+"77dd8" = "Ostatnie 4 cyfry numeru ubezpieczenia społecznego";
 
-"Loading" = "Wczytywanie";
+"dc3808" = "Wczytywanie";
 
-"Make sure all details are visible and focus" = "Upewnij się, że wszystkie szczegóły są widoczne i ostre";
+"859af" = "Upewnij się, że wszystkie szczegóły są widoczne i ostre";
 
-"Make sure you're in a well lit space." = "Upewnij się, że znajdujesz się w dobrze oświetlonym miejscu.";
+"6c2aa" = "Upewnij się, że znajdujesz się w dobrze oświetlonym miejscu.";
 
-"Move closer" = "Przybliż";
+"1da05" = "Przybliż";
 
-"Move farther" = "Oddal";
+"73333" = "Oddal";
 
-"Move to a darker area" = "Przenieś się do ciemniejszego miejsca";
+"4687a" = "Przenieś się do ciemniejszego miejsca";
 
-"Move to a well-lit area" = "Przenieś się do dobrze oświetlonego miejsca";
+"f579f" = "Przenieś się do dobrze oświetlonego miejsca";
 
-"NRIC or FIN" = "NRIC lub FIN";
+"32e72" = "NRIC lub FIN";
 
-"No document detected" = "Nie wykryto żadnego dokumentu";
+"b376f" = "Nie wykryto żadnego dokumentu";
 
-"Personal ID number" = "Numer dowodu tożsamości";
+"fae7d" = "Numer dowodu tożsamości";
 
-"Personal Information" = "Dane osobowe";
+"c4b37" = "Dane osobowe";
 
-"Phone Number" = "Numer telefonu";
+"72dba" = "Numer telefonu";
 
-"Phone Verification" = "Weryfikacja numeru telefonu";
+"cb074" = "Weryfikacja numeru telefonu";
 
-"Photo Library" = "Biblioteka zdjęć";
+"e0b2a" = "Biblioteka zdjęć";
 
-"Please upload images of the front and back of your %@" = "Prześlij zdjęcia przedniej i tylnej strony swojego dokumentu %@";
+"03fa9" = "Prześlij zdjęcia przedniej i tylnej strony swojego dokumentu %@";
 
-"Please upload images of the front and back of your identity document" = "Prześlij zdjęcia przedniej i tylnej strony swojego dokumentu tożsamości";
+"8c273" = "Prześlij zdjęcia przedniej i tylnej strony swojego dokumentu tożsamości";
 
-"Position your %@ in the center of the frame" = "Umieść dokument %@ na środku ramki";
+"ceab8" = "Umieść dokument %@ na środku ramki";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Umieść swoje prawo jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
+"12559" = "Umieść swoje prawo jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
 
-"Position your driver's license or passport in the center of the frame" = "Umieść swoje prawo jazdy lub paszport na środku ramki";
+"453ad" = "Umieść swoje prawo jazdy lub paszport na środku ramki";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Umieść swoje prawo jazdy, paszport lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
+"ad934" = "Umieść swoje prawo jazdy, paszport lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
 
-"Position your face in the center of the frame." = "Umieść twarz w centrum kadru.";
+"6f758" = "Umieść twarz w centrum kadru.";
 
-"Position your identity document in the center of the frame" = "Umieść swój dokument tożsamości na środku ramki";
+"68f51" = "Umieść swój dokument tożsamości na środku ramki";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Umieść swój paszport lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
+"74830" = "Umieść swój paszport lub dokument tożsamości ze zdjęciem wydany przez organ państwowy na środku ramki";
 
-"Retake Photos" = "zrób zdjęcia ponownie";
+"16681" = "zrób zdjęcia ponownie";
 
-"Scan" = "Skanowanie";
+"ea1c5" = "Skanowanie";
 
-"Scanned" = "Zeskanowano";
+"e9b3b" = "Zeskanowano";
 
-"Select" = "Wybierz";
+"2a780" = "Wybierz";
 
-"Select a location to upload the back of your identity document from" = "Wybierz lokalizację, z której chcesz przesłać tylną stronę dokumentu tożsamości";
+"568f3" = "Wybierz lokalizację, z której chcesz przesłać tylną stronę dokumentu tożsamości";
 
-"Select a location to upload the front of your identity document from" = "Wybierz lokalizację, z której chcesz przesłać przednią stronę dokumentu tożsamości";
+"a352a" = "Wybierz lokalizację, z której chcesz przesłać przednią stronę dokumentu tożsamości";
 
-"Select back %@ photo" = "Wybierz zdjęcie tylnej strony dokumentu %@";
+"0dfa8" = "Wybierz zdjęcie tylnej strony dokumentu %@";
 
-"Select back identity document photo" = "Wybierz zdjęcie tylnej strony dokumentu tożsamości";
+"38aec" = "Wybierz zdjęcie tylnej strony dokumentu tożsamości";
 
-"Select front %@ photo" = "Wybierz zdjęcie przedniej strony dokumentu %@";
+"1ca11" = "Wybierz zdjęcie przedniej strony dokumentu %@";
 
-"Select front identity document photo" = "Wybierz zdjęcie przedniej strony dokumentu tożsamości";
+"5c25a" = "Wybierz zdjęcie przedniej strony dokumentu tożsamości";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Przechwytywanie selfie";
+"ccd67" = "Przechwytywanie selfie";
 
-"Selfie captures are complete" = "Zakończono przechwytywanie selfie";
+"a7b36" = "Zakończono przechwytywanie selfie";
 
-"Take Photo" = "Zrób zdjęcie";
+"1ca36" = "Zrób zdjęcie";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Nie zapisano zdjęć Twojego dowodu tożsamości. Czy chcesz wyjść?";
+"b6b76" = "Nie zapisano zdjęć Twojego dowodu tożsamości. Czy chcesz wyjść?";
 
-"There was an error accessing the camera." = "Wystąpił błąd dostępu do aparatu.";
+"1eda8" = "Wystąpił błąd dostępu do aparatu.";
 
-"Try Again" = "Spróbuj ponownie";
+"df0fe" = "Spróbuj ponownie";
 
-"Try reduce glare and make ID visible" = "Spróbuj zmniejszyć oświetlenie i upewnij się, że dokument tożsamości jest widoczny.";
+"ffd3d" = "Spróbuj zmniejszyć oświetlenie i upewnij się, że dokument tożsamości jest widoczny.";
 
-"Unable to establish a connection." = "Nie można nawiązać połączenia.";
+"77ee9" = "Nie można nawiązać połączenia.";
 
-"Unsaved changes" = "Niezapisane zmiany";
+"a710c" = "Niezapisane zmiany";
 
-"Upload" = "Prześlij";
+"865e8" = "Prześlij";
 
-"Upload a Photo" = "Prześlij zdjęcie";
+"f0c8a" = "Prześlij zdjęcie";
 
-"Upload your %@" = "Prześlij swój dokument: %@";
+"7f6c1" = "Prześlij swój dokument: %@";
 
-"Upload your photo ID" = "Prześlij dokument tożsamości ze zdjęciem";
+"40a76" = "Prześlij dokument tożsamości ze zdjęciem";
 
-"Uploading back %@ photo" = "Przesyłanie tylnej strony dokumentu %@";
+"eaebd" = "Przesyłanie tylnej strony dokumentu %@";
 
-"Uploading back identity document photo" = "Przesyłanie tylnej strony dokumentu tożsamości";
+"e16b7" = "Przesyłanie tylnej strony dokumentu tożsamości";
 
-"Uploading front %@ photo" = "Przesyłanie przedniej strony dokumentu %@";
+"93af2" = "Przesyłanie przedniej strony dokumentu %@";
 
-"Uploading front identity document photo" = "Przesyłanie przedniej strony dokumentu tożsamości";
+"5dfbf" = "Przesyłanie przedniej strony dokumentu tożsamości";
 
-"Verify your identity" = "Zweryfikuj tożsamość";
+"ed32a" = "Zweryfikuj tożsamość";
 
-"We could not capture a high-quality image." = "Nie można zarejestrować obrazu wysokiej jakości.";
+"55e29" = "Nie można zarejestrować obrazu wysokiej jakości.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Potrzebujemy pozwolenia na używanie Twojego aparatu. Zezwól w ustawieniach aplikacji na dostęp do aparatu.";
+"a98b4" = "Potrzebujemy pozwolenia na używanie Twojego aparatu. Zezwól w ustawieniach aplikacji na dostęp do aparatu.";
 
-"Welcome" = "Witamy";
+"0e222" = "Witamy";
 
-"You can either try again or upload an image from your device." = "Możesz spróbować ponownie lub przesłać obraz z urządzenia.";
+"348a7" = "Możesz spróbować ponownie lub przesłać obraz z urządzenia.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Nie zapisano Twoich selfie. Czy chcesz wyjść?";
+"b892f" = "Nie zapisano Twoich selfie. Czy chcesz wyjść?";
 
-"driver's license" = "prawo jazdy";
+"cadf1" = "prawo jazdy";
 
-"government-issued photo ID" = "wydany przez rząd dokument tożsamości ze zdjęciem";
+"29fd8" = "wydany przez rząd dokument tożsamości ze zdjęciem";
 
-"passport" = "paszport";
+"cbc47" = "paszport";

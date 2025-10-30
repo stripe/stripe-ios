@@ -1,305 +1,305 @@
-"+ Add" = "+ Hozzáadás";
+"c0072" = "+ Hozzáadás";
 
-"Add US bank account" = "Amerikai bankszámla hozzáadása";
+"1b3a4" = "Amerikai bankszámla hozzáadása";
 
-"Add a card" = "Kártya hozzáadása";
+"be8f5" = "Kártya hozzáadása";
 
-"Add a payment method" = "Fizetési mód hozzáadása";
+"7e917" = "Fizetési mód hozzáadása";
 
-"Add bank account" = "Bankszámla hozzáadása";
+"a3cc9" = "Bankszámla hozzáadása";
 
-"Add card" = "Kártya hozzáadása";
+"769c5" = "Kártya hozzáadása";
 
-"Add new card" = "Új kártya hozzáadása";
+"800f4" = "Új kártya hozzáadása";
 
-"Add new payment method" = "Új fizetési mód hozzáadása";
+"8130f" = "Új fizetési mód hozzáadása";
 
-"Add your payment information" = "Fizetési adatok megadása";
+"eaa33" = "Fizetési adatok megadása";
 
-"Approve payment" = "Fizetés jóváhagyása";
+"e70d2" = "Fizetés jóváhagyása";
 
-"Are you sure you want to remove this card?" = "Biztosan törli ezt a kártyát?";
+"c8af7" = "Biztosan törli ezt a kártyát?";
 
-"Are you sure you want to remove this linked account?" = "Biztosan törli ezt a kapcsolt számlát?";
+"74460" = "Biztosan törli ezt a kapcsolt számlát?";
 
-"Back" = "Vissza";
+"76900" = "Vissza";
 
-"Bank" = "Bank";
+"676c4" = "Bank";
 
-"Bank account" = "Bankszámla";
+"1b427" = "Bankszámla";
 
-"Bank account details cannot be changed." = "A bankszámlaadatok nem módosíthatók.";
+"12ab1" = "A bankszámlaadatok nem módosíthatók.";
 
-"Buy now or pay later with  <img/>" = "Vegye meg most vagy fizessen később a következővel: <img/>";
+"38088" = "Vegye meg most vagy fizessen később a következővel: <img/>";
 
-"Buy now or pay later with Afterpay" = "Vegye meg most, vagy fizessen később Afterpayjel";
+"c04b4" = "Vegye meg most, vagy fizessen később Afterpayjel";
 
-"Buy now or pay later with Cash App Afterpay" = "Vegye meg most, vagy fizessen később Cash App Afterpayjel";
+"f566d" = "Vegye meg most, vagy fizessen később Cash App Afterpayjel";
 
-"Buy now or pay later with Clearpay" = "Vegye meg most, vagy fizessen később Clearpayjel";
+"bf452" = "Vegye meg most, vagy fizessen később Clearpayjel";
 
-"Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
+"5c41c" = "Vegye meg most, vagy fizessen később Klarnával";
 
-"Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
+"21793" = "Vásárlás UPI-azonosítóval";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
+"313bb" = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Az Amazon Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje az Amazon Pay-számláját.";
+"c1642" = "Az Amazon Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje az Amazon Pay-számláját.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "A Klarna fizetési módra történő továbblépéssel Ön engedélyezi, hogy a(z) %1$@ és a Klarna feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a Klarna-számláját. Ezt bármikor megváltoztathatja a Klarna alkalmazásban vagy a(z) %2$@ felkeresésével.";
+"09c61" = "A Klarna fizetési módra történő továbblépéssel Ön engedélyezi, hogy a(z) %1$@ és a Klarna feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a Klarna-számláját. Ezt bármikor megváltoztathatja a Klarna alkalmazásban vagy a(z) %2$@ felkeresésével.";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A PayPalra történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
+"c6ff4" = "A PayPalra történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "A Revolut Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a Revolut Pay számláját.";
+"694b5" = "A Revolut Payre történő továbblépéssel engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a Revolut Pay számláját.";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A folytatással elfogadja a <terms>feltételeket</terms> és az <privacy>adatvédelmi szabályzatot</privacy>.";
+"8ba3b" = "A folytatással elfogadja a <terms>feltételeket</terms> és az <privacy>adatvédelmi szabályzatot</privacy>.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
+"23d3e" = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@ és <link>a Linknél</link> a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
+"b8e49" = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@ és <link>a Linknél</link> a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
-"By continuing, you agree to save your information for future purchases with %@." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@.";
+"8ca70" = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@.";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "A folytatással felhatalmazza a(z) %@-t, hogy a vásárlási vagy előfizetési csomagjának megfelelően rendszeresen automatikusan megterhelje Satispay egyenlegét.";
+"d451f" = "A folytatással felhatalmazza a(z) %@-t, hogy a vásárlási vagy előfizetési csomagjának megfelelően rendszeresen automatikusan megterhelje Satispay egyenlegét.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ha folytatja, azzal engedélyezi, hogy a(z) %1$@ megterhelje a Cash App számláját ezzel a fizetéssel, és jövőbeli fizetésekkel a(z) %2$@ feltételeinek megfelelően, ameddig az engedélyt vissza nem vonja. Ezt bármikor megváltoztathatja a Cash App beállításaiban.";
+"97461" = "Ha folytatja, azzal engedélyezi, hogy a(z) %1$@ megterhelje a Cash App számláját ezzel a fizetéssel, és jövőbeli fizetésekkel a(z) %2$@ feltételeinek megfelelően, ameddig az engedélyt vissza nem vonja. Ezt bármikor megváltoztathatja a Cash App beállításaiban.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A Linkhez történő csatlakozással Őn elfogadja a <terms>feltételeket</terms> és az <privacy>adatvédelmi szabályzatot</privacy>.";
+"225b7" = "A Linkhez történő csatlakozással Őn elfogadja a <terms>feltételeket</terms> és az <privacy>adatvédelmi szabályzatot</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefonszáma és e-mail-címe megadásával hozzájárul a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> által szabályozott Link-számla létrehozásához.";
+"05e15" = "Telefonszáma és e-mail-címe megadásával hozzájárul a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> által szabályozott Link-számla létrehozásához.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "A kártyaadatok megadásával engedélyezi, hogy a(z) %@ megterhelje kártyáját a jövőbeli kifizetésekkel a feltételeiknek megfelelően.";
+"0cdc0" = "A kártyaadatok megadásával engedélyezi, hogy a(z) %@ megterhelje kártyáját a jövőbeli kifizetésekkel a feltételeiknek megfelelően.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Az e-mail-címe megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
+"36fad" = "Az e-mail-címe megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Fizetési adatainak megadásával és a fizetés megerősítésével Ön felhatalmazza (A) a(z) %@ céget és a Stripe-ot, fizetési szolgáltatónkat, hogy utasításokat küldjön a bankjának, hogy megterhelje a számláját, és (B) bankját, hogy az utasításoknak megfelelően megterhelje a számláját. A jogai részeként Ön jogosult a bankjától a velük kötött megállapodás feltételei szerinti visszatérítésre. A visszatérítést a számla megterhelésének napjától számított 8 héten belül kell igényelni. Jogait egy, a bankjától beszerezhető nyilatkozat tartalmazza. Beleegyezik abba, hogy a jövőbeni terhelésekről értesítést kap, legfeljebb 2 nappal azok bekövetkezése előtt.";
+"289c5" = "Fizetési adatainak megadásával és a fizetés megerősítésével Ön felhatalmazza (A) a(z) %@ céget és a Stripe-ot, fizetési szolgáltatónkat, hogy utasításokat küldjön a bankjának, hogy megterhelje a számláját, és (B) bankját, hogy az utasításoknak megfelelően megterhelje a számláját. A jogai részeként Ön jogosult a bankjától a velük kötött megállapodás feltételei szerinti visszatérítésre. A visszatérítést a számla megterhelésének napjától számított 8 héten belül kell igényelni. Jogait egy, a bankjától beszerezhető nyilatkozat tartalmazza. Beleegyezik abba, hogy a jövőbeni terhelésekről értesítést kap, legfeljebb 2 nappal azok bekövetkezése előtt.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A telefonszáma megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
+"e3661" = "A telefonszáma megadásával hozzájárul egy Link fiók létrehozásához és a fizetési adatai mentéséhez a Linkbe, a Link <terms>feltételei</terms> és <privacy>adatvédelmi szabályzata</privacy> szerint.";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
+"02d39" = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy megrendelését elküldi ide: %1$@ és %2$@, Ön beleegyezik abba, hogy adatait a(z) %3$@ szolgáltatás menti a jövőbeni vásárlásokhoz, illetve beleegyezik abba, hogy engedélyezi a kifizetéseket <terms>a jelen feltételek</terms> szerint.";
+"c041a" = "Azzal, hogy megrendelését elküldi ide: %1$@ és %2$@, Ön beleegyezik abba, hogy adatait a(z) %3$@ szolgáltatás menti a jövőbeni vásárlásokhoz, illetve beleegyezik abba, hogy engedélyezi a kifizetéseket <terms>a jelen feltételek</terms> szerint.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "A megrendelésének a(z) %@ részére történő elküldésével Ön beleegyezik abba, hogy engedélyezi a fizetéseket a <terms>jelen feltételek</terms> szerint.";
+"532e1" = "A megrendelésének a(z) %@ részére történő elküldésével Ön beleegyezik abba, hogy engedélyezi a fizetéseket a <terms>jelen feltételek</terms> szerint.";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "Szakítsa meg, és fizessen más módon";
+"58817" = "Szakítsa meg, és fizessen más módon";
 
-"Card details cannot be changed." = "A kártyai adatai nem módosíthatók.";
+"34c44" = "A kártyai adatai nem módosíthatók.";
 
-"Change" = "Módosítás";
+"c0bf7" = "Módosítás";
 
-"Choose a payment method" = "Fizetési mód választása";
+"1dc8a" = "Fizetési mód választása";
 
-"Close card scanner" = "Kártyabeolvasó bezárása";
+"c0077" = "Kártyabeolvasó bezárása";
 
-"Code sent" = "Kód elküldve";
+"f98a1" = "Kód elküldve";
 
-"Confirm" = "Megerősítés";
+"eebdd" = "Megerősítés";
 
-"Confirm it's you" = "Igazolja, hogy Ön az";
+"6176e" = "Igazolja, hogy Ön az";
 
-"Confirm payment details" = "Fizetési adatok megerősítése";
+"3a6b5" = "Fizetési adatok megerősítése";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést a bankjánál vagy a fizetést biztosító alkalmazásban.";
+"101ef" = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést a bankjánál vagy a fizetést biztosító alkalmazásban.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést bankja alkalmazásában.";
+"a8c9a" = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést bankja alkalmazásában.";
 
-"Confirm your CVC" = "CVC megerősítése";
+"a4bdf" = "CVC megerősítése";
 
-"Contact information" = "Kapcsolattartási adatok";
+"cbc73" = "Kapcsolattartási adatok";
 
-"Continue another way" = "Folytatás más módon";
+"c2a49" = "Folytatás más módon";
 
-"Create an account with Link for faster checkout across the web" = "Hozzon létre egy fiókot a Link segítségével a gyorsabb fizetéshez az interneten";
+"b568d" = "Hozzon létre egy fiókot a Link segítségével a gyorsabb fizetéshez az interneten";
 
-"Debit or credit card" = "Betéti vagy hitelkártya";
+"04f63" = "Betéti vagy hitelkártya";
 
-"Default" = "Alapértelmezett";
+"21b11" = "Alapértelmezett";
 
-"Default payment method" = "Alapértelmezett fizetési mód";
+"4c163" = "Alapértelmezett fizetési mód";
 
-"Did you mean %@? %@." = "Erre gondolt: %1$@? %2$@.";
+"6d7d1" = "Erre gondolt: %1$@? %2$@.";
 
-"EPS Bank" = "EPS Bank";
+"8f218" = "EPS Bank";
 
-"Enter address manually" = "Cím megadása kézzel";
+"1534f" = "Cím megadása kézzel";
 
-"Enter the code sent to %@." = "Adja meg a(z) %s telefonszámra küldött kódot.";
+"1e836" = "Adja meg a(z) %s telefonszámra küldött kódot.";
 
-"FPX Bank" = "FPX Bank";
+"8c73e" = "FPX Bank";
 
-"Failed to connect" = "Nem sikerült csatlakozni";
+"46c9f" = "Nem sikerült csatlakozni";
 
-"Fast, secure checkout" = "Gyors és biztonságos fizetés";
+"2aeb3" = "Gyors és biztonságos fizetés";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Kapjon vissza %@ összeget, amikor először fizet bankjával. <terms>Olvassa el a feltételeket</terms>";
+"b70b0" = "Kapjon vissza %@ összeget, amikor először fizet bankjával. <terms>Olvassa el a feltételeket</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Kapjon vissza %@ összeget, amikor bankjával fizet. <terms>Olvassa el a feltételeket</terms>";
+"332d2" = "Kapjon vissza %@ összeget, amikor bankjával fizet. <terms>Olvassa el a feltételeket</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tudomásul veszem, hogy a Stripe beszedéseket végez a(z) %@ nevében, és megerősítem, hogy én vagyok a számla tulajdonosa és az egyetlen személy, aki a terheléseket engedélyezheti erről a számláról.";
+"b751e" = "Tudomásul veszem, hogy a Stripe beszedéseket végez a(z) %@ nevében, és megerősítem, hogy én vagyok a számla tulajdonosa és az egyetlen személy, aki a terheléseket engedélyezheti erről a számláról.";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "Bejelentkezés vagy regisztrálás";
+"38f51" = "Bejelentkezés vagy regisztrálás";
 
-"Log out of Link" = "Kijelentkezés a Link";
+"57083" = "Kijelentkezés a Link";
 
-"Manage SEPA debit" = "SEPA beszedés kezelése";
+"a7ff3" = "SEPA beszedés kezelése";
 
-"Manage US bank account" = "USA bankszámla kezelése";
+"0b654" = "USA bankszámla kezelése";
 
-"Manage bank account" = "Bankszámla kezelése";
+"2d4ed" = "Bankszámla kezelése";
 
-"Manage card" = "Kártya kezelése";
+"49e98" = "Kártya kezelése";
 
-"Manage cards" = "Kártyák kezelése";
+"fe215" = "Kártyák kezelése";
 
-"Manage payment method" = "Fizetési mód kezelése";
+"67c16" = "Fizetési mód kezelése";
 
-"Manage payment methods" = "Fizetési módok kezelése";
+"cf0c9" = "Fizetési módok kezelése";
 
-"Manage your payment methods" = "Fizetési módok kezelése";
+"74db7" = "Fizetési módok kezelése";
 
-"Name on card" = "A kártyán szereplő név";
+"18bf0" = "A kártyán szereplő név";
 
-"New card" = "Új kártya";
+"8d3ef" = "Új kártya";
 
-"New payment method" = "Új fizetési mód";
+"c5f95" = "Új fizetési mód";
 
-"No %@ promo" = "Nincs %@ promóció";
+"99d88" = "Nincs %@ promóció";
 
-"Not you?" = "Nem Ön az?";
+"5b978" = "Nem Ön az?";
 
-"Only card brand can be changed." = "Csak a kártyatípus módosítható.";
+"d1c0a" = "Csak a kártyatípus módosítható.";
 
-"Open your UPI app to approve your payment within %@" = "Nyissa meg az UPI-alkalmazását a fizetés jóváhagyásához %@ belül";
+"b7546" = "Nyissa meg az UPI-alkalmazását a fizetés jóváhagyásához %@ belül";
 
-"Or" = "vagy";
+"0568b" = "vagy";
 
-"Or pay using" = "Vagy fizetés a következővel:";
+"3c3f7" = "Vagy fizetés a következővel:";
 
-"Or pay with a card" = "Vagy fizetés kártyával";
+"682d8" = "Vagy fizetés kártyával";
 
-"Or use" = "Vagy használja ezeket";
+"4158c" = "Vagy használja ezeket";
 
-"Or use a card" = "Vagy fizessen kártyával";
+"b529c" = "Vagy fizessen kártyával";
 
-"Pay %@" = "%@ kifizetése";
+"964f6" = "%@ kifizetése";
 
-"Pay another way" = "Fizetés más módon";
+"4bb4a" = "Fizetés más módon";
 
-"Pay faster at %@ and thousands of businesses." = "Gyorsabban fizethet a(z) %@ számára és még ezernyi vállalkozásnak.";
+"f43bb" = "Gyorsabban fizethet a(z) %@ számára és még ezernyi vállalkozásnak.";
 
-"Pay faster everywhere Link is accepted." = "Gyorsabban fizethet mindenhol, ahol a Linket elfogadják.";
+"d49c1" = "Gyorsabban fizethet mindenhol, ahol a Linket elfogadják.";
 
-"Pay over time with %@" = "Fizessen később a következővel: %@";
+"77196" = "Fizessen később a következővel: %@";
 
-"Pay over time with Affirm" = "Fizetés később az Affirmmel";
+"2f870" = "Fizetés később az Affirmmel";
 
-"Pay with Link" = "Fizetés Linkkel";
+"9d81a" = "Fizetés Linkkel";
 
-"Pay with your bank account in just a few steps." = "Fizessen egyszerűen a bankszámlájával.";
+"bc021" = "Fizessen egyszerűen a bankszámlájával.";
 
-"Payment" = "Fizetés";
+"7048f" = "Fizetés";
 
-"Payment failed" = "A fizetés nem sikerült";
+"17aad" = "A fizetés nem sikerült";
 
-"Payment methods" = "Fizetési módok";
+"16d26" = "Fizetési módok";
 
-"Please choose a valid payment method." = "Válasszon érvényes fizetési módot.";
+"5ddb8" = "Válasszon érvényes fizetési módot.";
 
-"Please go back and select another payment method" = "Lépjen vissza, és válasszon másik fizetési módot";
+"cf6c1" = "Lépjen vissza, és válasszon másik fizetési módot";
 
-"Point the camera at your card." = "Tegye a kártyát a kamera elé.";
+"59a6c" = "Tegye a kártyát a kamera elé.";
 
-"Processing..." = "Feldolgozás...";
+"f40a8" = "Feldolgozás...";
 
-"Przelewy24 Bank" = "Przelewy24 Bank";
+"b0866" = "Przelewy24 Bank";
 
-"Remove card?" = "Kártya eltávolítása?";
+"ce640" = "Kártya eltávolítása?";
 
-"Remove linked account" = "Kapcsolt számla törlése";
+"a545c" = "Kapcsolt számla törlése";
 
-"Resend code" = "Kód újraküldése";
+"b9745" = "Kód újraküldése";
 
-"SEPA debit details cannot be changed." = "A SEPA beszedés adatai nem módosíthatók.";
+"a4f77" = "A SEPA beszedés adatai nem módosíthatók.";
 
-"Save" = "Mentés";
+"1509f" = "Mentés";
 
-"Save a new payment method" = "Új fizetési mód mentése";
+"6b6eb" = "Új fizetési mód mentése";
 
-"Save address" = "Cím mentése";
+"0cbb9" = "Cím mentése";
 
-"Save for future payments" = "Mentés a későbbi fizetésekhez";
+"7990e" = "Mentés a későbbi fizetésekhez";
 
-"Save my info for faster checkout with Link" = "Adataim mentése a gyorsabb fizetéshez a Linkkel";
+"8e1e1" = "Adataim mentése a gyorsabb fizetéshez a Linkkel";
 
-"Save payment details to %@ for future purchases" = "Fizetési adatok mentése %@ vállalkozó részére későbbi vásárlásokhoz";
+"0745e" = "Fizetési adatok mentése %@ vállalkozó részére későbbi vásárlásokhoz";
 
-"Save this account for future %@ payments" = "Számla mentése a(z) %@ részére történő fizetésekhez";
+"e8c88" = "Számla mentése a(z) %@ részére történő fizetésekhez";
 
-"Save your bank account in just a few steps." = "Mentse el egyszerűen bankszámláját.";
+"b4042" = "Mentse el egyszerűen bankszámláját.";
 
-"Save your info for secure 1-click checkout with Link" = "Mentse el az adatait a biztonságos egykattintásos fizetéshez a Linkkel";
+"650b1" = "Mentse el az adatait a biztonságos egykattintásos fizetéshez a Linkkel";
 
-"Saved" = "Mentett";
+"b5c12" = "Mentett";
 
-"Select card" = "Kártya kiválasztása";
+"59ffd" = "Kártya kiválasztása";
 
-"Select payment method" = "Fizetési mód választása";
+"659d1" = "Fizetési mód választása";
 
-"Select your payment method" = "Fizetési mód kiválasztása";
+"d23e3" = "Fizetési mód kiválasztása";
 
-"Set as default" = "Legyen alapértelmezett";
+"d09b4" = "Legyen alapértelmezett";
 
-"Set as default payment method" = "Legyen ez az alapértelmezett fizetési mód";
+"af056" = "Legyen ez az alapértelmezett fizetési mód";
 
-"Set up" = "Beállítás";
+"4da10" = "Beállítás";
 
-"Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
+"b8e46" = "Ebbe az országba nem támogatott a szállítás: %@";
 
-"Show menu" = "Menü megjelenítése";
+"0b0af" = "Menü megjelenítése";
 
-"Simple, secure one-click payments" = "Egyszerű, biztonságos, egykattintásos fizetés";
+"edd6d" = "Egyszerű, biztonságos, egykattintásos fizetés";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Valami hiba történt a fiók összekapcsolásakor.\nKérjük, próbálja meg újra később.";
+"33596" = "Valami hiba történt a fiók összekapcsolásakor.\nKérjük, próbálja meg újra később.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe 1-2 munkanapon belül egy 0,01 dollár összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a bankszámlája mentéséről a(z) %@ vállalkozáshoz.";
+"822ff" = "A Stripe 1-2 munkanapon belül egy 0,01 dollár összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a bankszámlája mentéséről a(z) %@ vállalkozáshoz.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe néhány munkanapon belül egy 0,01 $ összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a fizetés befejezéséhez a(z) %@ felé.";
+"72fd8" = "A Stripe néhány munkanapon belül egy 0,01 $ összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a fizetés befejezéséhez a(z) %@ felé.";
 
-"Tap to close" = "Koppintson a bezáráshoz";
+"e263d" = "Koppintson a bezáráshoz";
 
-"Tap to expand" = "Koppintson a kinyitáshoz";
+"1cbaf" = "Koppintson a kinyitáshoz";
 
-"The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
+"477cb" = "A beírt IBAN-szám hiányos.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A megadott IBAN érvénytelen, a \"%@\" nem támogatott országkód.";
+"a70c6" = "A megadott IBAN érvénytelen, a \"%@\" nem támogatott országkód.";
 
-"The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
+"e32a6" = "A megadott ellenőrző kód lejárt.";
 
-"The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
+"e8cb8" = "A megadott ellenőrző kód hibás.";
 
-"This is your default" = "Ez az alapértelmezett";
+"f3c56" = "Ez az alapértelmezett";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Ez a fizetési mód eltávolításra kerül, de továbbra is elérhető marad %@ előfizetések esetén.";
+"478c1" = "Ez a fizetési mód eltávolításra kerül, de továbbra is elérhető marad %@ előfizetések esetén.";
 
-"Too many attempts. Please try again in a few minutes." = "Túl sok kísérlet. Próbálja meg újra néhány perc múlva.";
+"4a754" = "Túl sok kísérlet. Próbálja meg újra néhány perc múlva.";
 
-"Unavailable for this purchase" = "Nem érhető el ennél a vásárlásnál";
+"19202" = "Nem érhető el ennél a vásárlásnál";
 
-"Update card" = "Kártya módosítása";
+"e28b5" = "Kártya módosítása";
 
-"Update payment method" = "Fizetési mód frissítése";
+"fa7bf" = "Fizetési mód frissítése";
 
-"Use billing address for shipping" = "Számlázási cím használata a szállításhoz";
+"4a82d" = "Számlázási cím használata a szállításhoz";
 
-"View more" = "Továbbiak megjelenítése";
+"267e5" = "Továbbiak megjelenítése";
 
-"Yes, update" = "Igen, frissítés";
+"fa298" = "Igen, frissítés";
 
-"Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
+"42ef0" = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 
-"iDEAL Bank" = "iDEAL bank";
+"460cb" = "iDEAL bank";

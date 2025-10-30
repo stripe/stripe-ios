@@ -180,8 +180,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         }
 
         configure(
-            backButtonTitle: STPLocalizedString(
-                "Upload",
+            backButtonTitle: STPLocalizedString("865e8",
                 "Back button label for the identity document file upload screen"
             ),
             viewModel: .init(
@@ -262,13 +261,11 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         case (true, _):
             message = nil
         case (false, .front):
-            message = STPLocalizedString(
-                "Select a location to upload the front of your identity document from",
+            message = STPLocalizedString("a352a",
                 "Help text for action sheet that presents ways to upload the front of an identity document image"
             )
         case (false, .back):
-            message = STPLocalizedString(
-                "Select a location to upload the back of your identity document from",
+            message = STPLocalizedString("568f3",
                 "Help text for action sheet that presents ways to upload the back of an identity document image"
             )
         }
@@ -284,8 +281,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         if !requireLiveCapture && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             alert.addAction(
                 .init(
-                    title: STPLocalizedString(
-                        "Photo Library",
+                    title: STPLocalizedString("e0b2a",
                         "When selected in an action sheet, opens the device's photo library"
                     ),
                     style: .default,
@@ -299,8 +295,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             alert.addAction(
                 .init(
-                    title: STPLocalizedString(
-                        "Take Photo",
+                    title: STPLocalizedString("1ca36",
                         "When selected in an action sheet, opens the device's camera interface"
                     ),
                     style: .default,
@@ -314,8 +309,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         if !requireLiveCapture {
             alert.addAction(
                 .init(
-                    title: STPLocalizedString(
-                        "Choose File",
+                    title: STPLocalizedString("d7042",
                         "When selected in an action sheet, opens the device's file system browser"
                     ),
                     style: .default,
@@ -430,12 +424,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func showCameraPermissionsAlert() {
         let alert = UIAlertController(
-            title: STPLocalizedString(
-                "Camera permission",
+            title: STPLocalizedString("51e72",
                 "Title displayed when requesting camera permissions"
             ),
-            message: STPLocalizedString(
-                "We need permission to use your camera. Please allow camera access in app settings.",
+            message: STPLocalizedString("a98b4",
                 "Text displayed when requesting camera permissions"
             ),
             preferredStyle: .alert

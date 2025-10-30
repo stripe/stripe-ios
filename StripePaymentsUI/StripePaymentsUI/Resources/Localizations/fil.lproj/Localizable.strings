@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Card";
+"fbfa6" = "%1$@ Card";
 
-"%1$@ Credit" = "%1$@ Credit";
+"a11b0" = "%1$@ Credit";
 
-"%1$@ Debit" = "%1$@ Debit";
+"95233" = "%1$@ Debit";
 
-"%1$@ Prepaid" = "%1$@ Prepaid";
+"c90ba" = "%1$@ Prepaid";
 
-"%1$@ account ending in %2$@" = "%1$@ account na nagtatapos sa %2$@";
+"3b24a" = "%1$@ account na nagtatapos sa %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ nagtatapos sa %2$@";
+"f5b21" = "%1$@ nagtatapos sa %2$@";
 
-"%1$@ is not accepted" = "Ang %1$@ ay hindi tinatanggap";
+"29adf" = "Ang %1$@ ay hindi tinatanggap";
 
-"Address line 2 (optional)" = "Pangalawang linya ng adres";
+"9ada7" = "Pangalawang linya ng adres";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Account sa Bangko";
+"c6f64" = "Account sa Bangko";
 
-"Billing address" = "Adres para sa billing";
+"1f516" = "Adres para sa billing";
 
-"Billing details" = "Mga detalye ng singil";
+"7c928" = "Mga detalye ng singil";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Impormasyon ng kard";
+"fca47" = "Impormasyon ng kard";
 
-"Card number" = "Numero ng kard";
+"816fc" = "Numero ng kard";
 
-"Confirm your %@" = "Kumpirmahin ang iyong %@";
+"002d7" = "Kumpirmahin ang iyong %@";
 
-"Invalid data." = "Data na di balido.";
+"da175" = "Data na di balido.";
 
-"MM / YY" = "BB / TT";
+"58f4a" = "BB / TT";
 
-"MM/YY" = "BB / TT";
+"1b5f6" = "BB / TT";
 
-"Postal Code" = "Postal Code";
+"8198b" = "Postal Code";
 
-"Shipping Address" = "Adres ng Nagpadala";
+"6e244" = "Adres ng Nagpadala";
 
-"State / Province / Region" = "State / Probinsiya / Rehiyon";
+"649f1" = "State / Probinsiya / Rehiyon";
 
-"The BSB you entered is invalid." = "Ang BSB na ipinasok mo ay di balido.";
+"dfa21" = "Ang BSB na ipinasok mo ay di balido.";
 
-"The selected brand is not allowed" = "Ang napiling brand ay hindi pinapayagan";
+"aaf53" = "Ang napiling brand ay hindi pinapayagan";
 
-"To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
+"9f2d9" = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
 
-"Your card has expired." = "Napaso na ang iyong kard.";
+"393e6" = "Napaso na ang iyong kard.";
 
-"Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
+"7e5ae" = "Ang numero ng iyong kard ay di kumpleto.";
 
-"Your card number is invalid." = "Ang numero ng iyong kard ay di balido.";
+"3c122" = "Ang numero ng iyong kard ay di balido.";
 
-"Your card's expiration date is incomplete." = "Ang petsa ng pagkapaso ng iyong kard ay di kumpleto.";
+"a2036" = "Ang petsa ng pagkapaso ng iyong kard ay di kumpleto.";
 
-"Your card's expiration date is invalid." = "Ang petsa ng pagkapaso ng iyong kard ay di balido.";
+"6a457" = "Ang petsa ng pagkapaso ng iyong kard ay di balido.";
 
-"Your card's expiration month is invalid." = "Ang buwan ng pagkapaso ng iyong kard ay di balido.";
+"e47c0" = "Ang buwan ng pagkapaso ng iyong kard ay di balido.";
 
-"Your card's expiration year is invalid." = "Ang taon ng pagkapaso ng iyong kard ay di balido.";
+"36ae2" = "Ang taon ng pagkapaso ng iyong kard ay di balido.";
 
-"Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
+"300dd" = "Ang security code ng iyong kard ay di kumpleto.";
 
-"Your card's security code is invalid." = "Ang security code ng iyong kard ay di balido.";
+"394fd" = "Ang security code ng iyong kard ay di balido.";
 
-"card number" = "numero ng kard";
+"58da6" = "numero ng kard";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "Petsa ng pagkapaso";
+"b34dd" = "Petsa ng pagkapaso";

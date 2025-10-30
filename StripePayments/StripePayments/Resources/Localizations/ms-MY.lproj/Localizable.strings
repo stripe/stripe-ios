@@ -1,63 +1,63 @@
-"AU Direct Debit" = "Debit Terus AU";
+"c1188" = "Debit Terus AU";
 
-"Affirm" = "Affirm";
+"07b9f" = "Affirm";
 
-"Afterpay" = "Afterpay";
+"032a2" = "Afterpay";
 
-"Alipay" = "Alipay";
+"d5b72" = "Alipay";
 
-"BLIK" = "BLIK";
+"354ad" = "BLIK";
 
-"Bacs Direct Debit" = "Debit Terus Bacs";
+"0b4ee" = "Debit Terus Bacs";
 
-"Bancontact" = "Bancontact";
+"84e7c" = "Bancontact";
 
-"Boleto" = "Boleto";
+"3a3c9" = "Boleto";
 
-"Card" = "Kad";
+"be370" = "Kad";
 
-"Cash App Pay" = "Cash App Pay";
+"35d08" = "Cash App Pay";
 
-"Clearpay" = "Clearpay";
+"268da" = "Clearpay";
 
-"EPS" = "EPS";
+"6d9d7" = "EPS";
 
-"FPX" = "FPX";
+"fed44" = "FPX";
 
-"GrabPay" = "GrabPay";
+"09996" = "GrabPay";
 
-"Klarna" = "Klarna";
+"a2e77" = "Klarna";
 
-"Konbini" = "Konbini";
+"3f752" = "Konbini";
 
-"Link" = "Link";
+"a6a32" = "Link";
 
-"NetBanking" = "NetBanking";
+"3aba6" = "NetBanking";
 
-"OXXO" = "OXXO";
+"71ecf" = "OXXO";
 
-"PayPal" = "PayPal";
+"ab8a4" = "PayPal";
 
-"Przelewy24" = "Przelewy24";
+"0a7ad" = "Przelewy24";
 
-"SEPA Debit" = "Debit SEPA";
+"b5dc7" = "Debit SEPA";
 
-"Sofort" = "Sofort";
+"02f19" = "Sofort";
 
-"Swish" = "Swish";
+"1e736" = "Swish";
 
-"Timed out authenticating your payment method -- try again" = "Masa tamat ketika mensahihkan kaedah pembayaran anda -- cuba lagi";
+"37fc6" = "Masa tamat ketika mensahihkan kaedah pembayaran anda -- cuba lagi";
 
-"UPI" = "UPI";
+"7b06e" = "UPI";
 
-"US bank account" = "Akaun bank AS";
+"40d8d" = "Akaun bank AS";
 
-"Unknown" = "Tidak diketahui";
+"b764c" = "Tidak diketahui";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Kami tidak dapat mensahihkan kaedah pembayaran anda. Sila pilih kaedah pembayaran yang berbeza dan cuba lagi.";
+"f2763" = "Kami tidak dapat mensahihkan kaedah pembayaran anda. Sila pilih kaedah pembayaran yang berbeza dan cuba lagi.";
 
-"WeChat Pay" = "WeChat Pay";
+"a39c6" = "WeChat Pay";
 
-"giropay" = "giropay";
+"83eee" = "giropay";
 
-"iDEAL" = "iDEAL";
+"f54ab" = "iDEAL";

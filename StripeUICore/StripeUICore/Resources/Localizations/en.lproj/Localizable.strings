@@ -1,232 +1,231 @@
 /* Card preview details displaying the last four digits: {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@ (optional)";
+"224e3" = "%@ (optional)";
 
 /* Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\" */
-"(not accepted)" = "(not accepted)";
+"f676f" = "(not accepted)";
 
 /* Caption for account number */
-"Account number" = "Account number";
+"f7573" = "Account number";
 
 /* Caption for Address field on address form
 Section header for address fields */
-"Address" = "Address";
+"56ef8" = "Address";
 
 /* Address line 1 placeholder for billing address form.\nLabel for address line 1 field */
-"Address line 1" = "Address line 1";
+"ee760" = "Address line 1";
 
 /* Label for address line 2 field */
-"Address line 2" = "Address line 2";
+"350b2" = "Address line 2";
 
 /* Label of an address field */
-"Area" = "Area";
+"024dc" = "Area";
 
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Bank account •••• 4242' */
-"Bank account •••• %@" = "Bank account •••• %@";
+"7a614" = "Bank account •••• %@";
 
 /* Label for a checkbox that makes customers billing address same as their shipping address */
-"Billing address is same as shipping" = "Billing address is same as shipping";
+"a03f3" = "Billing address is same as shipping";
 
 /* Label for BLIK code number field on form */
-"BLIK code" = "BLIK code";
+"35cc2" = "BLIK code";
 
 /* Placeholder for AU BECS BSB number */
-"BSB number" = "BSB number";
+"88a06" = "BSB number";
 
 /* Button title to cancel action in an alert */
-"Cancel" = "Cancel";
+"19766e" = "Cancel";
 
 /* Label an input field to update card brand */
-"Card brand" = "Card brand";
+"45022" = "Card brand";
 
 /* Caption for City field on address form */
-"City" = "City";
+"fc33f" = "City";
 
 /* Accessibility label describing a field for entering a login code */
-"Code field" = "Code field";
+"2b743" = "Code field";
 
 /* Label for Company field on form */
-"Company" = "Company";
+"de474" = "Company";
 
 /* Text for continue button */
-"Continue" = "Continue";
+"31fbe" = "Continue";
 
 /* Caption for Country field on address form */
-"Country" = "Country";
+"701d0" = "Country";
 
 /* Country selector and postal code entry form header title\nLabel of an address field */
-"Country or region" = "Country or region";
+"8d236" = "Country or region";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom)
 Label of an address field */
-"County" = "County";
+"136c8" = "County";
 
 /* Label of an address field */
-"Department" = "Department";
+"5304a" = "Department";
 
 /* Label for the district field on an address form */
-"District" = "District";
+"50f18" = "District";
 
 /* Label of an address field */
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
 /* Used as the title for prompting the user if they want to close the sheet */
-"Do you want to close this form?" = "Do you want to close this form?";
+"6ebfc" = "Do you want to close this form?";
 
 /* Done button title */
-"Done" = "Done";
+"11a67" = "Done";
 
 /* Accessibility hint for a text field */
-"Double tap to edit" = "Double tap to edit";
+"f5dd0" = "Double tap to edit";
 
 /* Button title to enter editing mode */
-"Edit" = "Edit";
+"464c4" = "Edit";
 
 /* Label of an address field */
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
 /* Label for Email field on form */
-"Email" = "Email";
+"969cc" = "Email";
 
 /* Label of an address field */
-"Emirate" = "Emirate";
+"4309c" = "Emirate";
 
 /* Text for error labels */
-"Error" = "Error";
+"54a0e" = "Error";
 
 /* Label for first (given) name field */
-"First" = "First";
+"a151c" = "First";
 
 /* Label for Full name field on form */
-"Full name" = "Full name";
+"f13a6" = "Full name";
 
 /* Error description for incomplete phone number */
-"Incomplete phone number" = "Incomplete phone number";
+"6d2d3" = "Incomplete phone number";
 
 /* Error message when UPI ID is invalid */
-"Invalid UPI ID" = "Invalid UPI ID";
+"14cf3" = "Invalid UPI ID";
 
 /* Label of an address field */
-"Island" = "Island";
+"730f5" = "Island";
 
 /* Label for last (family) name field */
-"Last" = "Last";
+"eb970" = "Last";
 
 /* Label for Name field on form */
-"Name" = "Name";
+"dcd1d" = "Name";
 
 /* Label for Name on account field on form */
-"Name on account" = "Name on account";
+"59f3a" = "Name on account";
 
 /* Label of an address field */
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
 /* ok button */
-"OK" = "OK";
+"56533" = "OK";
 
 /* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Other";
+"f97e9" = "Other";
 
 /* Label of an address field */
-"Parish" = "Parish";
+"45ab6" = "Parish";
 
 /* Caption for Phone number field on address form */
-"Phone number" = "Phone number";
+"306f1" = "Phone number";
 
 /* Label of an address field
 Short string for postal code (text used in non-US countries) */
-"Postal code" = "Postal code";
+"ae53c" = "Postal code";
 
 /* Label of an address field */
-"Prefecture" = "Prefecture";
+"50571" = "Prefecture";
 
 /* Caption for Province field on address form (only countries that use province, like Canada)
 Label of an address field */
-"Province" = "Province";
+"abfce" = "Province";
 
 /* Button title for confirmation alert to remove a saved payment method */
-"Remove" = "Remove";
+"c3812" = "Remove";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account?" = "Remove bank account?";
+"05b2c" = "Remove bank account?";
 
 /* Label on a button for removing a card */
-"Remove card" = "Remove card";
+"dcf7d" = "Remove card";
 
 /* Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped */
-"Search" = "Search";
+"49c26" = "Search";
 
 /* Message when a user is selecting a card brand in a dropdown */
-"Select card brand (optional)" = "Select card brand (optional)";
+"4dc47" = "Select card brand (optional)";
 
 /* Error message for empty dropdown selection. */
-"Selection is empty." = "Selection is empty.";
+"4d6f0" = "Selection is empty.";
 
 /* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
-"Sort code" = "Sort code";
+"a9002" = "Sort code";
 
 /* Caption for State field on address form (only countries that use state , like United States)
 Label of an address field */
-"State" = "State";
+"a3b50" = "State";
 
 /* Label of an address field */
-"Suburb" = "Suburb";
+"9e843" = "Suburb";
 
 /* Label of an address field */
-"Suburb or city" = "Suburb or city";
+"c3273" = "Suburb or city";
 
 /* Error description for incomplete account number */
-"The account number you entered is incomplete." = "The account number you entered is incomplete.";
+"e10dd" = "The account number you entered is incomplete.";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. */
-"The BSB you entered is incomplete." = "The BSB you entered is incomplete.";
+"d5ad2" = "The BSB you entered is incomplete.";
 
 /* An error message. */
-"The ID number you entered is incomplete." = "The ID number you entered is incomplete.";
+"0f9bf" = "The ID number you entered is incomplete.";
 
 /* Error string displayed to user when they have entered an invalid 'sort code' (a bank routing number used in the UK and Ireland) */
-"The sort code you entered is invalid." = "The sort code you entered is invalid.";
+"ac7db" = "The sort code you entered is invalid.";
 
 /* Label of an address field */
-"Town or city" = "Town or city";
+"9ce56" = "Town or city";
 
 /* Error string when we can't parse a phone number */
-"Unable to parse phone number" = "Unable to parse phone number";
+"72356" = "Unable to parse phone number";
 
 /* Label for UPI ID number field on form */
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
 /* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
-"Use rotor to access links" = "Use rotor to access links";
+"11480" = "Use rotor to access links";
 
 /* Error message when BLIK code is incomplete */
-"Your BLIK code is incomplete." = "Your BLIK code is incomplete.";
+"6c0af" = "Your BLIK code is incomplete.";
 
 /* Error message when BLIK code is invalid */
-"Your BLIK code is invalid." = "Your BLIK code is invalid.";
+"224bb" = "Your BLIK code is invalid.";
 
 /* Error message when email is invalid */
-"Your email is invalid." = "Your email is invalid.";
+"57c28" = "Your email is invalid.";
 
 /* Used as the title for prompting the user if they want to close the sheet */
-"Your payment information will not be saved." = "Your payment information will not be saved.";
+"cc532" = "Your payment information will not be saved.";
 
 /* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Your postal code is incomplete.";
+"52c55" = "Your postal code is incomplete.";
 
 /* Error message for when postal code in form is invalid */
-"Your postal code is invalid." = "Your postal code is invalid.";
+"037ec" = "Your postal code is invalid.";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP code is incomplete." = "Your ZIP code is incomplete.";
+"3e686" = "Your ZIP code is incomplete.";
 
 /* Error message for when ZIP code in form is invalid (US only) */
-"Your ZIP code is invalid." = "Your ZIP code is invalid.";
+"f029b" = "Your ZIP code is invalid.";
 
 /* Label of an address field
 Short string for zip code (United States only)
 Zip code placeholder US only */
-"ZIP" = "ZIP";
-
+"eaca4" = "ZIP";

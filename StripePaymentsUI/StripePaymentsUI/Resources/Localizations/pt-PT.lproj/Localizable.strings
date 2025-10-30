@@ -1,75 +1,75 @@
-"%1$@ Card" = "Cartão %1$@";
+"fbfa6" = "Cartão %1$@";
 
-"%1$@ Credit" = "Crédito %1$@";
+"a11b0" = "Crédito %1$@";
 
-"%1$@ Debit" = "Débito %1$@";
+"95233" = "Débito %1$@";
 
-"%1$@ Prepaid" = "Pré-pago %1$@";
+"c90ba" = "Pré-pago %1$@";
 
-"%1$@ account ending in %2$@" = "Conta %1$@ que termina em %2$@";
+"3b24a" = "Conta %1$@ que termina em %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ a terminar em %2$@";
+"f5b21" = "%1$@ a terminar em %2$@";
 
-"%1$@ is not accepted" = "%1$@ não é aceite";
+"29adf" = "%1$@ não é aceite";
 
-"Address line 2 (optional)" = "Linha de endereço 2 (opcional)";
+"9ada7" = "Linha de endereço 2 (opcional)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Conta bancária";
+"c6f64" = "Conta bancária";
 
-"Billing address" = "Endereço de faturação";
+"1f516" = "Endereço de faturação";
 
-"Billing details" = "Detalhes de faturação";
+"7c928" = "Detalhes de faturação";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Informações do cartão";
+"fca47" = "Informações do cartão";
 
-"Card number" = "Número do cartão";
+"816fc" = "Número do cartão";
 
-"Confirm your %@" = "Confirme o seu %@";
+"002d7" = "Confirme o seu %@";
 
-"Invalid data." = "Dados inválidos.";
+"da175" = "Dados inválidos.";
 
-"MM / YY" = "MM/AA";
+"58f4a" = "MM/AA";
 
-"MM/YY" = "MM/AA";
+"1b5f6" = "MM/AA";
 
-"Postal Code" = "C.P.";
+"8198b" = "C.P.";
 
-"Shipping Address" = "Endereço de envio";
+"6e244" = "Endereço de envio";
 
-"State / Province / Region" = "Estado/Província/Região";
+"649f1" = "Estado/Província/Região";
 
-"The BSB you entered is invalid." = "O BSB que introduziu é inválido.";
+"dfa21" = "O BSB que introduziu é inválido.";
 
-"The selected brand is not allowed" = "A marca selecionada não é permitida";
+"aaf53" = "A marca selecionada não é permitida";
 
-"To scan your card, allow camera access in Settings." = "Para ler o seu cartão, permita o acesso à câmara nas Definições.";
+"9f2d9" = "Para ler o seu cartão, permita o acesso à câmara nas Definições.";
 
-"Your card has expired." = "O seu cartão expirou.";
+"393e6" = "O seu cartão expirou.";
 
-"Your card number is incomplete." = "O número do seu cartão está incompleto.";
+"7e5ae" = "O número do seu cartão está incompleto.";
 
-"Your card number is invalid." = "O número do seu cartão é inválido.";
+"3c122" = "O número do seu cartão é inválido.";
 
-"Your card's expiration date is incomplete." = "A data de validade do seu cartão está incompleta.";
+"a2036" = "A data de validade do seu cartão está incompleta.";
 
-"Your card's expiration date is invalid." = "A data de validade do seu cartão é inválida.";
+"6a457" = "A data de validade do seu cartão é inválida.";
 
-"Your card's expiration month is invalid." = "O mês de validade do seu cartão é inválido.";
+"e47c0" = "O mês de validade do seu cartão é inválido.";
 
-"Your card's expiration year is invalid." = "O ano de validade do seu cartão é inválido.";
+"36ae2" = "O ano de validade do seu cartão é inválido.";
 
-"Your card's security code is incomplete." = "O código de segurança do seu cartão está incompleto.";
+"300dd" = "O código de segurança do seu cartão está incompleto.";
 
-"Your card's security code is invalid." = "O código de segurança do seu cartão é inválido.";
+"394fd" = "O código de segurança do seu cartão é inválido.";
 
-"card number" = "número do cartão";
+"58da6" = "número do cartão";
 
-"example@example.com" = "exemplo@exemplo.com";
+"31c55" = "exemplo@exemplo.com";
 
-"expiration date" = "Data de validade";
+"b34dd" = "Data de validade";

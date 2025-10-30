@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (tùy chọn)";
+"224e3" = "%@ (tùy chọn)";
 
-"(not accepted)" = "(không được chấp nhận)";
+"f676f" = "(không được chấp nhận)";
 
-"Account number" = "Số tài khoản";
+"f7573" = "Số tài khoản";
 
-"Address" = "Địa chỉ";
+"56ef8" = "Địa chỉ";
 
-"Address line 1" = "Dòng địa chỉ 1";
+"ee760" = "Dòng địa chỉ 1";
 
-"Address line 2" = "Dòng địa chỉ 2";
+"350b2" = "Dòng địa chỉ 2";
 
-"Area" = "Khu vực";
+"024dc" = "Khu vực";
 
-"BLIK code" = "Mã BLIK";
+"35cc2" = "Mã BLIK";
 
-"BSB number" = "Số BSB";
+"88a06" = "Số BSB";
 
-"Bank account •••• %@" = "Tài khoản ngân hàng •••• %@";
+"7a614" = "Tài khoản ngân hàng •••• %@";
 
-"Billing address is same as shipping" = "Địa chỉ xuất hóa đơn giống địa chỉ chuyển hàng";
+"a03f3" = "Địa chỉ xuất hóa đơn giống địa chỉ chuyển hàng";
 
-"Cancel" = "Hủy";
+"19766e" = "Hủy";
 
-"Card brand" = "Thương hiệu thẻ";
+"45022" = "Thương hiệu thẻ";
 
-"City" = "Thành phố";
+"fc33f" = "Thành phố";
 
-"Code field" = "Trường mã";
+"2b743" = "Trường mã";
 
-"Company" = "Công ty";
+"de474" = "Công ty";
 
-"Continue" = "Tiếp tục";
+"31fbe" = "Tiếp tục";
 
-"Country" = "Quốc gia";
+"701d0" = "Quốc gia";
 
-"Country or region" = "Quốc gia hoặc khu vực";
+"8d236" = "Quốc gia hoặc khu vực";
 
-"County" = "Quận";
+"136c8" = "Quận";
 
-"Department" = "Sở ngành";
+"5304a" = "Sở ngành";
 
-"District" = "Quận/Huyện";
+"50f18" = "Quận/Huyện";
 
-"Do Si" = "Tỉnh/Thành phố";
+"32c9d" = "Tỉnh/Thành phố";
 
-"Do you want to close this form?" = "Bạn có muốn đóng biểu mẫu này không?";
+"6ebfc" = "Bạn có muốn đóng biểu mẫu này không?";
 
-"Done" = "Xong";
+"11a67" = "Xong";
 
-"Double tap to edit" = "Nhấp chạm đúp để hiệu đính";
+"f5dd0" = "Nhấp chạm đúp để hiệu đính";
 
-"Edit" = "Sửa";
+"464c4" = "Sửa";
 
-"Eircode" = "Mã Eircode";
+"113d9" = "Mã Eircode";
 
-"Email" = "Email";
+"969cc" = "Email";
 
-"Emirate" = "Tiểu vương quốc";
+"4309c" = "Tiểu vương quốc";
 
-"Error" = "Lỗi";
+"54a0e" = "Lỗi";
 
-"First" = "Tên";
+"a151c" = "Tên";
 
-"Full name" = "Họ tên";
+"f13a6" = "Họ tên";
 
-"Incomplete phone number" = "Số điện thoại chưa đầy đủ";
+"6d2d3" = "Số điện thoại chưa đầy đủ";
 
-"Invalid UPI ID" = "Số ID UPI không hợp lệ";
+"14cf3" = "Số ID UPI không hợp lệ";
 
-"Island" = "Đảo";
+"730f5" = "Đảo";
 
-"Last" = "Họ";
+"eb970" = "Họ";
 
-"Name" = "Tên";
+"dcd1d" = "Tên";
 
-"Name on account" = "Tên trên tài khoản";
+"59f3a" = "Tên trên tài khoản";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Vùng";
+"2ba5c" = "Vùng";
 
-"Other" = "Khác";
+"f97e9" = "Khác";
 
-"Parish" = "Giáo xứ";
+"45ab6" = "Giáo xứ";
 
-"Phone number" = "Số điện thoại";
+"306f1" = "Số điện thoại";
 
-"Postal code" = "Mã bưu điện";
+"ae53c" = "Mã bưu điện";
 
-"Prefecture" = "Tỉnh";
+"50571" = "Tỉnh";
 
-"Province" = "Tỉnh";
+"abfce" = "Tỉnh";
 
-"Remove" = "Xóa";
+"c3812" = "Xóa";
 
-"Remove bank account?" = "Bỏ tài khoản ngân hàng?";
+"05b2c" = "Bỏ tài khoản ngân hàng?";
 
-"Remove card" = "Xóa thẻ";
+"dcf7d" = "Xóa thẻ";
 
-"Search" = "Tìm kiếm";
+"49c26" = "Tìm kiếm";
 
-"Select card brand (optional)" = "Chọn thương hiệu thẻ (tùy chọn)";
+"4dc47" = "Chọn thương hiệu thẻ (tùy chọn)";
 
-"Selection is empty." = "Lựa chọn đang để trống.";
+"4d6f0" = "Lựa chọn đang để trống.";
 
-"Sort code" = "Mã sắp xếp";
+"a9002" = "Mã sắp xếp";
 
-"State" = "Tiểu bang";
+"a3b50" = "Tiểu bang";
 
-"Suburb" = "Ngoại ô";
+"9e843" = "Ngoại ô";
 
-"Suburb or city" = "Ngoại ô hoặc thành phố";
+"c3273" = "Ngoại ô hoặc thành phố";
 
-"The BSB you entered is incomplete." = "BSB mà bạn nhập chưa đầy đủ.";
+"d5ad2" = "BSB mà bạn nhập chưa đầy đủ.";
 
-"The ID number you entered is incomplete." = "Số ID bạn đã nhập chưa đầy đủ.";
+"0f9bf" = "Số ID bạn đã nhập chưa đầy đủ.";
 
-"The account number you entered is incomplete." = "Số tài khoản quý vị đã nhập không đầy đủ.";
+"e10dd" = "Số tài khoản quý vị đã nhập không đầy đủ.";
 
-"The sort code you entered is invalid." = "Mã sắp xếp bạn đã nhập không hợp lệ.";
+"ac7db" = "Mã sắp xếp bạn đã nhập không hợp lệ.";
 
-"Town or city" = "Thị trấn hoặc thành phố";
+"9ce56" = "Thị trấn hoặc thành phố";
 
-"UPI ID" = "Số ID UPI";
+"cec4a" = "Số ID UPI";
 
-"Unable to parse phone number" = "Không thể phân tích cú pháp số điện thoại";
+"72356" = "Không thể phân tích cú pháp số điện thoại";
 
-"Use rotor to access links" = "Sử dụng rô-to để truy cập liên kết";
+"11480" = "Sử dụng rô-to để truy cập liên kết";
 
-"Your BLIK code is incomplete." = "Mã BLIK của quý vị chưa đầy đủ.";
+"6c0af" = "Mã BLIK của quý vị chưa đầy đủ.";
 
-"Your BLIK code is invalid." = "Mã BLIK của quý vị không hợp lệ.";
+"224bb" = "Mã BLIK của quý vị không hợp lệ.";
 
-"Your ZIP code is incomplete." = "Mã ZIP của bạn không đầy đủ.";
+"3e686" = "Mã ZIP của bạn không đầy đủ.";
 
-"Your ZIP code is invalid." = "Mã bưu điện của bạn không hợp lệ.";
+"f029b" = "Mã bưu điện của bạn không hợp lệ.";
 
-"Your email is invalid." = "Email của quý vị không hợp lệ.";
+"57c28" = "Email của quý vị không hợp lệ.";
 
-"Your payment information will not be saved." = "Thông tin thanh toán của bạn sẽ không lưu lại.";
+"cc532" = "Thông tin thanh toán của bạn sẽ không lưu lại.";
 
-"Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
+"52c55" = "Mã bưu điện chưa đầy đủ.";
 
-"Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
+"037ec" = "Mã bưu điện không hợp lệ.";
 
-"ZIP" = "ZIP";
+"eaca4" = "ZIP";

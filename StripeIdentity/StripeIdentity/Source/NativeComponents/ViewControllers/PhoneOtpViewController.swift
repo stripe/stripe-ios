@@ -116,8 +116,7 @@ class PhoneOtpViewController: IdentityFlowViewController {
 
     func updateUI() {
         configure(
-            backButtonTitle: STPLocalizedString(
-                "Phone Verification",
+            backButtonTitle: STPLocalizedString("cb074",
                 "Back button title for returning to the phone verification page"
             ),
             viewModel: flowViewModel

@@ -73,8 +73,7 @@ final class IndividualWelcomeViewController: IdentityFlowViewController {
         )
 
         configure(
-            backButtonTitle: STPLocalizedString(
-                "Welcome",
+            backButtonTitle: STPLocalizedString("0e222",
                 "Back button title for returning to welcome screen of Identity verification"
             ),
             viewModel: flowViewModel

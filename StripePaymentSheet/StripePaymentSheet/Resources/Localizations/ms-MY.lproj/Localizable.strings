@@ -1,307 +1,307 @@
-"+ Add" = "+ Tambah";
+"c0072" = "+ Tambah";
 
-"Add US bank account" = "Tambah akaun bank AS";
+"1b3a4" = "Tambah akaun bank AS";
 
-"Add a card" = "Tambah kad";
+"be8f5" = "Tambah kad";
 
-"Add a payment method" = "Tambah kaedah pembayaran";
+"7e917" = "Tambah kaedah pembayaran";
 
-"Add bank account" = "Tambah akaun bank";
+"a3cc9" = "Tambah akaun bank";
 
-"Add card" = "Tambah kad";
+"769c5" = "Tambah kad";
 
-"Add new card" = "Tambah kad baharu";
+"800f4" = "Tambah kad baharu";
 
-"Add new payment method" = "Tambah kaedah pembayaran baharu";
+"8130f" = "Tambah kaedah pembayaran baharu";
 
-"Add your payment information" = "Tambah maklumat pembayaran anda";
+"eaa33" = "Tambah maklumat pembayaran anda";
 
-"Approve payment" = "Luluskan pembayaran";
+"e70d2" = "Luluskan pembayaran";
 
-"Are you sure you want to remove this card?" = "Anda pasti ingin mengalih keluar kad ini?";
+"c8af7" = "Anda pasti ingin mengalih keluar kad ini?";
 
-"Are you sure you want to remove this linked account?" = "Anda pasti ingin mengalih keluar akaun yang dipautkan ini?";
+"74460" = "Anda pasti ingin mengalih keluar akaun yang dipautkan ini?";
 
-"Back" = "Undur";
+"76900" = "Undur";
 
-"Bank" = "Bank";
+"676c4" = "Bank";
 
-"Bank account" = "Akaun bank";
+"1b427" = "Akaun bank";
 
-"Bank account details cannot be changed." = "Butiran akaun bank tidak boleh diubah.";
+"12ab1" = "Butiran akaun bank tidak boleh diubah.";
 
-"Buy now or pay later with  <img/>" = "Beli sekarang atau bayar kemudian dengan <img/>";
+"38088" = "Beli sekarang atau bayar kemudian dengan <img/>";
 
-"Buy now or pay later with Afterpay" = "Beli sekarang atau bayar kemudian dengan Afterpay";
+"c04b4" = "Beli sekarang atau bayar kemudian dengan Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Beli sekarang atau bayar kemudian dengan Cash App Afterpay";
+"f566d" = "Beli sekarang atau bayar kemudian dengan Cash App Afterpay";
 
-"Buy now or pay later with Clearpay" = "Beli sekarang atau bayar kemudian dengan Clearpay";
+"bf452" = "Beli sekarang atau bayar kemudian dengan Clearpay";
 
-"Buy now or pay later with Klarna" = "Beli sekarang atau bayar kemudian dengan Klarna";
+"5c41c" = "Beli sekarang atau bayar kemudian dengan Klarna";
 
-"Buy using a UPI ID" = "Beli menggunakan ID UPI";
+"21793" = "Beli menggunakan ID UPI";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan mengesahkan pembayaran anda dengan PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
+"313bb" = "Dengan mengesahkan pembayaran anda dengan PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Amazon Pay, anda membenarkan %@ mengecaj akaun Amazon Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
+"c1642" = "Dengan meneruskan langkah ke Amazon Pay, anda membenarkan %@ mengecaj akaun Amazon Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Dengan meneruskan langkah ke Klarna, anda membenarkan %1$@ mengecaj akaun Klarna anda bagi pembayaran masa hadapan menurut terma mereka dan terma Klarna. Anda boleh mengubah tetapan ini pada bila-bila masa dalam app Klarna anda atau dengan menghubungi %2$@.";
+"09c61" = "Dengan meneruskan langkah ke Klarna, anda membenarkan %1$@ mengecaj akaun Klarna anda bagi pembayaran masa hadapan menurut terma mereka dan terma Klarna. Anda boleh mengubah tetapan ini pada bila-bila masa dalam app Klarna anda atau dengan menghubungi %2$@.";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
+"c6ff4" = "Dengan meneruskan langkah ke PayPal, anda membenarkan %@ mengecaj akaun PayPal anda bagi pembayaran masa hadapan menurut terma mereka.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Revolut Pay, anda membenarkan %@ mengecaj akaun Revolut Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
+"694b5" = "Dengan meneruskan langkah ke Revolut Pay, anda membenarkan %@ mengecaj akaun Revolut Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan meneruskan langkah, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
+"8ba3b" = "Dengan meneruskan langkah, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
+"23d3e" = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda bagi pembelian masa hadapan dengan %@ dan <link>Link</link> menurut <terms>terma</terms> Dan <privacy>privasi</privacy> Link.";
+"b8e49" = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda bagi pembelian masa hadapan dengan %@ dan <link>Link</link> menurut <terms>terma</terms> Dan <privacy>privasi</privacy> Link.";
 
-"By continuing, you agree to save your information for future purchases with %@." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda untuk pembelian masa hadapan dengan %@.";
+"8ca70" = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda untuk pembelian masa hadapan dengan %@.";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Dengan meneruskan, anda membenarkan %@ untuk mendebitkan Baki Satispay anda secara automatik dan berulang mengikut pembelian atau pelan langganan anda.";
+"d451f" = "Dengan meneruskan, anda membenarkan %@ untuk mendebitkan Baki Satispay anda secara automatik dan berulang mengikut pembelian atau pelan langganan anda.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
+"97461" = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
+"225b7" = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nombor telefon dan e-mel, anda bersetuju untuk mencipta akaun Link, tertakluk pada <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
+"05e15" = "Dengan memberikan nombor telefon dan e-mel, anda bersetuju untuk mencipta akaun Link, tertakluk pada <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Dengan memberikan butiran akaun bank anda dan mengesahkan pembayaran ini, anda bersetuju dengan Permintaan Debit Terus ini dan <terms>perjanjian perkhidmatan Permintaan Debit Terus</terms>, serta membenarkan Stripe Payments Australia Pty Ltd ACN 160 180 343, ID Pengguna Debit Terus nombor 507156 (“Stripe”), untuk mendebitkan akaun anda melalui Sistem Penyelesaian Elektronik Pukal (BECS) bagi pihak %@ (“Peniaga”) bagi sebarang amaun yang dimaklumkan secara berasingan kepada anda oleh Peniaga. Anda mengesahkan bahawa anda ialah pemilik akaun atau penandatangan yang diberi kuasa bagi akaun yang disenaraikan di atas.";
+"ba265" = "Dengan memberikan butiran akaun bank anda dan mengesahkan pembayaran ini, anda bersetuju dengan Permintaan Debit Terus ini dan <terms>perjanjian perkhidmatan Permintaan Debit Terus</terms>, serta membenarkan Stripe Payments Australia Pty Ltd ACN 160 180 343, ID Pengguna Debit Terus nombor 507156 (“Stripe”), untuk mendebitkan akaun anda melalui Sistem Penyelesaian Elektronik Pukal (BECS) bagi pihak %@ (“Peniaga”) bagi sebarang amaun yang dimaklumkan secara berasingan kepada anda oleh Peniaga. Anda mengesahkan bahawa anda ialah pemilik akaun atau penandatangan yang diberi kuasa bagi akaun yang disenaraikan di atas.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Dengan memberikan maklumat kad anda, anda membenarkan %@ mengecaj kad anda bagi pembayaran masa hadapan menurut terma mereka.";
+"0cdc0" = "Dengan memberikan maklumat kad anda, anda membenarkan %@ mengecaj kad anda bagi pembayaran masa hadapan menurut terma mereka.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan e-mel anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
+"36fad" = "Dengan memberikan e-mel anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Dengan memberikan maklumat pembayaran anda dan mengesahkan pembayaran ini, anda mengizinkan (A) %@ dan Stripe, iaitu penyedia khidmat pembayaran kami, untuk menghantar arahan kepada bank untuk mendebitkan akaun anda dan (B) bank anda untuk mendebitkan akaun anda menurut arahan tersebut. Sebagai sebahagian daripada hak anda, anda layak mendapat bayaran balik daripada bank menurut terma dan syarat perjanjian dengan bank anda. Bayaran balik mesti dituntut dalam tempoh 8 minggu mulai tarikh akaun anda didebitkan. Hak anda dijelaskan dalam pernyataan yang boleh anda dapatkan daripada bank anda. Anda bersetuju untuk menerima pemberitahuan bagi debit masa hadapan sehingga 2 hari sebelum debit tersebut dibuat.";
+"289c5" = "Dengan memberikan maklumat pembayaran anda dan mengesahkan pembayaran ini, anda mengizinkan (A) %@ dan Stripe, iaitu penyedia khidmat pembayaran kami, untuk menghantar arahan kepada bank untuk mendebitkan akaun anda dan (B) bank anda untuk mendebitkan akaun anda menurut arahan tersebut. Sebagai sebahagian daripada hak anda, anda layak mendapat bayaran balik daripada bank menurut terma dan syarat perjanjian dengan bank anda. Bayaran balik mesti dituntut dalam tempoh 8 minggu mulai tarikh akaun anda didebitkan. Hak anda dijelaskan dalam pernyataan yang boleh anda dapatkan daripada bank anda. Anda bersetuju untuk menerima pemberitahuan bagi debit masa hadapan sehingga 2 hari sebelum debit tersebut dibuat.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nombor telefon anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
+"e3661" = "Dengan memberikan nombor telefon anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
+"02d39" = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %1$@ dan %2$@, anda bersetuju untuk menyimpan maklumat anda dengan %3$@ bagi pembelian masa hadapan, serta bersetuju untuk membenarkan pembayaran dibuat menurut <terms>terma ini</terms>.";
+"c041a" = "Dengan menghantar pesanan anda kepada %1$@ dan %2$@, anda bersetuju untuk menyimpan maklumat anda dengan %3$@ bagi pembelian masa hadapan, serta bersetuju untuk membenarkan pembayaran dibuat menurut <terms>terma ini</terms>.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %@ anda bersetuju untuk mengizinkan pembayaran mengikut <terms>terma-terma ini</terms>.";
+"532e1" = "Dengan menghantar pesanan anda kepada %@ anda bersetuju untuk mengizinkan pembayaran mengikut <terms>terma-terma ini</terms>.";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
+"58817" = "Batalkan dan bayar dengan cara lain";
 
-"Card details cannot be changed." = "Butiran kad tidak boleh diubah.";
+"34c44" = "Butiran kad tidak boleh diubah.";
 
-"Change" = "Ubah";
+"c0bf7" = "Ubah";
 
-"Choose a payment method" = "Pilih kaedah pembayaran";
+"1dc8a" = "Pilih kaedah pembayaran";
 
-"Close card scanner" = "Tutup pengimbas kad";
+"c0077" = "Tutup pengimbas kad";
 
-"Code sent" = "Kod dihantar";
+"f98a1" = "Kod dihantar";
 
-"Confirm" = "Sahkan";
+"eebdd" = "Sahkan";
 
-"Confirm it's you" = "Sahkan andalah orangnya";
+"6176e" = "Sahkan andalah orangnya";
 
-"Confirm payment details" = "Sahkan butiran pembayaran";
+"3a6b5" = "Sahkan butiran pembayaran";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
+"101ef" = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank anda dalam %@ untuk menyelesaikan pembelian.";
+"a8c9a" = "Sahkan pembayaran dalam aplikasi bank anda dalam %@ untuk menyelesaikan pembelian.";
 
-"Confirm your CVC" = "Sahkan CVC anda";
+"a4bdf" = "Sahkan CVC anda";
 
-"Contact information" = "Maklumat hubungan";
+"cbc73" = "Maklumat hubungan";
 
-"Continue another way" = "Teruskan dengan cara lain";
+"c2a49" = "Teruskan dengan cara lain";
 
-"Create an account with Link for faster checkout across the web" = "Buat akaun dengan Link untuk proses bayar dan keluar lebih pantas di seluruh web";
+"b568d" = "Buat akaun dengan Link untuk proses bayar dan keluar lebih pantas di seluruh web";
 
-"Debit or credit card" = "Kad debit atau kredit";
+"04f63" = "Kad debit atau kredit";
 
-"Default" = "Tetapan Asal";
+"21b11" = "Tetapan Asal";
 
-"Default payment method" = "Kaedah pembayaran tetapan asal";
+"4c163" = "Kaedah pembayaran tetapan asal";
 
-"Did you mean %@? %@." = "Adakah anda maksudkan %1$@? %2$@.";
+"6d7d1" = "Adakah anda maksudkan %1$@? %2$@.";
 
-"EPS Bank" = "Bank EPS";
+"8f218" = "Bank EPS";
 
-"Enter address manually" = "Masukkan alamat secara manual";
+"1534f" = "Masukkan alamat secara manual";
 
-"Enter the code sent to %@." = "Masukkan kod yang dihantar ke %s.";
+"1e836" = "Masukkan kod yang dihantar ke %s.";
 
-"FPX Bank" = "Bank untuk FPX";
+"8c73e" = "Bank untuk FPX";
 
-"Failed to connect" = "Gagal disambungkan";
+"46c9f" = "Gagal disambungkan";
 
-"Fast, secure checkout" = "Proses bayar dan keluar yang pantas dan selamat";
+"2aeb3" = "Proses bayar dan keluar yang pantas dan selamat";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran untuk kali pertama dengan bank anda. <terms>Lihat terma</terms>";
+"b70b0" = "Dapatkan kembali %@ apabila anda membuat pembayaran untuk kali pertama dengan bank anda. <terms>Lihat terma</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran dengan bank anda. <terms>Lihat terma</terms>";
+"332d2" = "Dapatkan kembali %@ apabila anda membuat pembayaran dengan bank anda. <terms>Lihat terma</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya faham bahawa Stripe akan mengutip Debit Terus bagi pihak %@ dan mengesahkan sayalah pemegang akaun dan satu-satunya individu yang diperlukan untuk mengizinkan debit daripada akaun ini.";
+"b751e" = "Saya faham bahawa Stripe akan mengutip Debit Terus bagi pihak %@ dan mengesahkan sayalah pemegang akaun dan satu-satunya individu yang diperlukan untuk mengizinkan debit daripada akaun ini.";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "Log masuk atau daftar";
+"38f51" = "Log masuk atau daftar";
 
-"Log out of Link" = "Log keluar dari Link";
+"57083" = "Log keluar dari Link";
 
-"Manage SEPA debit" = "Urus debit SEPA";
+"a7ff3" = "Urus debit SEPA";
 
-"Manage US bank account" = "Urus akaun bank AS";
+"0b654" = "Urus akaun bank AS";
 
-"Manage bank account" = "Urus akaun bank";
+"2d4ed" = "Urus akaun bank";
 
-"Manage card" = "Urus kad";
+"49e98" = "Urus kad";
 
-"Manage cards" = "Urus kad";
+"fe215" = "Urus kad";
 
-"Manage payment method" = "Urus kaedah pembayaran";
+"67c16" = "Urus kaedah pembayaran";
 
-"Manage payment methods" = "Urus kaedah pembayaran";
+"cf0c9" = "Urus kaedah pembayaran";
 
-"Manage your payment methods" = "Urus kaedah pembayaran anda";
+"74db7" = "Urus kaedah pembayaran anda";
 
-"Name on card" = "Nama pada kad";
+"18bf0" = "Nama pada kad";
 
-"New card" = "Kad baharu";
+"8d3ef" = "Kad baharu";
 
-"New payment method" = "Kaedah pembayaran baharu";
+"c5f95" = "Kaedah pembayaran baharu";
 
-"No %@ promo" = "Tiada promo %@";
+"99d88" = "Tiada promo %@";
 
-"Not you?" = "Bukan anda?";
+"5b978" = "Bukan anda?";
 
-"Only card brand can be changed." = "Hanya jenama kad boleh diubah.";
+"d1c0a" = "Hanya jenama kad boleh diubah.";
 
-"Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI untuk meluluskan pembayaran anda dalam masa %@";
+"b7546" = "Buka aplikasi UPI untuk meluluskan pembayaran anda dalam masa %@";
 
-"Or" = "Atau";
+"0568b" = "Atau";
 
-"Or pay using" = "Atau bayar menggunakan";
+"3c3f7" = "Atau bayar menggunakan";
 
-"Or pay with a card" = "Atau bayar dengan kad";
+"682d8" = "Atau bayar dengan kad";
 
-"Or use" = "Atau gunakan";
+"4158c" = "Atau gunakan";
 
-"Or use a card" = "Atau gunakan kad";
+"b529c" = "Atau gunakan kad";
 
-"Pay %@" = "Bayar %@";
+"964f6" = "Bayar %@";
 
-"Pay another way" = "Bayar dengan cara lain";
+"4bb4a" = "Bayar dengan cara lain";
 
-"Pay faster at %@ and thousands of businesses." = "Bayar dengan lebih cepat di %@ dan beribu-ribu perniagaan.";
+"f43bb" = "Bayar dengan lebih cepat di %@ dan beribu-ribu perniagaan.";
 
-"Pay faster everywhere Link is accepted." = "Bayar dengan lebih pantas di mana-mana sahaja Link diterima.";
+"d49c1" = "Bayar dengan lebih pantas di mana-mana sahaja Link diterima.";
 
-"Pay over time with %@" = "Bayar dari semasa ke semasa dengan %@";
+"77196" = "Bayar dari semasa ke semasa dengan %@";
 
-"Pay over time with Affirm" = "Bayar dari semasa ke semasa dengan Affirm";
+"2f870" = "Bayar dari semasa ke semasa dengan Affirm";
 
-"Pay with Link" = "Bayar dengan Link";
+"9d81a" = "Bayar dengan Link";
 
-"Pay with your bank account in just a few steps." = "Bayar dengan akaun bank anda dengan hanya beberapa langkah.";
+"bc021" = "Bayar dengan akaun bank anda dengan hanya beberapa langkah.";
 
-"Payment" = "Pembayaran";
+"7048f" = "Pembayaran";
 
-"Payment failed" = "Pembayaran tidak berjaya";
+"17aad" = "Pembayaran tidak berjaya";
 
-"Payment methods" = "Kaedah pembayaran";
+"16d26" = "Kaedah pembayaran";
 
-"Please choose a valid payment method." = "Sila pilih kaedah pembayaran yang sah.";
+"5ddb8" = "Sila pilih kaedah pembayaran yang sah.";
 
-"Please go back and select another payment method" = "Sila undur dan pilih kaedah pembayaran yang lain";
+"cf6c1" = "Sila undur dan pilih kaedah pembayaran yang lain";
 
-"Point the camera at your card." = "Halakan kamera pada kad anda.";
+"59a6c" = "Halakan kamera pada kad anda.";
 
-"Processing..." = "Sedang diproses...";
+"f40a8" = "Sedang diproses...";
 
-"Przelewy24 Bank" = "Bank Przelewy24";
+"b0866" = "Bank Przelewy24";
 
-"Remove card?" = "Alih keluar kad?";
+"ce640" = "Alih keluar kad?";
 
-"Remove linked account" = "Alih keluar akaun yang dipautkan";
+"a545c" = "Alih keluar akaun yang dipautkan";
 
-"Resend code" = "Hantar semula kod";
+"b9745" = "Hantar semula kod";
 
-"SEPA debit details cannot be changed." = "Butiran debit SEPA tidak boleh diubah.";
+"a4f77" = "Butiran debit SEPA tidak boleh diubah.";
 
-"Save" = "Simpan";
+"1509f" = "Simpan";
 
-"Save a new payment method" = "Simpan kaedah pembayaran baharu";
+"6b6eb" = "Simpan kaedah pembayaran baharu";
 
-"Save address" = "Simpan alamat";
+"0cbb9" = "Simpan alamat";
 
-"Save for future payments" = "Simpan untuk pembayaran masa hadapan";
+"7990e" = "Simpan untuk pembayaran masa hadapan";
 
-"Save my info for faster checkout with Link" = "Simpan maklumat saya untuk proses bayar dan keluar yang lebih cepat dengan Link";
+"8e1e1" = "Simpan maklumat saya untuk proses bayar dan keluar yang lebih cepat dengan Link";
 
-"Save payment details to %@ for future purchases" = "Simpan butiran pembayaran di %@ untuk pembelian yang akan datang";
+"0745e" = "Simpan butiran pembayaran di %@ untuk pembelian yang akan datang";
 
-"Save this account for future %@ payments" = "Simpan akaun ini untuk pembayaran %@ masa hadapan";
+"e8c88" = "Simpan akaun ini untuk pembayaran %@ masa hadapan";
 
-"Save your bank account in just a few steps." = "Simpan akaun bank anda dengan hanya beberapa langkah.";
+"b4042" = "Simpan akaun bank anda dengan hanya beberapa langkah.";
 
-"Save your info for secure 1-click checkout with Link" = "Simpan maklumat anda untuk proses bayar dan keluar dengan sekali klik yang selamat dengan Link";
+"650b1" = "Simpan maklumat anda untuk proses bayar dan keluar dengan sekali klik yang selamat dengan Link";
 
-"Saved" = "Disimpan";
+"b5c12" = "Disimpan";
 
-"Select card" = "Pilih kad";
+"59ffd" = "Pilih kad";
 
-"Select payment method" = "Pilih kaedah pembayaran";
+"659d1" = "Pilih kaedah pembayaran";
 
-"Select your payment method" = "Pilih kaedah pembayaran anda";
+"d23e3" = "Pilih kaedah pembayaran anda";
 
-"Set as default" = "Tetapkan sebagai tetapan asal";
+"d09b4" = "Tetapkan sebagai tetapan asal";
 
-"Set as default payment method" = "Tetapkan sebagai kaedah pembayaran tetapan asal";
+"af056" = "Tetapkan sebagai kaedah pembayaran tetapan asal";
 
-"Set up" = "Sediakan";
+"4da10" = "Sediakan";
 
-"Shipping to %@ is not supported." = "Penghantaran ke %@ tidak disokong.";
+"b8e46" = "Penghantaran ke %@ tidak disokong.";
 
-"Show menu" = "Paparkan menu";
+"0b0af" = "Paparkan menu";
 
-"Simple, secure one-click payments" = "Pembayaran dengan sekali klik yang mudah dan selamat";
+"edd6d" = "Pembayaran dengan sekali klik yang mudah dan selamat";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Masalah telah berlaku semasa menghubungkan akaun anda.\nSila cuba lagi kemudian.";
+"33596" = "Masalah telah berlaku semasa menghubungkan akaun anda.\nSila cuba lagi kemudian.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan proses menyimpan akaun bank anda dengan %@.";
+"822ff" = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan proses menyimpan akaun bank anda dengan %@.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan pembayaran kepada %@.";
+"72fd8" = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan pembayaran kepada %@.";
 
-"Tap to close" = "Ketik untuk tutup";
+"e263d" = "Ketik untuk tutup";
 
-"Tap to expand" = "Ketik untuk kembangkan";
+"1cbaf" = "Ketik untuk kembangkan";
 
-"The IBAN you entered is incomplete." = "IBAN yang anda masukkan tidak lengkap.";
+"477cb" = "IBAN yang anda masukkan tidak lengkap.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang anda masukkan tidak sah, “%@” bukan kod negara yang disokong.";
+"a70c6" = "IBAN yang anda masukkan tidak sah, “%@” bukan kod negara yang disokong.";
 
-"The provided verification code has expired." = "Kod penentusahan yang diberikan telah tamat tempoh.";
+"e32a6" = "Kod penentusahan yang diberikan telah tamat tempoh.";
 
-"The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
+"e8cb8" = "Kod penentusahan yang diberikan tidak betul.";
 
-"This is your default" = "Ini tetapan asal anda";
+"f3c56" = "Ini tetapan asal anda";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Kaedah pembayaran ini akan dialih keluar tetapi akan kekal tersedia untuk langganan %@.";
+"478c1" = "Kaedah pembayaran ini akan dialih keluar tetapi akan kekal tersedia untuk langganan %@.";
 
-"Too many attempts. Please try again in a few minutes." = "Terlalu banyak percubaan. Sila cuba lagi dalam beberapa minit.";
+"4a754" = "Terlalu banyak percubaan. Sila cuba lagi dalam beberapa minit.";
 
-"Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
+"19202" = "Tidak tersedia untuk pembelian ini";
 
-"Update card" = "Kemas kinikan kad";
+"e28b5" = "Kemas kinikan kad";
 
-"Update payment method" = "Kemas kinikan kaedah pembayaran";
+"fa7bf" = "Kemas kinikan kaedah pembayaran";
 
-"Use billing address for shipping" = "Gunakan alamat pengebilan untuk penghantaran";
+"4a82d" = "Gunakan alamat pengebilan untuk penghantaran";
 
-"View more" = "Lihat lebih banyak";
+"267e5" = "Lihat lebih banyak";
 
-"Yes, update" = "Ya, kemas kini";
+"fa298" = "Ya, kemas kini";
 
-"Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
+"42ef0" = "IBAN anda harus bermula dengan kod negara dua huruf.";
 
-"iDEAL Bank" = "Bank iDEAL";
+"460cb" = "Bank iDEAL";

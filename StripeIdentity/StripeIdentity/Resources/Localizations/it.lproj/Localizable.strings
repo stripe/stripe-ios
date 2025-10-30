@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Al prossimo passaggio verranno scattate automaticamente alcune foto per verificare la tua identità";
+"40b57" = "Al prossimo passaggio verranno scattate automaticamente alcune foto per verificare la tua identità";
 
-"Accepted forms of ID include" = "Forme di identificazione accettate";
+"a9934" = "Forme di identificazione accettate";
 
-"Alternatively, you may manually upload a photo of your identity document." = "In alternativa, puoi caricare manualmente una foto del tuo documento di identità.";
+"a570c" = "In alternativa, puoi caricare manualmente una foto del tuo documento di identità.";
 
-"App Settings" = "Impostazioni app";
+"da645" = "Impostazioni app";
 
-"Back %@ photo successfully uploaded" = "Foto del retro di %@ caricata con successo";
+"31438" = "Foto del retro di %@ caricata con successo";
 
-"Back identity document photo successfully uploaded" = "Foto del retro del documento d'identità caricata con successo";
+"3253a" = "Foto del retro del documento d'identità caricata con successo";
 
-"Back of %@" = "Retro di %@";
+"128b0" = "Retro di %@";
 
-"Back of driver's license or government-issued photo ID" = "Retro della patente di guida o documento di identità con foto rilasciato da un'autorità governativa";
+"37929" = "Retro della patente di guida o documento di identità con foto rilasciato da un'autorità governativa";
 
-"Back of identity document" = "Retro documento di identità";
+"3229d" = "Retro documento di identità";
 
-"Camera permission" = "Autorizzazione fotocamera";
+"51e72" = "Autorizzazione fotocamera";
 
-"Camera unavailable" = "Fotocamera non disponibile";
+"06cc3" = "Fotocamera non disponibile";
 
-"Capturing…" = "Acquisizione in corso...";
+"806e3" = "Acquisizione in corso...";
 
-"Choose File" = "Scegli file";
+"d7042" = "Scegli file";
 
-"Consent" = "Consenti";
+"d37e0" = "Consenti";
 
-"Could not capture image" = "Non è stato possibile acquisire l'immagine";
+"bf6e9" = "Non è stato possibile acquisire l'immagine";
 
-"Date of Birth" = "Data di nascita";
+"fdc73" = "Data di nascita";
 
-"Date of birth does not look valid" = "La data di nascita non è valida";
+"2baa1" = "La data di nascita non è valida";
 
-"Details not visible" = "Dettagli non visibili";
+"687cd" = "Dettagli non visibili";
 
-"Flip your %@ over to the other side" = "Capovolgi %@ sull'altro lato";
+"e3292" = "Capovolgi %@ sull'altro lato";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Capovolgi la patente di guida o il documento di identità con foto rilasciato da un'autorità governativa dall'altro lato";
+"dd41b" = "Capovolgi la patente di guida o il documento di identità con foto rilasciato da un'autorità governativa dall'altro lato";
 
-"Flip your identity card over to the other side" = "Gira sull'altro lato la carta di identità";
+"87346" = "Gira sull'altro lato la carta di identità";
 
-"Front %@ photo successfully uploaded" = "La foto del fronte di %@ è stata caricata con successo";
+"b57ad" = "La foto del fronte di %@ è stata caricata con successo";
 
-"Front identity document photo successfully uploaded" = "La foto del fronte del documento d'identità è stata caricata con successo";
+"3a9fd" = "La foto del fronte del documento d'identità è stata caricata con successo";
 
-"Front of %@" = "Fronte di %@";
+"73fc5" = "Fronte di %@";
 
-"Front of driver's license or government-issued photo ID" = "Parte anteriore della patente di guida o del documento di identità con foto rilasciato da un'autorità governativa";
+"b3d9a" = "Parte anteriore della patente di guida o del documento di identità con foto rilasciato da un'autorità governativa";
 
-"Front of driver's license or passport" = "Fronte della patente di guida o del passaporto";
+"8d188" = "Fronte della patente di guida o del passaporto";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Fronte della patente di guida, del passaporto o di un documento di identità con foto rilasciato da un'autorità governativa";
+"070b5" = "Fronte della patente di guida, del passaporto o di un documento di identità con foto rilasciato da un'autorità governativa";
 
-"Front of identity document" = "Fronte documento di identità";
+"8562c" = "Fronte documento di identità";
 
-"Front of passport or government-issued photo ID" = "Fronte del passaporto o documento di identità con foto rilasciato da un'autorità governativa";
+"bb2ee" = "Fronte del passaporto o documento di identità con foto rilasciato da un'autorità governativa";
 
-"Get ready to scan your photo ID" = "Preparati a scansionare il tuo documento di identità con foto";
+"83016" = "Preparati a scansionare il tuo documento di identità con foto";
 
-"Get ready to take a selfie" = "Preparati a scattare un selfie";
+"9e29f" = "Preparati a scattare un selfie";
 
-"Go Back" = "Indietro";
+"b8d99" = "Indietro";
 
-"Hold still, scanning" = "Tienilo fermo. Scansione in corso";
+"b63f6" = "Tienilo fermo. Scansione in corso";
 
-"I'm ready" = "Tutto pronto";
+"d5b05" = "Tutto pronto";
 
-"ID Number" = "Numero documento di identità";
+"a403d" = "Numero documento di identità";
 
-"Individual CPF" = "CPF personale";
+"6212a" = "CPF personale";
 
-"Keep ID level" = "Allinea il documento di identità all'angolo destro";
+"6be11" = "Allinea il documento di identità all'angolo destro";
 
-"Last 4 of Social Security number" = "Ultime quattro cifre del Social Security Number (SSN)";
+"77dd8" = "Ultime quattro cifre del Social Security Number (SSN)";
 
-"Loading" = "Caricamento in corso";
+"dc3808" = "Caricamento in corso";
 
-"Make sure all details are visible and focus" = "Assicurati che tutti i dettagli siano visibili e a fuoco";
+"859af" = "Assicurati che tutti i dettagli siano visibili e a fuoco";
 
-"Make sure you're in a well lit space." = "Assicurati che l'illuminazione sia adeguata.";
+"6c2aa" = "Assicurati che l'illuminazione sia adeguata.";
 
-"Move closer" = "Avvicinalo";
+"1da05" = "Avvicinalo";
 
-"Move farther" = "Allontanalo";
+"73333" = "Allontanalo";
 
-"Move to a darker area" = "Sposta il documento in un punto meno illuminato.";
+"4687a" = "Sposta il documento in un punto meno illuminato.";
 
-"Move to a well-lit area" = "Sposta il documento in modo che l'illuminazione sia adeguata";
+"f579f" = "Sposta il documento in modo che l'illuminazione sia adeguata";
 
-"NRIC or FIN" = "NRIC o FIN";
+"32e72" = "NRIC o FIN";
 
-"No document detected" = "Nessun documento rilevato";
+"b376f" = "Nessun documento rilevato";
 
-"Personal ID number" = "Numero documento di identità personale";
+"fae7d" = "Numero documento di identità personale";
 
-"Personal Information" = "Informazioni personali";
+"c4b37" = "Informazioni personali";
 
-"Phone Number" = "Numero di telefono";
+"72dba" = "Numero di telefono";
 
-"Phone Verification" = "Verifica del numero di telefono";
+"cb074" = "Verifica del numero di telefono";
 
-"Photo Library" = "Galleria foto";
+"e0b2a" = "Galleria foto";
 
-"Please upload images of the front and back of your %@" = "La preghiamo di caricare le immagini del fronte e del retro di %@";
+"03fa9" = "La preghiamo di caricare le immagini del fronte e del retro di %@";
 
-"Please upload images of the front and back of your identity document" = "Carica un'immagine fronte-retro del tuo documento di identità";
+"8c273" = "Carica un'immagine fronte-retro del tuo documento di identità";
 
-"Position your %@ in the center of the frame" = "Posiziona %@ al centro della cornice";
+"ceab8" = "Posiziona %@ al centro della cornice";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Posiziona la patente di guida o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
+"12559" = "Posiziona la patente di guida o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
 
-"Position your driver's license or passport in the center of the frame" = "Posiziona la patente di guida o il passaporto al centro dell'inquadratura";
+"453ad" = "Posiziona la patente di guida o il passaporto al centro dell'inquadratura";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Posiziona la patente di guida, il passaporto o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
+"ad934" = "Posiziona la patente di guida, il passaporto o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
 
-"Position your face in the center of the frame." = "Posiziona il volto al centro della cornice.";
+"6f758" = "Posiziona il volto al centro della cornice.";
 
-"Position your identity document in the center of the frame" = "Posiziona il tuo documento di identità al centro della cornice";
+"68f51" = "Posiziona il tuo documento di identità al centro della cornice";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Posiziona il passaporto o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
+"74830" = "Posiziona il passaporto o un documento di identità con foto rilasciato da un'autorità governativa al centro dell'inquadratura";
 
-"Retake Photos" = "Scatta di nuovo le foto";
+"16681" = "Scatta di nuovo le foto";
 
-"Scan" = "Scansiona";
+"ea1c5" = "Scansiona";
 
-"Scanned" = "Scansionato";
+"e9b3b" = "Scansionato";
 
-"Select" = "Seleziona";
+"2a780" = "Seleziona";
 
-"Select a location to upload the back of your identity document from" = "Seleziona una posizione da cui caricare il retro del tuo documento di identità";
+"568f3" = "Seleziona una posizione da cui caricare il retro del tuo documento di identità";
 
-"Select a location to upload the front of your identity document from" = "Seleziona una posizione da cui caricare il fronte del tuo documento di identità";
+"a352a" = "Seleziona una posizione da cui caricare il fronte del tuo documento di identità";
 
-"Select back %@ photo" = "Seleziona la foto del retro di %@";
+"0dfa8" = "Seleziona la foto del retro di %@";
 
-"Select back identity document photo" = "Seleziona la foto del retro del documento d'identità";
+"38aec" = "Seleziona la foto del retro del documento d'identità";
 
-"Select front %@ photo" = "Seleziona la foto del fronte di %@";
+"1ca11" = "Seleziona la foto del fronte di %@";
 
-"Select front identity document photo" = "Seleziona la foto del fronte del documento d'identità";
+"5c25a" = "Seleziona la foto del fronte del documento d'identità";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Acquisizioni di selfie";
+"ccd67" = "Acquisizioni di selfie";
 
-"Selfie captures are complete" = "L'acquisizione dei selfie è completa";
+"a7b36" = "L'acquisizione dei selfie è completa";
 
-"Take Photo" = "Scatta foto";
+"1ca36" = "Scatta foto";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Le immagini del tuo documento di identità non sono state salvate. Vuoi uscire?";
+"b6b76" = "Le immagini del tuo documento di identità non sono state salvate. Vuoi uscire?";
 
-"There was an error accessing the camera." = "Si è verificato un errore durante l'accesso alla fotocamera.";
+"1eda8" = "Si è verificato un errore durante l'accesso alla fotocamera.";
 
-"Try Again" = "Riprova";
+"df0fe" = "Riprova";
 
-"Try reduce glare and make ID visible" = "Cerca di ridurre i riflessi e assicurati che il documento di identità sia visibile.";
+"ffd3d" = "Cerca di ridurre i riflessi e assicurati che il documento di identità sia visibile.";
 
-"Unable to establish a connection." = "Impossibile stabilire una connessione.";
+"77ee9" = "Impossibile stabilire una connessione.";
 
-"Unsaved changes" = "Modifiche non salvate";
+"a710c" = "Modifiche non salvate";
 
-"Upload" = "Carica";
+"865e8" = "Carica";
 
-"Upload a Photo" = "Carica una foto";
+"f0c8a" = "Carica una foto";
 
-"Upload your %@" = "Carica %@";
+"7f6c1" = "Carica %@";
 
-"Upload your photo ID" = "Carica il tuo documento d'identità con foto";
+"40a76" = "Carica il tuo documento d'identità con foto";
 
-"Uploading back %@ photo" = "Caricamento della foto del retro di %@";
+"eaebd" = "Caricamento della foto del retro di %@";
 
-"Uploading back identity document photo" = "Caricamento della foto del retro del documento di identità";
+"e16b7" = "Caricamento della foto del retro del documento di identità";
 
-"Uploading front %@ photo" = "Caricamento della foto del fronte di %@";
+"93af2" = "Caricamento della foto del fronte di %@";
 
-"Uploading front identity document photo" = "Caricamento della foto del fronte del documento di identità";
+"5dfbf" = "Caricamento della foto del fronte del documento di identità";
 
-"Verify your identity" = "Verifica la tua identità";
+"ed32a" = "Verifica la tua identità";
 
-"We could not capture a high-quality image." = "Non è stato possibile acquisire un'immagine di alta qualità.";
+"55e29" = "Non è stato possibile acquisire un'immagine di alta qualità.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Devi autorizzare l'utilizzo della tua fotocamera. Concedi l'accesso alla fotocamera nelle impostazioni dell'app.";
+"a98b4" = "Devi autorizzare l'utilizzo della tua fotocamera. Concedi l'accesso alla fotocamera nelle impostazioni dell'app.";
 
-"Welcome" = "Ti diamo il benvenuto";
+"0e222" = "Ti diamo il benvenuto";
 
-"You can either try again or upload an image from your device." = "Puoi riprovare o caricare un'immagine dal tuo dispositivo.";
+"348a7" = "Puoi riprovare o caricare un'immagine dal tuo dispositivo.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "I tuoi selfie non sono stati salvati. Vuoi uscire?";
+"b892f" = "I tuoi selfie non sono stati salvati. Vuoi uscire?";
 
-"driver's license" = "patente di guida";
+"cadf1" = "patente di guida";
 
-"government-issued photo ID" = "documento identificativo ufficiale con foto";
+"29fd8" = "documento identificativo ufficiale con foto";
 
-"passport" = "passaporto";
+"cbc47" = "passaporto";

@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Kartica";
+"fbfa6" = "%1$@ Kartica";
 
-"%1$@ Credit" = "%1$@ Kreditna kartica";
+"a11b0" = "%1$@ Kreditna kartica";
 
-"%1$@ Debit" = "%1$@ Debitna kartica";
+"95233" = "%1$@ Debitna kartica";
 
-"%1$@ Prepaid" = "%1$@ Prepaid kartica";
+"c90ba" = "%1$@ Prepaid kartica";
 
-"%1$@ account ending in %2$@" = "%1$@ račun koji završava s %2$@";
+"3b24a" = "%1$@ račun koji završava s %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ završava na %2$@";
+"f5b21" = "%1$@ završava na %2$@";
 
-"%1$@ is not accepted" = "%1$@ nije prihvaćeno";
+"29adf" = "%1$@ nije prihvaćeno";
 
-"Address line 2 (optional)" = "Ulica i kućni broj 2 (neobavezno)";
+"9ada7" = "Ulica i kućni broj 2 (neobavezno)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bankovni račun";
+"c6f64" = "Bankovni račun";
 
-"Billing address" = "Adresa za naplatu";
+"1f516" = "Adresa za naplatu";
 
-"Billing details" = "Pojedinosti o fakturiranju";
+"7c928" = "Pojedinosti o fakturiranju";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Informacije o kartici";
+"fca47" = "Informacije o kartici";
 
-"Card number" = "Broj kartice";
+"816fc" = "Broj kartice";
 
-"Confirm your %@" = "Potvrdite svoj %@";
+"002d7" = "Potvrdite svoj %@";
 
-"Invalid data." = "Nevaljani podaci.";
+"da175" = "Nevaljani podaci.";
 
-"MM / YY" = "MM / GG";
+"58f4a" = "MM / GG";
 
-"MM/YY" = "MM/GG";
+"1b5f6" = "MM/GG";
 
-"Postal Code" = "Poštanski broj";
+"8198b" = "Poštanski broj";
 
-"Shipping Address" = "Adresa za otpremu";
+"6e244" = "Adresa za otpremu";
 
-"State / Province / Region" = "Država / pokrajina / regija";
+"649f1" = "Država / pokrajina / regija";
 
-"The BSB you entered is invalid." = "Uneseni BSB nije valjan.";
+"dfa21" = "Uneseni BSB nije valjan.";
 
-"The selected brand is not allowed" = "Odabrana marka kartice nije dozvoljena";
+"aaf53" = "Odabrana marka kartice nije dozvoljena";
 
-"To scan your card, allow camera access in Settings." = "Da biste skenirali karticu, dopustite pristup kameri u Postavkama.";
+"9f2d9" = "Da biste skenirali karticu, dopustite pristup kameri u Postavkama.";
 
-"Your card has expired." = "Vaša kartica je istekla.";
+"393e6" = "Vaša kartica je istekla.";
 
-"Your card number is incomplete." = "Broj vaše kartice nije kompletan.";
+"7e5ae" = "Broj vaše kartice nije kompletan.";
 
-"Your card number is invalid." = "Broj vaše kartice nije valjan.";
+"3c122" = "Broj vaše kartice nije valjan.";
 
-"Your card's expiration date is incomplete." = "Datum isteka vaše kartice nije kompletan.";
+"a2036" = "Datum isteka vaše kartice nije kompletan.";
 
-"Your card's expiration date is invalid." = "Datum isteka vaše kartice nije valjan.";
+"6a457" = "Datum isteka vaše kartice nije valjan.";
 
-"Your card's expiration month is invalid." = "Mjesec isteka kartice nije valjan.";
+"e47c0" = "Mjesec isteka kartice nije valjan.";
 
-"Your card's expiration year is invalid." = "Godina isteka kartice nije valjana.";
+"36ae2" = "Godina isteka kartice nije valjana.";
 
-"Your card's security code is incomplete." = "Sigurnosni kod vaše kartice nije kompletan.";
+"300dd" = "Sigurnosni kod vaše kartice nije kompletan.";
 
-"Your card's security code is invalid." = "Sigurnosni kod vaše kartice nije valjan.";
+"394fd" = "Sigurnosni kod vaše kartice nije valjan.";
 
-"card number" = "broj kartice";
+"58da6" = "broj kartice";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "Datum isteka";
+"b34dd" = "Datum isteka";

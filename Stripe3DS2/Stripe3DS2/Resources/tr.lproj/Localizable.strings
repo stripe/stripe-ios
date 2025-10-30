@@ -1,39 +1,38 @@
 /* The text for warning when a debugger is currently attached to the process. */
-"A debugger is attached to the App." = "Uygulamaya hata ayıklayıcı eklendi.";
+"028f7" = "Uygulamaya hata ayıklayıcı eklendi.";
 
 /* The text for warning when an emulator is being used to run the application. */
-"An emulator is being used to run the App." = "Uygulamayı çalıştırmak için bir emülatör kullanılıyor.";
+"8bcbe" = "Uygulamayı çalıştırmak için bir emülatör kullanılıyor.";
 
 /* The text for the button that cancels the current challenge process. */
-"Cancel" = "İptal";
+"19766" = "İptal";
 
 /* Spoken by VoiceOver when the screen is loading. */
-"Loading" = "Yüklüyor";
+"dc380" = "Yüklüyor";
 
 /* The no answer to a yes or no question. */
-"No" = "Hayır";
+"1ea44" = "Hayır";
 
 /* The title for the challenge response step of an authenticated checkout. */
-"Secure checkout" = "Güvenli ödeme";
+"58f32" = "Güvenli ödeme";
 
 /* Indicates that a button is selected. */
-"Selected" = "Seçildi";
+"57fd7" = "Seçildi";
 
 /* The text for warning when a device is jailbroken */
-"The device is jailbroken." = "Cihazın üretici yazılım kilidi kaldırılmış.";
+"0eb49" = "Cihazın üretici yazılım kilidi kaldırılmış.";
 
 /* The text for warning when the integrity of the SDK has been tampered with */
-"The integrity of the SDK has been tampered." = "SDK bütünlüğü ihlal edilmiş.";
+"29abb" = "SDK bütünlüğü ihlal edilmiş.";
 
 /* The text for warning when the SDK is running on an unsupported OS or OS version. */
-"The OS or the OS Version is not supported." = "İS veya İS Sürümü desteklenmiyor.";
+"79d01" = "İS veya İS Sürümü desteklenmiyor.";
 
 /* Error description for when a network request times out. English value is as required by UL certification. */
-"Timeout" = "Zaman aşımı";
+"70594" = "Zaman aşımı";
 
 /* Indicates that a button is not selected. */
-"Unselected" = "Seçimi kaldırıldı";
+"26118" = "Seçimi kaldırıldı";
 
 /* The yes answer to a yes or no question. */
-"Yes" = "Evet";
-
+"85a39" = "Evet";

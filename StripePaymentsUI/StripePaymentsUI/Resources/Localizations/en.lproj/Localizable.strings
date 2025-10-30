@@ -1,114 +1,113 @@
 /* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
-"%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
+"3b24a" = "%1$@ account ending in %2$@";
 
 /* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
-"%1$@ Card" = "%1$@ Card";
+"fbfa6" = "%1$@ Card";
 
 /* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
-"%1$@ Credit" = "%1$@ Credit";
+"a11b0" = "%1$@ Credit";
 
 /* Label a debit funding source. E.g. 'Visa Debit' */
-"%1$@ Debit" = "%1$@ Debit";
+"95233" = "%1$@ Debit";
 
 /* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
-"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
+"f5b21" = "%1$@ ending in %2$@";
 
 /* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
-"%1$@ is not accepted" = "%1$@ is not accepted";
+"29adf" = "%1$@ is not accepted";
 
 /* Label a prepaid funding source. E.g. 'Visa Prepaid' */
-"%1$@ Prepaid" = "%1$@ Prepaid";
+"c90ba" = "%1$@ Prepaid";
 
 /* Address line 2 placeholder for billing address form. */
-"Address line 2 (optional)" = "Address line 2 (optional)";
+"9ada7" = "Address line 2 (optional)";
 
 /* Text for Apple Pay payment method */
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
 /* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Bank Account";
+"c6f64" = "Bank Account";
 
 /* Billing address section title for card form entry. */
-"Billing address" = "Billing address";
+"1f516" = "Billing address";
 
 /* Billing details section title for card form entry. */
-"Billing details" = "Billing details";
+"7c928" = "Billing details";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
 /* Card details entry form header title */
-"Card information" = "Card information";
+"fca47" = "Card information";
 
 /* accessibility label for text field */
-"card number" = "card number";
+"58da6" = "card number";
 
 /* Label for card number entry text field */
-"Card number" = "Card number";
+"816fc" = "Card number";
 
 /* Section title for entering your CVC. e.g. 'Confirm your CVC' */
-"Confirm your %@" = "Confirm your %@";
+"002d7" = "Confirm your %@";
 
 /* Label for entering CVC in text field */
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
 /* Placeholder string for email entry field. */
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
 /* accessibility label for text field */
-"expiration date" = "expiration date";
+"b34dd" = "expiration date";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
-"Invalid data." = "Invalid data.";
+"da175" = "Invalid data.";
 
 /* label for text field to enter card expiry */
-"MM / YY" = "MM / YY";
+"58f4a" = "MM / YY";
 
 /* label for text field to enter card expiry */
-"MM/YY" = "MM/YY";
+"1b5f6" = "MM/YY";
 
 /* Postal code placeholder */
-"Postal Code" = "Postal Code";
+"8198b" = "Postal Code";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Shipping Address";
+"6e244" = "Shipping Address";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "State / Province / Region";
+"649f1" = "State / Province / Region";
 
 /* Error string displayed to user when they enter in an invalid BSB number. */
-"The BSB you entered is invalid." = "The BSB you entered is invalid.";
+"dfa21" = "The BSB you entered is invalid.";
 
 /* String to inform a user that specific card brands are not accepted. */
-"The selected brand is not allowed" = "The selected brand is not allowed";
+"aaf53" = "The selected brand is not allowed";
 
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
-"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
+"9f2d9" = "To scan your card, allow camera access in Settings.";
 
 /* Error message for card details form when expiration date has passed */
-"Your card has expired." = "Your card has expired.";
+"393e6" = "Your card has expired.";
 
 /* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Your card number is incomplete.";
+"7e5ae" = "Your card number is incomplete.";
 
 /* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Your card number is invalid.";
+"3c122" = "Your card number is invalid.";
 
 /* Error message for card details form when expiration date isn't entered completely */
-"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+"a2036" = "Your card's expiration date is incomplete.";
 
 /* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
+"6a457" = "Your card's expiration date is invalid.";
 
 /* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
+"e47c0" = "Your card's expiration month is invalid.";
 
 /* String to describe an invalid year in expiry date. */
-"Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
+"36ae2" = "Your card's expiration year is invalid.";
 
 /* Error message for card entry form when CVC is incomplete. */
-"Your card's security code is incomplete." = "Your card's security code is incomplete.";
+"300dd" = "Your card's security code is incomplete.";
 
 /* Error message for card entry form when CVC is invalid */
-"Your card's security code is invalid." = "Your card's security code is invalid.";
-
+"394fd" = "Your card's security code is invalid.";

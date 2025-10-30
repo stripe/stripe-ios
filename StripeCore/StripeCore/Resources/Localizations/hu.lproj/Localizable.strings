@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Hiba történt, próbálja újra.";
+"9c170" = "Hiba történt, próbálja újra.";
 
-"Card brand was not updated. Please try again." = "A kártyatípus frissítése nem sikerült, próbálja újra.";
+"4bc73" = "A kártyatípus frissítése nem sikerült, próbálja újra.";
 
-"Close" = "Bezárás";
+"7d9eb" = "Bezárás";
 
-"Default payment method was not updated. Please try again." = "Az alapértelmezett fizetési mód nem frissült, próbálja újra.";
+"3048d" = "Az alapértelmezett fizetési mód nem frissült, próbálja újra.";
 
-"Scan Card" = "Kártya beolvasása";
+"b60b5" = "Kártya beolvasása";
 
-"Scan card" = "Kártya beolvasása";
+"ea2fe" = "Kártya beolvasása";
 
-"The IBAN you entered is invalid." = "A beírt IBAN-szám érvénytelen.";
+"ee81e" = "A beírt IBAN-szám érvénytelen.";
 
-"There was an error processing your card -- try again in a few seconds" = "Hiba történt kártyája feldolgozása során, próbálja újra néhány másodperc múlva";
+"fa47c" = "Hiba történt kártyája feldolgozása során, próbálja újra néhány másodperc múlva";
 
-"There was an unexpected error -- try again in a few seconds" = "Váratlan hiba lépett fel, próbálja újra néhány másodperc múlva";
+"c98a4" = "Váratlan hiba lépett fel, próbálja újra néhány másodperc múlva";
 
-"Try again" = "Próbálja újra";
+"d8b83" = "Próbálja újra";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "A Stripe-ot használjuk a kártyájának az ellenőrzésére. A Stripe az adatvédelmi szabályzatának megfelelően használhatja és tárolhatja az Ön adatait. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>További tudnivalók</u></a>";
+"96fe7" = "A Stripe-ot használjuk a kártyájának az ellenőrzésére. A Stripe az adatvédelmi szabályzatának megfelelően használhatja és tárolhatja az Ön adatait. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>További tudnivalók</u></a>";
 
-"Your card has expired" = "A kártyája lejárt";
+"f5c35" = "A kártyája lejárt";
 
-"Your card was declined" = "A kártyáját elutasítottuk";
+"b9821" = "A kártyáját elutasítottuk";
 
-"Your card's expiration month is invalid" = "Kártyájának lejárati hónapja érvénytelen";
+"e02cf" = "Kártyájának lejárati hónapja érvénytelen";
 
-"Your card's expiration year is invalid" = "A kártyája lejárati éve érvénytelen";
+"53311" = "A kártyája lejárati éve érvénytelen";
 
-"Your card's number is invalid" = "Kártyaszáma érvénytelen";
+"c433c" = "Kártyaszáma érvénytelen";
 
-"Your card's security code is invalid" = "Kártyájának biztonsági kódja érvénytelen";
+"15f5b" = "Kártyájának biztonsági kódja érvénytelen";
 
-"Your name is invalid." = "Érvénytelen név.";
+"b1d57" = "Érvénytelen név.";
 
-"Your payment method was declined." = "Fizetési módja elutasításra került.";
+"3209d" = "Fizetési módja elutasításra került.";

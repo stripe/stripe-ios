@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Một vài ảnh sẽ được chụp tự động ở bước tiếp theo để xác minh đó là bạn";
+"40b57" = "Một vài ảnh sẽ được chụp tự động ở bước tiếp theo để xác minh đó là bạn";
 
-"Accepted forms of ID include" = "Các loại ID được chấp nhận bao gồm";
+"a9934" = "Các loại ID được chấp nhận bao gồm";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Ngoài ra, bạn có thể tự tải lên ảnh giấy tờ tùy thân của mình.";
+"a570c" = "Ngoài ra, bạn có thể tự tải lên ảnh giấy tờ tùy thân của mình.";
 
-"App Settings" = "Cài đặt Ứng dụng";
+"da645" = "Cài đặt Ứng dụng";
 
-"Back %@ photo successfully uploaded" = "Tải lên ảnh mặt sau %@ thành công";
+"31438" = "Tải lên ảnh mặt sau %@ thành công";
 
-"Back identity document photo successfully uploaded" = "Tải lên ảnh mặt sau giấy tờ tùy thân thành công";
+"3253a" = "Tải lên ảnh mặt sau giấy tờ tùy thân thành công";
 
-"Back of %@" = "Mặt sau của %@";
+"128b0" = "Mặt sau của %@";
 
-"Back of driver's license or government-issued photo ID" = "Mặt sau của bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+"37929" = "Mặt sau của bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
-"Back of identity document" = "Mặt sau giấy tờ nhận dạng";
+"3229d" = "Mặt sau giấy tờ nhận dạng";
 
-"Camera permission" = "Cấp quyền máy ảnh";
+"51e72" = "Cấp quyền máy ảnh";
 
-"Camera unavailable" = "Máy ảnh không khả dụng";
+"06cc3" = "Máy ảnh không khả dụng";
 
-"Capturing…" = "Đang chụp…";
+"806e3" = "Đang chụp…";
 
-"Choose File" = "Chọn tệp";
+"d7042" = "Chọn tệp";
 
-"Consent" = "Chấp thuận";
+"d37e0" = "Chấp thuận";
 
-"Could not capture image" = "Không thể chụp ảnh";
+"bf6e9" = "Không thể chụp ảnh";
 
-"Date of Birth" = "Ngày sinh";
+"fdc73" = "Ngày sinh";
 
-"Date of birth does not look valid" = "Ngày sinh có vẻ không hợp lệ";
+"2baa1" = "Ngày sinh có vẻ không hợp lệ";
 
-"Details not visible" = "Không thấy rõ thông tin chi tiết";
+"687cd" = "Không thấy rõ thông tin chi tiết";
 
-"Flip your %@ over to the other side" = "Lật %@ của bạn lại";
+"e3292" = "Lật %@ của bạn lại";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Lật ngược bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+"dd41b" = "Lật ngược bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
-"Flip your identity card over to the other side" = "Lật thẻ căn cước của bạn sang mặt khác";
+"87346" = "Lật thẻ căn cước của bạn sang mặt khác";
 
-"Front %@ photo successfully uploaded" = "Tải lên ảnh mặt trước %@ thành công";
+"b57ad" = "Tải lên ảnh mặt trước %@ thành công";
 
-"Front identity document photo successfully uploaded" = "Tải lên ảnh mặt trước giấy tờ tùy thân thành công";
+"3a9fd" = "Tải lên ảnh mặt trước giấy tờ tùy thân thành công";
 
-"Front of %@" = "Mặt trước của %@";
+"73fc5" = "Mặt trước của %@";
 
-"Front of driver's license or government-issued photo ID" = "Mặt trước của bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+"b3d9a" = "Mặt trước của bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
-"Front of driver's license or passport" = "Mặt trước của bằng lái xe hoặc hộ chiếu";
+"8d188" = "Mặt trước của bằng lái xe hoặc hộ chiếu";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Mặt trước của bằng lái xe, hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+"070b5" = "Mặt trước của bằng lái xe, hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
-"Front of identity document" = "Mặt trước giấy tờ nhận dạng";
+"8562c" = "Mặt trước giấy tờ nhận dạng";
 
-"Front of passport or government-issued photo ID" = "Mặt trước hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
+"bb2ee" = "Mặt trước hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
-"Get ready to scan your photo ID" = "Chuẩn bị quét ID có ảnh";
+"83016" = "Chuẩn bị quét ID có ảnh";
 
-"Get ready to take a selfie" = "Sẵn sàng để tự chụp ảnh";
+"9e29f" = "Sẵn sàng để tự chụp ảnh";
 
-"Go Back" = "Quay lại";
+"b8d99" = "Quay lại";
 
-"Hold still, scanning" = "Giữ yên, đang quét";
+"b63f6" = "Giữ yên, đang quét";
 
-"I'm ready" = "Đã sẵn sàng";
+"d5b05" = "Đã sẵn sàng";
 
-"ID Number" = "Số ID";
+"a403d" = "Số ID";
 
-"Individual CPF" = "CPF cá nhân";
+"6212a" = "CPF cá nhân";
 
-"Keep ID level" = "Giữ ID cân bằng";
+"6be11" = "Giữ ID cân bằng";
 
-"Last 4 of Social Security number" = "4 số cuối của số An Sinh Xã Hội";
+"77dd8" = "4 số cuối của số An Sinh Xã Hội";
 
-"Loading" = "Đang tải";
+"dc3808" = "Đang tải";
 
-"Make sure all details are visible and focus" = "Đảm bảo tất cả các thông tin nhìn rõ và được lấy nét";
+"859af" = "Đảm bảo tất cả các thông tin nhìn rõ và được lấy nét";
 
-"Make sure you're in a well lit space." = "Hãy đảm bảo bạn đang ở trong không gian đủ ánh sáng.";
+"6c2aa" = "Hãy đảm bảo bạn đang ở trong không gian đủ ánh sáng.";
 
-"Move closer" = "Đến gần hơn";
+"1da05" = "Đến gần hơn";
 
-"Move farther" = "Lùi xa hơn";
+"73333" = "Lùi xa hơn";
 
-"Move to a darker area" = "Di chuyển đến khu vực tối hơn";
+"4687a" = "Di chuyển đến khu vực tối hơn";
 
-"Move to a well-lit area" = "Di chuyển đến không gian đủ ánh sáng";
+"f579f" = "Di chuyển đến không gian đủ ánh sáng";
 
-"NRIC or FIN" = "NRIC hoặc FIN";
+"32e72" = "NRIC hoặc FIN";
 
-"No document detected" = "Không phát hiện tài liệu";
+"b376f" = "Không phát hiện tài liệu";
 
-"Personal ID number" = "Số ID Cá nhân";
+"fae7d" = "Số ID Cá nhân";
 
-"Personal Information" = "Thông tin cá nhân";
+"c4b37" = "Thông tin cá nhân";
 
-"Phone Number" = "Số điện thoại";
+"72dba" = "Số điện thoại";
 
-"Phone Verification" = "Xác minh Số điện thoại";
+"cb074" = "Xác minh Số điện thoại";
 
-"Photo Library" = "Thư viện ảnh";
+"e0b2a" = "Thư viện ảnh";
 
-"Please upload images of the front and back of your %@" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau %@ của bạn";
+"03fa9" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau %@ của bạn";
 
-"Please upload images of the front and back of your identity document" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau giấy tờ tùy thân của bạn";
+"8c273" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau giấy tờ tùy thân của bạn";
 
-"Position your %@ in the center of the frame" = "Đặt %@ của bạn ở giữa khung hình";
+"ceab8" = "Đặt %@ của bạn ở giữa khung hình";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Đặt giấy phép lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
+"12559" = "Đặt giấy phép lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
 
-"Position your driver's license or passport in the center of the frame" = "Đặt bằng lái xe hoặc hộ chiếu của bạn ở giữa khung hình";
+"453ad" = "Đặt bằng lái xe hoặc hộ chiếu của bạn ở giữa khung hình";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Đặt bằng lái xe, hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
+"ad934" = "Đặt bằng lái xe, hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
 
-"Position your face in the center of the frame." = "Đặt khuôn mặt của bạn ở giữa khung hình.";
+"6f758" = "Đặt khuôn mặt của bạn ở giữa khung hình.";
 
-"Position your identity document in the center of the frame" = "Đặt giấy tờ tùy thân của bạn ở giữa khung hình";
+"68f51" = "Đặt giấy tờ tùy thân của bạn ở giữa khung hình";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Đặt hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
+"74830" = "Đặt hộ chiếu hoặc giấy tờ tùy thân có ảnh do chính phủ cấp ở giữa khung hình";
 
-"Retake Photos" = "Chụp lại ảnh";
+"16681" = "Chụp lại ảnh";
 
-"Scan" = "Quét";
+"ea1c5" = "Quét";
 
-"Scanned" = "Đã quét";
+"e9b3b" = "Đã quét";
 
-"Select" = "Chọn";
+"2a780" = "Chọn";
 
-"Select a location to upload the back of your identity document from" = "Chọn một vị trí để tải lên mặt sau giấy tờ tùy thân của bạn";
+"568f3" = "Chọn một vị trí để tải lên mặt sau giấy tờ tùy thân của bạn";
 
-"Select a location to upload the front of your identity document from" = "Chọn một vị trí để tải lên mặt trước giấy tờ tùy thân của bạn";
+"a352a" = "Chọn một vị trí để tải lên mặt trước giấy tờ tùy thân của bạn";
 
-"Select back %@ photo" = "Chọn ảnh mặt sau %@";
+"0dfa8" = "Chọn ảnh mặt sau %@";
 
-"Select back identity document photo" = "Chọn ảnh mặt sau giấy tờ tùy thân";
+"38aec" = "Chọn ảnh mặt sau giấy tờ tùy thân";
 
-"Select front %@ photo" = "Chọn ảnh mặt trước %@";
+"1ca11" = "Chọn ảnh mặt trước %@";
 
-"Select front identity document photo" = "Chọn ảnh mặt trước giấy tờ tùy thân";
+"5c25a" = "Chọn ảnh mặt trước giấy tờ tùy thân";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Chụp ảnh selfie";
+"ccd67" = "Chụp ảnh selfie";
 
-"Selfie captures are complete" = "Chụp ảnh selfie đã hoàn tất";
+"a7b36" = "Chụp ảnh selfie đã hoàn tất";
 
-"Take Photo" = "Chụp ảnh";
+"1ca36" = "Chụp ảnh";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Ảnh của giấy tờ tùy thân của bạn chưa được lưu. Bạn có muốn rời đi không?";
+"b6b76" = "Ảnh của giấy tờ tùy thân của bạn chưa được lưu. Bạn có muốn rời đi không?";
 
-"There was an error accessing the camera." = "Đã xảy ra lỗi khi truy cập máy ảnh.";
+"1eda8" = "Đã xảy ra lỗi khi truy cập máy ảnh.";
 
-"Try Again" = "Hãy thử lại";
+"df0fe" = "Hãy thử lại";
 
-"Try reduce glare and make ID visible" = "Hãy thử giảm độ chói và đảm bảo ID được nhìn rõ";
+"ffd3d" = "Hãy thử giảm độ chói và đảm bảo ID được nhìn rõ";
 
-"Unable to establish a connection." = "Không thể thiết lập kết nối.";
+"77ee9" = "Không thể thiết lập kết nối.";
 
-"Unsaved changes" = "Thay đổi chưa lưu";
+"a710c" = "Thay đổi chưa lưu";
 
-"Upload" = "Tải lên";
+"865e8" = "Tải lên";
 
-"Upload a Photo" = "Tải lên ảnh";
+"f0c8a" = "Tải lên ảnh";
 
-"Upload your %@" = "Tải lên %@ của bạn";
+"7f6c1" = "Tải lên %@ của bạn";
 
-"Upload your photo ID" = "Tải lên ID có ảnh của bạn";
+"40a76" = "Tải lên ID có ảnh của bạn";
 
-"Uploading back %@ photo" = "Tải lên ảnh mặt sau %@";
+"eaebd" = "Tải lên ảnh mặt sau %@";
 
-"Uploading back identity document photo" = "Tải lên ảnh mặt sau giấy tờ tùy thân";
+"e16b7" = "Tải lên ảnh mặt sau giấy tờ tùy thân";
 
-"Uploading front %@ photo" = "Tải lên ảnh mặt trước %@";
+"93af2" = "Tải lên ảnh mặt trước %@";
 
-"Uploading front identity document photo" = "Tải lên ảnh mặt trước giấy tờ tùy thân";
+"5dfbf" = "Tải lên ảnh mặt trước giấy tờ tùy thân";
 
-"Verify your identity" = "Xác minh danh tính của bạn";
+"ed32a" = "Xác minh danh tính của bạn";
 
-"We could not capture a high-quality image." = "Chúng tôi không thể chụp ảnh có chất lượng cao.";
+"55e29" = "Chúng tôi không thể chụp ảnh có chất lượng cao.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Chúng tôi cần được cấp quyền để sử dụng máy ảnh của bạn. Vui lòng cho phép truy cập máy ảnh trong phần cài đặt ứng dụng.";
+"a98b4" = "Chúng tôi cần được cấp quyền để sử dụng máy ảnh của bạn. Vui lòng cho phép truy cập máy ảnh trong phần cài đặt ứng dụng.";
 
-"Welcome" = "Chào mừng";
+"0e222" = "Chào mừng";
 
-"You can either try again or upload an image from your device." = "Bạn có thể thử lại hoặc tải lên hình ảnh từ thiết bị của mình.";
+"348a7" = "Bạn có thể thử lại hoặc tải lên hình ảnh từ thiết bị của mình.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Ảnh selfie của bạn chưa được lưu. Bạn có muốn rời khỏi?";
+"b892f" = "Ảnh selfie của bạn chưa được lưu. Bạn có muốn rời khỏi?";
 
-"driver's license" = "bằng lái xe";
+"cadf1" = "bằng lái xe";
 
-"government-issued photo ID" = "giấy tờ tùy thân có ảnh do chính phủ cấp";
+"29fd8" = "giấy tờ tùy thân có ảnh do chính phủ cấp";
 
-"passport" = "hộ chiếu";
+"cbc47" = "hộ chiếu";

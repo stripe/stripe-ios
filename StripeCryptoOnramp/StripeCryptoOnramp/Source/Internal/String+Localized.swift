@@ -13,8 +13,7 @@ import Foundation
 
 extension String.Localized {
     static var debitIsMostLikelyToBeAccepted: String {
-        return STPLocalizedString(
-            "Debit cards are most likely to be accepted.",
+        return STPLocalizedString("ec924",
             "Label shown in the Link UI indicating that debit cards are more likely to be accepted"
         )
     }

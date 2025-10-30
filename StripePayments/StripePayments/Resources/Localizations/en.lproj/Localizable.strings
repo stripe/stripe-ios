@@ -1,96 +1,95 @@
 /* Payment Method type brand name */
-"Affirm" = "Affirm";
+"07b9f" = "Affirm";
 
 /* Payment Method type brand name */
-"Afterpay" = "Afterpay";
+"032a2" = "Afterpay";
 
 /* Payment Method type brand name */
-"Alipay" = "Alipay";
+"d5b72" = "Alipay";
 
 /* Payment Method type brand name. */
-"AU Direct Debit" = "AU Direct Debit";
+"c1188" = "AU Direct Debit";
 
 /* Payment Method type brand name */
-"Bacs Direct Debit" = "Bacs Direct Debit";
+"0b4ee" = "Bacs Direct Debit";
 
 /* Payment Method type brand name */
-"Bancontact" = "Bancontact";
+"84e7c" = "Bancontact";
 
 /* Payment Method type brand name */
-"BLIK" = "BLIK";
+"354ad" = "BLIK";
 
 /* Payment Method type brand name */
-"Boleto" = "Boleto";
+"3a3c9" = "Boleto";
 
 /* Payment Method for credit card */
-"Card" = "Card";
+"be370" = "Card";
 
 /* Payment Method type brand name */
-"Cash App Pay" = "Cash App Pay";
+"35d08" = "Cash App Pay";
 
 /* Payment Method type brand name */
-"Clearpay" = "Clearpay";
+"268da" = "Clearpay";
 
 /* Payment Method type brand name. */
-"EPS" = "EPS";
+"6d9d7" = "EPS";
 
 /* Payment Method type brand name */
-"FPX" = "FPX";
+"fed44" = "FPX";
 
 /* Payment Method type brand name. */
-"giropay" = "giropay";
+"83eee" = "giropay";
 
 /* Payment Method type brand name. */
-"GrabPay" = "GrabPay";
+"09996" = "GrabPay";
 
 /* Source type brand name */
-"iDEAL" = "iDEAL";
+"f54ab" = "iDEAL";
 
 /* Payment Method type brand name */
-"Klarna" = "Klarna";
+"a2e77" = "Klarna";
 
 /* Payment Method type brand name */
-"Konbini" = "Konbini";
+"3f752" = "Konbini";
 
 /* Link Payment Method type brand name */
-"Link" = "Link";
+"a6a32" = "Link";
 
 /* Payment Method type brand name */
-"NetBanking" = "NetBanking";
+"3aba6" = "NetBanking";
 
 /* Payment Method type brand name */
-"OXXO" = "OXXO";
+"71ecf" = "OXXO";
 
 /* Payment Method type brand name */
-"PayPal" = "PayPal";
+"ab8a4" = "PayPal";
 
 /* Payment Method type brand name. */
-"Przelewy24" = "Przelewy24";
+"0a7ad" = "Przelewy24";
 
 /* Payment method brand name */
-"SEPA Debit" = "SEPA Debit";
+"b5dc7" = "SEPA Debit";
 
 /* Payment Method type brand name */
-"Sofort" = "Sofort";
+"02f19" = "Sofort";
 
 /* Payment Method type brand name */
-"Swish" = "Swish";
+"1e736" = "Swish";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
+"37fc6" = "Timed out authenticating your payment method -- try again";
 
 /* Default missing source type label */
-"Unknown" = "Unknown";
+"b764c" = "Unknown";
 
 /* Payment Method type brand name */
-"UPI" = "UPI";
+"7b06e" = "UPI";
 
 /* Payment Method type name for US bank account payments. */
-"US bank account" = "US bank account";
+"40d8d" = "US bank account";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";
+"f2763" = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";
 
 /* Payment Method type brand name */
-"WeChat Pay" = "WeChat Pay";
-
+"a39c6" = "WeChat Pay";

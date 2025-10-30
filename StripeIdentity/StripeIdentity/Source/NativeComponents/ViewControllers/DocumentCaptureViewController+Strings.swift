@@ -82,8 +82,7 @@ extension DocumentCaptureViewController {
     }
 
     static var scannedInstructionalText: String {
-        STPLocalizedString(
-            "Scanned",
+        STPLocalizedString("e9b3b",
             "State when identity document has been successfully scanned"
         )
     }
@@ -93,8 +92,7 @@ extension DocumentCaptureViewController {
             return .Localized.noCameraAccessErrorBodyText
         }
 
-        let line2 = STPLocalizedString(
-            "Alternatively, you may manually upload a photo of your identity document.",
+        let line2 = STPLocalizedString("a570c",
             "Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed"
         )
 
@@ -106,8 +104,7 @@ extension DocumentCaptureViewController {
             return .Localized.timeoutErrorBodyText
         }
 
-        let line2 = STPLocalizedString(
-            "You can either try again or upload an image from your device.",
+        let line2 = STPLocalizedString("348a7",
             "Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed"
         )
 
@@ -115,8 +112,7 @@ extension DocumentCaptureViewController {
     }
 
     static var uploadButtonText: String {
-        STPLocalizedString(
-            "Upload a Photo",
+        STPLocalizedString("f0c8a",
             "Button to upload a photo"
         )
     }

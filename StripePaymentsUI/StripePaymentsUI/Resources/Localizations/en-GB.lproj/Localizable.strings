@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Card";
+"fbfa6" = "%1$@ Card";
 
-"%1$@ Credit" = "%1$@ Credit";
+"a11b0" = "%1$@ Credit";
 
-"%1$@ Debit" = "%1$@ Debit";
+"95233" = "%1$@ Debit";
 
-"%1$@ Prepaid" = "%1$@ Prepaid";
+"c90ba" = "%1$@ Prepaid";
 
-"%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
+"3b24a" = "%1$@ account ending in %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
+"f5b21" = "%1$@ ending in %2$@";
 
-"%1$@ is not accepted" = "%1$@ is not accepted";
+"29adf" = "%1$@ is not accepted";
 
-"Address line 2 (optional)" = "Address line 2 (optional)";
+"9ada7" = "Address line 2 (optional)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bank Account";
+"c6f64" = "Bank Account";
 
-"Billing address" = "Billing address";
+"1f516" = "Billing address";
 
-"Billing details" = "Billing details";
+"7c928" = "Billing details";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Card information";
+"fca47" = "Card information";
 
-"Card number" = "Card number";
+"816fc" = "Card number";
 
-"Confirm your %@" = "Confirm your %@";
+"002d7" = "Confirm your %@";
 
-"Invalid data." = "Invalid data.";
+"da175" = "Invalid data.";
 
-"MM / YY" = "MM / YY";
+"58f4a" = "MM / YY";
 
-"MM/YY" = "MM/YY";
+"1b5f6" = "MM/YY";
 
-"Postal Code" = "Postcode";
+"8198b" = "Postcode";
 
-"Shipping Address" = "Shipping Address";
+"6e244" = "Shipping Address";
 
-"State / Province / Region" = "County / Region";
+"649f1" = "County / Region";
 
-"The BSB you entered is invalid." = "The BSB you entered is invalid.";
+"dfa21" = "The BSB you entered is invalid.";
 
-"The selected brand is not allowed" = "The selected brand is not allowed";
+"aaf53" = "The selected brand is not allowed";
 
-"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
+"9f2d9" = "To scan your card, allow camera access in Settings.";
 
-"Your card has expired." = "Your card has expired.";
+"393e6" = "Your card has expired.";
 
-"Your card number is incomplete." = "Your card number is incomplete.";
+"7e5ae" = "Your card number is incomplete.";
 
-"Your card number is invalid." = "Your card number is invalid.";
+"3c122" = "Your card number is invalid.";
 
-"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+"a2036" = "Your card's expiration date is incomplete.";
 
-"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
+"6a457" = "Your card's expiration date is invalid.";
 
-"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
+"e47c0" = "Your card's expiration month is invalid.";
 
-"Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
+"36ae2" = "Your card's expiration year is invalid.";
 
-"Your card's security code is incomplete." = "Your card's security code is incomplete.";
+"300dd" = "Your card's security code is incomplete.";
 
-"Your card's security code is invalid." = "Your card's security code is invalid.";
+"394fd" = "Your card's security code is invalid.";
 
-"card number" = "card number";
+"58da6" = "card number";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "expiry date";
+"b34dd" = "expiry date";

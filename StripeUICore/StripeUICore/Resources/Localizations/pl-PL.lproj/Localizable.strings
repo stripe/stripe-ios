@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (opcjonalnie)";
+"224e3" = "%@ (opcjonalnie)";
 
-"(not accepted)" = "(nieakceptowane)";
+"f676f" = "(nieakceptowane)";
 
-"Account number" = "Numer konta";
+"f7573" = "Numer konta";
 
-"Address" = "Adres";
+"56ef8" = "Adres";
 
-"Address line 1" = "Linia adresu 1";
+"ee760" = "Linia adresu 1";
 
-"Address line 2" = "Linia adresu 2";
+"350b2" = "Linia adresu 2";
 
-"Area" = "Obszar";
+"024dc" = "Obszar";
 
-"BLIK code" = "Kod BLIK";
+"35cc2" = "Kod BLIK";
 
-"BSB number" = "Numer BSB";
+"88a06" = "Numer BSB";
 
-"Bank account •••• %@" = "Konto bankowe •••• %@";
+"7a614" = "Konto bankowe •••• %@";
 
-"Billing address is same as shipping" = "Adres rozliczenia ten sam, co adres wysyłki";
+"a03f3" = "Adres rozliczenia ten sam, co adres wysyłki";
 
-"Cancel" = "Anuluj";
+"19766e" = "Anuluj";
 
-"Card brand" = "Marka karty";
+"45022" = "Marka karty";
 
-"City" = "Miejscowość";
+"fc33f" = "Miejscowość";
 
-"Code field" = "Pole kodu";
+"2b743" = "Pole kodu";
 
-"Company" = "Firma";
+"de474" = "Firma";
 
-"Continue" = "Kontynuuj";
+"31fbe" = "Kontynuuj";
 
-"Country" = "Kraj";
+"701d0" = "Kraj";
 
-"Country or region" = "Kraj lub region";
+"8d236" = "Kraj lub region";
 
-"County" = "Hrabstwo";
+"136c8" = "Hrabstwo";
 
-"Department" = "Departament";
+"5304a" = "Departament";
 
-"District" = "Dystrykt";
+"50f18" = "Dystrykt";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Czy chcesz zamknąć ten formularz?";
+"6ebfc" = "Czy chcesz zamknąć ten formularz?";
 
-"Done" = "Gotowe";
+"11a67" = "Gotowe";
 
-"Double tap to edit" = "Dotknij dwa razy, aby edytować";
+"f5dd0" = "Dotknij dwa razy, aby edytować";
 
-"Edit" = "Edytuj";
+"464c4" = "Edytuj";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "Adres e-mail";
+"969cc" = "Adres e-mail";
 
-"Emirate" = "Emiraty";
+"4309c" = "Emiraty";
 
-"Error" = "Błąd";
+"54a0e" = "Błąd";
 
-"First" = "Imię";
+"a151c" = "Imię";
 
-"Full name" = "Imię i nazwisko";
+"f13a6" = "Imię i nazwisko";
 
-"Incomplete phone number" = "Niekompletny numer telefonu";
+"6d2d3" = "Niekompletny numer telefonu";
 
-"Invalid UPI ID" = "Nieprawidłowy UPI ID";
+"14cf3" = "Nieprawidłowy UPI ID";
 
-"Island" = "Wyspa";
+"730f5" = "Wyspa";
 
-"Last" = "Nazwisko";
+"eb970" = "Nazwisko";
 
-"Name" = "Imię i nazwisko";
+"dcd1d" = "Imię i nazwisko";
 
-"Name on account" = "Imię i nazwisko na rachunku";
+"59f3a" = "Imię i nazwisko na rachunku";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Obwód";
+"2ba5c" = "Obwód";
 
-"Other" = "Inne";
+"f97e9" = "Inne";
 
-"Parish" = "Parafia";
+"45ab6" = "Parafia";
 
-"Phone number" = "Numer telefonu";
+"306f1" = "Numer telefonu";
 
-"Postal code" = "Kod pocztowy";
+"ae53c" = "Kod pocztowy";
 
-"Prefecture" = "Prefektura";
+"50571" = "Prefektura";
 
-"Province" = "Prowincja";
+"abfce" = "Prowincja";
 
-"Remove" = "Usuń";
+"c3812" = "Usuń";
 
-"Remove bank account?" = "Usunąc konto bankowe?";
+"05b2c" = "Usunąc konto bankowe?";
 
-"Remove card" = "Usuń kartę";
+"dcf7d" = "Usuń kartę";
 
-"Search" = "Wyszukaj";
+"49c26" = "Wyszukaj";
 
-"Select card brand (optional)" = "Wybierz markę karty (opcjonalne)";
+"4dc47" = "Wybierz markę karty (opcjonalne)";
 
-"Selection is empty." = "Pusty wybór.";
+"4d6f0" = "Pusty wybór.";
 
-"Sort code" = "Kod sortowania";
+"a9002" = "Kod sortowania";
 
-"State" = "Stan";
+"a3b50" = "Stan";
 
-"Suburb" = "Przedmieścia";
+"9e843" = "Przedmieścia";
 
-"Suburb or city" = "Przedmieścia lub miasto";
+"c3273" = "Przedmieścia lub miasto";
 
-"The BSB you entered is incomplete." = "Wprowadzony numer BSB jest niepełny.";
+"d5ad2" = "Wprowadzony numer BSB jest niepełny.";
 
-"The ID number you entered is incomplete." = "Podany identyfikator jest niekompletny.";
+"0f9bf" = "Podany identyfikator jest niekompletny.";
 
-"The account number you entered is incomplete." = "Podany numer konta jest niekompletny.";
+"e10dd" = "Podany numer konta jest niekompletny.";
 
-"The sort code you entered is invalid." = "Wprowadzony kod sortowania jest nieprawidłowy.";
+"ac7db" = "Wprowadzony kod sortowania jest nieprawidłowy.";
 
-"Town or city" = "Miejscowość";
+"9ce56" = "Miejscowość";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Nie można dokonać parsowania numeru telefonu";
+"72356" = "Nie można dokonać parsowania numeru telefonu";
 
-"Use rotor to access links" = "Użyj pokrętła, aby uzyskać dostęp do łączy";
+"11480" = "Użyj pokrętła, aby uzyskać dostęp do łączy";
 
-"Your BLIK code is incomplete." = "Kod BLIK jest niekompletny.";
+"6c0af" = "Kod BLIK jest niekompletny.";
 
-"Your BLIK code is invalid." = "Nieprawidłowy kod BLIK.";
+"224bb" = "Nieprawidłowy kod BLIK.";
 
-"Your ZIP code is incomplete." = "Kod pocztowy (ZIP) jest niekompletny.";
+"3e686" = "Kod pocztowy (ZIP) jest niekompletny.";
 
-"Your ZIP code is invalid." = "Kod pocztowy jest nieprawidłowy.";
+"f029b" = "Kod pocztowy jest nieprawidłowy.";
 
-"Your email is invalid." = "Adres e-mail jest nieprawidłowy.";
+"57c28" = "Adres e-mail jest nieprawidłowy.";
 
-"Your payment information will not be saved." = "Informacje dotyczące płatności nie zostaną zapisane.";
+"cc532" = "Informacje dotyczące płatności nie zostaną zapisane.";
 
-"Your postal code is incomplete." = "Kod pocztowy jest niekompletny.";
+"52c55" = "Kod pocztowy jest niekompletny.";
 
-"Your postal code is invalid." = "Nieprawidłowy kod pocztowy.";
+"037ec" = "Nieprawidłowy kod pocztowy.";
 
-"ZIP" = "Kod p";
+"eaca4" = "Kod p";

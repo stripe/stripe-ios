@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Kort";
+"fbfa6" = "%1$@ Kort";
 
-"%1$@ Credit" = "%1$@ Kreditkort";
+"a11b0" = "%1$@ Kreditkort";
 
-"%1$@ Debit" = "%1$@ Bankkort";
+"95233" = "%1$@ Bankkort";
 
-"%1$@ Prepaid" = "%1$@ Förbetalt";
+"c90ba" = "%1$@ Förbetalt";
 
-"%1$@ account ending in %2$@" = "%1$@-konto som slutar på %2$@";
+"3b24a" = "%1$@-konto som slutar på %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ med slutsiffrorna %2$@";
+"f5b21" = "%1$@ med slutsiffrorna %2$@";
 
-"%1$@ is not accepted" = "%1$@ accepteras inte";
+"29adf" = "%1$@ accepteras inte";
 
-"Address line 2 (optional)" = "Adressrad 2 (valfritt)";
+"9ada7" = "Adressrad 2 (valfritt)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bankkonto";
+"c6f64" = "Bankkonto";
 
-"Billing address" = "Faktureringsadress";
+"1f516" = "Faktureringsadress";
 
-"Billing details" = "Billing uppgifter";
+"7c928" = "Billing uppgifter";
 
-"CVC" = "CVC-kod";
+"19e9b" = "CVC-kod";
 
-"Card information" = "Kortinformation";
+"fca47" = "Kortinformation";
 
-"Card number" = "Kortnummer";
+"816fc" = "Kortnummer";
 
-"Confirm your %@" = "Bekräfta %@";
+"002d7" = "Bekräfta %@";
 
-"Invalid data." = "Ogiltiga data.";
+"da175" = "Ogiltiga data.";
 
-"MM / YY" = "MM/ÅÅ";
+"58f4a" = "MM/ÅÅ";
 
-"MM/YY" = "MM/ÅÅ";
+"1b5f6" = "MM/ÅÅ";
 
-"Postal Code" = "Postnummer";
+"8198b" = "Postnummer";
 
-"Shipping Address" = "Leveransadress";
+"6e244" = "Leveransadress";
 
-"State / Province / Region" = "Stat/provins/region";
+"649f1" = "Stat/provins/region";
 
-"The BSB you entered is invalid." = "Det BSB du angav är ogiltigt.";
+"dfa21" = "Det BSB du angav är ogiltigt.";
 
-"The selected brand is not allowed" = "Valt kortmärke är inte tillåtet";
+"aaf53" = "Valt kortmärke är inte tillåtet";
 
-"To scan your card, allow camera access in Settings." = "Tillåt kameraåtkomst i Inställningar för att skanna kortet.";
+"9f2d9" = "Tillåt kameraåtkomst i Inställningar för att skanna kortet.";
 
-"Your card has expired." = "Ditt kort har upphört att gälla.";
+"393e6" = "Ditt kort har upphört att gälla.";
 
-"Your card number is incomplete." = "Ditt kortnummer är ofullständigt.";
+"7e5ae" = "Ditt kortnummer är ofullständigt.";
 
-"Your card number is invalid." = "Ditt kortnummer är ogiltigt.";
+"3c122" = "Ditt kortnummer är ogiltigt.";
 
-"Your card's expiration date is incomplete." = "Kortets utgångsdatum är ofullständigt.";
+"a2036" = "Kortets utgångsdatum är ofullständigt.";
 
-"Your card's expiration date is invalid." = "Kortets utgångsdatum är ogiltigt.";
+"6a457" = "Kortets utgångsdatum är ogiltigt.";
 
-"Your card's expiration month is invalid." = "Kortets utgångsmånad är ogiltig.";
+"e47c0" = "Kortets utgångsmånad är ogiltig.";
 
-"Your card's expiration year is invalid." = "Kortets utgångsår är ogiltigt.";
+"36ae2" = "Kortets utgångsår är ogiltigt.";
 
-"Your card's security code is incomplete." = "Kortets säkerhetskod är ofullständig.";
+"300dd" = "Kortets säkerhetskod är ofullständig.";
 
-"Your card's security code is invalid." = "Kortets säkerhetskod är ogiltig.";
+"394fd" = "Kortets säkerhetskod är ogiltig.";
 
-"card number" = "kortnummer";
+"58da6" = "kortnummer";
 
-"example@example.com" = "exempel@exempel.com";
+"31c55" = "exempel@exempel.com";
 
-"expiration date" = "utgångsdatum";
+"b34dd" = "utgångsdatum";

@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (nav obligāti)";
+"224e3" = "%@ (nav obligāti)";
 
-"(not accepted)" = "(netiek pieņemts)";
+"f676f" = "(netiek pieņemts)";
 
-"Account number" = "Konta numurs";
+"f7573" = "Konta numurs";
 
-"Address" = "Adrese";
+"56ef8" = "Adrese";
 
-"Address line 1" = "1. adreses rindiņa";
+"ee760" = "1. adreses rindiņa";
 
-"Address line 2" = "2. adreses rindiņa";
+"350b2" = "2. adreses rindiņa";
 
-"Area" = "Apgabals";
+"024dc" = "Apgabals";
 
-"BLIK code" = "BLIK kods";
+"35cc2" = "BLIK kods";
 
-"BSB number" = "BSB numurs";
+"88a06" = "BSB numurs";
 
-"Bank account •••• %@" = "Bankas konts •••• %@";
+"7a614" = "Bankas konts •••• %@";
 
-"Billing address is same as shipping" = "Norēķinu adrese un piegādes adrese sakrīt";
+"a03f3" = "Norēķinu adrese un piegādes adrese sakrīt";
 
-"Cancel" = "Atcelt";
+"19766e" = "Atcelt";
 
-"Card brand" = "Kartes zīmols";
+"45022" = "Kartes zīmols";
 
-"City" = "Pilsēta";
+"fc33f" = "Pilsēta";
 
-"Code field" = "Koda lauks";
+"2b743" = "Koda lauks";
 
-"Company" = "Uzņēmums";
+"de474" = "Uzņēmums";
 
-"Continue" = "Turpināt";
+"31fbe" = "Turpināt";
 
-"Country" = "Valsts";
+"701d0" = "Valsts";
 
-"Country or region" = "Valsts vai reģions";
+"8d236" = "Valsts vai reģions";
 
-"County" = "Apriņķis";
+"136c8" = "Apriņķis";
 
-"Department" = "Departaments";
+"5304a" = "Departaments";
 
-"District" = "Rajons";
+"50f18" = "Rajons";
 
-"Do Si" = "Province un pilsēta (Do Si)";
+"32c9d" = "Province un pilsēta (Do Si)";
 
-"Do you want to close this form?" = "Vai vēlaties aizvērt šo formu?";
+"6ebfc" = "Vai vēlaties aizvērt šo formu?";
 
-"Done" = "Gatavs";
+"11a67" = "Gatavs";
 
-"Double tap to edit" = "Pieskarieties divreiz, lai rediģētu";
+"f5dd0" = "Pieskarieties divreiz, lai rediģētu";
 
-"Edit" = "Rediģēt";
+"464c4" = "Rediģēt";
 
-"Eircode" = "Pasta indekss (Eirkods)";
+"113d9" = "Pasta indekss (Eirkods)";
 
-"Email" = "E-pasts";
+"969cc" = "E-pasts";
 
-"Emirate" = "Emirāts";
+"4309c" = "Emirāts";
 
-"Error" = "Kļūda";
+"54a0e" = "Kļūda";
 
-"First" = "Vārds";
+"a151c" = "Vārds";
 
-"Full name" = "Vārds, uzvārds";
+"f13a6" = "Vārds, uzvārds";
 
-"Incomplete phone number" = "Nepilnīgs tālruņa numurs";
+"6d2d3" = "Nepilnīgs tālruņa numurs";
 
-"Invalid UPI ID" = "Nederīgs UPI ID";
+"14cf3" = "Nederīgs UPI ID";
 
-"Island" = "Sala";
+"730f5" = "Sala";
 
-"Last" = "Uzvārds";
+"eb970" = "Uzvārds";
 
-"Name" = "Vārds, uzvārds";
+"dcd1d" = "Vārds, uzvārds";
 
-"Name on account" = "Konta īpašnieks";
+"59f3a" = "Konta īpašnieks";
 
-"OK" = "Labi";
+"56533" = "Labi";
 
-"Oblast" = "Apgabals";
+"2ba5c" = "Apgabals";
 
-"Other" = "Cits";
+"f97e9" = "Cits";
 
-"Parish" = "Pagasts";
+"45ab6" = "Pagasts";
 
-"Phone number" = "Tālruņa numurs";
+"306f1" = "Tālruņa numurs";
 
-"Postal code" = "Pasta indekss";
+"ae53c" = "Pasta indekss";
 
-"Prefecture" = "Prefektūra";
+"50571" = "Prefektūra";
 
-"Province" = "Province";
+"abfce" = "Province";
 
-"Remove" = "Noņemt";
+"c3812" = "Noņemt";
 
-"Remove bank account?" = "Noņemt bankas kontu?";
+"05b2c" = "Noņemt bankas kontu?";
 
-"Remove card" = "Noņemt karti";
+"dcf7d" = "Noņemt karti";
 
-"Search" = "Meklēšana";
+"49c26" = "Meklēšana";
 
-"Select card brand (optional)" = "Atlasīt kartes zīmolu (pēc izvēles)";
+"4dc47" = "Atlasīt kartes zīmolu (pēc izvēles)";
 
-"Selection is empty." = "Atlase ir tukša.";
+"4d6f0" = "Atlase ir tukša.";
 
-"Sort code" = "Bankas filiāles kods";
+"a9002" = "Bankas filiāles kods";
 
-"State" = "Novads/štats";
+"a3b50" = "Novads/štats";
 
-"Suburb" = "Priekšpilsēta";
+"9e843" = "Priekšpilsēta";
 
-"Suburb or city" = "Priekšpilsēta vai pilsēta";
+"c3273" = "Priekšpilsēta vai pilsēta";
 
-"The BSB you entered is incomplete." = "Ievadītais BSB ir nepilnīgs.";
+"d5ad2" = "Ievadītais BSB ir nepilnīgs.";
 
-"The ID number you entered is incomplete." = "Ievadītais ID numurs nav pilnīgs.";
+"0f9bf" = "Ievadītais ID numurs nav pilnīgs.";
 
-"The account number you entered is incomplete." = "Jūsu ievadītais konta numurs nav pilnīgs.";
+"e10dd" = "Jūsu ievadītais konta numurs nav pilnīgs.";
 
-"The sort code you entered is invalid." = "Jūsu ievadītais bankas filiāles kods nav derīgs.";
+"ac7db" = "Jūsu ievadītais bankas filiāles kods nav derīgs.";
 
-"Town or city" = "Ciems vai pilsēta";
+"9ce56" = "Ciems vai pilsēta";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Neizdevās parsēt tālruņa numuru";
+"72356" = "Neizdevās parsēt tālruņa numuru";
 
-"Use rotor to access links" = "Izmantot rotoru, lai piekļūtu saitēm";
+"11480" = "Izmantot rotoru, lai piekļūtu saitēm";
 
-"Your BLIK code is incomplete." = "Jūsu BLIK kods nav pilnīgs.";
+"6c0af" = "Jūsu BLIK kods nav pilnīgs.";
 
-"Your BLIK code is invalid." = "Jūsu BLIK kods nav derīgs.";
+"224bb" = "Jūsu BLIK kods nav derīgs.";
 
-"Your ZIP code is incomplete." = "Jūsu pasta indekss nav pilnīgs.";
+"3e686" = "Jūsu pasta indekss nav pilnīgs.";
 
-"Your ZIP code is invalid." = "Pasta indekss nav derīgs.";
+"f029b" = "Pasta indekss nav derīgs.";
 
-"Your email is invalid." = "E-pasta adrese nav derīga.";
+"57c28" = "E-pasta adrese nav derīga.";
 
-"Your payment information will not be saved." = "Jūsu maksājuma informācija nav saglabāta.";
+"cc532" = "Jūsu maksājuma informācija nav saglabāta.";
 
-"Your postal code is incomplete." = "Pasta indekss nav pilnīgs.";
+"52c55" = "Pasta indekss nav pilnīgs.";
 
-"Your postal code is invalid." = "Pasta indekss nav derīgs.";
+"037ec" = "Pasta indekss nav derīgs.";
 
-"ZIP" = "Pasta ind.";
+"eaca4" = "Pasta ind.";

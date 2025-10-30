@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Ett par foton kommer att tas automatiskt i nästa steg för att verifiera att det är du";
+"40b57" = "Ett par foton kommer att tas automatiskt i nästa steg för att verifiera att det är du";
 
-"Accepted forms of ID include" = "Godkända former av id-handlingar inkluderar";
+"a9934" = "Godkända former av id-handlingar inkluderar";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Du kan även manuellt ladda upp ett foto av din id-handling.";
+"a570c" = "Du kan även manuellt ladda upp ett foto av din id-handling.";
 
-"App Settings" = "Appinställningar";
+"da645" = "Appinställningar";
 
-"Back %@ photo successfully uploaded" = "Bilden på baksidan av %@ har laddats upp";
+"31438" = "Bilden på baksidan av %@ har laddats upp";
 
-"Back identity document photo successfully uploaded" = "Bilden på identitetshandlingens baksida har laddats upp";
+"3253a" = "Bilden på identitetshandlingens baksida har laddats upp";
 
-"Back of %@" = "Baksidan av %@";
+"128b0" = "Baksidan av %@";
 
-"Back of driver's license or government-issued photo ID" = "Baksidan av körkort eller en myndighetsutfärdad id-handling med foto";
+"37929" = "Baksidan av körkort eller en myndighetsutfärdad id-handling med foto";
 
-"Back of identity document" = "Id-handlingens baksida";
+"3229d" = "Id-handlingens baksida";
 
-"Camera permission" = "Kamerabehörighet";
+"51e72" = "Kamerabehörighet";
 
-"Camera unavailable" = "Kamera ej tillgänglig";
+"06cc3" = "Kamera ej tillgänglig";
 
-"Capturing…" = "Tar bild …";
+"806e3" = "Tar bild …";
 
-"Choose File" = "Välj fil";
+"d7042" = "Välj fil";
 
-"Consent" = "Samtycke";
+"d37e0" = "Samtycke";
 
-"Could not capture image" = "Det gick inte att ta bilden";
+"bf6e9" = "Det gick inte att ta bilden";
 
-"Date of Birth" = "Födelsedatum";
+"fdc73" = "Födelsedatum";
 
-"Date of birth does not look valid" = "Födelsedatumet verkar inte vara giltig";
+"2baa1" = "Födelsedatumet verkar inte vara giltig";
 
-"Details not visible" = "Detaljer syns inte";
+"687cd" = "Detaljer syns inte";
 
-"Flip your %@ over to the other side" = "Vänd på %@ till andra sidan";
+"e3292" = "Vänd på %@ till andra sidan";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Vänd på ditt körkort eller myndighetsutfärdad id-handling med foto över till andra sidan";
+"dd41b" = "Vänd på ditt körkort eller myndighetsutfärdad id-handling med foto över till andra sidan";
 
-"Flip your identity card over to the other side" = "Vänd på id-handlingen";
+"87346" = "Vänd på id-handlingen";
 
-"Front %@ photo successfully uploaded" = "Bilden på framsidan av %@ har laddats upp";
+"b57ad" = "Bilden på framsidan av %@ har laddats upp";
 
-"Front identity document photo successfully uploaded" = "Bilden på identitetshandlingens framsida har laddats upp";
+"3a9fd" = "Bilden på identitetshandlingens framsida har laddats upp";
 
-"Front of %@" = "Framsidan av %@";
+"73fc5" = "Framsidan av %@";
 
-"Front of driver's license or government-issued photo ID" = "Framsidan av körkort eller en myndighetsutfärdad id-handling med foto";
+"b3d9a" = "Framsidan av körkort eller en myndighetsutfärdad id-handling med foto";
 
-"Front of driver's license or passport" = "Framsidan av körkort eller pass";
+"8d188" = "Framsidan av körkort eller pass";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Framsidan av körkort, pass eller myndighetsutfärdad id-handling med foto";
+"070b5" = "Framsidan av körkort, pass eller myndighetsutfärdad id-handling med foto";
 
-"Front of identity document" = "Id-handlingens framsida";
+"8562c" = "Id-handlingens framsida";
 
-"Front of passport or government-issued photo ID" = "Framsidan av pass eller myndighetsutfärdad id-handling med foto";
+"bb2ee" = "Framsidan av pass eller myndighetsutfärdad id-handling med foto";
 
-"Get ready to scan your photo ID" = "Gör dig redo att skanna ditt foto-id";
+"83016" = "Gör dig redo att skanna ditt foto-id";
 
-"Get ready to take a selfie" = "Gör dig redo att ta en selfie";
+"9e29f" = "Gör dig redo att ta en selfie";
 
-"Go Back" = "Gå tillbaka";
+"b8d99" = "Gå tillbaka";
 
-"Hold still, scanning" = "Rör dig inte, dokumentet skannas in";
+"b63f6" = "Rör dig inte, dokumentet skannas in";
 
-"I'm ready" = "Jag är redo";
+"d5b05" = "Jag är redo";
 
-"ID Number" = "ID-nummer";
+"a403d" = "ID-nummer";
 
-"Individual CPF" = "Personligt CPF";
+"6212a" = "Personligt CPF";
 
-"Keep ID level" = "Se till att id-handlingen ligger rakt";
+"6be11" = "Se till att id-handlingen ligger rakt";
 
-"Last 4 of Social Security number" = "Fyra sista siffrorna i socialförsäkringsnumret";
+"77dd8" = "Fyra sista siffrorna i socialförsäkringsnumret";
 
-"Loading" = "Laddar";
+"dc3808" = "Laddar";
 
-"Make sure all details are visible and focus" = "Se till att alla uppgifter är synliga och i fokus";
+"859af" = "Se till att alla uppgifter är synliga och i fokus";
 
-"Make sure you're in a well lit space." = "Se till att du befinner dig på en plats med bra belysning.";
+"6c2aa" = "Se till att du befinner dig på en plats med bra belysning.";
 
-"Move closer" = "Flytta närmare";
+"1da05" = "Flytta närmare";
 
-"Move farther" = "Flytta längre bort";
+"73333" = "Flytta längre bort";
 
-"Move to a darker area" = "Flytta till en mörkare plats";
+"4687a" = "Flytta till en mörkare plats";
 
-"Move to a well-lit area" = "Flytta till en plats med bra belysning";
+"f579f" = "Flytta till en plats med bra belysning";
 
-"NRIC or FIN" = "NRIC eller FIN";
+"32e72" = "NRIC eller FIN";
 
-"No document detected" = "Inget dokument identifierades";
+"b376f" = "Inget dokument identifierades";
 
-"Personal ID number" = "Personligt ID-nummer";
+"fae7d" = "Personligt ID-nummer";
 
-"Personal Information" = "Personuppgifter";
+"c4b37" = "Personuppgifter";
 
-"Phone Number" = "Telefonnummer";
+"72dba" = "Telefonnummer";
 
-"Phone Verification" = "Telefonverifiering";
+"cb074" = "Telefonverifiering";
 
-"Photo Library" = "Fotobibliotek";
+"e0b2a" = "Fotobibliotek";
 
-"Please upload images of the front and back of your %@" = "Ladda upp bilderna på fram- och baksidan av ditt %@";
+"03fa9" = "Ladda upp bilderna på fram- och baksidan av ditt %@";
 
-"Please upload images of the front and back of your identity document" = "Ladda upp bilder av fram- och baksidan av din identitetshandling";
+"8c273" = "Ladda upp bilder av fram- och baksidan av din identitetshandling";
 
-"Position your %@ in the center of the frame" = "Placera %@ i mitten av ramen";
+"ceab8" = "Placera %@ i mitten av ramen";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Placera ditt körkort eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
+"12559" = "Placera ditt körkort eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
 
-"Position your driver's license or passport in the center of the frame" = "Placera ditt körkort eller pass i mitten av ramen";
+"453ad" = "Placera ditt körkort eller pass i mitten av ramen";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Placera ditt körkort, pass eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
+"ad934" = "Placera ditt körkort, pass eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
 
-"Position your face in the center of the frame." = "Placera ansiktet i mitten av ramen.";
+"6f758" = "Placera ansiktet i mitten av ramen.";
 
-"Position your identity document in the center of the frame" = "Placera din identitetshandling i mitten av ramen";
+"68f51" = "Placera din identitetshandling i mitten av ramen";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Placera ditt pass eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
+"74830" = "Placera ditt pass eller myndighetsutfärdade ID-handling med foto i mitten av ramen";
 
-"Retake Photos" = "Ta bilden på nytt";
+"16681" = "Ta bilden på nytt";
 
-"Scan" = "Skanna dokument";
+"ea1c5" = "Skanna dokument";
 
-"Scanned" = "Dokumentet har skannats";
+"e9b3b" = "Dokumentet har skannats";
 
-"Select" = "Välj";
+"2a780" = "Välj";
 
-"Select a location to upload the back of your identity document from" = "Välj från vilken plats du vill ladda upp baksidan på din id-handling";
+"568f3" = "Välj från vilken plats du vill ladda upp baksidan på din id-handling";
 
-"Select a location to upload the front of your identity document from" = "Välj från vilken plats du vill ladda upp framsidan på din id-handling";
+"a352a" = "Välj från vilken plats du vill ladda upp framsidan på din id-handling";
 
-"Select back %@ photo" = "Välj bilden på baksidan av %@";
+"0dfa8" = "Välj bilden på baksidan av %@";
 
-"Select back identity document photo" = "Välj bilden på baksidan av identitetshandlingen";
+"38aec" = "Välj bilden på baksidan av identitetshandlingen";
 
-"Select front %@ photo" = "Välj bilden på framsidan av %@";
+"1ca11" = "Välj bilden på framsidan av %@";
 
-"Select front identity document photo" = "Välj bilden på framsidan av identitetshandlingen";
+"5c25a" = "Välj bilden på framsidan av identitetshandlingen";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Selfiebilder";
+"ccd67" = "Selfiebilder";
 
-"Selfie captures are complete" = "Selfiebilderna har tagits";
+"a7b36" = "Selfiebilderna har tagits";
 
-"Take Photo" = "Ta bild";
+"1ca36" = "Ta bild";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Bilderna av din id-handling har inte sparats. Vill du avsluta?";
+"b6b76" = "Bilderna av din id-handling har inte sparats. Vill du avsluta?";
 
-"There was an error accessing the camera." = "Ett fel uppstod vid åtkomst till kameran.";
+"1eda8" = "Ett fel uppstod vid åtkomst till kameran.";
 
-"Try Again" = "Försök igen";
+"df0fe" = "Försök igen";
 
-"Try reduce glare and make ID visible" = "Försök att minska bländningen och se till att id-handlingen är synlig";
+"ffd3d" = "Försök att minska bländningen och se till att id-handlingen är synlig";
 
-"Unable to establish a connection." = "Det gick inte att upprätta en anslutning.";
+"77ee9" = "Det gick inte att upprätta en anslutning.";
 
-"Unsaved changes" = "Ändringarna har inte sparats";
+"a710c" = "Ändringarna har inte sparats";
 
-"Upload" = "Ladda upp";
+"865e8" = "Ladda upp";
 
-"Upload a Photo" = "Ladda upp en bild";
+"f0c8a" = "Ladda upp en bild";
 
-"Upload your %@" = "Ladda upp ditt %@";
+"7f6c1" = "Ladda upp ditt %@";
 
-"Upload your photo ID" = "Ladda upp ditt foto-id";
+"40a76" = "Ladda upp ditt foto-id";
 
-"Uploading back %@ photo" = "Laddar upp bilden på baksidan av %@";
+"eaebd" = "Laddar upp bilden på baksidan av %@";
 
-"Uploading back identity document photo" = "Laddar upp bilden på baksidan av identitetshandlingen";
+"e16b7" = "Laddar upp bilden på baksidan av identitetshandlingen";
 
-"Uploading front %@ photo" = "Laddar upp bilden på framsidan av %@";
+"93af2" = "Laddar upp bilden på framsidan av %@";
 
-"Uploading front identity document photo" = "Laddar upp bilden på framsidan av identitetshandlingen";
+"5dfbf" = "Laddar upp bilden på framsidan av identitetshandlingen";
 
-"Verify your identity" = "Verifiera din identitet";
+"ed32a" = "Verifiera din identitet";
 
-"We could not capture a high-quality image." = "Det gick inte att ta en bild av hög kvalitet.";
+"55e29" = "Det gick inte att ta en bild av hög kvalitet.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Vi behöver behörighet att använda din kamera. Tillåt kameraåtkomst i appens inställningar.";
+"a98b4" = "Vi behöver behörighet att använda din kamera. Tillåt kameraåtkomst i appens inställningar.";
 
-"Welcome" = "Välkommen";
+"0e222" = "Välkommen";
 
-"You can either try again or upload an image from your device." = "Du kan antingen försöka igen eller ladda upp en bild från din enhet.";
+"348a7" = "Du kan antingen försöka igen eller ladda upp en bild från din enhet.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Dina selfies har inte sparats. Vill du avsluta?";
+"b892f" = "Dina selfies har inte sparats. Vill du avsluta?";
 
-"driver's license" = "körkort";
+"cadf1" = "körkort";
 
-"government-issued photo ID" = "myndighetsutfärdad id-handling med foto";
+"29fd8" = "myndighetsutfärdad id-handling med foto";
 
-"passport" = "pass";
+"cbc47" = "pass";

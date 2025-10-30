@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ betaalkaart";
+"fbfa6" = "%1$@ betaalkaart";
 
-"%1$@ Credit" = "%1$@ creditcard";
+"a11b0" = "%1$@ creditcard";
 
-"%1$@ Debit" = "%1$@ debitcard";
+"95233" = "%1$@ debitcard";
 
-"%1$@ Prepaid" = "%1$@ prepaid";
+"c90ba" = "%1$@ prepaid";
 
-"%1$@ account ending in %2$@" = "%1$@-rekening die eindigt op %2$@";
+"3b24a" = "%1$@-rekening die eindigt op %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ eindigend op %2$@";
+"f5b21" = "%1$@ eindigend op %2$@";
 
-"%1$@ is not accepted" = "%1$@ wordt niet geaccepteerd";
+"29adf" = "%1$@ wordt niet geaccepteerd";
 
-"Address line 2 (optional)" = "Adresregel 2 (optioneel)";
+"9ada7" = "Adresregel 2 (optioneel)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bankrekening";
+"c6f64" = "Bankrekening";
 
-"Billing address" = "Factuuradres";
+"1f516" = "Factuuradres";
 
-"Billing details" = "Facturatiegegevens";
+"7c928" = "Facturatiegegevens";
 
-"CVC" = "Cvc";
+"19e9b" = "Cvc";
 
-"Card information" = "Kaartgegevens";
+"fca47" = "Kaartgegevens";
 
-"Card number" = "Kaartnummer";
+"816fc" = "Kaartnummer";
 
-"Confirm your %@" = "Je %@ bevestigen";
+"002d7" = "Je %@ bevestigen";
 
-"Invalid data." = "Ongeldige gegevens.";
+"da175" = "Ongeldige gegevens.";
 
-"MM / YY" = "MM / JJ";
+"58f4a" = "MM / JJ";
 
-"MM/YY" = "MM/JJ";
+"1b5f6" = "MM/JJ";
 
-"Postal Code" = "Postcode";
+"8198b" = "Postcode";
 
-"Shipping Address" = "Verzendadres";
+"6e244" = "Verzendadres";
 
-"State / Province / Region" = "Staat/provincie/regio";
+"649f1" = "Staat/provincie/regio";
 
-"The BSB you entered is invalid." = "Het ingevoerde BSB-nummer is ongeldig.";
+"dfa21" = "Het ingevoerde BSB-nummer is ongeldig.";
 
-"The selected brand is not allowed" = "Het geselecteerde merk is niet toegestaan";
+"aaf53" = "Het geselecteerde merk is niet toegestaan";
 
-"To scan your card, allow camera access in Settings." = "Sta toegang tot je camera toe in Instellingen om je kaart te scannen.";
+"9f2d9" = "Sta toegang tot je camera toe in Instellingen om je kaart te scannen.";
 
-"Your card has expired." = "Je betaalkaart is verlopen.";
+"393e6" = "Je betaalkaart is verlopen.";
 
-"Your card number is incomplete." = "Je kaartnummer is onvolledig.";
+"7e5ae" = "Je kaartnummer is onvolledig.";
 
-"Your card number is invalid." = "Je kaartnummer is ongeldig.";
+"3c122" = "Je kaartnummer is ongeldig.";
 
-"Your card's expiration date is incomplete." = "De vervaldatum van je kaart is onvolledig.";
+"a2036" = "De vervaldatum van je kaart is onvolledig.";
 
-"Your card's expiration date is invalid." = "De vervaldatum van je kaart is ongeldig.";
+"6a457" = "De vervaldatum van je kaart is ongeldig.";
 
-"Your card's expiration month is invalid." = "De vervalmaand van de kaart is ongeldig.";
+"e47c0" = "De vervalmaand van de kaart is ongeldig.";
 
-"Your card's expiration year is invalid." = "Het vervaljaar van de kaart is ongeldig.";
+"36ae2" = "Het vervaljaar van de kaart is ongeldig.";
 
-"Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
+"300dd" = "De beveiligingscode van je kaart is onvolledig.";
 
-"Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
+"394fd" = "De beveiligingscode van je kaart is ongeldig.";
 
-"card number" = "kaartnummer";
+"58da6" = "kaartnummer";
 
-"example@example.com" = "voorbeeld@voorbeeld.com";
+"31c55" = "voorbeeld@voorbeeld.com";
 
-"expiration date" = "vervaldatum";
+"b34dd" = "vervaldatum";

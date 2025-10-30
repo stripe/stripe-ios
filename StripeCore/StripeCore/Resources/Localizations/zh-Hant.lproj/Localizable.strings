@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "出錯了，請稍後重試。";
+"9c170" = "出錯了，請稍後重試。";
 
-"Card brand was not updated. Please try again." = "金融卡品牌未更新，請重試。";
+"4bc73" = "金融卡品牌未更新，請重試。";
 
-"Close" = "關閉";
+"7d9eb" = "關閉";
 
-"Default payment method was not updated. Please try again." = "未更新預設支付方式，請重試。";
+"3048d" = "未更新預設支付方式，請重試。";
 
-"Scan Card" = "掃描金融卡";
+"b60b5" = "掃描金融卡";
 
-"Scan card" = "掃描卡";
+"ea2fe" = "掃描卡";
 
-"The IBAN you entered is invalid." = "您輸入的 IBAN 無效。";
+"ee81e" = "您輸入的 IBAN 無效。";
 
-"There was an error processing your card -- try again in a few seconds" = "處理您的卡時發生錯誤 -- 請等待幾秒後再試";
+"fa47c" = "處理您的卡時發生錯誤 -- 請等待幾秒後再試";
 
-"There was an unexpected error -- try again in a few seconds" = "發生了意外錯誤 -- 請等待幾秒後再試一次";
+"c98a4" = "發生了意外錯誤 -- 請等待幾秒後再試一次";
 
-"Try again" = "重試";
+"d8b83" = "重試";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "我們用 Stripe 來驗證您的金融卡資訊。Stripe 可能會根據其隱私政策使用並存儲您的資料。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>瞭解更多</u></a>";
+"96fe7" = "我們用 Stripe 來驗證您的金融卡資訊。Stripe 可能會根據其隱私政策使用並存儲您的資料。<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>瞭解更多</u></a>";
 
-"Your card has expired" = "您的卡已過期";
+"f5c35" = "您的卡已過期";
 
-"Your card was declined" = "您的卡已被拒絕";
+"b9821" = "您的卡已被拒絕";
 
-"Your card's expiration month is invalid" = "您的金融卡的到期月份無效";
+"e02cf" = "您的金融卡的到期月份無效";
 
-"Your card's expiration year is invalid" = "您的金融卡的到期年份無效";
+"53311" = "您的金融卡的到期年份無效";
 
-"Your card's number is invalid" = "您的卡號無效";
+"c433c" = "您的卡號無效";
 
-"Your card's security code is invalid" = "您的金融卡的安全碼無效";
+"15f5b" = "您的金融卡的安全碼無效";
 
-"Your name is invalid." = "您的名稱無效。";
+"b1d57" = "您的名稱無效。";
 
-"Your payment method was declined." = "您的支付方式被拒絕了。";
+"3209d" = "您的支付方式被拒絕了。";

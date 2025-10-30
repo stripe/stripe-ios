@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "In de volgende stap worden er automatisch een paar foto's gemaakt om te verifiëren dat jij het bent";
+"40b57" = "In de volgende stap worden er automatisch een paar foto's gemaakt om te verifiëren dat jij het bent";
 
-"Accepted forms of ID include" = "Geaccepteerde identiteitsbewijzen";
+"a9934" = "Geaccepteerde identiteitsbewijzen";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Als alternatief kun je ook handmatig een foto van je identiteitsbewijs uploaden.";
+"a570c" = "Als alternatief kun je ook handmatig een foto van je identiteitsbewijs uploaden.";
 
-"App Settings" = "App-instellingen";
+"da645" = "App-instellingen";
 
-"Back %@ photo successfully uploaded" = "Terug %@ foto succesvol geüpload";
+"31438" = "Terug %@ foto succesvol geüpload";
 
-"Back identity document photo successfully uploaded" = "Foto van identiteitsbewijs succesvol geüpload";
+"3253a" = "Foto van identiteitsbewijs succesvol geüpload";
 
-"Back of %@" = "Achterkant van %@";
+"128b0" = "Achterkant van %@";
 
-"Back of driver's license or government-issued photo ID" = "Achterkant van rijbewijs of officieel identiteitsbewijs met foto";
+"37929" = "Achterkant van rijbewijs of officieel identiteitsbewijs met foto";
 
-"Back of identity document" = "Achterkant van identiteitsbewijs";
+"3229d" = "Achterkant van identiteitsbewijs";
 
-"Camera permission" = "Toestemming voor camera";
+"51e72" = "Toestemming voor camera";
 
-"Camera unavailable" = "Camera niet beschikbaar";
+"06cc3" = "Camera niet beschikbaar";
 
-"Capturing…" = "Selfie wordt gemaakt...";
+"806e3" = "Selfie wordt gemaakt...";
 
-"Choose File" = "Bestand kiezen";
+"d7042" = "Bestand kiezen";
 
-"Consent" = "Toestaan";
+"d37e0" = "Toestaan";
 
-"Could not capture image" = "Niet gelukt om afbeelding vast te leggen";
+"bf6e9" = "Niet gelukt om afbeelding vast te leggen";
 
-"Date of Birth" = "Geboortedatum";
+"fdc73" = "Geboortedatum";
 
-"Date of birth does not look valid" = "Geboortedatum lijkt ongeldig te zijn";
+"2baa1" = "Geboortedatum lijkt ongeldig te zijn";
 
-"Details not visible" = "Details niet zichtbaar";
+"687cd" = "Details niet zichtbaar";
 
-"Flip your %@ over to the other side" = "Draai je %@ naar de andere kant om";
+"e3292" = "Draai je %@ naar de andere kant om";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Draai het rijbewijs of officieel identiteitsbewijs met foto om zodat de andere kant zichtbaar is";
+"dd41b" = "Draai het rijbewijs of officieel identiteitsbewijs met foto om zodat de andere kant zichtbaar is";
 
-"Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
+"87346" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
 
-"Front %@ photo successfully uploaded" = "Voorkant %@ foto succesvol geüpload";
+"b57ad" = "Voorkant %@ foto succesvol geüpload";
 
-"Front identity document photo successfully uploaded" = "Foto voor identiteitsbewijs succesvol geüpload";
+"3a9fd" = "Foto voor identiteitsbewijs succesvol geüpload";
 
-"Front of %@" = "Voorkant van %@";
+"73fc5" = "Voorkant van %@";
 
-"Front of driver's license or government-issued photo ID" = "Voorkant van rijbewijs of officieel identiteitsbewijs met foto";
+"b3d9a" = "Voorkant van rijbewijs of officieel identiteitsbewijs met foto";
 
-"Front of driver's license or passport" = "Voorkant van rijbewijs of paspoort";
+"8d188" = "Voorkant van rijbewijs of paspoort";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Voorkant van rijbewijs, paspoort of officieel identiteitsbewijs met foto";
+"070b5" = "Voorkant van rijbewijs, paspoort of officieel identiteitsbewijs met foto";
 
-"Front of identity document" = "Voorkant van identiteitsbewijs";
+"8562c" = "Voorkant van identiteitsbewijs";
 
-"Front of passport or government-issued photo ID" = "Voorkant van paspoort of officieel identiteitsbewijs met foto";
+"bb2ee" = "Voorkant van paspoort of officieel identiteitsbewijs met foto";
 
-"Get ready to scan your photo ID" = "Bereid je voor om je foto-ID te scannen";
+"83016" = "Bereid je voor om je foto-ID te scannen";
 
-"Get ready to take a selfie" = "Maak je klaar om een selfie te nemen";
+"9e29f" = "Maak je klaar om een selfie te nemen";
 
-"Go Back" = "Terug";
+"b8d99" = "Terug";
 
-"Hold still, scanning" = "Niet bewegen, het document wordt gescand";
+"b63f6" = "Niet bewegen, het document wordt gescand";
 
-"I'm ready" = "Ik ben klaar";
+"d5b05" = "Ik ben klaar";
 
-"ID Number" = "Identificatienummer";
+"a403d" = "Identificatienummer";
 
-"Individual CPF" = "CPF natuurlijk persoon";
+"6212a" = "CPF natuurlijk persoon";
 
-"Keep ID level" = "Houd het identiteitsbewijs recht";
+"6be11" = "Houd het identiteitsbewijs recht";
 
-"Last 4 of Social Security number" = "Laatste vier cijfers van socialezekerheidsnummer";
+"77dd8" = "Laatste vier cijfers van socialezekerheidsnummer";
 
-"Loading" = "Bezig met laden";
+"dc3808" = "Bezig met laden";
 
-"Make sure all details are visible and focus" = "Zorg dat alle details goed zichtbaar en in focus zijn";
+"859af" = "Zorg dat alle details goed zichtbaar en in focus zijn";
 
-"Make sure you're in a well lit space." = "Zorg dat er voldoende belichting is.";
+"6c2aa" = "Zorg dat er voldoende belichting is.";
 
-"Move closer" = "Dichterbij houden";
+"1da05" = "Dichterbij houden";
 
-"Move farther" = "Verder weg houden";
+"73333" = "Verder weg houden";
 
-"Move to a darker area" = "Ga naar een donkerdere plek";
+"4687a" = "Ga naar een donkerdere plek";
 
-"Move to a well-lit area" = "Zorg dat er voldoende belichting is";
+"f579f" = "Zorg dat er voldoende belichting is";
 
-"NRIC or FIN" = "NRIC of FIN";
+"32e72" = "NRIC of FIN";
 
-"No document detected" = "Geen document gedetecteerd";
+"b376f" = "Geen document gedetecteerd";
 
-"Personal ID number" = "Persoonlijk identificatienummer";
+"fae7d" = "Persoonlijk identificatienummer";
 
-"Personal Information" = "Persoonlijke gegevens";
+"c4b37" = "Persoonlijke gegevens";
 
-"Phone Number" = "Telefoonnummer";
+"72dba" = "Telefoonnummer";
 
-"Phone Verification" = "Telefonische verificatie";
+"cb074" = "Telefonische verificatie";
 
-"Photo Library" = "Fotobibliotheek";
+"e0b2a" = "Fotobibliotheek";
 
-"Please upload images of the front and back of your %@" = "Upload afbeeldingen van de voor- en achterkant van je %@.";
+"03fa9" = "Upload afbeeldingen van de voor- en achterkant van je %@.";
 
-"Please upload images of the front and back of your identity document" = "Upload foto's van de voor- en achterkant van uw identiteitsbewijs";
+"8c273" = "Upload foto's van de voor- en achterkant van uw identiteitsbewijs";
 
-"Position your %@ in the center of the frame" = "Plaats je %@ in het midden van het frame";
+"ceab8" = "Plaats je %@ in het midden van het frame";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Plaats het rijbewijs of officieel identiteitsbewijs met foto in het midden van het frame";
+"12559" = "Plaats het rijbewijs of officieel identiteitsbewijs met foto in het midden van het frame";
 
-"Position your driver's license or passport in the center of the frame" = "Plaats het rijbewijs of paspoort midden in het frame";
+"453ad" = "Plaats het rijbewijs of paspoort midden in het frame";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Plaats het rijbewijs, paspoort of officieel identiteitsbewijs met foto in het midden van het frame";
+"ad934" = "Plaats het rijbewijs, paspoort of officieel identiteitsbewijs met foto in het midden van het frame";
 
-"Position your face in the center of the frame." = "Houd je gezicht in het midden van het frame.";
+"6f758" = "Houd je gezicht in het midden van het frame.";
 
-"Position your identity document in the center of the frame" = "Plaats uw identiteitsbewijs in het midden van het frame";
+"68f51" = "Plaats uw identiteitsbewijs in het midden van het frame";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Plaats het paspoort of officieel identiteitsbewijs met foto in het midden van het frame";
+"74830" = "Plaats het paspoort of officieel identiteitsbewijs met foto in het midden van het frame";
 
-"Retake Photos" = "Nieuwe foto's maken";
+"16681" = "Nieuwe foto's maken";
 
-"Scan" = "Scannen";
+"ea1c5" = "Scannen";
 
-"Scanned" = "Gescand";
+"e9b3b" = "Gescand";
 
-"Select" = "Selecteren";
+"2a780" = "Selecteren";
 
-"Select a location to upload the back of your identity document from" = "Selecteer een locatie vanwaar je de achterkant van je identiteitsbewijs wilt uploaden";
+"568f3" = "Selecteer een locatie vanwaar je de achterkant van je identiteitsbewijs wilt uploaden";
 
-"Select a location to upload the front of your identity document from" = "Selecteer een locatie vanwaar je de voorkant van je identiteitsbewijs wilt uploaden";
+"a352a" = "Selecteer een locatie vanwaar je de voorkant van je identiteitsbewijs wilt uploaden";
 
-"Select back %@ photo" = "Selecteer achterkant %@ foto";
+"0dfa8" = "Selecteer achterkant %@ foto";
 
-"Select back identity document photo" = "Selecteer een foto van het identiteitsbewijs aan de achterkant";
+"38aec" = "Selecteer een foto van het identiteitsbewijs aan de achterkant";
 
-"Select front %@ photo" = "Selecteer voorkant %@ foto";
+"1ca11" = "Selecteer voorkant %@ foto";
 
-"Select front identity document photo" = "Selecteer de foto van het identiteitsbewijs aan de voorkant";
+"5c25a" = "Selecteer de foto van het identiteitsbewijs aan de voorkant";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Selfieopnamen";
+"ccd67" = "Selfieopnamen";
 
-"Selfie captures are complete" = "Selfieopnamen zijn voltooid";
+"a7b36" = "Selfieopnamen zijn voltooid";
 
-"Take Photo" = "Foto maken";
+"1ca36" = "Foto maken";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "De afbeeldingen van je identiteitsbewijs zijn niet opgeslagen. Wil je afsluiten?";
+"b6b76" = "De afbeeldingen van je identiteitsbewijs zijn niet opgeslagen. Wil je afsluiten?";
 
-"There was an error accessing the camera." = "Fout bij het verkrijgen van toegang tot de camera.";
+"1eda8" = "Fout bij het verkrijgen van toegang tot de camera.";
 
-"Try Again" = "Opnieuw proberen";
+"df0fe" = "Opnieuw proberen";
 
-"Try reduce glare and make ID visible" = "Probeer de glans te verminderen en zorg dat de ID zichtbaar is";
+"ffd3d" = "Probeer de glans te verminderen en zorg dat de ID zichtbaar is";
 
-"Unable to establish a connection." = "Kan geen verbinding maken";
+"77ee9" = "Kan geen verbinding maken";
 
-"Unsaved changes" = "Niet-opgeslagen wijzigingen";
+"a710c" = "Niet-opgeslagen wijzigingen";
 
-"Upload" = "Uploaden";
+"865e8" = "Uploaden";
 
-"Upload a Photo" = "Een foto uploaden";
+"f0c8a" = "Een foto uploaden";
 
-"Upload your %@" = "Upload je %@";
+"7f6c1" = "Upload je %@";
 
-"Upload your photo ID" = "Je identiteitsbewijs uploaden";
+"40a76" = "Je identiteitsbewijs uploaden";
 
-"Uploading back %@ photo" = "Foto %@ achterkant uploaden";
+"eaebd" = "Foto %@ achterkant uploaden";
 
-"Uploading back identity document photo" = "Foto van achterkant identiteitsbewijs uploaden";
+"e16b7" = "Foto van achterkant identiteitsbewijs uploaden";
 
-"Uploading front %@ photo" = "Uploaden voorkant %@ foto";
+"93af2" = "Uploaden voorkant %@ foto";
 
-"Uploading front identity document photo" = "Foto voor voorkant identiteitsbewijs uploaden";
+"5dfbf" = "Foto voor voorkant identiteitsbewijs uploaden";
 
-"Verify your identity" = "Je identiteit verifiëren";
+"ed32a" = "Je identiteit verifiëren";
 
-"We could not capture a high-quality image." = "We kunnen geen afbeelding in hoge kwaliteit vastleggen.";
+"55e29" = "We kunnen geen afbeelding in hoge kwaliteit vastleggen.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "We hebben toestemming nodig om je camera te gebruiken. Sta dit toe via de app-instellingen.";
+"a98b4" = "We hebben toestemming nodig om je camera te gebruiken. Sta dit toe via de app-instellingen.";
 
-"Welcome" = "Welkom";
+"0e222" = "Welkom";
 
-"You can either try again or upload an image from your device." = "Probeer het nogmaals of upload een afbeelding van je apparaat.";
+"348a7" = "Probeer het nogmaals of upload een afbeelding van je apparaat.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "De afbeeldingen van je selfie zijn niet opgeslagen. Wil je afsluiten?";
+"b892f" = "De afbeeldingen van je selfie zijn niet opgeslagen. Wil je afsluiten?";
 
-"driver's license" = "rijbewijs";
+"cadf1" = "rijbewijs";
 
-"government-issued photo ID" = "Overheids-ID met foto";
+"29fd8" = "Overheids-ID met foto";
 
-"passport" = "paspoort";
+"cbc47" = "paspoort";

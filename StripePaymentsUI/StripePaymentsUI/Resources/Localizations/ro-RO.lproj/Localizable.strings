@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Card";
+"fbfa6" = "%1$@ Card";
 
-"%1$@ Credit" = "%1$@ Credit";
+"a11b0" = "%1$@ Credit";
 
-"%1$@ Debit" = "%1$@ Debit";
+"95233" = "%1$@ Debit";
 
-"%1$@ Prepaid" = "%1$@ Preplătit";
+"c90ba" = "%1$@ Preplătit";
 
-"%1$@ account ending in %2$@" = "Contul la %1$@ care se termină în %2$@";
+"3b24a" = "Contul la %1$@ care se termină în %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ se termină în %2$@";
+"f5b21" = "%1$@ se termină în %2$@";
 
-"%1$@ is not accepted" = "%1$@ nu este acceptat";
+"29adf" = "%1$@ nu este acceptat";
 
-"Address line 2 (optional)" = "Rândul 2 pentru adresă (opțional)";
+"9ada7" = "Rândul 2 pentru adresă (opțional)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "Număr BSB";
+"7d8c3" = "Număr BSB";
 
-"Bank Account" = "Cont bancar";
+"c6f64" = "Cont bancar";
 
-"Billing address" = "Adresă de facturare";
+"1f516" = "Adresă de facturare";
 
-"Billing details" = "Detalii de facturare";
+"7c928" = "Detalii de facturare";
 
-"CVC" = "Cod CVC";
+"19e9b" = "Cod CVC";
 
-"Card information" = "Informații privind cardul";
+"fca47" = "Informații privind cardul";
 
-"Card number" = "Număr card";
+"816fc" = "Număr card";
 
-"Confirm your %@" = "Confirmați-vă %@";
+"002d7" = "Confirmați-vă %@";
 
-"Invalid data." = "Datele nu sunt valide.";
+"da175" = "Datele nu sunt valide.";
 
-"MM / YY" = "LL/AA";
+"58f4a" = "LL/AA";
 
-"MM/YY" = "LL/AA";
+"1b5f6" = "LL/AA";
 
-"Postal Code" = "Cod poștal";
+"8198b" = "Cod poștal";
 
-"Shipping Address" = "Adresa de expediere";
+"6e244" = "Adresa de expediere";
 
-"State / Province / Region" = "Stat";
+"649f1" = "Stat";
 
-"The BSB you entered is invalid." = "Numărul BSB pe care l-ați introdus nu este valid.";
+"dfa21" = "Numărul BSB pe care l-ați introdus nu este valid.";
 
-"The selected brand is not allowed" = "Marca selectată nu este permisă";
+"aaf53" = "Marca selectată nu este permisă";
 
-"To scan your card, allow camera access in Settings." = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
+"9f2d9" = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
 
-"Your card has expired." = "Cardul dvs. a expirat.";
+"393e6" = "Cardul dvs. a expirat.";
 
-"Your card number is incomplete." = "Numărul cardului dvs. nu este complet.";
+"7e5ae" = "Numărul cardului dvs. nu este complet.";
 
-"Your card number is invalid." = "Numărul cardului dvs. nu este valid.";
+"3c122" = "Numărul cardului dvs. nu este valid.";
 
-"Your card's expiration date is incomplete." = "Data de expirare a cardului nu este completă.";
+"a2036" = "Data de expirare a cardului nu este completă.";
 
-"Your card's expiration date is invalid." = "Data de expirare a cardului dvs. nu este validă.";
+"6a457" = "Data de expirare a cardului dvs. nu este validă.";
 
-"Your card's expiration month is invalid." = "Luna de expirare a cardului nu este validă.";
+"e47c0" = "Luna de expirare a cardului nu este validă.";
 
-"Your card's expiration year is invalid." = "Anul de expirare al cardului nu este valid.";
+"36ae2" = "Anul de expirare al cardului nu este valid.";
 
-"Your card's security code is incomplete." = "Codul de securitate al cardului dvs. nu este complet.";
+"300dd" = "Codul de securitate al cardului dvs. nu este complet.";
 
-"Your card's security code is invalid." = "Codul de securitate al cardului dvs. nu este valid.";
+"394fd" = "Codul de securitate al cardului dvs. nu este valid.";
 
-"card number" = "număr card";
+"58da6" = "număr card";
 
-"example@example.com" = "exemplu@exemplu.com";
+"31c55" = "exemplu@exemplu.com";
 
-"expiration date" = "data de expirare";
+"b34dd" = "data de expirare";

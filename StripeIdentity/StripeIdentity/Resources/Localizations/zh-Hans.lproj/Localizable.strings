@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "下一步将自动拍摄一些照片来验证是否是您本人";
+"40b57" = "下一步将自动拍摄一些照片来验证是否是您本人";
 
-"Accepted forms of ID include" = "接受的身份证件包括";
+"a9934" = "接受的身份证件包括";
 
-"Alternatively, you may manually upload a photo of your identity document." = "您也可以手动上传您的身份证件的照片。";
+"a570c" = "您也可以手动上传您的身份证件的照片。";
 
-"App Settings" = "应用设置";
+"da645" = "应用设置";
 
-"Back %@ photo successfully uploaded" = "%@ 背面照片已成功上传";
+"31438" = "%@ 背面照片已成功上传";
 
-"Back identity document photo successfully uploaded" = "身份证件背面照片已成功上传";
+"3253a" = "身份证件背面照片已成功上传";
 
-"Back of %@" = "%@ 的背面";
+"128b0" = "%@ 的背面";
 
-"Back of driver's license or government-issued photo ID" = "驾驶证或政府签发的带照片身份证件的背面";
+"37929" = "驾驶证或政府签发的带照片身份证件的背面";
 
-"Back of identity document" = "身份证件背面";
+"3229d" = "身份证件背面";
 
-"Camera permission" = "相机许可";
+"51e72" = "相机许可";
 
-"Camera unavailable" = "相机不可用";
+"06cc3" = "相机不可用";
 
-"Capturing…" = "正在拍摄...";
+"806e3" = "正在拍摄...";
 
-"Choose File" = "选择文件";
+"d7042" = "选择文件";
 
-"Consent" = "许可";
+"d37e0" = "许可";
 
-"Could not capture image" = "无法拍摄图片";
+"bf6e9" = "无法拍摄图片";
 
-"Date of Birth" = "出生日期";
+"fdc73" = "出生日期";
 
-"Date of birth does not look valid" = "出生日期看似无效";
+"2baa1" = "出生日期看似无效";
 
-"Details not visible" = "细节不可见";
+"687cd" = "细节不可见";
 
-"Flip your %@ over to the other side" = "将您的 %@ 翻转到另一面";
+"e3292" = "将您的 %@ 翻转到另一面";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "将您的驾驶证或政府签发的带照片身份证件翻转到另一面";
+"dd41b" = "将您的驾驶证或政府签发的带照片身份证件翻转到另一面";
 
-"Flip your identity card over to the other side" = "将身份证翻到另一面";
+"87346" = "将身份证翻到另一面";
 
-"Front %@ photo successfully uploaded" = "%@ 正面照片已成功上传";
+"b57ad" = "%@ 正面照片已成功上传";
 
-"Front identity document photo successfully uploaded" = "身份证件正面照片已成功上传";
+"3a9fd" = "身份证件正面照片已成功上传";
 
-"Front of %@" = "%@ 的正面";
+"73fc5" = "%@ 的正面";
 
-"Front of driver's license or government-issued photo ID" = "驾驶证或政府签发的带照片身份证件的正面";
+"b3d9a" = "驾驶证或政府签发的带照片身份证件的正面";
 
-"Front of driver's license or passport" = "驾驶证或护照的正面";
+"8d188" = "驾驶证或护照的正面";
 
-"Front of driver's license, passport, or government-issued photo ID" = "驾驶证、护照或政府签发的带照片身份证件的正面";
+"070b5" = "驾驶证、护照或政府签发的带照片身份证件的正面";
 
-"Front of identity document" = "身份证件正面";
+"8562c" = "身份证件正面";
 
-"Front of passport or government-issued photo ID" = "护照或政府签发的带照片身份证件的正面";
+"bb2ee" = "护照或政府签发的带照片身份证件的正面";
 
-"Get ready to scan your photo ID" = "准备好扫描您带照片的身份证件";
+"83016" = "准备好扫描您带照片的身份证件";
 
-"Get ready to take a selfie" = "准备好自拍";
+"9e29f" = "准备好自拍";
 
-"Go Back" = "返回";
+"b8d99" = "返回";
 
-"Hold still, scanning" = "保持不动，正在扫描";
+"b63f6" = "保持不动，正在扫描";
 
-"I'm ready" = "我准备好了";
+"d5b05" = "我准备好了";
 
-"ID Number" = "证件号码";
+"a403d" = "证件号码";
 
-"Individual CPF" = "个人 CPF";
+"6212a" = "个人 CPF";
 
-"Keep ID level" = "保持证件水平";
+"6be11" = "保持证件水平";
 
-"Last 4 of Social Security number" = "社会保障号码后 4 位";
+"77dd8" = "社会保障号码后 4 位";
 
-"Loading" = "正在加载";
+"dc3808" = "正在加载";
 
-"Make sure all details are visible and focus" = "确保所有细节清晰可见且对焦";
+"859af" = "确保所有细节清晰可见且对焦";
 
-"Make sure you're in a well lit space." = "确保光线充足。";
+"6c2aa" = "确保光线充足。";
 
-"Move closer" = "请靠近一点";
+"1da05" = "请靠近一点";
 
-"Move farther" = "请放远一点";
+"73333" = "请放远一点";
 
-"Move to a darker area" = "移动到较暗区域";
+"4687a" = "移动到较暗区域";
 
-"Move to a well-lit area" = "移到光线良好处";
+"f579f" = "移到光线良好处";
 
-"NRIC or FIN" = "NRIC 或 FIN";
+"32e72" = "NRIC 或 FIN";
 
-"No document detected" = "未检测到证件";
+"b376f" = "未检测到证件";
 
-"Personal ID number" = "个人身份证件号码";
+"fae7d" = "个人身份证件号码";
 
-"Personal Information" = "个人信息";
+"c4b37" = "个人信息";
 
-"Phone Number" = "电话号码";
+"72dba" = "电话号码";
 
-"Phone Verification" = "电话验证";
+"cb074" = "电话验证";
 
-"Photo Library" = "照片库";
+"e0b2a" = "照片库";
 
-"Please upload images of the front and back of your %@" = "请上传您的 %@ 正面和背面的图片";
+"03fa9" = "请上传您的 %@ 正面和背面的图片";
 
-"Please upload images of the front and back of your identity document" = "请上传您的身份证件正反面的照片";
+"8c273" = "请上传您的身份证件正反面的照片";
 
-"Position your %@ in the center of the frame" = "将您的 %@ 放在画面正中间";
+"ceab8" = "将您的 %@ 放在画面正中间";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "将您的驾驶证或政府签发的带照片身份证件放在画面正中间";
+"12559" = "将您的驾驶证或政府签发的带照片身份证件放在画面正中间";
 
-"Position your driver's license or passport in the center of the frame" = "将您的驾驶证或护照放在画面正中间";
+"453ad" = "将您的驾驶证或护照放在画面正中间";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "将您的驾驶证、护照或政府签发的带照片身份证件放在画面正中间";
+"ad934" = "将您的驾驶证、护照或政府签发的带照片身份证件放在画面正中间";
 
-"Position your face in the center of the frame." = "将脸放在画面正中间。";
+"6f758" = "将脸放在画面正中间。";
 
-"Position your identity document in the center of the frame" = "将身份证件放在画面正中间";
+"68f51" = "将身份证件放在画面正中间";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "将您的护照或政府签发的带照片身份证件放在画面正中间";
+"74830" = "将您的护照或政府签发的带照片身份证件放在画面正中间";
 
-"Retake Photos" = "重新拍照";
+"16681" = "重新拍照";
 
-"Scan" = "扫描";
+"ea1c5" = "扫描";
 
-"Scanned" = "已扫描";
+"e9b3b" = "已扫描";
 
-"Select" = "选择";
+"2a780" = "选择";
 
-"Select a location to upload the back of your identity document from" = "选择一个位置，从那里您上传您的身份证的背面";
+"568f3" = "选择一个位置，从那里您上传您的身份证的背面";
 
-"Select a location to upload the front of your identity document from" = "选择一个位置，从那里您上传您的身份证的正面";
+"a352a" = "选择一个位置，从那里您上传您的身份证的正面";
 
-"Select back %@ photo" = "选择 %@ 背面照片";
+"0dfa8" = "选择 %@ 背面照片";
 
-"Select back identity document photo" = "选择身份证件背面照片";
+"38aec" = "选择身份证件背面照片";
 
-"Select front %@ photo" = "选择 %@ 正面照片";
+"1ca11" = "选择 %@ 正面照片";
 
-"Select front identity document photo" = "选择身份证件正面照片";
+"5c25a" = "选择身份证件正面照片";
 
-"Selfie" = "自拍照";
+"7891f" = "自拍照";
 
-"Selfie captures" = "自拍照拍摄";
+"ccd67" = "自拍照拍摄";
 
-"Selfie captures are complete" = "已完成自拍照拍摄";
+"a7b36" = "已完成自拍照拍摄";
 
-"Take Photo" = "拍照";
+"1ca36" = "拍照";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "尚未保存您的身份证件的照片。想要离开吗？";
+"b6b76" = "尚未保存您的身份证件的照片。想要离开吗？";
 
-"There was an error accessing the camera." = "访问相机时发生了错误。";
+"1eda8" = "访问相机时发生了错误。";
 
-"Try Again" = "重试";
+"df0fe" = "重试";
 
-"Try reduce glare and make ID visible" = "尝试减少眩光并使身份证件可见";
+"ffd3d" = "尝试减少眩光并使身份证件可见";
 
-"Unable to establish a connection." = "无法建立连接。";
+"77ee9" = "无法建立连接。";
 
-"Unsaved changes" = "未保存的更改";
+"a710c" = "未保存的更改";
 
-"Upload" = "上传";
+"865e8" = "上传";
 
-"Upload a Photo" = "上传一张照片";
+"f0c8a" = "上传一张照片";
 
-"Upload your %@" = "上传您的 %@";
+"7f6c1" = "上传您的 %@";
 
-"Upload your photo ID" = "上传您的带照片身份证件";
+"40a76" = "上传您的带照片身份证件";
 
-"Uploading back %@ photo" = "正在上传 %@ 背面照片";
+"eaebd" = "正在上传 %@ 背面照片";
 
-"Uploading back identity document photo" = "正在上传身份证件背面照片";
+"e16b7" = "正在上传身份证件背面照片";
 
-"Uploading front %@ photo" = "正在上传 %@ 正面照片";
+"93af2" = "正在上传 %@ 正面照片";
 
-"Uploading front identity document photo" = "正在上传身份证件正面照片";
+"5dfbf" = "正在上传身份证件正面照片";
 
-"Verify your identity" = "验证您的身份";
+"ed32a" = "验证您的身份";
 
-"We could not capture a high-quality image." = "我们未能捕捉到高质量图片。";
+"55e29" = "我们未能捕捉到高质量图片。";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "我们需要使用您的相机的许可。请在应用设置中允许使用相机。";
+"a98b4" = "我们需要使用您的相机的许可。请在应用设置中允许使用相机。";
 
-"Welcome" = "欢迎";
+"0e222" = "欢迎";
 
-"You can either try again or upload an image from your device." = "您可以重试或从设备上传一张照片。";
+"348a7" = "您可以重试或从设备上传一张照片。";
 
-"Your selfie images have not been saved. Do you want to leave?" = "尚未保存您的自拍照。想要离开吗？";
+"b892f" = "尚未保存您的自拍照。想要离开吗？";
 
-"driver's license" = "驾驶证";
+"cadf1" = "驾驶证";
 
-"government-issued photo ID" = "政府签发的带照片身份证";
+"29fd8" = "政府签发的带照片身份证";
 
-"passport" = "护照";
+"cbc47" = "护照";

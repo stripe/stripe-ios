@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Įvyko klaida. Bandykite dar kartą.";
+"9c170" = "Įvyko klaida. Bandykite dar kartą.";
 
-"Card brand was not updated. Please try again." = "Kortelės prekės ženklas neatnaujintas. Bandykite dar kartą.";
+"4bc73" = "Kortelės prekės ženklas neatnaujintas. Bandykite dar kartą.";
 
-"Close" = "Užverti";
+"7d9eb" = "Užverti";
 
-"Default payment method was not updated. Please try again." = "Numatytasis mokėjimo būdas neatnaujintas. Bandykite dar kartą.";
+"3048d" = "Numatytasis mokėjimo būdas neatnaujintas. Bandykite dar kartą.";
 
-"Scan Card" = "Skenuoti kortelę";
+"b60b5" = "Skenuoti kortelę";
 
-"Scan card" = "Nuskaityti kortelę";
+"ea2fe" = "Nuskaityti kortelę";
 
-"The IBAN you entered is invalid." = "Įvedėte neteisingą IBAN.";
+"ee81e" = "Įvedėte neteisingą IBAN.";
 
-"There was an error processing your card -- try again in a few seconds" = "Įvyko kortelės apdorojimo klaida, po kelių sekundžių bandykite dar kartą";
+"fa47c" = "Įvyko kortelės apdorojimo klaida, po kelių sekundžių bandykite dar kartą";
 
-"There was an unexpected error -- try again in a few seconds" = "Įvyko netikėta klaida, po kelių sekundžių bandykite dar kartą";
+"c98a4" = "Įvyko netikėta klaida, po kelių sekundžių bandykite dar kartą";
 
-"Try again" = "Bandyti dar kartą";
+"d8b83" = "Bandyti dar kartą";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Naudojame \"Stripe\", kad patikrintume jūsų kortelės duomenis. \"Stripe\" gali naudoti ir saugoti jūsų duomenis pagal savo privatumo politiką. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sužinokite daugiau</u></a>";
+"96fe7" = "Naudojame \"Stripe\", kad patikrintume jūsų kortelės duomenis. \"Stripe\" gali naudoti ir saugoti jūsų duomenis pagal savo privatumo politiką. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sužinokite daugiau</u></a>";
 
-"Your card has expired" = "Kortelė baigė galioti";
+"f5c35" = "Kortelė baigė galioti";
 
-"Your card was declined" = "Kortelė buvo atmesta";
+"b9821" = "Kortelė buvo atmesta";
 
-"Your card's expiration month is invalid" = "Negaliojantis kortelės galiojimo pabaigos mėnuo";
+"e02cf" = "Negaliojantis kortelės galiojimo pabaigos mėnuo";
 
-"Your card's expiration year is invalid" = "Kortelės galiojimo pabaigos metai neteisingi";
+"53311" = "Kortelės galiojimo pabaigos metai neteisingi";
 
-"Your card's number is invalid" = "Negaliojantis kortelės numeris";
+"c433c" = "Negaliojantis kortelės numeris";
 
-"Your card's security code is invalid" = "Kortelės saugos kodas negalioja";
+"15f5b" = "Kortelės saugos kodas negalioja";
 
-"Your name is invalid." = "Jūsų vardas neteisingas.";
+"b1d57" = "Jūsų vardas neteisingas.";
 
-"Your payment method was declined." = "Jūsų mokėjimo būdas buvo atmestas.";
+"3209d" = "Jūsų mokėjimo būdas buvo atmestas.";

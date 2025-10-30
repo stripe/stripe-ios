@@ -1,63 +1,63 @@
-"AU Direct Debit" = "AU Otomatik Ödeme";
+"c1188" = "AU Otomatik Ödeme";
 
-"Affirm" = "Affirm";
+"07b9f" = "Affirm";
 
-"Afterpay" = "Afterpay";
+"032a2" = "Afterpay";
 
-"Alipay" = "Alipay";
+"d5b72" = "Alipay";
 
-"BLIK" = "BLIK";
+"354ad" = "BLIK";
 
-"Bacs Direct Debit" = "Bacs Otomatik Ödeme";
+"0b4ee" = "Bacs Otomatik Ödeme";
 
-"Bancontact" = "Bancontact";
+"84e7c" = "Bancontact";
 
-"Boleto" = "Boleto";
+"3a3c9" = "Boleto";
 
-"Card" = "Kart";
+"be370" = "Kart";
 
-"Cash App Pay" = "Cash Uygulaması Ödemesi";
+"35d08" = "Cash Uygulaması Ödemesi";
 
-"Clearpay" = "Clearpay";
+"268da" = "Clearpay";
 
-"EPS" = "EPS";
+"6d9d7" = "EPS";
 
-"FPX" = "FPX";
+"fed44" = "FPX";
 
-"GrabPay" = "GrabPay";
+"09996" = "GrabPay";
 
-"Klarna" = "Klarna";
+"a2e77" = "Klarna";
 
-"Konbini" = "Konbini";
+"3f752" = "Konbini";
 
-"Link" = "Link";
+"a6a32" = "Link";
 
-"NetBanking" = "NetBanking";
+"3aba6" = "NetBanking";
 
-"OXXO" = "OXXO";
+"71ecf" = "OXXO";
 
-"PayPal" = "PayPal";
+"ab8a4" = "PayPal";
 
-"Przelewy24" = "Przelewy24";
+"0a7ad" = "Przelewy24";
 
-"SEPA Debit" = "SEPA Bankamatik";
+"b5dc7" = "SEPA Bankamatik";
 
-"Sofort" = "Sofort";
+"02f19" = "Sofort";
 
-"Swish" = "İsveççe";
+"1e736" = "İsveççe";
 
-"Timed out authenticating your payment method -- try again" = "Ödeme metodunuz doğrulanırken zaman aşımına uğradı -- tekrar deneyin";
+"37fc6" = "Ödeme metodunuz doğrulanırken zaman aşımına uğradı -- tekrar deneyin";
 
-"UPI" = "UPI";
+"7b06e" = "UPI";
 
-"US bank account" = "ABD banka hesabı";
+"40d8d" = "ABD banka hesabı";
 
-"Unknown" = "Bilinmeyen";
+"b764c" = "Bilinmeyen";
 
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ödeme metodunuzu doğrulayamadık. Lütfen farklı bir ödeme metodu seçin ve tekrar deneyin.";
+"f2763" = "Ödeme metodunuzu doğrulayamadık. Lütfen farklı bir ödeme metodu seçin ve tekrar deneyin.";
 
-"WeChat Pay" = "WeChat Pay";
+"a39c6" = "WeChat Pay";
 
-"giropay" = "giropay";
+"83eee" = "giropay";
 
-"iDEAL" = "iDEAL";
+"f54ab" = "iDEAL";

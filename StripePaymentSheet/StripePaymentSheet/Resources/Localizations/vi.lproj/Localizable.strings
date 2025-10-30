@@ -1,307 +1,307 @@
-"+ Add" = "+ Thêm";
+"c0072" = "+ Thêm";
 
-"Add US bank account" = "Thêm tài khoản ngân hàng Hoa Kỳ";
+"1b3a4" = "Thêm tài khoản ngân hàng Hoa Kỳ";
 
-"Add a card" = "Thêm một thẻ";
+"be8f5" = "Thêm một thẻ";
 
-"Add a payment method" = "Thêm phương thức thanh toán";
+"7e917" = "Thêm phương thức thanh toán";
 
-"Add bank account" = "Thêm tài khoản ngân hàng";
+"a3cc9" = "Thêm tài khoản ngân hàng";
 
-"Add card" = "Thêm thẻ";
+"769c5" = "Thêm thẻ";
 
-"Add new card" = "Thêm thẻ mới";
+"800f4" = "Thêm thẻ mới";
 
-"Add new payment method" = "Thêm phương thức thanh toán mới";
+"8130f" = "Thêm phương thức thanh toán mới";
 
-"Add your payment information" = "Thêm thông tin thanh toán của bạn";
+"eaa33" = "Thêm thông tin thanh toán của bạn";
 
-"Approve payment" = "Chấp nhận thanh toán";
+"e70d2" = "Chấp nhận thanh toán";
 
-"Are you sure you want to remove this card?" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
+"c8af7" = "Bạn có chắc chắn muốn gỡ bỏ thẻ này không?";
 
-"Are you sure you want to remove this linked account?" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
+"74460" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
 
-"Back" = "Quay lại";
+"76900" = "Quay lại";
 
-"Bank" = "Ngân hàng";
+"676c4" = "Ngân hàng";
 
-"Bank account" = "Tài khoản ngân hàng";
+"1b427" = "Tài khoản ngân hàng";
 
-"Bank account details cannot be changed." = "Không thể thay đổi thông tin tài khoản ngân hàng.";
+"12ab1" = "Không thể thay đổi thông tin tài khoản ngân hàng.";
 
-"Buy now or pay later with  <img/>" = "Mua ngay hoặc thanh toán sau bằng <img/>";
+"38088" = "Mua ngay hoặc thanh toán sau bằng <img/>";
 
-"Buy now or pay later with Afterpay" = "Mua ngay hoặc thanh toán sau bằng Afterpay";
+"c04b4" = "Mua ngay hoặc thanh toán sau bằng Afterpay";
 
-"Buy now or pay later with Cash App Afterpay" = "Mua ngay hoặc thanh toán sau bằng Ứng dụng Thanh toán Afterpay";
+"f566d" = "Mua ngay hoặc thanh toán sau bằng Ứng dụng Thanh toán Afterpay";
 
-"Buy now or pay later with Clearpay" = "Mua ngay hoặc thanh toán sau bằng Clearpay";
+"bf452" = "Mua ngay hoặc thanh toán sau bằng Clearpay";
 
-"Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
+"5c41c" = "Mua ngay hoặc thanh toán sau bằng Klarna";
 
-"Buy using a UPI ID" = "Mua bằng cách sử dụng ID UPI";
+"21793" = "Mua bằng cách sử dụng ID UPI";
 
-"By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+"313bb" = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
-"By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+"c1642" = "Bằng cách tiếp tục với Amazon Pay, bạn cho phép %@ tính phí tài khoản Amazon Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Bằng việc tiếp tục với Klarna, bạn cho phép %1$@ tính phí vào tài khoản Klarna của bạn cho các khoản thanh toán trong tương lai căn cứ theo các điều khoản của khoản thanh toán và của Klarna. Bạn có thể thay đổi tùy chọn này bất kỳ lúc nào trong ứng dụng Klarna của mình hoặc bằng cách liên hệ với %2$@.";
+"09c61" = "Bằng việc tiếp tục với Klarna, bạn cho phép %1$@ tính phí vào tài khoản Klarna của bạn cho các khoản thanh toán trong tương lai căn cứ theo các điều khoản của khoản thanh toán và của Klarna. Bạn có thể thay đổi tùy chọn này bất kỳ lúc nào trong ứng dụng Klarna của mình hoặc bằng cách liên hệ với %2$@.";
 
-"By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách tiếp tục với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+"c6ff4" = "Bằng cách tiếp tục với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
-"By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Bằng cách tiếp tục với Revolut Pay, bạn cho phép %@ tính phí tài khoản Revolut Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
+"694b5" = "Bằng cách tiếp tục với Revolut Pay, bạn cho phép %@ tính phí tài khoản Revolut Pay của bạn cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";
 
-"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tiếp tục, bạn đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
+"8ba3b" = "Bằng việc tiếp tục, bạn đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
 
-"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
+"23d3e" = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Bằng cách tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %@ và <link>Link</link> theo <terms>điều khoản</terms> và <privacy>quyền riêng tư</privacy> của Link.";
+"b8e49" = "Bằng cách tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %@ và <link>Link</link> theo <terms>điều khoản</terms> và <privacy>quyền riêng tư</privacy> của Link.";
 
-"By continuing, you agree to save your information for future purchases with %@." = "Bằng cách tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %@.";
+"8ca70" = "Bằng cách tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %@.";
 
-"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Bằng việc tiếp tục, bạn cho phép %@ tự động ghi nợ Số dư Satispay của bạn theo chu kỳ định kỳ dựa trên gói mua hoặc gói đăng ký của bạn.";
+"d451f" = "Bằng việc tiếp tục, bạn cho phép %@ tự động ghi nợ Số dư Satispay của bạn theo chu kỳ định kỳ dựa trên gói mua hoặc gói đăng ký của bạn.";
 
-"By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Bằng cách tiếp tục, quý vị ủy quyền cho %1$@ ghi nợ tài khoản Cash App của quý vị cho khoản thanh toán này và các khoản thanh toán trong tương lai theo các điều khoản của %2$@, cho đến khi ủy quyền này bị thu hồi. Quý vị có thể thay đổi điều này bất cứ lúc nào trong mục Cài đặt của Cash App.";
+"97461" = "Bằng cách tiếp tục, quý vị ủy quyền cho %1$@ ghi nợ tài khoản Cash App của quý vị cho khoản thanh toán này và các khoản thanh toán trong tương lai theo các điều khoản của %2$@, cho đến khi ủy quyền này bị thu hồi. Quý vị có thể thay đổi điều này bất cứ lúc nào trong mục Cài đặt của Cash App.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
+"225b7" = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp số điện thoại và email, bạn đồng ý tạo tài khoản Link theo <terms>Điều khoản sử dụng</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
+"05e15" = "Bằng việc cung cấp số điện thoại và email, bạn đồng ý tạo tài khoản Link theo <terms>Điều khoản sử dụng</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Bằng việc cung cấp thông tin tài khoản ngân hàng và xác nhận khoản thanh toán này, bạn đồng ý với Yêu cầu Ghi nợ Trực tiếp và với <terms>thỏa thuận dịch vụ Yêu cầu Ghi nợ Trực tiếp</terms>, đồng thời cho phép Stripe Payments Australia Pty Ltd ACN 160 180 343, Mã số người dùng ghi nợ trực tiếp 507156 (“Stripe”) được quyền trích tiền từ tài khoản của bạn thông qua hệ thống thanh toán bù trừ điện tử số lượng lớn (BECS) thay mặt cho %@ (“Đơn vị chấp nhận thanh toán”) cho bất kỳ khoản tiền nào đã được Đơn vị chấp nhận thanh toán thông báo riêng đến bạn. Bạn xác nhận rằng bạn là chủ tài khoản hoặc người được ủy quyền ký trên tài khoản được liệt kê ở trên.";
+"ba265" = "Bằng việc cung cấp thông tin tài khoản ngân hàng và xác nhận khoản thanh toán này, bạn đồng ý với Yêu cầu Ghi nợ Trực tiếp và với <terms>thỏa thuận dịch vụ Yêu cầu Ghi nợ Trực tiếp</terms>, đồng thời cho phép Stripe Payments Australia Pty Ltd ACN 160 180 343, Mã số người dùng ghi nợ trực tiếp 507156 (“Stripe”) được quyền trích tiền từ tài khoản của bạn thông qua hệ thống thanh toán bù trừ điện tử số lượng lớn (BECS) thay mặt cho %@ (“Đơn vị chấp nhận thanh toán”) cho bất kỳ khoản tiền nào đã được Đơn vị chấp nhận thanh toán thông báo riêng đến bạn. Bạn xác nhận rằng bạn là chủ tài khoản hoặc người được ủy quyền ký trên tài khoản được liệt kê ở trên.";
 
-"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Bằng việc cung cấp thông tin thẻ, bạn cho phép %@ tính phí thẻ của bạn cho các khoản thanh toán trong tương lai theo điều khoản của họ.";
+"0cdc0" = "Bằng việc cung cấp thông tin thẻ, bạn cho phép %@ tính phí thẻ của bạn cho các khoản thanh toán trong tương lai theo điều khoản của họ.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp email, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
+"36fad" = "Bằng việc cung cấp email, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
+"289c5" = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc cung cấp số điện thoại, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
+"e3661" = "Bằng việc cung cấp số điện thoại, bạn đồng ý tạo tài khoản Link và lưu thông tin thanh toán vào Link, theo <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy> của Link.";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
+"02d39" = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
-"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng cách gửi đơn hàng của bạn đến %1$@ và %2$@, bạn đồng ý lưu thông tin của mình với %3$@ cho các giao dịch mua trong tương lai và đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
+"c041a" = "Bằng cách gửi đơn hàng của bạn đến %1$@ và %2$@, bạn đồng ý lưu thông tin của mình với %3$@ cho các giao dịch mua trong tương lai và đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
 
-"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng cách gửi đơn hàng của bạn đến %@, bạn đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
+"532e1" = "Bằng cách gửi đơn hàng của bạn đến %@, bạn đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
 
-"CPF/CPNJ" = "CPF/CPNJ";
+"71187" = "CPF/CPNJ";
 
-"Cancel and pay another way" = "Hủy và thanh toán theo cách khác";
+"58817" = "Hủy và thanh toán theo cách khác";
 
-"Card details cannot be changed." = "Không thể thay đổi thông tin thẻ.";
+"34c44" = "Không thể thay đổi thông tin thẻ.";
 
-"Change" = "Thay đổi";
+"c0bf7" = "Thay đổi";
 
-"Choose a payment method" = "Chọn phương thức thanh toán";
+"1dc8a" = "Chọn phương thức thanh toán";
 
-"Close card scanner" = "Đóng máy quét thẻ";
+"c0077" = "Đóng máy quét thẻ";
 
-"Code sent" = "Mã đã được gửi";
+"f98a1" = "Mã đã được gửi";
 
-"Confirm" = "Xác nhận";
+"eebdd" = "Xác nhận";
 
-"Confirm it's you" = "Xác nhận đó là bạn";
+"6176e" = "Xác nhận đó là bạn";
 
-"Confirm payment details" = "Xác nhận thông tin thanh toán";
+"3a6b5" = "Xác nhận thông tin thanh toán";
 
-"Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
+"101ef" = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
 
-"Confirm the payment in your bank's app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
+"a8c9a" = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
 
-"Confirm your CVC" = "Xác nhận CVC của bạn";
+"a4bdf" = "Xác nhận CVC của bạn";
 
-"Contact information" = "Thông tin liên lạc";
+"cbc73" = "Thông tin liên lạc";
 
-"Continue another way" = "Tiếp tục theo cách khác";
+"c2a49" = "Tiếp tục theo cách khác";
 
-"Create an account with Link for faster checkout across the web" = "Tạo tài khoản bằng Link để thanh toán nhanh hơn trên web";
+"b568d" = "Tạo tài khoản bằng Link để thanh toán nhanh hơn trên web";
 
-"Debit or credit card" = "Thẻ ghi nợ hoặc thẻ tín dụng";
+"04f63" = "Thẻ ghi nợ hoặc thẻ tín dụng";
 
-"Default" = "Mặc định";
+"21b11" = "Mặc định";
 
-"Default payment method" = "Phương thức thanh toán mặc định";
+"4c163" = "Phương thức thanh toán mặc định";
 
-"Did you mean %@? %@." = "Ý của quý vị có phải là %1$@? %2$@.";
+"6d7d1" = "Ý của quý vị có phải là %1$@? %2$@.";
 
-"EPS Bank" = "Ngân hàng EPS";
+"8f218" = "Ngân hàng EPS";
 
-"Enter address manually" = "Nhập địa chỉ thủ công";
+"1534f" = "Nhập địa chỉ thủ công";
 
-"Enter the code sent to %@." = "Nhập mã đã được gửi tới %s.";
+"1e836" = "Nhập mã đã được gửi tới %s.";
 
-"FPX Bank" = "Ngân hàng FPX";
+"8c73e" = "Ngân hàng FPX";
 
-"Failed to connect" = "Không thể kết nối";
+"46c9f" = "Không thể kết nối";
 
-"Fast, secure checkout" = "Thanh toán nhanh chóng, an toàn";
+"2aeb3" = "Thanh toán nhanh chóng, an toàn";
 
-"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán lần đầu tiên với ngân hàng. <terms>Xem điều khoản</terms>";
+"b70b0" = "Được hoàn %@ khi thanh toán lần đầu tiên với ngân hàng. <terms>Xem điều khoản</terms>";
 
-"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán bằng ngân hàng.<terms>Xem điều khoản</terms>";
+"332d2" = "Được hoàn %@ khi thanh toán bằng ngân hàng.<terms>Xem điều khoản</terms>";
 
-"I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
+"b751e" = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
-"IBAN" = "IBAN";
+"7e345" = "IBAN";
 
-"Log in or sign up" = "Đăng nhập hoặc đăng ký";
+"38f51" = "Đăng nhập hoặc đăng ký";
 
-"Log out of Link" = "Đăng xuất khỏi Link";
+"57083" = "Đăng xuất khỏi Link";
 
-"Manage SEPA debit" = "Quản lý Ghi nợ SEPA";
+"a7ff3" = "Quản lý Ghi nợ SEPA";
 
-"Manage US bank account" = "Quản lý tài khoản ngân hàng Hoa Kỳ";
+"0b654" = "Quản lý tài khoản ngân hàng Hoa Kỳ";
 
-"Manage bank account" = "Quản lý tài khoản ngân hàng";
+"2d4ed" = "Quản lý tài khoản ngân hàng";
 
-"Manage card" = "Quản lý thẻ";
+"49e98" = "Quản lý thẻ";
 
-"Manage cards" = "Quản lý thẻ";
+"fe215" = "Quản lý thẻ";
 
-"Manage payment method" = "Quản lý phương thức thanh toán";
+"67c16" = "Quản lý phương thức thanh toán";
 
-"Manage payment methods" = "Quản lý các phương thức thanh toán";
+"cf0c9" = "Quản lý các phương thức thanh toán";
 
-"Manage your payment methods" = "Quản lý các phương thức thanh toán của bạn";
+"74db7" = "Quản lý các phương thức thanh toán của bạn";
 
-"Name on card" = "Tên trên thẻ";
+"18bf0" = "Tên trên thẻ";
 
-"New card" = "Thẻ mới";
+"8d3ef" = "Thẻ mới";
 
-"New payment method" = "Phương thức thanh toán mới";
+"c5f95" = "Phương thức thanh toán mới";
 
-"No %@ promo" = "Không có khuyến mại %@";
+"99d88" = "Không có khuyến mại %@";
 
-"Not you?" = "Đây không phải là bạn?";
+"5b978" = "Đây không phải là bạn?";
 
-"Only card brand can be changed." = "Chỉ có thể thay đổi thương hiệu thẻ.";
+"d1c0a" = "Chỉ có thể thay đổi thương hiệu thẻ.";
 
-"Open your UPI app to approve your payment within %@" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
+"b7546" = "Mở ứng dụng UPI của quý vị để phê duyệt khoản thanh toán của quý vị trong vòng%@";
 
-"Or" = "Hoặc";
+"0568b" = "Hoặc";
 
-"Or pay using" = "Hoặc thanh toán bằng";
+"3c3f7" = "Hoặc thanh toán bằng";
 
-"Or pay with a card" = "Hoặc thanh toán bằng thẻ";
+"682d8" = "Hoặc thanh toán bằng thẻ";
 
-"Or use" = "Hoặc dùng";
+"4158c" = "Hoặc dùng";
 
-"Or use a card" = "Hoặc dùng thẻ";
+"b529c" = "Hoặc dùng thẻ";
 
-"Pay %@" = "Thanh toán %@";
+"964f6" = "Thanh toán %@";
 
-"Pay another way" = "Thanh toán theo cách khác";
+"4bb4a" = "Thanh toán theo cách khác";
 
-"Pay faster at %@ and thousands of businesses." = "Thanh toán nhanh hơn tại %@ và hàng ngàn doanh nghiệp.";
+"f43bb" = "Thanh toán nhanh hơn tại %@ và hàng ngàn doanh nghiệp.";
 
-"Pay faster everywhere Link is accepted." = "Thanh toán nhanh hơn ở mọi nơi chấp nhận Link.";
+"d49c1" = "Thanh toán nhanh hơn ở mọi nơi chấp nhận Link.";
 
-"Pay over time with %@" = "Trả dần bằng %@";
+"77196" = "Trả dần bằng %@";
 
-"Pay over time with Affirm" = "Trả dần bằng Affirm";
+"2f870" = "Trả dần bằng Affirm";
 
-"Pay with Link" = "Thanh toán bằng Link";
+"9d81a" = "Thanh toán bằng Link";
 
-"Pay with your bank account in just a few steps." = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
+"bc021" = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
 
-"Payment" = "Thanh toán";
+"7048f" = "Thanh toán";
 
-"Payment failed" = "Thanh toán không thành công";
+"17aad" = "Thanh toán không thành công";
 
-"Payment methods" = "Phương thức thanh toán";
+"16d26" = "Phương thức thanh toán";
 
-"Please choose a valid payment method." = "Vui lòng chọn phương thức thanh toán hợp lệ. Hãy thử lại.";
+"5ddb8" = "Vui lòng chọn phương thức thanh toán hợp lệ. Hãy thử lại.";
 
-"Please go back and select another payment method" = "Vui lòng quay lại và chọn phương thức thanh toán khác";
+"cf6c1" = "Vui lòng quay lại và chọn phương thức thanh toán khác";
 
-"Point the camera at your card." = "Hướng camera vào thẻ.";
+"59a6c" = "Hướng camera vào thẻ.";
 
-"Processing..." = "Đang xử lý...";
+"f40a8" = "Đang xử lý...";
 
-"Przelewy24 Bank" = "Ngân hàng Przelewy24";
+"b0866" = "Ngân hàng Przelewy24";
 
-"Remove card?" = "Xóa thẻ?";
+"ce640" = "Xóa thẻ?";
 
-"Remove linked account" = "Xóa tài khoản liên kết";
+"a545c" = "Xóa tài khoản liên kết";
 
-"Resend code" = "Gửi lại mã";
+"b9745" = "Gửi lại mã";
 
-"SEPA debit details cannot be changed." = "Không thể thay đổi thông tin Ghi nợ SEPA.";
+"a4f77" = "Không thể thay đổi thông tin Ghi nợ SEPA.";
 
-"Save" = "Lưu";
+"1509f" = "Lưu";
 
-"Save a new payment method" = "Lưu một phương thức thanh toán mới";
+"6b6eb" = "Lưu một phương thức thanh toán mới";
 
-"Save address" = "Lưu địa chỉ";
+"0cbb9" = "Lưu địa chỉ";
 
-"Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
+"7990e" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
 
-"Save my info for faster checkout with Link" = "Lưu thông tin của tôi để thanh toán nhanh chóng hơn với Link";
+"8e1e1" = "Lưu thông tin của tôi để thanh toán nhanh chóng hơn với Link";
 
-"Save payment details to %@ for future purchases" = "Lưu thông tin thanh toán vào %@ để mua hàng trong tương lai";
+"0745e" = "Lưu thông tin thanh toán vào %@ để mua hàng trong tương lai";
 
-"Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
+"e8c88" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
 
-"Save your bank account in just a few steps." = "Lưu tài khoản ngân hàng chỉ trong vài bước.";
+"b4042" = "Lưu tài khoản ngân hàng chỉ trong vài bước.";
 
-"Save your info for secure 1-click checkout with Link" = "Lưu thông tin của bạn để thanh toán an toàn bằng 1 cú nhấp chuột với Link";
+"650b1" = "Lưu thông tin của bạn để thanh toán an toàn bằng 1 cú nhấp chuột với Link";
 
-"Saved" = "Đã lưu";
+"b5c12" = "Đã lưu";
 
-"Select card" = "Chọn thẻ";
+"59ffd" = "Chọn thẻ";
 
-"Select payment method" = "Chọn phương thức thanh toán";
+"659d1" = "Chọn phương thức thanh toán";
 
-"Select your payment method" = "Chọn phương thức thanh toán của bạn";
+"d23e3" = "Chọn phương thức thanh toán của bạn";
 
-"Set as default" = "Đặt làm mặc định";
+"d09b4" = "Đặt làm mặc định";
 
-"Set as default payment method" = "Đặt làm phương thức thanh toán mặc định";
+"af056" = "Đặt làm phương thức thanh toán mặc định";
 
-"Set up" = "Cài đặt";
+"4da10" = "Cài đặt";
 
-"Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
+"b8e46" = "Chuyển hàng đến %@ không được hỗ trợ.";
 
-"Show menu" = "Hiển thị trình đơn";
+"0b0af" = "Hiển thị trình đơn";
 
-"Simple, secure one-click payments" = "Thanh toán đơn giản, an toàn chỉ bằng một cú nhấp chuột";
+"edd6d" = "Thanh toán đơn giản, an toàn chỉ bằng một cú nhấp chuột";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Đã xảy ra sự cố khi liên kết tài khoản của bạn.\nVui lòng thử lại sau.";
+"33596" = "Đã xảy ra sự cố khi liên kết tài khoản của bạn.\nVui lòng thử lại sau.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe sẽ gửi 0,01 đô la vào tài khoản của bạn sau 1-2 ngày làm việc. Sau đó, bạn sẽ nhận được email kèm theo hướng dẫn để hoàn tất quá trình lưu tài khoản ngân hàng với %@.";
+"822ff" = "Stripe sẽ gửi 0,01 đô la vào tài khoản của bạn sau 1-2 ngày làm việc. Sau đó, bạn sẽ nhận được email kèm theo hướng dẫn để hoàn tất quá trình lưu tài khoản ngân hàng với %@.";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
+"72fd8" = "Stripe sẽ gửi $0.01 vào tài khoản của bạn trong 1-2 ngày làm việc. Khi đó bạn sẽ nhận được một email chứa hướng dẫn để hoàn tất thanh toán cho %@.";
 
-"Tap to close" = "Nhấp chạm vào để đóng";
+"e263d" = "Nhấp chạm vào để đóng";
 
-"Tap to expand" = "Nhấp chạm vào để mở rộng";
+"1cbaf" = "Nhấp chạm vào để mở rộng";
 
-"The IBAN you entered is incomplete." = "IBAN quý vị đã nhập chưa đầy đủ.";
+"477cb" = "IBAN quý vị đã nhập chưa đầy đủ.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN bạn nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
+"a70c6" = "IBAN bạn nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
 
-"The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
+"e32a6" = "Mã xác minh được cung cấp đã hết hạn.";
 
-"The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
+"e8cb8" = "Mã xác minh đã cung cấp không chính xác.";
 
-"This is your default" = "Đây là thông tin mặc định của bạn";
+"f3c56" = "Đây là thông tin mặc định của bạn";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Phương thức thanh toán này sẽ bị xóa nhưng sẽ vẫn khả dụng cho các gói đăng ký %@.";
+"478c1" = "Phương thức thanh toán này sẽ bị xóa nhưng sẽ vẫn khả dụng cho các gói đăng ký %@.";
 
-"Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
+"4a754" = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
 
-"Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";
+"19202" = "Không khả dụng cho giao dịch mua hàng này";
 
-"Update card" = "Cập nhật thẻ";
+"e28b5" = "Cập nhật thẻ";
 
-"Update payment method" = "Cập nhật phương thức thanh toán";
+"fa7bf" = "Cập nhật phương thức thanh toán";
 
-"Use billing address for shipping" = "Sử dụng địa chỉ thanh toán cho việc giao hàng";
+"4a82d" = "Sử dụng địa chỉ thanh toán cho việc giao hàng";
 
-"View more" = "Xem thêm";
+"267e5" = "Xem thêm";
 
-"Yes, update" = "Có, cập nhật";
+"fa298" = "Có, cập nhật";
 
-"Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
+"42ef0" = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 
-"iDEAL Bank" = "Ngân hàng iDEAL";
+"460cb" = "Ngân hàng iDEAL";

@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "En feil har oppstått. Prøv igjen senere.";
+"9c170" = "En feil har oppstått. Prøv igjen senere.";
 
-"Card brand was not updated. Please try again." = "Kortmerket ble ikke oppdatert. Prøv igjen.";
+"4bc73" = "Kortmerket ble ikke oppdatert. Prøv igjen.";
 
-"Close" = "Lukk";
+"7d9eb" = "Lukk";
 
-"Default payment method was not updated. Please try again." = "Standard betalingsmetode ble ikke oppdatert. Prøv igjen.";
+"3048d" = "Standard betalingsmetode ble ikke oppdatert. Prøv igjen.";
 
-"Scan Card" = "Skann kort";
+"b60b5" = "Skann kort";
 
-"Scan card" = "Skann kort";
+"ea2fe" = "Skann kort";
 
-"The IBAN you entered is invalid." = "IBAN-nummeret du la inn er ugyldig.";
+"ee81e" = "IBAN-nummeret du la inn er ugyldig.";
 
-"There was an error processing your card -- try again in a few seconds" = "Det oppstod en feil ved prosessering av kortet -- prøv igjen om et par sekunder";
+"fa47c" = "Det oppstod en feil ved prosessering av kortet -- prøv igjen om et par sekunder";
 
-"There was an unexpected error -- try again in a few seconds" = "En uventet feil har oppstått -- prøv igjen om et par sekunder";
+"c98a4" = "En uventet feil har oppstått -- prøv igjen om et par sekunder";
 
-"Try again" = "Prøv igjen";
+"d8b83" = "Prøv igjen";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Vi bruker Stripe til å verifisere kontoopplysningene. Stripe kan bruke og lagre opplysningene dine i henhold til personvernerklæringen sin. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Finn ut mer</u></a>";
+"96fe7" = "Vi bruker Stripe til å verifisere kontoopplysningene. Stripe kan bruke og lagre opplysningene dine i henhold til personvernerklæringen sin. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Finn ut mer</u></a>";
 
-"Your card has expired" = "Kortet ditt har utløpt";
+"f5c35" = "Kortet ditt har utløpt";
 
-"Your card was declined" = "Kortet ditt ble avvist";
+"b9821" = "Kortet ditt ble avvist";
 
-"Your card's expiration month is invalid" = "Kortet sin utløpsmåned er ugyldig";
+"e02cf" = "Kortet sin utløpsmåned er ugyldig";
 
-"Your card's expiration year is invalid" = "Kortet sitt utløpsår er ugyldig";
+"53311" = "Kortet sitt utløpsår er ugyldig";
 
-"Your card's number is invalid" = "Ugyldig kortnummer";
+"c433c" = "Ugyldig kortnummer";
 
-"Your card's security code is invalid" = "Ugyldig sikkerhetskode";
+"15f5b" = "Ugyldig sikkerhetskode";
 
-"Your name is invalid." = "Navnet er ugyldig.";
+"b1d57" = "Navnet er ugyldig.";
 
-"Your payment method was declined." = "Betalingsmetoden din ble avvist.";
+"3209d" = "Betalingsmetoden din ble avvist.";

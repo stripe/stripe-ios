@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (opțional)";
+"224e3" = "%@ (opțional)";
 
-"(not accepted)" = "(nu este acceptat)";
+"f676f" = "(nu este acceptat)";
 
-"Account number" = "Număr cont";
+"f7573" = "Număr cont";
 
-"Address" = "Adresa";
+"56ef8" = "Adresa";
 
-"Address line 1" = "Rândul 1 pentru adresă";
+"ee760" = "Rândul 1 pentru adresă";
 
-"Address line 2" = "Rândul 2 pentru adresă";
+"350b2" = "Rândul 2 pentru adresă";
 
-"Area" = "Zonă";
+"024dc" = "Zonă";
 
-"BLIK code" = "Cod BLIK";
+"35cc2" = "Cod BLIK";
 
-"BSB number" = "Număr BSB";
+"88a06" = "Număr BSB";
 
-"Bank account •••• %@" = "Cont bancar •••• %@";
+"7a614" = "Cont bancar •••• %@";
 
-"Billing address is same as shipping" = "Adresa de facturare este la fel cu cea de expediere";
+"a03f3" = "Adresa de facturare este la fel cu cea de expediere";
 
-"Cancel" = "Anulare";
+"19766e" = "Anulare";
 
-"Card brand" = "Marcă card";
+"45022" = "Marcă card";
 
-"City" = "Oraș";
+"fc33f" = "Oraș";
 
-"Code field" = "Câmp pentru introducerea codului";
+"2b743" = "Câmp pentru introducerea codului";
 
-"Company" = "Companie";
+"de474" = "Companie";
 
-"Continue" = "Continuare";
+"31fbe" = "Continuare";
 
-"Country" = "Țară";
+"701d0" = "Țară";
 
-"Country or region" = "Țară sau regiune";
+"8d236" = "Țară sau regiune";
 
-"County" = "Județ";
+"136c8" = "Județ";
 
-"Department" = "Departament";
+"5304a" = "Departament";
 
-"District" = "District";
+"50f18" = "District";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Doriți să închideți acest formular?";
+"6ebfc" = "Doriți să închideți acest formular?";
 
-"Done" = "Efectuat";
+"11a67" = "Efectuat";
 
-"Double tap to edit" = "Atingeți de două ori pentru a edita";
+"f5dd0" = "Atingeți de două ori pentru a edita";
 
-"Edit" = "Editare";
+"464c4" = "Editare";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "E-mail";
+"969cc" = "E-mail";
 
-"Emirate" = "Emirat";
+"4309c" = "Emirat";
 
-"Error" = "Eroare";
+"54a0e" = "Eroare";
 
-"First" = "Prenume";
+"a151c" = "Prenume";
 
-"Full name" = "Nume complet";
+"f13a6" = "Nume complet";
 
-"Incomplete phone number" = "Număr de telefon incomplet";
+"6d2d3" = "Număr de telefon incomplet";
 
-"Invalid UPI ID" = "ID UPI nevalid";
+"14cf3" = "ID UPI nevalid";
 
-"Island" = "Insulă";
+"730f5" = "Insulă";
 
-"Last" = "Nume de familie";
+"eb970" = "Nume de familie";
 
-"Name" = "Nume";
+"dcd1d" = "Nume";
 
-"Name on account" = "Numele contului";
+"59f3a" = "Numele contului";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Altele";
+"f97e9" = "Altele";
 
-"Parish" = "Parohie";
+"45ab6" = "Parohie";
 
-"Phone number" = "Număr de telefon";
+"306f1" = "Număr de telefon";
 
-"Postal code" = "Cod poștal";
+"ae53c" = "Cod poștal";
 
-"Prefecture" = "Prefectură";
+"50571" = "Prefectură";
 
-"Province" = "Provincie";
+"abfce" = "Provincie";
 
-"Remove" = "Eliminare";
+"c3812" = "Eliminare";
 
-"Remove bank account?" = "Eliminați contul bancar?";
+"05b2c" = "Eliminați contul bancar?";
 
-"Remove card" = "Eliminare card";
+"dcf7d" = "Eliminare card";
 
-"Search" = "Căutare";
+"49c26" = "Căutare";
 
-"Select card brand (optional)" = "Selectare marcă card (opțional)";
+"4dc47" = "Selectare marcă card (opțional)";
 
-"Selection is empty." = "Selecția este goală.";
+"4d6f0" = "Selecția este goală.";
 
-"Sort code" = "Cod de sortare";
+"a9002" = "Cod de sortare";
 
-"State" = "Stat";
+"a3b50" = "Stat";
 
-"Suburb" = "Suburbie";
+"9e843" = "Suburbie";
 
-"Suburb or city" = "Suburbie sau oraș";
+"c3273" = "Suburbie sau oraș";
 
-"The BSB you entered is incomplete." = "Numărul BSB pe care l-ați introdus nu este complet.";
+"d5ad2" = "Numărul BSB pe care l-ați introdus nu este complet.";
 
-"The ID number you entered is incomplete." = "Numărul de identificare pe care l-ați introdus nu este complet.";
+"0f9bf" = "Numărul de identificare pe care l-ați introdus nu este complet.";
 
-"The account number you entered is incomplete." = "Numărul de cont pe care l-ați introdus nu este complet.";
+"e10dd" = "Numărul de cont pe care l-ați introdus nu este complet.";
 
-"The sort code you entered is invalid." = "Codul de identificare a băncii pe care l-ați introdus nu este valid.";
+"ac7db" = "Codul de identificare a băncii pe care l-ați introdus nu este valid.";
 
-"Town or city" = "Municipalitate sau oraș";
+"9ce56" = "Municipalitate sau oraș";
 
-"UPI ID" = "ID UPI";
+"cec4a" = "ID UPI";
 
-"Unable to parse phone number" = "Nu se poate analiza numărul de telefon";
+"72356" = "Nu se poate analiza numărul de telefon";
 
-"Use rotor to access links" = "Utilizați rotorul pentru a accesa linkurile";
+"11480" = "Utilizați rotorul pentru a accesa linkurile";
 
-"Your BLIK code is incomplete." = "Codul dvs. BLIK nu este complet.";
+"6c0af" = "Codul dvs. BLIK nu este complet.";
 
-"Your BLIK code is invalid." = "Codul dvs. BLIK nu este valid.";
+"224bb" = "Codul dvs. BLIK nu este valid.";
 
-"Your ZIP code is incomplete." = "Codul dvs. poștal este incomplet.";
+"3e686" = "Codul dvs. poștal este incomplet.";
 
-"Your ZIP code is invalid." = "Codul dvs. poștal este nevalid.";
+"f029b" = "Codul dvs. poștal este nevalid.";
 
-"Your email is invalid." = "E-mailul nu este valid.";
+"57c28" = "E-mailul nu este valid.";
 
-"Your payment information will not be saved." = "Informațiile dvs. de plată nu vor fi salvate.";
+"cc532" = "Informațiile dvs. de plată nu vor fi salvate.";
 
-"Your postal code is incomplete." = "Codul dvs. poștal nu este complet.";
+"52c55" = "Codul dvs. poștal nu este complet.";
 
-"Your postal code is invalid." = "Codul dvs. poștal nu este valid.";
+"037ec" = "Codul dvs. poștal nu este valid.";
 
-"ZIP" = "Cod poștal";
+"eaca4" = "Cod poștal";

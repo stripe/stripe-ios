@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (volitelné)";
+"224e3" = "%@ (volitelné)";
 
-"(not accepted)" = "(nepřijímá se)";
+"f676f" = "(nepřijímá se)";
 
-"Account number" = "Číslo účtu";
+"f7573" = "Číslo účtu";
 
-"Address" = "Adresa";
+"56ef8" = "Adresa";
 
-"Address line 1" = "1. řádek adresy";
+"ee760" = "1. řádek adresy";
 
-"Address line 2" = "2. řádek adresy";
+"350b2" = "2. řádek adresy";
 
-"Area" = "Oblast";
+"024dc" = "Oblast";
 
-"BLIK code" = "Kód BLIK";
+"35cc2" = "Kód BLIK";
 
-"BSB number" = "Číslo BSB";
+"88a06" = "Číslo BSB";
 
-"Bank account •••• %@" = "Bankovní účet •••• %@";
+"7a614" = "Bankovní účet •••• %@";
 
-"Billing address is same as shipping" = "Fakturační adresa je stejná jako dodací";
+"a03f3" = "Fakturační adresa je stejná jako dodací";
 
-"Cancel" = "Zrušit";
+"19766e" = "Zrušit";
 
-"Card brand" = "Značka karty";
+"45022" = "Značka karty";
 
-"City" = "Město";
+"fc33f" = "Město";
 
-"Code field" = "Pole pro kód";
+"2b743" = "Pole pro kód";
 
-"Company" = "Společnost";
+"de474" = "Společnost";
 
-"Continue" = "Pokračovat";
+"31fbe" = "Pokračovat";
 
-"Country" = "Země";
+"701d0" = "Země";
 
-"Country or region" = "Země nebo region";
+"8d236" = "Země nebo region";
 
-"County" = "Okres";
+"136c8" = "Okres";
 
-"Department" = "Oddělení";
+"5304a" = "Oddělení";
 
-"District" = "Okrsek";
+"50f18" = "Okrsek";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Chcete tento formulář zavřít?";
+"6ebfc" = "Chcete tento formulář zavřít?";
 
-"Done" = "Hotovo";
+"11a67" = "Hotovo";
 
-"Double tap to edit" = "Dvakrát klepněte pro úpravu";
+"f5dd0" = "Dvakrát klepněte pro úpravu";
 
-"Edit" = "Upravit";
+"464c4" = "Upravit";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "E-mail";
+"969cc" = "E-mail";
 
-"Emirate" = "Emirát";
+"4309c" = "Emirát";
 
-"Error" = "Chyba";
+"54a0e" = "Chyba";
 
-"First" = "Jméno";
+"a151c" = "Jméno";
 
-"Full name" = "Celé jméno";
+"f13a6" = "Celé jméno";
 
-"Incomplete phone number" = "Neúplné telefonní číslo";
+"6d2d3" = "Neúplné telefonní číslo";
 
-"Invalid UPI ID" = "Neplatné UPI ID";
+"14cf3" = "Neplatné UPI ID";
 
-"Island" = "Ostrov";
+"730f5" = "Ostrov";
 
-"Last" = "Příjmení";
+"eb970" = "Příjmení";
 
-"Name" = "Jméno";
+"dcd1d" = "Jméno";
 
-"Name on account" = "Jméno na účtu";
+"59f3a" = "Jméno na účtu";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Jiné";
+"f97e9" = "Jiné";
 
-"Parish" = "Obec";
+"45ab6" = "Obec";
 
-"Phone number" = "Telefonní číslo";
+"306f1" = "Telefonní číslo";
 
-"Postal code" = "Poštovní směrovací číslo";
+"ae53c" = "Poštovní směrovací číslo";
 
-"Prefecture" = "Prefektura";
+"50571" = "Prefektura";
 
-"Province" = "Provincie";
+"abfce" = "Provincie";
 
-"Remove" = "Odebrat";
+"c3812" = "Odebrat";
 
-"Remove bank account?" = "Odebrat bankovní účet?";
+"05b2c" = "Odebrat bankovní účet?";
 
-"Remove card" = "Odebrat kartu";
+"dcf7d" = "Odebrat kartu";
 
-"Search" = "Hledat";
+"49c26" = "Hledat";
 
-"Select card brand (optional)" = "Vyberte značku karty (volitelné)";
+"4dc47" = "Vyberte značku karty (volitelné)";
 
-"Selection is empty." = "Výběr je prázdný.";
+"4d6f0" = "Výběr je prázdný.";
 
-"Sort code" = "Kód řazení";
+"a9002" = "Kód řazení";
 
-"State" = "Stát";
+"a3b50" = "Stát";
 
-"Suburb" = "Předměstí";
+"9e843" = "Předměstí";
 
-"Suburb or city" = "Předměstí nebo město";
+"c3273" = "Předměstí nebo město";
 
-"The BSB you entered is incomplete." = "Zadaný BSB je neúplný.";
+"d5ad2" = "Zadaný BSB je neúplný.";
 
-"The ID number you entered is incomplete." = "Identifikační číslo, které jste zadali, je neúplné.";
+"0f9bf" = "Identifikační číslo, které jste zadali, je neúplné.";
 
-"The account number you entered is incomplete." = "Zadané číslo účtu je neúplné.";
+"e10dd" = "Zadané číslo účtu je neúplné.";
 
-"The sort code you entered is invalid." = "Zadaný lokální bankovní kód je neplatný.";
+"ac7db" = "Zadaný lokální bankovní kód je neplatný.";
 
-"Town or city" = "Město nebo velkoměsto";
+"9ce56" = "Město nebo velkoměsto";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "Nelze analyzovat telefonní číslo";
+"72356" = "Nelze analyzovat telefonní číslo";
 
-"Use rotor to access links" = "Přístup k odkazům pomocí rotoru";
+"11480" = "Přístup k odkazům pomocí rotoru";
 
-"Your BLIK code is incomplete." = "Váš kód BLIK je neúplný.";
+"6c0af" = "Váš kód BLIK je neúplný.";
 
-"Your BLIK code is invalid." = "Váš kód BLIK je neplatný.";
+"224bb" = "Váš kód BLIK je neplatný.";
 
-"Your ZIP code is incomplete." = "Vaše PSČ není úplné.";
+"3e686" = "Vaše PSČ není úplné.";
 
-"Your ZIP code is invalid." = "Vaše PSČ je neplatné.";
+"f029b" = "Vaše PSČ je neplatné.";
 
-"Your email is invalid." = "Váš e-mail je neplatný.";
+"57c28" = "Váš e-mail je neplatný.";
 
-"Your payment information will not be saved." = "Vaše platební údaje nebudou uloženy.";
+"cc532" = "Vaše platební údaje nebudou uloženy.";
 
-"Your postal code is incomplete." = "Vaše poštovní směrovací číslo je neúplné.";
+"52c55" = "Vaše poštovní směrovací číslo je neúplné.";
 
-"Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
+"037ec" = "Poštovní směrovací číslo je neplatné";
 
-"ZIP" = "PSČ";
+"eaca4" = "PSČ";

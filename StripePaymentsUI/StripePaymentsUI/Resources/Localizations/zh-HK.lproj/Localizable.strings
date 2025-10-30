@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ 銀行卡";
+"fbfa6" = "%1$@ 銀行卡";
 
-"%1$@ Credit" = "%1$@ 信用卡";
+"a11b0" = "%1$@ 信用卡";
 
-"%1$@ Debit" = "%1$@ 扣賬卡";
+"95233" = "%1$@ 扣賬卡";
 
-"%1$@ Prepaid" = "%1$@ 預付卡";
+"c90ba" = "%1$@ 預付卡";
 
-"%1$@ account ending in %2$@" = "尾號為 %2$@ 的 %1$@ 賬戶";
+"3b24a" = "尾號為 %2$@ 的 %1$@ 賬戶";
 
-"%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
+"f5b21" = "%1$@ - 尾號：%2$@";
 
-"%1$@ is not accepted" = "不接受 %1$@";
+"29adf" = "不接受 %1$@";
 
-"Address line 2 (optional)" = "地址第 2 行（可選）";
+"9ada7" = "地址第 2 行（可選）";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "銀行賬戶";
+"c6f64" = "銀行賬戶";
 
-"Billing address" = "賬單地址";
+"1f516" = "賬單地址";
 
-"Billing details" = "帳單詳細資料";
+"7c928" = "帳單詳細資料";
 
-"CVC" = "安全碼";
+"19e9b" = "安全碼";
 
-"Card information" = "銀行卡資訊";
+"fca47" = "銀行卡資訊";
 
-"Card number" = "卡號";
+"816fc" = "卡號";
 
-"Confirm your %@" = "確認您的 %@";
+"002d7" = "確認您的 %@";
 
-"Invalid data." = "數據無效。";
+"da175" = "數據無效。";
 
-"MM / YY" = "月份/年份";
+"58f4a" = "月份/年份";
 
-"MM/YY" = "月份/年份";
+"1b5f6" = "月份/年份";
 
-"Postal Code" = "郵區編號";
+"8198b" = "郵區編號";
 
-"Shipping Address" = "收貨地址";
+"6e244" = "收貨地址";
 
-"State / Province / Region" = "州/省/區";
+"649f1" = "州/省/區";
 
-"The BSB you entered is invalid." = "您輸入的 BSB 無效。";
+"dfa21" = "您輸入的 BSB 無效。";
 
-"The selected brand is not allowed" = "不允許使用選定的品牌";
+"aaf53" = "不允許使用選定的品牌";
 
-"To scan your card, allow camera access in Settings." = "要掃描您的銀行卡，在「設置」中啟用照相機。";
+"9f2d9" = "要掃描您的銀行卡，在「設置」中啟用照相機。";
 
-"Your card has expired." = "您的銀行卡已過期。";
+"393e6" = "您的銀行卡已過期。";
 
-"Your card number is incomplete." = "您的銀行卡號不完整。";
+"7e5ae" = "您的銀行卡號不完整。";
 
-"Your card number is invalid." = "您的卡號無效。";
+"3c122" = "您的卡號無效。";
 
-"Your card's expiration date is incomplete." = "您的銀行卡的有效期不完整。";
+"a2036" = "您的銀行卡的有效期不完整。";
 
-"Your card's expiration date is invalid." = "您的銀行卡的有效期無效。";
+"6a457" = "您的銀行卡的有效期無效。";
 
-"Your card's expiration month is invalid." = "您的銀行卡的到期月份無效。";
+"e47c0" = "您的銀行卡的到期月份無效。";
 
-"Your card's expiration year is invalid." = "您的銀行卡的到期年份無效。";
+"36ae2" = "您的銀行卡的到期年份無效。";
 
-"Your card's security code is incomplete." = "您的銀行卡的安全碼不完整。";
+"300dd" = "您的銀行卡的安全碼不完整。";
 
-"Your card's security code is invalid." = "您的銀行卡的安全碼無效。";
+"394fd" = "您的銀行卡的安全碼無效。";
 
-"card number" = "卡號";
+"58da6" = "卡號";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "到期日";
+"b34dd" = "到期日";

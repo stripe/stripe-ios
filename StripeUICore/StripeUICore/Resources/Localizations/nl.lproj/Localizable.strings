@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (optioneel)";
+"224e3" = "%@ (optioneel)";
 
-"(not accepted)" = "(niet geaccepteerd)";
+"f676f" = "(niet geaccepteerd)";
 
-"Account number" = "Rekeningnummer";
+"f7573" = "Rekeningnummer";
 
-"Address" = "Adres";
+"56ef8" = "Adres";
 
-"Address line 1" = "Adresregel 1";
+"ee760" = "Adresregel 1";
 
-"Address line 2" = "Adresregel 2";
+"350b2" = "Adresregel 2";
 
-"Area" = "Regio";
+"024dc" = "Regio";
 
-"BLIK code" = "BLIK-code";
+"35cc2" = "BLIK-code";
 
-"BSB number" = "BSB-nummer";
+"88a06" = "BSB-nummer";
 
-"Bank account •••• %@" = "Bankrekening •••• %@";
+"7a614" = "Bankrekening •••• %@";
 
-"Billing address is same as shipping" = "Factuuradres is hetzelfde als het verzendadres";
+"a03f3" = "Factuuradres is hetzelfde als het verzendadres";
 
-"Cancel" = "Annuleren";
+"19766e" = "Annuleren";
 
-"Card brand" = "Merk betaalkaart";
+"45022" = "Merk betaalkaart";
 
-"City" = "Plaats";
+"fc33f" = "Plaats";
 
-"Code field" = "Codeveld";
+"2b743" = "Codeveld";
 
-"Company" = "Bedrijf";
+"de474" = "Bedrijf";
 
-"Continue" = "Doorgaan";
+"31fbe" = "Doorgaan";
 
-"Country" = "Land";
+"701d0" = "Land";
 
-"Country or region" = "Land of regio";
+"8d236" = "Land of regio";
 
-"County" = "Graafschap";
+"136c8" = "Graafschap";
 
-"Department" = "Departement";
+"5304a" = "Departement";
 
-"District" = "District";
+"50f18" = "District";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Wil je dit formulier sluiten?";
+"6ebfc" = "Wil je dit formulier sluiten?";
 
-"Done" = "Gereed";
+"11a67" = "Gereed";
 
-"Double tap to edit" = "Dubbeltikken om te bewerken";
+"f5dd0" = "Dubbeltikken om te bewerken";
 
-"Edit" = "Bewerken";
+"464c4" = "Bewerken";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "E-mailadres";
+"969cc" = "E-mailadres";
 
-"Emirate" = "Emiraat";
+"4309c" = "Emiraat";
 
-"Error" = "Fout";
+"54a0e" = "Fout";
 
-"First" = "Voornaam";
+"a151c" = "Voornaam";
 
-"Full name" = "Volledige naam";
+"f13a6" = "Volledige naam";
 
-"Incomplete phone number" = "Onvolledig telefoonnummer";
+"6d2d3" = "Onvolledig telefoonnummer";
 
-"Invalid UPI ID" = "Ongeldige UPI-ID";
+"14cf3" = "Ongeldige UPI-ID";
 
-"Island" = "Eiland";
+"730f5" = "Eiland";
 
-"Last" = "Achternaam";
+"eb970" = "Achternaam";
 
-"Name" = "Naam";
+"dcd1d" = "Naam";
 
-"Name on account" = "Naam op account";
+"59f3a" = "Naam op account";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Overige";
+"f97e9" = "Overige";
 
-"Parish" = "Parochie";
+"45ab6" = "Parochie";
 
-"Phone number" = "Telefoonnummer";
+"306f1" = "Telefoonnummer";
 
-"Postal code" = "Postcode";
+"ae53c" = "Postcode";
 
-"Prefecture" = "Prefectuur";
+"50571" = "Prefectuur";
 
-"Province" = "Provincie";
+"abfce" = "Provincie";
 
-"Remove" = "Verwijderen";
+"c3812" = "Verwijderen";
 
-"Remove bank account?" = "Bankrekening verwijderen?";
+"05b2c" = "Bankrekening verwijderen?";
 
-"Remove card" = "Betaalkaart verwijderen";
+"dcf7d" = "Betaalkaart verwijderen";
 
-"Search" = "Zoeken";
+"49c26" = "Zoeken";
 
-"Select card brand (optional)" = "Merk van betaalkaart selecteren (optioneel)";
+"4dc47" = "Merk van betaalkaart selecteren (optioneel)";
 
-"Selection is empty." = "Selectie is leeg.";
+"4d6f0" = "Selectie is leeg.";
 
-"Sort code" = "Bankcode";
+"a9002" = "Bankcode";
 
-"State" = "Staat";
+"a3b50" = "Staat";
 
-"Suburb" = "Voorstad";
+"9e843" = "Voorstad";
 
-"Suburb or city" = "Stad of voorstad";
+"c3273" = "Stad of voorstad";
 
-"The BSB you entered is incomplete." = "Het ingevoerde BSB-nummer is onvolledig.";
+"d5ad2" = "Het ingevoerde BSB-nummer is onvolledig.";
 
-"The ID number you entered is incomplete." = "Het opgegeven identificatienummer is onvolledig.";
+"0f9bf" = "Het opgegeven identificatienummer is onvolledig.";
 
-"The account number you entered is incomplete." = "Het opgegeven rekeningnummer is onvolledig.";
+"e10dd" = "Het opgegeven rekeningnummer is onvolledig.";
 
-"The sort code you entered is invalid." = "De opgegeven bankcode is ongeldig.";
+"ac7db" = "De opgegeven bankcode is ongeldig.";
 
-"Town or city" = "Stad of plaats";
+"9ce56" = "Stad of plaats";
 
-"UPI ID" = "UPI-ID";
+"cec4a" = "UPI-ID";
 
-"Unable to parse phone number" = "Kan telefoonnummer niet parseren";
+"72356" = "Kan telefoonnummer niet parseren";
 
-"Use rotor to access links" = "Gebruik de rotor om een link te openen";
+"11480" = "Gebruik de rotor om een link te openen";
 
-"Your BLIK code is incomplete." = "Je BLIK-code is onvolledig.";
+"6c0af" = "Je BLIK-code is onvolledig.";
 
-"Your BLIK code is invalid." = "Je BLIK-code is ongeldig.";
+"224bb" = "Je BLIK-code is ongeldig.";
 
-"Your ZIP code is incomplete." = "Uw postcode is incompleet.";
+"3e686" = "Uw postcode is incompleet.";
 
-"Your ZIP code is invalid." = "Uw postcode is ongeldig.";
+"f029b" = "Uw postcode is ongeldig.";
 
-"Your email is invalid." = "Je e-mailadres is ongeldig.";
+"57c28" = "Je e-mailadres is ongeldig.";
 
-"Your payment information will not be saved." = "Je betaalgegevens worden niet opgeslagen.";
+"cc532" = "Je betaalgegevens worden niet opgeslagen.";
 
-"Your postal code is incomplete." = "Je postcode is onvolledig.";
+"52c55" = "Je postcode is onvolledig.";
 
-"Your postal code is invalid." = "Je postcode is ongeldig.";
+"037ec" = "Je postcode is ongeldig.";
 
-"ZIP" = "Postcode";
+"eaca4" = "Postcode";

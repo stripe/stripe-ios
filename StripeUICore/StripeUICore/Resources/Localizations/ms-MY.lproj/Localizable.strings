@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (opsyenal)";
+"224e3" = "%@ (opsyenal)";
 
-"(not accepted)" = "(tidak diterima)";
+"f676f" = "(tidak diterima)";
 
-"Account number" = "Nombor akaun";
+"f7573" = "Nombor akaun";
 
-"Address" = "Alamat";
+"56ef8" = "Alamat";
 
-"Address line 1" = "Alamat baris 1";
+"ee760" = "Alamat baris 1";
 
-"Address line 2" = "Alamat baris 2";
+"350b2" = "Alamat baris 2";
 
-"Area" = "Kawasan";
+"024dc" = "Kawasan";
 
-"BLIK code" = "Kod BLIK";
+"35cc2" = "Kod BLIK";
 
-"BSB number" = "Nombor BSB";
+"88a06" = "Nombor BSB";
 
-"Bank account •••• %@" = "Akaun bank •••• %@";
+"7a614" = "Akaun bank •••• %@";
 
-"Billing address is same as shipping" = "Alamat pengebilan sama dengan alamat penghantaran";
+"a03f3" = "Alamat pengebilan sama dengan alamat penghantaran";
 
-"Cancel" = "Batalkan";
+"19766e" = "Batalkan";
 
-"Card brand" = "Jenama kad";
+"45022" = "Jenama kad";
 
-"City" = "Bandar";
+"fc33f" = "Bandar";
 
-"Code field" = "Medan kod";
+"2b743" = "Medan kod";
 
-"Company" = "Syarikat";
+"de474" = "Syarikat";
 
-"Continue" = "Teruskan";
+"31fbe" = "Teruskan";
 
-"Country" = "Negara";
+"701d0" = "Negara";
 
-"Country or region" = "Negara atau rantau";
+"8d236" = "Negara atau rantau";
 
-"County" = "Kaunti";
+"136c8" = "Kaunti";
 
-"Department" = "Jabatan";
+"5304a" = "Jabatan";
 
-"District" = "Daerah";
+"50f18" = "Daerah";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Adakah anda ingin menutup borang ini?";
+"6ebfc" = "Adakah anda ingin menutup borang ini?";
 
-"Done" = "Selesai";
+"11a67" = "Selesai";
 
-"Double tap to edit" = "Ketik dua kali untuk edit";
+"f5dd0" = "Ketik dua kali untuk edit";
 
-"Edit" = "Edit";
+"464c4" = "Edit";
 
-"Eircode" = "Eircode";
+"113d9" = "Eircode";
 
-"Email" = "E-mel";
+"969cc" = "E-mel";
 
-"Emirate" = "Amiriah";
+"4309c" = "Amiriah";
 
-"Error" = "Ralat";
+"54a0e" = "Ralat";
 
-"First" = "Pertama";
+"a151c" = "Pertama";
 
-"Full name" = "Nama penuh";
+"f13a6" = "Nama penuh";
 
-"Incomplete phone number" = "Nombor telefon tidak lengkap";
+"6d2d3" = "Nombor telefon tidak lengkap";
 
-"Invalid UPI ID" = "ID UPI tidak sah";
+"14cf3" = "ID UPI tidak sah";
 
-"Island" = "Pulau";
+"730f5" = "Pulau";
 
-"Last" = "Akhir";
+"eb970" = "Akhir";
 
-"Name" = "Nama";
+"dcd1d" = "Nama";
 
-"Name on account" = "Nama pada akaun";
+"59f3a" = "Nama pada akaun";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblast";
+"2ba5c" = "Oblast";
 
-"Other" = "Lain-lain";
+"f97e9" = "Lain-lain";
 
-"Parish" = "Kariah";
+"45ab6" = "Kariah";
 
-"Phone number" = "Nombor telefon";
+"306f1" = "Nombor telefon";
 
-"Postal code" = "Poskod";
+"ae53c" = "Poskod";
 
-"Prefecture" = "Wilayah";
+"50571" = "Wilayah";
 
-"Province" = "Wilayah";
+"abfce" = "Wilayah";
 
-"Remove" = "Alih Keluar";
+"c3812" = "Alih Keluar";
 
-"Remove bank account?" = "Alih keluar akaun bank?";
+"05b2c" = "Alih keluar akaun bank?";
 
-"Remove card" = "Alih keluar kad";
+"dcf7d" = "Alih keluar kad";
 
-"Search" = "Cari";
+"49c26" = "Cari";
 
-"Select card brand (optional)" = "Pilih jenama kad (opsyenal)";
+"4dc47" = "Pilih jenama kad (opsyenal)";
 
-"Selection is empty." = "Tiada pilihan dibuat.";
+"4d6f0" = "Tiada pilihan dibuat.";
 
-"Sort code" = "Kod isihan";
+"a9002" = "Kod isihan";
 
-"State" = "Negeri";
+"a3b50" = "Negeri";
 
-"Suburb" = "Pinggir Bandar";
+"9e843" = "Pinggir Bandar";
 
-"Suburb or city" = "Pinggir bandar atau bandar";
+"c3273" = "Pinggir bandar atau bandar";
 
-"The BSB you entered is incomplete." = "BSB yang anda masukkan tidak lengkap.";
+"d5ad2" = "BSB yang anda masukkan tidak lengkap.";
 
-"The ID number you entered is incomplete." = "Nombor ID yang anda masukkan tidak lengkap.";
+"0f9bf" = "Nombor ID yang anda masukkan tidak lengkap.";
 
-"The account number you entered is incomplete." = "Nombor akaun yang anda masukkan tidak lengkap.";
+"e10dd" = "Nombor akaun yang anda masukkan tidak lengkap.";
 
-"The sort code you entered is invalid." = "Kod isihan yang anda masukkan tidak sah.";
+"ac7db" = "Kod isihan yang anda masukkan tidak sah.";
 
-"Town or city" = "Pekan atau bandar";
+"9ce56" = "Pekan atau bandar";
 
-"UPI ID" = "ID UPI";
+"cec4a" = "ID UPI";
 
-"Unable to parse phone number" = "Nombor telefon tidak dapat dihuraikan";
+"72356" = "Nombor telefon tidak dapat dihuraikan";
 
-"Use rotor to access links" = "Gunakan rotor untuk mengakses pautan";
+"11480" = "Gunakan rotor untuk mengakses pautan";
 
-"Your BLIK code is incomplete." = "Kod BLIK anda tidak lengkap.";
+"6c0af" = "Kod BLIK anda tidak lengkap.";
 
-"Your BLIK code is invalid." = "Kod BLIK anda tidak sah.";
+"224bb" = "Kod BLIK anda tidak sah.";
 
-"Your ZIP code is incomplete." = "Poskod ZIP tidak lengkap.";
+"3e686" = "Poskod ZIP tidak lengkap.";
 
-"Your ZIP code is invalid." = "Poskod anda tidak sah.";
+"f029b" = "Poskod anda tidak sah.";
 
-"Your email is invalid." = "E-mel anda tidak sah.";
+"57c28" = "E-mel anda tidak sah.";
 
-"Your payment information will not be saved." = "Maklumat pembayaran anda tidak akan disimpan.";
+"cc532" = "Maklumat pembayaran anda tidak akan disimpan.";
 
-"Your postal code is incomplete." = "Poskod anda tidak lengkap.";
+"52c55" = "Poskod anda tidak lengkap.";
 
-"Your postal code is invalid." = "Poskod anda tidak sah.";
+"037ec" = "Poskod anda tidak sah.";
 
-"ZIP" = "ZIP";
+"eaca4" = "ZIP";

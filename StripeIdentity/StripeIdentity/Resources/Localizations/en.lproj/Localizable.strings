@@ -1,301 +1,300 @@
 /* Body for selfie warmup page */
-"A few photos will be taken automatically on the next step to verify it's you" = "A few photos will be taken automatically on the next step to verify it's you";
+"40b57" = "A few photos will be taken automatically on the next step to verify it's you";
 
 /* Title for accepted types of ids */
-"Accepted forms of ID include" = "Accepted forms of ID include";
+"a9934" = "Accepted forms of ID include";
 
 /* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
-"Alternatively, you may manually upload a photo of your identity document." = "Alternatively, you may manually upload a photo of your identity document.";
+"a570c" = "Alternatively, you may manually upload a photo of your identity document.";
 
 /* Opens the app's settings in the Settings app */
-"App Settings" = "App Settings";
+"da645" = "App Settings";
 
 /* Accessibility label when back driver's license, passport, or government issued photo id photo has successfully uploaded */
-"Back %@ photo successfully uploaded" = "Back %@ photo successfully uploaded";
+"31438" = "Back %@ photo successfully uploaded";
 
 /* Accessibility label when back identity document photo has successfully uploaded */
-"Back identity document photo successfully uploaded" = "Back identity document photo successfully uploaded";
+"3253a" = "Back identity document photo successfully uploaded";
 
 /* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
-"Back of %@" = "Back of %@";
+"128b0" = "Back of %@";
 
 /* Back of driver's license or government-issued photo ID */
-"Back of driver's license or government-issued photo ID" = "Back of driver's license or government-issued photo ID";
+"37929" = "Back of driver's license or government-issued photo ID";
 
 /* Title of ID document scanning screen when scanning the back of an identity card */
-"Back of identity document" = "Back of identity document";
+"3229d" = "Back of identity document";
 
 /* Error title displayed to the user when camera permissions have been denied
    Title displayed when requesting camera permissions */
-"Camera permission" = "Camera permission";
+"51e72" = "Camera permission";
 
 /* Error title displayed to the user when the device's camera is not available */
-"Camera unavailable" = "Camera unavailable";
+"06cc3" = "Camera unavailable";
 
 /* Instructional text for scanning selfies */
-"Capturing…" = "Capturing…";
+"806e3" = "Capturing…";
 
 /* When selected in an action sheet, opens the device's file system browser */
-"Choose File" = "Choose File";
+"d7042" = "Choose File";
 
 /* Back button title for returning to consent screen of Identity verification */
-"Consent" = "Consent";
+"d37e0" = "Consent";
 
 /* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
-"Could not capture image" = "Could not capture image";
+"bf6e9" = "Could not capture image";
 
 /* Label for Date of birth field */
-"Date of Birth" = "Date of Birth";
+"fdc73" = "Date of Birth";
 
 /* Message for invalid Date of birth field */
-"Date of birth does not look valid" = "Date of birth does not look valid";
+"2baa1" = "Date of birth does not look valid";
 
 /* Instructional text when environement is too bright
    Instructional text when the document is too glarry
    Instructional text when user needs remove anything blocking the document */
-"Details not visible" = "Details not visible";
+"687cd" = "Details not visible";
 
 /* driver's license */
-"driver's license" = "driver's license";
+"cadf1" = "driver's license";
 
 /* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
-"Flip your %@ over to the other side" = "Flip your %@ over to the other side";
+"e3292" = "Flip your %@ over to the other side";
 
 /* Flip your driver's license or government-issued photo ID over to the other side */
-"Flip your driver's license or government-issued photo ID over to the other side" = "Flip your driver's license or government-issued photo ID over to the other side";
+"dd41b" = "Flip your driver's license or government-issued photo ID over to the other side";
 
 /* Instructional text for scanning back of a identity card */
-"Flip your identity card over to the other side" = "Flip your identity card over to the other side";
+"87346" = "Flip your identity card over to the other side";
 
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
-"Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
+"b57ad" = "Front %@ photo successfully uploaded";
 
 /* Accessibility label when front identity document photo has successfully uploaded */
-"Front identity document photo successfully uploaded" = "Front identity document photo successfully uploaded";
+"3a9fd" = "Front identity document photo successfully uploaded";
 
 /* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id  */
-"Front of %@" = "Front of %@";
+"73fc5" = "Front of %@";
 
 /* Front of driver's license or government-issued photo ID */
-"Front of driver's license or government-issued photo ID" = "Front of driver's license or government-issued photo ID";
+"b3d9a" = "Front of driver's license or government-issued photo ID";
 
 /* Front of driver's license or passport */
-"Front of driver's license or passport" = "Front of driver's license or passport";
+"8d188" = "Front of driver's license or passport";
 
 /* Front of driver's license, passport, or government-issued photo ID */
-"Front of driver's license, passport, or government-issued photo ID" = "Front of driver's license, passport, or government-issued photo ID";
+"070b5" = "Front of driver's license, passport, or government-issued photo ID";
 
 /* Title of ID document scanning screen when scanning the front of an identity card */
-"Front of identity document" = "Front of identity document";
+"8562c" = "Front of identity document";
 
 /* Front of passport or government-issued photo ID */
-"Front of passport or government-issued photo ID" = "Front of passport or government-issued photo ID";
+"bb2ee" = "Front of passport or government-issued photo ID";
 
 /* Title for document front warmup page */
-"Get ready to scan your photo ID" = "Get ready to scan your photo ID";
+"83016" = "Get ready to scan your photo ID";
 
 /* Title for selfie warmup page */
-"Get ready to take a selfie" = "Get ready to take a selfie";
+"9e29f" = "Get ready to take a selfie";
 
 /* Button to go back to the previous screen */
-"Go Back" = "Go Back";
+"b8d99" = "Go Back";
 
 /* id issued by government */
-"government-issued photo ID" = "government-issued photo ID";
+"29fd8" = "government-issued photo ID";
 
 /* Instructional text when camera is focusing on a document while scanning it */
-"Hold still, scanning" = "Hold still, scanning";
+"b63f6" = "Hold still, scanning";
 
 /* Ready button text on warmup screen */
-"I'm ready" = "I'm ready";
+"d5b05" = "I'm ready";
 
 /* Label for ID number section */
-"ID Number" = "ID Number";
+"a403d" = "ID Number";
 
 /* Label for the ID field to collect individual CPF for Brazilian ID */
-"Individual CPF" = "Individual CPF";
+"6212a" = "Individual CPF";
 
 /* Instructional text when user align the edge with camera
    Instructional text when user needs to rorate to document to align with camera */
-"Keep ID level" = "Keep ID level";
+"6be11" = "Keep ID level";
 
 /* Label for the ID field to collect last 4 of social security number for US ID */
-"Last 4 of Social Security number" = "Last 4 of Social Security number";
+"77dd8" = "Last 4 of Social Security number";
 
 /* Status while screen is loading */
-"Loading" = "Loading";
+"dc3808" = "Loading";
 
 /* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "Make sure all details are visible and focus";
+"859af" = "Make sure all details are visible and focus";
 
 /* Body for selfie warmup page */
-"Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
+"6c2aa" = "Make sure you're in a well lit space.";
 
 /* Instructional text when camera is too far from a document */
-"Move closer" = "Move closer";
+"1da05" = "Move closer";
 
 /* Instructional text when camera is too close to a document */
-"Move farther" = "Move farther";
+"73333" = "Move farther";
 
 /* Instructional text when environement is too bright */
-"Move to a darker area" = "Move to a darker area";
+"4687a" = "Move to a darker area";
 
 /* Instructional text when environement is too dark */
-"Move to a well-lit area" = "Move to a well-lit area";
+"f579f" = "Move to a well-lit area";
 
 /* Instructional text when there is no document in camera frame */
-"No document detected" = "No document detected";
+"b376f" = "No document detected";
 
 /* Label for the ID field to collect NRIC or FIN for Singaporean ID */
-"NRIC or FIN" = "NRIC or FIN";
+"32e72" = "NRIC or FIN";
 
 /* passport */
-"passport" = "passport";
+"cbc47" = "passport";
 
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
-"Personal ID number" = "Personal ID number";
+"fae7d" = "Personal ID number";
 
 /* Back button title for returning to the individual's perssonal infomation screen */
-"Personal Information" = "Personal Information";
+"c4b37" = "Personal Information";
 
 /* Section title for collection phone number */
-"Phone Number" = "Phone Number";
+"72dba" = "Phone Number";
 
 /* Back button title for returning to the phone verification page */
-"Phone Verification" = "Phone Verification";
+"cb074" = "Phone Verification";
 
 /* When selected in an action sheet, opens the device's photo library */
-"Photo Library" = "Photo Library";
+"e0b2a" = "Photo Library";
 
 /* Instructions for uploading images of a driver's license, government issued photo id, or passport */
-"Please upload images of the front and back of your %@" = "Please upload images of the front and back of your %@";
+"03fa9" = "Please upload images of the front and back of your %@";
 
 /* Instructions for uploading images of identity document */
-"Please upload images of the front and back of your identity document" = "Please upload images of the front and back of your identity document";
+"8c273" = "Please upload images of the front and back of your identity document";
 
 /* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
-"Position your %@ in the center of the frame" = "Position your %@ in the center of the frame";
+"ceab8" = "Position your %@ in the center of the frame";
 
 /* Position your driver's license or government-issued photo ID in the center of the frame */
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Position your driver's license or government-issued photo ID in the center of the frame";
+"12559" = "Position your driver's license or government-issued photo ID in the center of the frame";
 
 /* Position your driver's license or passport in the center of the frame */
-"Position your driver's license or passport in the center of the frame" = "Position your driver's license or passport in the center of the frame";
+"453ad" = "Position your driver's license or passport in the center of the frame";
 
 /* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Position your driver's license, passport, or government-issued photo ID in the center of the frame";
+"ad934" = "Position your driver's license, passport, or government-issued photo ID in the center of the frame";
 
 /* Instructional text for scanning selfies */
-"Position your face in the center of the frame." = "Position your face in the center of the frame.";
+"6f758" = "Position your face in the center of the frame.";
 
 /* Instructional text for scanning front of a identity document */
-"Position your identity document in the center of the frame" = "Position your identity document in the center of the frame";
+"68f51" = "Position your identity document in the center of the frame";
 
 /* Position your passport or government-issued photo ID in the center of the frame */
-"Position your passport or government-issued photo ID in the center of the frame" = "Position your passport or government-issued photo ID in the center of the frame";
+"74830" = "Position your passport or government-issued photo ID in the center of the frame";
 
 /* Button text displayed to the user to retake photo */
-"Retake Photos" = "Retake Photos";
+"16681" = "Retake Photos";
 
 /* Back button title for returning to the document scan screen */
-"Scan" = "Scan";
+"ea1c5" = "Scan";
 
 /* State when identity document has been successfully scanned */
-"Scanned" = "Scanned";
+"e9b3b" = "Scanned";
 
 /* Button to select a file to upload */
-"Select" = "Select";
+"2a780" = "Select";
 
 /* Help text for action sheet that presents ways to upload the back of an identity document image */
-"Select a location to upload the back of your identity document from" = "Select a location to upload the back of your identity document from";
+"568f3" = "Select a location to upload the back of your identity document from";
 
 /* Help text for action sheet that presents ways to upload the front of an identity document image */
-"Select a location to upload the front of your identity document from" = "Select a location to upload the front of your identity document from";
+"a352a" = "Select a location to upload the front of your identity document from";
 
 /* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
-"Select back %@ photo" = "Select back %@ photo";
+"0dfa8" = "Select back %@ photo";
 
 /* Accessibility label to select a photo of back of identity document */
-"Select back identity document photo" = "Select back identity document photo";
+"38aec" = "Select back identity document photo";
 
 /* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
-"Select front %@ photo" = "Select front %@ photo";
+"1ca11" = "Select front %@ photo";
 
 /* Accessibility label to select a photo of front of identity document */
-"Select front identity document photo" = "Select front identity document photo";
+"5c25a" = "Select front identity document photo";
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
 /* Title of selfie capture screen */
-"Selfie captures" = "Selfie captures";
+"ccd67" = "Selfie captures";
 
 /* Status text when selfie images have been captured */
-"Selfie captures are complete" = "Selfie captures are complete";
+"a7b36" = "Selfie captures are complete";
 
 /* When selected in an action sheet, opens the device's camera interface */
-"Take Photo" = "Take Photo";
+"1ca36" = "Take Photo";
 
 /* Text for message of warning alert */
-"The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";
+"b6b76" = "The images of your identity document have not been saved. Do you want to leave?";
 
 /* Error text displayed to the user when the device's camera is not available */
-"There was an error accessing the camera." = "There was an error accessing the camera.";
+"1eda8" = "There was an error accessing the camera.";
 
 /* Button to attempt to re-scan identity document image */
-"Try Again" = "Try Again";
+"df0fe" = "Try Again";
 
 /* Instructional text when the document is too glarry */
-"Try reduce glare and make ID visible" = "Try reduce glare and make ID visible";
+"ffd3d" = "Try reduce glare and make ID visible";
 
 /* Error message that displays when we're unable to connect to the server. */
-"Unable to establish a connection." = "Unable to establish a connection.";
+"77ee9" = "Unable to establish a connection.";
 
 /* Title for warning alert */
-"Unsaved changes" = "Unsaved changes";
+"a710c" = "Unsaved changes";
 
 /* Back button label for the identity document file upload screen */
-"Upload" = "Upload";
+"865e8" = "Upload";
 
 /* Button that opens file upload screen
    Button to upload a photo */
-"Upload a Photo" = "Upload a Photo";
+"f0c8a" = "Upload a Photo";
 
 /* Title of document upload screen */
-"Upload your %@" = "Upload your %@";
+"7f6c1" = "Upload your %@";
 
 /* Title of document upload screen */
-"Upload your photo ID" = "Upload your photo ID";
+"40a76" = "Upload your photo ID";
 
 /* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
-"Uploading back %@ photo" = "Uploading back %@ photo";
+"eaebd" = "Uploading back %@ photo";
 
 /* Accessibility label while photo of back of identity document is uploading */
-"Uploading back identity document photo" = "Uploading back identity document photo";
+"e16b7" = "Uploading back identity document photo";
 
 /* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
-"Uploading front %@ photo" = "Uploading front %@ photo";
+"93af2" = "Uploading front %@ photo";
 
 /* Accessibility label while photo of front of identity document is uploading */
-"Uploading front identity document photo" = "Uploading front identity document photo";
+"5dfbf" = "Uploading front identity document photo";
 
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-"Verify your identity" = "Verify your identity";
+"ed32a" = "Verify your identity";
 
 /* Error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
-"We could not capture a high-quality image." = "We could not capture a high-quality image.";
+"55e29" = "We could not capture a high-quality image.";
 
 /* Line 1 of error text displayed to the user when camera permissions have been denied
    Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "We need permission to use your camera. Please allow camera access in app settings.";
+"a98b4" = "We need permission to use your camera. Please allow camera access in app settings.";
 
 /* Back button title for returning to welcome screen of Identity verification */
-"Welcome" = "Welcome";
+"0e222" = "Welcome";
 
 /* Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
-"You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
+"348a7" = "You can either try again or upload an image from your device.";
 
 /* Text for message of warning alert */
-"Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
-
+"b892f" = "Your selfie images have not been saved. Do you want to leave?";

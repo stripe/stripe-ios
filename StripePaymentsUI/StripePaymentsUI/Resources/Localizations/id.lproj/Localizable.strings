@@ -1,75 +1,75 @@
-"%1$@ Card" = "Kartu %1$@";
+"fbfa6" = "Kartu %1$@";
 
-"%1$@ Credit" = "Kredit %1$@";
+"a11b0" = "Kredit %1$@";
 
-"%1$@ Debit" = "Debit %1$@";
+"95233" = "Debit %1$@";
 
-"%1$@ Prepaid" = "Prabayar %1$@";
+"c90ba" = "Prabayar %1$@";
 
-"%1$@ account ending in %2$@" = "Rekening %1$@ berakhiran dengan %2$@";
+"3b24a" = "Rekening %1$@ berakhiran dengan %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ berakhiran %2$@";
+"f5b21" = "%1$@ berakhiran %2$@";
 
-"%1$@ is not accepted" = "%1$@ tidak diterima";
+"29adf" = "%1$@ tidak diterima";
 
-"Address line 2 (optional)" = "Baris alamat ke-2 (opsional)";
+"9ada7" = "Baris alamat ke-2 (opsional)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Rekening bank";
+"c6f64" = "Rekening bank";
 
-"Billing address" = "Alamat tagihan";
+"1f516" = "Alamat tagihan";
 
-"Billing details" = "Detail penagihan";
+"7c928" = "Detail penagihan";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Informasi kartu";
+"fca47" = "Informasi kartu";
 
-"Card number" = "Nomor kartu";
+"816fc" = "Nomor kartu";
 
-"Confirm your %@" = "Konfirmasikan %@ Anda";
+"002d7" = "Konfirmasikan %@ Anda";
 
-"Invalid data." = "Data tidak valid.";
+"da175" = "Data tidak valid.";
 
-"MM / YY" = "BB / TT";
+"58f4a" = "BB / TT";
 
-"MM/YY" = "BB/TT";
+"1b5f6" = "BB/TT";
 
-"Postal Code" = "Kode Pos";
+"8198b" = "Kode Pos";
 
-"Shipping Address" = "Alamat Pengiriman";
+"6e244" = "Alamat Pengiriman";
 
-"State / Province / Region" = "Negara Bagian / Provinsi / Wilayah";
+"649f1" = "Negara Bagian / Provinsi / Wilayah";
 
-"The BSB you entered is invalid." = "BSB yang Anda masukkan tidak valid.";
+"dfa21" = "BSB yang Anda masukkan tidak valid.";
 
-"The selected brand is not allowed" = "Brand yang dipilih tidak diizinkan";
+"aaf53" = "Brand yang dipilih tidak diizinkan";
 
-"To scan your card, allow camera access in Settings." = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
+"9f2d9" = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
 
-"Your card has expired." = "Kartu Anda telah kedaluwarsa.";
+"393e6" = "Kartu Anda telah kedaluwarsa.";
 
-"Your card number is incomplete." = "Nomor kartu Anda tidak lengkap.";
+"7e5ae" = "Nomor kartu Anda tidak lengkap.";
 
-"Your card number is invalid." = "Nomor kartu Anda tidak valid.";
+"3c122" = "Nomor kartu Anda tidak valid.";
 
-"Your card's expiration date is incomplete." = "Tanggal kedaluwarsa kartu Anda tidak lengkap.";
+"a2036" = "Tanggal kedaluwarsa kartu Anda tidak lengkap.";
 
-"Your card's expiration date is invalid." = "Tanggal kedaluwarsa kartu Anda tidak valid.";
+"6a457" = "Tanggal kedaluwarsa kartu Anda tidak valid.";
 
-"Your card's expiration month is invalid." = "Bulan kedaluwarsa kartu Anda tidak valid.";
+"e47c0" = "Bulan kedaluwarsa kartu Anda tidak valid.";
 
-"Your card's expiration year is invalid." = "Tahun kedaluwarsa kartu Anda tidak valid.";
+"36ae2" = "Tahun kedaluwarsa kartu Anda tidak valid.";
 
-"Your card's security code is incomplete." = "Kode keamanan kartu Anda tidak lengkap.";
+"300dd" = "Kode keamanan kartu Anda tidak lengkap.";
 
-"Your card's security code is invalid." = "Kode keamanan kartu Anda tidak valid.";
+"394fd" = "Kode keamanan kartu Anda tidak valid.";
 
-"card number" = "nomor kartu";
+"58da6" = "nomor kartu";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "Tanggal kedaluwarsa";
+"b34dd" = "Tanggal kedaluwarsa";

@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ 카드";
+"fbfa6" = "%1$@ 카드";
 
-"%1$@ Credit" = "%1$@ 신용";
+"a11b0" = "%1$@ 신용";
 
-"%1$@ Debit" = "%1$@ 직불";
+"95233" = "%1$@ 직불";
 
-"%1$@ Prepaid" = "%1$@ 선불";
+"c90ba" = "%1$@ 선불";
 
-"%1$@ account ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 계좌";
+"3b24a" = "%2$@(으)로 끝나는 %1$@ 계좌";
 
-"%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
+"f5b21" = "%2$@(으)로 끝나는 %1$@";
 
-"%1$@ is not accepted" = "%1$@이(가) 허용되지 않습니다.";
+"29adf" = "%1$@이(가) 허용되지 않습니다.";
 
-"Address line 2 (optional)" = "주소란 2(선택 사항)";
+"9ada7" = "주소란 2(선택 사항)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "은행 계좌";
+"c6f64" = "은행 계좌";
 
-"Billing address" = "청구 주소";
+"1f516" = "청구 주소";
 
-"Billing details" = "청구 세부사항";
+"7c928" = "청구 세부사항";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "카드 정보";
+"fca47" = "카드 정보";
 
-"Card number" = "카드 번호";
+"816fc" = "카드 번호";
 
-"Confirm your %@" = "%@ 확인";
+"002d7" = "%@ 확인";
 
-"Invalid data." = "잘못된 데이터입니다.";
+"da175" = "잘못된 데이터입니다.";
 
-"MM / YY" = "MM/YY";
+"58f4a" = "MM/YY";
 
-"MM/YY" = "MM/YY";
+"1b5f6" = "MM/YY";
 
-"Postal Code" = "우편번호";
+"8198b" = "우편번호";
 
-"Shipping Address" = "배송 주소";
+"6e244" = "배송 주소";
 
-"State / Province / Region" = "주 / 도 / 지역";
+"649f1" = "주 / 도 / 지역";
 
-"The BSB you entered is invalid." = "입력하신 BSB가 유효하지 않습니다.";
+"dfa21" = "입력하신 BSB가 유효하지 않습니다.";
 
-"The selected brand is not allowed" = "선택한 브랜드는 허용되지 않습니다.";
+"aaf53" = "선택한 브랜드는 허용되지 않습니다.";
 
-"To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
+"9f2d9" = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
 
-"Your card has expired." = "카드가 만료되었습니다.";
+"393e6" = "카드가 만료되었습니다.";
 
-"Your card number is incomplete." = "카드 번호가 불완전합니다.";
+"7e5ae" = "카드 번호가 불완전합니다.";
 
-"Your card number is invalid." = "카드 번호가 유효하지 않습니다.";
+"3c122" = "카드 번호가 유효하지 않습니다.";
 
-"Your card's expiration date is incomplete." = "카드의 만료 날짜가 불완전합니다.";
+"a2036" = "카드의 만료 날짜가 불완전합니다.";
 
-"Your card's expiration date is invalid." = "카드의 만료 날짜가 유효하지 않습니다.";
+"6a457" = "카드의 만료 날짜가 유효하지 않습니다.";
 
-"Your card's expiration month is invalid." = "카드의 만료 월이 유효하지 않습니다.";
+"e47c0" = "카드의 만료 월이 유효하지 않습니다.";
 
-"Your card's expiration year is invalid." = "카드의 만료 연도가 유효하지 않습니다.";
+"36ae2" = "카드의 만료 연도가 유효하지 않습니다.";
 
-"Your card's security code is incomplete." = "카드의 보안 코드가 불완전합니다.";
+"300dd" = "카드의 보안 코드가 불완전합니다.";
 
-"Your card's security code is invalid." = "카드의 보안 코드가 유효하지 않습니다.";
+"394fd" = "카드의 보안 코드가 유효하지 않습니다.";
 
-"card number" = "카드 번호";
+"58da6" = "카드 번호";
 
-"example@example.com" = "example@example.com";
+"31c55" = "example@example.com";
 
-"expiration date" = "만료 날짜";
+"b34dd" = "만료 날짜";

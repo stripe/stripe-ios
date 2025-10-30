@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@ Kartı";
+"fbfa6" = "%1$@ Kartı";
 
-"%1$@ Credit" = "%1$@ Kredisi";
+"a11b0" = "%1$@ Kredisi";
 
-"%1$@ Debit" = "%1$@ Borcu";
+"95233" = "%1$@ Borcu";
 
-"%1$@ Prepaid" = "%1$@ Ön Ödemeli";
+"c90ba" = "%1$@ Ön Ödemeli";
 
-"%1$@ account ending in %2$@" = "%2$@ ile biten %1$@ hesabınız";
+"3b24a" = "%2$@ ile biten %1$@ hesabınız";
 
-"%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
+"f5b21" = "%2$@ İle Biten %1$@";
 
-"%1$@ is not accepted" = "%1$@ kabul edilmiyor";
+"29adf" = "%1$@ kabul edilmiyor";
 
-"Address line 2 (optional)" = "Adres satırı 2 (isteğe bağlı)";
+"9ada7" = "Adres satırı 2 (isteğe bağlı)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Banka Hesabı";
+"c6f64" = "Banka Hesabı";
 
-"Billing address" = "Fatura adresi";
+"1f516" = "Fatura adresi";
 
-"Billing details" = "Faturalama ayrıntıları";
+"7c928" = "Faturalama ayrıntıları";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Kart bilgileri";
+"fca47" = "Kart bilgileri";
 
-"Card number" = "Kart numarası";
+"816fc" = "Kart numarası";
 
-"Confirm your %@" = "%@ kodunuzu onaylayın";
+"002d7" = "%@ kodunuzu onaylayın";
 
-"Invalid data." = "Geçersiz veri.";
+"da175" = "Geçersiz veri.";
 
-"MM / YY" = "AA / YY";
+"58f4a" = "AA / YY";
 
-"MM/YY" = "AA/YY";
+"1b5f6" = "AA/YY";
 
-"Postal Code" = "Posta Kodu";
+"8198b" = "Posta Kodu";
 
-"Shipping Address" = "Gönderi Adresi";
+"6e244" = "Gönderi Adresi";
 
-"State / Province / Region" = "İl/İlçe/Bölge";
+"649f1" = "İl/İlçe/Bölge";
 
-"The BSB you entered is invalid." = "Girdiğiniz BSB geçersiz.";
+"dfa21" = "Girdiğiniz BSB geçersiz.";
 
-"The selected brand is not allowed" = "Seçilen markaya izin verilmiyor";
+"aaf53" = "Seçilen markaya izin verilmiyor";
 
-"To scan your card, allow camera access in Settings." = "Kartınızı taramak için Ayarlar'da kamera erişimine izin verin.";
+"9f2d9" = "Kartınızı taramak için Ayarlar'da kamera erişimine izin verin.";
 
-"Your card has expired." = "Kartınızın süresi dolmuş.";
+"393e6" = "Kartınızın süresi dolmuş.";
 
-"Your card number is incomplete." = "Kart numaranız eksik.";
+"7e5ae" = "Kart numaranız eksik.";
 
-"Your card number is invalid." = "Kart numaranız geçersiz.";
+"3c122" = "Kart numaranız geçersiz.";
 
-"Your card's expiration date is incomplete." = "Kartınızın son kullanma tarihi eksik.";
+"a2036" = "Kartınızın son kullanma tarihi eksik.";
 
-"Your card's expiration date is invalid." = "Kartınızın son kullanma tarihi geçersiz.";
+"6a457" = "Kartınızın son kullanma tarihi geçersiz.";
 
-"Your card's expiration month is invalid." = "Kartınızın son kullanma ayı geçersiz.";
+"e47c0" = "Kartınızın son kullanma ayı geçersiz.";
 
-"Your card's expiration year is invalid." = "Kartınızın son kullanma yılı geçersiz.";
+"36ae2" = "Kartınızın son kullanma yılı geçersiz.";
 
-"Your card's security code is incomplete." = "Kartınızın güvenlik kodu eksik.";
+"300dd" = "Kartınızın güvenlik kodu eksik.";
 
-"Your card's security code is invalid." = "Kartınızın güvenlik kodu geçersiz.";
+"394fd" = "Kartınızın güvenlik kodu geçersiz.";
 
-"card number" = "kart numarası";
+"58da6" = "kart numarası";
 
-"example@example.com" = "ornek@ornek.com";
+"31c55" = "ornek@ornek.com";
 
-"expiration date" = "son kullanma tarihi";
+"b34dd" = "son kullanma tarihi";

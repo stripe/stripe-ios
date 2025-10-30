@@ -1,57 +1,56 @@
 /* A generic error message displayed when an error occurs. */
-"An error occurred. Please try again." = "An error occurred. Please try again.";
+"9c170" = "An error occurred. Please try again.";
 
 /* An error message displayed when updating a card brand fails. */
-"Card brand was not updated. Please try again." = "Card brand was not updated. Please try again.";
+"4bc73" = "Card brand was not updated. Please try again.";
 
 /* Text for close button */
-"Close" = "Close";
+"7d9eb" = "Close";
 
 /* An error message displayed when setting a default payment method fails. */
-"Default payment method was not updated. Please try again." = "Default payment method was not updated. Please try again.";
+"3048d" = "Default payment method was not updated. Please try again.";
 
 /* Text for button to scan a credit card */
-"Scan Card" = "Scan Card";
+"b60b5" = "Scan Card";
 
 /* Button title to open camera to scan credit/debit card */
-"Scan card" = "Scan card";
+"ea2fe" = "Scan card";
 
 /* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "The IBAN you entered is invalid.";
+"ee81e" = "The IBAN you entered is invalid.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "There was an error processing your card -- try again in a few seconds";
+"fa47c" = "There was an error processing your card -- try again in a few seconds";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "There was an unexpected error -- try again in a few seconds";
+"c98a4" = "There was an unexpected error -- try again in a few seconds";
 
 /* Text for a retry button */
-"Try again" = "Try again";
+"d8b83" = "Try again";
 
 /* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>";
+"96fe7" = "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>";
 
 /* Error when the card has already expired */
-"Your card has expired" = "Your card has expired";
+"f5c35" = "Your card has expired";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Your card was declined";
+"b9821" = "Your card was declined";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "Your card's expiration month is invalid";
+"e02cf" = "Your card's expiration month is invalid";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "Your card's expiration year is invalid";
+"53311" = "Your card's expiration year is invalid";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Your card's number is invalid";
+"c433c" = "Your card's number is invalid";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "Your card's security code is invalid";
+"15f5b" = "Your card's security code is invalid";
 
 /* Error when customer's name is invalid */
-"Your name is invalid." = "Your name is invalid.";
+"b1d57" = "Your name is invalid.";
 
 /* Error message when a payment method gets declined. */
-"Your payment method was declined." = "Your payment method was declined.";
-
+"3209d" = "Your payment method was declined.";

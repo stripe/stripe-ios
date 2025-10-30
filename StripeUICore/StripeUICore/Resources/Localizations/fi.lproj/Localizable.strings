@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@ (valinnainen)";
+"224e3" = "%@ (valinnainen)";
 
-"(not accepted)" = "(ei hyväksytty)";
+"f676f" = "(ei hyväksytty)";
 
-"Account number" = "Tilinumero";
+"f7573" = "Tilinumero";
 
-"Address" = "Osoite";
+"56ef8" = "Osoite";
 
-"Address line 1" = "Osoiterivi 1";
+"ee760" = "Osoiterivi 1";
 
-"Address line 2" = "Osoiterivi 2";
+"350b2" = "Osoiterivi 2";
 
-"Area" = "Alue";
+"024dc" = "Alue";
 
-"BLIK code" = "BLIK-koodi";
+"35cc2" = "BLIK-koodi";
 
-"BSB number" = "BSB-numero";
+"88a06" = "BSB-numero";
 
-"Bank account •••• %@" = "Pankkitili •••• %@";
+"7a614" = "Pankkitili •••• %@";
 
-"Billing address is same as shipping" = "Laskutusosoite on sama kuin toimitusosoite";
+"a03f3" = "Laskutusosoite on sama kuin toimitusosoite";
 
-"Cancel" = "Peruuta";
+"19766e" = "Peruuta";
 
-"Card brand" = "Kortin merkki";
+"45022" = "Kortin merkki";
 
-"City" = "Paikkakunta";
+"fc33f" = "Paikkakunta";
 
-"Code field" = "Koodikenttä";
+"2b743" = "Koodikenttä";
 
-"Company" = "Yritys";
+"de474" = "Yritys";
 
-"Continue" = "Jatka";
+"31fbe" = "Jatka";
 
-"Country" = "Maa";
+"701d0" = "Maa";
 
-"Country or region" = "Maa tai alue";
+"8d236" = "Maa tai alue";
 
-"County" = "Lääni";
+"136c8" = "Lääni";
 
-"Department" = "Osasto";
+"5304a" = "Osasto";
 
-"District" = "Piirikunta";
+"50f18" = "Piirikunta";
 
-"Do Si" = "Do Si";
+"32c9d" = "Do Si";
 
-"Do you want to close this form?" = "Haluatko sulkea tämän lomakkeen?";
+"6ebfc" = "Haluatko sulkea tämän lomakkeen?";
 
-"Done" = "Valmis";
+"11a67" = "Valmis";
 
-"Double tap to edit" = "Napauta kahdesti ja muokkaa";
+"f5dd0" = "Napauta kahdesti ja muokkaa";
 
-"Edit" = "Muokkaa";
+"464c4" = "Muokkaa";
 
-"Eircode" = "EIR-koodi";
+"113d9" = "EIR-koodi";
 
-"Email" = "Sähköposti";
+"969cc" = "Sähköposti";
 
-"Emirate" = "Emiraatti";
+"4309c" = "Emiraatti";
 
-"Error" = "Virhe";
+"54a0e" = "Virhe";
 
-"First" = "Etunimi";
+"a151c" = "Etunimi";
 
-"Full name" = "Koko nimi";
+"f13a6" = "Koko nimi";
 
-"Incomplete phone number" = "Puutteellinen puhelinnumero";
+"6d2d3" = "Puutteellinen puhelinnumero";
 
-"Invalid UPI ID" = "Virheellinen UPI-tunnus";
+"14cf3" = "Virheellinen UPI-tunnus";
 
-"Island" = "Saari";
+"730f5" = "Saari";
 
-"Last" = "Sukunimi";
+"eb970" = "Sukunimi";
 
-"Name" = "Nimi";
+"dcd1d" = "Nimi";
 
-"Name on account" = "Tilin nimi";
+"59f3a" = "Tilin nimi";
 
-"OK" = "OK";
+"56533" = "OK";
 
-"Oblast" = "Oblasti";
+"2ba5c" = "Oblasti";
 
-"Other" = "Muu";
+"f97e9" = "Muu";
 
-"Parish" = "Kunta";
+"45ab6" = "Kunta";
 
-"Phone number" = "Puhelinnumero";
+"306f1" = "Puhelinnumero";
 
-"Postal code" = "Postinumero";
+"ae53c" = "Postinumero";
 
-"Prefecture" = "Prefektuuri";
+"50571" = "Prefektuuri";
 
-"Province" = "Provinssi";
+"abfce" = "Provinssi";
 
-"Remove" = "Poista";
+"c3812" = "Poista";
 
-"Remove bank account?" = "Poistetaanko pankkitili?";
+"05b2c" = "Poistetaanko pankkitili?";
 
-"Remove card" = "Poista kortti";
+"dcf7d" = "Poista kortti";
 
-"Search" = "Etsi";
+"49c26" = "Etsi";
 
-"Select card brand (optional)" = "Valitse korttimerkki (valinnainen)";
+"4dc47" = "Valitse korttimerkki (valinnainen)";
 
-"Selection is empty." = "Valinta on tyhjä.";
+"4d6f0" = "Valinta on tyhjä.";
 
-"Sort code" = "Pankin tunnusnumero";
+"a9002" = "Pankin tunnusnumero";
 
-"State" = "Osavaltio";
+"a3b50" = "Osavaltio";
 
-"Suburb" = "Esikaupunki";
+"9e843" = "Esikaupunki";
 
-"Suburb or city" = "Esikaupunki tai kaupunki";
+"c3273" = "Esikaupunki tai kaupunki";
 
-"The BSB you entered is incomplete." = "Antamasi BSB-numero on puutteellinen.";
+"d5ad2" = "Antamasi BSB-numero on puutteellinen.";
 
-"The ID number you entered is incomplete." = "Antamasi tunnusnumero on puutteellinen.";
+"0f9bf" = "Antamasi tunnusnumero on puutteellinen.";
 
-"The account number you entered is incomplete." = "Antamasi tilinumero on puutteellinen.";
+"e10dd" = "Antamasi tilinumero on puutteellinen.";
 
-"The sort code you entered is invalid." = "Antamasi pankin tunnusnumero on virheellinen.";
+"ac7db" = "Antamasi pankin tunnusnumero on virheellinen.";
 
-"Town or city" = "Kaupunki tai kunta";
+"9ce56" = "Kaupunki tai kunta";
 
-"UPI ID" = "UPI-tunnus";
+"cec4a" = "UPI-tunnus";
 
-"Unable to parse phone number" = "Puhelinnumeron jäsennys epäonnistui";
+"72356" = "Puhelinnumeron jäsennys epäonnistui";
 
-"Use rotor to access links" = "Käytä roottoria linkeille";
+"11480" = "Käytä roottoria linkeille";
 
-"Your BLIK code is incomplete." = "BLIK-koodisi on puutteellinen.";
+"6c0af" = "BLIK-koodisi on puutteellinen.";
 
-"Your BLIK code is invalid." = "BLIK-koodi ei kelpaa.";
+"224bb" = "BLIK-koodi ei kelpaa.";
 
-"Your ZIP code is incomplete." = "Postinumerosi on puutteellinen.";
+"3e686" = "Postinumerosi on puutteellinen.";
 
-"Your ZIP code is invalid." = "Postinumero ei ole kelvollinen.";
+"f029b" = "Postinumero ei ole kelvollinen.";
 
-"Your email is invalid." = "Sähköposti on virheellinen.";
+"57c28" = "Sähköposti on virheellinen.";
 
-"Your payment information will not be saved." = "Maksutietojasi ei tallenneta.";
+"cc532" = "Maksutietojasi ei tallenneta.";
 
-"Your postal code is incomplete." = "Postinumero on puutteellinen.";
+"52c55" = "Postinumero on puutteellinen.";
 
-"Your postal code is invalid." = "Postinumeroon virheellinen.";
+"037ec" = "Postinumeroon virheellinen.";
 
-"ZIP" = "Postinumero";
+"eaca4" = "Postinumero";

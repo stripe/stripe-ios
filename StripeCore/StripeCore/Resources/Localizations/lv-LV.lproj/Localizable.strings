@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Radās kļūda. Lūdzu, mēģiniet vēlreiz.";
+"9c170" = "Radās kļūda. Lūdzu, mēģiniet vēlreiz.";
 
-"Card brand was not updated. Please try again." = "Kartes zīmols netika atjaunināts. Lūdzu, mēģiniet vēlreiz.";
+"4bc73" = "Kartes zīmols netika atjaunināts. Lūdzu, mēģiniet vēlreiz.";
 
-"Close" = "Aizvērt";
+"7d9eb" = "Aizvērt";
 
-"Default payment method was not updated. Please try again." = "Noklusējuma maksājumu veids netika atjaunināts. Mēģiniet vēlreiz.";
+"3048d" = "Noklusējuma maksājumu veids netika atjaunināts. Mēģiniet vēlreiz.";
 
-"Scan Card" = "Skenēt karti";
+"b60b5" = "Skenēt karti";
 
-"Scan card" = "Skenēt karti";
+"ea2fe" = "Skenēt karti";
 
-"The IBAN you entered is invalid." = "Ievadītais IBAN nav derīgs.";
+"ee81e" = "Ievadītais IBAN nav derīgs.";
 
-"There was an error processing your card -- try again in a few seconds" = "Radās kļūda, apstrādājot jūsu karti — mēģiniet vēlreiz pēc dažām sekundēm";
+"fa47c" = "Radās kļūda, apstrādājot jūsu karti — mēģiniet vēlreiz pēc dažām sekundēm";
 
-"There was an unexpected error -- try again in a few seconds" = "Radusies negaidīta kļūda — mēģiniet vēlreiz pēc dažām sekundēm";
+"c98a4" = "Radusies negaidīta kļūda — mēģiniet vēlreiz pēc dažām sekundēm";
 
-"Try again" = "Mēģināt vēlreiz";
+"d8b83" = "Mēģināt vēlreiz";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Mēs izmantojam Stripe, lai verificētu jūsu kartes informāciju. Stripe var izmantot un uzglabāt jūsu datus saskaņā ar konfidencialitātes politiku. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Uzzināt vairāk</u></a>";
+"96fe7" = "Mēs izmantojam Stripe, lai verificētu jūsu kartes informāciju. Stripe var izmantot un uzglabāt jūsu datus saskaņā ar konfidencialitātes politiku. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Uzzināt vairāk</u></a>";
 
-"Your card has expired" = "Kartes derīguma termiņš ir beidzies";
+"f5c35" = "Kartes derīguma termiņš ir beidzies";
 
-"Your card was declined" = "Karte tika noraidīta";
+"b9821" = "Karte tika noraidīta";
 
-"Your card's expiration month is invalid" = "Kartes derīguma termiņa mēnesis nav derīgs";
+"e02cf" = "Kartes derīguma termiņa mēnesis nav derīgs";
 
-"Your card's expiration year is invalid" = "Kartes derīguma termiņa gads nav derīgs";
+"53311" = "Kartes derīguma termiņa gads nav derīgs";
 
-"Your card's number is invalid" = "Kartes numurs nav derīgs";
+"c433c" = "Kartes numurs nav derīgs";
 
-"Your card's security code is invalid" = "Kartes drošības kods nav derīgs";
+"15f5b" = "Kartes drošības kods nav derīgs";
 
-"Your name is invalid." = "Jūsu vārds nav derīgs.";
+"b1d57" = "Jūsu vārds nav derīgs.";
 
-"Your payment method was declined." = "Maksājuma veids tika noraidīts.";
+"3209d" = "Maksājuma veids tika noraidīts.";

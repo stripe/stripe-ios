@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "S'ha produït un error. Torneu-ho a provar.";
+"9c170" = "S'ha produït un error. Torneu-ho a provar.";
 
-"Card brand was not updated. Please try again." = "La marca de la targeta no s'ha actualitzat. Torneu-ho a provar.";
+"4bc73" = "La marca de la targeta no s'ha actualitzat. Torneu-ho a provar.";
 
-"Close" = "Tanca";
+"7d9eb" = "Tanca";
 
-"Default payment method was not updated. Please try again." = "El mètode de pagament per defecte no s'ha pogut actualitzar. Torneu-ho a provar.";
+"3048d" = "El mètode de pagament per defecte no s'ha pogut actualitzar. Torneu-ho a provar.";
 
-"Scan Card" = "Escanejar targeta";
+"b60b5" = "Escanejar targeta";
 
-"Scan card" = "Escanejar targeta";
+"ea2fe" = "Escanejar targeta";
 
-"The IBAN you entered is invalid." = "L'IBAN és incorrecte.";
+"ee81e" = "L'IBAN és incorrecte.";
 
-"There was an error processing your card -- try again in a few seconds" = "Hi ha hagut un error processant la teva targeta - torna-ho a intentar en uns segons";
+"fa47c" = "Hi ha hagut un error processant la teva targeta - torna-ho a intentar en uns segons";
 
-"There was an unexpected error -- try again in a few seconds" = "Hi ha hagut un error inesperat - torna-ho a intentar en uns segons";
+"c98a4" = "Hi ha hagut un error inesperat - torna-ho a intentar en uns segons";
 
-"Try again" = "Intenta-ho un altre cop";
+"d8b83" = "Intenta-ho un altre cop";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Emprem Stripe per verificar els detalls de la vostra targeta. És possible que Stripe faci ús i emmagatzemi les dades d'acord amb la política de privadesa. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Més informació</u></a>";
+"96fe7" = "Emprem Stripe per verificar els detalls de la vostra targeta. És possible que Stripe faci ús i emmagatzemi les dades d'acord amb la política de privadesa. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Més informació</u></a>";
 
-"Your card has expired" = "La teva targeta ha caducat";
+"f5c35" = "La teva targeta ha caducat";
 
-"Your card was declined" = "S'ha rebutjat la teva targeta";
+"b9821" = "S'ha rebutjat la teva targeta";
 
-"Your card's expiration month is invalid" = "El mes de caducitat de la teva targeta no és vàlid";
+"e02cf" = "El mes de caducitat de la teva targeta no és vàlid";
 
-"Your card's expiration year is invalid" = "L'any de caducitat de la teva targeta no és vàlid";
+"53311" = "L'any de caducitat de la teva targeta no és vàlid";
 
-"Your card's number is invalid" = "El número de la teva targeta no és vàlid";
+"c433c" = "El número de la teva targeta no és vàlid";
 
-"Your card's security code is invalid" = "El codi de seguretat de la teva targeta no és vàlid";
+"15f5b" = "El codi de seguretat de la teva targeta no és vàlid";
 
-"Your name is invalid." = "El nom no és vàlid.";
+"b1d57" = "El nom no és vàlid.";
 
-"Your payment method was declined." = "S'ha rebutjat el mètode de pagament.";
+"3209d" = "S'ha rebutjat el mètode de pagament.";

@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Ilmnes tõrge. Palun proovige uuesti.";
+"9c170" = "Ilmnes tõrge. Palun proovige uuesti.";
 
-"Card brand was not updated. Please try again." = "Kaardi kaubamärki ei värskendatud. Palun proovige uuesti.";
+"4bc73" = "Kaardi kaubamärki ei värskendatud. Palun proovige uuesti.";
 
-"Close" = "Sule";
+"7d9eb" = "Sule";
 
-"Default payment method was not updated. Please try again." = "Vaikemakseviisi ei värskendatud. Palun proovige uuesti.";
+"3048d" = "Vaikemakseviisi ei värskendatud. Palun proovige uuesti.";
 
-"Scan Card" = "Skanni kaart";
+"b60b5" = "Skanni kaart";
 
-"Scan card" = "Skanni kaart";
+"ea2fe" = "Skanni kaart";
 
-"The IBAN you entered is invalid." = "Sisestatud IBAN on kehtetu.";
+"ee81e" = "Sisestatud IBAN on kehtetu.";
 
-"There was an error processing your card -- try again in a few seconds" = "Kaardi töötlemisel esines tõrge – proovige mõne sekundi pärast uuesti";
+"fa47c" = "Kaardi töötlemisel esines tõrge – proovige mõne sekundi pärast uuesti";
 
-"There was an unexpected error -- try again in a few seconds" = "Esines ootamatu tõrge – proovige mõne sekundi pärast uuesti";
+"c98a4" = "Esines ootamatu tõrge – proovige mõne sekundi pärast uuesti";
 
-"Try again" = "Proovi uuesti";
+"d8b83" = "Proovi uuesti";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Kasutame teie kaardiandmete kontrollimiseks Stripe'i. Stripe võib teie andmeid kasutada ja säilitada vastavalt oma privaatsuspoliitikale. <a href='https://support.stripe.com/questions/stripes-card-image-verification'>Vaata lähemalt</u></a><u>";
+"96fe7" = "Kasutame teie kaardiandmete kontrollimiseks Stripe'i. Stripe võib teie andmeid kasutada ja säilitada vastavalt oma privaatsuspoliitikale. <a href='https://support.stripe.com/questions/stripes-card-image-verification'>Vaata lähemalt</u></a><u>";
 
-"Your card has expired" = "Kaart on aegunud";
+"f5c35" = "Kaart on aegunud";
 
-"Your card was declined" = "Kaart lükati tagasi";
+"b9821" = "Kaart lükati tagasi";
 
-"Your card's expiration month is invalid" = "Kaardi aegumiskuu on kehtetu";
+"e02cf" = "Kaardi aegumiskuu on kehtetu";
 
-"Your card's expiration year is invalid" = "Kaardi aegumisaasta on kehtetu";
+"53311" = "Kaardi aegumisaasta on kehtetu";
 
-"Your card's number is invalid" = "Kaardi number on kehtetu";
+"c433c" = "Kaardi number on kehtetu";
 
-"Your card's security code is invalid" = "Kaardi turvakood on kehtetu";
+"15f5b" = "Kaardi turvakood on kehtetu";
 
-"Your name is invalid." = "Teie nimi on kehtetu.";
+"b1d57" = "Teie nimi on kehtetu.";
 
-"Your payment method was declined." = "Teie makseviis lükati tagasi.";
+"3209d" = "Teie makseviis lükati tagasi.";

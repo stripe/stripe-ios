@@ -1,75 +1,75 @@
-"%1$@ Card" = "%1$@Kártya";
+"fbfa6" = "%1$@Kártya";
 
-"%1$@ Credit" = "%1$@Hitel";
+"a11b0" = "%1$@Hitel";
 
-"%1$@ Debit" = "%1$@Betéti";
+"95233" = "%1$@Betéti";
 
-"%1$@ Prepaid" = "%1$@Előre fizetett";
+"c90ba" = "%1$@Előre fizetett";
 
-"%1$@ account ending in %2$@" = "%2$@ végződésű számla %1$@";
+"3b24a" = "%2$@ végződésű számla %1$@";
 
-"%1$@ ending in %2$@" = "%1$@ végződése %2$@";
+"f5b21" = "%1$@ végződése %2$@";
 
-"%1$@ is not accepted" = "%1$@ nem elfogadott";
+"29adf" = "%1$@ nem elfogadott";
 
-"Address line 2 (optional)" = "Cím 2. sora (nem kötelező)";
+"9ada7" = "Cím 2. sora (nem kötelező)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Bankszámla";
+"c6f64" = "Bankszámla";
 
-"Billing address" = "Számlázási cím";
+"1f516" = "Számlázási cím";
 
-"Billing details" = "Számlázási adatok";
+"7c928" = "Számlázási adatok";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "Kártyaadatok";
+"fca47" = "Kártyaadatok";
 
-"Card number" = "Kártyaszám";
+"816fc" = "Kártyaszám";
 
-"Confirm your %@" = "%@ megerősítése";
+"002d7" = "%@ megerősítése";
 
-"Invalid data." = "Érvénytelen adat.";
+"da175" = "Érvénytelen adat.";
 
-"MM / YY" = "HH / ÉÉ";
+"58f4a" = "HH / ÉÉ";
 
-"MM/YY" = "HH/ÉÉ";
+"1b5f6" = "HH/ÉÉ";
 
-"Postal Code" = "Postai irányítószám";
+"8198b" = "Postai irányítószám";
 
-"Shipping Address" = "Szállítási cím";
+"6e244" = "Szállítási cím";
 
-"State / Province / Region" = "Állam/tartomány/régió";
+"649f1" = "Állam/tartomány/régió";
 
-"The BSB you entered is invalid." = "A beírt BSB-szám érvénytelen.";
+"dfa21" = "A beírt BSB-szám érvénytelen.";
 
-"The selected brand is not allowed" = "A kiválasztott kártyamárka nem engedélyezett";
+"aaf53" = "A kiválasztott kártyamárka nem engedélyezett";
 
-"To scan your card, allow camera access in Settings." = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
+"9f2d9" = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
 
-"Your card has expired." = "A kártyája lejárt.";
+"393e6" = "A kártyája lejárt.";
 
-"Your card number is incomplete." = "A kártyaszám hiányos.";
+"7e5ae" = "A kártyaszám hiányos.";
 
-"Your card number is invalid." = "A kártyaszám érvénytelen.";
+"3c122" = "A kártyaszám érvénytelen.";
 
-"Your card's expiration date is incomplete." = "A kártya lejárati dátuma hiányos.";
+"a2036" = "A kártya lejárati dátuma hiányos.";
 
-"Your card's expiration date is invalid." = "A kártya lejárati dátuma érvénytelen.";
+"6a457" = "A kártya lejárati dátuma érvénytelen.";
 
-"Your card's expiration month is invalid." = "Kártyájának lejárati hónapja érvénytelen.";
+"e47c0" = "Kártyájának lejárati hónapja érvénytelen.";
 
-"Your card's expiration year is invalid." = "Kártyájának lejárati éve érvénytelen.";
+"36ae2" = "Kártyájának lejárati éve érvénytelen.";
 
-"Your card's security code is incomplete." = "A kártya biztonsági kódja hiányos.";
+"300dd" = "A kártya biztonsági kódja hiányos.";
 
-"Your card's security code is invalid." = "A kártya biztonsági kódja érvénytelen.";
+"394fd" = "A kártya biztonsági kódja érvénytelen.";
 
-"card number" = "kártyaszám";
+"58da6" = "kártyaszám";
 
-"example@example.com" = "valaki@example.com";
+"31c55" = "valaki@example.com";
 
-"expiration date" = "lejárati dátum";
+"b34dd" = "lejárati dátum";

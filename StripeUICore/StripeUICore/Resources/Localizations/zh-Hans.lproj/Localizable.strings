@@ -1,149 +1,149 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+"aab74" = "%1$@ •••• %2$@";
 
-"%@ (optional)" = "%@（可选）";
+"224e3" = "%@（可选）";
 
-"(not accepted)" = "（未接受）";
+"f676f" = "（未接受）";
 
-"Account number" = "账号";
+"f7573" = "账号";
 
-"Address" = "地址";
+"56ef8" = "地址";
 
-"Address line 1" = "地址第 1 行";
+"ee760" = "地址第 1 行";
 
-"Address line 2" = "地址第 2 行";
+"350b2" = "地址第 2 行";
 
-"Area" = "地区";
+"024dc" = "地区";
 
-"BLIK code" = "BLIK 代码";
+"35cc2" = "BLIK 代码";
 
-"BSB number" = "BSB 号码";
+"88a06" = "BSB 号码";
 
-"Bank account •••• %@" = "银行账户 •••• %@";
+"7a614" = "银行账户 •••• %@";
 
-"Billing address is same as shipping" = "账单地址与收货地址相同";
+"a03f3" = "账单地址与收货地址相同";
 
-"Cancel" = "取消";
+"19766e" = "取消";
 
-"Card brand" = "银行卡品牌";
+"45022" = "银行卡品牌";
 
-"City" = "城市";
+"fc33f" = "城市";
 
-"Code field" = "代码字段";
+"2b743" = "代码字段";
 
-"Company" = "公司";
+"de474" = "公司";
 
-"Continue" = "继续";
+"31fbe" = "继续";
 
-"Country" = "国家";
+"701d0" = "国家";
 
-"Country or region" = "国家或地区";
+"8d236" = "国家或地区";
 
-"County" = "县";
+"136c8" = "县";
 
-"Department" = "部门";
+"5304a" = "部门";
 
-"District" = "区";
+"50f18" = "区";
 
-"Do Si" = "道/县";
+"32c9d" = "道/县";
 
-"Do you want to close this form?" = "您想关闭此表单吗？";
+"6ebfc" = "您想关闭此表单吗？";
 
-"Done" = "完成";
+"11a67" = "完成";
 
-"Double tap to edit" = "双击可编辑";
+"f5dd0" = "双击可编辑";
 
-"Edit" = "编辑";
+"464c4" = "编辑";
 
-"Eircode" = "爱尔兰邮编";
+"113d9" = "爱尔兰邮编";
 
-"Email" = "电子邮件";
+"969cc" = "电子邮件";
 
-"Emirate" = "酋长国";
+"4309c" = "酋长国";
 
-"Error" = "错误";
+"54a0e" = "错误";
 
-"First" = "名字";
+"a151c" = "名字";
 
-"Full name" = "全名";
+"f13a6" = "全名";
 
-"Incomplete phone number" = "电话号码不完整";
+"6d2d3" = "电话号码不完整";
 
-"Invalid UPI ID" = "UPI ID 无效";
+"14cf3" = "UPI ID 无效";
 
-"Island" = "岛";
+"730f5" = "岛";
 
-"Last" = "姓氏";
+"eb970" = "姓氏";
 
-"Name" = "姓名";
+"dcd1d" = "姓名";
 
-"Name on account" = "账户名";
+"59f3a" = "账户名";
 
-"OK" = "确定";
+"56533" = "确定";
 
-"Oblast" = "州";
+"2ba5c" = "州";
 
-"Other" = "其他";
+"f97e9" = "其他";
 
-"Parish" = "堂区";
+"45ab6" = "堂区";
 
-"Phone number" = "手机号码";
+"306f1" = "手机号码";
 
-"Postal code" = "邮政编码";
+"ae53c" = "邮政编码";
 
-"Prefecture" = "辖区";
+"50571" = "辖区";
 
-"Province" = "省";
+"abfce" = "省";
 
-"Remove" = "移除";
+"c3812" = "移除";
 
-"Remove bank account?" = "移除银行账户？";
+"05b2c" = "移除银行账户？";
 
-"Remove card" = "移除卡";
+"dcf7d" = "移除卡";
 
-"Search" = "搜索";
+"49c26" = "搜索";
 
-"Select card brand (optional)" = "选择银行卡品牌（可选）";
+"4dc47" = "选择银行卡品牌（可选）";
 
-"Selection is empty." = "选择为空。";
+"4d6f0" = "选择为空。";
 
-"Sort code" = "分类代码";
+"a9002" = "分类代码";
 
-"State" = "州";
+"a3b50" = "州";
 
-"Suburb" = "市郊";
+"9e843" = "市郊";
 
-"Suburb or city" = "市郊或城市";
+"c3273" = "市郊或城市";
 
-"The BSB you entered is incomplete." = "您输入的 BSB 不完整。";
+"d5ad2" = "您输入的 BSB 不完整。";
 
-"The ID number you entered is incomplete." = "您输入的证件号码不完整。";
+"0f9bf" = "您输入的证件号码不完整。";
 
-"The account number you entered is incomplete." = "您输入的账号不完整。";
+"e10dd" = "您输入的账号不完整。";
 
-"The sort code you entered is invalid." = "您输入的分类代码无效。";
+"ac7db" = "您输入的分类代码无效。";
 
-"Town or city" = "城镇或城市";
+"9ce56" = "城镇或城市";
 
-"UPI ID" = "UPI ID";
+"cec4a" = "UPI ID";
 
-"Unable to parse phone number" = "无法粘贴手机号码";
+"72356" = "无法粘贴手机号码";
 
-"Use rotor to access links" = "用转子访问链接";
+"11480" = "用转子访问链接";
 
-"Your BLIK code is incomplete." = "您的 BLIK 代码不完整。";
+"6c0af" = "您的 BLIK 代码不完整。";
 
-"Your BLIK code is invalid." = "您的 BLIK 代码无效。";
+"224bb" = "您的 BLIK 代码无效。";
 
-"Your ZIP code is incomplete." = "您的邮政编码不完整。";
+"3e686" = "您的邮政编码不完整。";
 
-"Your ZIP code is invalid." = "您的邮编无效。";
+"f029b" = "您的邮编无效。";
 
-"Your email is invalid." = "您的邮件地址无效。";
+"57c28" = "您的邮件地址无效。";
 
-"Your payment information will not be saved." = "不会保存您的付款信息。";
+"cc532" = "不会保存您的付款信息。";
 
-"Your postal code is incomplete." = "您的邮编不完整。";
+"52c55" = "您的邮编不完整。";
 
-"Your postal code is invalid." = "您的邮编无效。";
+"037ec" = "您的邮编无效。";
 
-"ZIP" = "邮编";
+"eaca4" = "邮编";

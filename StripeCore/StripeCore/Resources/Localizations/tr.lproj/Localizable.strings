@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Bir hata oluştu. Lütfen tekrar deneyin.";
+"9c170" = "Bir hata oluştu. Lütfen tekrar deneyin.";
 
-"Card brand was not updated. Please try again." = "Kart markası güncellenmedi. Lütfen tekrar deneyin.";
+"4bc73" = "Kart markası güncellenmedi. Lütfen tekrar deneyin.";
 
-"Close" = "Kapat";
+"7d9eb" = "Kapat";
 
-"Default payment method was not updated. Please try again." = "Varsayılan ödeme yöntemi güncellenmedi. Lütfen tekrar deneyin.";
+"3048d" = "Varsayılan ödeme yöntemi güncellenmedi. Lütfen tekrar deneyin.";
 
-"Scan Card" = "Kartı Tara";
+"b60b5" = "Kartı Tara";
 
-"Scan card" = "Kartı tara";
+"ea2fe" = "Kartı tara";
 
-"The IBAN you entered is invalid." = "Girdiğiniz IBAN geçersiz.";
+"ee81e" = "Girdiğiniz IBAN geçersiz.";
 
-"There was an error processing your card -- try again in a few seconds" = "Kartınızla işlem yapılırken bir hata oluştu -- birazdan tekrar deneyin";
+"fa47c" = "Kartınızla işlem yapılırken bir hata oluştu -- birazdan tekrar deneyin";
 
-"There was an unexpected error -- try again in a few seconds" = "Beklenmedik bir hata oluştu -- birazdan tekrar deneyin";
+"c98a4" = "Beklenmedik bir hata oluştu -- birazdan tekrar deneyin";
 
-"Try again" = "Tekrar dene";
+"d8b83" = "Tekrar dene";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Kart bilgilerinizi doğrulamak için Stripe kullanıyoruz. Stripe verilerinizi gizlilik politikasına uygun şekilde kullanabilir ve saklayabilir.<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Daha fazlasını öğrenin</u></a>";
+"96fe7" = "Kart bilgilerinizi doğrulamak için Stripe kullanıyoruz. Stripe verilerinizi gizlilik politikasına uygun şekilde kullanabilir ve saklayabilir.<a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Daha fazlasını öğrenin</u></a>";
 
-"Your card has expired" = "Kartınızın kullanım süresi dolmuş";
+"f5c35" = "Kartınızın kullanım süresi dolmuş";
 
-"Your card was declined" = "Kartınız reddedildi";
+"b9821" = "Kartınız reddedildi";
 
-"Your card's expiration month is invalid" = "Kartınızın son kullanma ayı geçersiz";
+"e02cf" = "Kartınızın son kullanma ayı geçersiz";
 
-"Your card's expiration year is invalid" = "Kartınızın son kullanma yılı geçersiz";
+"53311" = "Kartınızın son kullanma yılı geçersiz";
 
-"Your card's number is invalid" = "Kart numaranız geçersiz";
+"c433c" = "Kart numaranız geçersiz";
 
-"Your card's security code is invalid" = "Kartınızın güvenlik kodu geçersiz";
+"15f5b" = "Kartınızın güvenlik kodu geçersiz";
 
-"Your name is invalid." = "Adınız geçersiz.";
+"b1d57" = "Adınız geçersiz.";
 
-"Your payment method was declined." = "Ödeme yönteminiz reddedildi.";
+"3209d" = "Ödeme yönteminiz reddedildi.";

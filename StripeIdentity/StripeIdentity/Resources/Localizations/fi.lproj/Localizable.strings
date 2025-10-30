@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "Seuraavassa vaiheessa otetaan automaattisesti muutama kuva sen vahvistamiseksi, että kyseessä olet sinä";
+"40b57" = "Seuraavassa vaiheessa otetaan automaattisesti muutama kuva sen vahvistamiseksi, että kyseessä olet sinä";
 
-"Accepted forms of ID include" = "Hyväksyttyjä henkilöllisyystodistusmuotoja ovat";
+"a9934" = "Hyväksyttyjä henkilöllisyystodistusmuotoja ovat";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Voit vaihtoehtoisesti ladata henkilöllisyysasiakirjan kuvan manuaalisesti.";
+"a570c" = "Voit vaihtoehtoisesti ladata henkilöllisyysasiakirjan kuvan manuaalisesti.";
 
-"App Settings" = "Sovelluksen asetukset";
+"da645" = "Sovelluksen asetukset";
 
-"Back %@ photo successfully uploaded" = "Kohteen %@ taustapuolen kuvan lataus onnistui";
+"31438" = "Kohteen %@ taustapuolen kuvan lataus onnistui";
 
-"Back identity document photo successfully uploaded" = "Henkilöllisyystodistuksen taustapuolen kuvan lataus onnistui";
+"3253a" = "Henkilöllisyystodistuksen taustapuolen kuvan lataus onnistui";
 
-"Back of %@" = "Kohteen %@ taustapuoli";
+"128b0" = "Kohteen %@ taustapuoli";
 
-"Back of driver's license or government-issued photo ID" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen kääntöpuoli.";
+"37929" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen kääntöpuoli.";
 
-"Back of identity document" = "Henkilötodistuksen takapuoli";
+"3229d" = "Henkilötodistuksen takapuoli";
 
-"Camera permission" = "Kameran käyttöoikeus";
+"51e72" = "Kameran käyttöoikeus";
 
-"Camera unavailable" = "Kamera ei käytössä";
+"06cc3" = "Kamera ei käytössä";
 
-"Capturing…" = "Otetaan kuvaa...";
+"806e3" = "Otetaan kuvaa...";
 
-"Choose File" = "Valitse tiedosto";
+"d7042" = "Valitse tiedosto";
 
-"Consent" = "Suostumus";
+"d37e0" = "Suostumus";
 
-"Could not capture image" = "Kuvaa ei voitu ottaa";
+"bf6e9" = "Kuvaa ei voitu ottaa";
 
-"Date of Birth" = "Syntymäaika";
+"fdc73" = "Syntymäaika";
 
-"Date of birth does not look valid" = "Syntymäaika ei näytä kelvolliselta";
+"2baa1" = "Syntymäaika ei näytä kelvolliselta";
 
-"Details not visible" = "Tiedot eivät ole näkyvillä";
+"687cd" = "Tiedot eivät ole näkyvillä";
 
-"Flip your %@ over to the other side" = "Käännä %@ ylösalaisin";
+"e3292" = "Käännä %@ ylösalaisin";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Käännä ajokortti tai valtion myöntämä kuvallinen henkilötodistus toisin päin";
+"dd41b" = "Käännä ajokortti tai valtion myöntämä kuvallinen henkilötodistus toisin päin";
 
-"Flip your identity card over to the other side" = "Käännä henkilökortti toisinpäin";
+"87346" = "Käännä henkilökortti toisinpäin";
 
-"Front %@ photo successfully uploaded" = "Kohteen %@ etupuolen kuvan lataus onnistui";
+"b57ad" = "Kohteen %@ etupuolen kuvan lataus onnistui";
 
-"Front identity document photo successfully uploaded" = "Henkilöllisyystodistuksen etupuolen kuvan lataus onnistui";
+"3a9fd" = "Henkilöllisyystodistuksen etupuolen kuvan lataus onnistui";
 
-"Front of %@" = "Kohteen %@ etupuoli";
+"73fc5" = "Kohteen %@ etupuoli";
 
-"Front of driver's license or government-issued photo ID" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
+"b3d9a" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
 
-"Front of driver's license or passport" = "Ajokortin tai passin etupuoli";
+"8d188" = "Ajokortin tai passin etupuoli";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Ajokortin, passin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
+"070b5" = "Ajokortin, passin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
 
-"Front of identity document" = "Henkilötodistuksen etupuoli";
+"8562c" = "Henkilötodistuksen etupuoli";
 
-"Front of passport or government-issued photo ID" = "Passin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli";
+"bb2ee" = "Passin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli";
 
-"Get ready to scan your photo ID" = "Valmistaudu skannaamaan kuvallinen henkilöllisyystodistus";
+"83016" = "Valmistaudu skannaamaan kuvallinen henkilöllisyystodistus";
 
-"Get ready to take a selfie" = "Valmistaudu selfien ottoon";
+"9e29f" = "Valmistaudu selfien ottoon";
 
-"Go Back" = "Siirry takaisin";
+"b8d99" = "Siirry takaisin";
 
-"Hold still, scanning" = "Odota, skannaus kesken";
+"b63f6" = "Odota, skannaus kesken";
 
-"I'm ready" = "Olen valmis";
+"d5b05" = "Olen valmis";
 
-"ID Number" = "Tunnusnumero";
+"a403d" = "Tunnusnumero";
 
-"Individual CPF" = "Yksityishenkilön CPF";
+"6212a" = "Yksityishenkilön CPF";
 
-"Keep ID level" = "Pidä henkilöllisyystodistus tasaisena";
+"6be11" = "Pidä henkilöllisyystodistus tasaisena";
 
-"Last 4 of Social Security number" = "Sosiaaliturvatunnuksen 4 viimeistä merkkiä";
+"77dd8" = "Sosiaaliturvatunnuksen 4 viimeistä merkkiä";
 
-"Loading" = "Ladataan";
+"dc3808" = "Ladataan";
 
-"Make sure all details are visible and focus" = "Varmista, että kaikki tiedot ovat näkyvissä ja tarkennettuja";
+"859af" = "Varmista, että kaikki tiedot ovat näkyvissä ja tarkennettuja";
 
-"Make sure you're in a well lit space." = "Varmista, että olet hyvin valaistussa tilassa.";
+"6c2aa" = "Varmista, että olet hyvin valaistussa tilassa.";
 
-"Move closer" = "Siirry lähemmäs";
+"1da05" = "Siirry lähemmäs";
 
-"Move farther" = "Siirrä kauemmas";
+"73333" = "Siirrä kauemmas";
 
-"Move to a darker area" = "Siirry hämärämpään tilaan";
+"4687a" = "Siirry hämärämpään tilaan";
 
-"Move to a well-lit area" = "Siirry hyvin valaistuun tilaan";
+"f579f" = "Siirry hyvin valaistuun tilaan";
 
-"NRIC or FIN" = "NRIC tai FIN";
+"32e72" = "NRIC tai FIN";
 
-"No document detected" = "Ei havaittuja asiakirjoja";
+"b376f" = "Ei havaittuja asiakirjoja";
 
-"Personal ID number" = "Henkilötunnus";
+"fae7d" = "Henkilötunnus";
 
-"Personal Information" = "Henkilötiedot";
+"c4b37" = "Henkilötiedot";
 
-"Phone Number" = "Puhelinnumero";
+"72dba" = "Puhelinnumero";
 
-"Phone Verification" = "Vahvistus puhelimella";
+"cb074" = "Vahvistus puhelimella";
 
-"Photo Library" = "Kuvakirjasto";
+"e0b2a" = "Kuvakirjasto";
 
-"Please upload images of the front and back of your %@" = "Lataa kohteen %@ etu- ja taustapuolen kuvat";
+"03fa9" = "Lataa kohteen %@ etu- ja taustapuolen kuvat";
 
-"Please upload images of the front and back of your identity document" = "Lataa kuvat henkilöllisyystodistuksesi etu- ja takapuolesta";
+"8c273" = "Lataa kuvat henkilöllisyystodistuksesi etu- ja takapuolesta";
 
-"Position your %@ in the center of the frame" = "Aseta %@ ruudun keskelle";
+"ceab8" = "Aseta %@ ruudun keskelle";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Aseta ajokortti tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
+"12559" = "Aseta ajokortti tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
 
-"Position your driver's license or passport in the center of the frame" = "Aseta ajokortti tai passi kehyksen keskelle";
+"453ad" = "Aseta ajokortti tai passi kehyksen keskelle";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Aseta ajokortti, passi tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
+"ad934" = "Aseta ajokortti, passi tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
 
-"Position your face in the center of the frame." = "Aseta kasvosi kuvan keskelle.";
+"6f758" = "Aseta kasvosi kuvan keskelle.";
 
-"Position your identity document in the center of the frame" = "Aseta henkilöllisyystodistus ruudun keskelle";
+"68f51" = "Aseta henkilöllisyystodistus ruudun keskelle";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Aseta passi tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
+"74830" = "Aseta passi tai valtion myöntämä kuvallinen henkilötodistus kehyksen keskelle";
 
-"Retake Photos" = "Ota kuvat uudelleen";
+"16681" = "Ota kuvat uudelleen";
 
-"Scan" = "Skannaa";
+"ea1c5" = "Skannaa";
 
-"Scanned" = "Skannattu";
+"e9b3b" = "Skannattu";
 
-"Select" = "Valitse";
+"2a780" = "Valitse";
 
-"Select a location to upload the back of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan takapuolen";
+"568f3" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan takapuolen";
 
-"Select a location to upload the front of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan etupuolen";
+"a352a" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan etupuolen";
 
-"Select back %@ photo" = "Valitse kohteen %@ taustapuolen kuva";
+"0dfa8" = "Valitse kohteen %@ taustapuolen kuva";
 
-"Select back identity document photo" = "Valitse henkilöllisyystodistuksen taustapuolen kuva";
+"38aec" = "Valitse henkilöllisyystodistuksen taustapuolen kuva";
 
-"Select front %@ photo" = "Valitse kohteen %@ etupuolen kuva";
+"1ca11" = "Valitse kohteen %@ etupuolen kuva";
 
-"Select front identity document photo" = "Valitse henkilöllisyystodistuksen etupuolen kuva";
+"5c25a" = "Valitse henkilöllisyystodistuksen etupuolen kuva";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Selfiet";
+"ccd67" = "Selfiet";
 
-"Selfie captures are complete" = "Selfien ottaminen suortitettu";
+"a7b36" = "Selfien ottaminen suortitettu";
 
-"Take Photo" = "Ota kuva";
+"1ca36" = "Ota kuva";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "Henkilöllisyysasiakirjan kuvia ei ole tallennettu. Haluatko poistua?";
+"b6b76" = "Henkilöllisyysasiakirjan kuvia ei ole tallennettu. Haluatko poistua?";
 
-"There was an error accessing the camera." = "Kameran käytössä tapahtui virhe.";
+"1eda8" = "Kameran käytössä tapahtui virhe.";
 
-"Try Again" = "Yritä uudelleen";
+"df0fe" = "Yritä uudelleen";
 
-"Try reduce glare and make ID visible" = "Yritä vähentää häikäisyä niin että henkilöllisyystodistus näkyy";
+"ffd3d" = "Yritä vähentää häikäisyä niin että henkilöllisyystodistus näkyy";
 
-"Unable to establish a connection." = "Yhteyttä ei voida muodostaa.";
+"77ee9" = "Yhteyttä ei voida muodostaa.";
 
-"Unsaved changes" = "Tallentamattomat muutokset";
+"a710c" = "Tallentamattomat muutokset";
 
-"Upload" = "Lataa";
+"865e8" = "Lataa";
 
-"Upload a Photo" = "Lataa kuva";
+"f0c8a" = "Lataa kuva";
 
-"Upload your %@" = "Lataa %@";
+"7f6c1" = "Lataa %@";
 
-"Upload your photo ID" = "Lataa kuvallinen henkilöllisyystodistus";
+"40a76" = "Lataa kuvallinen henkilöllisyystodistus";
 
-"Uploading back %@ photo" = "Kohteen %@ taustapuolen kuvaa ladataan";
+"eaebd" = "Kohteen %@ taustapuolen kuvaa ladataan";
 
-"Uploading back identity document photo" = "Henkilöllisyystodistuksen taustapuolen kuvaa ladataan";
+"e16b7" = "Henkilöllisyystodistuksen taustapuolen kuvaa ladataan";
 
-"Uploading front %@ photo" = "Kohteen %@ etupuolen kuvaa ladataan";
+"93af2" = "Kohteen %@ etupuolen kuvaa ladataan";
 
-"Uploading front identity document photo" = "Henkilöllisyystodistuksen etupuolen kuvaa ladataan";
+"5dfbf" = "Henkilöllisyystodistuksen etupuolen kuvaa ladataan";
 
-"Verify your identity" = "Vahvista henkilöllisyytesi";
+"ed32a" = "Vahvista henkilöllisyytesi";
 
-"We could not capture a high-quality image." = "Emme kyenneet ottamaan korkealaatuista kuvaa.";
+"55e29" = "Emme kyenneet ottamaan korkealaatuista kuvaa.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "Tarvitsemme kameran käyttöoikeuden. Salli käyttöoikeus sovelluksen asetuksissa.";
+"a98b4" = "Tarvitsemme kameran käyttöoikeuden. Salli käyttöoikeus sovelluksen asetuksissa.";
 
-"Welcome" = "Tervetuloa";
+"0e222" = "Tervetuloa";
 
-"You can either try again or upload an image from your device." = "Voit joko yrittää uudelleen tai ladata kuvan laitteestasi.";
+"348a7" = "Voit joko yrittää uudelleen tai ladata kuvan laitteestasi.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Selfiekuviasi ei ole tallennettu. Haluatko poistua?";
+"b892f" = "Selfiekuviasi ei ole tallennettu. Haluatko poistua?";
 
-"driver's license" = "ajokortti";
+"cadf1" = "ajokortti";
 
-"government-issued photo ID" = "valtion myöntämä kuvallinen henkilöllisyystodistus";
+"29fd8" = "valtion myöntämä kuvallinen henkilöllisyystodistus";
 
-"passport" = "passi";
+"cbc47" = "passi";

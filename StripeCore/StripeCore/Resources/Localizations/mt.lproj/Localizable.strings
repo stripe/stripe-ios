@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Seħħ żball. Jekk jogħġbok erġa' pprova.";
+"9c170" = "Seħħ żball. Jekk jogħġbok erġa' pprova.";
 
-"Card brand was not updated. Please try again." = "Id-ditta tal-karti ma nbidlitx. Jekk jogħġbok erġa' pprova.";
+"4bc73" = "Id-ditta tal-karti ma nbidlitx. Jekk jogħġbok erġa' pprova.";
 
-"Close" = "Agħlaq";
+"7d9eb" = "Agħlaq";
 
-"Default payment method was not updated. Please try again." = "Il-metodu tal-pagament standard ma nbidilx. Jekk jogħġbok erġa' pprova.";
+"3048d" = "Il-metodu tal-pagament standard ma nbidilx. Jekk jogħġbok erġa' pprova.";
 
-"Scan Card" = "Skennja l-Karta";
+"b60b5" = "Skennja l-Karta";
 
-"Scan card" = "Skennja l-karta";
+"ea2fe" = "Skennja l-karta";
 
-"The IBAN you entered is invalid." = "L-IBAN li daħħalt mhux tajjeb.";
+"ee81e" = "L-IBAN li daħħalt mhux tajjeb.";
 
-"There was an error processing your card -- try again in a few seconds" = "Seħħ żball aħna u nipproċessaw il-karta tiegħek -- erġa' pprova wara ftit sekondi";
+"fa47c" = "Seħħ żball aħna u nipproċessaw il-karta tiegħek -- erġa' pprova wara ftit sekondi";
 
-"There was an unexpected error -- try again in a few seconds" = "Kien hemm żball mhux mistenni -- erġa' pprova wara ftit sekondi";
+"c98a4" = "Kien hemm żball mhux mistenni -- erġa' pprova wara ftit sekondi";
 
-"Try again" = "Erġa' pprova";
+"d8b83" = "Erġa' pprova";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Aħna naħdmu ma' Stripe biex nivverifikaw id-dettalji tal-karta tiegħek. Stripe tista' tuża u taħżen id-dejta tiegħek skont il-politika tal-privatezza tagħha. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sir af iktar</u></a>";
+"96fe7" = "Aħna naħdmu ma' Stripe biex nivverifikaw id-dettalji tal-karta tiegħek. Stripe tista' tuża u taħżen id-dejta tiegħek skont il-politika tal-privatezza tagħha. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sir af iktar</u></a>";
 
-"Your card has expired" = "Il-karta tiegħek skadiet";
+"f5c35" = "Il-karta tiegħek skadiet";
 
-"Your card was declined" = "Il-karta tiegħek m'għaddietx";
+"b9821" = "Il-karta tiegħek m'għaddietx";
 
-"Your card's expiration month is invalid" = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb";
+"e02cf" = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb";
 
-"Your card's expiration year is invalid" = "Is-sena tal-iskadenza tal-karta tiegħek mhix tajba";
+"53311" = "Is-sena tal-iskadenza tal-karta tiegħek mhix tajba";
 
-"Your card's number is invalid" = "In-numru tal-karta tiegħek mhux tajjeb";
+"c433c" = "In-numru tal-karta tiegħek mhux tajjeb";
 
-"Your card's security code is invalid" = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb";
+"15f5b" = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb";
 
-"Your name is invalid." = "L-isem li daħħalt mhux tajjeb.";
+"b1d57" = "L-isem li daħħalt mhux tajjeb.";
 
-"Your payment method was declined." = "Il-metodu tal-pagament tiegħek m'għaddiex.";
+"3209d" = "Il-metodu tal-pagament tiegħek m'għaddiex.";

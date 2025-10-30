@@ -1,195 +1,195 @@
-"A few photos will be taken automatically on the next step to verify it's you" = "A few photos will be taken automatically on the next step to verify it's you";
+"40b57" = "A few photos will be taken automatically on the next step to verify it's you";
 
-"Accepted forms of ID include" = "Accepted forms of ID include";
+"a9934" = "Accepted forms of ID include";
 
-"Alternatively, you may manually upload a photo of your identity document." = "Alternatively, you may manually upload a photo of your identity document.";
+"a570c" = "Alternatively, you may manually upload a photo of your identity document.";
 
-"App Settings" = "App Settings";
+"da645" = "App Settings";
 
-"Back %@ photo successfully uploaded" = "Back %@ photo successfully uploaded";
+"31438" = "Back %@ photo successfully uploaded";
 
-"Back identity document photo successfully uploaded" = "Back identity document photo successfully uploaded";
+"3253a" = "Back identity document photo successfully uploaded";
 
-"Back of %@" = "Back of %@";
+"128b0" = "Back of %@";
 
-"Back of driver's license or government-issued photo ID" = "Back of driving licence or government-issued photo ID";
+"37929" = "Back of driving licence or government-issued photo ID";
 
-"Back of identity document" = "Back of identity document";
+"3229d" = "Back of identity document";
 
-"Camera permission" = "Camera permission";
+"51e72" = "Camera permission";
 
-"Camera unavailable" = "Camera unavailable";
+"06cc3" = "Camera unavailable";
 
-"Capturing…" = "Capturing…";
+"806e3" = "Capturing…";
 
-"Choose File" = "Choose File";
+"d7042" = "Choose File";
 
-"Consent" = "Consent";
+"d37e0" = "Consent";
 
-"Could not capture image" = "Could not capture image";
+"bf6e9" = "Could not capture image";
 
-"Date of Birth" = "Date of Birth";
+"fdc73" = "Date of Birth";
 
-"Date of birth does not look valid" = "Date of birth does not look valid";
+"2baa1" = "Date of birth does not look valid";
 
-"Details not visible" = "Details not visible";
+"687cd" = "Details not visible";
 
-"Flip your %@ over to the other side" = "Flip your %@ over to the other side";
+"e3292" = "Flip your %@ over to the other side";
 
-"Flip your driver's license or government-issued photo ID over to the other side" = "Flip your driving licence or government-issued photo ID over to the other side";
+"dd41b" = "Flip your driving licence or government-issued photo ID over to the other side";
 
-"Flip your identity card over to the other side" = "Flip your identity card over to the other side";
+"87346" = "Flip your identity card over to the other side";
 
-"Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
+"b57ad" = "Front %@ photo successfully uploaded";
 
-"Front identity document photo successfully uploaded" = "Front identity document photo successfully uploaded";
+"3a9fd" = "Front identity document photo successfully uploaded";
 
-"Front of %@" = "Front of %@";
+"73fc5" = "Front of %@";
 
-"Front of driver's license or government-issued photo ID" = "Front of driving licence or government-issued photo ID";
+"b3d9a" = "Front of driving licence or government-issued photo ID";
 
-"Front of driver's license or passport" = "Front of driving licence or passport";
+"8d188" = "Front of driving licence or passport";
 
-"Front of driver's license, passport, or government-issued photo ID" = "Front of driving licence, passport or government-issued photo ID";
+"070b5" = "Front of driving licence, passport or government-issued photo ID";
 
-"Front of identity document" = "Front of identity document";
+"8562c" = "Front of identity document";
 
-"Front of passport or government-issued photo ID" = "Front of passport or government-issued photo ID";
+"bb2ee" = "Front of passport or government-issued photo ID";
 
-"Get ready to scan your photo ID" = "Get ready to scan your photo ID";
+"83016" = "Get ready to scan your photo ID";
 
-"Get ready to take a selfie" = "Get ready to take a selfie";
+"9e29f" = "Get ready to take a selfie";
 
-"Go Back" = "Go Back";
+"b8d99" = "Go Back";
 
-"Hold still, scanning" = "Hold still, scanning";
+"b63f6" = "Hold still, scanning";
 
-"I'm ready" = "I'm ready";
+"d5b05" = "I'm ready";
 
-"ID Number" = "ID Number";
+"a403d" = "ID Number";
 
-"Individual CPF" = "Individual CPF";
+"6212a" = "Individual CPF";
 
-"Keep ID level" = "Keep ID level";
+"6be11" = "Keep ID level";
 
-"Last 4 of Social Security number" = "Last 4 of Social Security number";
+"77dd8" = "Last 4 of Social Security number";
 
-"Loading" = "Loading";
+"dc3808" = "Loading";
 
-"Make sure all details are visible and focus" = "Make sure all details are visible and focus";
+"859af" = "Make sure all details are visible and focus";
 
-"Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
+"6c2aa" = "Make sure you're in a well lit space.";
 
-"Move closer" = "Move closer";
+"1da05" = "Move closer";
 
-"Move farther" = "Move further away";
+"73333" = "Move further away";
 
-"Move to a darker area" = "Move to a darker area";
+"4687a" = "Move to a darker area";
 
-"Move to a well-lit area" = "Move to a well-lit area";
+"f579f" = "Move to a well-lit area";
 
-"NRIC or FIN" = "NRIC or FIN";
+"32e72" = "NRIC or FIN";
 
-"No document detected" = "No document detected";
+"b376f" = "No document detected";
 
-"Personal ID number" = "Personal ID number";
+"fae7d" = "Personal ID number";
 
-"Personal Information" = "Personal Information";
+"c4b37" = "Personal Information";
 
-"Phone Number" = "Phone Number";
+"72dba" = "Phone Number";
 
-"Phone Verification" = "Phone Verification";
+"cb074" = "Phone Verification";
 
-"Photo Library" = "Photo Library";
+"e0b2a" = "Photo Library";
 
-"Please upload images of the front and back of your %@" = "Please upload images of the front and back of your %@";
+"03fa9" = "Please upload images of the front and back of your %@";
 
-"Please upload images of the front and back of your identity document" = "Please upload images of the front and back of your identity document";
+"8c273" = "Please upload images of the front and back of your identity document";
 
-"Position your %@ in the center of the frame" = "Position your %@ in the centre of the frame";
+"ceab8" = "Position your %@ in the centre of the frame";
 
-"Position your driver's license or government-issued photo ID in the center of the frame" = "Position your driving licence or government-issued photo ID in the centre of the frame";
+"12559" = "Position your driving licence or government-issued photo ID in the centre of the frame";
 
-"Position your driver's license or passport in the center of the frame" = "Position your driving licence or passport in the centre of the frame";
+"453ad" = "Position your driving licence or passport in the centre of the frame";
 
-"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Position your driving licence, passport or government-issued photo ID in the centre of the frame";
+"ad934" = "Position your driving licence, passport or government-issued photo ID in the centre of the frame";
 
-"Position your face in the center of the frame." = "Position your face in the centre of the frame.";
+"6f758" = "Position your face in the centre of the frame.";
 
-"Position your identity document in the center of the frame" = "Position your identity document in the centre of the frame";
+"68f51" = "Position your identity document in the centre of the frame";
 
-"Position your passport or government-issued photo ID in the center of the frame" = "Position your passport or government-issued photo ID in the centre of the frame";
+"74830" = "Position your passport or government-issued photo ID in the centre of the frame";
 
-"Retake Photos" = "Retake Photos";
+"16681" = "Retake Photos";
 
-"Scan" = "Scan";
+"ea1c5" = "Scan";
 
-"Scanned" = "Scanned";
+"e9b3b" = "Scanned";
 
-"Select" = "Select";
+"2a780" = "Select";
 
-"Select a location to upload the back of your identity document from" = "Select a location to upload the back of your identity document from";
+"568f3" = "Select a location to upload the back of your identity document from";
 
-"Select a location to upload the front of your identity document from" = "Select a location to upload the front of your identity document from";
+"a352a" = "Select a location to upload the front of your identity document from";
 
-"Select back %@ photo" = "Select back %@ photo";
+"0dfa8" = "Select back %@ photo";
 
-"Select back identity document photo" = "Select back identity document photo";
+"38aec" = "Select back identity document photo";
 
-"Select front %@ photo" = "Select front %@ photo";
+"1ca11" = "Select front %@ photo";
 
-"Select front identity document photo" = "Select front identity document photo";
+"5c25a" = "Select front identity document photo";
 
-"Selfie" = "Selfie";
+"7891f" = "Selfie";
 
-"Selfie captures" = "Selfie captures";
+"ccd67" = "Selfie captures";
 
-"Selfie captures are complete" = "Selfie captures are complete";
+"a7b36" = "Selfie captures are complete";
 
-"Take Photo" = "Take Photo";
+"1ca36" = "Take Photo";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";
+"b6b76" = "The images of your identity document have not been saved. Do you want to leave?";
 
-"There was an error accessing the camera." = "There was an error accessing the camera.";
+"1eda8" = "There was an error accessing the camera.";
 
-"Try Again" = "Try Again";
+"df0fe" = "Try Again";
 
-"Try reduce glare and make ID visible" = "Try to reduce glare and make ID visible";
+"ffd3d" = "Try to reduce glare and make ID visible";
 
-"Unable to establish a connection." = "Unable to establish a connection.";
+"77ee9" = "Unable to establish a connection.";
 
-"Unsaved changes" = "Unsaved changes";
+"a710c" = "Unsaved changes";
 
-"Upload" = "Upload";
+"865e8" = "Upload";
 
-"Upload a Photo" = "Upload a Photo";
+"f0c8a" = "Upload a Photo";
 
-"Upload your %@" = "Upload your %@";
+"7f6c1" = "Upload your %@";
 
-"Upload your photo ID" = "Upload your photo ID";
+"40a76" = "Upload your photo ID";
 
-"Uploading back %@ photo" = "Uploading back %@ photo";
+"eaebd" = "Uploading back %@ photo";
 
-"Uploading back identity document photo" = "Uploading back identity document photo";
+"e16b7" = "Uploading back identity document photo";
 
-"Uploading front %@ photo" = "Uploading front %@ photo";
+"93af2" = "Uploading front %@ photo";
 
-"Uploading front identity document photo" = "Uploading front identity document photo";
+"5dfbf" = "Uploading front identity document photo";
 
-"Verify your identity" = "Verify your identity";
+"ed32a" = "Verify your identity";
 
-"We could not capture a high-quality image." = "We could not capture a high-quality image.";
+"55e29" = "We could not capture a high-quality image.";
 
-"We need permission to use your camera. Please allow camera access in app settings." = "We need permission to use your camera. Please allow camera access in app settings.";
+"a98b4" = "We need permission to use your camera. Please allow camera access in app settings.";
 
-"Welcome" = "Welcome";
+"0e222" = "Welcome";
 
-"You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
+"348a7" = "You can either try again or upload an image from your device.";
 
-"Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
+"b892f" = "Your selfie images have not been saved. Do you want to leave?";
 
-"driver's license" = "driver's license";
+"cadf1" = "driver's license";
 
-"government-issued photo ID" = "government-issued photo ID";
+"29fd8" = "government-issued photo ID";
 
-"passport" = "passport";
+"cbc47" = "passport";

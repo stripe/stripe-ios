@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "Došlo je do pogreške. Molimo pokušajte ponovo.";
+"9c170" = "Došlo je do pogreške. Molimo pokušajte ponovo.";
 
-"Card brand was not updated. Please try again." = "Marka kartice nije ažurirana. Molimo pokušajte ponovo.";
+"4bc73" = "Marka kartice nije ažurirana. Molimo pokušajte ponovo.";
 
-"Close" = "Zatvori";
+"7d9eb" = "Zatvori";
 
-"Default payment method was not updated. Please try again." = "Zadani način plaćanja nije ažuriran. Molimo pokušajte ponovo.";
+"3048d" = "Zadani način plaćanja nije ažuriran. Molimo pokušajte ponovo.";
 
-"Scan Card" = "Skeniraj karticu";
+"b60b5" = "Skeniraj karticu";
 
-"Scan card" = "Skeniraj karticu";
+"ea2fe" = "Skeniraj karticu";
 
-"The IBAN you entered is invalid." = "Uneseni IBAN nije valjan.";
+"ee81e" = "Uneseni IBAN nije valjan.";
 
-"There was an error processing your card -- try again in a few seconds" = "Došlo je do pogreške u obradi vaše kartice -- pokušajte ponovno za nekoliko sekundi";
+"fa47c" = "Došlo je do pogreške u obradi vaše kartice -- pokušajte ponovno za nekoliko sekundi";
 
-"There was an unexpected error -- try again in a few seconds" = "Došlo je do neočekivane pogreške -- pokušajte ponovno za nekoliko sekundi";
+"c98a4" = "Došlo je do neočekivane pogreške -- pokušajte ponovno za nekoliko sekundi";
 
-"Try again" = "Pokušajte ponovo";
+"d8b83" = "Pokušajte ponovo";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Koristimo Stripe za provjeru vaših podataka o kartici. Stripe može koristiti i pohranjivati vaše podatke u skladu sa svojim pravilima privatnosti. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Saznajte više</u></a>";
+"96fe7" = "Koristimo Stripe za provjeru vaših podataka o kartici. Stripe može koristiti i pohranjivati vaše podatke u skladu sa svojim pravilima privatnosti. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Saznajte više</u></a>";
 
-"Your card has expired" = "Vaša kartica je istekla";
+"f5c35" = "Vaša kartica je istekla";
 
-"Your card was declined" = "Kartica je odbijena";
+"b9821" = "Kartica je odbijena";
 
-"Your card's expiration month is invalid" = "Mjesec isteka kartice nije valjan";
+"e02cf" = "Mjesec isteka kartice nije valjan";
 
-"Your card's expiration year is invalid" = "Godina isteka kartice nije valjana";
+"53311" = "Godina isteka kartice nije valjana";
 
-"Your card's number is invalid" = "Broj kartice nije valjan";
+"c433c" = "Broj kartice nije valjan";
 
-"Your card's security code is invalid" = "Sigurnosni kod vaše kartice nije valjan";
+"15f5b" = "Sigurnosni kod vaše kartice nije valjan";
 
-"Your name is invalid." = "Vaše ime je neispravno.";
+"b1d57" = "Vaše ime je neispravno.";
 
-"Your payment method was declined." = "Vaš način plaćanja je odbijen.";
+"3209d" = "Vaš način plaćanja je odbijen.";

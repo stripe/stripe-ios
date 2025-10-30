@@ -24,69 +24,69 @@ import Foundation
     }
 
     static var address_line1: String {
-        STPLocalizedString("Address line 1", "Address line 1 placeholder for billing address form.\nLabel for address line 1 field")
+        STPLocalizedString("ee760", "Address line 1 placeholder for billing address form.\nLabel for address line 1 field")
     }
 
     static var address_line2: String {
-        STPLocalizedString("Address line 2", "Label for address line 2 field")
+        STPLocalizedString("350b2", "Label for address line 2 field")
     }
 
     static var country_or_region: String {
-        STPLocalizedString("Country or region", "Country selector and postal code entry form header title\nLabel of an address field")
+        STPLocalizedString("8d236", "Country selector and postal code entry form header title\nLabel of an address field")
     }
 
     static var country: String {
-        STPLocalizedString("Country", "Caption for Country field on address form")
+        STPLocalizedString("701d0", "Caption for Country field on address form")
     }
 
     static var email: String {
-        STPLocalizedString("Email", "Label for Email field on form")
+        STPLocalizedString("969cc", "Label for Email field on form")
     }
 
     static var name: String {
-        STPLocalizedString("Name", "Label for Name field on form")
+        STPLocalizedString("dcd1d", "Label for Name field on form")
     }
 
     static var full_name: String {
-        STPLocalizedString("Full name", "Label for Full name field on form")
+        STPLocalizedString("f13a6", "Label for Full name field on form")
     }
 
     static var given_name: String {
-        STPLocalizedString("First", "Label for first (given) name field")
+        STPLocalizedString("a151c", "Label for first (given) name field")
     }
 
     static var family_name: String {
-        STPLocalizedString("Last", "Label for last (family) name field")
+        STPLocalizedString("eb970", "Label for last (family) name field")
     }
 
     static var nameOnAccount: String {
-        STPLocalizedString("Name on account", "Label for Name on account field on form")
+        STPLocalizedString("59f3a", "Label for Name on account field on form")
     }
 
     static var company: String {
-        STPLocalizedString("Company", "Label for Company field on form")
+        STPLocalizedString("de474", "Label for Company field on form")
     }
 
     static var invalid_email: String {
-        STPLocalizedString("Your email is invalid.", "Error message when email is invalid")
+        STPLocalizedString("57c28", "Error message when email is invalid")
     }
 
     static var billing_same_as_shipping: String {
-        STPLocalizedString("Billing address is same as shipping", "Label for a checkbox that makes customers billing address same as their shipping address")
+        STPLocalizedString("a03f3", "Label for a checkbox that makes customers billing address same as their shipping address")
     }
 
     // MARK: - Phone number
 
     static var phoneNumber: String {
-        STPLocalizedString("Phone number", "Caption for Phone number field on address form")
+        STPLocalizedString("306f1", "Caption for Phone number field on address form")
     }
 
     static var incomplete_phone_number: String {
-        STPLocalizedString("Incomplete phone number", "Error description for incomplete phone number")
+        STPLocalizedString("6d2d3", "Error description for incomplete phone number")
     }
 
     static var invalid_phone_number: String {
-        STPLocalizedString("Unable to parse phone number", "Error string when we can't parse a phone number")
+        STPLocalizedString("72356", "Error string when we can't parse a phone number")
     }
 
     static var optional_field: String {
@@ -97,35 +97,35 @@ import Foundation
     }
 
     static var other: String {
-        STPLocalizedString("Other", "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'")
+        STPLocalizedString("f97e9", "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'")
     }
 
     // MARK: City field labels
 
     static var city: String {
-        STPLocalizedString("City", "Caption for City field on address form")
+        STPLocalizedString("fc33f", "Caption for City field on address form")
     }
 
     static var district: String {
-        STPLocalizedString("District", "Label for the district field on an address form")
+        STPLocalizedString("50f18", "Label for the district field on an address form")
     }
 
     static var suburb: String {
-        STPLocalizedString("Suburb", "Label of an address field")
+        STPLocalizedString("9e843", "Label of an address field")
     }
 
     static var post_town: String {
-        STPLocalizedString("Town or city", "Label of an address field")
+        STPLocalizedString("9ce56", "Label of an address field")
     }
 
     static var suburb_or_city: String {
-        STPLocalizedString("Suburb or city", "Label of an address field")
+        STPLocalizedString("c3273", "Label of an address field")
     }
 
     // MARK: Postal code field labels
 
     static var eircode: String {
-        STPLocalizedString("Eircode", "Label of an address field")
+        STPLocalizedString("113d9", "Label of an address field")
     }
 
     static var postal_pin: String {
@@ -154,25 +154,25 @@ import Foundation
     }
 
     static var your_zip_is_incomplete: String {
-        STPLocalizedString("Your ZIP code is incomplete.", "Error message for when ZIP code in form is incomplete (US only)")
+        STPLocalizedString("3e686", "Error message for when ZIP code in form is incomplete (US only)")
     }
 
     static var your_postal_code_is_incomplete: String {
-        STPLocalizedString("Your postal code is incomplete.", "Error message for when postal code in form is incomplete")
+        STPLocalizedString("52c55", "Error message for when postal code in form is incomplete")
     }
 
     static var your_zip_is_invalid: String {
-        STPLocalizedString("Your ZIP code is invalid.", "Error message for when ZIP code in form is invalid (US only)")
+        STPLocalizedString("f029b", "Error message for when ZIP code in form is invalid (US only)")
     }
 
     static var your_postal_code_is_invalid: String {
-        STPLocalizedString("Your postal code is invalid.", "Error message for when postal code in form is invalid")
+        STPLocalizedString("037ec", "Error message for when postal code in form is invalid")
     }
 
     // MARK: State field labels
 
     static var area: String {
-        STPLocalizedString("Area", "Label of an address field")
+        STPLocalizedString("024dc", "Label of an address field")
     }
 
     static var county: String {
@@ -186,31 +186,31 @@ import Foundation
     }
 
     static var department: String {
-        STPLocalizedString("Department", "Label of an address field")
+        STPLocalizedString("5304a", "Label of an address field")
     }
 
     static var do_si: String {
-        STPLocalizedString("Do Si", "Label of an address field")
+        STPLocalizedString("32c9d", "Label of an address field")
     }
 
     static var emirate: String {
-        STPLocalizedString("Emirate", "Label of an address field")
+        STPLocalizedString("4309c", "Label of an address field")
     }
 
     static var island: String {
-        STPLocalizedString("Island", "Label of an address field")
+        STPLocalizedString("730f5", "Label of an address field")
     }
 
     static var oblast: String {
-        STPLocalizedString("Oblast", "Label of an address field")
+        STPLocalizedString("2ba5c", "Label of an address field")
     }
 
     static var parish: String {
-        STPLocalizedString("Parish", "Label of an address field")
+        STPLocalizedString("45ab6", "Label of an address field")
     }
 
     static var prefecture: String {
-        STPLocalizedString("Prefecture", "Label of an address field")
+        STPLocalizedString("50571", "Label of an address field")
     }
 
     static var province: String {
@@ -255,7 +255,7 @@ import Foundation
     }
 
     static var incompleteAccountNumber: String {
-        STPLocalizedString("The account number you entered is incomplete.", "Error description for incomplete account number")
+        STPLocalizedString("e10dd", "Error description for incomplete account number")
     }
 
     static var bank_account_xxxx: String {
@@ -272,37 +272,37 @@ import Foundation
 
     // MARK: - Control strings
     static var error: String {
-        return STPLocalizedString("Error", "Text for error labels")
+        return STPLocalizedString("54a0e", "Text for error labels")
     }
 
     static var cancel: String {
-        STPLocalizedString("Cancel", "Button title to cancel action in an alert")
+        STPLocalizedString("19766e", "Button title to cancel action in an alert")
     }
 
     static var closeFormTitle: String {
-        STPLocalizedString("Do you want to close this form?",
+        STPLocalizedString("6ebfc",
                            "Used as the title for prompting the user if they want to close the sheet")
     }
 
     static var paymentInfoWontBeSaved: String {
-        STPLocalizedString("Your payment information will not be saved.",
+        STPLocalizedString("cc532",
                            "Used as the title for prompting the user if they want to close the sheet")
     }
 
     static var ok: String {
-        STPLocalizedString("OK", "ok button")
+        STPLocalizedString("56533", "ok button")
     }
 
     static var `continue`: String {
-        STPLocalizedString("Continue", "Text for continue button")
+        STPLocalizedString("31fbe", "Text for continue button")
     }
 
     static var remove: String {
-        STPLocalizedString("Remove", "Button title for confirmation alert to remove a saved payment method")
+        STPLocalizedString("c3812", "Button title for confirmation alert to remove a saved payment method")
     }
 
     static var search: String {
-        STPLocalizedString("Search", "Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped")
+        STPLocalizedString("49c26", "Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped")
     }
 
     static var useRotorToAccessLinks: String {
@@ -322,39 +322,39 @@ import Foundation
     // MARK: - UPI
 
     static var upi_id: String {
-        STPLocalizedString("UPI ID", "Label for UPI ID number field on form")
+        STPLocalizedString("cec4a", "Label for UPI ID number field on form")
     }
 
     static var invalid_upi_id: String {
-        STPLocalizedString("Invalid UPI ID", "Error message when UPI ID is invalid")
+        STPLocalizedString("14cf3", "Error message when UPI ID is invalid")
     }
 
     // MARK: - Blik
 
     static var blik_code: String {
-        STPLocalizedString("BLIK code", "Label for BLIK code number field on form")
+        STPLocalizedString("35cc2", "Label for BLIK code number field on form")
     }
 
     static var incomplete_blik_code: String {
-        STPLocalizedString("Your BLIK code is incomplete.", "Error message when BLIK code is incomplete")
+        STPLocalizedString("6c0af", "Error message when BLIK code is incomplete")
     }
 
     static var invalid_blik_code: String {
-        STPLocalizedString("Your BLIK code is invalid.", "Error message when BLIK code is invalid")
+        STPLocalizedString("224bb", "Error message when BLIK code is invalid")
     }
 
     // MARK: - Card brand choice
 
     static var card_brand_dropdown_placeholder: String {
-        STPLocalizedString("Select card brand (optional)", "Message when a user is selecting a card brand in a dropdown")
+        STPLocalizedString("4dc47", "Message when a user is selecting a card brand in a dropdown")
     }
 
     static var card_brand: String {
-        STPLocalizedString("Card brand", "Label an input field to update card brand")
+        STPLocalizedString("45022", "Label an input field to update card brand")
     }
 
     static var remove_card: String {
-        STPLocalizedString("Remove card", "Label on a button for removing a card")
+        STPLocalizedString("dcf7d", "Label on a button for removing a card")
     }
 
     static var brand_not_accepted: String {

@@ -1,37 +1,37 @@
-"An error occurred. Please try again." = "오류가 발생했습니다. 다시 시도하십시오.";
+"9c170" = "오류가 발생했습니다. 다시 시도하십시오.";
 
-"Card brand was not updated. Please try again." = "카드 브랜드가 업데이트되지 않았습니다. 다시 시도하십시오.";
+"4bc73" = "카드 브랜드가 업데이트되지 않았습니다. 다시 시도하십시오.";
 
-"Close" = "닫기";
+"7d9eb" = "닫기";
 
-"Default payment method was not updated. Please try again." = "기본 결제 방식이 업데이트되지 않았습니다. 다시 시도하십시오.";
+"3048d" = "기본 결제 방식이 업데이트되지 않았습니다. 다시 시도하십시오.";
 
-"Scan Card" = "카드 스캔";
+"b60b5" = "카드 스캔";
 
-"Scan card" = "카드 스캔";
+"ea2fe" = "카드 스캔";
 
-"The IBAN you entered is invalid." = "입력한 IBAN이 잘못되었습니다.";
+"ee81e" = "입력한 IBAN이 잘못되었습니다.";
 
-"There was an error processing your card -- try again in a few seconds" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
+"fa47c" = "카드를 처리하는 동안 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
 
-"There was an unexpected error -- try again in a few seconds" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
+"c98a4" = "예기치 않은 오류가 발생했습니다. 몇 초 후에 다시 시도하십시오.";
 
-"Try again" = "다시 시도";
+"d8b83" = "다시 시도";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Stripe를 통해 카드 세부사항을 확인합니다. Stripe에서 자사 개인정보정책에 따라 귀하의 데이터를 사용하고 저장할 수 있습니다. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>자세히 알아보기</u></a>";
+"96fe7" = "Stripe를 통해 카드 세부사항을 확인합니다. Stripe에서 자사 개인정보정책에 따라 귀하의 데이터를 사용하고 저장할 수 있습니다. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>자세히 알아보기</u></a>";
 
-"Your card has expired" = "카드가 만료되었습니다";
+"f5c35" = "카드가 만료되었습니다";
 
-"Your card was declined" = "카드가 거절되었습니다";
+"b9821" = "카드가 거절되었습니다";
 
-"Your card's expiration month is invalid" = "카드의 만료 월이 유효하지 않습니다";
+"e02cf" = "카드의 만료 월이 유효하지 않습니다";
 
-"Your card's expiration year is invalid" = "카드의 만료 연도가 유효하지 않습니다";
+"53311" = "카드의 만료 연도가 유효하지 않습니다";
 
-"Your card's number is invalid" = "카드 번호가 유효하지 않습니다";
+"c433c" = "카드 번호가 유효하지 않습니다";
 
-"Your card's security code is invalid" = "카드의 보안 코드가 유효하지 않습니다";
+"15f5b" = "카드의 보안 코드가 유효하지 않습니다";
 
-"Your name is invalid." = "이름이 잘못되었습니다.";
+"b1d57" = "이름이 잘못되었습니다.";
 
-"Your payment method was declined." = "결제 방식이 거부되었습니다.";
+"3209d" = "결제 방식이 거부되었습니다.";

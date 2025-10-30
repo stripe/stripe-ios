@@ -1,39 +1,38 @@
 /* The text for warning when a debugger is currently attached to the process. */
-"A debugger is attached to the App." = "Er is een foutopsporingsprogramma gekoppeld aan de app.";
+"028f7" = "Er is een foutopsporingsprogramma gekoppeld aan de app.";
 
 /* The text for warning when an emulator is being used to run the application. */
-"An emulator is being used to run the App." = "Er wordt een emulator gebruikt om de app uit te voeren.";
+"8bcbe" = "Er wordt een emulator gebruikt om de app uit te voeren.";
 
 /* The text for the button that cancels the current challenge process. */
-"Cancel" = "Annuleren";
+"19766" = "Annuleren";
 
 /* Spoken by VoiceOver when the screen is loading. */
-"Loading" = "Bezig met laden";
+"dc380" = "Bezig met laden";
 
 /* The no answer to a yes or no question. */
-"No" = "Nee";
+"1ea44" = "Nee";
 
 /* The title for the challenge response step of an authenticated checkout. */
-"Secure checkout" = "Beveiligde Checkout";
+"58f32" = "Beveiligde Checkout";
 
 /* Indicates that a button is selected. */
-"Selected" = "Geselecteerd";
+"57fd7" = "Geselecteerd";
 
 /* The text for warning when a device is jailbroken */
-"The device is jailbroken." = "Het apparaat is opengebroken via een jailbreak.";
+"0eb49" = "Het apparaat is opengebroken via een jailbreak.";
 
 /* The text for warning when the integrity of the SDK has been tampered with */
-"The integrity of the SDK has been tampered." = "De integriteit van de SDK is niet meer intact.";
+"29abb" = "De integriteit van de SDK is niet meer intact.";
 
 /* The text for warning when the SDK is running on an unsupported OS or OS version. */
-"The OS or the OS Version is not supported." = "Het besturingssysteem of de versie wordt niet ondersteund.";
+"79d01" = "Het besturingssysteem of de versie wordt niet ondersteund.";
 
 /* Error description for when a network request times out. English value is as required by UL certification. */
-"Timeout" = "Time-out";
+"70594" = "Time-out";
 
 /* Indicates that a button is not selected. */
-"Unselected" = "Niet geselecteerd";
+"26118" = "Niet geselecteerd";
 
 /* The yes answer to a yes or no question. */
-"Yes" = "Ja";
-
+"85a39" = "Ja";

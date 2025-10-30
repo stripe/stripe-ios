@@ -1,75 +1,75 @@
-"%1$@ Card" = "Karta %1$@";
+"fbfa6" = "Karta %1$@";
 
-"%1$@ Credit" = "%1$@ Credit";
+"a11b0" = "%1$@ Credit";
 
-"%1$@ Debit" = "%1$@ Debit";
+"95233" = "%1$@ Debit";
 
-"%1$@ Prepaid" = "%1$@ Prepaid";
+"c90ba" = "%1$@ Prepaid";
 
-"%1$@ account ending in %2$@" = "Kont ta' %1$@ li jintemm biċ-ċifri %2$@";
+"3b24a" = "Kont ta' %1$@ li jintemm biċ-ċifri %2$@";
 
-"%1$@ ending in %2$@" = "%1$@ li jispiċċa %2$@";
+"f5b21" = "%1$@ li jispiċċa %2$@";
 
-"%1$@ is not accepted" = "%1$@ mhix aċċettata";
+"29adf" = "%1$@ mhix aċċettata";
 
-"Address line 2 (optional)" = "Indirizz linja 2 (mhux obbligatorju)";
+"9ada7" = "Indirizz linja 2 (mhux obbligatorju)";
 
-"Apple Pay" = "Apple Pay";
+"9bb3a" = "Apple Pay";
 
-"BSB" = "BSB";
+"7d8c3" = "BSB";
 
-"Bank Account" = "Kont bankarju";
+"c6f64" = "Kont bankarju";
 
-"Billing address" = "Indirizz tal-kont";
+"1f516" = "Indirizz tal-kont";
 
-"Billing details" = "Dettalji tal-ħruġ tal-fatturi";
+"7c928" = "Dettalji tal-ħruġ tal-fatturi";
 
-"CVC" = "CVC";
+"19e9b" = "CVC";
 
-"Card information" = "L-informazzjoni tal-karta";
+"fca47" = "L-informazzjoni tal-karta";
 
-"Card number" = "In-numru tal-karta";
+"816fc" = "In-numru tal-karta";
 
-"Confirm your %@" = "Ikkonferma l-%@ tiegħek";
+"002d7" = "Ikkonferma l-%@ tiegħek";
 
-"Invalid data." = "Data invalida.";
+"da175" = "Data invalida.";
 
-"MM / YY" = "XX / SS";
+"58f4a" = "XX / SS";
 
-"MM/YY" = "XX/SS";
+"1b5f6" = "XX/SS";
 
-"Postal Code" = "Kodiċi Postali";
+"8198b" = "Kodiċi Postali";
 
-"Shipping Address" = "L-Indirizz tat-Trasport tal-Merkanzija";
+"6e244" = "L-Indirizz tat-Trasport tal-Merkanzija";
 
-"State / Province / Region" = "Stat / Provinċja / Reġjun";
+"649f1" = "Stat / Provinċja / Reġjun";
 
-"The BSB you entered is invalid." = "Il-BSB li daħħalt mhux validu.";
+"dfa21" = "Il-BSB li daħħalt mhux validu.";
 
-"The selected brand is not allowed" = "Ix-xorta ta' karta magħżula ma tistax tintuża";
+"aaf53" = "Ix-xorta ta' karta magħżula ma tistax tintuża";
 
-"To scan your card, allow camera access in Settings." = "Biex tiskennja l-karta tiegħek, agħti l-aċċess għall-kamera mill-Għażliet.";
+"9f2d9" = "Biex tiskennja l-karta tiegħek, agħti l-aċċess għall-kamera mill-Għażliet.";
 
-"Your card has expired." = "Il-karta tiegħek skadiet.";
+"393e6" = "Il-karta tiegħek skadiet.";
 
-"Your card number is incomplete." = "In-numru tal-karta tiegħek mhux komplut.";
+"7e5ae" = "In-numru tal-karta tiegħek mhux komplut.";
 
-"Your card number is invalid." = "In-numru tal-karta tiegħek mhux tajjeb.";
+"3c122" = "In-numru tal-karta tiegħek mhux tajjeb.";
 
-"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-karta tiegħek mhix sħiħa.";
+"a2036" = "Id-data tal-iskadenza tal-karta tiegħek mhix sħiħa.";
 
-"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-karta tiegħek mhix tajba.";
+"6a457" = "Id-data tal-iskadenza tal-karta tiegħek mhix tajba.";
 
-"Your card's expiration month is invalid." = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb.";
+"e47c0" = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb.";
 
-"Your card's expiration year is invalid." = "Is-sena tal-iskadenza tal-karta tiegħek mhix tajba.";
+"36ae2" = "Is-sena tal-iskadenza tal-karta tiegħek mhix tajba.";
 
-"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux komplut.";
+"300dd" = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux komplut.";
 
-"Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb.";
+"394fd" = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb.";
 
-"card number" = "in-numru tal-karta";
+"58da6" = "in-numru tal-karta";
 
-"example@example.com" = "eżempju@eżempju.com";
+"31c55" = "eżempju@eżempju.com";
 
-"expiration date" = "id-data tal-iskadenza";
+"b34dd" = "id-data tal-iskadenza";
