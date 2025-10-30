@@ -121,10 +121,10 @@ import Foundation
         let startTime = Date()
         let siteKey = passiveCaptchaData.siteKey
         let isReady = hasFetchedToken
-        let passiveCaptchaOperation = AsyncOperation<String> {
+        let passiveCaptchaOperation = TaskWithCancellation<String> {
             return try await self.fetchToken()
         } onCancel: {
-            self.cancel()
+            Task { await self.cancel() }
         }
         let passiveCaptchaResult = await withTimeout(timeout: timeout, passiveCaptchaOperation)
         switch passiveCaptchaResult {

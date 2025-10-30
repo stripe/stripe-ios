@@ -12,17 +12,17 @@ import XCTest
 
 class TimeoutTests: XCTestCase {
     func testWithTimeout_allOperationsCompleteBeforeTimeout() async {
-        let operation1 = AsyncOperation<String> {
+        let operation1 = TaskWithCancellation<String> {
             try await Task.sleep(nanoseconds: 500_000_000) // 0.5s
             return "Result1"
         } onCancel: {}
 
-        let operation2 = AsyncOperation<Int> {
+        let operation2 = TaskWithCancellation<Int> {
             try await Task.sleep(nanoseconds: 100_000_000) // 0.1s
             return 42
         } onCancel: {}
 
-        let operation3 = AsyncOperation<Bool> {
+        let operation3 = TaskWithCancellation<Bool> {
             try await Task.sleep(nanoseconds: 300_000_000) // 0.3s
             return true
         } onCancel: {}
@@ -53,21 +53,21 @@ class TimeoutTests: XCTestCase {
     }
 
     func testWithTimeout_allOperationsTimeout() async {
-        var cancel1Called = false
-        var cancel2Called = false
+        let expectation1 = XCTestExpectation(description: "Cancel handler 1 called")
+        let expectation2 = XCTestExpectation(description: "Cancel handler 2 called")
 
-        let operation1 = AsyncOperation<String> {
+        let operation1 = TaskWithCancellation<String> {
             try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
             return "Should not complete"
         } onCancel: {
-            cancel1Called = true
+            expectation1.fulfill()
         }
 
-        let operation2 = AsyncOperation<Int> {
+        let operation2 = TaskWithCancellation<Int> {
             try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
             return 999
         } onCancel: {
-            cancel2Called = true
+            expectation2.fulfill()
         }
 
         let (result1, result2) = await withTimeout(
@@ -87,19 +87,16 @@ class TimeoutTests: XCTestCase {
         }
         XCTAssertEqual(error2 as? TimeoutError, TimeoutError.timeout)
 
-        // Give cancel handlers time to run
-        try? await Task.sleep(nanoseconds: 100_000_000)
-        XCTAssertTrue(cancel1Called)
-        XCTAssertTrue(cancel2Called)
+        await fulfillment(of: [expectation1, expectation2], timeout: 1.0)
     }
 
     func testWithTimeout_someOperationsTimeout() async {
-        let operation1 = AsyncOperation<String> {
+        let operation1 = TaskWithCancellation<String> {
             try await Task.sleep(nanoseconds: 100_000_000) // 0.1s - completes
             return "Fast"
         } onCancel: {}
 
-        let operation2 = AsyncOperation<String> {
+        let operation2 = TaskWithCancellation<String> {
             try await Task.sleep(nanoseconds: 5_000_000_000) // 5s - times out
             return "Slow"
         } onCancel: {}
@@ -123,7 +120,7 @@ class TimeoutTests: XCTestCase {
     }
 
     func testWithTimeout_singleOperation() async {
-        let operation = AsyncOperation<String> {
+        let operation = TaskWithCancellation<String> {
             try await Task.sleep(nanoseconds: 100_000_000) // 0.1s
             return "Single"
         } onCancel: {}
@@ -138,7 +135,7 @@ class TimeoutTests: XCTestCase {
     }
 
     func testWithTimeout_singleOperationTimesOut() async {
-        let operation = AsyncOperation<String> {
+        let operation = TaskWithCancellation<String> {
             try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
             return "Should timeout"
         } onCancel: {}
@@ -157,11 +154,11 @@ class TimeoutTests: XCTestCase {
             case test
         }
 
-        let operation1 = AsyncOperation<Error> {
+        let operation1 = TaskWithCancellation<Error> {
             throw TestError.test
         } onCancel: {}
 
-        let operation2 = AsyncOperation<String> {
+        let operation2 = TaskWithCancellation<String> {
             return "Success"
         } onCancel: {}
 
@@ -187,17 +184,17 @@ class TimeoutTests: XCTestCase {
         // All operations start at the same time, so total time should be ~0.5s
         let startTime = Date()
 
-        let operation1 = AsyncOperation<Int> {
+        let operation1 = TaskWithCancellation<Int> {
             try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
             return 1
         } onCancel: {}
 
-        let operation2 = AsyncOperation<Int> {
+        let operation2 = TaskWithCancellation<Int> {
             try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
             return 2
         } onCancel: {}
 
-        let operation3 = AsyncOperation<Int> {
+        let operation3 = TaskWithCancellation<Int> {
             try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
             return 3
         } onCancel: {}
@@ -221,14 +218,14 @@ class TimeoutTests: XCTestCase {
         let expectation1 = XCTestExpectation(description: "Cancel handler 1 called")
         let expectation2 = XCTestExpectation(description: "Cancel handler 2 called")
 
-        let operation1 = AsyncOperation<String> {
+        let operation1 = TaskWithCancellation<String> {
             try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
             return "A"
         } onCancel: {
             expectation1.fulfill()
         }
 
-        let operation2 = AsyncOperation<String> {
+        let operation2 = TaskWithCancellation<String> {
             try await Task.sleep(nanoseconds: 5_000_000_000) // 5s
             return "B"
         } onCancel: {
