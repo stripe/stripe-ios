@@ -24,15 +24,30 @@ protocol PaymentMethodElement: Element {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams?
 }
 
-extension PaymentMethodElement {
-    func clearTextFields() {
-        for element in getAllUnwrappedSubElements() {
+// MARK: - PaymentMethodElement utilities
+/// Utility methods for working with PaymentMethodElements
+enum PaymentMethodElementUtils {
+    /// Clears all text fields within an element hierarchy
+    static func clearTextFields(in element: Element) {
+        for element in element.getAllUnwrappedSubElements() {
             if let element = element as? TextFieldElement {
                 element.setText("")
             } else if let element = element as? CVCRecollectionElement {
                 element.clearTextFields()
             }
         }
+    }
+
+    /// Get the mandate text from an element hierarchy, if available
+    /// - Note: Assumes mandates are SimpleMandateElement
+    static func getMandateText(from element: Element) -> NSAttributedString? {
+        guard let mandateText = element.getAllUnwrappedSubElements()
+            .compactMap({ $0 as? SimpleMandateElement })
+            .first?.mandateTextView.attributedText,
+              !mandateText.string.isEmpty else {
+            return nil
+        }
+        return mandateText
     }
 }
 
