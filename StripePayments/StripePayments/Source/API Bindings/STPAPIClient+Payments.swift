@@ -323,6 +323,10 @@ extension STPAPIClient {
         with sourceParams: STPSourceParams,
         completion: @escaping STPSourceCompletionBlock
     ) {
+        let sourceType = STPSource.string(from: sourceParams.type)
+        STPAnalyticsClient.sharedClient.logSourceCreationAttempt(
+            sourceType: sourceType
+        )
         var params = STPFormEncoder.dictionary(forObject: sourceParams)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         params = Self.paramsAddingPaymentUserAgent(params)

@@ -59,7 +59,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     class func stringToTypeMapping() -> [String: NSNumber] {
         return [
             "card": NSNumber(value: STPSourceType.card.rawValue),
-            "three_d_secure": NSNumber(value: STPSourceType.threeDSecure.rawValue),
         ]
     }
 

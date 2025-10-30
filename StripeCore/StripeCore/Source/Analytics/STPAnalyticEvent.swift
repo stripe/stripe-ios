@@ -13,6 +13,10 @@ import Foundation
     // MARK: - Payment Creation
     case tokenCreation = "stripeios.token_creation"
 
+    // This was "stripeios.source_creation" in earlier SDKs,
+    // but we need to support both the old and new values forever.
+    case sourceCreation = "stripeios.source_creationn"
+
     case paymentMethodCreation = "stripeios.payment_method_creation"
     case paymentMethodUpdate = "stripeios.payment_method_update"
     case confirmationTokenCreation = "stripeios.confirmation_token_creation"

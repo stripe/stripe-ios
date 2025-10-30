@@ -24,6 +24,19 @@ extension STPAnalyticsClient {
         )
     }
 
+    func logSourceCreationAttempt(
+        sourceType: String?
+    ) {
+        log(
+            analytic: GenericPaymentAnalytic(
+                event: .sourceCreation,
+                additionalParams: [
+                    "source_type": sourceType ?? "unknown",
+                ]
+            )
+        )
+    }
+
     func logPaymentMethodCreationAttempt(
         paymentMethodType: String?,
         apiClient: STPAPIClient
