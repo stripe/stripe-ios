@@ -1,5 +1,5 @@
 //
-//  STPPaymentIntentParamsTest.swift
+//  STPPaymentIntentConfirmParamsTest.swift
 //  StripeiOS Tests
 //
 //  Created by Daniel Jackson on 7/5/18.
@@ -12,12 +12,12 @@
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentIntentParamsTest: XCTestCase {
+class STPPaymentIntentConfirmParamsTest: XCTestCase {
     func testInit() {
         for params in [
-            STPPaymentIntentParams(clientSecret: "secret"),
-            STPPaymentIntentParams(),
-            STPPaymentIntentParams(),
+            STPPaymentIntentConfirmParams(clientSecret: "secret"),
+            STPPaymentIntentConfirmParams(),
+            STPPaymentIntentConfirmParams(),
         ] {
             XCTAssertNotNil(params)
             XCTAssertNotNil(params.clientSecret)
@@ -41,7 +41,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
     }
 
     func testDescription() {
-        let params = STPPaymentIntentParams()
+        let params = STPPaymentIntentConfirmParams()
         XCTAssertNotNil(params.description)
     }
 
@@ -50,7 +50,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
     // #pragma clang diagnostic push
     // #pragma clang diagnostic ignored "-Wdeprecated"
     func testReturnURLRenaming() {
-        let params = STPPaymentIntentParams()
+        let params = STPPaymentIntentConfirmParams()
 
         XCTAssertNil(params.returnURL)
         XCTAssertNil(params.perform(NSSelectorFromString("returnUrl")))
@@ -63,7 +63,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
     }
 
     func testDefaultMandateData() {
-        let params = STPPaymentIntentParams()
+        let params = STPPaymentIntentConfirmParams()
 
         // no configuration should have no mandateData
         XCTAssertNil(params.mandateData)
@@ -100,13 +100,13 @@ class STPPaymentIntentParamsTest: XCTestCase {
 
     // MARK: STPFormEncodable Tests
     func testRootObjectName() {
-        XCTAssertNil(STPPaymentIntentParams.rootObjectName())
+        XCTAssertNil(STPPaymentIntentConfirmParams.rootObjectName())
     }
 
     func testPropertyNamesToFormFieldNamesMapping() {
-        let params = STPPaymentIntentParams()
+        let params = STPPaymentIntentConfirmParams()
 
-        let mapping = STPPaymentIntentParams.propertyNamesToFormFieldNamesMapping()
+        let mapping = STPPaymentIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
 
         for propertyName in mapping.keys {
             XCTAssertFalse(propertyName.contains(":"))
@@ -124,7 +124,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
     }
 
     func testCopy() {
-        let params = STPPaymentIntentParams(clientSecret: "test_client_secret")
+        let params = STPPaymentIntentConfirmParams(clientSecret: "test_client_secret")
         params.paymentMethodParams = STPPaymentMethodParams()
         params.paymentMethodId = "test_payment_method_id"
         params.savePaymentMethod = true
@@ -150,7 +150,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
         )
         params.confirmationToken = "ctoken_test_123"
 
-        let paramsCopy = params.copy() as! STPPaymentIntentParams
+        let paramsCopy = params.copy() as! STPPaymentIntentConfirmParams
         XCTAssertEqual(params.clientSecret, paramsCopy.clientSecret)
         XCTAssertEqual(params.paymentMethodId, paramsCopy.paymentMethodId)
 
@@ -195,30 +195,30 @@ class STPPaymentIntentParamsTest: XCTestCase {
 
     func testClientSecretValidation() {
         XCTAssertFalse(
-            STPPaymentIntentParams.isClientSecretValid("pi_12345"),
+            STPPaymentIntentConfirmParams.isClientSecretValid("pi_12345"),
             "'pi_12345' is not a valid client secret."
         )
         XCTAssertFalse(
-            STPPaymentIntentParams.isClientSecretValid("pi_12345_secret_"),
+            STPPaymentIntentConfirmParams.isClientSecretValid("pi_12345_secret_"),
             "'pi_12345_secret_' is not a valid client secret."
         )
         XCTAssertFalse(
-            STPPaymentIntentParams.isClientSecretValid(
+            STPPaymentIntentConfirmParams.isClientSecretValid(
                 "pi_a1b2c3_secret_x7y8z9pi_a1b2c3_secret_x7y8z9"
             ),
             "'pi_a1b2c3_secret_x7y8z9pi_a1b2c3_secret_x7y8z9' is not a valid client secret."
         )
         XCTAssertFalse(
-            STPPaymentIntentParams.isClientSecretValid("seti_a1b2c3_secret_x7y8z9"),
+            STPPaymentIntentConfirmParams.isClientSecretValid("seti_a1b2c3_secret_x7y8z9"),
             "'seti_a1b2c3_secret_x7y8z9' is not a valid client secret."
         )
 
         XCTAssertTrue(
-            STPPaymentIntentParams.isClientSecretValid("pi_a1b2c3_secret_x7y8z9"),
+            STPPaymentIntentConfirmParams.isClientSecretValid("pi_a1b2c3_secret_x7y8z9"),
             "'pi_a1b2c3_secret_x7y8z9' is a valid client secret."
         )
         XCTAssertTrue(
-            STPPaymentIntentParams.isClientSecretValid(
+            STPPaymentIntentConfirmParams.isClientSecretValid(
                 "pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA"
             ),
             "'pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA' is a valid client secret."
@@ -226,17 +226,17 @@ class STPPaymentIntentParamsTest: XCTestCase {
 
         // Test valid scoped client secrets
         XCTAssertTrue(
-            STPPaymentIntentParams.isClientSecretValid("pi_3RddVUHh8VvNDQ8j1CFgLC0y_scoped_secret_JouqJt9ahCKgh6B9r6"),
+            STPPaymentIntentConfirmParams.isClientSecretValid("pi_3RddVUHh8VvNDQ8j1CFgLC0y_scoped_secret_JouqJt9ahCKgh6B9r6"),
             "'pi_3RddVUHh8VvNDQ8j1CFgLC0y_scoped_secret_JouqJt9ahCKgh6B9r6' is a valid scoped client secret."
         )
         XCTAssertTrue(
-            STPPaymentIntentParams.isClientSecretValid("pi_1CkiBMLENEVhOs7YMtUehLau_scoped_secret_s4O8SDh7s6spSmHDw1VaYPGZA"),
+            STPPaymentIntentConfirmParams.isClientSecretValid("pi_1CkiBMLENEVhOs7YMtUehLau_scoped_secret_s4O8SDh7s6spSmHDw1VaYPGZA"),
             "'pi_1CkiBMLENEVhOs7YMtUehLau_scoped_secret_s4O8SDh7s6spSmHDw1VaYPGZA' is a valid scoped client secret."
         )
 
         // Test invalid scoped client secrets
         XCTAssertFalse(
-            STPPaymentIntentParams.isClientSecretValid("pi_12345_scoped_secret_"),
+            STPPaymentIntentConfirmParams.isClientSecretValid("pi_12345_scoped_secret_"),
             "'pi_12345_scoped_secret_' is not a valid client secret."
         )
     }

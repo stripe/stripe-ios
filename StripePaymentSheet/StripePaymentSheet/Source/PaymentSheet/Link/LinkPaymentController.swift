@@ -443,7 +443,7 @@ import UIKit
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             switch mode {
             case .paymentIntentClientSecret(let clientSecret):
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: .link)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret, paymentMethodType: .link)
                 paymentIntentParams.paymentMethodId = paymentMethodId
                 paymentIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                 STPPaymentHandler.shared().confirmPaymentIntent(

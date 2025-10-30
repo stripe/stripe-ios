@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripePaymentsUI
 
-extension STPPaymentIntentParams {
+extension STPPaymentIntentConfirmParams {
     var nonnil_paymentMethodOptions: STPConfirmPaymentMethodOptions {
         guard let paymentMethodOptions else {
             let paymentMethodOptions = STPConfirmPaymentMethodOptions()
