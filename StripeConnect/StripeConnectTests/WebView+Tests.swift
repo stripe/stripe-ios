@@ -83,6 +83,18 @@ extension WKWebView {
                                   }
                                   """)
     }
+
+    func evaluateCallSupplementalFunction(functionName: SupplementalFunctionName, invocationId: String, args: String) async throws {
+        try await evaluateMessage(name: "callSupplementalFunction",
+                                  json:
+                                  """
+                                  {
+                                      "functionName": "\(functionName)",
+                                      "invocationId": "\(invocationId)",
+                                      "args": \(args)
+                                  }
+                                  """)
+    }
 }
 
 extension WKWebView {

@@ -1,18 +1,39 @@
 require 'open3'
+require 'tempfile'
 require_relative 'get_frameworks'
 
 def diff(old_path, new_path)
-  stdout, _stderr, _status = Open3.capture3("diff", "-u", old_path, new_path)
+  # Read and sort both files alphabetically
+  old_lines = File.readlines(old_path).sort
+  new_lines = File.readlines(new_path).sort
 
-  diff_string = stdout.lines.map do |line|
-    case line[0..1]
-    when "+ " then "+ #{line[2..-1].strip}"
-    when "- " then "- #{line[2..-1].strip}"
-    else nil
-    end
-  end.compact.join("\n")
+  # Create temporary files with sorted content
+  old_temp = Tempfile.new(['sorted_old', '.swiftinterface'])
+  new_temp = Tempfile.new(['sorted_new', '.swiftinterface'])
 
-  return diff_string
+  begin
+    old_temp.write(old_lines.join)
+    old_temp.flush
+    new_temp.write(new_lines.join)
+    new_temp.flush
+
+    stdout, _stderr, _status = Open3.capture3("diff", "-u", old_temp.path, new_temp.path)
+
+    diff_string = stdout.lines.map do |line|
+      case line[0..1]
+      when "+ " then "+ #{line[2..-1].strip}"
+      when "- " then "- #{line[2..-1].strip}"
+      else nil
+      end
+    end.compact.join("\n")
+
+    return diff_string
+  ensure
+    old_temp.close
+    old_temp.unlink
+    new_temp.close
+    new_temp.unlink
+  end
 end
 
 final_diff_string = ""
@@ -25,7 +46,7 @@ for framework_name in GetFrameworks.framework_names("./modules.yaml")
   processed_lines = module_diff.lines.map do |line|
     if line.include?('public')
       # Remove everything before 'public', including any leading characters
-      line.sub(/^.*?(public)/, '- \1')
+      line.sub(/^(.*?)(public)/, '\1\2')  # Keep the original prefix
     else
       # Keep the line as is
       line

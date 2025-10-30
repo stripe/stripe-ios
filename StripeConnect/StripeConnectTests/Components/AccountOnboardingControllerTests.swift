@@ -6,7 +6,7 @@
 //
 
 import SafariServices
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@testable import StripeConnect
 @_spi(STP) import StripeCore
 import WebKit
 import XCTest
@@ -51,14 +51,15 @@ class AccountOnboardingControllerTests: XCTestCase {
                 var collectionOptions = AccountCollectionOptions()
                 collectionOptions.fields = .eventuallyDue
                 collectionOptions.futureRequirements = .include
+                collectionOptions.requirements = .only(["business_profile.mcc", "individual.first_name"])
                 return collectionOptions
             }()
         )
 
         try await controller.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
-                                                            json: "{}",
-                                                            expectedResponse: """
-            {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include"},"setFullTermsOfServiceUrl":"https:\\/\\/fullTermsOfServiceUrl.com","setPrivacyPolicyUrl":"https:\\/\\/privacyPolicyUrl.com","setRecipientTermsOfServiceUrl":"https:\\/\\/recipientTermsOfServiceUrl.com","setSkipTermsOfServiceCollection":true}
+                                                                    json: "{}",
+                                                                    expectedResponse: """
+            {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include","requirements":{"only":["business_profile.mcc","individual.first_name"]}},"setFullTermsOfServiceUrl":"https:\\/\\/fullTermsOfServiceUrl.com","setPrivacyPolicyUrl":"https:\\/\\/privacyPolicyUrl.com","setRecipientTermsOfServiceUrl":"https:\\/\\/recipientTermsOfServiceUrl.com","setSkipTermsOfServiceCollection":true}
             """)
     }
 
@@ -104,15 +105,14 @@ class AccountOnboardingControllerTests: XCTestCase {
     private class AccountOnboardingControllerDelegatePassThrough: AccountOnboardingControllerDelegate {
 
         var accountOnboardingDidFailLoadWithError: ((_ accountOnboarding: AccountOnboardingController, _ error: Error) -> Void)?
-        
-        var accountOnboardingDidExit: ((_ accountOnboarding: AccountOnboardingController)->Void)? = nil
 
+        var accountOnboardingDidExit: ((_ accountOnboarding: AccountOnboardingController) -> Void)?
 
         func accountOnboarding(_ accountOnboarding: AccountOnboardingController,
                                didFailLoadWithError error: Error) {
             accountOnboardingDidFailLoadWithError?(accountOnboarding, error)
         }
-        
+
         func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController) {
             accountOnboardingDidExit?(accountOnboarding)
         }

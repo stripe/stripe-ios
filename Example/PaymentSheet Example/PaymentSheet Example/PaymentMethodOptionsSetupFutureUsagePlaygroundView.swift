@@ -27,10 +27,10 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
             Group {
                 VStack {
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.card, customDisplayLabel: "Card")
-                    if viewModel.merchantCountryCode == .US, viewModel.currency == .usd {
+                    if viewModel.merchantCountryCode == .US, viewModel.currency == .usd, viewModel.allowsDelayedPMs == .on {
                         SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.usBankAccount, customDisplayLabel: "US Bank Account")
                     }
-                    if viewModel.allowsDelayedPMs == .on {
+                    if viewModel.allowsDelayedPMs == .on, viewModel.currency == .eur {
                         SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.sepaDebit, customDisplayLabel: "SEPA Debit")
                     }
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.link, customDisplayLabel: "Link")

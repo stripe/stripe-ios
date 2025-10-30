@@ -14,6 +14,7 @@ import XCTest
 final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()
+//        recordMode = true
         let expectation = expectation(description: "Specs loaded")
         AddressSpecProvider.shared.loadAddressSpecs {
             FormSpecProvider.shared.load { _ in

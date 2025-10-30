@@ -8,7 +8,7 @@
 @_spi(STP) @testable import StripeCore
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
@@ -29,11 +29,13 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return config
     }()
-    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) { _, _, _ in
+    let paymentIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) { _, _ in
         // These tests don't confirm, so this is unused
+        return ""
     }
-    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "us_bank_account"]) { _, _, _ in
+    let setupIntentConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: ["card", "us_bank_account"]) { _, _ in
         // These tests don't confirm, so this is unused
+        return ""
     }
 
     override func setUp() async throws {
@@ -82,8 +84,25 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         await _testShowsChangeButton(rowStyle: .flatWithCheckmark)
     }
 
+    func testShowsChangeButton_flatDisclosure() async throws {
+        await _testShowsChangeButton(rowStyle: .flatWithDisclosure)
+    }
+
     func _testShowsChangeButton(rowStyle: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style) async {
         var configuration = configuration
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                line2: "Apt 123",
+                postalCode: "94080",
+                state: "CA"
+            ),
+            email: "foo@bar.com",
+            name: "Jane Doe",
+            phone: "+15551234567"
+        )
         configuration.appearance.embeddedPaymentElement.row.style = rowStyle
         var paymentIntentConfig = paymentIntentConfig
         paymentIntentConfig.paymentMethodTypes = ["card", "us_bank_account", "afterpay_clearpay"]

@@ -1,3 +1,11 @@
+"%1$@ Card" = "Kad %1$@";
+
+"%1$@ Credit" = "Kredit %1$@";
+
+"%1$@ Debit" = "Debit %1$@";
+
+"%1$@ Prepaid" = "Prabayar %1$@";
+
 "%1$@ account ending in %2$@" = "akaun %1$@ yang berakhir dengan %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ – berakhiran %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Akaun Bank";
 
 "Billing address" = "Alamat pengebilan";
+
+"Billing details" = "Butiran pengebilan";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Untuk mengimbas kad anda, benarkan akses kamera dalam Tetapan.";
 
-"Your ZIP is invalid." = "Kod ZIP anda tidak sah.";
-
 "Your card has expired." = "Kad anda telah tamat tempoh.";
 
 "Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
@@ -60,10 +68,8 @@
 
 "Your card's security code is invalid." = "Kod keselamatan kad anda tidak sah.";
 
-"Your postal code is invalid." = "Poskod anda tidak sah.";
-
 "card number" = "nombor kad";
 
-"example@example.com" = "contoh@contoh.com";
+"example@example.com" = "contoh@example.com";
 
 "expiration date" = "Tarikh tamat tempoh";

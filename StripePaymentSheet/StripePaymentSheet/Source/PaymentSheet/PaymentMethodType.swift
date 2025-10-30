@@ -73,7 +73,7 @@ extension PaymentSheet {
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
-        func makeImage(forDarkBackground: Bool = false, currency: String? = nil, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+        func makeImage(forDarkBackground: Bool, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
@@ -86,13 +86,14 @@ extension PaymentSheet {
                 )
             case .stripe(let paymentMethodType):
                 // Get the client-side asset first
-                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency)
+                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
                 // Next, try to download the image from the spec if possible
                 if
                     FormSpecProvider.shared.isLoaded,
                     let spec = FormSpecProvider.shared.formSpec(for: identifier),
                     let selectorIcon = spec.selectorIcon,
-                    var imageUrl = URL(string: selectorIcon.lightThemePng)
+                    var imageUrl = URL(string: selectorIcon.lightThemePng),
+                    paymentMethodType != .crypto // special case, don't use remote URL for crypto so we can use the local image based on iconStyle
                 {
                     if forDarkBackground,
                        let darkImageString = selectorIcon.darkThemePng,
@@ -120,7 +121,7 @@ extension PaymentSheet {
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
             case .instantDebits, .linkCardBrand:
-                return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
+                return STPPaymentMethodType.USBankAccount.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle) ?? UIImage()
             }
         }
 
@@ -293,12 +294,12 @@ extension PaymentSheet {
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
-            if intent.isSettingUp {
+            if intent.isSetupFutureUsageSet(for: paymentMethod) {
                 requirements = {
                     switch paymentMethod {
                     case .card:
                         return []
-                    case .payPal, .cashApp, .revolutPay, .amazonPay, .klarna:
+                    case .payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay:
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
@@ -312,7 +313,7 @@ extension PaymentSheet {
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
-                        .sunbit, .billie, .satispay, .crypto:
+                        .sunbit, .billie, .crypto, .shopPay:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -321,7 +322,7 @@ extension PaymentSheet {
             } else {
                 requirements = {
                     switch paymentMethod {
-                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay:
+                    case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay, .shopPay:
                         return []
                     case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
@@ -385,14 +386,8 @@ extension PaymentSheet {
                 missingRequirements.formUnion(requirements)
             }
 
-            // - US Bank Account is *not* an available payment method.
-            if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.unexpectedUsBankAccount)
-            }
-
-            // - Link Funding Sources contains Bank Account.
-            if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.linkFundingSourcesMissingBankAccount)
+            if elementsSession.linkSettings?.instantDebitsOnboardingEnabled != true {
+                missingRequirements.insert(.instantDebitsDisabledForOnboarding)
             }
 
             // - We collect an email, or a default non-empty email has been provided.
@@ -435,14 +430,8 @@ extension PaymentSheet {
                 missingRequirements.formUnion(requirements)
             }
 
-            // - Link Funding Sources contains Bank Account.
-            if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.linkFundingSourcesMissingBankAccount)
-            }
-
-            // - US Bank Account is *not* an available payment method.
-            if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.unexpectedUsBankAccount)
+            if elementsSession.linkSettings?.instantDebitsOnboardingEnabled != true {
+                missingRequirements.insert(.instantDebitsDisabledForOnboarding)
             }
 
             // - We collect an email, or a default non-empty email has been provided.
@@ -559,17 +548,23 @@ extension STPPaymentMethod {
                 return []
             case .USBankAccount, .SEPADebit:
                 return [.userSupportsDelayedPaymentMethods]
+            case .link:
+                return isLinkPaymentMethod ? [] : [.unsupportedForReuse]
             default:
                 return [.unsupportedForReuse]
             }
         }()
+        var supportedPaymentMethods = PaymentSheet.supportedPaymentMethods
+        if elementsSession.enableLinkInSPM {
+            supportedPaymentMethods.append(.link)
+        }
         return PaymentSheet.PaymentMethodType.configurationSupports(
             paymentMethod: type,
             requirements: requirements,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
+            supportedPaymentMethods: supportedPaymentMethods
         ) == .supported
     }
 }

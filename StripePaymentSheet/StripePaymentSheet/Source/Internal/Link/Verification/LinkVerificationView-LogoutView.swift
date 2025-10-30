@@ -15,31 +15,23 @@ extension LinkVerificationView {
     final class LogoutView: UIView {
         let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
-        private let font: UIFont = LinkUI.font(forTextStyle: .detail)
-
         private lazy var label: UILabel = {
             let label = UILabel()
-            label.font = font
+            label.font = LinkUI.font(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextTertiary
             label.lineBreakMode = .byTruncatingMiddle
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            label.text = String(
-                format: STPLocalizedString(
-                    "Not %@?",
-                    "Text of a label for confirming an email address. E.g., 'Not user@example.com?'"
-                ),
-                linkAccount.email
-            )
+            label.text = linkAccount.email
             return label
         }()
 
         private(set) lazy var button: Button = {
             let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
-                "Change email",
+                "Not you?",
                 "Title for a button that allows the user to use a different email in the signup flow."
             ))
-            button.configuration.font = font
+            button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
             return button
         }()
 

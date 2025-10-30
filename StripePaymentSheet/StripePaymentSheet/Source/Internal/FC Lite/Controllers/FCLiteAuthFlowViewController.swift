@@ -36,6 +36,7 @@ class FCLiteAuthFlowViewController: UIViewController {
         HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: manifest.hostedAuthURL,
             isInstantDebits: manifest.isInstantDebits,
+            hasExistingAccountholderToken: manifest.hasAccountholderToken,
             elementsSessionContext: elementsSessionContext
         )
     }

@@ -1,0 +1,51 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1RxttyFY0qyl6XeWFIQ7IOZm\/verify_microdeposits$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=WzQCnNjKY2Uor_zOUbUD4ZJr3iD2sbMP8DEuHtBC4JajZrtyyxwMjoQIv-9AyL5BztenIABP8krZ9VPr
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_TZy5gmDtAeptX5
+Content-Length: 662
+Vary: Origin
+Date: Tue, 19 Aug 2025 18:04:56 GMT
+original-request: req_TZy5gmDtAeptX5
+stripe-version: 2020-08-27
+idempotency-key: 1b6feccb-d8f2-4972-a0bb-6fc6d6d5043b
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: amounts\[0]=32&amounts\[1]=45&client_secret=seti_1RxttyFY0qyl6XeWFIQ7IOZm_secret_SthIrTpWVRDW6AUqd9FMSK6AWT5xC0s
+
+{
+  "id" : "seti_1RxttyFY0qyl6XeWFIQ7IOZm",
+  "description" : null,
+  "next_action" : null,
+  "status" : "succeeded",
+  "livemode" : false,
+  "payment_method" : "pm_1RxttzFY0qyl6XeWykdlPa5Z",
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "us_bank_account"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1755626694,
+  "client_secret" : "seti_1RxttyFY0qyl6XeWFIQ7IOZm_secret_SthIrTpWVRDW6AUqd9FMSK6AWT5xC0s",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "payment_method_options" : {
+    "us_bank_account" : {
+      "verification_method" : "automatic"
+    }
+  }
+}

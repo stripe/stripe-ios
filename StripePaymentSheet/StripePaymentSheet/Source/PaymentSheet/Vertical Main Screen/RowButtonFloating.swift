@@ -13,22 +13,39 @@ import UIKit
 final class RowButtonFloating: RowButton {
     // MARK: - Subviews
 
-    /// The shadow view that manages corner radius and shadows and selection border
-    private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
-        ShadowedRoundedRectangle(appearance: appearance)
+    /// The view that manages corner radius and shadows and selection border
+    private lazy var selectableRectangle: ShadowedRoundedRectangle = {
+        return ShadowedRoundedRectangle(appearance: appearance, ios26DefaultCornerStyle: .capsule)
     }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
-    private var insets: CGFloat {
+    private var contentInsets: CGFloat {
         guard isEmbedded else {
-            return 4.0 // 4.0 insets for vertical mode
+            return appearance.verticalModeRowPadding // Configurable insets for vertical mode
         }
 
         return appearance.embeddedPaymentElement.row.additionalInsets
     }
 
+    private var imageViewMargin: CGFloat {
+        return 10 + contentInsets
+    }
+
+    private var imageViewLeadingConstant: CGFloat {
+        if isEmbedded {
+            return appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
+        }
+        return selectableRectangle.didSetCornerConfiguration ? 16 : 12
+    }
+    private var contentTrailingConstant: CGFloat {
+        guard selectableRectangle.didSetCornerConfiguration else {
+            return 12
+        }
+        return 16
+    }
+
     override func updateSelectedState() {
         super.updateSelectedState()
-        shadowRoundedRect.isSelected = isSelected
+        selectableRectangle.isSelected = isSelected
     }
 
     private lazy var arrangedLabelAndSubLabel: UIView = {
@@ -68,7 +85,7 @@ final class RowButtonFloating: RowButton {
     }()
 
     override func setupUI() {
-        addAndPinSubview(shadowRoundedRect)
+        addAndPinSubview(selectableRectangle)
 
         let horizontalStackView = UIStackView(arrangedSubviews: [arrangedLabelAndSubLabel,
                                                                  defaultBadgeLabel,
@@ -91,29 +108,31 @@ final class RowButtonFloating: RowButton {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
 
+        let imageViewTrailingConstant = isEmbedded ? appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing : 12
+
         NSLayoutConstraint.activate([
             // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: imageViewLeadingConstant),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: imageViewMargin),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -imageViewMargin),
             imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageViewBottomConstraint,
             imageViewTopConstraint,
 
-            // Label constraints
-            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
-            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            // Content constraints - use configurable insets for the main content area
+            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: imageViewTrailingConstant),
+            horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -contentTrailingConstant),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: insets),
-            horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets),
+            horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: contentInsets),
+            horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -contentInsets),
         ])
     }
 
     override func handleEvent(_ event: STPEvent) {
         // Don't make the rounded rect look disabled
-        let filteredSubviews = subviews.filter { !($0 === shadowRoundedRect) }
+        let filteredSubviews = subviews.filter { !($0 === selectableRectangle) }
 
         switch event {
         case .shouldEnableUserInteraction:

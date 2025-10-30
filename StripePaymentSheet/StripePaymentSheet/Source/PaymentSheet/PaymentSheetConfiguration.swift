@@ -95,6 +95,9 @@ extension PaymentSheet {
         /// Configuration related to Link
         public var link: LinkConfiguration = LinkConfiguration()
 
+        /// Configuration related to ShopPay
+        @_spi(STP) public var shopPay: ShopPayConfiguration?
+
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
             get {
@@ -169,7 +172,9 @@ extension PaymentSheet {
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 
         /// Initializes a Configuration with default values
-        public init() {}
+        public init() {
+            validateConfiguration()
+        }
 
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
@@ -215,6 +220,59 @@ extension PaymentSheet {
         /// Note: This is only a client-side solution.
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+
+        /// A map for specifying when legal agreements are displayed for each payment method type.
+        /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
+        /// Valid payment method types include:
+        /// .card
+        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
+
+        /// By default, the card form will provide a button to open the card scanner.
+        /// If true, the card form will instead initialize with the card scanner already open.
+        public var opensCardScannerAutomatically: Bool = false
+
+        /// If true, an invisible challenge will be performed for human verification
+        @_spi(STP) public var enablePassiveCaptcha: Bool = false
+
+        /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
+        @_spi(STP) public var willUseWalletButtonsView = false
+
+        /// When using WalletButtonsView, configures payment method visibility across available surfaces.
+        @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
+    }
+
+    /// When using WalletButtonsView, configures payment method visibility across available surfaces.
+    @_spi(STP) public struct WalletButtonsVisibility {
+        /// Configure wallet button visibility in PaymentSheet, FlowController, or Embedded Payment Element.
+        /// If a field is empty, the default behavior is `.automatic`.
+        @_spi(STP) public var paymentElement: [ExpressType: PaymentElementVisibility] = [:]
+        /// Configure wallet button visibility in Wallet Buttons View.
+        /// If a field is empty, the default behavior is `.automatic`.
+        @_spi(STP) public var walletButtonsView: [ExpressType: WalletButtonsViewVisibility] = [:]
+
+        @_spi(STP) public enum PaymentElementVisibility {
+            /// (Default) Stripe will manage which surface shows this payment method. For example, if an Apple Pay button is currently visible in WalletButtonsView, it will not appear in the PaymentSheet list.
+            case automatic
+            /// This payment method, if available for this payment, will always appear in the selected surface.
+            case always
+            /// This payment method will never appear in the selected surface.
+            case never
+        }
+
+        @_spi(STP) public enum WalletButtonsViewVisibility {
+            /// (Default) Stripe will manage which surface shows this payment method. For example, if an Apple Pay button is currently visible in WalletButtonsView, it will not appear in the PaymentSheet list.
+            case automatic
+            /// This payment method will never appear in the selected surface.
+            case never
+        }
+
+        @_spi(STP) public enum ExpressType: String, Hashable, CaseIterable {
+            case applePay = "apple_pay"
+            case link = "link"
+            case shopPay = "shop_pay"
+        }
+
+        @_spi(STP) public init() {}
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
@@ -249,29 +307,41 @@ extension PaymentSheet {
         /// See https://stripe.com/docs/api/customers/object#customer_object-id
         public let id: String
 
-        /// A short-lived token that allows the SDK to access a Customer's payment methods
-        public let ephemeralKeySecret: String
-
         internal let customerAccessProvider: CustomerAccessProvider
 
         /// Initializes a CustomerConfiguration with an ephemeralKeySecret
         public init(id: String, ephemeralKeySecret: String) {
             self.id = id
             self.customerAccessProvider = .legacyCustomerEphemeralKey(ephemeralKeySecret)
-            self.ephemeralKeySecret = ephemeralKeySecret
         }
 
         /// Initializes a CustomerConfiguration with a customerSessionClientSecret
-        @_spi(CustomerSessionBetaAccess)
         public init(id: String, customerSessionClientSecret: String) {
             self.id = id
             self.customerAccessProvider = .customerSession(customerSessionClientSecret)
-            self.ephemeralKeySecret = ""
 
             stpAssert(!customerSessionClientSecret.hasPrefix("ek_"),
                       "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
             stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
                       "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        }
+    }
+    /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.
+    /// The default setting is 'automatic', which causes legal agreements to be shown only when necessary.
+    public enum TermsDisplay {
+        /// Show legal agreements only when necessary
+        case automatic
+
+        /// Never show legal agreements
+        case never
+
+        var analyticValue: String {
+            switch self {
+            case .automatic:
+                return "automatic"
+            case .never:
+                return "never"
+            }
         }
     }
 
@@ -315,28 +385,75 @@ extension PaymentSheet {
             /// In your implementation, you can configure the PKPaymentAuthorizationResult to add custom fields, such as `orderDetails`.
             /// See https://developer.apple.com/documentation/passkit/pkpaymentauthorizationresult for all configuration options.
             /// - Parameter $0: The PKPaymentAuthorizationResult created by PaymentSheet.
-            /// - Parameter $1: A completion handler. You must call this handler with the PKPaymentAuthorizationResult on the main queue
-            /// after applying your modifications.
+            /// - Returns: An updated authorization result.
             /// For example:
             /// ```
-            /// .authorizationResultHandler = { result, completion in
+            /// .authorizationResultHandler = { result in
             ///     result.orderDetails = PKPaymentOrderDetails(/* ... */)
-            ///     completion(result)
+            ///     return result
+            /// }
+            /// ```
+            public let authorizationResultHandler: AuthorizationResultHandler?
+            public typealias AuthorizationResultHandler = (_ result: PKPaymentAuthorizationResult) async -> PKPaymentAuthorizationResult
+
+            /// Optionally get shipping method updates if you've configured shipping method options
+            /// This closure will be called each time a user selects a new shipping option
+            /// - Parameter $0: The PKShippingMethod that was selected by the user
+            /// - Parameter $1: A completion handler. You must call this handler with a PKPaymentRequestShippingMethodUpdate on the main queue
+            /// with your updates
+            /// For example:
+            /// ```
+            /// .shippingMethodUpdateHandler = { result, completion in
+            ///     let updates = PKPaymentRequestShippingMethodUpdate()
+            ///     completion(updates)
             /// }
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            public let authorizationResultHandler:
-            ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+            @_spi(STP) public let shippingMethodUpdateHandler:
+            ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
+
+            /// Optionally get shipping contact updates if you've configured shipping contact options
+            /// This closure will be called each time a user selects a new shipping option
+            /// - Parameter $0: The PKContact that was selected by the user
+            /// - Parameter $1: A completion handler. You must call this handler with a PKPaymentRequestShippingContactUpdate on the main queue
+            /// with your updates
+            /// For example:
+            /// ```
+            /// .shippingContactUpdateHandler = { result, completion in
+            ///     let updates = PKPaymentRequestShippingContactUpdate()
+            ///     completion(updates)
+            /// }
+            /// ```
+            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+            @_spi(STP) public let shippingContactUpdateHandler:
+            ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
 
             /// Initializes the ApplePayConfiguration Handlers.
             public init(
                 paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
-                authorizationResultHandler: (
-                    (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
+                authorizationResultHandler: AuthorizationResultHandler? = nil
+            ) {
+                self.paymentRequestHandler = paymentRequestHandler
+                self.authorizationResultHandler = authorizationResultHandler
+                self.shippingMethodUpdateHandler = nil
+                self.shippingContactUpdateHandler = nil
+            }
+
+            /// Initializes the ApplePayConfiguration w/ ShippingMethod & ShippingContact update handlers
+            @_spi(STP) public init(
+                paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
+                authorizationResultHandler: AuthorizationResultHandler? = nil,
+                shippingMethodUpdateHandler: (
+                    (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
+                )? = nil,
+                shippingContactUpdateHandler: (
+                    (PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void
                 )? = nil
             ) {
                 self.paymentRequestHandler = paymentRequestHandler
                 self.authorizationResultHandler = authorizationResultHandler
+                self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
+                self.shippingContactUpdateHandler = shippingContactUpdateHandler
             }
         }
 
@@ -361,6 +478,12 @@ extension PaymentSheet {
         /// The Link display mode.
         public var display: Display = .automatic
 
+        /// The Link funding sources that should be disabled. Defaults to an empty set.
+        @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
+
+        /// Whether missing billing details should be collected for existing Link payment methods.
+        @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
+
         /// Display configuration for Link
         public enum Display: String {
             /// Link will be displayed when available.
@@ -381,6 +504,195 @@ extension PaymentSheet {
             display: Display = .automatic
         ) {
             self.display = display
+        }
+
+        @_spi(CollectMissingLinkBillingDetailsPreview) public init(
+            display: Display = .automatic,
+            collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
+        ) {
+            self.display = display
+            self.collectMissingBillingDetailsForExistingPaymentMethods = collectMissingBillingDetailsForExistingPaymentMethods
+        }
+    }
+
+    /// Configuration related to ShopPay, which only applies when using WalletButtonsView
+    @_spi(STP) public struct ShopPayConfiguration {
+        /// Handler blocks for Shop Pay
+        public struct Handlers {
+            /// Optionally get shipping method updates if you've configured shipping method options
+            /// This closure will be called each time a user selects a new shipping option
+            /// - Parameter $0: The ShippingRateSelected that was selected by the user
+            /// - Parameter $1: A completion handler. You must call this handler with a ShippingRateUpdate on the main queue
+            /// with your updates. To reject this selection, pass nil into this handler.
+            /// For example:
+            /// ```
+            /// .shippingMethodUpdateHandler = { result, completion in
+            ///     let updates = ShippingRateUpdate()
+            ///     completion(updates)
+            /// }
+            /// ```
+            /// WARNING: If you do not call the completion handler, your app will hang until the Shop Pay sheet times out.
+            public let shippingMethodUpdateHandler:
+            ((ShippingRateSelected, @escaping ((ShippingRateUpdate?) -> Void)) -> Void)?
+
+            /// Optionally get shipping contact updates if you've configured shipping contact options
+            /// This closure will be called each time a user selects a new shipping option
+            /// - Parameter $0: The ShippingContactSelected that was selected by the user
+            /// - Parameter $1: A completion handler. You must call this handler with a ShippingContactUpdate on the main queue
+            /// with your updates. To reject this selection, pass nil into this handler
+            /// For example:
+            /// ```
+            /// .shippingContactUpdateHandler = { result, completion in
+            ///     let updates = ShippingContactUpdate()
+            ///     completion(updates)
+            /// }
+            /// ```
+            /// WARNING: If you do not call the completion handler, your app will hang until the Shop Pay sheet times out.
+            public let shippingContactUpdateHandler:
+            ((ShippingContactSelected, @escaping ((ShippingContactUpdate?) -> Void)) -> Void)?
+
+            /// Initializes the handlers.
+            public init(
+                shippingMethodUpdateHandler:
+                ((ShippingRateSelected, @escaping ((ShippingRateUpdate?) -> Void)) -> Void)?,
+                shippingContactUpdateHandler:
+                ((ShippingContactSelected, @escaping ((ShippingContactUpdate?) -> Void)) -> Void)?
+            ) {
+                self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
+                self.shippingContactUpdateHandler = shippingContactUpdateHandler
+            }
+        }
+        /// The shipping rate selected by the customer
+        public struct ShippingRateSelected {
+            public let shippingRate: ShippingRate
+        }
+
+        /// The shipping contact selected by the customer
+        public struct ShippingContactSelected {
+            public let name: String
+            public let address: PartialAddress
+        }
+
+        /// Describes a single Shipping Rate
+        public struct ShippingRate {
+            public let id: String
+            public let amount: Int
+            public let displayName: String
+            public let deliveryEstimate: DeliveryEstimate?
+            public init(id: String, amount: Int, displayName: String, deliveryEstimate: DeliveryEstimate?) {
+                self.id = id
+                self.amount = amount
+                self.displayName = displayName
+                self.deliveryEstimate = deliveryEstimate
+            }
+        }
+
+        /// Describes the address
+        public struct PartialAddress {
+            public let city: String
+            public let state: String
+            public let postalCode: String
+            public let country: String
+        }
+
+        /// Type used to describe convey changes in the ShopPay WalletUI when a Shipping Rate Update occurs
+        public struct ShippingRateUpdate {
+            public let lineItems: [LineItem]
+            public let shippingRates: [ShippingRate]
+            public init(lineItems: [LineItem], shippingRates: [ShippingRate]) {
+                self.lineItems = lineItems
+                self.shippingRates = shippingRates
+            }
+        }
+
+        /// Type used to describe convey changes in the ShopPay WalletUI when a Shipping Contact Update occurs
+        public struct ShippingContactUpdate {
+            public let lineItems: [LineItem]
+            public let shippingRates: [ShippingRate]
+            public init(lineItems: [LineItem], shippingRates: [ShippingRate]) {
+                self.lineItems = lineItems
+                self.shippingRates = shippingRates
+            }
+        }
+        /// Type used to describe a single item for in the ShopPay WalletUI
+        public struct LineItem {
+            public let name: String
+            public let amount: Int
+            public init(name: String, amount: Int) {
+                self.name = name
+                self.amount = amount
+            }
+        }
+
+        /// Type used to describe DeliveryEstimates for shipping. This maps to the ECE API shape:
+        /// https://docs.stripe.com/js/elements_object/create_express_checkout_element#express_checkout_element_create-options-shippingRates-deliveryEstimate
+        public enum DeliveryEstimate {
+            case structured(minimum: DeliveryEstimateUnit?, maximum: DeliveryEstimateUnit?)
+            case unstructured(String)
+
+            public struct DeliveryEstimateUnit {
+                public enum TimeUnit {
+                    case hour
+                    case day
+                    case business_day
+                    case week
+                    case month
+                }
+
+                public let value: Int
+                public let unit: TimeUnit
+                public init(value: Int, unit: TimeUnit) {
+                    self.unit = unit
+                    self.value = value
+                }
+            }
+        }
+
+        /// Whether or not billing address is required
+        /// Defaults to `True`.
+        public let billingAddressRequired: Bool
+
+        /// Whether or not email is required
+        /// Defaults to `True`.
+        public let emailRequired: Bool
+
+        /// Whether or not to collect the customer's shipping address
+        public let shippingAddressRequired: Bool
+
+        /// By default, the Express Checkout Element allows all countries for shipping.
+        /// You can specify which countries are allowed for shipping in the Express Checkout Element with a list of two-letter country codes
+        public let allowedShippingCountries: [String]
+
+        /// An array of LineItem objects. These LineItems are shown as line items in the payment interface, if line items are supported. You can represent discounts as negative amount LineItems.
+        public let lineItems: [LineItem]
+
+        /// An array of ShippingRate objects. The first shipping rate listed appears in the payment interface as the default option.
+        public let shippingRates: [ShippingRate]
+
+        /// The corresponding store's shopId
+        public let shopId: String
+
+        /// A set of optional handlers to facilitate the checkout experience
+        public let handlers: Handlers?
+
+        public init(
+            billingAddressRequired: Bool = true,
+            emailRequired: Bool = true,
+            shippingAddressRequired: Bool,
+            lineItems: [LineItem],
+            shippingRates: [ShippingRate],
+            shopId: String,
+            allowedShippingCountries: [String] = [],
+            handlers: Handlers? = nil
+        ) {
+            self.billingAddressRequired = billingAddressRequired
+            self.emailRequired = emailRequired
+            self.shippingAddressRequired = shippingAddressRequired
+            self.lineItems = lineItems
+            self.shippingRates = shippingRates
+            self.shopId = shopId
+            self.allowedShippingCountries = allowedShippingCountries
+            self.handlers = handlers
         }
     }
 
@@ -507,6 +819,15 @@ extension PaymentSheet {
         ///
         /// If `false` (the default), those values will only be used to prefill the corresponding fields in the form.
         public var attachDefaultsToPaymentMethod = false
+
+        /// A set of two-letter country codes representing countries the customers can select.
+        /// If the set is empty (the default), we display all countries.
+        /// Country codes are automatically normalized to uppercase.
+        public var allowedCountries: Set<String> = [] {
+            didSet {
+                allowedCountries = Set(allowedCountries.map { $0.uppercased() })
+            }
+        }
     }
 
     /// Configuration for external payment methods
@@ -528,16 +849,14 @@ extension PaymentSheet {
 
         /// - Parameter externalPaymentMethodType: The external payment method to confirm payment with e.g., "external_paypal"
         /// - Parameter billingDetails: An object containing any billing details you've configured PaymentSheet to collect.
-        /// - Parameter completion: Call this after payment has completed, passing the result of the payment.
         /// - Returns: The result of the attempt to confirm payment using the given external payment method.
         public typealias ExternalPaymentMethodConfirmHandler = (
             _ externalPaymentMethodType: String,
-            _ billingDetails: STPPaymentMethodBillingDetails,
-            _ completion: @escaping ((PaymentSheetResult) -> Void)
-        ) -> Void
+            _ billingDetails: STPPaymentMethodBillingDetails
+        ) async -> PaymentSheetResult
 
         /// This handler is called when the customer confirms the payment using an external payment method.
-        /// Your implementation should complete the payment and call the `completion` parameter with the result.
+        /// Your implementation should complete the payment and return the result.
         /// - Note: This is always called on the main thread.
         public var externalPaymentMethodConfirmHandler: ExternalPaymentMethodConfirmHandler
     }
@@ -611,12 +930,21 @@ extension STPPaymentMethodBillingDetails {
     }
 }
 extension PaymentSheet.CustomerConfiguration {
-    func ephemeralKeySecretBasedOn(elementsSession: STPElementsSession?) -> String? {
+    func ephemeralKeySecret(basedOn elementsSession: STPElementsSession?) -> String? {
         switch customerAccessProvider {
         case .legacyCustomerEphemeralKey(let legacy):
             return legacy
         case .customerSession:
             return elementsSession?.customer?.customerSession.apiKey
+        }
+    }
+}
+extension PaymentSheet.Configuration {
+    private func validateConfiguration() {
+        for (paymentMethodType, _) in termsDisplay {
+            if paymentMethodType != .card {
+                stpAssertionFailure("PaymentSheet.Configuration termsDisplay contains unsupported payment method type: \(paymentMethodType)")
+            }
         }
     }
 }

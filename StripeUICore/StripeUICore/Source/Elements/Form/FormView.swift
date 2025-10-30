@@ -19,14 +19,18 @@ import UIKit
     private let stackView: UIStackView
     public init(viewModel: FormElement.ViewModel) {
         if viewModel.bordered {
+            // This is a hack we should refactor one day - it turns FormView into a SectionView.
+            // Its only user - LinkInlineSignupElement - should use a SectionView instead, or its own custom view.
             let stack = StackViewWithSeparator(arrangedSubviews: viewModel.elements)
             self.stackView = stack
             stack.drawBorder = true
             stack.customBackgroundColor = viewModel.theme.colors.componentBackground
             stack.separatorColor = viewModel.theme.colors.divider
             stack.borderColor = viewModel.theme.colors.border
-            stack.borderCornerRadius = viewModel.theme.cornerRadius
-            stack.spacing = viewModel.theme.borderWidth
+            // TODO(iOS 26): Does this need to respect corner radius = nil?
+            stack.borderCornerRadius = viewModel.theme.cornerRadius ?? 6.0
+            stack.spacing = viewModel.theme.separatorWidth
+            stack.borderWidth = viewModel.theme.borderWidth
             stack.hideShadow = true
             stack.layer.applyShadow(shadow: viewModel.theme.shadow)
             stack.axis = .vertical
@@ -34,7 +38,7 @@ import UIKit
             let stack = UIStackView(arrangedSubviews: viewModel.elements)
             self.stackView = stack
             stack.axis = .vertical
-            stack.spacing = ElementsUI.formSpacing
+            stack.spacing = viewModel.theme.sectionSpacing
         }
         for (view, spacing) in viewModel.customSpacing {
             self.stackView.setCustomSpacing(spacing, after: view)

@@ -70,7 +70,7 @@ class CVCReconfirmationViewController: UIViewController {
         intent: Intent,
         configuration: PaymentElementConfiguration,
         onCompletion: @escaping ((CVCReconfirmationViewController, IntentConfirmParams?) -> Void),
-        onCancel: @escaping((CVCReconfirmationViewController) -> Void)
+        onCancel: @escaping ((CVCReconfirmationViewController) -> Void)
     ) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
@@ -93,7 +93,7 @@ class CVCReconfirmationViewController: UIViewController {
             confirmButton,
         ])
         stackView.bringSubviewToFront(headerLabel)
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = 10
         stackView.axis = .vertical
@@ -105,14 +105,14 @@ class CVCReconfirmationViewController: UIViewController {
         }
 
         // Get our margins in order
-        view.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
+        view.directionalLayoutMargins = configuration.appearance.formInsets
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+                equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
         updateUI()

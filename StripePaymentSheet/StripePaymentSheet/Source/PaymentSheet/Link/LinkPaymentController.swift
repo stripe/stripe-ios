@@ -30,8 +30,7 @@ import UIKit
         let loadingViewController = LoadingViewController(
             delegate: self,
             appearance: PaymentSheet.Appearance.default,
-            isTestMode: configuration.apiClient.isTestmode,
-            loadingViewHeight: 244
+            isTestMode: configuration.apiClient.isTestmode
         )
         return loadingViewController
     }()
@@ -276,7 +275,7 @@ import UIKit
             let amount: Int?
             let currency: String?
             switch intentConfiguration.mode {
-            case let .payment(amount: _amount, currency: _currency, _, _):
+            case let .payment(amount: _amount, currency: _currency, _, _, _):
                 amount = _amount
                 currency = _currency
             case let .setup(currency: _currency, _):
@@ -322,7 +321,8 @@ import UIKit
             intentId: nil,
             linkMode: nil,
             billingDetails: billingDetails,
-            eligibleForIncentive: false
+            eligibleForIncentive: false,
+            clientAttributionMetadata: nil
         )
     }
 
@@ -446,8 +446,8 @@ import UIKit
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: .link)
                 paymentIntentParams.paymentMethodId = paymentMethodId
                 paymentIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
-                STPPaymentHandler.shared().confirmPayment(
-                    paymentIntentParams, with: authenticationContext
+                STPPaymentHandler.shared().confirmPaymentIntent(
+                    params: paymentIntentParams, authenticationContext: authenticationContext
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -465,7 +465,7 @@ import UIKit
                 setupIntentParams.paymentMethodID = paymentMethodId
                 setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                 STPPaymentHandler.shared().confirmSetupIntent(
-                    setupIntentParams, with: authenticationContext
+                    params: setupIntentParams, authenticationContext: authenticationContext
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -481,13 +481,14 @@ import UIKit
             case .deferredIntent(let intentConfiguration):
                 let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, type: .link)
                 PaymentSheet
-                    .handleDeferredIntentConfirmation(
-                        confirmType: .saved(paymentMethod, paymentOptions: nil),
+                    .routeDeferredIntentConfirmation(
+                        confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), // LinkPaymentController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id and doesn't have an elements session object so we don't want to send CAM here
                         configuration: configuration,
                         intentConfig: intentConfiguration,
                         authenticationContext: authenticationContext,
                         paymentHandler: STPPaymentHandler.shared(),
                         isFlowController: true,
+                        elementsSession: nil, // Headless link does not have an elements session object
                         mandateData: STPMandateDataParams.makeWithInferredValues()) { result, _ in
                     switch result {
                     case .canceled:
@@ -542,7 +543,7 @@ private extension PaymentSheet.InitializationMode {
             return nil
         case .deferredIntent(let intentConfiguration):
             switch intentConfiguration.mode {
-            case .payment(let amount, _, _, _):
+            case .payment(let amount, _, _, _, _):
                 return amount
             case .setup:
                 return nil
@@ -558,7 +559,7 @@ private extension PaymentSheet.InitializationMode {
             return nil
         case .deferredIntent(let intentConfiguration):
             switch intentConfiguration.mode {
-            case .payment(_, let currency, _, _):
+            case .payment(_, let currency, _, _, _):
                 return currency
             case .setup(let currency, _):
                 return currency

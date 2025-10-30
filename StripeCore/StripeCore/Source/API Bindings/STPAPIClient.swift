@@ -52,6 +52,7 @@ import UIKit
     }
 
     // Stored STPPaymentConfiguration: Type checking handled in STPAPIClient+Payments.swift.
+    // TODO: Delete this, dead code
     @_spi(STP) public var _stored_configuration: NSObject?
 
     /// In order to perform API requests on behalf of a connected account, e.g. to
@@ -153,10 +154,13 @@ import UIKit
             )
             return
         }
-        let secretKey = publishableKey.hasPrefix("sk_")
         assert(
-            !secretKey,
+            !publishableKey.hasPrefix("sk_"),
             "You are using a secret key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys"
+        )
+        assert(
+            !publishableKey.hasPrefix("rk_"),
+            "You are using a restricted key. Use a publishable key instead. For more info, see https://stripe.com/docs/keys"
         )
         #if !DEBUG
             if publishableKey.lowercased().hasPrefix("pk_test") && !didShowTestmodeKeyWarning {
@@ -248,6 +252,7 @@ import UIKit
         client.userKeyLiveMode = userKeyLiveMode
         return client
     }
+
 }
 
 private let APIVersion = "2020-08-27"
@@ -542,34 +547,31 @@ extension STPAPIClient {
         response: URLResponse?,
         request: URLRequest? = nil
     ) -> Result<T, Error> {
-        if let error = error {
+        if let error {
             return .failure(error)
         }
-        guard let data = data else {
-            return .failure(NSError.stp_genericFailedToParseResponseError())
+        #if DEBUG
+        if let httpResponse = response as? HTTPURLResponse,
+           let method = request?.httpMethod,
+           let requestId = httpResponse.value(forHTTPHeaderField: "request-id"),
+           let url = httpResponse.value(forKey: "URL") as? URL {
+            print("[Stripe SDK]: \(method) \"\(url.relativePath)\" \(httpResponse.statusCode) \(requestId)")
         }
+        #endif
 
         do {
-            #if DEBUG
-            if let httpResponse = response as? HTTPURLResponse,
-               let method = request?.httpMethod,
-               let requestId = httpResponse.value(forHTTPHeaderField: "request-id"),
-               let url = httpResponse.value(forKey: "URL") as? URL {
-                print("[Stripe SDK]: \(method) \"\(url.relativePath)\" \(httpResponse.statusCode) \(requestId)")
-            }
-            #endif
-            // HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
-            if T.self == EmptyResponse.self,
-                let decodedStripeError = decodeStripeErrorResponse(data: data, response: response)
-            {
-                return .failure(decodedStripeError)
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode)
+            else {
+                throw NSError.stp_genericFailedToParseResponseError()
             }
 
-            let decodedObject: T = try StripeJSONDecoder.decode(jsonData: data)
+            let decodedObject: T = try StripeJSONDecoder.decode(jsonData: data ?? Data())
             return .success(decodedObject)
         } catch {
             // Try decoding the error from the service if one is available
-            if let decodedStripeError = decodeStripeErrorResponse(data: data, response: response) {
+            if let data, let decodedStripeError = decodeStripeErrorResponse(data: data, response: response) {
                 return .failure(decodedStripeError)
             } else {
                 // Return decoding error directly
@@ -590,7 +592,7 @@ extension STPAPIClient {
         ),
             var apiError = decodedErrorResponse.error
         {
-            apiError.statusCode = (response as? HTTPURLResponse)?.statusCode
+            apiError.httpStatusCode = (response as? HTTPURLResponse)?.statusCode
             apiError.requestID = (response as? HTTPURLResponse)?.value(forHTTPHeaderField: "request-id")
 
             decodedError = StripeError.apiError(apiError)

@@ -6,49 +6,27 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 import UIKit
 
 extension PayWithLinkViewController {
 
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkBaseViewController)
-    class BaseViewController: UIViewController {
+    class BaseViewController: UIViewController, BottomSheetContentViewController {
         weak var coordinator: PayWithLinkCoordinating?
 
         let context: Context
+        let navigationTitle: String?
 
         var preferredContentMargins: NSDirectionalEdgeInsets {
-            return customNavigationBar.isLarge
-                ? LinkUI.contentMarginsWithLargeNav
-                : LinkUI.contentMargins
+            LinkUI.contentMargins
         }
-
-        private(set) lazy var customNavigationBar: LinkNavigationBar = {
-            let navigationBar = LinkNavigationBar()
-            navigationBar.backButton.addTarget(
-                self,
-                action: #selector(onBackButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            navigationBar.closeButton.addTarget(
-                self,
-                action: #selector(onCloseButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            navigationBar.menuButton.addTarget(
-                self,
-                action: #selector(onMenuButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            return navigationBar
-        }()
 
         private(set) lazy var contentView = UIView()
 
-        init(context: Context) {
+        init(context: Context, navigationTitle: String? = nil) {
             self.context = context
+            self.navigationTitle = navigationTitle
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -58,21 +36,13 @@ extension PayWithLinkViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-            view.backgroundColor = .linkBackground
-
-            customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(customNavigationBar)
+            view.backgroundColor = .linkSurfacePrimary
 
             contentView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(contentView)
 
             NSLayoutConstraint.activate([
-                // Navigation bar
-                customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor),
-                customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                // Content view
-                contentView.topAnchor.constraint(equalTo: customNavigationBar.bottomAnchor),
+                contentView.topAnchor.constraint(equalTo: view.topAnchor),
                 contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -89,38 +59,21 @@ extension PayWithLinkViewController {
             super.present(viewControllerToPresent, animated: flag, completion: completion)
         }
 
-        @objc
-        func onBackButtonTapped(_ sender: UIButton) {
-            navigationController?.popViewController(animated: true)
-        }
+        var requiresFullScreen: Bool { false }
 
-        @objc
-        func onCloseButtonTapped(_ sender: UIButton) {
+        lazy var navigationBar: SheetNavigationBar = {
+            let navBar = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+            navBar.title = navigationTitle
+            return navBar
+        }()
+
+        func didTapOrSwipeToDismiss() {
+            guard context.isDismissible else { return }
             if context.shouldFinishOnClose {
                 coordinator?.finish(withResult: .canceled, deferredIntentConfirmationType: nil)
             } else {
-                coordinator?.cancel()
+                coordinator?.cancel(shouldReturnToPaymentSheet: false)
             }
         }
-
-        @objc
-        func onMenuButtonTapped(_ sender: UIButton) {
-            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            actionSheet.addAction(UIAlertAction(
-                title: STPLocalizedString("Log out of Link", "Title of the logout action."),
-                style: .destructive,
-                handler: { [weak self] _ in
-                    self?.coordinator?.logout(cancel: true)
-                }
-            ))
-            actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
-
-            // iPad support
-            actionSheet.popoverPresentationController?.sourceView = sender
-            actionSheet.popoverPresentationController?.sourceRect = sender.bounds
-
-            present(actionSheet, animated: true)
-        }
     }
-
 }

@@ -36,13 +36,18 @@ import UIKit
         }
     }
 
-    /// Commonly referred to as `borderWidth`
+    /// Controls the separator width between subviews
     public override var spacing: CGFloat {
         didSet {
-            backgroundView.layer.borderWidth = spacing
             separatorLayer.lineWidth = spacing
+        }
+    }
+
+    public var borderWidth: CGFloat = 0 {
+        didSet {
+            backgroundView.layer.borderWidth = borderWidth
             layoutMargins = UIEdgeInsets(
-                top: spacing, left: spacing, bottom: spacing, right: spacing)
+                top: borderWidth, left: borderWidth, bottom: borderWidth, right: borderWidth)
         }
     }
 
@@ -203,7 +208,7 @@ import UIKit
             UIBezierPath(roundedRect: bounds, cornerRadius: borderCornerRadius).cgPath
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         // CGColor's must be manually updated when the trait collection changes

@@ -29,12 +29,12 @@ final class PickerFieldView: UIView {
     private lazy var textField: PickerTextField = {
         let textField = PickerTextField()
         // Input views are not supported on Catalyst (and are non-optimal on visionOS)
-#if !targetEnvironment(macCatalyst) && !canImport(CompositorServices)
+#if !targetEnvironment(macCatalyst) && !canImport(visionOS)
         textField.inputView = pickerView
 #endif
         textField.adjustsFontForContentSizeCategory = true
         textField.font = theme.fonts.subheadline
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         textField.inputAccessoryView = toolbar
 #endif
         textField.delegate = self
@@ -137,10 +137,10 @@ final class PickerFieldView: UIView {
         self.theme = theme
         self.isOptional = isOptional
         super.init(frame: .zero)
-        addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? ElementsUI.contentViewInsets : .zero)
+        addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? theme.textFieldInsets : .zero)
 //      On Catalyst/visionOS, add the picker view as a subview instead of an input view.
-        #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
-        addAndPinSubview(pickerView, directionalLayoutMargins: ElementsUI.contentViewInsets)
+        #if targetEnvironment(macCatalyst) || canImport(visionOS)
+        addAndPinSubview(pickerView, directionalLayoutMargins: theme.textFieldInsets)
         #endif
         layer.borderColor = theme.colors.border.cgColor
         isUserInteractionEnabled = true
@@ -166,7 +166,7 @@ final class PickerFieldView: UIView {
         }
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         layer.borderColor = theme.colors.border.cgColor
@@ -179,7 +179,7 @@ final class PickerFieldView: UIView {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
         }
-        #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
+        #if targetEnvironment(macCatalyst) || canImport(visionOS)
         // Forward all events within our bounds to the button
         return pickerView
         #else
@@ -213,6 +213,10 @@ final class PickerFieldView: UIView {
 
     func setCanBecomeFirstResponder(_ value: Bool) {
         _canBecomeFirstResponder = value
+    }
+
+    override func resignFirstResponder() -> Bool {
+        return textField.resignFirstResponder()
     }
 }
 
@@ -250,7 +254,7 @@ extension PickerFieldView: UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         floatingPlaceholderTextFieldView?.updatePlaceholder()
-        delegate?.didFinish(self, shouldAutoAdvance: true)
+        delegate?.didFinish(self, shouldAutoAdvance: false)
     }
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -262,7 +266,8 @@ extension PickerFieldView: UITextFieldDelegate {
 
 extension PickerFieldView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
-        _ = textField.resignFirstResponder()
+        // Switch to the next field. Our delegate will tell us to resign if needed in didFinish.
+        delegate?.didFinish(self, shouldAutoAdvance: true)
     }
 
     func didTapCancel(_ toolbar: DoneButtonToolbar) {

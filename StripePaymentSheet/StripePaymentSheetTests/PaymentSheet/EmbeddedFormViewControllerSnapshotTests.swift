@@ -5,11 +5,11 @@
 //  Created by Nick Porter on 10/17/24.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP)  @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
-@_spi(STP) import StripeCore
 import XCTest
 
 final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
@@ -177,19 +177,18 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         sut.updateErrorLabel(for: MockError())
         verify(sut)
     }
-
 }
 
 extension EmbeddedFormViewControllerSnapshotTests: EmbeddedFormViewControllerDelegate {
     func embeddedFormViewControllerShouldConfirm(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, with paymentOption: StripePaymentSheet.PaymentOption, completion: @escaping (StripePaymentSheet.PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) {
     }
-    
+
     func embeddedFormViewControllerDidCompleteConfirmation(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController, result: StripePaymentSheet.PaymentSheetResult) {
     }
-    
+
     func embeddedFormViewControllerDidCancel(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController) {
     }
-    
+
     func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: StripePaymentSheet.EmbeddedFormViewController) {
     }
 }

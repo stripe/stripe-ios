@@ -9,3 +9,6 @@ LOCALIZATION_DIRECTORIES=($(ruby -e "\$LOAD_PATH << Dir.pwd;require './ci_script
 
 # Languages that we localize to
 LANGUAGES=($(ruby -I . -e "\$LOAD_PATH << Dir.pwd;require './ci_scripts/l10n/config';puts LANGUAGES.join(',')"))
+
+# File names in lokalise
+LOKALISE_FILENAMES=($(ruby -I . -e "\$LOAD_PATH << Dir.pwd;require './ci_scripts/l10n/config';puts LOKALISE_FILENAMES.join(',')"))

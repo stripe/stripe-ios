@@ -16,12 +16,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class StripeErrorTest: XCTestCase {
-    func testEmptyResponse() {
-        let response: [AnyHashable: Any] = [:]
-        let error = NSError.stp_error(fromStripeResponse: response)
-        XCTAssertNil(error)
-    }
-
+    let httpResponse = HTTPURLResponse(url: URL(string: "http://foo.bar")!, statusCode: 400, httpVersion: nil, headerFields: nil)
     func testResponseWithUnknownTypeAndNoMessage() {
         let response = [
             "error": [
@@ -29,7 +24,7 @@ class StripeErrorTest: XCTestCase {
                 "code": "error_code",
             ],
         ]
-        let error = NSError.stp_error(fromStripeResponse: response)!
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.apiError.rawValue)
         XCTAssertEqual(
@@ -44,11 +39,6 @@ class StripeErrorTest: XCTestCase {
             error.userInfo[STPError.stripeErrorCodeKey] as! String,
             response["error"]!["code"]!
         )
-        XCTAssertTrue(
-            (error.userInfo[STPError.errorMessageKey]! as! String).hasPrefix(
-                "Could not interpret the error response"
-            )
-        )
     }
 
     func testAPIError() {
@@ -58,7 +48,7 @@ class StripeErrorTest: XCTestCase {
                 "message": "some message",
             ],
         ]
-        let error = NSError.stp_error(fromStripeResponse: response)!
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.apiError.rawValue)
         XCTAssertEqual(
@@ -83,7 +73,7 @@ class StripeErrorTest: XCTestCase {
                 "param": "card[exp_year]",
             ],
         ]
-        let error = NSError.stp_error(fromStripeResponse: response)!
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.invalidRequestError.rawValue)
         XCTAssertEqual(
@@ -118,7 +108,7 @@ class StripeErrorTest: XCTestCase {
             headerFields: nil
         )
 
-        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)!
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
 
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(
@@ -146,7 +136,7 @@ class StripeErrorTest: XCTestCase {
             headerFields: nil
         )
 
-        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)!
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
 
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(
@@ -164,13 +154,12 @@ class StripeErrorTest: XCTestCase {
                 "code": "incorrect_number",
             ],
         ]
-        let error = NSError.stp_error(fromStripeResponse: response)!
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.invalidRequestError.rawValue)
-        // Error type is not `card_error`, so `NSLocalizedDescription` will be a generic error.
         XCTAssertEqual(
             error.userInfo[NSLocalizedDescriptionKey] as! String,
-            NSError.stp_unexpectedErrorMessage()
+            NSError.stp_cardErrorInvalidNumberUserMessage()
         )
         XCTAssertEqual(
             error.userInfo[STPError.cardErrorCodeKey] as! String,
@@ -198,7 +187,7 @@ class StripeErrorTest: XCTestCase {
                 "code": "incorrect_number",
             ],
         ]
-        let error = NSError.stp_error(fromStripeResponse: response)!
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.cardError.rawValue)
         XCTAssertEqual(
@@ -231,10 +220,7 @@ class StripeErrorTest: XCTestCase {
                 "decline_code": "insufficient_funds",
             ],
         ]
-        guard let error = NSError.stp_error(fromStripeResponse: response) else {
-            XCTFail()
-            return
-        }
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.cardError.rawValue)
         XCTAssertEqual(
@@ -252,7 +238,7 @@ class StripeErrorTest: XCTestCase {
         )
     }
 
-    func testErrorAddsRequestIdToUserInfo() {
+    func testErrorAddsRequestIdAndHTTPStatusCodeToUserInfo() {
         let response = [
             "error": [
                 "type": "card_error",
@@ -261,13 +247,34 @@ class StripeErrorTest: XCTestCase {
             ],
         ]
         let httpURLResponse = HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 400, httpVersion: nil, headerFields: ["request-id": "req_123"])
-        guard let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpURLResponse) else {
-            XCTFail()
-            return
-        }
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpURLResponse)
         XCTAssertEqual(
             error.userInfo[STPError.stripeRequestIDKey] as? String,
             "req_123"
         )
+        XCTAssertEqual(
+            error.userInfo[STPError.httpStatusCodeKey] as? Int,
+            400
+        )
+    }
+
+    func testStpErrorCodeExtension() {
+        let modernAPIError = StripeError.apiError(StripeAPIError(
+            type: .invalidRequestError, code: "test_code", message: "Test message",
+            param: nil
+        ))
+        XCTAssertEqual(modernAPIError._stp_error_code, "test_code")
+
+        let response = [
+            "error": [
+                "type": "card_error",
+                "code": "card_declined",
+            ],
+        ]
+        let legacyError = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)
+        XCTAssertEqual(legacyError._stp_error_code, "card_declined")
+
+        let genericError = NSError(domain: "test", code: 1, userInfo: nil)
+        XCTAssertNil(genericError._stp_error_code)
     }
 }

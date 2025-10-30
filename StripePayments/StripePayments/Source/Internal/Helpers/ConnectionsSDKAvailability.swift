@@ -20,7 +20,8 @@ import UIKit
         as? FinancialConnectionsSDKInterface.Type
 
     @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
-    @_spi(STP) public static var shouldPreferFCLite: Bool = false
+    @_spi(STP) public static var localFcLiteOverride: Bool = false
+    @_spi(STP) public static var remoteFcLiteOverride: Bool = false
 
     private static var FCLiteClassIfEnabled: FinancialConnectionsSDKInterface.Type? {
         guard !fcLiteKillswitchEnabled else {
@@ -69,13 +70,14 @@ import UIKit
         }
     }
 
-    static func financialConnections() -> FinancialConnectionsSDKInterface? {
+    @_spi(STP) public static func financialConnections() -> FinancialConnectionsSDKInterface? {
         let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
         if isUnitTest || (isUITest && financialConnectionsStubbedResult) {
             return StubbedConnectionsSDKInterface()
         }
 
-        let klass: FinancialConnectionsSDKInterface.Type? = shouldPreferFCLite
+        let fcLiteOverrideEnabled = localFcLiteOverride || remoteFcLiteOverride
+        let klass: FinancialConnectionsSDKInterface.Type? = fcLiteOverrideEnabled
             ? (FCLiteClassIfEnabled ?? FinancialConnectionsSDKClass)
             : (FinancialConnectionsSDKClass ?? FCLiteClassIfEnabled) // Default
 
@@ -92,6 +94,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,

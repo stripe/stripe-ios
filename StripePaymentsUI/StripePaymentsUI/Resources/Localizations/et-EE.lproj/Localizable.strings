@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ kaart";
+
+"%1$@ Credit" = "%1$@ krediit";
+
+"%1$@ Debit" = "%1$@ deebet";
+
+"%1$@ Prepaid" = "%1$@ ettemakstud";
+
 "%1$@ account ending in %2$@" = "%1$@ konto lõpuga %2$@";
 
 "%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Pangakonto";
 
 "Billing address" = "Arveldusaadress";
+
+"Billing details" = "Arveldusandmed";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
 
-"Your ZIP is invalid." = "Teie sihtnumber on kehtetu.";
-
 "Your card has expired." = "Teie kaart on aegunud.";
 
 "Your card number is incomplete." = "Teie kaardinumber on puudulik.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Teie kaardi turvakood on puudulik.";
 
 "Your card's security code is invalid." = "Kaardi turvakood on kehtetu.";
-
-"Your postal code is invalid." = "Teie sihtnumber on kehtetu.";
 
 "card number" = "kaardinumber";
 
