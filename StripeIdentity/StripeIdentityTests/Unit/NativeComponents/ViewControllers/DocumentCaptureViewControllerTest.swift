@@ -782,7 +782,8 @@ extension DocumentCaptureViewControllerTest {
             documentUploader: mockDocumentUploader,
             anyDocumentScanner: .init(mockDocumentScanner),
             concurrencyManager: mockConcurrencyManager,
-            appSettingsHelper: mockAppSettingsHelper
+            appSettingsHelper: mockAppSettingsHelper,
+            avaialableIDTypes: DocumentCaptureViewControllerTest.mockVerificationPage.documentSelect.idDocumentTypeAllowlistKeys
         )
     }
 
@@ -800,7 +801,8 @@ extension DocumentCaptureViewControllerTest {
             documentUploader: mockDocumentUploader,
             anyDocumentScanner: .init(mockDocumentScanner),
             concurrencyManager: mockConcurrencyManager,
-            appSettingsHelper: mockAppSettingsHelper
+            appSettingsHelper: mockAppSettingsHelper,
+            avaialableIDTypes: DocumentCaptureViewControllerTest.mockVerificationPage.documentSelect.idDocumentTypeAllowlistKeys
         )
     }
 

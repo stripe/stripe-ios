@@ -192,7 +192,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         // disable swipe to dismiss
         isModalInPresentation = true
         self.view.backgroundColor = configuration.appearance.colors.background
-        view.addAndPinSubview(formStackView, insets: PaymentSheetUI.defaultSheetMargins)
+        view.addAndPinSubview(formStackView, insets: configuration.appearance.formInsets)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -411,6 +411,26 @@ extension STPPaymentMethodCard {
     var twoDigitYear: NSNumber? {
         if let year = Int(String(expYear).suffix(2)) {
             return NSNumber(value: year)
+        }
+        return nil
+    }
+}
+
+extension UpdatePaymentMethodViewController {
+    static func resolveRemoveMessage(removeSavedPaymentMethodMessage: String?,
+                                     paymentMethodRemoveIsPartial: Bool,
+                                     merchantName: String) -> String? {
+        if let removeSavedPaymentMethodMessage {
+            return removeSavedPaymentMethodMessage
+        }
+        if paymentMethodRemoveIsPartial {
+            return String(
+                format: STPLocalizedString(
+                    "This payment method will be removed but will remain available for %@ subscriptions.",
+                    "Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name"
+                ),
+                merchantName
+            )
         }
         return nil
     }

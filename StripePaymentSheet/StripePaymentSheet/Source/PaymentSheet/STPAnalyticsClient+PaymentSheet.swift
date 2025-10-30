@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 extension STPAnalyticsClient {
     /// ⚠️ Deprecated - use `PaymentSheetAnalyticsHelper` if you are actually a PaymentSheet analytic so that you can send all the params common to PaymentSheet analytics. 
@@ -69,6 +70,11 @@ extension PaymentSheet.Appearance {
         payload["font"] = font != PaymentSheet.Appearance.default.font
         payload["colors"] = colors != PaymentSheet.Appearance.default.colors
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
+        payload["navigation_bar_style"] = navigationBarStyle.analyticsValue
+        payload["apply_liquid_glass"] = didCallApplyLiquidGlass
+        payload["ui_design_requires_compatibility"] = LiquidGlassDetector.hasOptedOut
+        payload["has_liquid_glass_compiler_requirements"] = LiquidGlassDetector.meetsCompilerRequirements
+
         // Convenience payload item to make querying high level appearance usage easier
         payload["usage"] = payload.values.contains(where: { value in
             if let boolValue = value as? Bool {
@@ -155,6 +161,29 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
             return "floating_button"
         case .flatWithCheckmark:
             return "flat_with_checkmark"
+        case .flatWithDisclosure:
+            return "flat_with_disclosure"
+        }
+    }
+}
+
+extension Dictionary where Key == STPPaymentMethodType, Value == PaymentSheet.TermsDisplay {
+    var analyticValue: [String: Any] {
+        var result: [String: Any] = [:]
+        for (paymentMethodType, termsDisplayValue) in self {
+            result[paymentMethodType.identifier] = termsDisplayValue.analyticValue
+        }
+        return result
+    }
+}
+
+extension PaymentSheet.Appearance.NavigationBarStyle {
+    var analyticsValue: String {
+        switch self {
+        case .plain:
+            return "plain"
+        case .glass:
+            return "glass"
         }
     }
 }

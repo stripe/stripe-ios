@@ -6,7 +6,7 @@
 //
 
 import SafariServices
-@_spi(PrivateBetaConnect) @_spi(DashboardOnly) @testable import StripeConnect
+@_spi(DashboardOnly) @testable import StripeConnect
 @_spi(STP) import StripeCore
 import WebKit
 import XCTest

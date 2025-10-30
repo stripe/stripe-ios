@@ -9,7 +9,7 @@ import OHHTTPStubsSwift
 @_spi(STP) @testable import StripeCore
 @testable import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -92,6 +92,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
                                                },
                   "ordered_payment_method_types" : ["card"],
                   "session_id": "123",
+                  "config_id": "123",
                   "apple_pay_preference": "enabled",
                   "customer": {"payment_methods": [
                                ],

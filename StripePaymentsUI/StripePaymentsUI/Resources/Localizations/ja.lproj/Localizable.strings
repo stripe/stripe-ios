@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ カード";
+
+"%1$@ Credit" = "%1$@ クレジット";
+
+"%1$@ Debit" = "%1$@ デビット";
+
+"%1$@ Prepaid" = "%1$@ プリペイド";
+
 "%1$@ account ending in %2$@" = "末尾が %2$@ の %1$@ 口座";
 
 "%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "銀行口座";
 
 "Billing address" = "請求先住所";
+
+"Billing details" = "請求先の詳細";
 
 "CVC" = "セキュリティコード";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
 
-"Your ZIP is invalid." = "郵便番号が無効です。";
-
 "Your card has expired." = "カードの有効期限が切れています。";
 
 "Your card number is incomplete." = "カード番号に不備があります。";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
 
 "Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
-
-"Your postal code is invalid." = "郵便番号が無効です";
 
 "card number" = "カード番号";
 

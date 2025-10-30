@@ -1,3 +1,11 @@
+"%1$@ Card" = "Karta %1$@";
+
+"%1$@ Credit" = "Kreditná karta %1$@";
+
+"%1$@ Debit" = "Debetná karta %1$@";
+
+"%1$@ Prepaid" = "Predplatená platba %1$@";
+
 "%1$@ account ending in %2$@" = "%1$@ účet končiaci na %2$@";
 
 "%1$@ ending in %2$@" = "Karta %1$@ s poslednými štyrmi číslami %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Bankový účet";
 
 "Billing address" = "Fakturačná adresa";
+
+"Billing details" = "Podrobnosti o fakturácii";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Na nasnímanie vašej karty umožnite prístup ku kamere pod položkou Nastavenia.";
 
-"Your ZIP is invalid." = "Vaše PSČ je neplatné.";
-
 "Your card has expired." = "Platnosť vašej karty vypršala.";
 
 "Your card number is incomplete." = "Číslo vašej karty je neúplné.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Bezpečnostný kód vašej karty je neúplný.";
 
 "Your card's security code is invalid." = "Bezpečnostný kód vašej karty je neplatný.";
-
-"Your postal code is invalid." = "Vaše PSČ je neplatné.";
 
 "card number" = "číslo karty";
 

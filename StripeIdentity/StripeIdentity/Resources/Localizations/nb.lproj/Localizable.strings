@@ -6,9 +6,13 @@
 
 "App Settings" = "Appinnstillinger";
 
-"Back identity card photo successfully uploaded" = "Bilde av baksiden av identitetskortet ble lastet opp";
+"Back %@ photo successfully uploaded" = "Baksiden av bildet, %@, ble lastet opp";
 
-"Back of identity card" = "Baksiden av identitetskortet";
+"Back identity document photo successfully uploaded" = "Baksiden av bildet for identitetsdokumentet ble lastet opp";
+
+"Back of %@" = "Baksiden av %@";
+
+"Back of driver's license or government-issued photo ID" = "Baksiden av et førerkort eller en offentlig utstedt ID med bilde";
 
 "Back of identity document" = "Baksiden av identitetsdokumentet";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Detaljer er ikke synlige";
 
+"Flip your %@ over to the other side" = "Snu %@ over til den andre siden";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Snu førerkortet eller den offentlig utstedte ID-en med bilde over til den andre siden";
+
 "Flip your identity card over to the other side" = "Snu identitetskortet over til den andre siden";
 
-"Front identity card photo successfully uploaded" = "Bilde av forsiden av identitetskortet ble lastet opp";
+"Front %@ photo successfully uploaded" = "Forsiden av bildet, %@, ble lastet opp";
 
-"Front of identity card" = "Forsiden av identitetskortet";
+"Front identity document photo successfully uploaded" = "Forsiden av bildet for identitetsdokumentet ble lastet opp";
+
+"Front of %@" = "Forsiden av %@";
+
+"Front of driver's license or government-issued photo ID" = "Forsiden av et førerkort eller en offentlig utstedt ID med bilde";
+
+"Front of driver's license or passport" = "Forsiden av et førerkort eller et pass";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Forsiden av et førerkort, et pass eller en offentlig utstedt ID med bilde";
 
 "Front of identity document" = "Forsiden av identitetsdokumentet";
+
+"Front of passport or government-issued photo ID" = "Forsiden av et pass eller en offentlig utstedt ID med bilde";
 
 "Get ready to scan your photo ID" = "Gjør deg klar til å skanne bilde-ID-en din";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Bildebibliotek";
 
-"Please upload images of the front and back of your identity card" = "Last opp bilder av for- og baksiden av identitetskortet ditt";
+"Please upload images of the front and back of your %@" = "Last opp bilder av forsiden og baksiden av %@";
+
+"Please upload images of the front and back of your identity document" = "Last opp bilder av forsiden og baksiden av identitetsdokumentet ditt";
+
+"Position your %@ in the center of the frame" = "Plasser %@ i midten av rammen";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Plasser førerkortet eller den offentlig utstedte ID-en med bilde i midten av rammen";
+
+"Position your driver's license or passport in the center of the frame" = "Plasser førerkortet eller passet i midten av rammen";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Plasser førerkortet, passet eller den offentlig utstedte ID-en med bilde i midten av rammen";
 
 "Position your face in the center of the frame." = "Plasser ansiktet midt i bildet.";
 
-"Position your identity card in the center of the frame" = "Plasser identitetskortet midt i bildet";
+"Position your identity document in the center of the frame" = "Plasser identitetsdokumentet ditt i midten av rammen";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Plasser passet eller den offentlig utstedte ID-en med bilde i midten av rammen";
 
 "Retake Photos" = "Ta bilder på nytt";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Velg en plassering du vil laste opp forsiden av identitetsdokumentet ditt fra";
 
-"Select back identity card photo" = "Velg bilde av baksiden av identitetskortet";
+"Select back %@ photo" = "Velg baksiden av bildet, %@";
 
-"Select front identity card photo" = "Velg bilde av forsiden av identitetskortet";
+"Select back identity document photo" = "Velg baksiden av bildet for identitetsdokumentet";
+
+"Select front %@ photo" = "Velg forsiden av bildet, %@";
+
+"Select front identity document photo" = "Velg forsiden av bildet for identitetsdokumentet";
 
 "Selfie" = "Selfie";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Last opp et bilde";
 
+"Upload your %@" = "Last opp %@";
+
 "Upload your photo ID" = "Last opp din bilde-ID";
 
-"Uploading back identity card photo" = "Laster opp bilde av baksiden av identitetskortet";
+"Uploading back %@ photo" = "Laster opp baksiden av bildet for %@";
 
-"Uploading front identity card photo" = "Laster opp bilde av forsiden av identitetskortet";
+"Uploading back identity document photo" = "Laster opp baksiden av bildet for identitetsdokumentet";
+
+"Uploading front %@ photo" = "Laster opp forsiden av bildet for %@";
+
+"Uploading front identity document photo" = "Laster opp forsiden av bildet for identitetsdokumentet";
 
 "Verify your identity" = "Verifiser identiteten din";
 

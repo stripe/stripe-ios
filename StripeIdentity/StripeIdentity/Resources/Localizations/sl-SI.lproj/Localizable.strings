@@ -6,9 +6,13 @@
 
 "App Settings" = "Nastavitve aplikacije";
 
-"Back identity card photo successfully uploaded" = "Fotografija hrbtne strani osebne izkaznice je bila uspešno naložena";
+"Back %@ photo successfully uploaded" = "Fotografija na zadnji strani %@ je bila uspešno naložena";
 
-"Back of identity card" = "Hrbtna stran osebne izkaznice";
+"Back identity document photo successfully uploaded" = "Fotografija na zadnji strani osebnega dokumenta je bila uspešno naložena";
+
+"Back of %@" = "Zadnja stran %@";
+
+"Back of driver's license or government-issued photo ID" = "Hrbtna stran vozniškega dovoljenja ali osebnega dokumenta s fotografijo, ki ga je izdal državni organ";
 
 "Back of identity document" = "Hrbtna stran osebnega dokumenta";
 
@@ -30,13 +34,27 @@
 
 "Details not visible" = "Podrobnosti niso vidne";
 
+"Flip your %@ over to the other side" = "Obrnite svojo %@ na drugo stran";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Obrnite vozniško dovoljenje ali osebni dokument s fotografijo, ki ga je izdal državni organ, na drugo stran";
+
 "Flip your identity card over to the other side" = "Obrnite osebno izkaznico na drugo stran";
 
-"Front identity card photo successfully uploaded" = "Fotografija sprednje strani osebne izkaznice je bila uspešno naložena";
+"Front %@ photo successfully uploaded" = "Fotografija na sprednji strani %@ je bila uspešno naložena";
 
-"Front of identity card" = "Sprednja stran osebne izkaznice";
+"Front identity document photo successfully uploaded" = "Fotografija na sprednji strani osebnega dokumenta je bila uspešno naložena";
+
+"Front of %@" = "Sprednja stran %@";
+
+"Front of driver's license or government-issued photo ID" = "Sprednja stran vozniškega dovoljenja ali osebnega dokumenta s fotografijo, ki ga je izdal državni organ";
+
+"Front of driver's license or passport" = "Sprednja stran vozniškega dovoljenja ali potnega lista";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Sprednja stran vozniškega dovoljenja, potnega lista ali osebnega dokumenta s fotografijo, ki ga je izdal državni organ";
 
 "Front of identity document" = "Sprednja stran osebnega dokumenta";
+
+"Front of passport or government-issued photo ID" = "Sprednja stran potnega lista ali osebnega dokumenta s fotografijo, ki ga je izdal državni organ";
 
 "Get ready to scan your photo ID" = "Pripravite se na optično branje osebnega dokumenta s fotografijo";
 
@@ -84,11 +102,23 @@
 
 "Photo Library" = "Knjižnica fotografij";
 
-"Please upload images of the front and back of your identity card" = "Naložite sliki sprednje in hrbtne strani osebne izkaznice";
+"Please upload images of the front and back of your %@" = "Prosimo, naložite slike sprednjo in zadnjo stran vašega %@";
+
+"Please upload images of the front and back of your identity document" = "Naložite slike sprednje in zadnje strani osebnega dokumenta.";
+
+"Position your %@ in the center of the frame" = "Namestite %@ na sredino okvirja";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Namestite vozniško dovoljenje ali osebni dokument s fotografijo, ki ga je izdal državni organ, v sredino okvirja";
+
+"Position your driver's license or passport in the center of the frame" = "Namestite vozniško dovoljenje ali potni list v sredino okvirja";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Namestite vozniško dovoljenje, potni list ali osebni dokument s fotografijo, ki ga je izdal državni organ, v sredino okvirja";
 
 "Position your face in the center of the frame." = "Zagotovite, da je vaš obraz na sredini okvira.";
 
-"Position your identity card in the center of the frame" = "Zagotovite, da je osebna izkaznica na sredini okvirja";
+"Position your identity document in the center of the frame" = "Osebni dokument namestite na sredino okvirja.";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Namestite potni list ali osebni dokument s fotografijo, ki ga je izdal državni organ, v sredino okvirja";
 
 "Retake Photos" = "Znova posnemi fotografije";
 
@@ -102,9 +132,13 @@
 
 "Select a location to upload the front of your identity document from" = "Izberite mesto, s katerega želite naložiti sprednjo stran osebnega dokumenta";
 
-"Select back identity card photo" = "Izberite fotografijo hrbtne strani osebne izkaznice";
+"Select back %@ photo" = "Izberite fotografijo na zadnji strani %@";
 
-"Select front identity card photo" = "Izberite fotografijo sprednje strani osebne izkaznice";
+"Select back identity document photo" = "Izberite fotografijo osebnega dokumenta";
+
+"Select front %@ photo" = "Izberite fotografijo na sprednji strani %@";
+
+"Select front identity document photo" = "Izberite fotografijo na sprednji strani osebnega dokumenta";
 
 "Selfie" = "Selfi";
 
@@ -130,11 +164,17 @@
 
 "Upload a Photo" = "Naloži fotografijo";
 
+"Upload your %@" = "Naložite svoj %@";
+
 "Upload your photo ID" = "Naložite osebni dokument s svojo fotografijo";
 
-"Uploading back identity card photo" = "Nalaganje fotografije hrbtne strani osebne izkaznice";
+"Uploading back %@ photo" = "Nalaganje fotografije %@ na zadnji strani";
 
-"Uploading front identity card photo" = "Nalaganje fotografije sprednje strani osebne izkaznice";
+"Uploading back identity document photo" = "Nalaganje fotografije osebnega dokumenta";
+
+"Uploading front %@ photo" = "Nalaganje fotografije %@ na sprednji strani";
+
+"Uploading front identity document photo" = "Nalaganje fotografije na sprednji strani osebnega dokumenta";
 
 "Verify your identity" = "Preverite svojo identiteto";
 

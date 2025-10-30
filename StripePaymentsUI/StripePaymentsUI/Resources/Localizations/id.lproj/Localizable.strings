@@ -1,3 +1,11 @@
+"%1$@ Card" = "Kartu %1$@";
+
+"%1$@ Credit" = "Kredit %1$@";
+
+"%1$@ Debit" = "Debit %1$@";
+
+"%1$@ Prepaid" = "Prabayar %1$@";
+
 "%1$@ account ending in %2$@" = "Rekening %1$@ berakhiran dengan %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ berakhiran %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Rekening bank";
 
 "Billing address" = "Alamat tagihan";
+
+"Billing details" = "Detail penagihan";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
 
-"Your ZIP is invalid." = "ZIP Anda tidak valid.";
-
 "Your card has expired." = "Kartu Anda telah kedaluwarsa.";
 
 "Your card number is incomplete." = "Nomor kartu Anda tidak lengkap.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Kode keamanan kartu Anda tidak lengkap.";
 
 "Your card's security code is invalid." = "Kode keamanan kartu Anda tidak valid.";
-
-"Your postal code is invalid." = "Kode pos Anda tidak valid.";
 
 "card number" = "nomor kartu";
 

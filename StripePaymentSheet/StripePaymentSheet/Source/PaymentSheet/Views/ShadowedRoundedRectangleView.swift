@@ -12,6 +12,7 @@ import UIKit
 /// The shadowed rounded rectangle that our cells use to display content
 class ShadowedRoundedRectangle: UIView {
     private let roundedRectangle: UIView
+    private let ios26DefaultCornerStyle: CornerStyle
     var appearance: PaymentSheet.Appearance {
         didSet {
             update()
@@ -40,8 +41,8 @@ class ShadowedRoundedRectangle: UIView {
         }
 
         // Corner radius
-        roundedRectangle.layer.cornerRadius = appearance.cornerRadius
-        layer.cornerRadius = appearance.cornerRadius
+        roundedRectangle.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: ios26DefaultCornerStyle)
+        applyCornerRadiusOrConfiguration(for: appearance)
 
         // Shadow
         layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
@@ -63,8 +64,9 @@ class ShadowedRoundedRectangle: UIView {
         }
     }
 
-    required init(appearance: PaymentSheet.Appearance) {
+    required init(appearance: PaymentSheet.Appearance, ios26DefaultCornerStyle: CornerStyle = .uniform) {
         self.appearance = appearance
+        self.ios26DefaultCornerStyle = ios26DefaultCornerStyle
         roundedRectangle = UIView()
         roundedRectangle.layer.masksToBounds = true
         super.init(frame: .zero)
@@ -72,7 +74,7 @@ class ShadowedRoundedRectangle: UIView {
         update()
     }
 
-    #if !canImport(CompositorServices)
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         update()

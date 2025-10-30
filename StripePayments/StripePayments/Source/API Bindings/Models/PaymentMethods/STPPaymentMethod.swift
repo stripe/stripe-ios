@@ -96,6 +96,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var multibanco: STPPaymentMethodMultibanco?
     /// If this is a MobilePay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeMobilePay`), this contains additional details.
     @objc private(set) public var mobilePay: STPPaymentMethodMobilePay?
+    /// If this is a ShopPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeShopPay`), this contains additional details.
+    @_spi(STP) @objc private(set) public var shopPay: STPPaymentMethodShopPay?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -114,6 +116,15 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
     )
     @objc private(set) public var metadata: [String: String]?
+
+    /// The payment details of a PaymentMethod that was created using Link.
+    @_spi(STP) public var linkPaymentDetails: LinkPaymentDetails?
+    /// Whether this payment method is coming from Link.
+    @_spi(STP) public var isLinkPassthroughMode: Bool = false
+
+    @_spi(STP) public var isLinkPaymentMethod: Bool {
+        linkPaymentDetails != nil
+    }
 
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
@@ -165,6 +176,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "crypto = \(String(describing: crypto))",
             "multibanco = \(String(describing: multibanco))",
             "mobilePay = \(String(describing: mobilePay))",
+            "shopPay = \(String(describing: shopPay))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -357,7 +369,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.mobilePay = STPPaymentMethodMobilePay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "mobilepay")
         )
-
+        paymentMethod.shopPay = STPPaymentMethodShopPay.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "shop_pay")
+        )
         return paymentMethod
     }
 }

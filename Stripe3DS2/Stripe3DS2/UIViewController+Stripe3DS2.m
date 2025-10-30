@@ -26,8 +26,12 @@
     cancelButton.accessibilityIdentifier = @"Cancel";
     [cancelButton addTarget:self action:cancelButtonSelector forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *cancelBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
+#if defined(__IPHONE_26_0)
+    if (@available(iOS 26, *)) {
+        cancelButton.configuration = UIButtonConfiguration.glassButtonConfiguration;
+    }
+#endif
     self.navigationItem.rightBarButtonItem = cancelBarButtonItem;
-    
     // Title
     self.title = navigationBarCustomization.headerText;
     NSMutableDictionary *titleTextAttributes = [NSMutableDictionary dictionary];

@@ -3,9 +3,6 @@ build-static/*
 build-3ds2/*
 build-ci-symbol-check/*
 build-ci-tests/*
-Example/*/Carthage/*
-Example/*/Cartfile.resolved
-Carthage/*
 Tests/build/*
 Tests/installation_tests/cocoapods/**/Podfile.lock
 Tests/installation_tests/cocoapods/**/Pods
@@ -13,9 +10,6 @@ Tests/installation_tests/cocoapods/**/build
 Tests/installation_tests/manual_installation/build
 Tests/installation_tests/manual_installation/ManualInstallationTest/Frameworks/Stripe.framework
 Tests/installation_tests/manual_installation/ManualInstallationTest/Frameworks/Stripe.bundle
-Tests/installation_tests/carthage/Cartfile
-Tests/installation_tests/carthage/Cartfile.resolved
-Tests/installation_tests/carthage/Carthage/*
 vendor/*
 .bundle/
 temp_docs
@@ -48,3 +42,9 @@ fastlane/.env
 
 # Xcode Related files
 Stripe.xcworkspace/xcuserdata/*
+
+# Local LLM settings
+.claude
+
+# Simulator configuration cache
+.stripe-ios-config

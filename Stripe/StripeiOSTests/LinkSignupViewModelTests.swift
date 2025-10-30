@@ -161,6 +161,96 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         let sut = makeSUT(country: "US", showCheckbox: false, hasAccountObject: true)
         XCTAssertEqual(sut.consentAction, .implied_v0_0)
     }
+
+    func test_defaultOptIn_allowed_for_eligible_merchant() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        XCTAssertEqual(sut.mode, .checkboxWithDefaultOptIn)
+    }
+
+    func test_defaultOptIn_not_allowed_for_ineligible_merchant() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: false)
+        XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
+    }
+
+    func test_defaultOptIn_not_allowed_outside_US() {
+        let sut = makeSUT(country: "CA", showCheckbox: true, allowsDefaultOptIn: true)
+        XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
+    }
+
+    func test_defaultOptIn_not_allowed_if_showing_checkbox() {
+        let sut = makeSUT(country: "US", showCheckbox: false, allowsDefaultOptIn: true)
+        XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
+    }
+
+    func test_defaultOptIn_shows_readonly_view_if_completely_prefilled() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        sut.emailWasPrefilled = true
+        sut.phoneNumberWasPrefilled = true
+        XCTAssertTrue(sut.shouldShowDefaultOptInView)
+        XCTAssertFalse(sut.shouldShowEmailField)
+        XCTAssertFalse(sut.shouldShowPhoneField)
+    }
+
+    func test_defaultOptIn_shows_fields_if_user_asked_to_change_signup_data() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        sut.emailWasPrefilled = true
+        sut.phoneNumberWasPrefilled = true
+        XCTAssertTrue(sut.shouldShowDefaultOptInView)
+        XCTAssertFalse(sut.shouldShowEmailField)
+        XCTAssertFalse(sut.shouldShowPhoneField)
+        sut.didAskToChangeSignupData = true
+        XCTAssertFalse(sut.shouldShowDefaultOptInView)
+        XCTAssertTrue(sut.shouldShowEmailField)
+        XCTAssertTrue(sut.shouldShowPhoneField)
+    }
+
+    func test_defaultOptIn_shows_fields_if_not_completely_prefilled() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        sut.emailWasPrefilled = true
+        sut.phoneNumberWasPrefilled = false
+        XCTAssertFalse(sut.shouldShowDefaultOptInView)
+        XCTAssertTrue(sut.shouldShowEmailField)
+        XCTAssertTrue(sut.shouldShowPhoneField)
+    }
+
+    func test_signupOptIn_shows_no_fields() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true
+        )
+        XCTAssertFalse(sut.shouldShowDefaultOptInView)
+        XCTAssertFalse(sut.shouldShowEmailField)
+        XCTAssertFalse(sut.shouldShowPhoneField)
+        XCTAssertFalse(sut.shouldShowNameField)
+    }
+
+    func test_signupOptIn_prechecked() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true
+        )
+        XCTAssertTrue(sut.saveCheckboxChecked)
+    }
+
+    func test_signupOptIn_not_prechecked() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: false
+        )
+        XCTAssertFalse(sut.saveCheckboxChecked)
+    }
 }
 
 extension LinkInlineSignupViewModelTests {
@@ -172,6 +262,7 @@ extension LinkInlineSignupViewModelTests {
             withEmail email: String?,
             emailSource: StripePaymentSheet.EmailSource,
             doNotLogConsumerFunnelEvent: Bool,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             if shouldFailLookup {
@@ -183,16 +274,63 @@ extension LinkInlineSignupViewModelTests {
                             email: "user@example.com",
                             session: nil,
                             publishableKey: nil,
-                            useMobileEndpoints: false
+                            displayablePaymentDetails: nil,
+                            useMobileEndpoints: false,
+                            canSyncAttestationState: false,
+                            requestSurface: requestSurface
                         )
                     )
                 )
             }
         }
 
-        func hasEmailLoggedOut(email: String) -> Bool {
-            // TODO(porter): Determine if we want to implement this in tests
-            return false
+        func lookupLinkAuthToken(
+            _ linkAuthTokenClientSecret: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface,
+            completion: @escaping (Result<StripePaymentSheet.PaymentSheetLinkAccount?, any Error>) -> Void
+        ) {
+            if shouldFailLookup {
+                completion(.failure(NSError.stp_genericConnectionError()))
+            } else {
+                completion(
+                    .success(
+                        PaymentSheetLinkAccount(
+                            email: "user@example.com",
+                            session: nil,
+                            publishableKey: nil,
+                            displayablePaymentDetails: nil,
+                            useMobileEndpoints: false,
+                            canSyncAttestationState: false,
+                            requestSurface: requestSurface
+                        )
+                    )
+                )
+            }
+        }
+
+        func lookupLinkAuthIntent(
+            linkAuthIntentID: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
+            completion: @escaping (Result<StripePaymentSheet.LookupLinkAuthIntentResponse?, Error>) -> Void
+        ) {
+            if shouldFailLookup {
+                completion(.failure(NSError.stp_genericConnectionError()))
+            } else {
+                let linkAccount = PaymentSheetLinkAccount(
+                    email: "user@example.com",
+                    session: nil,
+                    publishableKey: nil,
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false,
+                    requestSurface: requestSurface
+                )
+                let response = StripePaymentSheet.LookupLinkAuthIntentResponse(
+                    linkAccount: linkAccount,
+                    consentViewModel: nil
+                )
+                completion(.success(response))
+            }
         }
     }
 
@@ -200,16 +338,29 @@ extension LinkInlineSignupViewModelTests {
         country: String,
         showCheckbox: Bool,
         hasAccountObject: Bool = false,
-        shouldFailLookup: Bool = false
+        shouldFailLookup: Bool = false,
+        allowsDefaultOptIn: Bool = false,
+        signupOptInFeatureEnabled: Bool = false,
+        signupOptInInitialValue: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
-            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false)
-            : nil
+        ? PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+        : nil
 
         return LinkInlineSignupViewModel(
             configuration: PaymentSheet.Configuration(),
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
+            allowsDefaultOptIn: allowsDefaultOptIn,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: signupOptInInitialValue,
             linkAccount: linkAccount,
             country: country
         )

@@ -82,7 +82,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
             action: #selector(didTapClose)
         )
         item.tintColor = FinancialConnectionsAppearance.Colors.icon
-        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
+        item.applyFinancialConnectionsCloseButtonEdgeInsets()
         return item
     }()
 
@@ -167,6 +167,7 @@ extension FinancialConnectionsWebFlowViewController {
         let updatedHostedAuthUrl = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: hostedAuthUrl,
             isInstantDebits: manifest.isProductInstantDebits,
+            hasExistingAccountholderToken: manifest.accountholderToken != nil,
             elementsSessionContext: elementsSessionContext,
             prefillDetailsOverride: prefillDetailsOverride,
             additionalQueryParameters: additionalQueryParameters
@@ -186,6 +187,8 @@ extension FinancialConnectionsWebFlowViewController {
                                 linkAccountSessionId: manifest.id
                             )
                             self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
+                        } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
+                            self.notifyDelegateOfSuccess(result: .linkedAccount(id: linkedAccountId))
                         } else {
                             self.notifyDelegateOfFailure(
                                 error: FinancialConnectionsSheetError.unknown(

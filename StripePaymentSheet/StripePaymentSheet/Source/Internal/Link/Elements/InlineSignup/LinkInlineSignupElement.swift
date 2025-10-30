@@ -40,14 +40,22 @@ final class LinkInlineSignupElement: Element {
         linkAccount: PaymentSheetLinkAccount?,
         country: String?,
         showCheckbox: Bool,
-        accountService: LinkAccountServiceProtocol
+        accountService: LinkAccountServiceProtocol,
+        allowsDefaultOptIn: Bool,
+        signupOptInFeatureEnabled: Bool,
+        signupOptInInitialValue: Bool,
+        analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
             configuration: configuration,
             showCheckbox: showCheckbox,
             accountService: accountService,
+            allowsDefaultOptIn: allowsDefaultOptIn,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: signupOptInInitialValue,
             linkAccount: linkAccount,
-            country: country
+            country: country,
+            analyticsHelper: analyticsHelper
         ))
     }
 

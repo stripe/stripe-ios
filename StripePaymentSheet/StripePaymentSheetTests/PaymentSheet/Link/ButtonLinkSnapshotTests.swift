@@ -20,16 +20,6 @@ class ButtonLinkSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    func testSecondary() {
-        let sut = makeSUT(configuration: .linkSecondary(), title: "Secondary Button")
-        verify(sut)
-    }
-
-    func testBordered() {
-        let sut = makeSUT(configuration: .linkBordered(), title: "Bordered Button")
-        verify(sut)
-    }
-
     func testPlain() {
         let sut = makeSUT(configuration: .linkPlain(), title: "Plain Button")
         verify(sut)

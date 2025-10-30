@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ Thẻ";
+
+"%1$@ Credit" = "%1$@ Ghi có";
+
+"%1$@ Debit" = "%1$@ Ghi nợ";
+
+"%1$@ Prepaid" = "%1$@ Trả trước";
+
 "%1$@ account ending in %2$@" = "Tài khoản %1$@ kết thúc bằng %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Tài khoản ngân hàng";
 
 "Billing address" = "Địa chỉ thanh toán";
+
+"Billing details" = "Chi tiết hóa đơn";
 
 "CVC" = "CVC";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
 
-"Your ZIP is invalid." = "Mã ZIP không hợp lệ";
-
 "Your card has expired." = "Thẻ đã hết hạn.";
 
 "Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
 
 "Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
-
-"Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
 
 "card number" = "số thẻ";
 

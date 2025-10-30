@@ -86,7 +86,13 @@ class FCLiteContainerViewController: UIViewController {
         switch result {
         case .success(let returnUrl):
             if isInstantDebits {
-                createInstantDebitsLinkedBankAndComplete(from: returnUrl)
+                if let linkedBank = createInstantDebitsLinkedBank(from: returnUrl) {
+                    completion(.completed(.instantDebits(linkedBank)))
+                } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
+                    completion(.completed(.linkedAccount(id: linkedAccountId)))
+                } else {
+                    completion(.failed(error: FCLiteError.linkedBankUnavailable))
+                }
             } else {
                 await fetchSessionAndComplete()
             }
@@ -211,12 +217,12 @@ class FCLiteContainerViewController: UIViewController {
         }
     }
 
-    private func createInstantDebitsLinkedBankAndComplete(from url: URL) {
+    private func createInstantDebitsLinkedBank(from url: URL) -> InstantDebitsLinkedBank? {
         guard let paymentMethod = url.extractLinkBankPaymentMethod() else {
-            completion(.failed(error: FCLiteError.linkedBankUnavailable))
-            return
+            return nil
         }
-        let linkedBank = InstantDebitsLinkedBank(
+
+        return InstantDebitsLinkedBank(
             paymentMethod: paymentMethod,
             bankName: url.extractValue(forKey: "bank_name")?
                 .replacingOccurrences(of: "+", with: " "),
@@ -225,7 +231,6 @@ class FCLiteContainerViewController: UIViewController {
             incentiveEligible: url.extractValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false,
             linkAccountSessionId: manifest?.id
         )
-        completion(.completed(.instantDebits(linkedBank)))
     }
 
     private func setNavigationBar(isHidden: Bool) {

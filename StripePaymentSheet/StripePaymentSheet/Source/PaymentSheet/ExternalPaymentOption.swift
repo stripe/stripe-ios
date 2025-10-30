@@ -52,17 +52,12 @@ class ExternalPaymentOption {
     /// - Parameters:
     ///   - billingDetails: The billing details to use for confirmation
     ///   - completion: A closure that will be called with the payment result
-    func confirm(billingDetails: STPPaymentMethodBillingDetails, completion: @escaping (PaymentSheetResult) -> Void) {
+    func confirm(billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult {
         switch confirmHandler {
         case .custom(let cpm, let confirmHandler):
-            Task {
-                let result = await confirmHandler(cpm, billingDetails)
-                completion(result)
-            }
+            return await confirmHandler(cpm, billingDetails)
         case .external(let confirmHandler):
-            confirmHandler(type, billingDetails) { result in
-                completion(result)
-            }
+            return await confirmHandler(type, billingDetails)
         }
     }
 

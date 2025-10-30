@@ -42,8 +42,12 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     // MARK: - Writable Properties
     private let configuration: CustomerSheet.Configuration
 
-    // We are keeping usBankAccountInfo in memory to preserve state if the user switches payment method types
-    private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
+    /// This caches forms for payment methods so that customers don't have to re-enter details
+    /// This assumes the form generated for a given PM type _does not change_ at any point after load.
+    let formCache = PaymentMethodFormCache()
+
+    /// Reference to the AddressSectionElement in the form, if present
+    private var addressSectionElement: AddressSectionElement?
     var overrideActionButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .stripe(.USBankAccount) {
             if let paymentOption = paymentOption,
@@ -67,6 +71,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         }
         switch overrideBuyButtonBehavior {
         case .LinkUSBankAccount:
+            let usBankAccountFormElement = formCache[.stripe(.USBankAccount)] as? USBankAccountPaymentMethodElement
             return usBankAccountFormElement?.canLinkAccount ?? false
         case .instantDebits:
             return false // instant debits is not supported for customer sheet
@@ -82,26 +87,21 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         return nil
     }
 
-    private lazy var paymentMethodFormElement: PaymentMethodElement = {
-        if selectedPaymentMethodType == .stripe(.USBankAccount) {
-            if let usBankAccountFormElement {
-                // Use the cached form instead of creating a new one
-                return usBankAccountFormElement
-            } else {
-                // Cache the form
-                let element = self.makeElement(for: .stripe(.USBankAccount))
-                usBankAccountFormElement = element as? USBankAccountPaymentMethodElement
-                return element
-            }
+    lazy var paymentMethodFormElement: PaymentMethodElement = {
+        if let cachedForm = formCache[selectedPaymentMethodType] {
+            return cachedForm
+        } else {
+            let element = makeElement(for: selectedPaymentMethodType)
+            formCache[selectedPaymentMethodType] = element
+            return element
         }
-        return makeElement(for: selectedPaymentMethodType)
     }()
 
     // MARK: - Views
     private lazy var paymentMethodDetailsView: UIView = {
         return paymentMethodFormElement.view
     }()
-    private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
+    lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
             paymentMethodTypes: paymentMethodTypes,
             appearance: configuration.appearance,
@@ -112,7 +112,14 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .bottom)
-        view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        // if the carousel is hidden, then we have a singular card form that needs to apply top padding
+        // otherwise, the superview will handle the top padding
+        let isCarouselHidden = paymentMethodTypes == [.stripe(.card)]
+        view.directionalLayoutMargins = .insets(
+            top: isCarouselHidden ? configuration.appearance.formInsets.top : 0,
+            leading: configuration.appearance.formInsets.leading,
+            trailing: configuration.appearance.formInsets.trailing
+        )
         view.addPinnedSubview(paymentMethodDetailsView)
         view.updateHeight()
         return view
@@ -201,7 +208,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethodDetailsContainerView.layoutIfNeeded()
             newView.alpha = 0
 
-            #if !canImport(CompositorServices)
+            #if !os(visionOS)
             UISelectionFeedbackGenerator().selectionChanged()
             #endif
             // Fade the new one in and the old one out
@@ -221,15 +228,12 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         }
     }
     private func updateFormElement() {
-        if selectedPaymentMethodType == .stripe(.USBankAccount) {
-            if let usBankAccountFormElement {
-                paymentMethodFormElement = usBankAccountFormElement
-            } else {
-                paymentMethodFormElement = makeElement(for: .stripe(.USBankAccount))
-                usBankAccountFormElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement
-            }
+        if let cachedForm = formCache[selectedPaymentMethodType] {
+            paymentMethodFormElement = cachedForm
         } else {
-            paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
+            let element = makeElement(for: selectedPaymentMethodType)
+            formCache[selectedPaymentMethodType] = element
+            paymentMethodFormElement = element
         }
         updateUI()
         sendEventToSubviews(.viewDidAppear, from: view)
@@ -253,7 +257,50 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethodIncentive: nil
         ).make()
         formElement.delegate = self
+
+        // Setup AddressSectionElement autocomplete callback after form creation
+        setupAddressSectionAutocompleteCallback(for: formElement)
+
         return formElement
+    }
+
+    // MARK: - Autocomplete Methods
+
+    /// Sets up the autocomplete button callback for any AddressSectionElement in the form
+    /// TODO(porter) Make this more generic for when we have shipping address section in here too
+    private func setupAddressSectionAutocompleteCallback(for formElement: PaymentMethodElement) {
+        let unwrappedFormElement = (formElement as? PaymentMethodElementWrapper<FormElement>)?.element ?? formElement
+        if let addressSection = unwrappedFormElement.getAllUnwrappedSubElements()
+            .compactMap({ $0 as? AddressSectionElement }).first {
+            // Store reference to the address section element
+            self.addressSectionElement = addressSection
+            addressSection.didTapAutocompleteButton = { [weak self] in
+                self?.presentAutocomplete()
+            }
+        }
+    }
+
+    /// Presents the autocomplete view controller
+    private func presentAutocomplete() {
+        guard let addressSectionElement = addressSectionElement else {
+            return
+        }
+
+        // Create a basic AddressViewController.Configuration for the autocomplete
+        let addressConfiguration = AddressViewController.Configuration(
+            appearance: configuration.appearance
+        )
+
+        let autoCompleteViewController = AutoCompleteViewController(
+            configuration: addressConfiguration,
+            initialLine1Text: addressSectionElement.line1?.text,
+            addressSpecProvider: AddressSpecProvider.shared,
+            verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
+        )
+        autoCompleteViewController.delegate = self
+
+        let navigationController = UINavigationController(rootViewController: autoCompleteViewController)
+        present(navigationController, animated: true)
     }
 }
 
@@ -362,5 +409,48 @@ extension CustomerAddPaymentMethodViewController: PaymentMethodTypeCollectionVie
 extension CustomerAddPaymentMethodViewController: PresentingViewControllerDelegate {
     func presentViewController(viewController: UIViewController, completion: (() -> Void)?) {
         self.present(viewController, animated: true, completion: completion)
+    }
+}
+
+// MARK: - AutoCompleteViewControllerDelegate
+
+extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDelegate {
+    func didSelectManualEntry(_ line1: String) {
+        guard let addressSectionElement = addressSectionElement else { return }
+
+        // Dismiss the autocomplete view controller
+        presentedViewController?.dismiss(animated: true) {
+            // Switch to manual entry mode and set the line1 text
+            addressSectionElement.collectionMode = .allWithAutocomplete
+            addressSectionElement.line1?.setText(line1)
+            addressSectionElement.line1?.beginEditing()
+        }
+    }
+
+    func didSelectAddress(_ address: PaymentSheet.Address?) {
+        guard let addressSectionElement = addressSectionElement else { return }
+
+        // Dismiss the autocomplete view controller
+        presentedViewController?.dismiss(animated: true) {
+            // Switch to manual entry mode after address selection
+            addressSectionElement.collectionMode = .allWithAutocomplete
+
+            guard let address = address else {
+                return
+            }
+
+            // Set the country if it's supported
+            let autocompleteCountryIndex = addressSectionElement.countryCodes.firstIndex(where: { $0 == address.country })
+            if let autocompleteCountryIndex = autocompleteCountryIndex {
+                addressSectionElement.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
+            }
+
+            // Populate the address fields
+            addressSectionElement.line1?.setText(address.line1 ?? "")
+            addressSectionElement.line2?.setText(address.line2 ?? "")
+            addressSectionElement.city?.setText(address.city ?? "")
+            addressSectionElement.postalCode?.setText(address.postalCode ?? "")
+            addressSectionElement.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+        }
     }
 }

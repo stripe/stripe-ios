@@ -1,6 +1,7 @@
 {
   "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
+  "config_id": "123",
   "customer": {
     "customer_session": {
       "id": "cuss_1PK3MvL654321654",
@@ -44,7 +45,8 @@
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,
     "elements_enable_mx_card_installments": false,
-    "elements_enable_br_card_installments": false
+    "elements_enable_br_card_installments": false,
+    "elements_enable_link_spm": true
   },
   "google_pay_preference": "disabled",
   "link_consumer_info": null,

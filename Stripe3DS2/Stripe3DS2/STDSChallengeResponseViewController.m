@@ -557,6 +557,14 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [self.delegate challengeResponseViewControllerDidRequestResend:self];
 }
 
+- (nullable id<STDSChallengeResponseSelectionInfo>)whitelistResponse {
+    if (self.response.whitelistingInfoText == nil || self.response.whitelistingInfoText.length == 0) {
+        return nil;
+    } else {
+        return self.whitelistView.selectedResponse;
+    }
+}
+
 - (void)submit:(STDSACSUIType)type {
     [self.textChallengeView endEditing:NO];
 
@@ -566,7 +574,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         case STDSACSUITypeText: {
             [self.delegate challengeResponseViewController:self
                                             didSubmitInput:self.textChallengeView.inputText
-                                        whitelistSelection:self.whitelistView.selectedResponse];
+                                        whitelistSelection:self.whitelistResponse];
             
             [self.analyticsDelegate OTPSubmitButtonTappedWithTransactionID:self.response.threeDSServerTransactionID];
             break;
@@ -575,12 +583,12 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         case STDSACSUITypeMultiSelect: {
             [self.delegate challengeResponseViewController:self
                                         didSubmitSelection:self.challengeSelectionView.currentlySelectedChallengeInfo
-                                        whitelistSelection:self.whitelistView.selectedResponse];
+                                        whitelistSelection:self.whitelistResponse];
             break;
         }
         case STDSACSUITypeOOB:
             [self.delegate challengeResponseViewControllerDidOOBContinue:self
-                                                      whitelistSelection:self.whitelistView.selectedResponse];
+                                                      whitelistSelection:self.whitelistResponse];
             [self.analyticsDelegate OOBContinueButtonTappedWithTransactionID:self.response.threeDSServerTransactionID];
             break;
         case STDSACSUITypeHTML:
