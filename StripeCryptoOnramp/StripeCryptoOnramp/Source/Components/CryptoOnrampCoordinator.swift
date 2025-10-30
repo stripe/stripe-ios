@@ -410,7 +410,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
             return try await withCheckedThrowingContinuation { continuation in
                 Task { @MainActor in
-                    let verifyKYCViewController = VerifyKYCViewController(info: displayInfo)
+                    let verifyKYCViewController = VerifyKYCViewController(info: displayInfo, appearance: appearance)
 
                     verifyKYCViewController.onResult = { result in
                         verifyKYCViewController.dismiss(animated: true) {

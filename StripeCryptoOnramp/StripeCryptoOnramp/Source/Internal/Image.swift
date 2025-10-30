@@ -13,4 +13,5 @@ import Foundation
     @_spi(STP) public typealias BundleLocator = StripeCryptoOnrampBundleLocator
 
     case linkIconSquare = "link_icon_square"
+    case kycVerifyEdit = "kyc_verify_edit"
 }
