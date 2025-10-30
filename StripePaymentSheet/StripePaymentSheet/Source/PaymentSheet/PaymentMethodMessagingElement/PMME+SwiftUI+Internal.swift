@@ -68,22 +68,16 @@ extension PaymentMethodMessagingElement {
 extension PaymentMethodMessagingElement.View {
 
     @ViewBuilder func bodyImpl() -> some View {
-        if let config {
-            // If we were initialized with a config, load the config
-            ZStack {
-                Color.clear.frame(width: 0, height: 0)
-                content(phase)
-            }
-            // Anytime the config changes we reload.
-            // .task automatically manages the lifetime of the task to match the view.
-            // In the config (no content) integration style, the content will be an clear size 0 view to start, this
-            //      is necessary since an EmptyView will not enter the view hierarchy and thus .task has nothing to run on.
-                .task(id: config) {
-                    await load()
-                }
-        } else {
-            // If we were initialized with viewData, then we just show the content
+        ZStack {
+            Color.clear.frame(width: 0, height: 0)
             content(phase)
+        }
+        // Anytime the config (if provided) changes we reload.
+        // .task automatically manages the lifetime of the task to match the view.
+        // In the config (no content) integration style, the content will be an clear size 0 view to start, this
+        //      is necessary since an EmptyView will not enter the view hierarchy and thus .task has nothing to run on.
+        .task(id: config) {
+            await load()
         }
     }
 
