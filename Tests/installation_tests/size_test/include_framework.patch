@@ -1,5 +1,5 @@
 diff --git a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
-index e81bf834efb..3a106bebd37 100644
+index e81bf834efb..95a667b0c0c 100644
 --- a/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 +++ b/Tests/installation_tests/size_test/SPMTest.xcodeproj/project.pbxproj
 @@ -8,6 +8,7 @@
@@ -26,7 +26,12 @@ index e81bf834efb..3a106bebd37 100644
  			);
  			productName = CocoapodsTest;
  			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
-@@ -468,8 +471,8 @@
+@@ -464,12 +467,13 @@
+ 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+ 				INFOPLIST_FILE = SPMTest/Info.plist;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
++				LD_GENERATE_MAP_FILE = YES;
+ 				LD_RUNPATH_SEARCH_PATHS = (
  					"$(inherited)",
  					"@executable_path/Frameworks",
  				);
@@ -37,7 +42,12 @@ index e81bf834efb..3a106bebd37 100644
  				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
-@@ -490,8 +493,8 @@
+@@ -486,12 +490,13 @@
+ 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+ 				INFOPLIST_FILE = SPMTest/Info.plist;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
++				LD_GENERATE_MAP_FILE = YES;
+ 				LD_RUNPATH_SEARCH_PATHS = (
  					"$(inherited)",
  					"@executable_path/Frameworks",
  				);
@@ -48,7 +58,7 @@ index e81bf834efb..3a106bebd37 100644
  				SWIFT_VERSION = 5.0;
  				TARGETED_DEVICE_FAMILY = "1,2";
  			};
-@@ -528,6 +531,12 @@
+@@ -528,6 +533,12 @@
  			defaultConfigurationName = Release;
  		};
  /* End XCConfigurationList section */
