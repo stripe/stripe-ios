@@ -113,8 +113,6 @@ class STPPaymentMethodTest: XCTestCase {
                 XCTAssertEqual(string, "eps")
             case .OXXO:
                 XCTAssertEqual(string, "oxxo")
-            case .sofort:
-                XCTAssertEqual(string, "sofort")
             case .alipay:
                 XCTAssertEqual(string, "alipay")
             case .payPal:

@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "Prélèvement SEPA";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Le délai d'authentification de votre moyen de paiement est dépassé, veuillez réessayer.";

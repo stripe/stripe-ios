@@ -32,7 +32,6 @@ extern NSString *const STPTestJSONSourceiDEAL;
 extern NSString *const STPTestJSONSourceMultibanco;
 extern NSString *const STPTestJSONSourceP24;
 extern NSString *const STPTestJSONSourceSEPADebit;
-extern NSString *const STPTestJSONSourceSofort;
 
 @interface STPFixtures : NSObject
 

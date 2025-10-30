@@ -37,7 +37,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     @MainActor
     func testPaymentSheetLoadWithPaymentIntent() async throws {
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
+        let types = ["ideal", "card", "bancontact"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         // Given a PaymentIntent client secret...
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { result in
@@ -67,8 +67,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     func testPaymentSheetLoadWithSetupIntent() async throws {
         let expectation = XCTestExpectation(description: "Retrieve Setup Intent With Preferences")
-        let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
+        let types = ["ideal", "card", "bancontact"]
+        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact]
         let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: types)
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret(clientSecret),
@@ -294,7 +294,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     func testPaymentSheetLoadWithExternalPaymentMethods() async throws {
         // Loading PaymentSheet...
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
+        let types = ["ideal", "card", "bancontact"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         var configuration = self.configuration
         // ...with valid external payment methods configured...
@@ -335,7 +335,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         STPAnalyticsClient.sharedClient._testLogHistory = []
         // Loading PaymentSheet...
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
+        let types = ["ideal", "card", "bancontact"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         var configuration = self.configuration
         // ...with invalid external payment methods configured...
@@ -374,7 +374,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     func testPaymentSheetLoadWithCustomPaymentMethods() async throws {
         // Loading PaymentSheet...
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
+        let types = ["ideal", "card", "bancontact"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         var configuration = self.configuration
         // ...with valid custom payment methods configured...

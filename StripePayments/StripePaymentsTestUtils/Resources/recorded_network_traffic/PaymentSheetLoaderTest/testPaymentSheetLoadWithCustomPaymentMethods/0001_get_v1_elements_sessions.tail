@@ -61,8 +61,7 @@ request-id: req_DZ0jO3wwmMt0CM
       "payment_method_types" : [
         "ideal",
         "card",
-        "bancontact",
-        "sofort"
+        "bancontact"
       ],
       "setup_future_usage" : null,
       "created" : 1760644784,
@@ -71,8 +70,7 @@ request-id: req_DZ0jO3wwmMt0CM
     "ordered_payment_method_types" : [
       "card",
       "ideal",
-      "bancontact",
-      "sofort"
+      "bancontact"
     ],
     "type" : "payment_intent"
   },
@@ -514,69 +512,6 @@ request-id: req_DZ0jO3wwmMt0CM
           }
         }
       }
-    },
-    {
-      "async" : true,
-      "fields" : [
-        {
-          "for" : "name",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "email",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "phone",
-          "type" : "placeholder"
-        },
-        {
-          "type" : "country",
-          "api_path" : {
-            "v1" : "sofort[country]"
-          },
-          "allowed_country_codes" : [
-            "AT",
-            "BE",
-            "DE",
-            "ES",
-            "NL"
-          ]
-        },
-        {
-          "for" : "billing_address_without_country",
-          "type" : "placeholder"
-        },
-        {
-          "for" : "sepa_mandate",
-          "type" : "placeholder"
-        }
-      ],
-      "selector_icon" : {
-        "dark_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sofort_dark@3x-1b34ec3a7503b3e20be0a069f8046f29.png",
-        "dark_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sofort_dark-ded76aa1c92357f1b78dab85ed5b6347.svg",
-        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sofort@3x-8842e382bdf77386d547ff0ef56880c1.png",
-        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sofort-c12d29b37f06a2d05dfb22ea9736104b.svg"
-      },
-      "type" : "sofort",
-      "next_action_spec" : {
-        "confirm_response_status_specs" : {
-          "requires_action" : {
-            "type" : "redirect_to_url"
-          }
-        },
-        "post_confirm_handling_pi_status_specs" : {
-          "requires_action" : {
-            "type" : "canceled"
-          },
-          "succeeded" : {
-            "type" : "finished"
-          },
-          "processing" : {
-            "type" : "finished"
-          }
-        }
-      }
     }
   ],
   "prefill_selectors" : {
@@ -589,8 +524,7 @@ request-id: req_DZ0jO3wwmMt0CM
   },
   "unactivated_payment_method_types" : [
     "ideal",
-    "bancontact",
-    "sofort"
+    "bancontact"
   ],
   "unverified_payment_methods_on_domain" : [
     "apple_pay"
@@ -619,8 +553,7 @@ request-id: req_DZ0jO3wwmMt0CM
     "apple_pay",
     "ideal",
     "bancontact",
-    "google_pay",
-    "sofort"
+    "google_pay"
   ],
   "customer_error" : null
 }
