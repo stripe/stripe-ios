@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - Custom colors
 
-extension UIColor {
+@_spi(STP) public extension UIColor {
 
     // MARK: - Semantic Colors
 

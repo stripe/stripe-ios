@@ -27,7 +27,7 @@ extension PaymentSheet {
         /// PaymentSheet will always use colors appropriate for dark mode UI
         case alwaysDark
 
-        func configure(_ viewController: UIViewController) {
+        public func configure(_ viewController: UIViewController) {
             switch self {
             case .automatic:
                 break  // no-op

@@ -14,7 +14,7 @@ import UIKit
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkSheetNavigationBar)
-class LinkSheetNavigationBar: SheetNavigationBar {
+@_spi(STP) public class LinkSheetNavigationBar: SheetNavigationBar {
     private let logoView: UIImageView = {
         let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))
         imageView.tintColor = .linkIconBrand
@@ -56,7 +56,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return super.leftmostElement
     }
 
-    override init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
+    @_spi(STP) public override init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
         super.init(isTestMode: isTestMode, appearance: appearance)
 
         logoView.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +89,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         titleLabel.isHidden = true
     }
 
-    override var intrinsicContentSize: CGSize {
+    @_spi(STP) public override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: LinkUI.navigationBarHeight)
     }
 
@@ -163,7 +163,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return button
     }
 
-    override func setStyle(_ style: SheetNavigationBar.Style) {
+    @_spi(STP) public override func setStyle(_ style: SheetNavigationBar.Style) {
         super.setStyle(style)
         if case .back = style {
             logoView.isHidden = true
@@ -237,7 +237,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return max(0, rightBoundary - leftBoundary - rightSpacing)
     }
 
-    override func layoutSubviews() {
+    @_spi(STP) public override func layoutSubviews() {
         super.layoutSubviews()
         updateTitleConstraints()
     }

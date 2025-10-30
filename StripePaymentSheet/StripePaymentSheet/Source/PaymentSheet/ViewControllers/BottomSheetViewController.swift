@@ -13,7 +13,7 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol BottomSheetContentViewController: UIViewController {
+@_spi(STP) public protocol BottomSheetContentViewController: UIViewController {
 
     /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
     var navigationBar: SheetNavigationBar { get }
@@ -24,12 +24,12 @@ protocol BottomSheetContentViewController: UIViewController {
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
 @objc(STP_Internal_BottomSheetViewController)
-class BottomSheetViewController: UIViewController, BottomSheetPresentable {
+@_spi(STP) open class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
 
-    var sheetCornerRadius: CGFloat? {
+    @_spi(STP) open var sheetCornerRadius: CGFloat? {
         BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
     }
 
@@ -126,7 +126,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     let didCancelNative3DS2: () -> Void
 
-    required init(
+    @_spi(STP) public required init(
         contentViewController: BottomSheetContentViewController,
         appearance: PaymentSheet.Appearance,
         isTestMode: Bool,
@@ -148,7 +148,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.view.backgroundColor = appearance.colors.background
     }
 
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -502,14 +502,14 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return nil
     }
 
-    func didTapOrSwipeToDismiss() {
+    @_spi(STP) open func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
     }
 }
 
 extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
-    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+    @_spi(STP) public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
         // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
         didTapOrSwipeToDismiss()
         return false
@@ -518,7 +518,7 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
 
 // MARK: - UIScrollViewDelegate
 extension BottomSheetViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    @_spi(STP) public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 0 {
             contentViewController.navigationBar.setShadowHidden(false)
         } else {
@@ -530,21 +530,21 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 // MARK: - PaymentSheetAuthenticationContext
 extension BottomSheetViewController: PaymentSheetAuthenticationContext {
 
-    func authenticationPresentingViewController() -> UIViewController {
+    @_spi(STP) public func authenticationPresentingViewController() -> UIViewController {
         return findTopMostPresentedViewController()
     }
 
-    func configureSafariViewController(_ viewController: SFSafariViewController) {
+    @_spi(STP) public func configureSafariViewController(_ viewController: SFSafariViewController) {
         // Change to a from bottom modal presentation. This also avoids a bug where the contents is squished when returning
         viewController.modalPresentationStyle = .overFullScreen
     }
 
-    func authenticationContextWillDismiss(_ viewController: UIViewController) {
+    @_spi(STP) public func authenticationContextWillDismiss(_ viewController: UIViewController) {
         view.setNeedsLayout()
     }
 
     // TODO: Remove these three methods! BottomSheetVC shouldn't be aware of any of these specific VCs; it should expose generic present/dismiss methods
-    func present(
+    @_spi(STP) public func present(
         _ authenticationViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
@@ -555,13 +555,13 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         self.removeBlurEffect(animated: true, completion: completion)
     }
 
-    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    @_spi(STP) public func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                                       appearance: self.appearance, safariViewController: safariViewController)
         pushContentViewController(pollingVC)
     }
 
-    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
+    @_spi(STP) public func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
         guard contentViewController is BottomSheet3DS2ViewController || contentViewController is PollingViewController else {
             assertionFailure("Dismiss called, but it will do nothing!")
             return
@@ -575,14 +575,14 @@ extension BottomSheetViewController: UIViewControllerTransitioningDelegate {}
 
 // MARK: - UIGestureRecognizerDelegate
 extension BottomSheetViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(
+    @_spi(STP) public func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
         return true
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
+    @_spi(STP) public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
         -> Bool
     {
         // I can't find another way to allow custom UIControl subclasses to receive touches

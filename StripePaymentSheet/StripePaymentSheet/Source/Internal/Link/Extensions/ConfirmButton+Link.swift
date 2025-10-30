@@ -10,7 +10,7 @@ import UIKit
 
 extension ConfirmButton {
 
-    static func makeLinkButton(
+    @_spi(STP) public static func makeLinkButton(
         callToAction: CallToActionType,
         showProcessingLabel: Bool,
         compact: Bool = false,

@@ -18,7 +18,7 @@ private let spinnerMoveToCenterAnimationDuration = 0.35
 private let checkmarkStrokeDuration = 0.2
 
 /// Buy or Continue button
-class ConfirmButton: UIView {
+@_spi(STP) public class ConfirmButton: UIView {
     // MARK: Internal Properties
     enum Status {
         case enabled
@@ -27,7 +27,7 @@ class ConfirmButton: UIView {
         case spinnerWithInteractionDisabled
         case succeeded
     }
-    enum CallToActionType {
+    @_spi(STP) public enum CallToActionType {
         case pay(amount: Int, currency: String, withLock: Bool = true)
         case add(paymentMethodType: PaymentSheet.PaymentMethodType)
         case `continue`
@@ -134,7 +134,7 @@ class ConfirmButton: UIView {
     }
 
 #if !os(visionOS)
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    @_spi(STP) public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.buyButton.update(status: state, callToAction: callToAction, animated: false)
     }

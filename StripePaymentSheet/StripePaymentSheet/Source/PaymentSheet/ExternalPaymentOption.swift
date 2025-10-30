@@ -14,7 +14,7 @@ enum ExternalPaymentOptionConfirmHandler {
 }
 
 /// A type that can represent either a custom or external payment method and handle confirmation
-class ExternalPaymentOption {
+@_spi(STP) public class ExternalPaymentOption {
     /// A unique identifier for the ExternalPaymentOption, like external_paypal or cpmt_...
     let type: String
 
@@ -125,13 +125,13 @@ class ExternalPaymentOption {
 
 /// Note: ExternalPaymentOption equality is based solely on the type property, as it is a unique identifier.
 extension ExternalPaymentOption: Equatable {
-    static func == (lhs: ExternalPaymentOption, rhs: ExternalPaymentOption) -> Bool {
+    @_spi(STP) public static func == (lhs: ExternalPaymentOption, rhs: ExternalPaymentOption) -> Bool {
         return lhs.type == rhs.type
     }
 }
 
 extension ExternalPaymentOption: Hashable {
-    func hash(into hasher: inout Hasher) {
+    @_spi(STP) public func hash(into hasher: inout Hasher) {
         hasher.combine(type)
     }
 }

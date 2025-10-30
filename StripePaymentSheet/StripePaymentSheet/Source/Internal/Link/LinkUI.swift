@@ -8,10 +8,10 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-enum LinkUI {
+@_spi(STP) public enum LinkUI {
 
     /// Semantic text styles for the Link user interface.
-    enum TextStyle {
+    @_spi(STP) public enum TextStyle {
         case title
         case body
         case bodyEmphasized
@@ -87,7 +87,7 @@ enum LinkUI {
 
     static let largeContentSpacing: CGFloat = 24
 
-    static let contentSpacing: CGFloat = 16
+    @_spi(STP) public static let contentSpacing: CGFloat = 16
 
     static let smallContentSpacing: CGFloat = 8
 
@@ -157,7 +157,7 @@ extension LinkUI {
     ///   - maximumPointSize: The maximum size that the font can scale up to.
     ///   - traitCollection: Trait collection that the font should be compatible with.
     /// - Returns: Font.
-    static func font(
+    @_spi(STP) public static func font(
         forTextStyle textStyle: TextStyle,
         maximumPointSize: CGFloat? = nil,
         compatibleWith traitCollection: UITraitCollection? = nil
@@ -232,7 +232,7 @@ extension LinkUI {
         Self.appearance = createLinkAppearance()
     }
 
-    static var appearance: PaymentSheet.Appearance = {
+    @_spi(STP) public static var appearance: PaymentSheet.Appearance = {
         return createLinkAppearance()
     }()
 

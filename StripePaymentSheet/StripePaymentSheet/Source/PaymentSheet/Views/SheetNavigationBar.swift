@@ -11,19 +11,19 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol SheetNavigationBarDelegate: AnyObject {
+@_spi(STP) public protocol SheetNavigationBarDelegate: AnyObject {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar)
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar)
 }
 
 /// For internal SDK use only
 @objc(STP_Internal_SheetNavigationBar)
-class SheetNavigationBar: UIView {
+@_spi(STP) public class SheetNavigationBar: UIView {
     static func height(appearance: PaymentSheet.Appearance) -> CGFloat {
         return appearance.navigationBarStyle.isGlass ? 76 : 52
 
     }
-    weak var delegate: SheetNavigationBarDelegate?
+    @_spi(STP) public weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
         stack.spacing = PaymentSheetUI.defaultPadding
@@ -73,7 +73,7 @@ class SheetNavigationBar: UIView {
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
 
-    override var isUserInteractionEnabled: Bool {
+    @_spi(STP) public override var isUserInteractionEnabled: Bool {
         didSet {
             // Explicitly disable buttons to update their appearance
             closeButtonLeft.isEnabled = isUserInteractionEnabled
@@ -124,13 +124,14 @@ class SheetNavigationBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override var intrinsicContentSize: CGSize {
+    @_spi(STP) public override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: Self.height(appearance: appearance))
     }
 
     @objc
     private func didTapCloseButton() {
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+        // TODO: we shouldn’t fire analytics from crypto onramp.
+        // STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
         delegate?.sheetNavigationBarDidClose(self)
     }
 
@@ -140,7 +141,7 @@ class SheetNavigationBar: UIView {
     }
 
     // MARK: -
-    enum Style {
+    @_spi(STP) public enum Style {
         case close(showAdditionalButton: Bool)
         case back(showAdditionalButton: Bool)
         case none

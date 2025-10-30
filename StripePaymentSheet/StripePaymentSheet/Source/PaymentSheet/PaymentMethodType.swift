@@ -13,7 +13,7 @@ import Foundation
 import UIKit
 
 extension PaymentSheet {
-    enum PaymentMethodType: Equatable, Hashable {
+    @_spi(STP) public enum PaymentMethodType: Equatable, Hashable {
         case stripe(STPPaymentMethodType)
         case external(ExternalPaymentOption)
 
