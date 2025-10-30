@@ -33,6 +33,7 @@
 
 import Foundation
 
+// ⛔️ DEPRECATED: Futures are not fully thread safe and can cause crashes. Use Swift concurrency instead. ⛔️
 @_spi(STP) public class Future<Value> {
     public typealias Result = Swift.Result<Value, Error>
 
@@ -123,6 +124,7 @@ import Foundation
     }
 }
 
+// ⛔️ DEPRECATED: Promises are not fully thread safe and can cause crashes. Use Swift concurrency instead. ⛔️
 @_spi(STP) public class Promise<Value>: Future<Value> {
     public override init() {
         super.init()

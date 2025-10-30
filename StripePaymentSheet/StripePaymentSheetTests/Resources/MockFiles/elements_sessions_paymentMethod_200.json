@@ -4,6 +4,7 @@
   "experiments": {
     "miui_payment_element_aa_experiment": "control"
   },
+  "config_id": "123",
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,
     "elements_enable_mx_card_installments": false,
@@ -25,7 +26,11 @@
             "payment_method": "link_instant_debits",
         },
         "incentive_display_text": "$5",
-    }
+    },
+    "link_supported_payment_methods_onboarding_enabled": [
+        "CARD",
+        "INSTANT_DEBITS",
+    ]
   },
   "merchant_country": "US",
   "merchant_currency": "usd",

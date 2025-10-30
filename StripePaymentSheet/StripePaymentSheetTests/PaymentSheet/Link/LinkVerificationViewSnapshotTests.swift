@@ -13,11 +13,17 @@ import UIKit
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
 
     func testModal() {
         let sut = makeSUT(mode: .modal)
+        verify(sut)
+    }
+
+    func testModalWithLogout() {
+        let sut = makeSUT(mode: .modal, allowLogoutInDialog: true)
         verify(sut)
     }
 
@@ -34,6 +40,24 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbedded() {
         let sut = makeSUT(mode: .embedded)
+        verify(sut)
+    }
+
+    func testEmbeddedWithInput() {
+        let sut = makeSUT(mode: .embedded)
+        sut.codeField.value = "1234"
+        verify(sut)
+    }
+
+    func testCustomColors() {
+        let appearance = LinkAppearance(
+            colors: .init(
+                primary: .systemTeal,
+                selectedBorder: .red
+            )
+        )
+        let sut = makeSUT(mode: .modal, appearance: appearance)
+        sut.codeField.value = "1234"
         verify(sut)
     }
 
@@ -55,21 +79,25 @@ extension LinkVerificationViewSnapshotTests {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
-        let isLoggedIn: Bool
+        let sessionState: PaymentSheetLinkAccount.SessionState
+        let consumerSessionClientSecret: String?
     }
 
-    func makeSUT(mode: LinkVerificationView.Mode) -> LinkVerificationView {
+    func makeSUT(mode: LinkVerificationView.Mode, appearance: LinkAppearance? = nil, allowLogoutInDialog: Bool = false) -> LinkVerificationView {
         let sut = LinkVerificationView(
             mode: mode,
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
-                redactedPhoneNumber: "+1********55",
+                redactedPhoneNumber: "(•••) ••• ••55",
                 isRegistered: true,
-                isLoggedIn: false
-            )
+                sessionState: .verified,
+                consumerSessionClientSecret: nil
+            ),
+            appearance: appearance,
+            allowLogoutInDialog: allowLogoutInDialog
         )
 
-        sut.tintColor = .linkBrand
+        sut.tintColor = .linkIconBrand
 
         return sut
     }

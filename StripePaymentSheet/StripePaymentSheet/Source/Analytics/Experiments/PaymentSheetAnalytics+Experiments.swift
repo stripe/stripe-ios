@@ -25,7 +25,7 @@ extension PaymentSheetAnalyticsHelper {
         parameters["assignment_group"] = experiment.group.rawValue
 
         for (key, value) in experiment.dimensions {
-            parameters["dimension-\(key)"] = value
+            parameters["dimensions-\(key)"] = value
         }
 
         // Make sure we log to `r.stripe.com` via `analyticsClientV2`:

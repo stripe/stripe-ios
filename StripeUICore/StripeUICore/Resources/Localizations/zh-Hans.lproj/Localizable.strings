@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@（可选）";
 
 "(not accepted)" = "（未接受）";
@@ -37,8 +39,6 @@
 "Country or region" = "国家或地区";
 
 "County" = "县";
-
-"Date is empty." = "日期为空。";
 
 "Department" = "部门";
 
@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "选择银行卡品牌（可选）";
 
+"Selection is empty." = "选择为空。";
+
 "Sort code" = "分类代码";
 
 "State" = "州";
@@ -132,12 +134,16 @@
 
 "Your BLIK code is invalid." = "您的 BLIK 代码无效。";
 
-"Your ZIP is incomplete." = "您的邮编不完整。";
+"Your ZIP code is incomplete." = "您的邮政编码不完整。";
+
+"Your ZIP code is invalid." = "您的邮编无效。";
 
 "Your email is invalid." = "您的邮件地址无效。";
 
 "Your payment information will not be saved." = "不会保存您的付款信息。";
 
 "Your postal code is incomplete." = "您的邮编不完整。";
+
+"Your postal code is invalid." = "您的邮编无效。";
 
 "ZIP" = "邮编";

@@ -31,7 +31,10 @@ final class FormHeaderView: UIView {
             // Don't show an image on the form header for card and US bank account
             return nil
         default:
-            return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, contrastMatchingColor: appearance.colors.componentText, currency: currency)
+            return PaymentMethodTypeImageView(paymentMethodType: paymentMethodType,
+                                              contrastMatchingColor: appearance.colors.componentText,
+                                              currency: currency,
+                                              iconStyle: appearance.iconStyle)
         }
     }()
 

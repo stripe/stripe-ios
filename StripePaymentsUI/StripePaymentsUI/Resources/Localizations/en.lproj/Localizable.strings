@@ -1,11 +1,23 @@
 /* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
 "%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
 
+/* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
+"%1$@ Card" = "%1$@ Card";
+
+/* Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte' */
+"%1$@ Credit" = "%1$@ Credit";
+
+/* Label a debit funding source. E.g. 'Visa Debit' */
+"%1$@ Debit" = "%1$@ Debit";
+
 /* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
 
 /* String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted */
 "%1$@ is not accepted" = "%1$@ is not accepted";
+
+/* Label a prepaid funding source. E.g. 'Visa Prepaid' */
+"%1$@ Prepaid" = "%1$@ Prepaid";
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Address line 2 (optional)";
@@ -18,6 +30,9 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Billing address";
+
+/* Billing details section title for card form entry. */
+"Billing details" = "Billing details";
 
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
@@ -96,10 +111,4 @@
 
 /* Error message for card entry form when CVC is invalid */
 "Your card's security code is invalid." = "Your card's security code is invalid.";
-
-/* Error message for when postal code in form is invalid */
-"Your postal code is invalid." = "Your postal code is invalid.";
-
-/* Error message for when postal code in form is invalid (US only) */
-"Your ZIP is invalid." = "Your ZIP is invalid.";
 

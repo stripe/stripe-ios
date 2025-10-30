@@ -10,7 +10,16 @@ import Foundation
 import XCTest
 
 class HCaptcha__Bench: XCTestCase {
+    var testTimeout: TimeInterval = 5 // Default timeout value
+
     override func setUp() {
+        super.setUp()
+
+        // Set timeout value based on CI environment
+        if ProcessInfo.processInfo.environment["CI"] != nil {
+            testTimeout = 20
+        }
+
         HCaptchaHtml.template = """
             <html>
               <head>
@@ -63,12 +72,12 @@ class HCaptcha__Bench: XCTestCase {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 400, height: 600))
         self.measureMetrics([.wallClockTime], automaticallyStartMeasuring: true, for: {
             let exp = expectation(description: "completed")
-            let hcaptcha = try! HCaptcha(apiKey: apiKey, size: .invisible)
-            hcaptcha.validate(on: view, completion: { _ in
+            let hcaptcha = try? HCaptcha(apiKey: apiKey, size: .invisible)
+            hcaptcha?.validate(on: view, completion: { _ in
                 self.stopMeasuring()
                 exp.fulfill()
             })
-            waitForExpectations(timeout: 15)
+            waitForExpectations(timeout: testTimeout)
         })
     }
 
@@ -77,11 +86,12 @@ class HCaptcha__Bench: XCTestCase {
         let hcaptcha = try? HCaptcha(apiKey: apiKey, size: .invisible)
         self.measureMetrics([.wallClockTime], automaticallyStartMeasuring: true, for: {
             let exp = expectation(description: "completed")
-            hcaptcha?.validate(on: view, completion: { _ in
+            hcaptcha?.validate(on: view, completion: { result in
+                XCTAssertEqual("bench-token", result.token)
                 self.stopMeasuring()
                 exp.fulfill()
             })
-            waitForExpectations(timeout: 5)
+            waitForExpectations(timeout: testTimeout)
         })
     }
 }

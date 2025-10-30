@@ -30,18 +30,25 @@ import UIKit
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
-    public private(set) var isEditing: Bool = false
+    public private(set) var isEditing: Bool = false {
+        didSet {
+            delegate?.didUpdate(element: self)
+        }
+    }
     private(set) var didReceiveAutofill: Bool = false
+    /// When true, indicates the user tapped confirm button requesting validation feedback
+    var displayEmptyFields: Bool = false
     public var validationState: ElementValidationState {
         return .init(
             from: configuration.validate(text: text, isOptional: configuration.isOptional),
-            isUserEditing: isEditing
+            isUserEditing: isEditing,
+            displayEmptyFields: displayEmptyFields
         )
     }
 
     private let theme: ElementsAppearance
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     public var inputAccessoryView: UIView? {
         get {
             return textFieldView.textField.inputAccessoryView
@@ -76,6 +83,7 @@ import UIKit
         let shouldShowClearButton: Bool
         let editConfiguration: EditConfiguration
         let theme: ElementsAppearance
+        let displayEmptyFields: Bool
     }
 
     var viewModel: ViewModel {
@@ -96,7 +104,8 @@ import UIKit
             accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
             editConfiguration: configuration.editConfiguration,
-            theme: theme
+            theme: theme,
+            displayEmptyFields: displayEmptyFields
         )
     }
 
@@ -122,7 +131,9 @@ import UIKit
     // MARK: - Helpers
 
     func sanitize(text: String) -> String {
-        let sanitizedText = text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+        let sanitizedText = text
+            .stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+            .stp_stringByRemovingEmoji()
         return String(sanitizedText.prefix(configuration.maxLength(for: sanitizedText)))
     }
 }
@@ -138,6 +149,13 @@ extension TextFieldElement: Element {
     @discardableResult
     public func beginEditing() -> Bool {
         return textFieldView.textField.becomeFirstResponder()
+    }
+
+    /// Forces validation errors to be displayed, even if the user is currently editing
+    public func showValidationErrors() {
+        displayEmptyFields = true
+        textFieldView.updateUI(with: viewModel)
+        delegate?.didUpdate(element: self)
     }
 
     @discardableResult

@@ -3,37 +3,35 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=uGFO7AF_a4-LA_PWpxdfQ_bAdj9pMWWJ1IvN0QCEwzoR83xnEXKbJshX_7mBIkm3sEamwnquIIK9NRVz
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6pkROP0SP3CQrS7uIxtLKk2cMxij9aU9ze7UVj7PPJToGoqQMYbaRKjQWVCPZ4_SLYh6_KzTYPpV0LBz
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_UPpyZW6NB0mRLZ
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 970
+request-id: req_B8EqJAyCAx75Qr
+Content-Length: 990
 Vary: Origin
-Date: Thu, 10 Apr 2025 22:49:00 GMT
-original-request: req_UPpyZW6NB0mRLZ
+Date: Wed, 20 Aug 2025 17:35:39 GMT
+original-request: req_B8EqJAyCAx75Qr
 stripe-version: 2020-08-27
-idempotency-key: 2566a982-3250-401e-8978-eea2c301d4e6
+idempotency-key: af40446b-655f-486f-9c6b-fe2d5e6768c4
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_month]=1&card\[exp_year]=2040&card\[number]=4242424242424242&payment_user_agent=.*&type=card
+X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_month]=1&card\[exp_year]=2040&card\[number]=4242424242424242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RCTu4FY0qyl6XeW7fGvnTQ8",
+  "id" : "pm_1RyFvDFY0qyl6XeWVzGrLhts",
   "billing_details" : {
     "email" : null,
     "phone" : null,
+    "tax_id" : null,
     "name" : null,
     "address" : {
       "state" : null,
@@ -71,7 +69,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_mont
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1744325340,
+  "created" : 1755711339,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null

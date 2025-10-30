@@ -34,7 +34,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset and a form spec image URL...
         let loadExpectation = expectation(description: "Load form spec image")
         let clientImage = STPPaymentMethodType.cashApp.makeImage()!
-        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.cashApp).makeImage(forDarkBackground: false) { image in
             // ...should update to the form spec image
             XCTAssertNotEqual(image, clientImage)
             XCTAssertTrue(image.size.width > 1) // Sanity check
@@ -49,7 +49,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         // A Payment methods with a client-side asset but without a form spec image URL...
         let e = expectation(description: "Load form spec image")
         e.isInverted = true
-        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage { _ in
+        let usBankAccountImage = PaymentSheet.PaymentMethodType.stripe(.USBankAccount).makeImage(forDarkBackground: false) { _ in
             // This shouldn't be called
             XCTFail()
             e.fulfill()
@@ -68,7 +68,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         waitForExpectations(timeout: 10)
         // A Payment methods without a client-side asset...
         let loadExpectation = expectation(description: "Load form spec image")
-        let image = PaymentSheet.PaymentMethodType.stripe(.amazonPay).makeImage { image in
+        let image = PaymentSheet.PaymentMethodType.stripe(.amazonPay).makeImage(forDarkBackground: false) { image in
             // ...should update to the form spec image
             XCTAssertTrue(image.size.width > 1) // Sanity check
             loadExpectation.fulfill()
@@ -145,6 +145,49 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 supportedPaymentMethods: [.iDEAL]
             ),
             .missingRequirements([.returnURL])
+        )
+    }
+
+    /// Returns true, iDEAL in `supportedPaymentMethods` and URL and delayed payment method support requirements for setting up are met
+    func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequired() {
+        var configuration = makeConfiguration(hasReturnURL: true)
+        configuration.allowsDelayedPaymentMethods = true
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .iDEAL,
+                configuration: configuration,
+                intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: "off_session"]), elementsSession: ._testValue(paymentMethodTypes: ["iDEAL"]),
+                supportedPaymentMethods: [.iDEAL]
+            ),
+            .supported
+        )
+    }
+
+    /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement is met but delayed payment method support requirement for setting up is not met
+    func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequiredButNotProvided() {
+        let configuration = makeConfiguration(hasReturnURL: true)
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .iDEAL,
+                configuration: configuration,
+                intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: "off_session"]), elementsSession: ._testValue(paymentMethodTypes: ["iDEAL"]),
+                supportedPaymentMethods: [.iDEAL]
+            ),
+            .missingRequirements([.userSupportsDelayedPaymentMethods])
+        )
+    }
+
+    /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement and not setting up requirement are met
+    func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedNotRequired() {
+        let configuration = makeConfiguration(hasReturnURL: true)
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .iDEAL,
+                configuration: configuration,
+                intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: "none"]), elementsSession: ._testValue(paymentMethodTypes: ["iDEAL"]),
+                supportedPaymentMethods: [.iDEAL]
+            ),
+            .supported
         )
     }
 
@@ -359,7 +402,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: ._testValue(
                 intent: intent,
                 linkMode: .linkCardBrand,
-                linkFundingSources: [.card, .bankAccount]
+                linkFundingSources: [.card, .bankAccount],
+                linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
             ),
             configuration: configuration
         )
@@ -393,7 +437,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -404,13 +449,39 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(availability, .supported)
     }
 
+    func testSupportsInstantBankPayments_onboardingDisabled() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
+        let configuration = PaymentSheet.Configuration()
+        let elementsSession = STPElementsSession._testValue(
+            intent: intent,
+            linkMode: .linkCardBrand,
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
+        )
+
+        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        guard case .missingRequirements(let requirements) = availability else {
+            XCTFail("Unexpected availability: \(availability)")
+            return
+        }
+
+        XCTAssertEqual(requirements.count, 1)
+        XCTAssertEqual(requirements.first, .instantDebitsDisabledForOnboarding)
+    }
+
     func testSupportsInstantBankPayments_missingLink() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let configuration = PaymentSheet.Configuration()
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -422,54 +493,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(availability, .notSupported)
     }
 
-    func testSupportsInstantBankPayments_unexpectedUsBankAccount() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link, .USBankAccount])
-        let configuration = PaymentSheet.Configuration()
-        let elementsSession = STPElementsSession._testValue(
-            intent: intent,
-            linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount]
-        )
-
-        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
-            configuration: configuration,
-            intent: intent,
-            elementsSession: elementsSession
-        )
-
-        guard case .missingRequirements(let requirements) = availability else {
-            XCTFail("Unexpected availability: \(availability)")
-            return
-        }
-
-        XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .unexpectedUsBankAccount)
-    }
-
-    func testSupportsInstantBankPayments_linkFundingSourcesMissingBankAccount() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
-        let configuration = PaymentSheet.Configuration()
-        let elementsSession = STPElementsSession._testValue(
-            intent: intent,
-            linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card]
-        )
-
-        let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
-            configuration: configuration,
-            intent: intent,
-            elementsSession: elementsSession
-        )
-
-        guard case .missingRequirements(let requirements) = availability else {
-            XCTFail("Unexpected availability: \(availability)")
-            return
-        }
-
-        XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .linkFundingSourcesMissingBankAccount)
-    }
-
     func testSupportsInstantBankPayments_invalidEmailCollectionConfiguration() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .link])
         var configuration = PaymentSheet.Configuration()
@@ -478,7 +501,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -504,7 +528,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card]
+            linkFundingSources: [.card],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -519,11 +544,10 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         }
 
         let expectedMissingRequirements: Set<PaymentSheet.PaymentMethodTypeRequirement> = [
-            .unexpectedUsBankAccount,
-            .linkFundingSourcesMissingBankAccount,
+            .instantDebitsDisabledForOnboarding,
             .invalidEmailCollectionConfiguration,
         ]
-        XCTAssertEqual(requirements.count, 3)
+        XCTAssertEqual(requirements.count, 2)
         XCTAssertEqual(requirements, expectedMissingRequirements)
     }
 
@@ -582,7 +606,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let expectedDebugDescription = """
-        \t* Your account isn't set up to process Instant Bank Payments. Reach out to Stripe support.
+        \t* The Bank tab is configured to be hidden for your account.
         """
         XCTAssertEqual(availability.debugDescription, expectedDebugDescription)
     }
@@ -616,7 +640,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
@@ -625,6 +650,31 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
         XCTAssertEqual(availability, .supported)
+    }
+
+    func testSupportsLinkCardIntegration_onboardingDisabled() {
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let configuration = PaymentSheet.Configuration()
+        let elementsSession = STPElementsSession._testValue(
+            intent: intent,
+            linkMode: .linkCardBrand,
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
+        )
+
+        let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        guard case .missingRequirements(let requirements) = availability else {
+            XCTFail("Unexpected availability: \(availability)")
+            return
+        }
+
+        XCTAssertEqual(requirements.count, 1)
+        XCTAssertEqual(requirements.first, .instantDebitsDisabledForOnboarding)
     }
 
     func testSupportsLinkCardIntegration_missingLink() {
@@ -645,54 +695,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         XCTAssertEqual(availability, .notSupported)
     }
 
-    func testSupportsLinkCardIntegration_unexpectedUsBankAccount() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card, .USBankAccount])
-        let configuration = PaymentSheet.Configuration()
-        let elementsSession = STPElementsSession._testValue(
-            intent: intent,
-            linkMode: .linkCardBrand,
-            linkFundingSources: [.card, .bankAccount]
-        )
-
-        let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
-            configuration: configuration,
-            intent: intent,
-            elementsSession: elementsSession
-        )
-
-        guard case .missingRequirements(let requirements) = availability else {
-            XCTFail("Unexpected availability: \(availability)")
-            return
-        }
-
-        XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .unexpectedUsBankAccount)
-    }
-
-    func testSupportsLinkCardIntegration_linkFundingSourcesMissingBankAccount() {
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let configuration = PaymentSheet.Configuration()
-        let elementsSession = STPElementsSession._testValue(
-            intent: intent,
-            linkMode: .linkCardBrand,
-            linkFundingSources: [.card]
-        )
-
-        let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
-            configuration: configuration,
-            intent: intent,
-            elementsSession: elementsSession
-        )
-
-        guard case .missingRequirements(let requirements) = availability else {
-            XCTFail("Unexpected availability: \(availability)")
-            return
-        }
-
-        XCTAssertEqual(requirements.count, 1)
-        XCTAssertEqual(requirements.first, .linkFundingSourcesMissingBankAccount)
-    }
-
     func testSupportsLinkCardIntegration_invalidEmailCollectionConfiguration() {
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         var configuration = PaymentSheet.Configuration()
@@ -701,7 +703,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [.card, .bankAccount],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
@@ -727,7 +730,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card]
+            linkFundingSources: [.card],
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
@@ -742,11 +746,10 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         }
 
         let expectedMissingRequirements: Set<PaymentSheet.PaymentMethodTypeRequirement> = [
-            .unexpectedUsBankAccount,
-            .linkFundingSourcesMissingBankAccount,
+            .instantDebitsDisabledForOnboarding,
             .invalidEmailCollectionConfiguration,
         ]
-        XCTAssertEqual(requirements.count, 3)
+        XCTAssertEqual(requirements.count, 2)
         XCTAssertEqual(requirements, expectedMissingRequirements)
     }
 
@@ -805,7 +808,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let expectedDebugDescription = """
-        \t* Your account isn't set up to process Instant Bank Payments. Reach out to Stripe support.
+        \t* The Bank tab is configured to be hidden for your account.
         """
         XCTAssertEqual(availability.debugDescription, expectedDebugDescription)
     }
@@ -877,14 +880,14 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     func testPaymentMethodOrder() {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
             XCTFail()
-            completion(.canceled)
+            return .canceled
         })
 
         func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String], externalPMTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(
-                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in })
+                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
             )
             // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, externalPaymentMethodTypes: externalPMTypes), configuration: configuration)

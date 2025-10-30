@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ betaalkaart";
+
+"%1$@ Credit" = "%1$@ creditcard";
+
+"%1$@ Debit" = "%1$@ debitcard";
+
+"%1$@ Prepaid" = "%1$@ prepaid";
+
 "%1$@ account ending in %2$@" = "%1$@-rekening die eindigt op %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ eindigend op %2$@";
@@ -13,6 +21,8 @@
 "Bank Account" = "Bankrekening";
 
 "Billing address" = "Factuuradres";
+
+"Billing details" = "Facturatiegegevens";
 
 "CVC" = "Cvc";
 
@@ -40,8 +50,6 @@
 
 "To scan your card, allow camera access in Settings." = "Sta toegang tot je camera toe in Instellingen om je kaart te scannen.";
 
-"Your ZIP is invalid." = "Je ZIP is ongeldig.";
-
 "Your card has expired." = "Je betaalkaart is verlopen.";
 
 "Your card number is incomplete." = "Je kaartnummer is onvolledig.";
@@ -59,8 +67,6 @@
 "Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
 
 "Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
-
-"Your postal code is invalid." = "Je postcode is ongeldig.";
 
 "card number" = "kaartnummer";
 

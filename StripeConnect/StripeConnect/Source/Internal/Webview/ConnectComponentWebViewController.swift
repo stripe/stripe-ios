@@ -52,6 +52,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     let bundleIdProvider: () -> String?
 
+    // If applicable, these are supplied via fetchInitProps which happens after construction
+    // but before the component is created and actually able to call them
+    private var supplementalFunctions: SupplementalFunctions?
+
     init<InitProps: Encodable>(
         componentManager: EmbeddedComponentManager,
         componentType: ComponentType,
@@ -324,7 +328,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(setterMessageHandler)
         addMessageHandler(OnLoaderStartMessageHandler { [analyticsClient, activityIndicator] _ in
             analyticsClient.logComponentLoaded(loadEnd: .now)
-            UIView.animate(withDuration: 1.0, animations: {
+            // Keeps the spinner around for 100ms which is just enough on most devices to smooth the transition to the web spinner
+            // Any longer, and the spinner begins to conflict with the embedded loading state
+            UIView.animate(withDuration: 0.1, animations: {
                 activityIndicator.alpha = 0.0
             }, completion: { _ in
                 activityIndicator.stopAnimating()
@@ -345,7 +351,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(FetchAppInfoMessageHandler.init(didReceiveMessage: { [weak self] _ in
             return .init(applicationId: self?.bundleIdProvider() ?? "")
         }))
-        addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps))
+        addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps) { [weak self] supplementalFunctions in
+            self?.supplementalFunctions = supplementalFunctions
+        })
         addMessageHandler(OnLoadErrorMessageHandler { [weak self, analyticsClient] value in
             self?.didFailLoad(error: value.error.connectEmbedError(analyticsClient: analyticsClient))
         })
@@ -372,6 +380,9 @@ private extension ConnectComponentWebViewController {
         })
         addMessageHandler(CloseWebViewMessageHandler(analyticsClient: analyticsClient, didReceiveMessage: { [weak self] _ in
             self?.dismiss(animated: true)
+        }))
+        self.addMessageHandler(CallSupplementalFunctionMessageHandler(analyticsClient: self.analyticsClient, didReceiveMessage: { [weak self] payload in
+            self?.dispatch(payload)
         }))
     }
 
@@ -451,6 +462,27 @@ private extension ConnectComponentWebViewController {
             sendMessage(SetCollectMobileFinancialConnectionsResult.sender(
                 value: result.toSenderValue(id: args.id, analyticsClient: analyticsClient)
             ))
+        }
+    }
+
+    private func dispatch(_ payload: CallSupplementalFunctionMessageHandler.Payload) {
+        Task {
+            let result: SupplementalFunctionCompletedSender.Payload.Result
+            do {
+                if let returnValue = try await supplementalFunctions?.call(payload.args) {
+                    result = .success(returnValue)
+                } else {
+                    result = .error("No supplemental function registered for \(payload.functionName)")
+                }
+            } catch {
+                result = .error("Error calling supplemental function")
+            }
+
+            sendMessage(SupplementalFunctionCompletedSender(payload: .init(
+                functionName: payload.functionName,
+                invocationId: payload.invocationId,
+                result: result
+            )))
         }
     }
 }

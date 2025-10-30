@@ -29,10 +29,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
 
+    var sheetCornerRadius: CGFloat? {
+        BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
+    }
+
     // MARK: - Views
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.automaticallyAdjustsScrollIndicatorInsets = false
+        #if !os(visionOS)
+        scrollView.keyboardDismissMode = .onDrag
+        #endif
         scrollView.delegate = self
         return scrollView
     }()
@@ -45,7 +52,23 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return UIStackView()
     }()
 
+    #if compiler(>=6.2)
+    private lazy var navigationBarBlur: UIInteraction? = {
+        guard appearance.navigationBarStyle.isGlass, #available(iOS 26.0, *) else {
+            return nil
+        }
+        let interaction = UIScrollEdgeElementContainerInteraction()
+        interaction.scrollView = scrollView
+        interaction.edge = .top
+        return interaction
+    }()
+    #endif
+
     private(set) var contentStack: [BottomSheetContentViewController] = []
+
+    var navigationBarHeight: CGFloat {
+        SheetNavigationBar.height(appearance: appearance)
+    }
 
     /// Content offset of the scroll view as a percentage (0 - 1.0) of the total height.
     var contentOffsetPercentage: CGFloat {
@@ -182,7 +205,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         let oldContentViewController = contentViewController
         contentViewController = newContentViewController
-
         // Handle edge case where BottomSheetPresentationAnimator is mid-presentation
         // We need to finish *that* transition before starting this one.
         completeBottomSheetPresentationTransition?(true)
@@ -309,7 +331,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemBackground
         registerForKeyboardNotifications()
         [scrollView, navigationBarContainerView].forEach({  // Note: Order important here, navigation bar should be on top
             view.addSubview($0)
@@ -328,26 +349,41 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             bottomAnchor,
         ])
 
+        if appearance.navigationBarStyle.isGlass {
+            NSLayoutConstraint.activate([
+                // Allow scroll view to extend under the navigation bar for blur effect
+                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
+            ])
+        }
+        #if compiler(>=6.2)
+        enableNavigationBarBlurInteraction()
+        #endif
+
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
-        contentContainerView.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
+        contentContainerView.directionalLayoutMargins = appearance.formInsets
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height
-        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
-            equalTo: scrollView.contentLayoutGuide.heightAnchor)
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
+
+        // Move the contentContainerView to start below the sheet
+        let topOffset = appearance.navigationBarStyle.isGlass ? navigationBarHeight : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: topOffset),
             contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
@@ -358,7 +394,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
     }
-
+    #if compiler(>=6.2)
+    func enableNavigationBarBlurInteraction() {
+        guard let navigationBarBlur,
+            navigationBarBlur.view == nil,
+        // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
+        NSClassFromString("XCTest") == nil else {
+            return
+        }
+        navigationBarContainerView.addInteraction(navigationBarBlur)
+    }
+    #endif
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardDidHide),
@@ -422,6 +468,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 if notification.name == UIResponder.keyboardWillHideNotification {
                     bottomAnchor.constant = 0
                 } else {
+                    #if !os(visionOS)
+                    if #available(iOS 26.0, *), let inputAccessoryView = self.view.firstResponder()?.inputAccessoryView {
+                        // On iOS 26, the input accessory view is transparent, so we don't want shift the content above it.
+                       keyboardInViewHeight -= inputAccessoryView.frame.height
+                    }
+                    #endif
                     bottomAnchor.constant = -keyboardInViewHeight
                 }
 

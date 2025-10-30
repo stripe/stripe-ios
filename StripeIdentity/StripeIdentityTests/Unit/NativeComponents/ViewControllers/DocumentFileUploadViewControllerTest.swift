@@ -38,7 +38,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         let vc = makeViewController()
         // Allows front
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 1)
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license or passport")
     }
 
     func testIdCardBack() {
@@ -50,8 +50,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         let vc = makeViewController()
         // Allows front and back
         XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
-        XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of identity card")
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license or passport")
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of driver's license")
 
         // Verify button is only enabled after both front and back images are uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
@@ -63,7 +63,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
     func testAlertNoRequireLiveCapture() {
         let vc = makeViewController(requireLiveCapture: false)
-        vc.didTapSelect(for: .front)
+        vc.didTapSelect(for: .front, from: UIButton())
         guard let alert = vc.test_presentedViewController as? UIAlertController else {
             return XCTFail("Expected UIAlertController")
         }
@@ -75,7 +75,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     func testSelectPhotoFromLibrary() {
         let vc = makeViewController()
         // Mock that user selected to upload front of document
-        vc.didTapSelect(for: .front)
+        vc.didTapSelect(for: .front, from: UIButton())
         // Mock that user chooses to Photo Library
         vc.selectPhotoFromLibrary()
         guard let pickerController = vc.test_presentedViewController as? UIImagePickerController
@@ -101,7 +101,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
         let vc = makeViewController()
         // Mock that user selected to upload front of document
-        vc.didTapSelect(for: .back)
+        vc.didTapSelect(for: .back, from: UIButton())
         // Mock that user chooses to Take Photo
         vc.takePhoto()
         XCTAssertTrue(mockCameraPermissionsManager.didRequestCameraAccess)
@@ -120,7 +120,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     func testSelectFileFromSystem() {
         let vc = makeViewController()
         // Mock that user selected to upload front of document
-        vc.didTapSelect(for: .front)
+        vc.didTapSelect(for: .front, from: UIButton())
         // Mock that user chooses to Select File
         vc.selectFileFromSystem()
         guard
@@ -176,7 +176,8 @@ extension DocumentFileUploadViewControllerTest {
             sheetController: mockSheetController,
             documentUploader: mockDocumentUploader,
             cameraPermissionsManager: mockCameraPermissionsManager,
-            appSettingsHelper: mockAppSettingsHelper
+            appSettingsHelper: mockAppSettingsHelper,
+            availableIDTypes: ["driving_license", "passport"]
         )
     }
 }

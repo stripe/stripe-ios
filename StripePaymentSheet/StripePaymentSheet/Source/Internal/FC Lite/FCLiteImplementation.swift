@@ -16,6 +16,7 @@ import UIKit
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
@@ -29,6 +30,7 @@ import UIKit
             returnUrl: returnUrl
         )
         fcLite.elementsSessionContext = elementsSessionContext
+        fcLite.existingConsumer = existingConsumer
         fcLite.present(from: presentingViewController, completion: completion)
     }
 }

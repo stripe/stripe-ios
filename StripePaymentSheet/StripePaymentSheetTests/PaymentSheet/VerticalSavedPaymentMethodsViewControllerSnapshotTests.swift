@@ -6,10 +6,12 @@
 //
 
 import StripeCoreTestUtils
-@_spi(STP) @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
+// ☠️ WARNING: These snapshots have selected borders that don't follow the correct curvature on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
+// @iOS26
 final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode() {
@@ -40,7 +42,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, showDefaultPMBadge: true)
     }
 
-    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(), isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
         var paymentMethods = generatePaymentMethods()

@@ -28,6 +28,7 @@ public extension STPFixtures {
     static func paymentIntent(
         paymentMethodTypes: [String],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
+        paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: String]? = nil,
         currency: String = "usd",
         status: STPPaymentIntentStatus = .requiresPaymentMethod,
         paymentMethod: [AnyHashable: Any]? = nil,
@@ -45,6 +46,13 @@ public extension STPFixtures {
         ]
         if let setupFutureUsage = setupFutureUsage.stringValue {
             apiResponse["setup_future_usage"] = setupFutureUsage
+        }
+        if let paymentMethodOptionsSetupFutureUsage = paymentMethodOptionsSetupFutureUsage {
+            var paymentMethodOptions: [String: Any] = [:]
+            paymentMethodOptionsSetupFutureUsage.forEach { paymentMethodType, setupFutureUsage in
+                paymentMethodOptions[paymentMethodType.identifier] = ["setup_future_usage": setupFutureUsage]
+            }
+            apiResponse["payment_method_options"] = paymentMethodOptions
         }
         if let paymentMethod = paymentMethod {
             apiResponse["payment_method"] = paymentMethod

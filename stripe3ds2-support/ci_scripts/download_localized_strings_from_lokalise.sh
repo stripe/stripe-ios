@@ -14,7 +14,7 @@ fi
 API_TOKEN=$(fetch-password lokalise-api-token-manual -q)
 # iOS 3DS2 SDK
 PROJECT_ID=614720955e51bbfda93be1.46626639
-LANGUAGES="da,de,en-GB,en,es-419,es,fi,fr-CA,fr,hu,it,ja,ko,nb,nl,nn-NO,mt,pt-BR,pt-PT,ru,sv,tr,zh-HANS,zh-HK,zh-Hant"
+LANGUAGES="da,de,en-GB,en,es-419,es,fi,fr-CA,fr,hu,it,ja,ko,nb,nl,mt,pt-BR,pt-PT,ru,sv,tr,zh-HANS,zh-HK,zh-Hant"
 # This is the custom status ID for our project with which the localizers mark completed translations
 FINAL_STATUS_ID=583
 

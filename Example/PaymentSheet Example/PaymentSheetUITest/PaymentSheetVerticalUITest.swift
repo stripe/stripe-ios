@@ -39,10 +39,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         paymentMethodButton.waitForExistenceAndTap()
         let continueButton = app.buttons["Continue"]
 
-        // Select Link - FC paymentOption should change to Link
-        app.buttons["Link"].tap()
+        // Select Cash App Pay - FC paymentOption should change to it
+        app.buttons["Cash App Pay"].tap()
         continueButton.tap()
-        XCTAssertEqual(paymentMethodButton.label, "Link, link")
+        XCTAssertEqual(paymentMethodButton.label, "Cash App Pay, cashapp")
 
         // Go back in, select Card
         paymentMethodButton.tap()
@@ -62,8 +62,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         // Back out of card form
         app.buttons["Back"].tap()
-        // Link (the previous selection) should be selected
-        XCTAssertTrue(app.buttons["Link"].isSelected)
+        // Cash App Pay (the previous selection) should be selected
+        XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(continueButton.isEnabled)
 
         // Go back to card
@@ -91,7 +91,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["SEPA Debit"].tap()
         try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         continueButton.tap()
-        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 123 Main, San Francisco, CA, 94016, US")
+        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         XCTAssertEqual(
@@ -108,7 +108,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Reload
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10))
-        XCTAssertEqual(paymentMethodButton.label, "••••3000, sepa_debit, John Doe, test@example.com, 123 Main, San Francisco, CA, 94016, US")
+        XCTAssertEqual(paymentMethodButton.label, "••••3000, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
         paymentMethodButton.tap()
 
         // Switch to the saved card...
@@ -116,8 +116,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["•••• 4242"].waitForExistenceAndTap()
         app.buttons["Continue"].tap() // For some reason, waitForExistenceAndTap() does not tap this!
         XCTAssertEqual(
-            analyticsLog.map({ $0[string: "event"] }),
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_lpms_render", "mc_custom_paymentoption_savedpm_select", "mc_lpms_render", "mc_confirm_button_tapped"]
+            // filter out async passive captcha logs
+            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) }),
+            // fraud detection telemetry should not be sent in tests, so it should report an API failure
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_lpms_render", "mc_custom_paymentoption_savedpm_select", "mc_lpms_render", "mc_confirm_button_tapped"]
         )
         XCTAssertEqual(
             analyticsLog.filter({ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]

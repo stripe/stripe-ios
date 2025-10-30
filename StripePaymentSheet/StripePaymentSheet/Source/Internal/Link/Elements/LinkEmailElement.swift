@@ -12,9 +12,10 @@ import UIKit
 class LinkEmailElement: Element {
     let collectsUserInput: Bool = true
 
+    private let theme: ElementsAppearance
     weak var delegate: ElementDelegate?
 
-    private let emailAddressElement: TextFieldElement
+    let emailAddressElement: TextFieldElement
 
     private let activityIndicator: ActivityIndicator = {
         // TODO: Consider adding the activity indicator to TextFieldView
@@ -38,7 +39,7 @@ class LinkEmailElement: Element {
             top: 0,
             leading: 0,
             bottom: 0,
-            trailing: ElementsUI.contentViewInsets.trailing
+            trailing: theme.textFieldInsets.trailing
         )
         if let infoView = infoView {
             NSLayoutConstraint.activate([
@@ -88,6 +89,8 @@ class LinkEmailElement: Element {
     }
 
     public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default) {
+        self.theme = theme
+
         if showLogo {
             self.infoView = LinkMoreInfoView(theme: theme)
         }

@@ -278,7 +278,7 @@ final class PlaygroundViewModel: ObservableObject {
 
     func didSelectShow() {
         let useFCLite = playgroundConfiguration.sdkType == .fcLite
-        FinancialConnectionsSDKAvailability.shouldPreferFCLite = useFCLite
+        FinancialConnectionsSDKAvailability.localFcLiteOverride = useFCLite
 
         switch playgroundConfiguration.integrationType {
         case .standalone:
@@ -606,7 +606,7 @@ private func SetupPlayground(
         assertionFailure("test@test.com will not work with livemode, it will return rate limit exceeded")
     }
 
-    let baseURL = "https://financial-connections-playground-ios.glitch.me"
+    let baseURL = "https://ios-financial-connections-playground.stripedemos.com"
     let endpoint = "/setup_playground"
     let url = URL(string: baseURL + endpoint)!
 
@@ -741,7 +741,7 @@ private func CreatePaymentIntent(
     configuration: [String: Any],
     completion: @escaping (Result<CreatePaymentIntentResponse, PaymentSheetError>) -> Void
 ) {
-    let baseURL = "https://financial-connections-playground-ios.glitch.me"
+    let baseURL = "https://ios-financial-connections-playground.stripedemos.com"
     let endpoint = "/create_payment_intent"
     let url = URL(string: baseURL + endpoint)!
 
