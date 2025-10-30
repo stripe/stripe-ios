@@ -327,5 +327,4 @@ extension STPPaymentIntentConfirmParams: NSCopying {
 
 }
 
-@available(*, deprecated, renamed: "STPPaymentIntentConfirmParams", message: "")
 public typealias STPPaymentIntentParams = STPPaymentIntentConfirmParams

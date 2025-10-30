@@ -669,7 +669,7 @@ extension STPAPIClient {
     /// - Note: Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you.
     /// - Parameters:
-    ///   - paymentIntentParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
+    ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable.
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#confirm_payment_intent)
