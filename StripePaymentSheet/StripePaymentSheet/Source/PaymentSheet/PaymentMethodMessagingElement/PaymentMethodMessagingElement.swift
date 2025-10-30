@@ -38,9 +38,6 @@ public class PaymentMethodMessagingElement {
     /// Describes the visual appearance of the PaymentMethodMessagingElement.
     public struct Appearance: Equatable {
 
-        /// The default appearance for Payment Method Messaging Element.
-        public static let `default` = PaymentMethodMessagingElement.Appearance()
-
         /// The color scheme style of the PaymentMethodMessagingElement.
         public enum UserInterfaceStyle {
             /// (Default) The PaymentMethodMessagingElement will automatically switch between standard and dark mode compatible colors based on device settings.
