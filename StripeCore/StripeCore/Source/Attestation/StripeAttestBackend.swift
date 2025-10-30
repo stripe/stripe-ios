@@ -29,7 +29,7 @@ import Foundation
                 "app_id": appId,
                 "device_id": deviceId,
                 "key_id": keyId,
-                "attestation_object": attestation.base64EncodedString()
+                "attestation_object": attestation.base64EncodedString(),
             ]
         )
         // If attestation succeeds, we can proceed. Otherwise we'll throw an error above.
@@ -41,7 +41,7 @@ import Foundation
             parameters: [
                 "app_id": appId,
                 "device_id": deviceId,
-                "key_id": keyId
+                "key_id": keyId,
             ]
         )
         return challengeResponse

@@ -262,7 +262,7 @@ import UIKit
 
     func _assert(canSyncState: Bool, isRetry: Bool = false) async throws -> Assertion {
         // Check at entry point
-//        try Task.checkCancellation()
+        try Task.checkCancellation()
 
         let keyId = try await self.getOrCreateKeyID()
 
