@@ -30,6 +30,26 @@ PaymentSheet.IntentConfiguration(
 }
 ```
 
+```diff
+PaymentSheet.IntentConfiguration(
+  mode: .payment(amount: 1000),
+  currency: "USD"
+- ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
++ ) { [weak self] paymentMethod, shouldSavePaymentMethod in
++   try await withCheckedThrowingContinuation() { continuation in
+    MyExampleNetworkManager.fetchIntentClientSecret() { result in
+-       switch result {
+-       case .success(let clientSecret):
+-           intentCreationCallback(.success(clientSecret))
+-       case .failure(let error):
+-  	        intentCreationCallback(.failure(error))
+-       }
++       continuation.resume(with: result)
+    }
+  }
+}
+```
+
 
 `PaymentSheet.ExternalPaymentMethodConfiguration` completion-block based confirm handler has been replaced by an async equivalent. You can use the following example to quickly migrate completion-block based code:
 
