@@ -118,7 +118,13 @@ public class STPPaymentIntent: NSObject {
     @objc public let status: STPPaymentIntentStatus
 
     /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this PaymentIntent is allowed to use.
-    @objc public let paymentMethodTypes: [NSNumber]
+    @objc(paymentMethodTypes)
+    public var paymentMethodTypes_objc: [NSNumber] {
+        return paymentMethodTypes.map { NSNumber(value: $0.rawValue) }
+    }
+
+    /// The list of payment method types that this PaymentIntent is allowed to use.
+    public let paymentMethodTypes: [STPPaymentMethodType]
 
     /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes. If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
     /// Use on_session if you intend to only reuse the payment method when the customer is in your checkout flow. Use off_session if your customer may or may not be in your checkout flow.
@@ -205,7 +211,7 @@ public class STPPaymentIntent: NSObject {
         paymentMethod: STPPaymentMethod?,
         paymentMethodId: String?,
         paymentMethodOptions: STPPaymentMethodOptions?,
-        paymentMethodTypes: [NSNumber],
+        paymentMethodTypes: [STPPaymentMethodType],
         receiptEmail: String?,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage,
         shipping: STPPaymentIntentShippingDetails?,

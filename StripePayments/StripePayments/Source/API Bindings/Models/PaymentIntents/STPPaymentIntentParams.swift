@@ -174,19 +174,6 @@ public class STPPaymentIntentParams: NSObject {
             returnURL = returnUrl
         }
     }
-    /// `@YES` to save this PaymentIntent’s Source to the associated Customer,
-    /// if the Source is not already attached.
-    /// This should be a boolean NSNumber, so that it can be `nil`
-    /// This property has been renamed to `savePaymentMethod` and deprecated.
-    @available(*, deprecated, renamed: "savePaymentMethod")
-    @objc public var saveSourceToCustomer: NSNumber? {
-        get {
-            return savePaymentMethod
-        }
-        set(saveSourceToCustomer) {
-            savePaymentMethod = saveSourceToCustomer
-        }
-    }
 
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
@@ -202,7 +189,7 @@ public class STPPaymentIntentParams: NSObject {
             "clientSecret = \(!clientSecret.isEmpty ? "<redacted>" : "")",
             "receiptEmail = \(String(describing: receiptEmail))",
             "returnURL = \(String(describing: returnURL))",
-            "savePaymentMethod = \(String(describing: savePaymentMethod?.boolValue))",
+            "savePaymentMethod = \(String(describing: savePaymentMethod))",
             "setupFutureUsage = \(String(describing: setupFutureUsage))",
             "shipping = \(String(describing: shipping))",
             "useStripeSDK = \(String(describing: useStripeSDK?.boolValue))",
@@ -213,7 +200,7 @@ public class STPPaymentIntentParams: NSObject {
             "paymentMethodId = \(String(describing: paymentMethodId))",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
             // Set as default payment method
-            "setAsDefaultPM = \(String(describing: setAsDefaultPM?.boolValue))",
+            "setAsDefaultPM = \(String(describing: setAsDefaultPM))",
             // Mandate
             "mandateData = \(String(describing: mandateData))",
             // PaymentMethodOptions
