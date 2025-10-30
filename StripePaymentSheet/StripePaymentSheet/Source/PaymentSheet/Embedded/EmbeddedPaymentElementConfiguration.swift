@@ -144,6 +144,9 @@ extension EmbeddedPaymentElement {
         /// If true, an invisible challenge will be performed for human verification
         @_spi(STP) public var enablePassiveCaptcha: Bool = false
 
+        /// If true, device will attest and assert on confirmation requests
+        @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
+
         /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
         /// Valid payment method types include:

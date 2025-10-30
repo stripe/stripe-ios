@@ -214,6 +214,10 @@ class PlaygroundController: ObservableObject {
             configuration.enablePassiveCaptcha = true
         }
 
+        if settings.enableAttestationOnConfirmation == .on {
+            configuration.enableAttestationOnConfirmation = true
+        }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -332,6 +336,10 @@ class PlaygroundController: ObservableObject {
 
         if settings.enablePassiveCaptcha == .on {
             configuration.enablePassiveCaptcha = true
+        }
+
+        if settings.enableAttestationOnConfirmation == .on {
+            configuration.enableAttestationOnConfirmation = true
         }
 
         if settings.shippingInfo != .off {

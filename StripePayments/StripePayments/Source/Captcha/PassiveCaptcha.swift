@@ -12,7 +12,7 @@ import Foundation
 /// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/elements/api/resources/elements_passive_captcha_resource.rb
 @_spi(STP) public struct PassiveCaptchaData: Equatable, Hashable {
 
-    let siteKey: String
+    public let siteKey: String
     let rqdata: String?
 
     /// Helper method to decode the `v1/elements/sessions` response's `passive_captcha` hash.
@@ -48,12 +48,6 @@ import Foundation
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
     private var hasFetchedToken = false
-
-    var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
-
-    func setTimeout(timeout: TimeInterval) {
-        self.timeout = timeout
-    }
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
@@ -121,7 +115,7 @@ import Foundation
         hasFetchedToken = true
     }
 
-    public func fetchTokenWithTimeout() async -> String? {
+    public func fetchTokenWithTimeout(_ timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6) async -> String? {
         let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
         let siteKey = passiveCaptchaData.siteKey
@@ -198,7 +192,7 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPassiveCaptchaAttach(siteKey: String, isReady: Bool, duration: TimeInterval) {
+    public func logPassiveCaptchaAttach(siteKey: String, isReady: Bool, duration: TimeInterval) {
         log(
             analytic: GenericAnalytic(event: .passiveCaptchaAttach, params: ["site_key": siteKey, "is_ready": isReady, "duration": duration * 1000])
         )

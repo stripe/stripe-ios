@@ -58,7 +58,7 @@ final class PayWithNativeLinkController {
 
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
-    private let passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    private let confirmationChallenge: ConfirmationChallenge?
 
     init(
         mode: Mode,
@@ -70,7 +70,7 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil
+        confirmationChallenge: ConfirmationChallenge? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -82,7 +82,7 @@ final class PayWithNativeLinkController {
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
-        self.passiveCaptchaChallenge = passiveCaptchaChallenge
+        self.confirmationChallenge = confirmationChallenge
     }
 
     func presentAsBottomSheet(
@@ -229,7 +229,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper,
             completion: { result, confirmationType in
                 if self.logPayment {
@@ -286,7 +286,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: .complete,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in
             self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
