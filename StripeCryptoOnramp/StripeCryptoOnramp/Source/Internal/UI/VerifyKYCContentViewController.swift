@@ -62,7 +62,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
             containerStackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             containerStackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
             containerStackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            containerStackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
+            containerStackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
         ])
 
         return scrollView
@@ -71,7 +71,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     private lazy var containerStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             headingLabel,
-            infoContainerView
+            infoContainerView,
         ])
         stackView.axis = .vertical
         stackView.spacing = LinkUI.contentSpacing
@@ -114,7 +114,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
             makeDivider(),
             VerifyKYCInfoRowView(title: "Address", value: address, editAction: { [weak self] in
                 self?.onResult?(.updateAddress)
-            })
+            }),
         ])
 
         stackView.axis = .vertical
@@ -182,7 +182,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor)
+            scrollView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
         ])
     }
 

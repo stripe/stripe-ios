@@ -394,7 +394,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKycResult {
         do {
             // Fetch existing KYC info
-            //let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
+            // let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
             let response = RetrieveKYCInfoResponse(kycInfo: .init(firstName: "Mike", lastName: "Liberatore", dateOfBirth: .init(day: 1, month: 2, year: 1990), address: .init(city: "New York", country: "US", line1: "123 Fake St", line2: "APT 2", postalCode: "10019", state: "NY"), idNumberLast4: "6789", idType: .socialSecurityNumber))
             var displayInfo = response.kycInfo
             if let newAddress = updatedAddress {

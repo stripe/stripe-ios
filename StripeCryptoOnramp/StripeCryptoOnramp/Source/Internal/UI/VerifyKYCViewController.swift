@@ -5,11 +5,9 @@
 //  Created by Michael Liberatore on 10/28/25.
 //
 
-import UIKit
-import SwiftUI
-
-@_spi(STP) import StripeUICore
 @_spi(STP) import StripePaymentSheet
+
+import UIKit
 
 /// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
 final class VerifyKYCViewController: BottomSheetViewController {
@@ -55,13 +53,13 @@ final class VerifyKYCViewController: BottomSheetViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     required init(contentViewController: any BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool, didCancelNative3DS2: @escaping () -> Void) {
         fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
     }
 
     // MARK: - BottomSheetViewController
-    
+
     override func didTapOrSwipeToDismiss() {
         contentViewController?.didTapOrSwipeToDismiss()
     }
