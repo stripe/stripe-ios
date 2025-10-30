@@ -6,7 +6,7 @@
 import Foundation
 
 /// Values for STPPaymentMethodAllowRedisplay
-@objc public enum STPPaymentMethodAllowRedisplay: Int {
+@objc @frozen public enum STPPaymentMethodAllowRedisplay: Int {
     /// This is the default value for payment methods where allow_redisplay wasn’t set.
     case unspecified
 

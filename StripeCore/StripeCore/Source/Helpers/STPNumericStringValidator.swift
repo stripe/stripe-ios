@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) public enum STPTextValidationState: Int {
+@_spi(STP) @frozen public enum STPTextValidationState: Int {
     case empty
     case incomplete
     case complete

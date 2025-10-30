@@ -601,7 +601,7 @@ extension EmbeddedPaymentElement {
         // However: When `rowSelectionBehavior` is `immediateAction` and `embeddedViewDisplaysMandateText` is `true` and the customer selects a PM that has no form but has a mandate, there's a problem.
         // We'd normally show the mandate in the embedded view, but `immediateAction` implies the merchant will immediately confirm or move the customer to a different screen before they can see or consent to the mandate.
         // We therefore show a form with the mandate text and proceed as normal as if it were any other PM with a form (customer can continue or confirm in the sheet).
-        let paymentMethodHasNoFormAndHasAMandate = form.collectsUserInput == false && form.getMandateText() != nil
+        let paymentMethodHasNoFormAndHasAMandate = form.collectsUserInput == false && PaymentMethodElementUtils.getMandateText(from: form) != nil
         if
             case .immediateAction = configuration.rowSelectionBehavior,
             configuration.embeddedViewDisplaysMandateText,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public enum LinkMode: String {
+@_spi(STP) @frozen public enum LinkMode: String {
     case linkPaymentMethod = "LINK_PAYMENT_METHOD"
     case passthrough = "PASSTHROUGH"
     case linkCardBrand = "LINK_CARD_BRAND"

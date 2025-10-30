@@ -9,7 +9,7 @@
 import Foundation
 
 /// Enumeration of all the analytic events logged by our SDK.
-@_spi(STP) public enum STPAnalyticEvent: String {
+@_spi(STP) @frozen public enum STPAnalyticEvent: String {
     // MARK: - Payment Creation
     case tokenCreation = "stripeios.token_creation"
 

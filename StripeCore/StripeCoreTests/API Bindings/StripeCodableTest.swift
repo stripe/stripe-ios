@@ -71,7 +71,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
         completion: @escaping ([String: Any], Result<T, Error>) -> Void
     ) {
         let e = expectation(description: "Request completed")
-        let encodedDict = try! codable.encodeJSONDictionary()
+        let encodedDict = try! StripeJSONEncoder().encodeJSONDictionary(codable)
         let encodedData = try? JSONSerialization.data(withJSONObject: encodedDict, options: [])
 
         let apiClient = stubbedAPIClient()
@@ -163,7 +163,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
                 resultObject.nested!.deeplyNested!.deeplyNestedProperty,
                 codable.nested!.deeplyNested!.deeplyNestedProperty
             )
-            let newDictionary = try! resultObject.encodeJSONDictionary() as NSDictionary
+            let newDictionary = try! StripeJSONEncoder().encodeJSONDictionary(resultObject) as NSDictionary
             XCTAssert(newDictionary.isEqual(to: codableDict))
         }
     }
@@ -193,7 +193,7 @@ class StripeAPIRequestTest: APIStubbedTestCase {
                 resultObject.nested!.deeplyNested!.deeplyNestedProperty,
                 codable.nested!.deeplyNested!.deeplyNestedProperty
             )
-            let newDictionary = try! resultObject.encodeJSONDictionary() as NSDictionary
+            let newDictionary = try! StripeJSONEncoder().encodeJSONDictionary(resultObject) as NSDictionary
             XCTAssert(newDictionary.isEqual(to: codableDict))
             XCTAssertEqual(
                 resultObject.nested!.nestedProperty,

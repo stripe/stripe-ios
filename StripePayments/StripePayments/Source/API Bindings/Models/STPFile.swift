@@ -12,7 +12,7 @@ import Foundation
 /// The purpose of the uploaded file.
 /// - seealso: https://stripe.com/docs/file-upload
 @objc
-public enum STPFilePurpose: Int {
+@frozen public enum STPFilePurpose: Int {
 
     // NOTE: If adding cases here, also add to `StripeFile.Purpose` or they will
     // not be encoded/decoded to/from the server.

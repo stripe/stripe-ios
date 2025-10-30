@@ -9,7 +9,7 @@
 import Foundation
 
 /// Usage types for a Source
-@objc public enum STPSourceUsage: Int {
+@objc @frozen public enum STPSourceUsage: Int {
     /// The source can be reused.
     case reusable
     /// The source can only be used once.
@@ -19,7 +19,7 @@ import Foundation
 }
 
 /// Status types for a Source
-@objc public enum STPSourceStatus: Int {
+@objc @frozen public enum STPSourceStatus: Int {
     /// The source has been created and is awaiting customer action.
     case pending
     /// The source is ready to use. The customer action has been completed or the
@@ -40,7 +40,7 @@ import Foundation
 
 /// Types for a Source
 /// - seealso: https://stripe.com/docs/sources
-@objc public enum STPSourceType: Int {
+@objc @frozen public enum STPSourceType: Int {
     /// A card source. - seealso: https://stripe.com/docs/sources/cards
     case card
     /// An unknown type of source.

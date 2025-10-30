@@ -84,7 +84,7 @@ class VerticalListMandateProvider: MandateTextProvider {
 
             // If we get to this point, we didn't show the form, so return the mandate from the form if it exists
             // 🙋‍♂️ Note: assumes mandates are SimpleMandateElement!
-            return form.getMandateText()
+            return PaymentMethodElementUtils.getMandateText(from: form)
         }
     }
 }
