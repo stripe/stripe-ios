@@ -140,10 +140,29 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     }
 
     private func formattedDOB(_ dob: KycInfo.DateOfBirth) -> String {
-        let mm = String(format: "%02d", dob.month)
-        let dd = String(format: "%02d", dob.day)
-        let yyyy = String(format: "%04d", dob.year)
-        return "\(mm)/\(dd)/\(yyyy)"
+        // Format the date in a locale-friendly manner where components can change order
+        // and use leading 0s for days and months < 10, e.g. 09/01/2000.
+        var components = DateComponents()
+        components.calendar = .current
+        components.timeZone = .current
+        components.year = dob.year
+        components.month = dob.month
+        components.day = dob.day
+
+        if let date = components.date {
+            let formatter = DateFormatter()
+            formatter.locale = .current
+            formatter.calendar = .current
+            formatter.timeZone = .current
+            formatter.setLocalizedDateFormatFromTemplate("MMddyyyy")
+            return formatter.string(from: date)
+        } else {
+            // fall back to strict manual formatting in the event of an unexpected error with `DateComponents`.
+            let mm = String(format: "%02d", dob.month)
+            let dd = String(format: "%02d", dob.day)
+            let yyyy = String(format: "%04d", dob.year)
+            return "\(mm)/\(dd)/\(yyyy)"
+        }
     }
 
     private func formattedAddress(_ address: Address) -> String {
