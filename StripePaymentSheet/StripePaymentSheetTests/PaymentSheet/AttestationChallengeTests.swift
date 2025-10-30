@@ -53,7 +53,6 @@ class AttestationChallengeTests: XCTestCase {
 
     func testAttestationChallenge() async throws {
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
-        await attestationChallenge.setTimeout(timeout: 30)
         // wait to make sure that the assertion will be ready by the time we call fetchAssertion
         try await Task.sleep(nanoseconds: 6_000_000_000)
         let startTime = Date()
@@ -70,7 +69,6 @@ class AttestationChallengeTests: XCTestCase {
         // Inject a delay longer than the timeout to force cancellation during attestation
         await mockAttestService.setAttestationDelay(5.0)
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
-        await attestationChallenge.setTimeout(timeout: 1)
         let startTime = Date()
         let assertion = await attestationChallenge.fetchAssertionWithTimeout(1)
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
@@ -83,7 +81,6 @@ class AttestationChallengeTests: XCTestCase {
         // Inject a delay longer than the timeout to force cancellation during assertion
         await mockAttestService.setGenerateAssertionDelay(5.0)
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
-        await attestationChallenge.setTimeout(timeout: 1)
         let startTime = Date()
         let assertion = await attestationChallenge.fetchAssertionWithTimeout(1)
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
