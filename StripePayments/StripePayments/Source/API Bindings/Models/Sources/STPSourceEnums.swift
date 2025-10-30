@@ -43,8 +43,6 @@ import Foundation
 @objc public enum STPSourceType: Int {
     /// A card source. - seealso: https://stripe.com/docs/sources/cards
     case card
-    /// A 3DS card source. - seealso: https://stripe.com/docs/sources/three-d-secure
-    case threeDSecure
     /// An unknown type of source.
     case unknown
 }
