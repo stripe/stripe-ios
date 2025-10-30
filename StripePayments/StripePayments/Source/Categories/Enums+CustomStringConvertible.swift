@@ -652,8 +652,6 @@ extension STPSourceType: CustomStringConvertible {
         switch self {
         case .card:
             return "card"
-        case .threeDSecure:
-            return "threeDSecure"
         case .unknown:
             return "unknown"
         }
