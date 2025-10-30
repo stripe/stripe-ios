@@ -11,8 +11,7 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-// Abstract class for PMME UIViews. Use PMMESinglePartnerView or PMMEMultiPartnerView instead of displaying directly
-class PMMEUIView: UIStackView {
+class PMMEUIView: UIView {
 
     private let infoUrl: URL
     private let appearance: PaymentMethodMessagingElement.Appearance
