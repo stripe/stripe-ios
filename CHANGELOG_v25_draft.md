@@ -15,7 +15,6 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Changed] CustomerSessions is now generally available.
 * [Changed] ConfirmationTokens is now generally available.
 * [Removed] Removed `PaymentSheet.reset()` in favor of `PaymentSheet.resetCustomer()`.
-* [Removed] Removed STPPaymentMethod `metadata`.
 
 ### Financial Connections
 * [Added] Added an async versions of `present(from:)` and `presentForToken(from:)`.
@@ -34,4 +33,5 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Changed] Renamed STPPaymentHandler's `confirm` and `handleNextAction` methods and added async versions.
 * [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
 * [Removed] Removed deprecated `STPPaymentIntentParams.saveSourceToCustomer` property. Use `savePaymentMethod` instead.
+* [Removed] Removed STPPaymentMethod `metadata`.
 
