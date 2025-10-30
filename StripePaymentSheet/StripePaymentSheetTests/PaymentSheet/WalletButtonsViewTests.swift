@@ -38,7 +38,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -78,7 +78,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         // Don't set up Apple Pay
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -118,7 +118,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         // Don't set up Apple Pay
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -167,7 +167,7 @@ class WalletButtonsViewTests: XCTestCase {
             shopId: "test_shop_123",
             allowedShippingCountries: ["US"]
         )
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -216,7 +216,7 @@ class WalletButtonsViewTests: XCTestCase {
             shopId: "test_shop_123",
             allowedShippingCountries: ["US"]
         )
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -265,7 +265,7 @@ class WalletButtonsViewTests: XCTestCase {
             shopId: "test_shop_123",
             allowedShippingCountries: ["US"]
         )
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -305,7 +305,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -354,7 +354,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -408,7 +408,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
@@ -463,7 +463,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)

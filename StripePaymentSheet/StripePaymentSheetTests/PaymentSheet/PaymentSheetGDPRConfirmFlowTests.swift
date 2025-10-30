@@ -516,7 +516,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }()
 
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
-        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _, _ in })
+        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
         _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
 
         // Make the form

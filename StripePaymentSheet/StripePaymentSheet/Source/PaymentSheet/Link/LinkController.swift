@@ -674,9 +674,9 @@ import UIKit
                 currency: nil,
                 setupFutureUsage: .offSession
             ),
-            confirmHandler: { _, _, intentCreationCallback in
+            confirmHandler: { _, _ in
                 stpAssertionFailure("The confirmHandler is not expected to be called in the LinkController.")
-                intentCreationCallback(.success(PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT))
+                return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
             }
         )
 

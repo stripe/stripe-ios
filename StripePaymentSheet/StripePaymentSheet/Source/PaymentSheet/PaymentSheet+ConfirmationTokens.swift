@@ -92,9 +92,9 @@ extension PaymentSheet {
                         paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
                         paymentIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .client)
                         }
@@ -121,8 +121,8 @@ extension PaymentSheet {
                         setupIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .client)
                         }

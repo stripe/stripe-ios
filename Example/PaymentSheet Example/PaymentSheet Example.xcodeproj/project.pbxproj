@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,80 +11,18 @@
 		09FA1391DCA2717DBC962562 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1E565B552830E657F863C4F8 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1094816DB7E9DFAF01815365 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */; };
 		11DDC6610B393BFF4C6DF02C /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; };
-		17D626E890FD11B84654C846 /* PaymentSheetTestPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BA81F620FAB6E5505E0B32 /* PaymentSheetTestPlayground.swift */; };
 		185A611D085DC24198C3D2D1 /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9C96D25ED549D6255FC274 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		27233E85B0B6E1114E9AF6E8 /* ExampleSwiftUICustomerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */; };
-		2CB72F11E36DB65E8BA9205A /* PlaygroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0C0324B4075DED17688123 /* PlaygroundController.swift */; };
-		2CD71F097C7CD0D9BFC7499D /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD340D0C93E93B9E9DB7691F /* PaymentSheetTestPlaygroundSettings.swift */; };
-		31AB49B72C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */; };
-		31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */; };
-		3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */; };
 		37CDE2E21F00571F147FCFF7 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		424BBBEBF25E5F020FF40F36 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		432E82C3F5EC56E89D257563 /* ExampleSwiftUIPaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */; };
-		4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */; };
-		4954E96F2D960E340061585F /* FCLiteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4954E96E2D960E340061585F /* FCLiteUITests.swift */; };
-		49ABCC732E2FFFCA00C3BBF4 /* ExampleLinkControllerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ABCC722E2FFFCA00C3BBF4 /* ExampleLinkControllerView.swift */; };
-		4E3F7EFF78BC4F14D18024E7 /* PaymentSheetLocalizationScreenshotGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA08203146CADE9649CF0EAD /* PaymentSheetLocalizationScreenshotGenerator.swift */; };
-		540F279CE5B41C122AD1DEF6 /* PaymentSheetUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CA299EAF5914484195167EB /* PaymentSheetUITest.swift */; };
-		5441EB34BBE32DD98B7A6883 /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2806FC6A4514AA88A26B32CD /* CustomerSheetTestPlaygroundSettings.swift */; };
 		551DB033DB4C8257ABAADA8F /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; };
-		56EF0879D7EAC041B147680C /* ExampleLinkPaymentCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */; };
-		5AF35F9FA7106ACD4E4F360F /* PaymentSheetBillingCollectionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083DF3A89B26704DA21858DB /* PaymentSheetBillingCollectionUITests.swift */; };
-		61271F082E2167380016302B /* AddressElementExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61271F072E2167380016302B /* AddressElementExample.swift */; };
-		61B2532E2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B2532D2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift */; };
-		61FB6BC72C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FB6BC62C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift */; };
 		65D034E37B345C1B64785451 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6A5CCDA42C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5CCDA32C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift */; };
-		6B03B12F2CDA890700F95A9D /* XCUITest+PaymentSheetTestUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03B12E2CDA88F900F95A9D /* XCUITest+PaymentSheetTestUtilities.swift */; };
-		6B1E84072DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1E84062DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift */; };
-		6BC971102E1250A7008AA006 /* PaymentSheetExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC9710F2E1250A7008AA006 /* PaymentSheetExampleApp.swift */; };
-		6BC971122E125143008AA006 /* PaymentSheetExampleAppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC971112E12513E008AA006 /* PaymentSheetExampleAppRootView.swift */; };
-		6BC971142E1263B0008AA006 /* StoryboardSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC971132E126391008AA006 /* StoryboardSceneView.swift */; };
-		6BCB57EA2D81FB15000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCB57E92D81FB13000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift */; };
-		6BE115002DF8A6150024AC26 /* PlaygroundController+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE114FF2DF8A6150024AC26 /* PlaygroundController+ApplePay.swift */; };
-		6BFE613D2D407C420094DFE2 /* CustomerSessionPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFE613C2D407C3B0094DFE2 /* CustomerSessionPlaygroundView.swift */; };
 		75D1997DA514F6DB82FF1CFC /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		79E8C77C99A25E38F96747F1 /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1261A6BDCDB7E81D08F137F0 /* PaymentSheetTestPlaygroundSettings.swift */; };
-		7B89F83982B6D43C3B9E8AD5 /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA7F02B5FFA4FEA1218561A /* PaymentSheetTestPlaygroundSettings.swift */; };
 		7CD54A47BC36A065ADA952BF /* StripeCoreTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7ECCD70F9CE16A1854F2633E /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */; };
-		7F005A0179023A25918D9014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59EF54A49D2FCC743E9EBC5F /* Assets.xcassets */; };
-		84CFB1ACA4915EE5B2E25341 /* EndpointSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8738B92B2B3B97A7A53E6FE9 /* EndpointSelectorViewController.swift */; };
-		8A6DBB641294F9AE6A9C61B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CDBD593EFEAD2EDA4D33D5D /* LaunchScreen.storyboard */; };
-		8D9AAFD1D1D49112A7777414 /* CustomerSheetTestPlaygroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54E58F2CA450CF49ECD5637 /* CustomerSheetTestPlaygroundController.swift */; };
-		8F5C48FC825539B96F592315 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5259232431E2683DDD05CB84 /* ViewController.swift */; };
 		95B578013869DFEA1C912A10 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */; };
-		973DA944730BD761CE479F8E /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575345B1A7F6EBD12A1A5F9C /* QRView.swift */; };
 		9F126696AD86BF2E861B5CC5 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */; };
-		A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */; };
-		A00DB98A2E132EAB00A75242 /* Appearance+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00DB9892E132EAB00A75242 /* Appearance+Codable.swift */; };
-		A03BF5292DD292B700B5122B /* EmbeddedPaymentElementWrapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03BF5282DD292A800B5122B /* EmbeddedPaymentElementWrapperViewController.swift */; };
-		A071C07B6FFACC5DEFC6AA01 /* ExampleSwiftUIViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20765908089ACB79B556592 /* ExampleSwiftUIViews.swift */; };
-		A262D76C3319002A2F6EE395 /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A8BAE3842A0E892D06BB9 /* CustomerSheetTestPlaygroundSettings.swift */; };
-		A3884C372DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3884C362DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift */; };
-		AEC3BC636297A0D3E2DDF522 /* MockFiles in Resources */ = {isa = PBXBuildFile; fileRef = 9496755DA1916325D38ECB2F /* MockFiles */; };
-		B36A24145C97D73C981DDBAC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4B26C754925F8D2A5183B2E /* Main.storyboard */; };
-		B615E86F2CA4B267007D684C /* ExampleEmbeddedElementCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615E86E2CA4B266007D684C /* ExampleEmbeddedElementCheckoutViewController.swift */; };
-		B62CAE812E4D15C200CB3A5F /* AppDelegate+BrokenConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62CAE802E4D15B300CB3A5F /* AppDelegate+BrokenConstraints.swift */; };
-		B641A4192C2BA25D00AE654A /* PaymentSheetVerticalUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B641A4182C2BA25D00AE654A /* PaymentSheetVerticalUITest.swift */; };
-		B661D3BA2E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B661D3B92E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift */; };
-		B6CA975C2C486DE700DAE441 /* PaymentSheetLPMUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CA975B2C486DE700DAE441 /* PaymentSheetLPMUITest.swift */; };
-		B6D6AAA666859847BB59749C /* PaymentSheet+AddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61C5739DBE6405A4D9FD5F2 /* PaymentSheet+AddressTests.swift */; };
-		B6DA0FEE2CC97F4900BF41B7 /* EmbeddedUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA0FED2CC97F3D00BF41B7 /* EmbeddedUITest.swift */; };
 		C39CA2EBE08EE768559A8FD1 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CB433B462D9715C70066DD18 /* LinkTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB433B452D9715C70066DD18 /* LinkTestHelpers.swift */; };
-		CB6F8F872E04545D003551D5 /* ExampleLinkStandaloneComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6F8F862E04545D003551D5 /* ExampleLinkStandaloneComponent.swift */; };
-		CC9090D573972E8B14D204CB /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F10B63B9ECBC62AFCF8B32 /* CustomerSheetTestPlaygroundSettings.swift */; };
-		D235E82A7173E8051BC5A261 /* ExampleCustomCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */; };
 		D89C23032CFB732A0CFCD565 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E565B552830E657F863C4F8 /* StripePayments.framework */; };
-		DDF30DE9D7AA4BCC47CC12FB /* CustomerSheetTestPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC6711266D93A72ED4938F8 /* CustomerSheetTestPlayground.swift */; };
-		E3D7A04974C35D2D8D31CDCD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53AAAA316E1DA1C44D30D7B0 /* SceneDelegate.swift */; };
-		E66F4E053FC6DD05EA245CDF /* CustomerSheetUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B294B57F4692E283110E205 /* CustomerSheetUITest.swift */; };
-		EB1DCD930408180734A8D7CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E317C6C8459B147C041D93 /* AppDelegate.swift */; };
-		EB3C76C2A5704F94F0414BEF /* ExampleCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A5E37ECAEFAD0178E0A4E /* ExampleCheckoutViewController.swift */; };
-		EE0FA73AAB80863583C69D70 /* XCUITest+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */; };
-		F998DD23CE1F49B63F5A5741 /* ExampleCheckoutDeferredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74185DD2F7DC4BBDC4774A /* ExampleCheckoutDeferredViewController.swift */; };
 		FA36E30724AAC6E3EF717A6A /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9C96D25ED549D6255FC274 /* StripeUICore.framework */; };
 		FBA21DE7C9261D3BFD53A6CB /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD441E14EDF702D50D812875 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = B195FF5EEDEAC460C45887F1 /* iOSSnapshotTestCase */; };
@@ -152,178 +90,63 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSwiftUICustomerSheet.swift; sourceTree = "<group>"; };
-		033F9384026ACB5CDD6E45CB /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		05B17CA60B66752AF6022CAE /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		05E317C6C8459B147C041D93 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		07A77D160888D6D7830E9FC9 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Main.strings; sourceTree = "<group>"; };
-		083DF3A89B26704DA21858DB /* PaymentSheetBillingCollectionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetBillingCollectionUITests.swift; sourceTree = "<group>"; };
-		09C26C1E7D82343EBF376E5F /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		0B83BFBF1AF7550D4C3398F1 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		0B8BE18738723FE41AAD4FE1 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Main.strings"; sourceTree = "<group>"; };
 		0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig"; sourceTree = "<group>"; };
-		0F4C1FBB3402C074F4F21E29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		1261A6BDCDB7E81D08F137F0 /* PaymentSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
-		1405897B2DC90B2C00DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		1405897C2DC90B2C00DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Main.strings; sourceTree = "<group>"; };
 		16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCustomDeferredCheckoutViewController.swift; sourceTree = "<group>"; };
-		1B294B57F4692E283110E205 /* CustomerSheetUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetUITest.swift; sourceTree = "<group>"; };
-		1BD9252F1B15953FED102F56 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Main.strings"; sourceTree = "<group>"; };
-		1E4CB6507CE9B078E4E42710 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		1E565B552830E657F863C4F8 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1FA7F02B5FFA4FEA1218561A /* PaymentSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
 		1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		22EC46843878DEC3467BAF29 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
-		23F93C3E4B011AB469CD29D3 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Main.strings; sourceTree = "<group>"; };
 		240DDF52B887E788853A838B /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2755F01760456EE134D307D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		27BA81F620FAB6E5505E0B32 /* PaymentSheetTestPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetTestPlayground.swift; sourceTree = "<group>"; };
-		2806FC6A4514AA88A26B32CD /* CustomerSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
 		28CE345E1398AF3E28F164EF /* PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetLocalizationScreenshotGenerator-Release.xcconfig"; sourceTree = "<group>"; };
-		294C411B3283F79D018BD1C1 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		2BA4C0DB741C5D8C406F381E /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Main.strings"; sourceTree = "<group>"; };
 		2C720CA9AA1AECA0BB248B49 /* PaymentSheetUITest-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Debug.xcconfig"; sourceTree = "<group>"; };
-		2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLinkPaymentCheckoutViewController.swift; sourceTree = "<group>"; };
 		310E6B5D2C581640006A03EC /* PaymentSheet Example-Shard4.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard4.xctestplan"; sourceTree = "<group>"; };
 		310E6B5E2C581640006A03EC /* PaymentSheet Example-Shard3.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard3.xctestplan"; sourceTree = "<group>"; };
-		31A510FDEA3F1AAED0507251 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
-		31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+PaymentSheetDebugging.swift"; sourceTree = "<group>"; };
-		31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		34CCC286E48ADD9F586832D9 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Main.strings"; sourceTree = "<group>"; };
-		36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+Utilities.swift"; sourceTree = "<group>"; };
-		3C2A8BAE3842A0E892D06BB9 /* CustomerSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
 		3ED454099B55B5F3BCA1D642 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
-		4021CAA92058F4822D8584BD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
-		4135E39F036A7E3D61254A8C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
-		4172744D71975647BB954766 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		417C63E0DB7B5BA3F8691E67 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
-		42ABA03F697FDC1AEAA3C9FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSwiftUICustomPaymentFlow.swift; sourceTree = "<group>"; };
-		4546705B6D6BCA883F5532B8 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheet-Example-Release.xcconfig"; sourceTree = "<group>"; };
-		47F5ABF3CE2F657E0085EBB2 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		4954E96E2D960E340061585F /* FCLiteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteUITests.swift; sourceTree = "<group>"; };
-		49ABCC722E2FFFCA00C3BBF4 /* ExampleLinkControllerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLinkControllerView.swift; sourceTree = "<group>"; };
-		4A52C114362A90EF8A5BBA1A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		4AD9595F2BD9D48997A44309 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		4E74185DD2F7DC4BBDC4774A /* ExampleCheckoutDeferredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCheckoutDeferredViewController.swift; sourceTree = "<group>"; };
-		4EA8496FFF762D7F3B9B9F84 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Main.strings; sourceTree = "<group>"; };
-		5259232431E2683DDD05CB84 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		53AAAA316E1DA1C44D30D7B0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		56446A16EB65FF744B625D22 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Main.strings"; sourceTree = "<group>"; };
-		575345B1A7F6EBD12A1A5F9C /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
-		59EF54A49D2FCC743E9EBC5F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5CA299EAF5914484195167EB /* PaymentSheetUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetUITest.swift; sourceTree = "<group>"; };
-		5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearancePlaygroundView.swift; sourceTree = "<group>"; };
-		5E4DD63AD5E9B8153E04EF7C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
-		61271F072E2167380016302B /* AddressElementExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressElementExample.swift; sourceTree = "<group>"; };
-		61B2532D2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSwiftUIEmbeddedPaymentElement.swift; sourceTree = "<group>"; };
-		61FB6BC62C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPlaygroundViewController.swift; sourceTree = "<group>"; };
 		63237DF22FD4600B9D2E8071 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6891CC1208EA3F4DE934760E /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		6A5CCDA32C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPaymentControllerUITest.swift; sourceTree = "<group>"; };
-		6B03B12E2CDA88F900F95A9D /* XCUITest+PaymentSheetTestUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+PaymentSheetTestUtilities.swift"; sourceTree = "<group>"; };
-		6B1E84062DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleWalletButtonsView.swift; sourceTree = "<group>"; };
-		6BC9710F2E1250A7008AA006 /* PaymentSheetExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetExampleApp.swift; sourceTree = "<group>"; };
-		6BC971112E12513E008AA006 /* PaymentSheetExampleAppRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetExampleAppRootView.swift; sourceTree = "<group>"; };
-		6BC971132E126391008AA006 /* StoryboardSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardSceneView.swift; sourceTree = "<group>"; };
-		6BCB57E92D81FB13000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetCustomerSessionPlaygroundView.swift; sourceTree = "<group>"; };
-		6BE114FF2DF8A6150024AC26 /* PlaygroundController+ApplePay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlaygroundController+ApplePay.swift"; sourceTree = "<group>"; };
-		6BFE613C2D407C3B0094DFE2 /* CustomerSessionPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSessionPlaygroundView.swift; sourceTree = "<group>"; };
 		6CD01636EA3B4C6F84E9CC86 /* PaymentSheetUITest-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Release.xcconfig"; sourceTree = "<group>"; };
-		6E4F3FA49534E745C5EDC1C0 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		701B8DEF9958B8EDB3C6E25B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		73DAE0051A928CB1597F8917 /* PaymentSheetExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaymentSheetExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		76C1CBA6B516B1DD96CB12EB /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Main.strings; sourceTree = "<group>"; };
-		78CAB0BA7EF4EE82FF76D9EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		7A2F17F4DC178387659116DE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		7C2D3C4D44C73D619A42CF3A /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7CA29C6F89C759381CE11175 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		7F0C0324B4075DED17688123 /* PlaygroundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundController.swift; sourceTree = "<group>"; };
-		8083C7DBDB2654A8123613C5 /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		81BB8CD3461287DDB397717E /* PaymentSheet Example.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example.xctestplan"; sourceTree = "<group>"; };
-		82FA4AD9771D68717C0E3B0D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		830255F427E66F475B970A95 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		8542B65BCF43F2EE1B606603 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		8738B92B2B3B97A7A53E6FE9 /* EndpointSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointSelectorViewController.swift; sourceTree = "<group>"; };
-		899A5E37ECAEFAD0178E0A4E /* ExampleCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCheckoutViewController.swift; sourceTree = "<group>"; };
 		89E47F13DA6D394178F06849 /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8E99EA900EA73F2B87EC6916 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		8F10C2342DB4C0F20CEFE054 /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		92136ABC8F4154790E9757D9 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Main.strings; sourceTree = "<group>"; };
-		923D9CE10871FEA23359122F /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		9496755DA1916325D38ECB2F /* MockFiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MockFiles; sourceTree = "<group>"; };
-		971B2DDB4EB6E0D2B47B41B0 /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Main.strings"; sourceTree = "<group>"; };
-		986B03576192BCEE27ECA6FC /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		9B26EE02630FA57C9321F8C9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
-		9D167C684F995306D0F33D17 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		9D47127A1AAC9FAC41819950 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		9D55109311453F8D8F44A144 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Main.strings"; sourceTree = "<group>"; };
-		9D6F8659F31E23DF549E5057 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Main.strings"; sourceTree = "<group>"; };
 		9F9C96D25ED549D6255FC274 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A00DB9892E132EAB00A75242 /* Appearance+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Appearance+Codable.swift"; sourceTree = "<group>"; };
-		A03BF5282DD292A800B5122B /* EmbeddedPaymentElementWrapperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentElementWrapperViewController.swift; sourceTree = "<group>"; };
-		A10301FB96F08B8ADF93B2DB /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		A10F554509B65711F00BE91C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		A1D77C5D868315EAB494325C /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Main.strings"; sourceTree = "<group>"; };
-		A2FCA3AF75051639C445454E /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Main.strings"; sourceTree = "<group>"; };
-		A3884C362DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift; sourceTree = "<group>"; };
-		A430B6DF5233ACF15D47D507 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		A462672B893EF4F811331B2F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		A61C5739DBE6405A4D9FD5F2 /* PaymentSheet+AddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheet+AddressTests.swift"; sourceTree = "<group>"; };
-		AA08203146CADE9649CF0EAD /* PaymentSheetLocalizationScreenshotGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetLocalizationScreenshotGenerator.swift; sourceTree = "<group>"; };
-		AA18950DA9394C1A3756B4F3 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Main.strings; sourceTree = "<group>"; };
-		AB52AEBB55BDC5F8F9C2880F /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Main.strings"; sourceTree = "<group>"; };
-		ADBEC0CE822B92C078E5D758 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		B33D2066D7BA7984CABC23A5 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		B54E58F2CA450CF49ECD5637 /* CustomerSheetTestPlaygroundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlaygroundController.swift; sourceTree = "<group>"; };
-		B615E86E2CA4B266007D684C /* ExampleEmbeddedElementCheckoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleEmbeddedElementCheckoutViewController.swift; sourceTree = "<group>"; };
-		B62CAE802E4D15B300CB3A5F /* AppDelegate+BrokenConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+BrokenConstraints.swift"; sourceTree = "<group>"; };
-		B641A4182C2BA25D00AE654A /* PaymentSheetVerticalUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetVerticalUITest.swift; sourceTree = "<group>"; };
-		B661D3B92E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppearancePlaygroundView+EmbeddedPaymentElement.swift"; sourceTree = "<group>"; };
 		B69C155A2B9FDCBD009CE667 /* PaymentSheet Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "PaymentSheet Example.entitlements"; path = "PaymentSheet Example/PaymentSheet Example.entitlements"; sourceTree = "<group>"; };
-		B6CA975B2C486DE700DAE441 /* PaymentSheetLPMUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetLPMUITest.swift; sourceTree = "<group>"; };
-		B6DA0FED2CC97F3D00BF41B7 /* EmbeddedUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedUITest.swift; sourceTree = "<group>"; };
-		B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSwiftUIPaymentSheet.swift; sourceTree = "<group>"; };
-		B7C76D3D1BF7666D1963DD0B /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B96951DD278BA611BBCBB10A /* PaymentSheet Example-Shard1.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard1.xctestplan"; sourceTree = "<group>"; };
-		BE9F3199D00539DE9EC4E69F /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
 		C2655A8B1DF0649CD996E045 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C346E896A6816562AA3E5ADD /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Main.strings"; sourceTree = "<group>"; };
-		C505106BB2A66528FF4083AA /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Main.strings; sourceTree = "<group>"; };
-		C553C161A749EC29E462A4EE /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Main.strings; sourceTree = "<group>"; };
-		C6A8906D5F5654EB11482363 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Main.strings"; sourceTree = "<group>"; };
-		C9391722F844F47DD6C44DC0 /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Main.strings"; sourceTree = "<group>"; };
 		C9BC6E49FF08F3B2DB837734 /* PaymentSheet Example-Shard2.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PaymentSheet Example-Shard2.xctestplan"; sourceTree = "<group>"; };
-		CA7B4F3A0C373E78CF35D4A6 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Main.strings"; sourceTree = "<group>"; };
-		CAB1D321D0BDBF696CA90532 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		CB433B452D9715C70066DD18 /* LinkTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkTestHelpers.swift; sourceTree = "<group>"; };
-		CB6F8F862E04545D003551D5 /* ExampleLinkStandaloneComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLinkStandaloneComponent.swift; sourceTree = "<group>"; };
-		D09A0708A006CB661551A84B /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		D1BC09347B9F3629671A1E9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
-		D20765908089ACB79B556592 /* ExampleSwiftUIViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSwiftUIViews.swift; sourceTree = "<group>"; };
-		D24AEAF534ACE4457E7B2D4A /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "ms-MY.lproj/Main.strings"; sourceTree = "<group>"; };
-		D6C4592568A595F601520B26 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Main.strings; sourceTree = "<group>"; };
-		D86D7FBAA1A972C983129D2A /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		DD340D0C93E93B9E9DB7691F /* PaymentSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
-		DEC6711266D93A72ED4938F8 /* CustomerSheetTestPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlayground.swift; sourceTree = "<group>"; };
-		E242726E633D2723048358BC /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		E5F907A06297C3A243EB5AFE /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Main.strings"; sourceTree = "<group>"; };
-		E63A02BE64B4A0E9E592E08B /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Main.strings; sourceTree = "<group>"; };
 		E8A5A0B5A4A1BF06663BE2BF /* PaymentSheetLocalizationScreenshotGenerator.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaymentSheetLocalizationScreenshotGenerator.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8DAA9A37F05C460E730973F /* PaymentSheetUITest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaymentSheetUITest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA3C52A73DC5DC3179ACF945 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		EAD9EA5E2AB73F145F99B23B /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
-		ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCustomCheckoutViewController.swift; sourceTree = "<group>"; };
-		EE5651DA6F3AF63B4C51899B /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		EFD868533089E2ED82F82987 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		EFDB8AECB67684ACA122981F /* PaymentSheet-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheet-Example-Debug.xcconfig"; sourceTree = "<group>"; };
-		F2F10B63B9ECBC62AFCF8B32 /* CustomerSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
-		F4D0043CB7BB72616C649C8A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		F933B0A684D1C36C46A65D6A /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
-		FC7D694F73564D632588F417 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Main.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		31C5F7B12EB2AD99005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D017784615929C0DD3717FE8 /* PaymentSheet Example */;
+		};
+		31C5F7D32EB2AD9C005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AAF1424C7F0424C3506712E6 /* PaymentSheetUITest */;
+		};
+		31C5F7DD2EB2AD9F005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5BBB41069612B9B628C5E65D /* PaymentSheetLocalizationScreenshotGenerator */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		31C5F7832EB2AD98005770FA /* PaymentSheet Example */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F7B12EB2AD99005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "PaymentSheet Example"; sourceTree = "<group>"; };
+		31C5F7C22EB2AD9C005770FA /* PaymentSheetUITest */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F7D32EB2AD9C005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (MockFiles, ); path = PaymentSheetUITest; sourceTree = "<group>"; };
+		31C5F7D82EB2AD9F005770FA /* PaymentSheetLocalizationScreenshotGenerator */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F7DD2EB2AD9F005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = PaymentSheetLocalizationScreenshotGenerator; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		583FD201691FAE086B140055 /* Frameworks */ = {
@@ -360,16 +183,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		132709C10C0114D239ED3FE9 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				7CDBD593EFEAD2EDA4D33D5D /* LaunchScreen.storyboard */,
-				F4B26C754925F8D2A5183B2E /* Main.storyboard */,
-				59EF54A49D2FCC743E9EBC5F /* Assets.xcassets */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		13E32DF0E48E9ED66783B3C2 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -419,25 +232,14 @@
 			path = ../../BuildConfigurations;
 			sourceTree = "<group>";
 		};
-		8370707CD3E47F69FD221747 /* PaymentSheetLocalizationScreenshotGenerator */ = {
-			isa = PBXGroup;
-			children = (
-				3C2A8BAE3842A0E892D06BB9 /* CustomerSheetTestPlaygroundSettings.swift */,
-				0F4C1FBB3402C074F4F21E29 /* Info.plist */,
-				AA08203146CADE9649CF0EAD /* PaymentSheetLocalizationScreenshotGenerator.swift */,
-				1FA7F02B5FFA4FEA1218561A /* PaymentSheetTestPlaygroundSettings.swift */,
-			);
-			path = PaymentSheetLocalizationScreenshotGenerator;
-			sourceTree = "<group>";
-		};
 		ACF2A07E6D470CDF889DE14C /* Project */ = {
 			isa = PBXGroup;
 			children = (
 				13E32DF0E48E9ED66783B3C2 /* BuildConfigurations */,
 				82D2733E9126398D9714C58F /* BuildConfigurations */,
-				C4BE75A2EECEF0AC9EC24CD8 /* PaymentSheet Example */,
-				8370707CD3E47F69FD221747 /* PaymentSheetLocalizationScreenshotGenerator */,
-				C326AC7AEE88B92E72DDD6AF /* PaymentSheetUITest */,
+				31C5F7832EB2AD98005770FA /* PaymentSheet Example */,
+				31C5F7D82EB2AD9F005770FA /* PaymentSheetLocalizationScreenshotGenerator */,
+				31C5F7C22EB2AD9C005770FA /* PaymentSheetUITest */,
 				B96951DD278BA611BBCBB10A /* PaymentSheet Example-Shard1.xctestplan */,
 				C9BC6E49FF08F3B2DB837734 /* PaymentSheet Example-Shard2.xctestplan */,
 				310E6B5E2C581640006A03EC /* PaymentSheet Example-Shard3.xctestplan */,
@@ -445,79 +247,6 @@
 				81BB8CD3461287DDB397717E /* PaymentSheet Example.xctestplan */,
 			);
 			name = Project;
-			sourceTree = "<group>";
-		};
-		C326AC7AEE88B92E72DDD6AF /* PaymentSheetUITest */ = {
-			isa = PBXGroup;
-			children = (
-				2806FC6A4514AA88A26B32CD /* CustomerSheetTestPlaygroundSettings.swift */,
-				1B294B57F4692E283110E205 /* CustomerSheetUITest.swift */,
-				78CAB0BA7EF4EE82FF76D9EC /* Info.plist */,
-				9496755DA1916325D38ECB2F /* MockFiles */,
-				A61C5739DBE6405A4D9FD5F2 /* PaymentSheet+AddressTests.swift */,
-				083DF3A89B26704DA21858DB /* PaymentSheetBillingCollectionUITests.swift */,
-				DD340D0C93E93B9E9DB7691F /* PaymentSheetTestPlaygroundSettings.swift */,
-				5CA299EAF5914484195167EB /* PaymentSheetUITest.swift */,
-				B6CA975B2C486DE700DAE441 /* PaymentSheetLPMUITest.swift */,
-				B641A4182C2BA25D00AE654A /* PaymentSheetVerticalUITest.swift */,
-				B6DA0FED2CC97F3D00BF41B7 /* EmbeddedUITest.swift */,
-				36BB679CF53EEF943F0BAAC9 /* XCUITest+Utilities.swift */,
-				6B03B12E2CDA88F900F95A9D /* XCUITest+PaymentSheetTestUtilities.swift */,
-				6A5CCDA32C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift */,
-				4954E96E2D960E340061585F /* FCLiteUITests.swift */,
-				CB433B452D9715C70066DD18 /* LinkTestHelpers.swift */,
-			);
-			path = PaymentSheetUITest;
-			sourceTree = "<group>";
-		};
-		C4BE75A2EECEF0AC9EC24CD8 /* PaymentSheet Example */ = {
-			isa = PBXGroup;
-			children = (
-				A03BF5282DD292A800B5122B /* EmbeddedPaymentElementWrapperViewController.swift */,
-				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
-				132709C10C0114D239ED3FE9 /* Resources */,
-				05E317C6C8459B147C041D93 /* AppDelegate.swift */,
-				B62CAE802E4D15B300CB3A5F /* AppDelegate+BrokenConstraints.swift */,
-				5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */,
-				B661D3B92E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift */,
-				6BFE613C2D407C3B0094DFE2 /* CustomerSessionPlaygroundView.swift */,
-				6BC9710F2E1250A7008AA006 /* PaymentSheetExampleApp.swift */,
-				6BC971112E12513E008AA006 /* PaymentSheetExampleAppRootView.swift */,
-				6BC971132E126391008AA006 /* StoryboardSceneView.swift */,
-				61271F072E2167380016302B /* AddressElementExample.swift */,
-				A3884C362DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift */,
-				6BCB57E92D81FB13000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift */,
-				DEC6711266D93A72ED4938F8 /* CustomerSheetTestPlayground.swift */,
-				B54E58F2CA450CF49ECD5637 /* CustomerSheetTestPlaygroundController.swift */,
-				F2F10B63B9ECBC62AFCF8B32 /* CustomerSheetTestPlaygroundSettings.swift */,
-				8738B92B2B3B97A7A53E6FE9 /* EndpointSelectorViewController.swift */,
-				4E74185DD2F7DC4BBDC4774A /* ExampleCheckoutDeferredViewController.swift */,
-				899A5E37ECAEFAD0178E0A4E /* ExampleCheckoutViewController.swift */,
-				ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */,
-				179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */,
-				2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */,
-				CB6F8F862E04545D003551D5 /* ExampleLinkStandaloneComponent.swift */,
-				49ABCC722E2FFFCA00C3BBF4 /* ExampleLinkControllerView.swift */,
-				0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */,
-				447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */,
-				B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */,
-				61B2532D2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift */,
-				D20765908089ACB79B556592 /* ExampleSwiftUIViews.swift */,
-				6B1E84062DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift */,
-				61FB6BC62C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift */,
-				B615E86E2CA4B266007D684C /* ExampleEmbeddedElementCheckoutViewController.swift */,
-				ADBEC0CE822B92C078E5D758 /* Info.plist */,
-				27BA81F620FAB6E5505E0B32 /* PaymentSheetTestPlayground.swift */,
-				1261A6BDCDB7E81D08F137F0 /* PaymentSheetTestPlaygroundSettings.swift */,
-				7F0C0324B4075DED17688123 /* PlaygroundController.swift */,
-				6BE114FF2DF8A6150024AC26 /* PlaygroundController+ApplePay.swift */,
-				575345B1A7F6EBD12A1A5F9C /* QRView.swift */,
-				53AAAA316E1DA1C44D30D7B0 /* SceneDelegate.swift */,
-				31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */,
-				5259232431E2683DDD05CB84 /* ViewController.swift */,
-				A00DB9892E132EAB00A75242 /* Appearance+Codable.swift */,
-			);
-			path = "PaymentSheet Example";
 			sourceTree = "<group>";
 		};
 		C9D5B927CC2F83061D0651E5 = {
@@ -547,6 +276,9 @@
 			dependencies = (
 				C3A27D557E4528B40083617F /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				31C5F7D82EB2AD9F005770FA /* PaymentSheetLocalizationScreenshotGenerator */,
+			);
 			name = PaymentSheetLocalizationScreenshotGenerator;
 			productName = PaymentSheetLocalizationScreenshotGenerator;
 			productReference = E8A5A0B5A4A1BF06663BE2BF /* PaymentSheetLocalizationScreenshotGenerator.xctest */;
@@ -565,6 +297,9 @@
 			);
 			dependencies = (
 				4E27102B097427E5F2F4ECCA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F7C22EB2AD9C005770FA /* PaymentSheetUITest */,
 			);
 			name = PaymentSheetUITest;
 			packageProductDependencies = (
@@ -586,6 +321,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F7832EB2AD98005770FA /* PaymentSheet Example */,
 			);
 			name = "PaymentSheet Example";
 			productName = PaymentSheetExample;
@@ -675,7 +413,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEC3BC636297A0D3E2DDF522 /* MockFiles in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,10 +420,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F005A0179023A25918D9014 /* Assets.xcassets in Resources */,
-				8A6DBB641294F9AE6A9C61B1 /* LaunchScreen.storyboard in Resources */,
-				31CDFC2C2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy in Resources */,
-				B36A24145C97D73C981DDBAC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -704,9 +437,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A262D76C3319002A2F6EE395 /* CustomerSheetTestPlaygroundSettings.swift in Sources */,
-				4E3F7EFF78BC4F14D18024E7 /* PaymentSheetLocalizationScreenshotGenerator.swift in Sources */,
-				7B89F83982B6D43C3B9E8AD5 /* PaymentSheetTestPlaygroundSettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -714,20 +444,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6DA0FEE2CC97F4900BF41B7 /* EmbeddedUITest.swift in Sources */,
-				5441EB34BBE32DD98B7A6883 /* CustomerSheetTestPlaygroundSettings.swift in Sources */,
-				E66F4E053FC6DD05EA245CDF /* CustomerSheetUITest.swift in Sources */,
-				B6CA975C2C486DE700DAE441 /* PaymentSheetLPMUITest.swift in Sources */,
-				B6D6AAA666859847BB59749C /* PaymentSheet+AddressTests.swift in Sources */,
-				B641A4192C2BA25D00AE654A /* PaymentSheetVerticalUITest.swift in Sources */,
-				5AF35F9FA7106ACD4E4F360F /* PaymentSheetBillingCollectionUITests.swift in Sources */,
-				2CD71F097C7CD0D9BFC7499D /* PaymentSheetTestPlaygroundSettings.swift in Sources */,
-				540F279CE5B41C122AD1DEF6 /* PaymentSheetUITest.swift in Sources */,
-				CB433B462D9715C70066DD18 /* LinkTestHelpers.swift in Sources */,
-				6A5CCDA42C0E6F5D003306A4 /* LinkPaymentControllerUITest.swift in Sources */,
-				6B03B12F2CDA890700F95A9D /* XCUITest+PaymentSheetTestUtilities.swift in Sources */,
-				4954E96F2D960E340061585F /* FCLiteUITests.swift in Sources */,
-				EE0FA73AAB80863583C69D70 /* XCUITest+Utilities.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,46 +451,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB1DCD930408180734A8D7CA /* AppDelegate.swift in Sources */,
-				6BC971122E125143008AA006 /* PaymentSheetExampleAppRootView.swift in Sources */,
-				B615E86F2CA4B267007D684C /* ExampleEmbeddedElementCheckoutViewController.swift in Sources */,
-				49ABCC732E2FFFCA00C3BBF4 /* ExampleLinkControllerView.swift in Sources */,
-				61B2532E2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift in Sources */,
-				6BFE613D2D407C420094DFE2 /* CustomerSessionPlaygroundView.swift in Sources */,
-				B62CAE812E4D15C200CB3A5F /* AppDelegate+BrokenConstraints.swift in Sources */,
-				4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */,
-				B661D3BA2E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift in Sources */,
-				CB6F8F872E04545D003551D5 /* ExampleLinkStandaloneComponent.swift in Sources */,
-				A3884C372DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift in Sources */,
-				DDF30DE9D7AA4BCC47CC12FB /* CustomerSheetTestPlayground.swift in Sources */,
-				8D9AAFD1D1D49112A7777414 /* CustomerSheetTestPlaygroundController.swift in Sources */,
-				CC9090D573972E8B14D204CB /* CustomerSheetTestPlaygroundSettings.swift in Sources */,
-				84CFB1ACA4915EE5B2E25341 /* EndpointSelectorViewController.swift in Sources */,
-				6BC971142E1263B0008AA006 /* StoryboardSceneView.swift in Sources */,
-				F998DD23CE1F49B63F5A5741 /* ExampleCheckoutDeferredViewController.swift in Sources */,
-				EB3C76C2A5704F94F0414BEF /* ExampleCheckoutViewController.swift in Sources */,
-				D235E82A7173E8051BC5A261 /* ExampleCustomCheckoutViewController.swift in Sources */,
-				3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */,
-				61FB6BC72C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift in Sources */,
-				56EF0879D7EAC041B147680C /* ExampleLinkPaymentCheckoutViewController.swift in Sources */,
-				A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */,
-				27233E85B0B6E1114E9AF6E8 /* ExampleSwiftUICustomerSheet.swift in Sources */,
-				432E82C3F5EC56E89D257563 /* ExampleSwiftUIPaymentSheet.swift in Sources */,
-				6BE115002DF8A6150024AC26 /* PlaygroundController+ApplePay.swift in Sources */,
-				A071C07B6FFACC5DEFC6AA01 /* ExampleSwiftUIViews.swift in Sources */,
-				17D626E890FD11B84654C846 /* PaymentSheetTestPlayground.swift in Sources */,
-				79E8C77C99A25E38F96747F1 /* PaymentSheetTestPlaygroundSettings.swift in Sources */,
-				61271F082E2167380016302B /* AddressElementExample.swift in Sources */,
-				2CB72F11E36DB65E8BA9205A /* PlaygroundController.swift in Sources */,
-				A00DB98A2E132EAB00A75242 /* Appearance+Codable.swift in Sources */,
-				6B1E84072DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift in Sources */,
-				31AB49B72C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift in Sources */,
-				973DA944730BD761CE479F8E /* QRView.swift in Sources */,
-				6BC971102E1250A7008AA006 /* PaymentSheetExampleApp.swift in Sources */,
-				A03BF5292DD292B700B5122B /* EmbeddedPaymentElementWrapperViewController.swift in Sources */,
-				E3D7A04974C35D2D8D31CDCD /* SceneDelegate.swift in Sources */,
-				6BCB57EA2D81FB15000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift in Sources */,
-				8F5C48FC825539B96F592315 /* ViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,105 +470,6 @@
 			targetProxy = 87E0693FE4D0931305C423C2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		7CDBD593EFEAD2EDA4D33D5D /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7CA29C6F89C759381CE11175 /* Base */,
-				B7C76D3D1BF7666D1963DD0B /* bg-BG */,
-				EE5651DA6F3AF63B4C51899B /* ca-ES */,
-				05B17CA60B66752AF6022CAE /* cs-CZ */,
-				6E4F3FA49534E745C5EDC1C0 /* da */,
-				A10F554509B65711F00BE91C /* de */,
-				830255F427E66F475B970A95 /* el-GR */,
-				4172744D71975647BB954766 /* en-GB */,
-				82FA4AD9771D68717C0E3B0D /* es */,
-				1E4CB6507CE9B078E4E42710 /* es-419 */,
-				E242726E633D2723048358BC /* et-EE */,
-				033F9384026ACB5CDD6E45CB /* fi */,
-				CAB1D321D0BDBF696CA90532 /* fil */,
-				8E99EA900EA73F2B87EC6916 /* fr */,
-				0B83BFBF1AF7550D4C3398F1 /* fr-CA */,
-				D86D7FBAA1A972C983129D2A /* hr */,
-				4AD9595F2BD9D48997A44309 /* hu */,
-				D09A0708A006CB661551A84B /* id */,
-				A430B6DF5233ACF15D47D507 /* it */,
-				09C26C1E7D82343EBF376E5F /* ja */,
-				6891CC1208EA3F4DE934760E /* ko */,
-				F933B0A684D1C36C46A65D6A /* lt-LT */,
-				A10301FB96F08B8ADF93B2DB /* lv-LV */,
-				8F10C2342DB4C0F20CEFE054 /* ms-MY */,
-				47F5ABF3CE2F657E0085EBB2 /* mt */,
-				8542B65BCF43F2EE1B606603 /* nb */,
-				42ABA03F697FDC1AEAA3C9FB /* nl */,
-				923D9CE10871FEA23359122F /* pl-PL */,
-				4546705B6D6BCA883F5532B8 /* pt-BR */,
-				EFD868533089E2ED82F82987 /* pt-PT */,
-				9D167C684F995306D0F33D17 /* ro-RO */,
-				F4D0043CB7BB72616C649C8A /* ru */,
-				986B03576192BCEE27ECA6FC /* sk-SK */,
-				8083C7DBDB2654A8123613C5 /* sl-SI */,
-				294C411B3283F79D018BD1C1 /* sv */,
-				2755F01760456EE134D307D8 /* tr */,
-				EA3C52A73DC5DC3179ACF945 /* vi */,
-				4A52C114362A90EF8A5BBA1A /* zh-Hans */,
-				9D47127A1AAC9FAC41819950 /* zh-Hant */,
-				B33D2066D7BA7984CABC23A5 /* zh-HK */,
-				1405897B2DC90B2C00DF2EAA /* th */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		F4B26C754925F8D2A5183B2E /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A462672B893EF4F811331B2F /* Base */,
-				A2FCA3AF75051639C445454E /* bg-BG */,
-				2BA4C0DB741C5D8C406F381E /* ca-ES */,
-				56446A16EB65FF744B625D22 /* cs-CZ */,
-				AA18950DA9394C1A3756B4F3 /* da */,
-				7A2F17F4DC178387659116DE /* de */,
-				9D6F8659F31E23DF549E5057 /* el-GR */,
-				E5F907A06297C3A243EB5AFE /* en-GB */,
-				22EC46843878DEC3467BAF29 /* es */,
-				34CCC286E48ADD9F586832D9 /* es-419 */,
-				C346E896A6816562AA3E5ADD /* et-EE */,
-				76C1CBA6B516B1DD96CB12EB /* fi */,
-				4EA8496FFF762D7F3B9B9F84 /* fil */,
-				4021CAA92058F4822D8584BD /* fr */,
-				C6A8906D5F5654EB11482363 /* fr-CA */,
-				C553C161A749EC29E462A4EE /* hr */,
-				C505106BB2A66528FF4083AA /* hu */,
-				07A77D160888D6D7830E9FC9 /* id */,
-				417C63E0DB7B5BA3F8691E67 /* it */,
-				BE9F3199D00539DE9EC4E69F /* ja */,
-				D6C4592568A595F601520B26 /* ko */,
-				C9391722F844F47DD6C44DC0 /* lt-LT */,
-				A1D77C5D868315EAB494325C /* lv-LV */,
-				D24AEAF534ACE4457E7B2D4A /* ms-MY */,
-				92136ABC8F4154790E9757D9 /* mt */,
-				FC7D694F73564D632588F417 /* nb */,
-				4135E39F036A7E3D61254A8C /* nl */,
-				9D55109311453F8D8F44A144 /* pl-PL */,
-				D1BC09347B9F3629671A1E9A /* pt-BR */,
-				CA7B4F3A0C373E78CF35D4A6 /* pt-PT */,
-				0B8BE18738723FE41AAD4FE1 /* ro-RO */,
-				701B8DEF9958B8EDB3C6E25B /* ru */,
-				AB52AEBB55BDC5F8F9C2880F /* sk-SK */,
-				971B2DDB4EB6E0D2B47B41B0 /* sl-SI */,
-				23F93C3E4B011AB469CD29D3 /* sv */,
-				31A510FDEA3F1AAED0507251 /* tr */,
-				E63A02BE64B4A0E9E592E08B /* vi */,
-				9B26EE02630FA57C9321F8C9 /* zh-Hans */,
-				5E4DD63AD5E9B8153E04EF7C /* zh-Hant */,
-				1BD9252F1B15953FED102F56 /* zh-HK */,
-				1405897C2DC90B2C00DF2EAA /* th */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		04B451E4262EF8B42D36A6AE /* Release */ = {

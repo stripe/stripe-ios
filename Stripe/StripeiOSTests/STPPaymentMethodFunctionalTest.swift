@@ -81,6 +81,60 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
+    func testCreateCardPaymentMethodAsync() async throws {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let card = STPPaymentMethodCardParams()
+        card.number = "4242424242424242"
+        card.expMonth = NSNumber(value: 10)
+        card.expYear = NSNumber(value: 2028)
+        card.cvc = "100"
+
+        let billingAddress = STPPaymentMethodAddress()
+        billingAddress.city = "San Francisco"
+        billingAddress.country = "US"
+        billingAddress.line1 = "150 Townsend St"
+        billingAddress.line2 = "4th Floor"
+        billingAddress.postalCode = "94103"
+        billingAddress.state = "CA"
+
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.address = billingAddress
+        billingDetails.email = "email@email.com"
+        billingDetails.name = "Isaac Asimov"
+        billingDetails.phone = "555-555-5555"
+
+        let params = STPPaymentMethodParams(
+            card: card,
+            billingDetails: billingDetails,
+            metadata: [
+                "test_key": "test_value",
+            ])
+        let paymentMethod = try await client.createPaymentMethod(with: params)
+        XCTAssertNotNil(paymentMethod.stripeId)
+        XCTAssertNotNil(paymentMethod.created)
+        XCTAssertFalse(paymentMethod.liveMode)
+        XCTAssertEqual(paymentMethod.type, .card)
+        XCTAssertEqual(paymentMethod.billingDetails!.email, "email@email.com")
+        XCTAssertEqual(paymentMethod.billingDetails!.name, "Isaac Asimov")
+        XCTAssertEqual(paymentMethod.billingDetails!.phone, "555-555-5555")
+        XCTAssertEqual(paymentMethod.billingDetails!.address!.line1, "150 Townsend St")
+        XCTAssertEqual(paymentMethod.billingDetails!.address!.line2, "4th Floor")
+        XCTAssertEqual(paymentMethod.billingDetails!.address!.city, "San Francisco")
+        XCTAssertEqual(paymentMethod.billingDetails!.address!.country, "US")
+        XCTAssertEqual(paymentMethod.billingDetails!.address!.state, "CA")
+        XCTAssertEqual(paymentMethod.billingDetails!.address!.postalCode, "94103")
+        XCTAssertEqual(paymentMethod.card!.brand, .visa)
+        XCTAssertEqual(paymentMethod.card!.checks!.cvcCheck, .unknown)
+        XCTAssertEqual(paymentMethod.card!.checks!.addressLine1Check, .unknown)
+        XCTAssertEqual(paymentMethod.card!.checks!.addressPostalCodeCheck, .unknown)
+        XCTAssertEqual(paymentMethod.card!.country, "US")
+        XCTAssertEqual(paymentMethod.card!.expMonth, 10)
+        XCTAssertEqual(paymentMethod.card!.expYear, 2028)
+        XCTAssertEqual(paymentMethod.card!.funding, "credit")
+        XCTAssertEqual(paymentMethod.card!.last4, "4242")
+        XCTAssertTrue(paymentMethod.card!.threeDSecureUsage!.supported)
+    }
+
     func testUpdateCardPaymentMethod() async throws {
          let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
 
@@ -145,8 +199,8 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         let elementSession = try await client.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
-                                    confirmHandler: { _, _, _ in
-                                        // no-op
+                                    confirmHandler: { _, _ in
+                                        return "" // not executed
                                     }),
             clientDefaultPaymentMethod: paymentMethod2.stripeId,
             configuration: configuration)
@@ -244,8 +298,8 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         let elementSession = try await client.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .payment(amount: 5000, currency: "eur", setupFutureUsage: .offSession, captureMethod: .automatic),
-                                    confirmHandler: { _, _, _ in
-                                        // no-op
+                                    confirmHandler: { _, _ in
+                                        return "" // not executed
                                     }),
             clientDefaultPaymentMethod: nil,
             configuration: configuration)

@@ -44,8 +44,12 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            try await withCheckedThrowingContinuation { continuation in
+                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
+                    continuation.resume(with: result)
+                }
+            }
         }
     }
 
