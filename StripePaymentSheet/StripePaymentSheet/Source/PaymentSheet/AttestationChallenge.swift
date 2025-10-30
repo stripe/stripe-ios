@@ -14,6 +14,7 @@ actor AttestationChallenge {
     }
 
     private let stripeAttest: StripeAttest
+    private let canSyncState: Bool
     private var assertionHandle: StripeAttest.AssertionHandle?
     private let attestationTask: Task<Void, Error>
     private var assertionTask: Task<StripeAttest.Assertion?, Never>?
@@ -24,8 +25,9 @@ actor AttestationChallenge {
         self.timeout = timeout
     }
 
-    public init(stripeAttest: StripeAttest) {
+    public init(stripeAttest: StripeAttest, canSyncState: Bool) {
         self.stripeAttest = stripeAttest
+        self.canSyncState = canSyncState
         STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepare()
         let startTime = Date()
         self.attestationTask = Task { // Intentionally not blocking loading/initialization!
@@ -61,7 +63,7 @@ actor AttestationChallenge {
             let startTime = Date()
             do {
                 assertionHandle = try await withTaskCancellationHandler {
-                    try await stripeAttest.assert(canSyncState: false)
+                    try await stripeAttest.assert(canSyncState: canSyncState)
                 } onCancel: {
                     Task {
                         await stripeAttest.cancel()

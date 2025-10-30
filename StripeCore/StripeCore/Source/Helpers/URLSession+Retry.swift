@@ -39,4 +39,35 @@ extension URLSession {
         }
         task.resume()
     }
+
+    /// Async/await version of stp_performDataTask with automatic retry logic.
+    /// This method supports Task cancellation - if the Task is cancelled, the network request will be cancelled.
+    @_spi(STP) public func stp_performDataTask(
+        with request: URLRequest,
+        retryCount: Int = StripeAPI.maxRetries
+    ) async throws -> (Data, URLResponse) {
+        let (data, response) = try await data(for: request)
+
+        // Check for 429 rate limit and retry if needed
+        if let httpResponse = response as? HTTPURLResponse,
+            httpResponse.statusCode == 429,
+            retryCount > 0
+        {
+            // Add some backoff time with a little bit of jitter:
+            let delayTime = TimeInterval(
+                pow(Double(1 + StripeAPI.maxRetries - retryCount), Double(2))
+                    + .random(in: 0..<0.5)
+            )
+
+            try await Task.sleep(nanoseconds: UInt64(delayTime * 1_000_000_000))
+
+            // Retry with decremented retry count
+            return try await stp_performDataTask(
+                with: request,
+                retryCount: retryCount - 1
+            )
+        }
+
+        return (data, response)
+    }
 }
