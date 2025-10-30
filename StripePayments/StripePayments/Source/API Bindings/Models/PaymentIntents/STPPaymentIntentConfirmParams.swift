@@ -1,5 +1,5 @@
 //
-//  STPPaymentIntentParams.swift
+//  STPPaymentIntentConfirmParams.swift
 //  StripePayments
 //
 //  Created by Daniel Jackson on 7/3/18.
@@ -16,9 +16,9 @@ import Foundation
 /// - a pre-existing PaymentMethod or Source can be associated by passing its id in the `paymentMethodId` or `sourceId` field
 /// - or already set via your backend, either when creating or updating the PaymentIntent
 /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
-public class STPPaymentIntentParams: NSObject {
+public class STPPaymentIntentConfirmParams: NSObject {
 
-    /// Initialize this `STPPaymentIntentParams` with a `clientSecret`, which is the only required
+    /// Initialize this `STPPaymentIntentConfirmParams` with a `clientSecret`, which is the only required
     /// field.
     /// - Parameter clientSecret: the client secret for this PaymentIntent
     @objc
@@ -29,7 +29,7 @@ public class STPPaymentIntentParams: NSObject {
         super.init()
     }
 
-    /// Initializes this `STPPaymentIntentParams` with a `clientSecret` and `paymentMethodType`.
+    /// Initializes this `STPPaymentIntentConfirmParams` with a `clientSecret` and `paymentMethodType`.
     /// Use this initializer for PaymentIntents that already have a PaymentMethod attached.
     /// - Parameter clientSecret: the client secret for this PaymentIntent
     /// - Parameter paymentMethodType: the known type of the PaymentIntent's attached PaymentMethod
@@ -182,7 +182,7 @@ public class STPPaymentIntentParams: NSObject {
     @objc public override var description: String {
         let props: [String] = [
             // Object
-            String(format: "%@: %p", NSStringFromClass(STPPaymentIntentParams.self), self),
+            String(format: "%@: %p", NSStringFromClass(STPPaymentIntentConfirmParams.self), self),
             // Identifier
             "stripeId = \(String(describing: stripeId))",
             // PaymentIntentParams details (alphabetical)
@@ -235,7 +235,7 @@ public class STPPaymentIntentParams: NSObject {
 }
 
 // MARK: - STPFormEncodable
-extension STPPaymentIntentParams: STPFormEncodable {
+extension STPPaymentIntentConfirmParams: STPFormEncodable {
 
     @objc internal var setupFutureUsageRawString: String? {
         return setupFutureUsage?.stringValue
@@ -271,12 +271,12 @@ extension STPPaymentIntentParams: STPFormEncodable {
 }
 
 // MARK: - NSCopying
-extension STPPaymentIntentParams: NSCopying {
+extension STPPaymentIntentConfirmParams: NSCopying {
 
     /// :nodoc:
     @objc
     public func copy(with zone: NSZone? = nil) -> Any {
-        let copy = STPPaymentIntentParams(clientSecret: clientSecret)
+        let copy = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
 
         copy.paymentMethodParams = paymentMethodParams
         copy._paymentMethodType = _paymentMethodType
@@ -313,3 +313,5 @@ extension STPPaymentIntentParams: NSCopying {
     }
 
 }
+
+public typealias STPPaymentIntentParams = STPPaymentIntentConfirmParams

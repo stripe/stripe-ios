@@ -75,7 +75,7 @@ extension AmazonPayExampleViewController {
                 }
 
                 // 2. Confirm the payment and redirect the user to Amazon Pay
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     amazonPay: STPPaymentMethodAmazonPayParams(),
                     billingDetails: nil,
