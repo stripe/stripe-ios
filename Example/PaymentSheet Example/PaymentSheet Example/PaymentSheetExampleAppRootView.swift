@@ -57,6 +57,7 @@ struct PaymentSheetExampleAppRootView: View {
 
         case paymentSheet_playground
         case customerSheet_playground
+        case pmme_playground
 
         static var destinationsBySection: [Section: [NavigationDestination]] {
             var result: [Section: [NavigationDestination]] = [:]
@@ -83,7 +84,8 @@ struct PaymentSheetExampleAppRootView: View {
                      .addressCollection_swiftUI:
                     result[.examples]?.append(destination)
                 case .paymentSheet_playground,
-                     .customerSheet_playground:
+                     .customerSheet_playground,
+                     .pmme_playground:
                     result[.testPlaygrounds]?.append(destination)
                 }
             }
@@ -126,6 +128,8 @@ struct PaymentSheetExampleAppRootView: View {
                 return "Customer Sheet (test playground)"
             case .paymentSheet_playground:
                 return "Payment Sheet (test playground)"
+            case .pmme_playground:
+                return "Payment Method Messaging Element (test playground)"
             }
         }
 
@@ -175,18 +179,15 @@ struct PaymentSheetExampleAppRootView: View {
         case .walletButtonsView_swiftUI:
             ExampleWalletButtonsContainerView()
         case .addressCollection_swiftUI:
-            if #available(iOS 15.0, *) {
-                AddressElementExampleView()
-            } else {
-                Text("Sorry, only available on >= iOS 15.0")
-                    .font(.title2)
-            }
+            AddressElementExampleView()
 
         // Playgrounds
         case .customerSheet_playground:
             CustomerSheetTestPlayground()
         case .paymentSheet_playground:
             PaymentSheetTestPlayground()
+        case .pmme_playground:
+            PMMETestPlayground()
         case .none:
             EmptyView()
         }
