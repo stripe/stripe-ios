@@ -65,8 +65,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var netBanking: STPPaymentMethodNetBankingParams?
     /// If this is an OXXO PaymentMethod, this contains additional details.
     @objc public var oxxo: STPPaymentMethodOXXOParams?
-    /// If this is a Sofort PaymentMethod, this contains additional details.
-    @objc public var sofort: STPPaymentMethodSofortParams?
     /// If this is a UPI PaymentMethod, this contains additional details.
     @objc public var upi: STPPaymentMethodUPIParams?
     /// If this is a GrabPay PaymentMethod, this contains additional details.
@@ -336,24 +334,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.type = .OXXO
         self.oxxo = oxxo
         self.billingDetails = billingDetails
-    }
-
-    /// Creates params for a Sofort PaymentMethod;
-    /// - Parameters:
-    ///   - sofort:   An object containing additional Sofort details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` and `billingDetails.email` are required to save bank details from a Sofort payment.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc
-    public convenience init(
-        sofort: STPPaymentMethodSofortParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .sofort
-        self.sofort = sofort
-        self.billingDetails = billingDetails
-        self.metadata = metadata
     }
 
     /// Creates params for a UPI PaymentMethod;
@@ -773,7 +753,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: bancontact)): "bancontact",
             NSStringFromSelector(#selector(getter: netBanking)): "netbanking",
             NSStringFromSelector(#selector(getter: oxxo)): "oxxo",
-            NSStringFromSelector(#selector(getter: sofort)): "sofort",
             NSStringFromSelector(#selector(getter: upi)): "upi",
             NSStringFromSelector(#selector(getter: afterpayClearpay)): "afterpayClearpay",
             NSStringFromSelector(#selector(getter: weChatPay)): "wechat_pay",
@@ -1017,24 +996,6 @@ extension STPPaymentMethodParams {
         )
     }
 
-    /// Creates params for a Sofort PaymentMethod;
-    /// - Parameters:
-    ///   - sofort:   An object containing additional Sofort details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` and `billingDetails.email` are required to save bank details from a Sofort payment.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc(paramsWithSofort:billingDetails:metadata:)
-    public class func paramsWith(
-        sofort: STPPaymentMethodSofortParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) -> STPPaymentMethodParams {
-        return STPPaymentMethodParams(
-            sofort: sofort,
-            billingDetails: billingDetails,
-            metadata: metadata
-        )
-    }
-
     /// Creates params for a UPI PaymentMethod;
     /// - Parameters:
     ///   - upi:   An object containing additional UPI details.
@@ -1210,8 +1171,6 @@ extension STPPaymentMethodParams {
             netBanking = STPPaymentMethodNetBankingParams()
         case .OXXO:
             oxxo = STPPaymentMethodOXXOParams()
-        case .sofort:
-            sofort = STPPaymentMethodSofortParams()
         case .UPI:
             upi = STPPaymentMethodUPIParams()
         case .payPal:

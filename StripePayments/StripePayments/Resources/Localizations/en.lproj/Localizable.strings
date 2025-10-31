@@ -68,9 +68,6 @@
 "SEPA Debit" = "SEPA Debit";
 
 /* Payment Method type brand name */
-"Sofort" = "Sofort";
-
-/* Payment Method type brand name */
 "Swish" = "Swish";
 
 /* Error when 3DS2 authentication timed out. */

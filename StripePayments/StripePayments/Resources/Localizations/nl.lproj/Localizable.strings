@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "SEPA-incasso";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Time-out bij authenticatie van de betaalmethode. Probeer het nogmaals";

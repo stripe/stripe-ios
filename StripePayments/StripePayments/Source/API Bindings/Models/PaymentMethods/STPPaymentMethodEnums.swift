@@ -39,8 +39,6 @@ import Foundation
     case netBanking
     /// An OXXO payment method.
     @objc(STPPaymentMethodTypeOXXO) case OXXO
-    /// A Sofort payment method.
-    case sofort
     /// A UPI payment method.
     case UPI
     /// A PayPal payment method. :nodoc:
@@ -126,8 +124,6 @@ import Foundation
             return STPLocalizedString("NetBanking", "Payment Method type brand name")
         case .OXXO:
             return STPLocalizedString("OXXO", "Payment Method type brand name")
-        case .sofort:
-            return STPLocalizedString("Sofort", "Payment Method type brand name")
         case .UPI:
             return STPLocalizedString("UPI", "Payment Method type brand name")
         case .payPal:
@@ -229,8 +225,6 @@ import Foundation
             return "netbanking"
         case .OXXO:
             return "oxxo"
-        case .sofort:
-            return "sofort"
         case .UPI:
             return "upi"
         case .payPal:

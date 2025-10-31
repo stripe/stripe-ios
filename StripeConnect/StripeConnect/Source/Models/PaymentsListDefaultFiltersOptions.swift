@@ -180,7 +180,6 @@ extension EmbeddedComponentManager {
             case samsungPay
             case sepaCreditTransfer
             case sepaDebit
-            case sofort
             case southKoreaMarket
             case swish
             case threeDSecure

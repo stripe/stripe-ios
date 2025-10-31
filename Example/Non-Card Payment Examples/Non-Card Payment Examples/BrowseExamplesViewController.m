@@ -19,7 +19,6 @@
 #import "Przelewy24ExampleViewController.h"
 #import "OXXOExampleViewController.h"
 #import "SEPADebitExampleViewController.h"
-#import "SofortExampleViewController.h"
 #import "EPSExampleViewController.h"
 #import "PayPalExampleViewController.h"
 
@@ -77,69 +76,66 @@
             cell.textLabel.text = @"EPS";
             break;
         case 9:
-            cell.textLabel.text = @"Sofort (PaymentMethods)";
-            break;
-        case 10:
             cell.textLabel.text = @"GrabPay";
             break;
-        case 11:
+        case 10:
             cell.textLabel.text = @"OXXO";
             break;
-        case 12:
+        case 11:
             cell.textLabel.text = @"Afterpay";
             break;
-        case 13:
+        case 12:
             cell.textLabel.text = @"Boleto";
             break;
-        case 14:
+        case 13:
             cell.textLabel.text = @"Klarna (PaymentMethods)";
             break;
-        case 15:
+        case 14:
             cell.textLabel.text = @"Affirm (PaymentMethods)";
             break;
-        case 16:
+        case 15:
             cell.textLabel.text = @"US Bank Account";
             break;
-        case 17:
+        case 16:
             cell.textLabel.text = @"US Bank Account w/ FinancialConnections";
             break;
-        case 18:
+        case 17:
             cell.textLabel.text = @"Cash App Pay";
             break;
-        case 19:
+        case 18:
             cell.textLabel.text = @"BLIK";
             break;
-        case 20:
+        case 19:
             cell.textLabel.text = @"PayPal";
             break;
-        case 21:
+        case 20:
             cell.textLabel.text = @"RevolutPay";
             break;
-        case 22:
+        case 21:
             cell.textLabel.text = @"Swish";
             break;
-        case 23:
+        case 22:
             cell.textLabel.text = @"Amazon Pay";
             break;
-        case 24:
+        case 23:
             cell.textLabel.text = @"Alma";
             break;
-        case 25:
+        case 24:
             cell.textLabel.text = @"Multibanco";
             break;
-        case 26:
+        case 25:
             cell.textLabel.text = @"MobilePay";
             break;
-        case 27:
+        case 26:
             cell.textLabel.text = @"Sunbit";
             break;
-        case 28:
+        case 27:
             cell.textLabel.text = @"Billie";
             break;
-        case 29:
+        case 28:
             cell.textLabel.text = @"Satispay";
             break;
-        case 30:
+        case 29:
             cell.textLabel.text = @"Crypto";
             break;
     }
@@ -211,132 +207,126 @@
             break;
         }
         case 9: {
-            SofortExampleViewController *exampleVC = [SofortExampleViewController new];
-            exampleVC.delegate = self;
-            viewController = exampleVC;
-            break;
-        }
-        case 10: {
             GrabPayExampleViewController *exampleVC = [GrabPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 11: {
+        case 10: {
             OXXOExampleViewController *exampleVC = [OXXOExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 12: {
+        case 11: {
             AfterpayClearpayExampleViewController *exampleVC = [AfterpayClearpayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 13: {
+        case 12: {
             BoletoExampleViewController *exampleVC = [BoletoExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 14: {
+        case 13: {
             KlarnaExampleViewController *exampleVC = [KlarnaExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 15: {
+        case 14: {
             AffirmExampleViewController *exampleVC = [AffirmExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 16: {
+        case 15: {
             USBankAccountExampleViewController *exampleVC = [USBankAccountExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 17: {
+        case 16: {
             USBankAccountFinancialConnectionsExampleViewController *exampleVC = [USBankAccountFinancialConnectionsExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 18: {
+        case 17: {
             CashAppExampleViewController *exampleVC = [CashAppExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 19: {
+        case 18: {
             BlikExampleViewController *exampleVC = [BlikExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 20: {
+        case 19: {
             PayPalExampleViewController *exampleVC = [PayPalExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 21: {
+        case 20: {
             RevolutPayExampleViewController *exampleVC = [RevolutPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 22: {
+        case 21: {
             SwishExampleViewController *exampleVC = [SwishExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 23: {
+        case 22: {
             AmazonPayExampleViewController *exampleVC = [AmazonPayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 24: {
+        case 23: {
             AlmaExampleViewController *exampleVC = [AlmaExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 25: {
+        case 24: {
             MultibancoExampleViewController *exampleVC = [MultibancoExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 26: {
+        case 25: {
             MobilePayExampleViewController *exampleVC = [MobilePayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 27: {
+        case 26: {
             SunbitExampleViewController *exampleVC = [SunbitExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 28: {
+        case 27: {
             BillieExampleViewController *exampleVC = [BillieExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 29: {
+        case 28: {
             SatispayExampleViewController *exampleVC = [SatispayExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
         }
-        case 30: {
+        case 29: {
             CryptoExampleViewController *exampleVC = [CryptoExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;

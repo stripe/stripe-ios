@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "การหักบัญชีอัตโนมัติแบบ SEPA";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "หมดเวลาตรวจสอบสิทธิ์วิธีการชำระเงินแล้ว โปรดลองอีกครั้ง";

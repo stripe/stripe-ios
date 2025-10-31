@@ -23,8 +23,7 @@ struct IntegrationView: View {
             AUBECSDebitView()
         case .sepaDebit:
             SEPADebitView()
-        case .sofort,
-             .iDEAL,
+        case .iDEAL,
              .alipay,
              .bacsDebit,
              .weChatPay,

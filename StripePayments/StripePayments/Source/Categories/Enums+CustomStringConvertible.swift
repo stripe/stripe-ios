@@ -459,8 +459,6 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "payPal"
         case .przelewy24:
             return "przelewy24"
-        case .sofort:
-            return "sofort"
         case .unknown:
             return "unknown"
         case .weChatPay:
