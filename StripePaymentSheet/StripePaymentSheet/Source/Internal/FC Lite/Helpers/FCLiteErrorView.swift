@@ -24,10 +24,7 @@ class ErrorView: UIView {
         backgroundColor = .white
 
         let errorLabel = UILabel()
-        let errorLabelText = STPLocalizedString(
-            "Failed to connect",
-            "Label shown when a network-related error has occured."
-        )
+        let errorLabelText = String.Localized.failed_to_connect
         errorLabel.text = errorLabelText
         errorLabel.textAlignment = .center
         errorLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)

@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ ei tällä hetkellä ole saatavilla";
+
+"%@ is undergoing maintenance" = "%@ on huollossa";
+
+"Account number is required." = "Tilinumero vaaditaan.";
+
+"Almost there" = "Melkein valmista";
+
+"Can't find your bank?" = "Etkö löydä pankkiasi?";
+
+"Checking and savings accounts are supported." = "Käyttö- tai säästötilejä tuetaan.";
+
+"Choose a different bank" = "Valitse toinen pankki";
+
+"Click “Resend code” and try again, or %@." = "Napsauta \"Lähetä koodi uudelleen\" tai yritä uudelleen tai %@.";
+
+"Confirm account number" = "Vahvista tilinumero";
+
+"Confirm the account number." = "Vahvista tilinumero.";
+
+"Connect account" = "Yhdistä tili";
+
+"Connect accounts" = "Yhdistä tilit";
+
+"Connect another account" = "Yhdistä toinen tili";
+
+"Continue linking your account" = "Jatka tilisi linkittämistä";
+
+"Continue with Link" = "Jatka Link-palvelulla";
+
+"Email address" = "Sähköpostiosoite";
+
+"Enter bank details" = "Anna pankkitiedot";
+
+"Enter bank details manually" = "Syötä pankkitiedot manuaalisesti";
+
+"Enter the code sent to %@" = "Syötä koodi, joka lähetettiin numeroon %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Syötä sähköpostiin %@ lähetetty koodi. Pyydämme tätä ylimääräistä vaihetta säännöllisesti pitääksemme tilisi turvassa.";
+
+"Exit without connecting?" = "Poistutaanko ilman yhdistämistä?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Hmm, kyseinen koodi ei toiminut. Tarkista se ja yritä uudelleen.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Virheellinen pankkitilin numero: täytyy olla enintään %li numeroa pitkä, saa sisältää vain numeroita.";
+
+"Invalid routing number." = "Virheellinen reititysnumero.";
+
+"It looks like the verification code you provided is not valid anymore." = "Näyttää siltä, että antamasi vahvistuskoodi ei enää kelpaa.";
+
+"Learn more" = "Lue lisää";
+
+"Maintenance is scheduled to end at %@." = "Huolto on ajoitettu päättyväksi %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Huolto on ajoitettu päättyväksi %1$@ %2$@.";
+
+"Manually enter details" = "Syötä tiedot manuaalisesti";
+
+"No payment accounts available" = "Maksutilejä ei ole saatavilla";
+
+"No results" = "Ei tuloksia";
+
+"Not now" = "Ei nyt";
+
+"Only checking accounts are supported." = "Vain käyttötilejä tuetaan.";
+
+"Please enter %d digits for your routing number." = "Syötä %li numeroa reititysnumerollesi.";
+
+"Please enter your bank details manually or select another bank." = "Anna pankkitiedot manuaalisesti tai valitse toinen pankki.";
+
+"Please select another bank or try again later." = "Valitse toinen pankki tai yritä myöhemmin uudelleen.";
+
+"Please select another bank or try again." = "Valitse toinen pankki tai yritä uudelleen.";
+
+"Please select another bank." = "Valitse toinen pankki.";
+
+"Please try selecting another bank account." = "Yritä valitsemalla toinen pankkitili.";
+
+"Please try selecting another bank." = "Yritä valitsemalla toinen pankki.";
+
+"Retrieving accounts..." = "Noudetaan tilejä...";
+
+"Routing number" = "Reititysnumero";
+
+"Routing number is required." = "Reititysnumero on pakollinen.";
+
+"Search for more banks" = "Etsi lisää pankkeja";
+
+"Select account" = "Valitse tili";
+
+"Select accounts" = "Valitse tilit";
+
+"Select another bank" = "Valitse toinen pankki";
+
 "Select bank" = "Valitse pankki";
+
+"Something went wrong" = "Jokin meni pieleen";
+
+"Submit" = "Lähetä";
+
+"Success" = "Onnistui";
+
+"The account you selected isn't available for payments" = "Valitsemasi tili ei ole saatavilla maksuille";
+
+"The accounts you selected aren't available for payments" = "Valitsemasi tilit eivät ole saatavilla maksuille";
+
+"There was a problem accessing your %@ account" = "Tilisi %@ käytössä ilmeni virhe";
+
+"Try again, or %@." = "Yritä uudelleen tai %@.";
+
+"Try searching another bank" = "Yritä hakea toista pankkia";
+
+"Try searching another bank or %@" = "Yritä hakea toista pankkia tai %@";
+
+"Use information you previously saved with your Link account." = "Käytä Link-tilille aiemmin tallennettuja tietoja.";
+
+"Use test account" = "Käytä testitiliä";
+
+"Use test code" = "Käytä testikoodia";
+
+"Verify your email" = "Vahvista sähköposti";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Löysimme %1$li %2$@ tiliä, mutta voit linkittää vain yhdysvaltalaisia käyttötilejä %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Löysimme %1$li %2$@ tiliä, mutta voit linkittää vain yhdysvaltalaisia käyttötilejä.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Löysimme %1$li %2$@ tiliä, mutta voit linkittää vain käyttö- tai säästötilejä %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Löysimme %1$li %2$@ tiliä, mutta voit linkittää vain käyttö- tai säästötilejä.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Löysimme 1 %1$@ tilin, mutta voit linkittää yhdysvaltalaisia käyttötilejä kohteeseen %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Löysimme 1 %@ tilin, mutta voit linkittää vain yhdysvaltalaisia sekkitilejä.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Löysimme 1 %1$@ tilin, mutta voit linkittää vain käyttö- tai säästötilejä kohteeseen %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Löysimme 1 %@ tilin, mutta voit linkittää vain käyttö- tai säästötilejä.";
+
+"Yes, exit" = "Kyllä, poistu";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Voit odottaa mikrotalletuksia tilillesi ••••%@ 1–2 päivän kuluessa ja sähköpostiviestin, joka sisältää tarkemmat ohjeet.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Et ole viimeistellyt tilisi linkittämistä. Viimeistele prosessi painamalla jatka.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Et ole viimeistellyt pankkitilisi linkittämistä ja kaikki edistyminen menetetään.";
+
+"You're in test mode." = "Olet testitilassa.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Tiliäsi ei voida yhdistää tällä kertaa. Anna pankkitiedot manuaalisesti tai yritä myöhemmin uudelleen.";
+
+"Your account can’t be connected at this time. Please try again later." = "Tiliäsi ei voida yhdistää nyt. Yritä myöhemmin uudelleen.";
+
+"Your account number couldn’t be accessed at this time" = "Tilinumeroasi ei voitu käsitellä juuri nyt";
+
+"Your account numbers don't match." = "Tilinumerot eivät täsmää.";
+
+"Your account was connected, but couldn't be saved to Link." = "Tilisi on yhdistetty, mutta sitä ei voitu tallentaa Link-palveluun.";
+
+"Your account was connected." = "Tilisi on yhdistetty.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Tilisi on yhdistetty, mutta niitä ei voitu tallentaa Link-palveluun.";
+
+"Your accounts were connected." = "Tilisi on yhdistetty.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Pankkitietosi vahvistetaan tilisi mikrotalletuksien avulla noin 1–2 arkipäivän kuluessa. Vain käyttötilejä tuetaan.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Pankkitietosi vahvistetaan tilisi mikrotalletuksien avulla. Siinä kestää noin 1–2 arkipäivää.";
+
+"Your email address is invalid." = "Sähköpostiosoitteesi on virheellinen.";
+
+"Your mobile phone number is incomplete." = "Puhelinnumerosi on puutteellinen.";
+
+"contact us" = "ota meihin yhteyttä";
+
+"manually enter details" = "syötä tiedot manuaalisesti";

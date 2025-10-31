@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ hiện không khả dụng";
+
+"%@ is undergoing maintenance" = "%@ đang trong quá trình bảo trì";
+
+"Account number is required." = "Số tài khoản là bắt buộc.";
+
+"Almost there" = "Sắp xong rồi";
+
+"Can't find your bank?" = "Không tìm thấy ngân hàng của bạn?";
+
+"Checking and savings accounts are supported." = "Hỗ trợ tài khoản vãng lai và tài khoản tiết kiệm.";
+
+"Choose a different bank" = "Chọn một ngân hàng khác";
+
+"Click “Resend code” and try again, or %@." = "Nhấp \"Gửi lại mãi\" và thử lại hoặc %@.";
+
+"Confirm account number" = "Xác nhận số tài khoản";
+
+"Confirm the account number." = "Xác nhận số tài khoản.";
+
+"Connect account" = "Kết nối tài khoản";
+
+"Connect accounts" = "Kết nối tài khoản";
+
+"Connect another account" = "Kết nối một tài khoản khác";
+
+"Continue linking your account" = "Tiếp tục liên kết tài khoản của bạn";
+
+"Continue with Link" = "Tiếp tục với Link";
+
+"Email address" = "Địa chỉ email";
+
+"Enter bank details" = "Nhập thông tin ngân hàng";
+
+"Enter bank details manually" = "Nhập thông tin ngân hàng theo cách thủ công";
+
+"Enter the code sent to %@" = "Nhập mã đã được gửi tới %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Nhập mã được gửi tới %@. Chúng tôi yêu cầu bước bổ sung này theo định kỳ để giữ an toàn cho tài khoản của bạn.";
+
+"Exit without connecting?" = "Thoát mà không kết nối?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Rất tiếc, mã đó không đúng. Hãy kiểm tra kỹ mã và thử lại.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Số tài khoản ngân hàng không hợp lệ: phải có tối đa %li chữ số và chỉ được có số.";
+
+"Invalid routing number." = "Số định tuyến không hợp lệ.";
+
+"It looks like the verification code you provided is not valid anymore." = "Có vẻ như mã xác minh quý vị đã cung cấp không còn hợp lệ nữa.";
+
+"Learn more" = "Tìm hiểu thêm";
+
+"Maintenance is scheduled to end at %@." = "Quá trình bảo trì dự kiến kết thúc vào %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Quá trình bảo trì dự kiến kết thúc vào %1$@ lúc %2$@.";
+
+"Manually enter details" = "Nhập thủ công thông tin chi tiết";
+
+"No payment accounts available" = "Không có tài khoản thanh toán khả dụng";
+
+"No results" = "Không có kết quả";
+
+"Not now" = "Không phải lúc này";
+
+"Only checking accounts are supported." = "Chỉ hỗ trợ tài khoản vãng lai.";
+
+"Please enter %d digits for your routing number." = "Vui lòng nhập %li chữ số của số định tuyến.";
+
+"Please enter your bank details manually or select another bank." = "Vui lòng nhập thông tin ngân hàng của bạn theo cách thủ công hoặc chọn một ngân hàng khác.";
+
+"Please select another bank or try again later." = "Vui lòng chọn một ngân hàng khác hoặc thử lại sau.";
+
+"Please select another bank or try again." = "Vui lòng chọn một ngân hàng khác hoặc thử lại.";
+
+"Please select another bank." = "Vui lòng chọn một ngân hàng khác.";
+
+"Please try selecting another bank account." = "Vui lòng thử chọn một tài khoản ngân hàng khác.";
+
+"Please try selecting another bank." = "Vui lòng thử chọn một ngân hàng khác.";
+
+"Retrieving accounts..." = "Đang truy xuất tài khoản...";
+
+"Routing number" = "Số định tuyến";
+
+"Routing number is required." = "Phải có số định tuyến.";
+
+"Search for more banks" = "Tìm kiếm ngân hàng khác";
+
+"Select account" = "Chọn tài khoản";
+
+"Select accounts" = "Chọn tài khoản";
+
+"Select another bank" = "Chọn ngân hàng khác";
+
 "Select bank" = "Chọn ngân hàng";
+
+"Something went wrong" = "Đã xảy ra sự cố";
+
+"Submit" = "Gửi";
+
+"Success" = "Thành công";
+
+"The account you selected isn't available for payments" = "Tài khoản bạn đã chọn không khả dụng để thanh toán";
+
+"The accounts you selected aren't available for payments" = "Tài khoản bạn đã chọn không khả dụng để thanh toán";
+
+"There was a problem accessing your %@ account" = "Đã xảy ra sự cố khi truy cập tài khoản %@";
+
+"Try again, or %@." = "Thử lại, hoặc %@.";
+
+"Try searching another bank" = "Thử tìm ngân hàng khác";
+
+"Try searching another bank or %@" = "Hãy thử tìm ngân hàng khác hoặc %@";
+
+"Use information you previously saved with your Link account." = "Sử dụng thông tin bạn đã lưu vào tài khoản Link trước đây.";
+
+"Use test account" = "Sử dụng tài khoản thử nghiệm";
+
+"Use test code" = "Sử dụng mã thử nghiệm";
+
+"Verify your email" = "Xác minh email của bạn";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Chúng tôi tìm thấy %1$li %2$@ tài khoản nhưng bạn chỉ có thể liên kết tài khoản vãng lai Hoa Kỳ với %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Chúng tôi tìm thấy %1$li %2$@ tài khoản nhưng bạn chỉ có thể liên kết tài khoản vãng lai Hoa Kỳ.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Chúng tôi tìm thấy %1$li %2$@ tài khoản nhưng bạn chỉ có thể liên kết tài khoản vãng lai hoặc tài khoản tiết kiệm với %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Chúng tôi tìm thấy %1$li %2$@ tài khoản nhưng bạn chỉ có thể liên kết tài khoản vãng lai hoặc tài khoản tiết kiệm.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Chúng tôi tìm thấy 1 tài khoản %1$@ nhưng bạn chỉ có thể liên kết tài khoản vãng lai Hoa Kỳ với %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Chúng tôi tìm thấy 1 tài khoản %@ nhưng bạn chỉ có thể liên kết các tài khoản vãng lai của Hoa Kỳ.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Chúng tôi tìm thấy 1 tài khoản %1$@ nhưng bạn chỉ có thể liên kết tài khoản vãng lai hoặc tài khoản tiết kiệm với %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Chúng tôi tìm thấy 1 tài khoản %@ nhưng bạn chỉ có thể liên kết tài khoản vãng lai hoặc tài khoản tiết kiệm.";
+
+"Yes, exit" = "Có, hãy thoát";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Trong 1-2 ngày tới, tài khoản ••••%@ có thể nhận các khoản tiền gửi siêu nhỏ và bạn sẽ nhận được email kèm theo hướng dẫn chi tiết.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Bạn chưa hoàn tất việc liên kết tài khoản. Nhấn tiếp tục để hoàn tất tiến trình.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Bạn chưa hoàn tất việc liên kết tài khoản ngân hàng và toàn bộ tiến trình sẽ bị mất.";
+
+"You're in test mode." = "Bạn đang ở chế độ thử nghiệm.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Không thể kết nối tài khoản của bạn tại thời điểm này. Vui lòng nhập thông tin ngân hàng của bạn theo cách thủ công hoặc thử lại sau.";
+
+"Your account can’t be connected at this time. Please try again later." = "Không thể kết nối tài khoản của bạn tại thời điểm này. Vui lòng thử lại sau.";
+
+"Your account number couldn’t be accessed at this time" = "Không thể truy cập số tài khoản của bạn tại thời điểm này";
+
+"Your account numbers don't match." = "Số tài khoản của bạn không khớp.";
+
+"Your account was connected, but couldn't be saved to Link." = "Tài khoản của bạn đã kết nối thành công, nhưng không thể lưu vào Link.";
+
+"Your account was connected." = "Tài khoản của bạn đã kết nối.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Tài khoản của bạn đã kết nối thành công, nhưng không thể lưu vào Link.";
+
+"Your accounts were connected." = "Tài khoản của bạn đã kết nối.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Thông tin ngân hàng sẽ được xác minh thông qua khoản tiền gửi siêu nhỏ vào tài khoản của bạn, thường diễn ra trong vòng 1-2 ngày làm việc. Chỉ hỗ trợ tài khoản vãng lai.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Thông tin tài khoản ngân hàng sẽ được xác minh thông qua các khoản tiền gửi siêu nhỏ vào tài khoản của bạn. Quá trình này thường mất từ 1-2 ngày làm việc.";
+
+"Your email address is invalid." = "Địa chỉ email của bạn không hợp lệ.";
+
+"Your mobile phone number is incomplete." = "Số điện thoại di động của bạn chưa đầy đủ.";
+
+"contact us" = "liên hệ với chúng tôi";
+
+"manually enter details" = "nhập thủ công thông tin chi tiết";

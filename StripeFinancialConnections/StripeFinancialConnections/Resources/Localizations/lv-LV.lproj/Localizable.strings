@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ šobrīd nav pieejams";
+
+"%@ is undergoing maintenance" = "%@ tiek veikta apkope";
+
+"Account number is required." = "Jānorāda konta numurs.";
+
+"Almost there" = "Gandrīz gatavs";
+
+"Can't find your bank?" = "Vai neizdodas atrast savu banku?";
+
+"Checking and savings accounts are supported." = "Tiek atbalstīti norēķinu un uzkrājumu konti.";
+
+"Choose a different bank" = "Izvēlieties citu banku";
+
+"Click “Resend code” and try again, or %@." = "Noklikšķiniet \"Nosūtīt kodu vēlreiz\" un mēģiniet vēlreiz vai %@.";
+
+"Confirm account number" = "Apstipriniet konta numuru";
+
+"Confirm the account number." = "Apstipriniet konta numuru.";
+
+"Connect account" = "Connect konts";
+
+"Connect accounts" = "Savienot kontus";
+
+"Connect another account" = "Savienojiet citu kontu";
+
+"Continue linking your account" = "Turpināt sasaistīt savu kontu";
+
+"Continue with Link" = "Turpināt ar Link";
+
+"Email address" = "E-pasta adrese";
+
+"Enter bank details" = "Ievadiet bankas informāciju";
+
+"Enter bank details manually" = "Manuāli ievadīt bankas rekvizītus";
+
+"Enter the code sent to %@" = "Ievadiet kodu, kas nosūtīts uz %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Ievadiet uz %@ nosūtīto kodu. Mēs periodiski pieprasām šo papildu darbību, lai pasargātu jūsu kontu.";
+
+"Exit without connecting?" = "Iziet bez savienošanas?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Šis kods nav derīgs. Vēlreiz pārbaudiet to un mēģiniet vēlreiz.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Nederīgs bankas konta numurs: jābūt līdz %li cipariem garam, saturot tikai skaitļus.";
+
+"Invalid routing number." = "Nederīgs bankas kods.";
+
+"It looks like the verification code you provided is not valid anymore." = "Izskatās, ka jūsu norādītais pārbaudes kods vairs nav derīgs.";
+
+"Learn more" = "Uzziniet vairāk";
+
+"Maintenance is scheduled to end at %@." = "Apkopes beigas ir paredzētas %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Apkopes beigas ir paredzētas %1$@ plkst. %2$@.";
+
+"Manually enter details" = "Manuāli ievadiet informāciju";
+
+"No payment accounts available" = "Maksājuma konti nav pieejami";
+
+"No results" = "Nav rezultātu";
+
+"Not now" = "Ne tagad";
+
+"Only checking accounts are supported." = "Tiek atbalstīti tikai norēķinu konti.";
+
+"Please enter %d digits for your routing number." = "Lūdzu, ievadiet %li ciparus jūsu bankas kodam.";
+
+"Please enter your bank details manually or select another bank." = "Ievadiet jūsu bankas informāciju manuāli vai atlasiet citu banku.";
+
+"Please select another bank or try again later." = "Atlasiet citu banku vai mēģiniet vēlreiz vēlāk.";
+
+"Please select another bank or try again." = "Atlasiet citu banku vai mēģiniet vēlreiz.";
+
+"Please select another bank." = "Atlasiet citu banku.";
+
+"Please try selecting another bank account." = "Mēģiniet atlasīt citu bankas kontu.";
+
+"Please try selecting another bank." = "Mēģiniet atlasīt citu banku.";
+
+"Retrieving accounts..." = "Izgūst kontus...";
+
+"Routing number" = "Bankas kods";
+
+"Routing number is required." = "Nepieciešams bankas kods.";
+
+"Search for more banks" = "Meklēt vairāk banku";
+
+"Select account" = "Atlasīt kontu";
+
+"Select accounts" = "Atlasīt kontus";
+
+"Select another bank" = "Atlasīt citu banku";
+
 "Select bank" = "Atlasīt banku";
+
+"Something went wrong" = "Radusies kļūda";
+
+"Submit" = "Iesniegt";
+
+"Success" = "Sekmīgi";
+
+"The account you selected isn't available for payments" = "Jūsu atlasītais konts maksājumiem nav pieejams";
+
+"The accounts you selected aren't available for payments" = "Jūsu atlasītie konti maksājumiem nav pieejami";
+
+"There was a problem accessing your %@ account" = "Piekļūstot jūsu %@ kontam, radās problēma";
+
+"Try again, or %@." = "Mēģiniet vēlreiz vai %@.";
+
+"Try searching another bank" = "Mēģiniet sameklēt citu banku";
+
+"Try searching another bank or %@" = "Mēģiniet sameklēt citu banku vai %@";
+
+"Use information you previously saved with your Link account." = "Izmantojiet iepriekš Link kontā saglabāto informāciju.";
+
+"Use test account" = "Izmantojiet testa kontu";
+
+"Use test code" = "Izmantojiet testa kodu";
+
+"Verify your email" = "Pārbaudīt savu e-pastu";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Mēs atradām %1$li %2$@ kontus, bet ar %3$@ var saistīt tikai ASV norēķinu kontus.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Mēs atradām %1$li %2$@ kontus, bet saistīt var tikai ASV norēķinu kontus.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Mēs atradām %1$li %2$@ kontus, bet ar %3$@ var saistīt tikai norēķinu vai krājkontus.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Mēs atradām %1$li %2$@ kontus, bet jūs varat piesaistīt tikai norēķinu vai krājkontus.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Mēs atradām 1 %1$@ kontu, bet ar %2$@ var saistīt tikai ASV norēķinu kontus.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Mēs atradām 1 %@ kontu, bet jūs varat saistīt tikai ASV norēķinu kontus.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Mēs atradām 1 %1$@ kontu, bet ar %2$@ var saistīt tikai norēķinu vai krājkontus.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Mēs atradām 1 %@ kontu, bet jūs varat saistīt tikai norēķinu vai krājkontus.";
+
+"Yes, exit" = "Jā, iziet";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Varat sagaidīt mikrodepozītus savā kontā, kas beidzas ar ••••%@ pēc 1–2 dienām, un e-pastu ar turpmākiem norādījumiem.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Jūs neesat pabeidzis piesaistīt savu kontu. Lūdzu, turpiniet, lai pabeigtu procesu.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Jūs neesat pabeidzis piesaistīt savu bankas kontu un viss progress tiks pazaudēts.";
+
+"You're in test mode." = "Esat testa režīmā.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Jūsu kontu šoreiz nevar savienot. Lūdzu, ievadiet savu bankas informāciju manuāli vai mēģiniet vēlreiz vēlāk.";
+
+"Your account can’t be connected at this time. Please try again later." = "Jūsu kontu šoreiz nevar savienot. Lūdzu mēģiniet vēlāk vēlreiz.";
+
+"Your account number couldn’t be accessed at this time" = "Jūsu konta numuram šoreiz nevar piekļūt";
+
+"Your account numbers don't match." = "Jūsu konta numuri nesakrīt.";
+
+"Your account was connected, but couldn't be saved to Link." = "Jūsu konts tika savienots, bet tos nevarēja saglabāt Link.";
+
+"Your account was connected." = "Jūsu konts tika savienots.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Jūsu konti tika savienoti, bet tos nevarēja saglabāt Link.";
+
+"Your accounts were connected." = "Jūsu konti tika savienoti.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Jūsu bankas informācija tiks verificēta ar mikrodepozītiem jūsu kontā, parasti 1–2 darba dienu laikā. Tiek atbalstīti tikai norēķinu konti.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Jūsu bankas informācija tiks verificēta ar mikrodepozītiem jūsu kontā. Tas parasti aizņem 1–2 darba dienas.";
+
+"Your email address is invalid." = "E-pasta adrese nav derīga.";
+
+"Your mobile phone number is incomplete." = "Jūsu mobilā tālruņa numurs nav pilnīgs.";
+
+"contact us" = "sazinieties ar mums";
+
+"manually enter details" = "manuāli ievadiet informāciju";

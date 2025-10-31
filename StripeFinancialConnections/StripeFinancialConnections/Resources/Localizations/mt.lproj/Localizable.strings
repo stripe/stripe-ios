@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "Bħalissa ma tistax tuża %@";
+
+"%@ is undergoing maintenance" = "Qed isir xogħol ta' żamma fuq %@";
+
+"Account number is required." = "In-numru tal-kont huwa meħtieġ.";
+
+"Almost there" = "Kważi lest";
+
+"Can't find your bank?" = "Ma tistax issib il-bank tiegħek?";
+
+"Checking and savings accounts are supported." = "Tista' tuża kontijiet kurrenti u tat-tfaddil.";
+
+"Choose a different bank" = "Agħżel bank ieħor";
+
+"Click “Resend code” and try again, or %@." = "Agħfas fuq \"Ibgħatuli l-kodiċi mill-ġdid\" u erġa' pprova jew %@.";
+
+"Confirm account number" = "Ikkonferma n-numru tal-kont";
+
+"Confirm the account number." = "Ikkonferma n-numru tal-kont.";
+
+"Connect account" = "Qabbad il-kont";
+
+"Connect accounts" = "Qabbad il-kontijiet";
+
+"Connect another account" = "Qabbad kont ieħor";
+
+"Continue linking your account" = "Kompli orbot il-kont tiegħek";
+
+"Continue with Link" = "Kompli b'Link";
+
+"Email address" = "L-indirizz tal-email";
+
+"Enter bank details" = "Daħħal id-dettalji tal-bank";
+
+"Enter bank details manually" = "Daħħal id-dettalji tal-bank int stess";
+
+"Enter the code sent to %@" = "Daħħal il-kodiċi li bgħatna lil %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Daħħal il-kodiċi li bgħatna lil %@. Kull tant żmien nitolbuk tagħmel dal-pass miżjud biex il-kont tiegħek jinżamm sigur.";
+
+"Exit without connecting?" = "Tixtieq toħroġ mingħajr ma taqbad?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Mmm, dak il-kodiċi mhux tajjeb. Iċċekkjah sew u erġa' pprova.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "In-numru tal-kont tal-bank mhux tajjeb: ma jistax ikun itwal minn dal-għadd ta' ċifri: %li u jeħtieġ li jkun magħmul min-numri biss.";
+
+"Invalid routing number." = "In-numru tar-routing mhux tajjeb.";
+
+"It looks like the verification code you provided is not valid anymore." = "Milli jidher il-kodiċi tal-verifika li tajtna m'għadux tajjeb.";
+
+"Learn more" = "Sir af iktar";
+
+"Maintenance is scheduled to end at %@." = "Ix-xogħol ta' żamma mistenni jintemm f'dal-ħin: %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Ix-xogħol ta' żamma mistenni jintemm f'did-data: %1$@ f'dal-ħin: %2$@.";
+
+"Manually enter details" = "Daħħal id-dettalji int stess";
+
+"No payment accounts available" = "L-ebda kont tal-pagament disponibbli";
+
+"No results" = "L-ebda riżultat";
+
+"Not now" = "Mhux issa";
+
+"Only checking accounts are supported." = "Tista' tuża biss kontijiet kurrenti.";
+
+"Please enter %d digits for your routing number." = "Jekk jogħġbok daħħal dal-għadd ta' ċifri: %li għan-numru tar-routing tiegħek.";
+
+"Please enter your bank details manually or select another bank." = "Jekk jogħġbok daħħal id-dettalji tal-bank tiegħek int stess jew agħżel bank ieħor.";
+
+"Please select another bank or try again later." = "Jekk jogħġbok agħżel bank ieħor jew erġa' pprova iktar tard.";
+
+"Please select another bank or try again." = "Jekk jogħġbok agħżel bank ieħor jew erġa' pprova.";
+
+"Please select another bank." = "Jekk jogħġbok agħżel bank ieħor.";
+
+"Please try selecting another bank account." = "Jekk jogħġbok ipprova agħżel kont tal-bank ieħor.";
+
+"Please try selecting another bank." = "Jekk jogħġbok ipprova agħżel bank ieħor.";
+
+"Retrieving accounts..." = "Qed niksbu l-kontijiet...";
+
+"Routing number" = "In-numru tar-routing";
+
+"Routing number is required." = "Neħtieġu n-numru tar-routing.";
+
+"Search for more banks" = "Fittex iktar banek";
+
+"Select account" = "Agħżel il-kont";
+
+"Select accounts" = "Agħżel il-kontijiet";
+
+"Select another bank" = "Agħżel bank ieħor";
+
 "Select bank" = "Agħżel bank";
+
+"Something went wrong" = "Xi ħaġa marret ħażin";
+
+"Submit" = "Ibgħat";
+
+"Success" = "Irnexxa";
+
+"The account you selected isn't available for payments" = "Il-kont li għażilt ma jistax jintuża għall-pagamenti";
+
+"The accounts you selected aren't available for payments" = "Il-kontijiet li għażilt ma jistgħux jintużaw għall-pagamenti";
+
+"There was a problem accessing your %@ account" = "Kien hemm problema biex intellgħu l-kont ta' %@ tiegħek";
+
+"Try again, or %@." = "Erġa' pprova jew %@.";
+
+"Try searching another bank" = "Ipprova fittex bank ieħor";
+
+"Try searching another bank or %@" = "Ipprova fittex bank ieħor jew %@.";
+
+"Use information you previously saved with your Link account." = "Uża l-informazzjoni li erfajt qabel fil-kont Link tiegħek.";
+
+"Use test account" = "Uża l-kont ta' prova";
+
+"Use test code" = "Uża l-kodiċi ta' prova";
+
+"Verify your email" = "Ivverifika l-indirizz tal-email tiegħek";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Sibna kontijiet ta’ %1$li %2$@ imma tista’ torbot biss kontijiet checking tal-Istati Uniti ma’ %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Sibna kontijiet ta’ %1$li %2$@ imma tista’ torbot biss kontijiet checking tal-Istati Uniti.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Sibna kontijiet ta’ %1$li %2$@ imma tista’ torbot biss kontijiet checking jew tat-tfaddil ma’ %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Sibna kontijiet ta’ %1$li %2$@ imma tista’ torbot biss kontijiet checking jew tat-tfaddil.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Sibna kont wieħed ta’ %1$@ imma tista’ torbot biss kontijiet checking tal-Istati Uniti ma’ %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Sibna kont wieħed ta’ %@ imma tista’ torbot biss kontijiet checking tal-Istati Uniti.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Sibna kont wieħed ta’ %@ imma tista’ torbot biss kontijiet checking jew tat-tfaddil ma’ %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Sibna kont wieħed ta’ %@ imma tista’ torbot biss kontijiet checking jew tat-tfaddil.";
+
+"Yes, exit" = "Iva, oħroġ";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Għandek tistenna li l-mikrodepożiti jaslulek fi żmien jum jew jumejn fil-kont li jispiċċa ••••%@ flimkien ma' email b'iktar istruzzjonijiet.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Għadek ma lestejtx ir-rabta tal-kont tiegħek. Jekk jogħġbok kompli biex tlesti l-proċess.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Għadek ma lestejtx ir-rabta tal-kont tal-bank tiegħek u dak kollu li għamilt mhux se jintrefa'.";
+
+"You're in test mode." = "Qed tuża l-modalità ta' prova.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Għalissa ma nistgħux norbtu l-kont tal-bank tiegħek. Jekk jogħġbok daħħal id-dettalji tal-bank tiegħek int stess jew erġa' pprova iktar tard.";
+
+"Your account can’t be connected at this time. Please try again later." = "Għalissa ma nistgħux norbtu l-kont tal-bank tiegħek. Jekk jogħġbok erġa' pprova iktar tard.";
+
+"Your account number couldn’t be accessed at this time" = "Did-darba ma stajniex intellgħu n-numru tal-kont tiegħek";
+
+"Your account numbers don't match." = "In-numri tal-kontijiet tiegħek ma jaqblux.";
+
+"Your account was connected, but couldn't be saved to Link." = "Il-kont tiegħek intrabat, imma ma stajniex nerfgħuh ma' Link.";
+
+"Your account was connected." = "Il-kont tiegħek intrabat.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Il-kontijiet tiegħek intrabtu, imma ma stajniex nerfgħuhom ma' Link.";
+
+"Your accounts were connected." = "Il-kontijiet tiegħek intrabtu.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Se nivverifikaw l-informazzjoni tal-bank tiegħek bil-mikrodepożiti fil-kont tiegħek, ħafna drabi fi żmien jum sa jumejn tax-xogħol. Tista' tuża biss il-kontijiet kurrenti.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Se nivverifikaw l-informazzjoni tal-bank tiegħek bil-mikrodepożiti fil-kont tiegħek. Ħafna drabi dal-proċess jieħu bejn jum u jumejn tax-xogħol.";
+
+"Your email address is invalid." = "L-indirizz tal-email tiegħek mhux tajjeb.";
+
+"Your mobile phone number is incomplete." = "In-numru tal-mowbajl tiegħek mhux sħiħ.";
+
+"contact us" = "ikkuntattjana";
+
+"manually enter details" = "daħħal id-dettalji int stess";

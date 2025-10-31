@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ is currently unavailable";
+
+"%@ is undergoing maintenance" = "%@ is undergoing maintenance";
+
+"Account number is required." = "Account number is required.";
+
+"Almost there" = "Almost there";
+
+"Can't find your bank?" = "Can't find your bank?";
+
+"Checking and savings accounts are supported." = "Checking and savings accounts are supported.";
+
+"Choose a different bank" = "Choose a different bank";
+
+"Click “Resend code” and try again, or %@." = "Click “Resend code” and try again, or %@.";
+
+"Confirm account number" = "Confirm account number";
+
+"Confirm the account number." = "Confirm the account number.";
+
+"Connect account" = "Connect account";
+
+"Connect accounts" = "Connect accounts";
+
+"Connect another account" = "Connect another account";
+
+"Continue linking your account" = "Continue linking your account";
+
+"Continue with Link" = "Continue with Link";
+
+"Email address" = "Email address";
+
+"Enter bank details" = "Enter bank details";
+
+"Enter bank details manually" = "Enter bank details manually";
+
+"Enter the code sent to %@" = "Enter the code sent to %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Enter the code sent to %@. We periodically request this extra step to keep your account safe.";
+
+"Exit without connecting?" = "Exit without connecting?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Hmm, that code didn’t work. Double check it and try again.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Invalid bank account number: must be at most %li digits long, containing only numbers.";
+
+"Invalid routing number." = "Invalid routing number.";
+
+"It looks like the verification code you provided is not valid anymore." = "It looks like the verification code you provided is no longer valid.";
+
+"Learn more" = "Learn more";
+
+"Maintenance is scheduled to end at %@." = "Maintenance is scheduled to end at %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Maintenance is scheduled to end on %1$@ at %2$@.";
+
+"Manually enter details" = "Manually enter details";
+
+"No payment accounts available" = "No payment accounts available";
+
+"No results" = "No results";
+
+"Not now" = "Not now";
+
+"Only checking accounts are supported." = "Only checking accounts are supported.";
+
+"Please enter %d digits for your routing number." = "Please enter %li digits for your routing number.";
+
+"Please enter your bank details manually or select another bank." = "Please enter your bank details manually or select another bank.";
+
+"Please select another bank or try again later." = "Please select another bank or try again later.";
+
+"Please select another bank or try again." = "Please select another bank or try again.";
+
+"Please select another bank." = "Please select another bank.";
+
+"Please try selecting another bank account." = "Please try selecting another bank account.";
+
+"Please try selecting another bank." = "Please try selecting another bank.";
+
+"Retrieving accounts..." = "Retrieving accounts...";
+
+"Routing number" = "Routing number";
+
+"Routing number is required." = "Routing number is required.";
+
+"Search for more banks" = "Search for more banks";
+
+"Select account" = "Select account";
+
+"Select accounts" = "Select accounts";
+
+"Select another bank" = "Select another bank";
+
 "Select bank" = "Select bank";
+
+"Something went wrong" = "Something went wrong";
+
+"Submit" = "Submit";
+
+"Success" = "Success";
+
+"The account you selected isn't available for payments" = "The account you selected isn't available for payments";
+
+"The accounts you selected aren't available for payments" = "The accounts you selected aren't available for payments";
+
+"There was a problem accessing your %@ account" = "There was a problem accessing your %@ account";
+
+"Try again, or %@." = "Try again, or %@.";
+
+"Try searching another bank" = "Try searching another bank";
+
+"Try searching another bank or %@" = "Try searching another bank or %@";
+
+"Use information you previously saved with your Link account." = "Use information you previously saved with your Link account.";
+
+"Use test account" = "Use test account";
+
+"Use test code" = "Use test code";
+
+"Verify your email" = "Verify your email address";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "We found %1$li %2$@ accounts but you can only link US checking accounts to %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "We found %1$li %2$@ accounts but you can only link US checking accounts.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "We found %1$li %2$@ accounts but you can only link checking or savings accounts to %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "We found %1$li %2$@ accounts but you can only link checking or savings accounts.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "We found 1 %1$@ account but you can only link US checking accounts to %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "We found 1 %@ account but you can only link US checking accounts.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "We found 1 %1$@ account but you can only link checking or savings accounts to %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "We found 1 %@ account but you can only link checking or savings accounts.";
+
+"Yes, exit" = "Yes, exit";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "You haven't finished linking your account. Press continue to finish the process.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "You haven't finished linking your bank account and all progress will be lost.";
+
+"You're in test mode." = "You're in test mode.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Your account can’t be connected at the moment. Please enter your bank details manually or try again later.";
+
+"Your account can’t be connected at this time. Please try again later." = "Your account can’t be connected at the moment. Please try again later.";
+
+"Your account number couldn’t be accessed at this time" = "Your account number can’t be accessed at the moment";
+
+"Your account numbers don't match." = "Your account numbers don't match.";
+
+"Your account was connected, but couldn't be saved to Link." = "Your account was connected, but couldn't be saved to Link.";
+
+"Your account was connected." = "Your account was connected.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Your accounts were connected, but couldn't be saved to Link.";
+
+"Your accounts were connected." = "Your accounts were connected.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Your bank information will be verified via micro-deposits to your account, normally within 1-2 business days. Only checking accounts are supported.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Your bank information will be verified with micro-deposits to your account. This normally takes 1-2 business days.";
+
+"Your email address is invalid." = "Your email address is invalid.";
+
+"Your mobile phone number is incomplete." = "Your mobile phone number is incomplete.";
+
+"contact us" = "contact us";
+
+"manually enter details" = "manually enter details";
