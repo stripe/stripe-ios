@@ -15,7 +15,6 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Changed] Replaces `PaymentSheet.ApplePayConfiguration.Handlers` completion-block based `authorizationResultHandler` with an async equivalent.
 * [Changed] ConfirmationTokens is now generally available.
 * [Removed] Removed `PaymentSheet.reset()` in favor of `PaymentSheet.resetCustomer()`.
-* [Removed] Removed deprecated Giropay bindings.
 
 ### Financial Connections
 * [Added] Added an async versions of `present(from:)` and `presentForToken(from:)`.
@@ -38,3 +37,4 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Removed] Removed deprecated `STPPaymentIntentParams.saveSourceToCustomer` property. Use `savePaymentMethod` instead.
 * [Removed] Removed `singleUsePaymentMethod` STPPaymentMethodParams initializer.
 * [Removed] Removed STPPaymentMethod `metadata`.
+* [Removed] Removed deprecated Giropay bindings.
