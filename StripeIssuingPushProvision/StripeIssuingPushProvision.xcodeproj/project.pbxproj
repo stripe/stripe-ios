@@ -18,8 +18,6 @@
 		3D136BE92EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDB2EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig */; };
 		3D136BEA2EB4494900186DA1 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BE02EB4494900186DA1 /* Version.xcconfig */; };
 		3D136BEB2EB4494900186DA1 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BD92EB4494900186DA1 /* Project-Shared.xcconfig */; };
-		3D136BEC2EB4494900186DA1 /* StripeIssuingPushProvision.docc in Sources */ = {isa = PBXBuildFile; fileRef = 3D136BD42EB4494900186DA1 /* StripeIssuingPushProvision.docc */; };
-		3D136BED2EB4494900186DA1 /* StripeIssuingPushProvision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D136BD52EB4494900186DA1 /* StripeIssuingPushProvision.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,8 +33,6 @@
 /* Begin PBXFileReference section */
 		3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIssuingPushProvision.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D136BC52EB4493500186DA1 /* StripeIssuingPushProvisionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeIssuingPushProvisionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D136BD42EB4494900186DA1 /* StripeIssuingPushProvision.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = StripeIssuingPushProvision.docc; sourceTree = "<group>"; };
-		3D136BD52EB4494900186DA1 /* StripeIssuingPushProvision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeIssuingPushProvision.swift; sourceTree = "<group>"; };
 		3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		3D136BD82EB4494900186DA1 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		3D136BD92EB4494900186DA1 /* Project-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Shared.xcconfig"; sourceTree = "<group>"; };
@@ -49,9 +45,22 @@
 		3D136BE02EB4494900186DA1 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3DE353CD2EB55D880080A34A /* Exceptions for "StripeIssuingPushProvision" folder in "StripeIssuingPushProvision" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3D136BBC2EB4493500186DA1 /* StripeIssuingPushProvision */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3DE353CD2EB55D880080A34A /* Exceptions for "StripeIssuingPushProvision" folder in "StripeIssuingPushProvision" target */,
+			);
 			path = StripeIssuingPushProvision;
 			sourceTree = "<group>";
 		};
@@ -100,19 +109,9 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3D136BD62EB4494900186DA1 /* StripeIssuingPushProvision */ = {
-			isa = PBXGroup;
-			children = (
-				3D136BD42EB4494900186DA1 /* StripeIssuingPushProvision.docc */,
-				3D136BD52EB4494900186DA1 /* StripeIssuingPushProvision.swift */,
-			);
-			path = StripeIssuingPushProvision;
-			sourceTree = "<group>";
-		};
 		3D136BE12EB4494900186DA1 /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				3D136BD62EB4494900186DA1 /* StripeIssuingPushProvision */,
 				3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */,
 				3D136BD82EB4494900186DA1 /* Project-Release.xcconfig */,
 				3D136BD92EB4494900186DA1 /* Project-Shared.xcconfig */,
@@ -257,8 +256,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D136BEC2EB4494900186DA1 /* StripeIssuingPushProvision.docc in Sources */,
-				3D136BED2EB4494900186DA1 /* StripeIssuingPushProvision.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
