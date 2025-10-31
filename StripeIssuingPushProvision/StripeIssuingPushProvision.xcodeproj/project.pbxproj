@@ -46,10 +46,10 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3DE353CD2EB55D880080A34A /* Exceptions for "StripeIssuingPushProvision" folder in "StripeIssuingPushProvision" target */ = {
+		3D8CA9FA2EB5733B001E9D0F /* Exceptions for "StripeIssuingPushProvision" folder in "StripeIssuingPushProvision" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
+			publicHeaders = (
+				StripeIssuingPushProvision.h,
 			);
 			target = 3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */;
 		};
@@ -59,7 +59,7 @@
 		3D136BBC2EB4493500186DA1 /* StripeIssuingPushProvision */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3DE353CD2EB55D880080A34A /* Exceptions for "StripeIssuingPushProvision" folder in "StripeIssuingPushProvision" target */,
+				3D8CA9FA2EB5733B001E9D0F /* Exceptions for "StripeIssuingPushProvision" folder in "StripeIssuingPushProvision" target */,
 			);
 			path = StripeIssuingPushProvision;
 			sourceTree = "<group>";
@@ -308,7 +308,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_MODULE_VERIFIER = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = StripeIssuingPushProvision/Info.plist;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -336,7 +336,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_MODULE_VERIFIER = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = StripeIssuingPushProvision/Info.plist;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
