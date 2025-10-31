@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 /// A view model that manages an `EmbeddedPaymentElement`.
-@MainActor
+@preconcurrency @MainActor
 public final class EmbeddedPaymentElementViewModel: ObservableObject {
     enum ViewModelError: Error, CustomDebugStringConvertible {
         /// The `EmbeddedPaymentElementViewModel` has not been loaded. Call `load()` before attempting this operation.

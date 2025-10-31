@@ -7,7 +7,7 @@
 
 import Foundation
 
-@MainActor
+@preconcurrency @MainActor
 public protocol EmbeddedPaymentElementDelegate: AnyObject {
   /// Called inside an animation block when the EmbeddedPaymentElement view is updating its height. Your implementation should call `setNeedsLayout()` and `layoutIfNeeded` on the scroll view that contains the EmbeddedPaymentElement view. This enables a smooth animation of the height change.
   func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement)

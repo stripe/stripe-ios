@@ -12,7 +12,7 @@
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
-@MainActor
+@preconcurrency @MainActor
 public final class EmbeddedPaymentElement {
 
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
