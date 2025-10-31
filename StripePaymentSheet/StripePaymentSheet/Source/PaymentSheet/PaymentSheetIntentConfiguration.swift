@@ -268,5 +268,38 @@ public extension PaymentSheet {
             }
             return nil
         }
+
+        // MARK: - Deprecated
+
+        @available(*, deprecated, message: "The confirmHandler closure has been replaced by an async version. To update, delete the `intentCreationCallback` argument in the closure and return the intent client secret or throw an error. See https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2500 for help.")
+        public init(
+            mode: Mode,
+            paymentMethodTypes: [String]? = nil,
+            onBehalfOf: String? = nil,
+            paymentMethodConfigurationId: String? = nil,
+            confirmHandler: @escaping (
+                _ paymentMethod: STPPaymentMethod,
+                _ shouldSavePaymentMethod: Bool,
+                _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
+            ) -> Void,
+            requireCVCRecollection: Bool = false
+        ) {
+            self.init(
+                mode: mode,
+                paymentMethodTypes: paymentMethodTypes,
+                onBehalfOf: onBehalfOf,
+                paymentMethodConfigurationId: paymentMethodConfigurationId,
+                confirmHandler: { paymentMethod, shouldSavePaymentMethod in
+                    return try await withCheckedThrowingContinuation { continuation in
+                        Task { @MainActor in
+                            confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
+                                continuation.resume(with: result)
+                            }
+                        }
+                    }
+                },
+                requireCVCRecollection: requireCVCRecollection
+            )
+        }
     }
 }
