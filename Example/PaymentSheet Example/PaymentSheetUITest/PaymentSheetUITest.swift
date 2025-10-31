@@ -1030,6 +1030,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_mc
+        settings.confirmationMode = .paymentMethod
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -1155,6 +1156,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_mc
+        settings.confirmationMode = .paymentMethod
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
 

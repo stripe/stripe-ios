@@ -1062,10 +1062,12 @@ extension PlaygroundController {
 
     func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken) async throws -> String {
         switch settings.integrationType {
+        case .deferred_mp:
+            return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
         case .deferred_csc:
             try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second simulate creating an intent
             return self.clientSecret!
-        case .deferred_ssc:
+        case .deferred_mc, .deferred_ssc:
             break
         default:
             throw NSError(domain: "PlaygroundController.confirmationTokenConfirmHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unhandled integration type"])
