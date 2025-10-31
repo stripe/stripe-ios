@@ -21,7 +21,7 @@ import Foundation
  ) async -> (repeat Result<(each T)?, Error>) {
     // Wrap each operation with timeout logic
     let timeoutTasks = (repeat Task<(each T)?, Error> {
-        return try await withTimeout(timeout){ try await (each operations)() }
+        return try await withTimeout(timeout) { try await (each operations)() }
     })
 
     // Wait for all tasks to complete and collect results using .result
