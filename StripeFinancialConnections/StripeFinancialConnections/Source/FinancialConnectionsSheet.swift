@@ -193,7 +193,7 @@ final public class FinancialConnectionsSheet {
     /// - Parameter presentingViewController: The view controller to present the financial connections sheet.
     /// - Returns: The result of the financial connections session after the financial connections sheet is dismissed, along with the bank account token.
     @MainActor
-    @_spi(v25) public func presentForToken(from presentingViewController: UIViewController) async -> TokenResult {
+    public func presentForToken(from presentingViewController: UIViewController) async -> TokenResult {
         await withCheckedContinuation { continuation in
             presentForToken(from: presentingViewController) { (result: TokenResult) in
                 continuation.resume(returning: result)
@@ -262,7 +262,7 @@ final public class FinancialConnectionsSheet {
     /// - Parameter presentingViewController: The view controller to present the financial connections sheet.
     /// - Returns: The result of the financial connections session after the financial connections sheet is dismissed.
     @MainActor
-    @_spi(v25) public func present(from presentingViewController: UIViewController) async -> Result {
+    public func present(from presentingViewController: UIViewController) async -> Result {
         await withCheckedContinuation { continuation in
             present(from: presentingViewController) { (result: Result) in
                 continuation.resume(returning: result)
