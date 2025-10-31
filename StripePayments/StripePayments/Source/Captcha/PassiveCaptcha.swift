@@ -121,12 +121,9 @@ import Foundation
         let startTime = Date()
         let siteKey = passiveCaptchaData.siteKey
         let isReady = hasFetchedToken
-        let passiveCaptchaOperation = TaskWithCancellation<String> {
+        let passiveCaptchaResult = await withTimeout(timeout: timeout) {
             return try await self.fetchToken()
-        } onCancel: {
-            Task { await self.cancel() }
         }
-        let passiveCaptchaResult = await withTimeout(timeout: timeout, passiveCaptchaOperation)
         switch passiveCaptchaResult {
         case .success(let token):
             STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
@@ -139,9 +136,6 @@ import Foundation
         }
     }
 
-    public func cancel() {
-        tokenTask?.cancel()
-    }
 }
 
 // Protocol for creating HCaptcha instances

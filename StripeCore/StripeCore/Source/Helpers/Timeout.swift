@@ -7,16 +7,117 @@
 
 import Foundation
 
+@_spi(STP) public struct TimeoutError: Error {}
+
+//// MARK: - Timeout with TaskGroup and CheckedContinuation escape hatch
+///// Runs multiple operations in parallel with individual timeouts
+///// - Parameters:
+/////   - timeout: The maximum time interval to wait for each operation to complete
+/////   - operations: Variadic operations to run with timeout
+///// - Returns: Tuple of Results, where each Result contains either the task's value or its error
+//@_spi(STP) public func withTimeout<each T>(
+//    _ timeout: TimeInterval,
+//    _ operations: repeat @escaping () async throws -> each T
+//) async -> (repeat Result<(each T)?, Error>) {
+//    // Wrap each operation with timeout logic
+//    let timeoutTasks = (repeat Task<(each T)?, Error> {
+//        return try await withTimeout(timeout){ try await (each operations)() }
+//    })
+//
+//    // Wait for all tasks to complete and collect results using .result
+//    return await (repeat (each timeoutTasks).result)
+//}
+//
+///// Runs a singular operation with a timeout
+///// - Parameters:
+/////   - timeout: The maximum time interval to wait for the operation to complete
+/////   - operation: The operation to run with a timeout
+///// - Returns: A Task whose result contains either the operation's value or its error
+//private func withTimeout<T>(
+//    _ timeout: TimeInterval,
+//    _ operation: @escaping () async throws -> T
+//) async throws -> T? {
+//    let timeoutNs = UInt64(timeout) * 1_000_000_000
+//
+//    return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<T?, Error>) in
+//        Task {
+//            try await withThrowingTaskGroup(of: T.self) { group in
+//                // Add the task
+//                group.addTask {
+//                    return try await operation()
+//                }
+//
+//                // Add timeout task
+//                group.addTask {
+//                    try await Task.sleep(nanoseconds: timeoutNs)
+//                    throw TimeoutError()
+//                }
+//
+//                defer {
+//                    group.cancelAll()
+//                }
+//
+//                continuation.resume(returning: try await group.next())
+//            }
+//        }
+//    }
+//}
+
+// MARK: - Timeout with TaskGroup and CheckedContinuation escape hatch shared timeout
+/// Runs multiple operations in parallel with a shared timeout
+/// - Parameters:
+///   - timeout: The maximum time interval to wait for all operations to complete
+///   - operations: Variadic operations to run with timeout
+/// - Returns: Tuple of Results, where each Result contains either the task's value or its error
+@_spi(STP) public func withTimeout<each T>(
+    _ timeout: TimeInterval,
+    _ operations: repeat @escaping () async throws -> each T
+) async -> (repeat Result<each T, Error>) {
+    let timeoutNs = UInt64(timeout) * 1_000_000_000
+
+    // Create individual operation tasks (heterogeneous types require separate Tasks)
+    let operationTasks = (repeat Task {
+        try await (each operations)()
+    })
+
+    // Shared timeout with escape hatch pattern
+    return await withCheckedContinuation { (continuation: CheckedContinuation<(repeat Result<each T, Error>), Never>) in
+        Task {
+            await withTaskGroup(of: Void.self) { group in
+                // Add shared timeout task
+                group.addTask {
+                    try? await Task.sleep(nanoseconds: timeoutNs)
+                    // When timeout fires, cancel all operations
+                    repeat (each operationTasks).cancel()
+                }
+
+                // Add a monitoring task that waits for all operations
+                (repeat group.addTask {
+                        _ = await (each operationTasks).result
+                    }
+                )
+
+                defer {
+                    group.cancelAll()
+                }
+
+                // Wait for first to complete (either timeout or all operations)
+                await group.next()
+
+                // Collect results in order and resume
+                let results = await (repeat (each operationTasks).result)
+                continuation.resume(returning: results)
+            }
+        }
+    }
+}
+
+
+// MARK: - Timeout with TaskWithCancellation
 /// Represents a running task with an associated cancellation handler
 /// ⚠️ Swift concurrency uses cooperative cancellation, so each task is responsible for responding to cancellation and exiting early
 @_spi(STP) public struct TaskWithCancellation<T> {
     public let task: Task<T, Error>
-    public let onCancel: @Sendable () -> Void
-
-    public init(task: Task<T, Error>, onCancel: @escaping @Sendable () -> Void) {
-        self.task = task
-        self.onCancel = onCancel
-    }
 
     /// Convenience initializer that creates a task with a cancellation handler
     public init(
@@ -30,13 +131,8 @@ import Foundation
                 onCancel()
             }
         }
-        self.onCancel = onCancel
     }
 
-}
-
-@_spi(STP) public enum TimeoutError: Error {
-    case timeout
 }
 
 /// Runs multiple tasks in parallel with individual timeouts
@@ -77,7 +173,7 @@ private func withTimeout<T>(
         // Add timeout task
         group.addTask {
             try await Task.sleep(nanoseconds: timeoutNs)
-            throw TimeoutError.timeout
+            throw TimeoutError()
         }
 
         defer {
