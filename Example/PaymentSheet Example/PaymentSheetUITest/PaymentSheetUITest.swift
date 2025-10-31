@@ -1873,6 +1873,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
+        settings.confirmationMode = .paymentMethod
 
         loadPlayground(app, settings)
 
@@ -1922,6 +1923,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        settings.confirmationMode = .paymentMethod
 
         _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: settings)
     }
@@ -1941,6 +1943,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.paymentMethodRemove = .enabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
         settings.paymentMethodRemoveLast = .disabled
+        settings.confirmationMode = .paymentMethod
 
         _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: settings)
     }
