@@ -1185,7 +1185,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ApplePay_ConfirmationToken_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
-        settings.integrationType = .deferred_csc_ct
+        settings.integrationType = .deferred_csc
+        settings.confirmationMode = .confirmationToken
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
@@ -1201,7 +1202,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.mode = .paymentWithSetup
-        settings.integrationType = .deferred_ssc_ct
+        settings.integrationType = .deferred_ssc
+        settings.confirmationMode = .confirmationToken
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
@@ -2472,7 +2474,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
-        settings.integrationType = .deferred_csc_ct
+        settings.integrationType = .deferred_csc
+        settings.confirmationMode = .confirmationToken
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2493,7 +2496,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
-        settings.integrationType = .deferred_ssc_ct
+        settings.integrationType = .deferred_ssc
+        settings.confirmationMode = .confirmationToken
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
