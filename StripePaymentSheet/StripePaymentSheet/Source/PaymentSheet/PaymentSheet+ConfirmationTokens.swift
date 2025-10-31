@@ -21,7 +21,7 @@ extension PaymentSheet {
         mandateData: STPMandateDataParams? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        Task {
+        Task { @MainActor in
             do {
             // 1. Create the confirmation token params
             let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
