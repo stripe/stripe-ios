@@ -33,6 +33,10 @@ let package = Package(
             targets: ["StripeIdentity"]
         ),
         .library(
+            name: "StripeIssuingPushProvision",
+            targets: ["StripeIssuingPushProvision"]
+        ),
+        .library(
             name: "StripeCardScan",
             targets: ["StripeCardScan"]
         ),
@@ -92,6 +96,14 @@ let package = Package(
             name: "StripeIdentity",
             dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
             path: "StripeIdentity/StripeIdentity",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Resources/Images")
+            ]
+        ),
+        .target(
+            name: "StripeIssuingPushProvision",
+            path: "StripeIssuingPushProvision/StripeIssuingPushProvision",
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources/Images")

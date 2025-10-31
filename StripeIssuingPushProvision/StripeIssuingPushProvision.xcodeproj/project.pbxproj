@@ -1,0 +1,428 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3D136BC62EB4493500186DA1 /* StripeIssuingPushProvision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */; };
+		3D136BE22EB4494900186DA1 /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDC2EB4494900186DA1 /* StripeiOS Tests-Shared.xcconfig */; };
+		3D136BE32EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDA2EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig */; };
+		3D136BE42EB4494900186DA1 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */; };
+		3D136BE52EB4494900186DA1 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDF2EB4494900186DA1 /* StripeiOS-Shared.xcconfig */; };
+		3D136BE62EB4494900186DA1 /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BD82EB4494900186DA1 /* Project-Release.xcconfig */; };
+		3D136BE72EB4494900186DA1 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDE2EB4494900186DA1 /* StripeiOS-Release.xcconfig */; };
+		3D136BE82EB4494900186DA1 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDD2EB4494900186DA1 /* StripeiOS-Debug.xcconfig */; };
+		3D136BE92EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDB2EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig */; };
+		3D136BEA2EB4494900186DA1 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BE02EB4494900186DA1 /* Version.xcconfig */; };
+		3D136BEB2EB4494900186DA1 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BD92EB4494900186DA1 /* Project-Shared.xcconfig */; };
+		3D136BEC2EB4494900186DA1 /* StripeIssuingPushProvision.docc in Sources */ = {isa = PBXBuildFile; fileRef = 3D136BD42EB4494900186DA1 /* StripeIssuingPushProvision.docc */; };
+		3D136BED2EB4494900186DA1 /* StripeIssuingPushProvision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D136BD52EB4494900186DA1 /* StripeIssuingPushProvision.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3D136BC72EB4493500186DA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D136BB12EB4493500186DA1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D136BB92EB4493500186DA1;
+			remoteInfo = StripeIssuingPushProvision;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIssuingPushProvision.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D136BC52EB4493500186DA1 /* StripeIssuingPushProvisionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeIssuingPushProvisionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D136BD42EB4494900186DA1 /* StripeIssuingPushProvision.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = StripeIssuingPushProvision.docc; sourceTree = "<group>"; };
+		3D136BD52EB4494900186DA1 /* StripeIssuingPushProvision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeIssuingPushProvision.swift; sourceTree = "<group>"; };
+		3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		3D136BD82EB4494900186DA1 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		3D136BD92EB4494900186DA1 /* Project-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Shared.xcconfig"; sourceTree = "<group>"; };
+		3D136BDA2EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		3D136BDB2EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
+		3D136BDC2EB4494900186DA1 /* StripeiOS Tests-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Shared.xcconfig"; sourceTree = "<group>"; };
+		3D136BDD2EB4494900186DA1 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
+		3D136BDE2EB4494900186DA1 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		3D136BDF2EB4494900186DA1 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
+		3D136BE02EB4494900186DA1 /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3D136BBC2EB4493500186DA1 /* StripeIssuingPushProvision */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = StripeIssuingPushProvision;
+			sourceTree = "<group>";
+		};
+		3D136BC92EB4493500186DA1 /* StripeIssuingPushProvisionTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = StripeIssuingPushProvisionTests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3D136BB72EB4493500186DA1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D136BC22EB4493500186DA1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D136BC62EB4493500186DA1 /* StripeIssuingPushProvision.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3D136BB02EB4493500186DA1 = {
+			isa = PBXGroup;
+			children = (
+				3D136BE12EB4494900186DA1 /* BuildConfigurations */,
+				3D136BBC2EB4493500186DA1 /* StripeIssuingPushProvision */,
+				3D136BC92EB4493500186DA1 /* StripeIssuingPushProvisionTests */,
+				3D136BBB2EB4493500186DA1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3D136BBB2EB4493500186DA1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */,
+				3D136BC52EB4493500186DA1 /* StripeIssuingPushProvisionTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3D136BD62EB4494900186DA1 /* StripeIssuingPushProvision */ = {
+			isa = PBXGroup;
+			children = (
+				3D136BD42EB4494900186DA1 /* StripeIssuingPushProvision.docc */,
+				3D136BD52EB4494900186DA1 /* StripeIssuingPushProvision.swift */,
+			);
+			path = StripeIssuingPushProvision;
+			sourceTree = "<group>";
+		};
+		3D136BE12EB4494900186DA1 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				3D136BD62EB4494900186DA1 /* StripeIssuingPushProvision */,
+				3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */,
+				3D136BD82EB4494900186DA1 /* Project-Release.xcconfig */,
+				3D136BD92EB4494900186DA1 /* Project-Shared.xcconfig */,
+				3D136BDA2EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig */,
+				3D136BDB2EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig */,
+				3D136BDC2EB4494900186DA1 /* StripeiOS Tests-Shared.xcconfig */,
+				3D136BDD2EB4494900186DA1 /* StripeiOS-Debug.xcconfig */,
+				3D136BDE2EB4494900186DA1 /* StripeiOS-Release.xcconfig */,
+				3D136BDF2EB4494900186DA1 /* StripeiOS-Shared.xcconfig */,
+				3D136BE02EB4494900186DA1 /* Version.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../BuildConfigurations;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3D136BB52EB4493500186DA1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D136BCE2EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingPushProvision" */;
+			buildPhases = (
+				3D136BB52EB4493500186DA1 /* Headers */,
+				3D136BB62EB4493500186DA1 /* Sources */,
+				3D136BB72EB4493500186DA1 /* Frameworks */,
+				3D136BB82EB4493500186DA1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3D136BBC2EB4493500186DA1 /* StripeIssuingPushProvision */,
+			);
+			name = StripeIssuingPushProvision;
+			packageProductDependencies = (
+			);
+			productName = StripeIssuingPushProvision;
+			productReference = 3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		3D136BC42EB4493500186DA1 /* StripeIssuingPushProvisionTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D136BD12EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingPushProvisionTests" */;
+			buildPhases = (
+				3D136BC12EB4493500186DA1 /* Sources */,
+				3D136BC22EB4493500186DA1 /* Frameworks */,
+				3D136BC32EB4493500186DA1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D136BC82EB4493500186DA1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3D136BC92EB4493500186DA1 /* StripeIssuingPushProvisionTests */,
+			);
+			name = StripeIssuingPushProvisionTests;
+			packageProductDependencies = (
+			);
+			productName = StripeIssuingPushProvisionTests;
+			productReference = 3D136BC52EB4493500186DA1 /* StripeIssuingPushProvisionTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3D136BB12EB4493500186DA1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					3D136BB92EB4493500186DA1 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					3D136BC42EB4493500186DA1 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = 3D136BB42EB4493500186DA1 /* Build configuration list for PBXProject "StripeIssuingPushProvision" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3D136BB02EB4493500186DA1;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3D136BBB2EB4493500186DA1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */,
+				3D136BC42EB4493500186DA1 /* StripeIssuingPushProvisionTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3D136BB82EB4493500186DA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D136BE22EB4494900186DA1 /* StripeiOS Tests-Shared.xcconfig in Resources */,
+				3D136BE32EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig in Resources */,
+				3D136BE42EB4494900186DA1 /* Project-Debug.xcconfig in Resources */,
+				3D136BE52EB4494900186DA1 /* StripeiOS-Shared.xcconfig in Resources */,
+				3D136BE62EB4494900186DA1 /* Project-Release.xcconfig in Resources */,
+				3D136BE72EB4494900186DA1 /* StripeiOS-Release.xcconfig in Resources */,
+				3D136BE82EB4494900186DA1 /* StripeiOS-Debug.xcconfig in Resources */,
+				3D136BE92EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig in Resources */,
+				3D136BEA2EB4494900186DA1 /* Version.xcconfig in Resources */,
+				3D136BEB2EB4494900186DA1 /* Project-Shared.xcconfig in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D136BC32EB4493500186DA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3D136BB62EB4493500186DA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D136BEC2EB4494900186DA1 /* StripeIssuingPushProvision.docc in Sources */,
+				3D136BED2EB4494900186DA1 /* StripeIssuingPushProvision.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D136BC12EB4493500186DA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3D136BC82EB4493500186DA1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */;
+			targetProxy = 3D136BC72EB4493500186DA1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3D136BCC2EB4493500186DA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+			};
+			name = Debug;
+		};
+		3D136BCD2EB4493500186DA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D136BD82EB4494900186DA1 /* Project-Release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+			};
+			name = Release;
+		};
+		3D136BCF2EB4493500186DA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D136BDD2EB4494900186DA1 /* StripeiOS-Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StripeIssuingPushProvision/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-issuing-push-provision";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+			};
+			name = Debug;
+		};
+		3D136BD02EB4493500186DA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D136BDE2EB4494900186DA1 /* StripeiOS-Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StripeIssuingPushProvision/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-issuing-push-provision";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+			};
+			name = Release;
+		};
+		3D136BD22EB4493500186DA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D136BDA2EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIssuingPushProvisionTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+			};
+			name = Debug;
+		};
+		3D136BD32EB4493500186DA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3D136BDB2EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIssuingPushProvisionTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3D136BB42EB4493500186DA1 /* Build configuration list for PBXProject "StripeIssuingPushProvision" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D136BCC2EB4493500186DA1 /* Debug */,
+				3D136BCD2EB4493500186DA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D136BCE2EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingPushProvision" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D136BCF2EB4493500186DA1 /* Debug */,
+				3D136BD02EB4493500186DA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D136BD12EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingPushProvisionTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D136BD22EB4493500186DA1 /* Debug */,
+				3D136BD32EB4493500186DA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3D136BB12EB4493500186DA1 /* Project object */;
+}
