@@ -124,6 +124,10 @@ struct PaymentSheetTestPlayground: View {
                             setting: integrationTypeBinding,
                             disabledSettings: playgroundController.settings.uiStyle == .embedded ? [.normal] : []
                         )
+                        // Only show confirmation mode for deferred integration types
+                        if playgroundController.settings.integrationType != .normal {
+                            SettingView(setting: $playgroundController.settings.confirmationMode)
+                        }
                         SettingView(setting: $playgroundController.settings.customerKeyType)
                         SettingView(setting: customerModeBinding)
                         HStack {
