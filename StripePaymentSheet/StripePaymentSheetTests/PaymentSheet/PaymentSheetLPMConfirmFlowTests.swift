@@ -135,24 +135,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
-    func testSofortConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .sofort, defaultCountry: "AT") { form in
-            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
-            XCTAssertNil(form.getTextFieldElement("Full name"))
-            XCTAssertNil(form.getTextFieldElement("Email"))
-            XCTAssertNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
-        }
-
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .sofort, defaultCountry: "AT") { form in
-            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
-            form.getTextFieldElement("Full name").setText("Foo")
-            form.getTextFieldElement("Email").setText("f@z.c")
-            XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
-        }
-    }
-
     func testGrabPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "SGD",
@@ -1144,9 +1126,9 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         XCTAssertNil(form.getTextFieldElement("Address line 2"))
         XCTAssertNil(form.getTextFieldElement(addressSpec.cityNameType.localizedLabel))
         XCTAssertNil(getState(from: form))
-        // Klarna and Sofort have a bug where the country is still shown; rather than change this and potentially break integrations,
+        // Klarna has a bug where the country is still shown; rather than change this and potentially break integrations,
         // we'll preserve existing behavior until the next major version
-        if ![.klarna, .sofort].contains(paymentMethodType) {
+        if ![.klarna].contains(paymentMethodType) {
             XCTAssertNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))

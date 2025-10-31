@@ -82,8 +82,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Payment Intent With Preferences")
-        let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected = [.card, .iDEAL, .bancontact, .sofort]
+        let types = ["ideal", "card", "bancontact"]
+        let expected = [.card, .iDEAL, .bancontact]
             .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
 
         // 0. Create a PI on our test backend

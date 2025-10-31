@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "Obremenitev SEPA";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Pri preverjanju pristnosti vašega načina plačila je potekla časovna omejitev. Poskusite znova.";
