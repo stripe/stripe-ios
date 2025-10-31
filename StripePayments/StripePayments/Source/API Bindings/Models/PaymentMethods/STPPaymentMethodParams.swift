@@ -53,8 +53,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var bacsDebit: STPPaymentMethodBacsDebitParams?
     /// If this is an AU BECS Debit PaymentMethod, this contains details about the bank to debit.
     @objc public var auBECSDebit: STPPaymentMethodAUBECSDebitParams?
-    /// If this is a giropay PaymentMethod, this contains additional details.
-    @objc public var giropay: STPPaymentMethodGiropayParams?
     /// If this is a PayPal PaymentMethod, this contains additional details. :nodoc:
     @objc public var payPal: STPPaymentMethodPayPalParams?
     /// If this is a Przelewy24 PaymentMethod, this contains additional details.
@@ -228,24 +226,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.init()
         self.type = .AUBECSDebit
         self.auBECSDebit = auBECSDebit
-        self.billingDetails = billingDetails
-        self.metadata = metadata
-    }
-
-    /// Creates params for a giropay PaymentMethod;
-    /// - Parameters:
-    ///   - giropay:   An object containing additional giropay details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` is required for giropay PaymentMethods.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc
-    public convenience init(
-        giropay: STPPaymentMethodGiropayParams,
-        billingDetails: STPPaymentMethodBillingDetails,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .giropay
-        self.giropay = giropay
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
@@ -768,7 +748,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: sepaDebit)): "sepa_debit",
             NSStringFromSelector(#selector(getter: bacsDebit)): "bacs_debit",
             NSStringFromSelector(#selector(getter: auBECSDebit)): "au_becs_debit",
-            NSStringFromSelector(#selector(getter: giropay)): "giropay",
             NSStringFromSelector(#selector(getter: grabPay)): "grabpay",
             NSStringFromSelector(#selector(getter: przelewy24)): "p24",
             NSStringFromSelector(#selector(getter: bancontact)): "bancontact",
@@ -908,24 +887,6 @@ extension STPPaymentMethodParams {
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
             aubecsDebit: auBECSDebit,
-            billingDetails: billingDetails,
-            metadata: metadata
-        )
-    }
-
-    /// Creates params for a giropay PaymentMethod;
-    /// - Parameters:
-    ///   - giropay:   An object containing additional giropay details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` is required for giropay PaymentMethods.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc(paramsWithGiropay:billingDetails:metadata:)
-    public class func paramsWith(
-        giropay: STPPaymentMethodGiropayParams,
-        billingDetails: STPPaymentMethodBillingDetails,
-        metadata: [String: String]?
-    ) -> STPPaymentMethodParams {
-        return STPPaymentMethodParams(
-            giropay: giropay,
             billingDetails: billingDetails,
             metadata: metadata
         )
@@ -1200,8 +1161,6 @@ extension STPPaymentMethodParams {
             auBECSDebit = STPPaymentMethodAUBECSDebitParams()
         case .bacsDebit:
             bacsDebit = STPPaymentMethodBacsDebitParams()
-        case .giropay:
-            giropay = STPPaymentMethodGiropayParams()
         case .przelewy24:
             przelewy24 = STPPaymentMethodPrzelewy24Params()
         case .EPS:

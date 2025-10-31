@@ -38,3 +38,4 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 * [Removed] Removed `singleUsePaymentMethod` STPPaymentMethodParams initializer.
 * [Changed] Changed `STPPaymentMethodType.description`.
 * [Removed] Removed STPPaymentMethod `metadata`.
+* [Removed] Removed deprecated Giropay bindings.

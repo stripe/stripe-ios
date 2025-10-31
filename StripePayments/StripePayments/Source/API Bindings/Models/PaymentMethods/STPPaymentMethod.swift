@@ -42,8 +42,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var bacsDebit: STPPaymentMethodBacsDebit?
     /// If this is an AU BECS Debit PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAUBECSDebit`), this contains additional details.
     @objc private(set) public var auBECSDebit: STPPaymentMethodAUBECSDebit?
-    /// If this is a giropay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeGiropay`), this contains additional details.
-    @objc private(set) public var giropay: STPPaymentMethodGiropay?
     /// If this is an EPS PaymentMethod (i.e. `self.type == STPPaymentMethodTypeEPS`), this contains additional details.
     @objc private(set) public var eps: STPPaymentMethodEPS?
     /// If this is a Przelewy24 PaymentMethod (i.e. `self.type == STPPaymentMethodTypePrzelewy24`), this contains additional details.
@@ -137,7 +135,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "ideal = \(String(describing: iDEAL))",
             "eps = \(String(describing: eps))",
             "fpx = \(String(describing: fpx))",
-            "giropay = \(String(describing: giropay))",
             "netBanking = \(String(describing: netBanking))",
             "oxxo = \(String(describing: oxxo))",
             "grabPay = \(String(describing: grabPay))",
@@ -271,9 +268,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.auBECSDebit = STPPaymentMethodAUBECSDebit.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "au_becs_debit")
-        )
-        paymentMethod.giropay = STPPaymentMethodGiropay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "giropay")
         )
         paymentMethod.eps = STPPaymentMethodEPS.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "eps")

@@ -444,33 +444,6 @@
         }
     },
     {
-        "type": "giropay",
-        "async": false,
-        "fields": [
-            {
-                "type": "name",
-                "api_path": {
-                    "v1": "billing_details[name]"
-                }
-            }
-        ],
-        "next_action_spec": {
-            "confirm_response_status_specs": {
-                "requires_action": {
-                    "type": "redirect_to_url"
-                }
-            },
-            "post_confirm_handling_pi_status_specs": {
-                "succeeded": {
-                    "type": "finished"
-                },
-                "requires_action": {
-                    "type": "canceled"
-                }
-            }
-        }
-    },
-    {
         "type": "p24",
         "async": false,
         "fields": [

@@ -192,8 +192,6 @@ extension STPPaymentMethodType {
                 return .pm_type_sepa
             case .EPS:
                 return .pm_type_eps
-            case .giropay:
-                return .pm_type_giropay
             case .przelewy24:
                 return .pm_type_p24
             case .afterpayClearpay:

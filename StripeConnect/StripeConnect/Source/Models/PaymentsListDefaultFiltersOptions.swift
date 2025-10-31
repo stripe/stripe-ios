@@ -141,7 +141,6 @@ extension EmbeddedComponentManager {
             case googlePay
             case eps
             case fpx
-            case giropay
             case grabpay
             case ideal
             case idBankTransfer

@@ -17,7 +17,6 @@ public enum IntegrationMethod: String, CaseIterable {
     case alipay = "Alipay"
     case bacsDebit = "Bacs Debit"
     case aubecsDebit = "AU BECS Debit"
-    case giropay
     case przelewy24 = "Przelewy24"
     case bancontact = "Bancontact"
     case eps = "EPS"
@@ -54,9 +53,6 @@ extension IntegrationMethod {
       case .aubecsDebit:
           let aubecsDebit = STPPaymentMethodAUBECSDebitParams()
           return STPPaymentMethodParams(aubecsDebit: aubecsDebit, billingDetails: Self.defaultBillingDetails, metadata: nil)
-      case .giropay:
-          let giropay = STPPaymentMethodGiropayParams()
-          return STPPaymentMethodParams(giropay: giropay, billingDetails: Self.defaultBillingDetails, metadata: nil)
       case .przelewy24:
           let przelewy24 = STPPaymentMethodPrzelewy24Params()
           return STPPaymentMethodParams(przelewy24: przelewy24, billingDetails: Self.defaultBillingDetails, metadata: nil)
