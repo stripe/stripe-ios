@@ -15,10 +15,10 @@ import Foundation
 /////   - timeout: The maximum time interval to wait for each operation to complete
 /////   - operations: Variadic operations to run with timeout
 ///// - Returns: Tuple of Results, where each Result contains either the task's value or its error
-//@_spi(STP) public func withTimeout<each T>(
+// @_spi(STP) public func withTimeout<each T>(
 //    _ timeout: TimeInterval,
 //    _ operations: repeat @escaping () async throws -> each T
-//) async -> (repeat Result<(each T)?, Error>) {
+// ) async -> (repeat Result<(each T)?, Error>) {
 //    // Wrap each operation with timeout logic
 //    let timeoutTasks = (repeat Task<(each T)?, Error> {
 //        return try await withTimeout(timeout){ try await (each operations)() }
@@ -26,17 +26,17 @@ import Foundation
 //
 //    // Wait for all tasks to complete and collect results using .result
 //    return await (repeat (each timeoutTasks).result)
-//}
+// }
 //
 ///// Runs a singular operation with a timeout
 ///// - Parameters:
 /////   - timeout: The maximum time interval to wait for the operation to complete
 /////   - operation: The operation to run with a timeout
 ///// - Returns: A Task whose result contains either the operation's value or its error
-//private func withTimeout<T>(
+// private func withTimeout<T>(
 //    _ timeout: TimeInterval,
 //    _ operation: @escaping () async throws -> T
-//) async throws -> T? {
+// ) async throws -> T? {
 //    let timeoutNs = UInt64(timeout) * 1_000_000_000
 //
 //    return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<T?, Error>) in
@@ -61,7 +61,7 @@ import Foundation
 //            }
 //        }
 //    }
-//}
+// }
 
 // MARK: - Timeout with TaskGroup and CheckedContinuation escape hatch shared timeout
 /// Runs multiple operations in parallel with a shared timeout
@@ -111,7 +111,6 @@ import Foundation
         }
     }
 }
-
 
 // MARK: - Timeout with TaskWithCancellation
 /// Represents a running task with an associated cancellation handler
