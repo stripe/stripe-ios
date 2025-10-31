@@ -148,6 +148,17 @@ modules:
     readme: StripeIdentity/README.md
   size_report: true
 
+- podspec: StripeIssuingPushProvision.podspec
+  scheme: StripeIssuingPushProvision
+  framework_name: StripeIssuingPushProvision
+  localization_dir: StripeIssuingPushProvision/StripeIssuingPushProvision
+  custom_string_convertible_dir: StripeIssuingPushProvision/StripeIssuingPushProvision/Source
+  supports_catalyst: false
+  docs:
+    output: docs/StripeIssuingPushProvision
+    readme: StripeIssuingPushProvision/README.md
+  size_report: true
+
 - podspec: StripeApplePay.podspec
   scheme: StripeApplePay
   framework_name: StripeApplePay
@@ -230,3 +241,4 @@ pod_push_order:
 - StripeFinancialConnections.podspec
 - StripeConnect.podspec
 - StripeCryptoOnramp.podspec
+- StripeIssuingPushProvision.podspec
