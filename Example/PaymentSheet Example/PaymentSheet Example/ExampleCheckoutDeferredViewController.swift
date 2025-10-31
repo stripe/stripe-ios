@@ -47,13 +47,21 @@ class ExampleDeferredCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
-            try await withCheckedThrowingContinuation { continuation in
-                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
-                    continuation.resume(with: result)
-                }
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod, confirmHandler in
+            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
+                confirmHandler(result)
             }
         }
+//        return .init(mode: .payment(amount: Int(computedTotals.total),
+//                                    currency: "USD",
+//                                    setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
+//        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+//            try await withCheckedThrowingContinuation { continuation in
+//                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
+//                    continuation.resume(with: result)
+//                }
+//            }
+//        }
     }
 
     lazy var paymentSheetConfiguration: PaymentSheet.Configuration = {
