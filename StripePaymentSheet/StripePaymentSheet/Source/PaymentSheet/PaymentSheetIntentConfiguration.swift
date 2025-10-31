@@ -45,7 +45,7 @@ public extension PaymentSheet {
         /// - Returns: The `client_secret` of the PaymentIntent or SetupIntent created by your server.
         /// - Throws: An error if one occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         /// - SeeAlso: [Confirmation Tokens documentation](https://stripe.com/docs/api/confirmation_tokens) for more information about how confirmation tokens work.
-        public typealias ConfirmationTokenConfirmHandler = @MainActor (
+        public typealias ConfirmationTokenConfirmHandler = (
             _ confirmationToken: STPConfirmationToken
         ) async throws -> String
 
