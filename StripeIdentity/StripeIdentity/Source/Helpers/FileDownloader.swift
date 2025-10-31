@@ -1,21 +1,22 @@
 //
 //  FileDownloader.swift
-//  StripeCore
+//  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/1/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Downloads files using a downloadTask.
-@_spi(STP) public final class FileDownloader {
+final class FileDownloader {
     let urlSession: URLSession
 
     /// Initializes the `FileDownloader`.
     ///
     /// - Parameter urlSession: The session to use to download files with
-    public init(
+    init(
         urlSession: URLSession
     ) {
         self.urlSession = urlSession
@@ -25,7 +26,7 @@ import Foundation
     /// resolve to the temporary local file location where the file was downloaded to.
     ///
     /// - Parameter remoteURL: The URL to download the file from.
-    public func downloadFileTemporarily(from remoteURL: URL) -> Future<URL> {
+    func downloadFileTemporarily(from remoteURL: URL) -> Future<URL> {
         let promise = Promise<URL>()
 
         let request = URLRequest(url: remoteURL)

@@ -327,7 +327,6 @@ extension STPAPIClient {
         STPAnalyticsClient.sharedClient.logSourceCreationAttempt(
             sourceType: sourceType
         )
-        sourceParams.redirectMerchantName = Bundle.stp_applicationName() ?? ""
         var params = STPFormEncoder.dictionary(forObject: sourceParams)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         params = Self.paramsAddingPaymentUserAgent(params)
@@ -426,53 +425,6 @@ extension STPAPIClient {
         )
     }
 
-    /// Starts polling the Source object with the given ID. For payment methods that require
-    /// additional customer action (e.g. authorizing a payment with their bank), polling
-    /// allows you to determine if the action was successful. Polling will stop and the
-    /// provided callback will be called once the source's status is no longer `pending`,
-    /// or if the given timeout is reached and the source is still `pending`. If polling
-    /// stops due to an error, the callback will be fired with the latest retrieved
-    /// source and the error.
-    /// Note that if a poll is already running for a source, subsequent calls to `startPolling`
-    /// with the same source ID will do nothing.
-    /// - Parameters:
-    ///   - identifier:  The identifier of the source to be retrieved. Cannot be nil.
-    ///   - secret:      The client secret of the source. Cannot be nil.
-    ///   - timeout:     The timeout for the polling operation, in seconds. Timeouts are capped at 5 minutes.
-    ///   - completion:  The callback to run with the returned Source object, or an error.
-    @objc(startPollingSourceWithId:clientSecret:timeout:completion:)
-    public func startPollingSource(
-        withId identifier: String,
-        clientSecret secret: String,
-        timeout: TimeInterval,
-        completion: @escaping STPSourceCompletionBlock
-    ) {
-        stopPollingSource(withId: identifier)
-        let poller = STPSourcePoller(
-            apiClient: self,
-            clientSecret: secret,
-            sourceID: identifier,
-            timeout: timeout,
-            completion: completion
-        )
-        sourcePollersQueue?.async(execute: {
-            self.sourcePollers?[identifier] = poller
-        })
-    }
-
-    /// Stops polling the Source object with the given ID. Note that the completion block passed to
-    /// `startPolling` will not be fired when `stopPolling` is called.
-    /// - Parameter identifier:  The identifier of the source to be retrieved. Cannot be nil.
-    @objc(stopPollingSourceWithId:)
-    public func stopPollingSource(withId identifier: String) {
-        sourcePollersQueue?.async(execute: {
-            let poller = self.sourcePollers?[identifier] as? STPSourcePoller
-            if let poller = poller {
-                poller.stopPolling()
-                self.sourcePollers?[identifier] = nil
-            }
-        })
-    }
 }
 
 // MARK: Payment Intents
@@ -1117,20 +1069,6 @@ extension STPAPIClient {
         }
     }
 
-    /// Creates a PaymentMethod object with the provided params object.
-    /// - seealso: https://stripe.com/docs/api/payment_methods/create
-    /// - Parameters:
-    ///   - paymentMethodParams: The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
-    ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    /// - Returns: the returned PaymentMethod object.
-    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
-        return try await createPaymentMethod(
-            with: paymentMethodParams,
-            additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
-            overridePublishableKey: nil
-        )
-    }
-
     /// Creates a PaymentMethod object with the provided params object and optional override publishable key.
     /// - seealso: https://stripe.com/docs/api/payment_methods/create
     /// - Parameters:
@@ -1567,8 +1505,7 @@ extension STPAPIClient {
         group.notify(queue: DispatchQueue.main) {
             // Once all parallel requests are finished, sort the array w/ newest first
             shared_allPaymentMethods.sort { a, b in
-                guard let aCreated = a.created, let bCreated = b.created else { return true }
-                return aCreated > bCreated
+                return a.created > b.created
             }
             completion(shared_allPaymentMethods, shared_lastError)
         }

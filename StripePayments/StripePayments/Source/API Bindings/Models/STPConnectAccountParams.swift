@@ -26,6 +26,7 @@ public class STPConnectAccountParams: NSObject {
     /// Boolean indicating that the Terms Of Service were shown to the user &
     /// the user accepted them.
     @objc(tosShownAndAccepted)
+    @available(swift, obsoleted: 1.0, renamed: "tosShownAndAccepted")
     public var tosShownAndAccepted_objc: NSNumber? {
         get {
             guard let tosShownAndAccepted else { return nil }
@@ -162,6 +163,7 @@ public class STPConnectAccountParams: NSObject {
 
 // MARK: - STPFormEncodable
 extension STPConnectAccountParams: STPFormEncodable {
+    @objc private var tosShownAndAccepted_apiValue: NSNumber? { tosShownAndAccepted.map { NSNumber(value: $0) } }
 
     @objc var businessTypeString: String? {
         return STPConnectAccountParams.string(from: businessType)
@@ -175,7 +177,7 @@ extension STPConnectAccountParams: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter: tosShownAndAccepted_objc)): "tos_shown_and_accepted",
+            NSStringFromSelector(#selector(getter: tosShownAndAccepted_apiValue)): "tos_shown_and_accepted",
             NSStringFromSelector(#selector(getter: individual)): "individual",
             NSStringFromSelector(#selector(getter: company)): "company",
             NSStringFromSelector(#selector(getter: businessTypeString)): "business_type",

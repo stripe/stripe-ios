@@ -15,7 +15,6 @@ class PMMESinglePartnerView: UIView {
     private let promotion: String
     private let appearance: PaymentMethodMessagingElement.Appearance
 
-    private var logoViews = [UIImageView]()
     private let promotionLabel = UILabel()
 
     init(

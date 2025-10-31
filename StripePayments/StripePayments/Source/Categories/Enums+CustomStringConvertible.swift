@@ -188,36 +188,6 @@ extension STPIntentActionUseStripeSDKType: CustomStringConvertible {
 }
 
 /// :nodoc:
-extension STPKlarnaLineItemType: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .SKU:
-            return "SKU"
-        case .shipping:
-            return "shipping"
-        case .tax:
-            return "tax"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPKlarnaPaymentMethods: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .installments:
-            return "installments"
-        case .none:
-            return "none"
-        case .payIn4:
-            return "payIn4"
-        case .payIn4OrInstallments:
-            return "payIn4OrInstallments"
-        }
-    }
-}
-
-/// :nodoc:
 extension STPMandateCustomerAcceptanceType: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -575,32 +545,6 @@ extension STPPinStatus: CustomStringConvertible {
 }
 
 /// :nodoc:
-extension STPRedirectContextError: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .appRedirectError:
-            return "appRedirectError"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPRedirectContextState: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .cancelled:
-            return "cancelled"
-        case .completed:
-            return "completed"
-        case .inProgress:
-            return "inProgress"
-        case .notStarted:
-            return "notStarted"
-        }
-    }
-}
-
-/// :nodoc:
 extension STPSetupIntentLastSetupErrorType: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -681,42 +625,6 @@ extension STPSourceCard3DSecureStatus: CustomStringConvertible {
 }
 
 /// :nodoc:
-extension STPSourceFlow: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .codeVerification:
-            return "codeVerification"
-        case .none:
-            return "none"
-        case .receiver:
-            return "receiver"
-        case .redirect:
-            return "redirect"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPSourceRedirectStatus: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .failed:
-            return "failed"
-        case .notRequired:
-            return "notRequired"
-        case .pending:
-            return "pending"
-        case .succeeded:
-            return "succeeded"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
 extension STPSourceStatus: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -740,32 +648,10 @@ extension STPSourceStatus: CustomStringConvertible {
 extension STPSourceType: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .EPS:
-            return "EPS"
-        case .P24:
-            return "P24"
-        case .SEPADebit:
-            return "SEPADebit"
-        case .alipay:
-            return "alipay"
-        case .bancontact:
-            return "bancontact"
         case .card:
             return "card"
-        case .iDEAL:
-            return "iDEAL"
-        case .klarna:
-            return "klarna"
-        case .multibanco:
-            return "multibanco"
-        case .sofort:
-            return "sofort"
-        case .threeDSecure:
-            return "threeDSecure"
         case .unknown:
             return "unknown"
-        case .weChatPay:
-            return "weChatPay"
         }
     }
 }
@@ -778,22 +664,6 @@ extension STPSourceUsage: CustomStringConvertible {
             return "reusable"
         case .singleUse:
             return "singleUse"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPSourceVerificationStatus: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .failed:
-            return "failed"
-        case .pending:
-            return "pending"
-        case .succeeded:
-            return "succeeded"
         case .unknown:
             return "unknown"
         }

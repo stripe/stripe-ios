@@ -9,10 +9,10 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 ### PaymentSheet
 * [Fixed] PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement return errors when loading with invalid configuration instead of loading in a degraded state.
 * [Added] Added async versions of all completion-block-based PaymentSheet and PaymentSheet.FlowController methods.
+* [Added] CustomerSessions is now generally available.
 * [Changed] Replaces `ExternalPaymentMethodConfirmHandler` with an async equivalent.
 * [Changed] Replaced `IntentConfiguration.ConfirmHandler` with an async equivalent.
 * [Changed] Replaces `PaymentSheet.ApplePayConfiguration.Handlers` completion-block based `authorizationResultHandler` with an async equivalent.
-* [Changed] CustomerSessions is now generally available.
 * [Changed] ConfirmationTokens is now generally available.
 * [Removed] Removed `PaymentSheet.reset()` in favor of `PaymentSheet.resetCustomer()`.
 * [Removed] Removed deprecated Giropay bindings.
@@ -22,7 +22,7 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 
 ### CustomerSheet
 * [Added] Added an async version of `present(from:)`.
-* [Changed] CustomerSessions is now generally available.
+* [Added] CustomerSessions is now generally available.
 
 ### STPApplePayContext
 * [Added] Added async delegate methods.
@@ -30,10 +30,11 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 
 ### Payments
 * [Changed] `STPPaymentIntent.paymentMethodTypes` and `STPSetupIntent.paymentMethodTypes` now return `[STPPaymentMethodType]` instead of `[NSNumber]` in Swift for better ergonomics.
-* [Changed] `STPSetupIntentConfirmParams.useStripeSDK` now uses `Bool?` instead of `NSNumber?` in Swift for better ergonomics.
+* [Changed] `STPSetupIntentConfirmParams.useStripeSDK`, `STPPaymentIntentConfirmParams.useStripeSDK`, `STPConnectAccountCompanyParams.directorsProvided`, `STPConnectAccountCompanyParams.ownersProvided`, and `STPConnectAccountParams.tosShownAndAccepted` now uses `Bool?` instead of `NSNumber?` in Swift for better ergonomics.
 * [Changed] Renamed STPPaymentHandler's `confirm` and `handleNextAction` methods and added async versions.
 * [Changed] Renamed STPPaymentIntentParams to STPPaymentIntentConfirmParams
+* [Changed] `linkedAccount` on `STPPaymentMethodUSBankAccount` has been renamed to `financialConnectionsAccount`.
 * [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
 * [Removed] Removed deprecated `STPPaymentIntentParams.saveSourceToCustomer` property. Use `savePaymentMethod` instead.
 * [Removed] Removed `singleUsePaymentMethod` STPPaymentMethodParams initializer.
-
+* [Removed] Removed STPPaymentMethod `metadata`.

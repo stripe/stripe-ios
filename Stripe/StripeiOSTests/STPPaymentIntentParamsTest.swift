@@ -133,7 +133,7 @@ class STPPaymentIntentConfirmParamsTest: XCTestCase {
         params.setupFutureUsage = STPPaymentIntentSetupFutureUsage(
             rawValue: Int(truncating: NSNumber(value: 1))
         )
-        params.useStripeSDK = NSNumber(value: true)
+        params.useStripeSDK = true
         params.mandateData = STPMandateDataParams(
             customerAcceptance: STPMandateCustomerAcceptanceParams(
                 type: .offline,
