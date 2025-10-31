@@ -455,6 +455,24 @@ extension PaymentSheet {
                 self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
                 self.shippingContactUpdateHandler = shippingContactUpdateHandler
             }
+
+            @available(*, deprecated, message: "")
+            public init(
+                paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
+                authorizationResultHandler: ((_ result: PKPaymentAuthorizationResult, _ completion: @escaping (PKPaymentAuthorizationResult) -> Void) -> Void)? = nil
+            ) {
+                self.init(paymentRequestHandler: paymentRequestHandler) { result in
+                    guard let authorizationResultHandler else { return result }
+                    return await withCheckedContinuation { continuation in
+                        Task { @MainActor in
+                            authorizationResultHandler(result) { newResult in
+                                continuation.resume(returning: newResult)
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
         /// Initializes a ApplePayConfiguration
