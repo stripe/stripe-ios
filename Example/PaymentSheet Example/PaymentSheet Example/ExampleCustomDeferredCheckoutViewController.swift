@@ -45,11 +45,10 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
         ) { [weak self] paymentMethod, shouldSavePaymentMethod in
-            try await withCheckedThrowingContinuation { continuation in
-                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
-                    continuation.resume(with: result)
-                }
+            guard let self = self else {
+                throw ExampleError(errorDescription: "View controller was deallocated")
             }
+            return try await self.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod)
         }
     }
 
@@ -73,7 +72,13 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         saladStepper.isEnabled = false
         subscribeSwitch.isEnabled = false
 
-        self.loadCheckout()
+        Task {
+            do {
+                try await loadCheckout()
+            } catch {
+                print("Failed to load checkout: \(error)")
+            }
+        }
     }
 
     // MARK: - Button handlers
@@ -122,23 +127,27 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         buyButton.isEnabled = false
         paymentMethodButton.isEnabled = false
 
-        fetchTotals { [weak self] in
-            guard let self = self else { return }
-            self.updateLabels()
+        Task {
+            do {
+                try await fetchTotals()
+                updateLabels()
 
-            // Update PaymentSheet with the latest `intentConfig`
-            self.paymentSheetFlowController.update(intentConfiguration: self.intentConfig) { [weak self] error in
-                if let error = error {
-                    print(error)
-                    self?.displayAlert("\(error)", success: false)
-                    // Retry - production code should use an exponential backoff
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-                        self?.updateUI()
-                    }
-                } else {
+                // Update PaymentSheet with the latest `intentConfig`
+                do {
+                    try await paymentSheetFlowController.update(intentConfiguration: intentConfig)
                     // Re-enable your "Buy" and "Payment method" buttons
-                    self?.updateButtons()
-                  }
+                    updateButtons()
+                } catch {
+                    print(error)
+                    displayAlert("\(error)", success: false)
+                    // Retry - production code should use an exponential backoff
+                    Task {
+                        try await Task.sleep(nanoseconds: 5_000_000_000)
+                        updateUI()
+                    }
+                }
+            } catch {
+                print("Failed to fetch totals: \(error)")
             }
         }
     }
@@ -185,22 +194,14 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     // MARK: Server-side confirm handler
 
     func serverSideConfirmHandler(_ paymentMethodID: String,
-                                  _ shouldSavePaymentMethod: Bool,
-                                  _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
-        // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret
-        confirmIntent(paymentMethodID: paymentMethodID, shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
-            switch result {
-            case .success(let clientSecret):
-                intentCreationCallback(.success(clientSecret))
-            case .failure(let error):
-                intentCreationCallback(.failure(error))
-            }
-        }
+                                  _ shouldSavePaymentMethod: Bool) async throws -> String {
+        // Create and confirm an intent on your server and return the client secret
+        return try await confirmIntent(paymentMethodID: paymentMethodID, shouldSavePaymentMethod: shouldSavePaymentMethod)
     }
 
     // MARK: Networking helpers
 
-    private func fetchTotals(completion: @escaping () -> Void) {
+    private func fetchTotals() async throws {
         // MARK: Fetch the current amounts from the server
         var request = URLRequest(url: computeTotalsUrl)
         request.httpMethod = "POST"
@@ -212,26 +213,15 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
         ]
 
-        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
+        request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
 
-        let task = URLSession.shared.dataTask(
-            with: request,
-            completionHandler: { [weak self] (data, _, _) in
-                guard let data = data,
-                      let totals = try? JSONDecoder().decode(ComputedTotals.self, from: data) else {
-                          fatalError("Failed to decode compute_totals response")
-                        }
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let totals = try JSONDecoder().decode(ComputedTotals.self, from: data)
 
-                self?.computedTotals = totals
-                DispatchQueue.main.async {
-                    completion()
-                }
-            })
-
-        task.resume()
+        self.computedTotals = totals
     }
 
-    private func loadCheckout() {
+    private func loadCheckout() async throws {
         // MARK: Fetch the publishable key, order information, and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
@@ -243,69 +233,53 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
         ]
 
-        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
+        request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
 
-        let task = URLSession.shared.dataTask(
-            with: request,
-            completionHandler: { [weak self] (data, _, error) in
-                guard let data = data,
-                    let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                        as? [String: Any],
-                    let customerId = json["customer"] as? String,
-                    let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
-                    let publishableKey = json["publishableKey"] as? String,
-                    let subtotal = json["subtotal"] as? Double,
-                    let tax = json["tax"] as? Double,
-                    let total = json["total"] as? Double,
-                    let self = self
-                else {
-                    // Handle error
-                    return
-                }
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        guard
+            let customerId = json?["customer"] as? String,
+            let customerEphemeralKeySecret = json?["ephemeralKey"] as? String,
+            let publishableKey = json?["publishableKey"] as? String,
+            let subtotal = json?["subtotal"] as? Double,
+            let tax = json?["tax"] as? Double,
+            let total = json?["total"] as? Double
+        else {
+            throw ExampleError(errorDescription: "Invalid response from backend")
+        }
 
-                self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
-                // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
-                STPAPIClient.shared.publishableKey = publishableKey
+        self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
+        // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
+        STPAPIClient.shared.publishableKey = publishableKey
 
-                // MARK: Create a PaymentSheet.FlowController instance
-                var configuration = PaymentSheet.Configuration()
-                configuration.merchantDisplayName = "Example, Inc."
-                configuration.applePay = .init(
-                    merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
-                    merchantCountryCode: "US"
-                )
-                configuration.customer = .init(
-                    id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
-                configuration.returnURL = "payments-example://stripe-redirect"
-                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
-                configuration.allowsDelayedPaymentMethods = true
-                DispatchQueue.main.async {
-                    PaymentSheet.FlowController.create(
-                        intentConfiguration: self.intentConfig,
-                        configuration: configuration
-                    ) { [weak self] result in
-                        switch result {
-                        case .failure(let error):
-                            print(error)
-                        case .success(let paymentSheetFlowController):
-                            self?.paymentSheetFlowController = paymentSheetFlowController
-                            self?.paymentMethodButton.isEnabled = true
-                            self?.hotDogStepper.isEnabled = true
-                            self?.saladStepper.isEnabled = true
-                            self?.subscribeSwitch.isEnabled = true
-                            self?.updateButtons()
-                            self?.updateLabels()
-                        }
-                    }
-                }
-            })
+        // MARK: Create a PaymentSheet.FlowController instance
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example, Inc."
+        configuration.applePay = .init(
+            merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
+            merchantCountryCode: "US"
+        )
+        configuration.customer = .init(
+            id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+        configuration.returnURL = "payments-example://stripe-redirect"
+        // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
+        configuration.allowsDelayedPaymentMethods = true
 
-        task.resume()
+        let paymentSheetFlowController = try await PaymentSheet.FlowController.create(
+            intentConfiguration: self.intentConfig,
+            configuration: configuration
+        )
+        self.paymentSheetFlowController = paymentSheetFlowController
+        self.paymentMethodButton.isEnabled = true
+        self.hotDogStepper.isEnabled = true
+        self.saladStepper.isEnabled = true
+        self.subscribeSwitch.isEnabled = true
+        self.updateButtons()
+        self.updateLabels()
     }
 
     func confirmIntent(paymentMethodID: String,
-                       shouldSavePaymentMethod: Bool,
-                       completion: @escaping (Result<String, Error>) -> Void) {
+                       shouldSavePaymentMethod: Bool) async throws -> String {
         var request = URLRequest(url: confirmIntentUrl)
         request.httpMethod = "POST"
 
@@ -320,28 +294,17 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
             "customer_id": paymentSheetFlowController.configuration.customer?.id,
         ]
 
-        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
+        request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
 
-        let task = URLSession.shared.dataTask(
-            with: request,
-            completionHandler: { (data, _, error) in
-                guard
-                    error == nil,
-                    let data = data,
-                    let json = try? JSONDecoder().decode([String: String].self, from: data)
-                else {
-                    completion(.failure(error ?? ExampleError(errorDescription: "An unknown error occurred.")))
-                    return
-                }
-                if let clientSecret = json["intentClientSecret"] {
-                    completion(.success(clientSecret))
-                } else {
-                    completion(.failure(error ?? ExampleError(errorDescription: json["error"] ?? "An unknown error occurred.")))
-                }
-        })
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let json = try JSONDecoder().decode([String: String].self, from: data)
 
-        task.resume()
+        if let clientSecret = json["intentClientSecret"] {
+            return clientSecret
+        } else {
+            throw ExampleError(errorDescription: json["error"] ?? "An unknown error occurred.")
+        }
     }
 
     struct ExampleError: LocalizedError {
