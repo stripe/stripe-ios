@@ -498,7 +498,6 @@ private extension STPPaymentMethod {
     func updateLocalFields(from original: STPPaymentMethod) {
         // We don't receive the following fields as part of the update response, so we need to copy them over
         linkPaymentDetails = original.linkPaymentDetails
-        isLinkPassthroughMode = original.isLinkPassthroughMode
     }
 }
 

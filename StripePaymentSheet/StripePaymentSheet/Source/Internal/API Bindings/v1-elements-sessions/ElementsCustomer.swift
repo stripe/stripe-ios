@@ -59,8 +59,6 @@ struct ElementsCustomer: Equatable, Hashable {
                     let paymentMethod = paymentMethodWithLinkDetails.paymentMethod
                     if let linkDetails = paymentMethodWithLinkDetails.linkDetails {
                         paymentMethod.setLinkPaymentDetails(from: linkDetails)
-                    } else {
-                        paymentMethod.isLinkPassthroughMode = paymentMethodWithLinkDetails.isLinkOrigin
                     }
                     paymentMethods.append(paymentMethod)
                 }
