@@ -430,7 +430,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                                     // When confirming, we make the API call for confirmation before returning success.
                                     // If the API call fails, the error will be caught and returned to the caller.
                                     try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
-                                    analyticsClient.log(.identityVerificationCompleted)
+                                    analyticsClient.log(.kycInfoVerificationCompleted)
                                     dismissAndResumeWithResult(.success(result))
                                 } catch {
                                     analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
