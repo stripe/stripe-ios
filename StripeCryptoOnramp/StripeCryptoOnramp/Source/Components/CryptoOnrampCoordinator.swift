@@ -438,7 +438,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         }
                     }
 
-                    viewController.presentAsBottomSheet(verifyKYCViewController, appearance: LinkUI.appearance)
+                    viewController.presentAsBottomSheet(verifyKYCViewController, appearance: .init())
                 }
             }
         } catch {
