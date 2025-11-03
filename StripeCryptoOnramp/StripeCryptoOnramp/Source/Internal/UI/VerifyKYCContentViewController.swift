@@ -135,8 +135,10 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     }
 
     private func formattedName(first: String, last: String?) -> String {
-        let lastTrimmed = (last ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        return lastTrimmed.isEmpty ? first : "\(first) \(lastTrimmed)"
+        var components = PersonNameComponents()
+        components.givenName = first.trimmingCharacters(in: .whitespacesAndNewlines)
+        components.familyName = last?.trimmingCharacters(in: .whitespacesAndNewlines)
+        return PersonNameComponentsFormatter.localizedString(from: components, style: .default)
     }
 
     private func formattedDOB(_ dob: KycInfo.DateOfBirth) -> String {
