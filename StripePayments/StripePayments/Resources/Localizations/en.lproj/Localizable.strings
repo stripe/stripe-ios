@@ -38,9 +38,6 @@
 "FPX" = "FPX";
 
 /* Payment Method type brand name. */
-"giropay" = "giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* Source type brand name */
@@ -69,9 +66,6 @@
 
 /* Payment method brand name */
 "SEPA Debit" = "SEPA Debit";
-
-/* Payment Method type brand name */
-"Sofort" = "Sofort";
 
 /* Payment Method type brand name */
 "Swish" = "Swish";

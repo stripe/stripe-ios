@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "Débito SEPA";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "A autenticação do seu método de pagamento atingiu o tempo limite -- tente novamente";

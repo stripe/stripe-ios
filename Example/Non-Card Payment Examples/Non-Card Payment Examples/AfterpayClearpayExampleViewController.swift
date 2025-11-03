@@ -90,7 +90,7 @@ extension AfterpayClearpayExampleViewController {
                     address: shippingAddress, name: "Jane Doe")
 
                 // 2. Confirm the payment and redirect the user to Afterpay
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     afterpayClearpay: STPPaymentMethodAfterpayClearpayParams(),
                     billingDetails: billingDetails,

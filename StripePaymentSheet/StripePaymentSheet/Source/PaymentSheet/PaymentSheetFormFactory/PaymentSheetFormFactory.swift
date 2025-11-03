@@ -258,8 +258,6 @@ class PaymentSheetFormFactory {
             }
             if paymentMethod == .iDEAL {
                 return makeiDEAL(spec: spec)
-            } else if paymentMethod == .sofort {
-                return makeSofort(spec: spec)
             } else if paymentMethod == .SEPADebit {
                 return makeSepaDebit()
             }
@@ -576,36 +574,6 @@ extension PaymentSheetFormFactory {
     }
 
     // MARK: - PaymentMethod form definitions
-
-    func makeSofort(spec: FormSpec) -> PaymentMethodElement {
-        let contactSection: Element? = makeContactInformationSection(
-            nameRequiredByPaymentMethod: isSettingUp,
-            emailRequiredByPaymentMethod: isSettingUp,
-            phoneRequiredByPaymentMethod: false
-        )
-        // Hack: Use the luxe spec to get the latest list of accepted countries rather than hardcoding it here
-        let countries: [String]? = spec.fields.reduce(nil) { countries, fieldSpec in
-            if case let .country(countrySpec) = fieldSpec {
-                return countrySpec.allowedCountryCodes
-            }
-            return countries
-        }
-
-        let addressSection: Element? = {
-            if configuration.billingDetailsCollectionConfiguration.address == .full {
-                return makeBillingAddressSection(countries: countries, countryAPIPath: "sofort[country]")
-            } else {
-                return makeCountry(countryCodes: countries, apiPath: "sofort[country]")
-            }
-        }()
-        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
-        let checkboxElement: Element? = makeSepaBasedPMCheckbox()
-        let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
-        return FormElement(
-            autoSectioningElements: elements.compactMap { $0 },
-            theme: theme
-        )
-    }
 
     func makeSepaDebit() -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(

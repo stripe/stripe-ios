@@ -26,9 +26,6 @@
          location = "group:StripeConnectExample/StripeConnect Example.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:CryptoOnramp Example/CryptoOnramp Example.xcodeproj">
-      </FileRef>
-      <FileRef
          location = "group:UI Examples/UI Examples.xcodeproj">
       </FileRef>
    </Group>
