@@ -30,9 +30,19 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     let flowCoordinator: CryptoOnrampFlowCoordinator?
 
     @Environment(\.isLoading) private var isLoading
+    @State private var isPresentingUpdateAddress = false
 
     func body(content: Content) -> some View {
         content
+        .sheet(isPresented: $isPresentingUpdateAddress) {
+            UpdateAddressView { address in
+                // Wait for dismissal to be fully complete, otherwise, we'll try to
+                // present a view controller while another is already attached.
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    verifyKYC(updatedAddress: address)
+                }
+            }
+        }
         .toolbar {
             if isShown {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -89,18 +99,20 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
         }
     }
 
-    private func verifyKYC() {
+    private func verifyKYC(updatedAddress: Address? = nil) {
         guard let presentingVC = UIApplication.shared.findTopViewController() else { return }
         Task {
             do {
-                let result = try await coordinator.verifyKYCInfo(from: presentingVC)
+                let result = try await coordinator.verifyKYCInfo(updatedAddress: updatedAddress, from: presentingVC)
                 switch result {
                 case .confirmed:
                     print("KYC verification confirmed")
                 case .updateAddress:
-                    print("KYC verification: user chose to update address")
+                    await MainActor.run {
+                        isPresentingUpdateAddress = true
+                    }
                 case .canceled:
-                    print("KYC verification canceled")
+                    break
                 @unknown default:
                     break
                 }
