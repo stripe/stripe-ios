@@ -162,7 +162,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
-        settings.customerKeyType = .legacy
+        settings.customerKeyType = .customerSession
+        settings.confirmationMode = .confirmationToken
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -177,7 +178,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             app,
             cardNumber: "4000002500001001",
             postalEnabled: true,
-            disableDefaultOptInIfNeeded: true
+            tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases"
         )
 
         // Complete payment
@@ -320,7 +321,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.mode = .paymentWithSetup
         settings.uiStyle = .embedded
         settings.integrationType = .deferred_csc
-        settings.customerKeyType = .legacy
+        settings.customerKeyType = .customerSession
         settings.customerMode = .returning
         settings.merchantCountryCode = .FR
         settings.currency = .eur
