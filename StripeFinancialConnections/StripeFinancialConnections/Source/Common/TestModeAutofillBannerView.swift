@@ -75,6 +75,8 @@ class TestModeAutofillBannerView: UIView {
         button.setTitleColor(appearance.colors.textAction, for: .normal)
         button.titleLabel?.textAlignment = .right
         button.titleLabel?.font = FinancialConnectionsFont.label(.mediumEmphasized).uiFont
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.lineBreakMode = .byWordWrapping
         button.addTarget(self, action: #selector(autofillTapped), for: .touchUpInside)
         button.accessibilityIdentifier = "test_mode_autofill_button"
         return button
