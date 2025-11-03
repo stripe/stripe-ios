@@ -96,7 +96,6 @@ struct UpdateAddressView: View {
                 }
                 .padding()
             }
-            .padding()
             .navigationTitle("Update Address")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
