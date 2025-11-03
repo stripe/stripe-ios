@@ -396,22 +396,23 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             let linkAccountInfo = try await self.linkAccountInfo
             let apiClient = self.apiClient
 
-            // Fetch existing KYC info
-            // let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
-            let response = RetrieveKYCInfoResponse(kycInfo: .init(firstName: "Mike", lastName: "Liberatore", dateOfBirth: .init(day: 1, month: 2, year: 1990), address: .init(city: "New York", country: "US", line1: "123 Fake St", line2: "APT 2", postalCode: "10019", state: "NY"), idNumberLast4: "6789", idType: .socialSecurityNumber))
-
+            // Fetch existing KYC info to display for confirmation.
+            let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
             var displayInfo = response.kycInfo
 
+            // Update the address for the displayed information, if any was passed in.
             if let updatedAddress {
                 displayInfo.address = updatedAddress
             }
 
+            // Present the UI for the user to confirm their KYC information is correct.
             return try await withCheckedThrowingContinuation { continuation in
                 Task { @MainActor in
                     let verifyKYCViewController = VerifyKYCViewController(info: displayInfo, appearance: appearance)
                     verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
                         verifyKYCViewController?.onResult = nil
 
+                        // We’ll report the result back to the user after full dismissal of the sheet.
                         let dismissAndResumeWithResult: (Result<VerifyKycResult, Swift.Error>) -> Void = { continuationResult in
                             verifyKYCViewController?.dismiss(animated: true) {
                                 continuation.resume(with: continuationResult)
@@ -424,6 +425,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         case .confirmed:
                             Task {
                                 do {
+                                    // When confirming, we make the API call for confirmation before returning success.
+                                    // If the API call fails, the error will be caught and returned to the caller.
                                     try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
                                     dismissAndResumeWithResult(.success(result))
                                 } catch {
