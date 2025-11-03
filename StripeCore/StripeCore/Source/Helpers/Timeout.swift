@@ -58,8 +58,7 @@ private func withTimeout<T>(
                 }
 
                 do {
-                    let result = try await group.next()
-                    continuation.resume(returning: result)
+                    continuation.resume(returning: try await group.next())
                 } catch {
                     continuation.resume(throwing: error)
                 }
