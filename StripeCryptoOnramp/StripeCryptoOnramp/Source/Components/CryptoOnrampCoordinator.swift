@@ -392,9 +392,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKYCResult {
+        analyticsClient.log(.kycInfoVerificationStarted)
         do {
             let linkAccountInfo = try await self.linkAccountInfo
             let apiClient = self.apiClient
+            let analyticsClient = self.analyticsClient
 
             // Fetch existing KYC info to display for confirmation.
             let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
@@ -428,8 +430,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                                     // When confirming, we make the API call for confirmation before returning success.
                                     // If the API call fails, the error will be caught and returned to the caller.
                                     try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
+                                    analyticsClient.log(.identityVerificationCompleted)
                                     dismissAndResumeWithResult(.success(result))
                                 } catch {
+                                    analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
                                     dismissAndResumeWithResult(.failure(error))
                                 }
                             }
@@ -442,6 +446,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             }
         } catch {
+            analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
             throw error
         }
     }
