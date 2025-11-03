@@ -72,38 +72,29 @@ import Foundation
             do {
                 let hcaptcha = try hcaptchaFactory.create(siteKey: siteKey, rqdata: rqdata)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
-                let result = try await withTaskCancellationHandler {
-                    try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
-                        // Prevent Swift Task continuation misuse - the validate completion block can get called multiple times
-                        var nillableContinuation: CheckedContinuation<String, Error>? = continuation
+                let result =  try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
+                    // Prevent Swift Task continuation misuse - the validate completion block can get called multiple times
+                    var nillableContinuation: CheckedContinuation<String, Error>? = continuation
 
-                        hcaptcha.validate { result in
-                            Task { @MainActor in // MainActor to prevent continuation from different threads
-                                do {
-                                    let token = try result.dematerialize()
-                                    nillableContinuation?.resume(returning: token)
-                                    nillableContinuation = nil
-                                } catch {
-                                    nillableContinuation?.resume(throwing: error)
-                                    nillableContinuation = nil
-                                }
+                    hcaptcha.validate { result in
+                        Task { @MainActor in // MainActor to prevent continuation from different threads
+                            do {
+                                let token = try result.dematerialize()
+                                nillableContinuation?.resume(returning: token)
+                                nillableContinuation = nil
+                            } catch {
+                                nillableContinuation?.resume(throwing: error)
+                                nillableContinuation = nil
                             }
                         }
                     }
-                } onCancel: {
-                    Task { @MainActor in
-                        hcaptcha.stop()
-                    }
                 }
-                // Check cancellation after continuation
-                try Task.checkCancellation()
                 // Mark as complete
                 await self?.setValidationComplete()
                 let duration = Date().timeIntervalSince(startTime)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
                 return result
             } catch {
-                try Task.checkCancellation()
                 let duration = Date().timeIntervalSince(startTime)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
                 throw error
@@ -121,8 +112,8 @@ import Foundation
         let startTime = Date()
         let siteKey = passiveCaptchaData.siteKey
         let isReady = hasFetchedToken
-        let passiveCaptchaResult = await withTimeout(timeout: timeout) {
-            return try await self.fetchToken()
+        let passiveCaptchaResult = await withTimeout(timeout) {
+            try await self.fetchToken()
         }
         switch passiveCaptchaResult {
         case .success(let token):
