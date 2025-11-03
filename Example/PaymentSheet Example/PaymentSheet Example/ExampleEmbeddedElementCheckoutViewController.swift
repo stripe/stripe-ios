@@ -269,7 +269,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             configuration.customer = .init(
                 id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
             configuration.returnURL = "payments-example://stripe-redirect"
-            // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
+            // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
             configuration.allowsDelayedPaymentMethods = true
             configuration.appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled = false
             configuration.appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled = false

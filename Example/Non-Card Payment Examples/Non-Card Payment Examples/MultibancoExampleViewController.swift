@@ -77,7 +77,7 @@ extension MultibancoExampleViewController {
                 // 2. Confirm the payment and redirect the user to Multibanco
                 let billingDetails = STPPaymentMethodBillingDetails()
                 billingDetails.email = "tester@example.com"
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     multibanco: STPPaymentMethodMultibancoParams(),
                     billingDetails: billingDetails,

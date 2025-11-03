@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "SEPA 借记";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "验证您的支付方式时失败——请重试";

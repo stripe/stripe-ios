@@ -220,7 +220,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
                 // ...with an ElementsSession whose payment method types is equal to the PaymentIntent...
                 XCTAssertEqual(
-                    paymentIntent.paymentMethodTypes.map { STPPaymentMethodType(rawValue: $0.intValue) },
+                    paymentIntent.paymentMethodTypes,
                     loadResult.elementsSession.orderedPaymentMethodTypes
                 )
 
@@ -283,7 +283,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
                 // ...with an ElementsSession whose payment method types contain the same as the PaymentIntent...
                 XCTAssertEqual(
-                    Set(paymentIntent.paymentMethodTypes.map { STPPaymentMethodType(rawValue: $0.intValue) }),
+                    Set(paymentIntent.paymentMethodTypes.map { $0 }),
                     Set(loadResult.elementsSession.orderedPaymentMethodTypes)
                 )
 
@@ -336,7 +336,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
                 // ...with an ElementsSession whose payment method types is equal to the PaymentIntent...
                 XCTAssertEqual(
-                    paymentIntent.paymentMethodTypes.map { STPPaymentMethodType(rawValue: $0.intValue) },
+                    paymentIntent.paymentMethodTypes.map { $0 },
                     loadResult.elementsSession.orderedPaymentMethodTypes
                 )
             case .failure(let error):
@@ -387,7 +387,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
                 // ...with an ElementsSession whose payment method types is equal to the SetupIntent...
                 XCTAssertEqual(
-                    setupIntent.paymentMethodTypes.map { STPPaymentMethodType(rawValue: $0.intValue) },
+                    setupIntent.paymentMethodTypes,
                     loadResult.elementsSession.orderedPaymentMethodTypes
                 )
 

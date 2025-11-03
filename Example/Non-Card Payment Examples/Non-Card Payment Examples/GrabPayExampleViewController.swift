@@ -72,7 +72,7 @@ class GrabPayExampleViewController: UIViewController {
                     return
                 }
 
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = paymentMethodParams
                 paymentIntentParams.returnURL = "payments-example://stripe-redirect"
 

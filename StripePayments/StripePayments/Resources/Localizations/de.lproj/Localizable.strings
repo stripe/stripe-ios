@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "SEPA-Lastschrift";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Zeitüberschreitung bei der Authentifizierung Ihrer Zahlungsmethode – versuchen Sie es noch einmal.";

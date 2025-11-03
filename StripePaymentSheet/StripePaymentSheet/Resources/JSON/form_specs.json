@@ -216,60 +216,6 @@
         }
     },
     {
-        "type": "sofort",
-        "async": true,
-        "fields": [
-            {
-                "type": "placeholder",
-                "for": "name"
-            },
-            {
-                "type": "placeholder",
-                "for": "email"
-            },
-            {
-                "type": "placeholder",
-                "for": "phone"
-            },
-            {
-                "type": "country",
-                "allowed_country_codes": [
-                    "AT",
-                    "BE",
-                    "DE",
-                    "ES",
-                    "IT",
-                    "NL"
-                ],
-                "api_path": {
-                    "v1": "sofort[country]"
-                }
-            },
-            {
-                "type": "placeholder",
-                "for": "billing_address_without_country"
-            }
-        ],
-        "next_action_spec": {
-            "confirm_response_status_specs": {
-                "requires_action": {
-                    "type": "redirect_to_url"
-                }
-            },
-            "post_confirm_handling_pi_status_specs": {
-                "succeeded": {
-                    "type": "finished"
-                },
-                "processing": {
-                    "type": "finished"
-                },
-                "requires_action": {
-                    "type": "canceled"
-                }
-            }
-        }
-    },
-    {
         "type": "bancontact",
         "async": false,
         "fields": [
@@ -479,33 +425,6 @@
             {
                 "type": "placeholder",
                 "for": "billing_address"
-            }
-        ],
-        "next_action_spec": {
-            "confirm_response_status_specs": {
-                "requires_action": {
-                    "type": "redirect_to_url"
-                }
-            },
-            "post_confirm_handling_pi_status_specs": {
-                "succeeded": {
-                    "type": "finished"
-                },
-                "requires_action": {
-                    "type": "canceled"
-                }
-            }
-        }
-    },
-    {
-        "type": "giropay",
-        "async": false,
-        "fields": [
-            {
-                "type": "name",
-                "api_path": {
-                    "v1": "billing_details[name]"
-                }
             }
         ],
         "next_action_spec": {

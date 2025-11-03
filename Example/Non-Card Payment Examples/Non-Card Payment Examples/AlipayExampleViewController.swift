@@ -75,7 +75,7 @@ extension AlipayExampleViewController {
                 // 2. Redirect your customer to Alipay.
                 // If the customer has the Alipay app installed, we open it.
                 // Otherwise, we open alipay.com.
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     alipay: STPPaymentMethodAlipayParams(), billingDetails: nil, metadata: nil)
                 paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
