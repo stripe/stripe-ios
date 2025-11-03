@@ -154,8 +154,6 @@ struct UpdateAddressView: View {
     }
 }
 
-
-
 #Preview {
     UpdateAddressView { _ in }
 }

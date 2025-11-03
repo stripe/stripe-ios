@@ -31,6 +31,15 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
 
     @Environment(\.isLoading) private var isLoading
     @State private var isPresentingUpdateAddress = false
+    @State private var alert: Alert?
+
+    private var isPresentingAlert: Binding<Bool> {
+        Binding(get: {
+            alert != nil
+        }, set: { newValue in
+            if !newValue { alert = nil }
+        })
+    }
 
     func body(content: Content) -> some View {
         content
@@ -43,6 +52,16 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                 }
             }
         }
+        .alert(
+            alert?.title ?? "Error",
+            isPresented: isPresentingAlert,
+            presenting: alert,
+            actions: { _ in
+                Button("OK") {}
+            }, message: { alert in
+                Text(alert.message)
+            }
+        )
         .toolbar {
             if isShown {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -106,7 +125,9 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                 let result = try await coordinator.verifyKYCInfo(updatedAddress: updatedAddress, from: presentingVC)
                 switch result {
                 case .confirmed:
-                    print("KYC verification confirmed")
+                    await MainActor.run {
+                        alert = Alert(title: "Success", message: "KYC information confirmed.")
+                    }
                 case .updateAddress:
                     await MainActor.run {
                         isPresentingUpdateAddress = true
@@ -117,7 +138,18 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                     break
                 }
             } catch {
-                print("Error during KYC verification: \(error)")
+                await MainActor.run {
+                    let errorMessage = if
+                        let stripeError = error as? StripeError,
+                        case let .apiError(stripeAPIError) = stripeError,
+                        let message = stripeAPIError.message {
+                        message + " (\(stripeAPIError.code ?? "no error code"))"
+                    } else {
+                        error.localizedDescription
+                    }
+
+                    alert = Alert(title: "KYC verification failed", message: errorMessage)
+                }
             }
         }
     }
