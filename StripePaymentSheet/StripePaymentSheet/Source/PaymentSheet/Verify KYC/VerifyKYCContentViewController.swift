@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 10/30/25.
 //
 
-import UIKit
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// The content view of `VerifyKYCViewController`, which displays a list of KYC fields with the optional ability to initiate editing of the address.
 final class VerifyKYCContentViewController: UIViewController, BottomSheetContentViewController {
