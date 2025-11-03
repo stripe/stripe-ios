@@ -1,13 +1,12 @@
 //
 //  VerifyKYCInfoRowView.swift
-//  StripeCryptoOnramp
+//  StripePaymentSheet
 //
 //  Created by Michael Liberatore on 10/30/25.
 //
 
 import UIKit
 
-@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 
 /// Displays an individual KYC detail (e.g. name) with an optional edit button.

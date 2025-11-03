@@ -1,13 +1,11 @@
 //
 //  VerifyKYCContentViewController.swift
-//  StripeCryptoOnramp
+//  StripePaymentSheet
 //
 //  Created by Michael Liberatore on 10/30/25.
 //
 
 import UIKit
-
-@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 
 /// The content view of `VerifyKYCViewController`, which displays a list of KYC fields with the optional ability to initiate editing of the address.
@@ -31,17 +29,17 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
 
     // MARK: - VerifyKYCContentViewController
 
-    private let info: KYCRefreshInfo
+    private let info: VerifyKYCInfo
     private let appearance: LinkAppearance
 
     /// Closure called when a user takes action (confirm, cancel, or initiate editing of the address).
-    var onResult: ((VerifyKycResult) -> Void)?
+    var onResult: ((VerifyKYCResult) -> Void)?
 
     /// Creates a new instance of `VerifyKYCContentViewController`.
     /// - Parameters:
     ///   - info: The KYC information to display.
     ///   - appearance: Determines the colors, corner radius, and height of the "Confirm" button.
-    init(info: KYCRefreshInfo, appearance: LinkAppearance) {
+    init(info: VerifyKYCInfo, appearance: LinkAppearance) {
         self.info = info
         self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
@@ -92,6 +90,46 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         return label
     }()
 
+    private var formattedName: String {
+        var components = PersonNameComponents()
+        components.givenName = info.firstName.trimmingCharacters(in: .whitespacesAndNewlines)
+        components.familyName = info.lastName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        return PersonNameComponentsFormatter.localizedString(from: components, style: .default)
+    }
+
+    private var formattedDateOfBirth: String {
+        // Format the date in a locale-friendly manner where components can change order
+        // and use leading 0s for days and months < 10, e.g. 09/01/2000.
+        var components = DateComponents()
+        components.calendar = .current
+        components.timeZone = .current
+        components.year = info.dateOfBirthYear
+        components.month = info.dateOfBirthMonth
+        components.day = info.dateOfBirthDay
+
+        if let date = components.date {
+            let formatter = DateFormatter()
+            formatter.locale = .current
+            formatter.calendar = .current
+            formatter.timeZone = .current
+            formatter.setLocalizedDateFormatFromTemplate("MMddyyyy")
+            return formatter.string(from: date)
+        } else {
+            // fall back to strict manual formatting in the event of an unexpected error with `DateComponents`.
+            let mm = String(format: "%02d", info.dateOfBirthMonth)
+            let dd = String(format: "%02d", info.dateOfBirthDay)
+            let yyyy = String(format: "%04d", info.dateOfBirthYear)
+            return "\(mm)/\(dd)/\(yyyy)"
+        }
+    }
+
+    private var formattedAddress: String {
+        [info.line1, info.line2, info.city, info.state, info.country, info.postalCode]
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .joined(separator: ", ")
+    }
+
     private lazy var infoContainerView: UIView = {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
@@ -100,19 +138,14 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         container.layer.cornerRadius = Constants.infoContainerCornerRadius
         container.layer.masksToBounds = true
 
-        let name = formattedName(first: info.firstName, last: info.lastName)
-        let dob = formattedDOB(info.dateOfBirth)
-        let last4 = info.idNumberLast4 ?? ""
-        let address = formattedAddress(info.address)
-
         let stackView = UIStackView(arrangedSubviews: [
-            VerifyKYCInfoRowView(title: "Name", value: name),
+            VerifyKYCInfoRowView(title: "Name", value: formattedName),
             makeDivider(),
-            VerifyKYCInfoRowView(title: "Date of Birth", value: dob),
+            VerifyKYCInfoRowView(title: "Date of Birth", value: formattedDateOfBirth),
             makeDivider(),
-            VerifyKYCInfoRowView(title: "Last 4 digits of SSN", value: last4),
+            VerifyKYCInfoRowView(title: "Last 4 digits of SSN", value: info.idNumberLast4 ?? ""),
             makeDivider(),
-            VerifyKYCInfoRowView(title: "Address", value: address, editAction: { [weak self] in
+            VerifyKYCInfoRowView(title: "Address", value: formattedAddress, editAction: { [weak self] in
                 self?.onResult?(.updateAddress)
             }),
         ])
@@ -132,46 +165,6 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
             divider.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.scale)
         ])
         return divider
-    }
-
-    private func formattedName(first: String, last: String?) -> String {
-        var components = PersonNameComponents()
-        components.givenName = first.trimmingCharacters(in: .whitespacesAndNewlines)
-        components.familyName = last?.trimmingCharacters(in: .whitespacesAndNewlines)
-        return PersonNameComponentsFormatter.localizedString(from: components, style: .default)
-    }
-
-    private func formattedDOB(_ dob: KycInfo.DateOfBirth) -> String {
-        // Format the date in a locale-friendly manner where components can change order
-        // and use leading 0s for days and months < 10, e.g. 09/01/2000.
-        var components = DateComponents()
-        components.calendar = .current
-        components.timeZone = .current
-        components.year = dob.year
-        components.month = dob.month
-        components.day = dob.day
-
-        if let date = components.date {
-            let formatter = DateFormatter()
-            formatter.locale = .current
-            formatter.calendar = .current
-            formatter.timeZone = .current
-            formatter.setLocalizedDateFormatFromTemplate("MMddyyyy")
-            return formatter.string(from: date)
-        } else {
-            // fall back to strict manual formatting in the event of an unexpected error with `DateComponents`.
-            let mm = String(format: "%02d", dob.month)
-            let dd = String(format: "%02d", dob.day)
-            let yyyy = String(format: "%04d", dob.year)
-            return "\(mm)/\(dd)/\(yyyy)"
-        }
-    }
-
-    private func formattedAddress(_ address: Address) -> String {
-        [address.line1, address.line2, address.city, address.state, address.country, address.postalCode]
-            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty }
-            .joined(separator: ", ")
     }
 
     private lazy var bottomButtonContainer: UIView = {

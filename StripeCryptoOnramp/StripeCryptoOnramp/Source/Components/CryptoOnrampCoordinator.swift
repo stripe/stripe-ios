@@ -91,14 +91,14 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
     /// - Parameters:
-    ///   - updatedAddress: An optional updated address. Specify this parameter if the user has elected to change the address after a prior call to this API returned `VerifyKycResult.updateAddress`. Otherwise, specify `nil` to show the user’s existing KYC information on the presented flow.
+    ///   - updatedAddress: An optional updated address. Specify this parameter if the user has elected to change the address after a prior call to this API returned `VerifyKYCResult.updateAddress`. Otherwise, specify `nil` to show the user’s existing KYC information on the presented flow.
     ///   - viewController: The view controller from which to present the KYC verification flow.
-    /// - Returns: An instance of `VerifyKycResult` indicating the following:
-    ///     - `VerifyKycResult.confirmed`: The user has confirmed that the KYC information displayed is accurate.
-    ///     - `VerifyKycResult.updateAddress`: The user has elected to update the displayed address. The verification UI will be dismissed, and the caller must collect new address information, and call this API again, specifying the new address in the `updatedAddress` parameter.
-    ///     - `VerifyKycResult.canceled`: The user canceled the flow, dismissing the verification UI.
+    /// - Returns: An instance of `VerifyKYCResult` indicating the following:
+    ///     - `VerifyKYCResult.confirmed`: The user has confirmed that the KYC information displayed is accurate.
+    ///     - `VerifyKYCResult.updateAddress`: The user has elected to update the displayed address. The verification UI will be dismissed, and the caller must collect new address information, and call this API again, specifying the new address in the `updatedAddress` parameter.
+    ///     - `VerifyKYCResult.canceled`: The user canceled the flow, dismissing the verification UI.
     /// Throws if an authenticated Link user is not available, KYC information has not yet been collected, or an API error occurs.
-    func verifyKYCInfo(updatedAddress: Address?, from viewController: UIViewController) async throws -> VerifyKycResult
+    func verifyKYCInfo(updatedAddress: Address?, from viewController: UIViewController) async throws -> VerifyKYCResult
 
     /// Creates an identity verification session and launches the document verification flow.
     /// Requires an authenticated Link user.
@@ -391,7 +391,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
-    public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKycResult {
+    public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKYCResult {
         do {
             let linkAccountInfo = try await self.linkAccountInfo
             let apiClient = self.apiClient
@@ -413,7 +413,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         verifyKYCViewController?.onResult = nil
 
                         // We’ll report the result back to the user after full dismissal of the sheet.
-                        let dismissAndResumeWithResult: (Result<VerifyKycResult, Swift.Error>) -> Void = { continuationResult in
+                        let dismissAndResumeWithResult: (Result<VerifyKYCResult, Swift.Error>) -> Void = { continuationResult in
                             verifyKYCViewController?.dismiss(animated: true) {
                                 continuation.resume(with: continuationResult)
                             }
@@ -433,6 +433,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                                     dismissAndResumeWithResult(.failure(error))
                                 }
                             }
+                        @unknown default:
+                            break
                         }
                     }
 

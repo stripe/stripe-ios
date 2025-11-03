@@ -1,16 +1,14 @@
 //
 //  VerifyKYCViewController.swift
-//  StripeCryptoOnramp
+//  StripePaymentSheet
 //
 //  Created by Michael Liberatore on 10/28/25.
 //
 
-@_spi(STP) import StripePaymentSheet
-
 import UIKit
 
 /// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
-final class VerifyKYCViewController: BottomSheetViewController {
+@_spi(STP) public final class VerifyKYCViewController: BottomSheetViewController {
     private enum Constants {
         static let sheetCornerRadius: CGFloat = 24
     }
@@ -18,7 +16,7 @@ final class VerifyKYCViewController: BottomSheetViewController {
     private weak var contentViewController: VerifyKYCContentViewController?
 
     /// Closure called when a user takes action (confirm, cancel, or initiate editing of the address).
-    var onResult: ((VerifyKycResult) -> Void)? {
+    @_spi(STP) public var onResult: ((VerifyKYCResult) -> Void)? {
         didSet {
             contentViewController?.onResult = onResult
         }
@@ -26,7 +24,7 @@ final class VerifyKYCViewController: BottomSheetViewController {
 
     // MARK: - BottomSheetViewController
 
-    override var sheetCornerRadius: CGFloat? {
+    @_spi(STP) public override var sheetCornerRadius: CGFloat? {
         Constants.sheetCornerRadius
     }
 
@@ -36,7 +34,7 @@ final class VerifyKYCViewController: BottomSheetViewController {
     /// - Parameters:
     ///   - info: The KYC information to display.
     ///   - appearance: Determines the colors, corner radius, and height of the "Confirm" button and the user interface style (i.e. light, dark, or system).
-    init(info: KYCRefreshInfo, appearance: LinkAppearance) {
+    @_spi(STP) public init(info: VerifyKYCInfo, appearance: LinkAppearance) {
         let contentViewController = VerifyKYCContentViewController(info: info, appearance: appearance)
         self.contentViewController = contentViewController
 
@@ -60,7 +58,7 @@ final class VerifyKYCViewController: BottomSheetViewController {
 
     // MARK: - BottomSheetViewController
 
-    override func didTapOrSwipeToDismiss() {
+    @_spi(STP) public override func didTapOrSwipeToDismiss() {
         contentViewController?.didTapOrSwipeToDismiss()
     }
 }
