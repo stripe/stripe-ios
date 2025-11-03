@@ -220,9 +220,9 @@ extension PaymentSheet {
                         paymentIntent: paymentIntent,
                         configuration: configuration
                     )
-                    paymentHandler.confirmPayment(
-                        params,
-                        with: authenticationContext,
+                    paymentHandler.confirmPaymentIntent(
+                        params: params,
+                        authenticationContext: authenticationContext,
                         completion: { actionStatus, paymentIntent, error in
                             if let paymentIntent {
                                 setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -243,8 +243,8 @@ extension PaymentSheet {
                         configuration: configuration
                     )
                     paymentHandler.confirmSetupIntent(
-                        setupIntentParams,
-                        with: authenticationContext,
+                        params: setupIntentParams,
+                        authenticationContext: authenticationContext,
                         completion: { actionStatus, setupIntent, error in
                             if let setupIntent {
                                 setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -286,9 +286,9 @@ extension PaymentSheet {
 
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil), paymentIntent: paymentIntent, configuration: configuration)
 
-                paymentHandler.confirmPayment(
-                    paymentIntentParams,
-                    with: authenticationContext,
+                paymentHandler.confirmPaymentIntent(
+                    params: paymentIntentParams,
+                    authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -301,8 +301,8 @@ extension PaymentSheet {
                     configuration: configuration
                 )
                 paymentHandler.confirmSetupIntent(
-                    setupIntentParams,
-                    with: authenticationContext,
+                    params: setupIntentParams,
+                    authenticationContext: authenticationContext,
                     completion: { actionStatus, _, error in
                         paymentHandlerCompletion(actionStatus, error)
                     }
@@ -339,7 +339,7 @@ extension PaymentSheet {
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
                     case .paymentIntent(let paymentIntent):
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.paymentMethodParams = paymentMethodParams
                         paymentIntentParams.returnURL = configuration.returnURL
                         let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
@@ -349,9 +349,9 @@ extension PaymentSheet {
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext,
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 paymentHandlerCompletion(actionStatus, error)
                                 if actionStatus == .succeeded {
@@ -365,8 +365,8 @@ extension PaymentSheet {
                         setupIntentParams.returnURL = configuration.returnURL
                         setupIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext,
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 paymentHandlerCompletion(actionStatus, error)
                                 if actionStatus == .succeeded {
@@ -410,7 +410,7 @@ extension PaymentSheet {
                     let mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
                     switch intent {
                     case .paymentIntent(let paymentIntent):
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                         paymentIntentParams.returnURL = configuration.returnURL
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
@@ -422,9 +422,9 @@ extension PaymentSheet {
                         paymentIntentParams.radarOptions = radarOptions
                         paymentIntentParams.mandateData = mandateData
                         paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext,
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
@@ -440,8 +440,8 @@ extension PaymentSheet {
                         setupIntentParams.radarOptions = radarOptions
                         setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext,
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext,
                             completion: { actionStatus, _, error in
                                 if actionStatus == .succeeded {
                                     linkAccount?.logout()
@@ -628,12 +628,10 @@ extension PaymentSheet {
                 }
             }
         case let .external(externalPaymentOption, billingDetails):
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 // Call confirmHandler so that the merchant completes the payment
-                externalPaymentOption.confirm(billingDetails: billingDetails) { result in
-                    // This closure is invoked by the merchant when payment is finished
-                    completion(result, nil)
-                }
+                let result = await externalPaymentOption.confirm(billingDetails: billingDetails)
+                completion(result, nil)
             }
         }
     }
@@ -714,15 +712,15 @@ extension PaymentSheet {
         paymentIntent: STPPaymentIntent,
         configuration: PaymentElementConfiguration,
         mandateData: STPMandateDataParams? = nil
-    ) -> STPPaymentIntentParams {
-        let params: STPPaymentIntentParams
+    ) -> STPPaymentIntentConfirmParams {
+        let params: STPPaymentIntentConfirmParams
         let shouldSave: Bool
         let paymentMethodType: STPPaymentMethodType
         switch confirmPaymentMethodType {
         case .saved(let paymentMethod, let paymentMethodOptions, let clientAttributionMetadata, let radarOptions):
             shouldSave = false
             paymentMethodType = paymentMethod.type
-            params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
+            params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
             params.paymentMethodOptions = paymentMethodOptions
             params.paymentMethodId = paymentMethod.stripeId
             params.radarOptions = radarOptions
@@ -731,11 +729,11 @@ extension PaymentSheet {
             shouldSave = _shouldSave
             if let paymentMethod = paymentMethod {
                 paymentMethodType = paymentMethod.type
-                params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
+                params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
                 params.paymentMethodId = paymentMethod.stripeId
                 params.paymentMethodOptions = paymentMethodoptions
             } else {
-                params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
                 params.paymentMethodOptions = paymentMethodoptions
                 paymentMethodType = paymentMethodParams.type

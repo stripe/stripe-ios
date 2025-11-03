@@ -393,17 +393,16 @@ class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
         // When the user taps 'Pay', PKPaymentAuthorizationController calls `didAuthorizePayment:completion:`
         // After you call its completion block, it calls `paymentAuthorizationControllerDidFinish:`
         let didCallAuthorizePaymentCompletion = expectation(description: "ApplePayContext called completion block of paymentAuthorizationController:didAuthorizePayment:completion:")
-        if let authorizationController = context?.authorizationController {
-            context?.paymentAuthorizationController(authorizationController, didAuthorizePayment: STPFixtures.simulatorApplePayPayment(), handler: { [self] result in
-                XCTAssertEqual(expectedStatus, result.status)
-                DispatchQueue.main.async(execute: { [self] in
-                    if let authorizationController = context?.authorizationController {
-                        context?.paymentAuthorizationControllerDidFinish(authorizationController)
-                    }
-                    didCallAuthorizePaymentCompletion.fulfill()
-                })
+        let authorizationController = context.authorizationController
+        context?.paymentAuthorizationController(authorizationController, didAuthorizePayment: STPFixtures.simulatorApplePayPayment(), handler: { [self] result in
+            XCTAssertEqual(expectedStatus, result.status)
+            DispatchQueue.main.async(execute: { [self] in
+                if let authorizationController = context?.authorizationController {
+                    context?.paymentAuthorizationControllerDidFinish(authorizationController)
+                }
+                didCallAuthorizePaymentCompletion.fulfill()
             })
-        }
+        })
     }
 }
 
@@ -411,5 +410,121 @@ class STPTestPKPaymentAuthorizationController: PKPaymentAuthorizationController 
     // Stub dismissViewControllerAnimated: to just call its completion block
     override func dismiss(completion: (() -> Void)? = nil) {
         completion?()
+    }
+}
+
+// MARK: - Async delegate methods
+// Keeps track of which async delegate methods have been called
+class TestAsyncApplePayContextDelegate: NSObject, ApplePayContextDelegate {
+    enum AsyncDelegateMethods: Comparable {
+        case didCreatePaymentMethod
+        case didSelectShippingMethod
+        case didSelectShippingContact
+        case didChangeCouponCode
+        case willCompleteWithResult
+        case didCompleteWithStatus
+    }
+
+    var delegateMethodsCalled: [AsyncDelegateMethods] = []
+
+    func applePayContext(
+        _ context: StripeApplePay.STPApplePayContext,
+        didCreatePaymentMethod paymentMethod: StripeCore.StripeAPI.PaymentMethod,
+        paymentInformation: PKPayment
+    ) async throws -> String {
+        delegateMethodsCalled.append(.didCreatePaymentMethod)
+        return "pi_bad_secret_1234"
+    }
+
+    func applePayContext(
+        _ context: StripeApplePay.STPApplePayContext,
+        didSelectShippingContact contact: PKContact
+    ) async -> PKPaymentRequestShippingContactUpdate {
+        delegateMethodsCalled.append(.didSelectShippingContact)
+        return .init()
+    }
+
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didSelect shippingMethod: PKShippingMethod
+    ) async -> PKPaymentRequestShippingMethodUpdate {
+        delegateMethodsCalled.append(.didSelectShippingMethod)
+        return .init()
+    }
+
+    @available(iOS 15.0, *)
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didChangeCouponCode couponCode: String
+    ) async -> PKPaymentRequestCouponCodeUpdate {
+        delegateMethodsCalled.append(.didChangeCouponCode)
+        return .init()
+    }
+
+    func applePayContext(
+        _ context: STPApplePayContext,
+        willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult
+    ) async -> PKPaymentAuthorizationResult {
+        delegateMethodsCalled.append(.willCompleteWithResult)
+        return authorizationResult
+    }
+
+    func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCompleteWith status: StripeApplePay.STPApplePayContext.PaymentStatus, error: (any Error)?) {
+        delegateMethodsCalled.append(.didCompleteWithStatus)
+    }
+}
+
+extension STPApplePayContextFunctionalTest {
+    func testAsyncDelegateMethodsCalled() {
+        let delegate = TestAsyncApplePayContextDelegate()
+        let request = StripeAPI.paymentRequest(
+            withMerchantIdentifier: "foo",
+            country: "US",
+            currency: "USD"
+        )
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00")),
+        ]
+        self.context = STPApplePayContext(paymentRequest: request, delegate: delegate)!
+        context.apiClient = apiClient
+        _startApplePayForContext(withExpectedStatus: .failure)
+        waitForExpectations(timeout: 50)
+        XCTAssertEqual(delegate.delegateMethodsCalled, [.didCreatePaymentMethod, .willCompleteWithResult])
+        delegate.delegateMethodsCalled = []
+
+        // Now test that the 3 optional async methods get called:
+        let e1 = expectation(description: "didSelectShippingMethod")
+        XCTAssertTrue(context.responds(to: #selector((PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didSelectShippingMethod:handler:)))))
+        context.paymentAuthorizationController(
+            context.authorizationController,
+            didSelectShippingMethod: .init()
+        ) { _ in
+            e1.fulfill()
+        }
+        // didSelectShippingContact should be called
+        let e2 = expectation(description: "didSelectShippingContact")
+        XCTAssertTrue(context.responds(to: #selector(PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didSelectShippingContact:handler:))))
+        context.paymentAuthorizationController(
+            context.authorizationController,
+            didSelectShippingContact: .init()
+        ) { _ in
+            e2.fulfill()
+        }
+
+        // didChangeCouponCode should be called
+        if #available(iOS 15.0, *) {
+            let e3 = expectation(description: "didChangeCouponCode")
+            XCTAssertTrue(context.responds(to: #selector(PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didChangeCouponCode:handler:))))
+            context.paymentAuthorizationController(
+                context.authorizationController,
+                didChangeCouponCode: .init()
+            ) { _ in
+                e3.fulfill()
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+        waitForExpectations(timeout: 3)
+        XCTAssertEqual(delegate.delegateMethodsCalled.sorted(), [.didCompleteWithStatus, .didSelectShippingMethod, .didSelectShippingContact, .didChangeCouponCode].sorted())
     }
 }

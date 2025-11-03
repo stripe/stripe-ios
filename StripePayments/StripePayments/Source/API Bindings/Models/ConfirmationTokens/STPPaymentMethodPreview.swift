@@ -9,7 +9,7 @@ import Foundation
 
 /// Preview of payment method details captured by the ConfirmationToken.
 /// - seealso: https://docs.stripe.com/api/confirmation_tokens/object#confirmation_token_object-payment_method_preview
-@_spi(ConfirmationTokensPublicPreview) public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
+public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
     /// You cannot directly instantiate an `STPPaymentMethodPreview`. You should only use one that is returned from the Stripe API.
     required internal override init() {
         super.init()

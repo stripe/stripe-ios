@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@_spi(STP) import StripePayments
 
 extension PaymentSheet {
     static func handleDeferredIntentConfirmation_confirmationToken(
@@ -27,7 +27,9 @@ extension PaymentSheet {
             let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
                                                                         configuration: configuration,
                                                                         intentConfig: intentConfig,
-                                                                        elementsSession: elementsSession)
+                                                                        allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                                                                        elementsSession: elementsSession,
+                                                                        mandateData: mandateData)
 
                 let ephemeralKeySecret: String? = {
                     // Only needed when using existing saved payment methods, API will error if provided for new payment methods
@@ -44,8 +46,11 @@ extension PaymentSheet {
                                                                                                   additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
 
                 // 3. Vend the ConfirmationToken and fetch the client secret from the merchant
-                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
-                                                                  confirmationToken: confirmationToken)
+                guard let handler = intentConfig.confirmationTokenConfirmHandler else {
+                    stpAssertionFailure("No confirmationTokenConfirmHandler available")
+                    throw PaymentSheetError.unknown(debugDescription: "No confirmationTokenConfirmHandler available")
+                }
+                let clientSecret = try await handler(confirmationToken)
 
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
@@ -81,15 +86,15 @@ extension PaymentSheet {
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 5a. Client-side confirmation with confirmation token
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.confirmationToken = confirmationToken.stripeId
                         paymentIntentParams.returnURL = configuration.returnURL
                         paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
                         paymentIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
                             completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .client)
                         }
@@ -116,8 +121,8 @@ extension PaymentSheet {
                         setupIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
                             completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .client)
                         }
@@ -218,7 +223,7 @@ extension PaymentSheet {
 
                 // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
                 if confirmationTokenParams.mandateData == nil {
-                    confirmationTokenParams.mandateData = STPPaymentIntentParams.mandateDataIfRequired(for: paymentMethodType)
+                    confirmationTokenParams.mandateData = STPPaymentIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
                 }
             case .setup:
                 // Setup intents always require mandate data for certain payment methods
@@ -256,29 +261,9 @@ extension PaymentSheet {
     private static func isSavedFromLink(from confirmType: ConfirmPaymentMethodType) -> Bool {
         switch confirmType {
         case .saved(let paymentMethod, _, _, _):
-            return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.usBankAccount?.linkedAccount != nil || paymentMethod.link != nil
+            return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.link != nil
         case .new:
             return false
-        }
-    }
-
-    /// Calls merchant app confirm handler to get the intent client secret
-    ///
-    /// - Parameters:
-    ///   - intentConfig: The Intent configuration
-    ///   - confirmationToken: The newly created confirmation token
-    /// - Returns: Client secret for the PaymentIntent or SetupIntent
-    /// - Throws: Any error from the merchant's confirmation handler
-    private static func fetchIntentClientSecretFromMerchant(
-        intentConfig: IntentConfiguration,
-        confirmationToken: STPConfirmationToken
-    ) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                intentConfig.confirmationTokenConfirmHandler?(confirmationToken) { result in
-                    continuation.resume(with: result)
-                }
-            }
         }
     }
 }

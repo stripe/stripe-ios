@@ -32,7 +32,7 @@ class CheckScanningControllerTests: XCTestCase {
     @MainActor
     func testDelegate() async throws {
         let delegate = CheckScanningControllerDelegatePassThrough()
-        let controller = componentManager.createCheckScanningController { _ in return HandleCheckScanSubmittedReturnValue() }
+        let controller = componentManager.createCheckScanningController { _ in }
         controller.delegate = delegate
 
         let expectationDidFail = XCTestExpectation(description: "didFail called")
@@ -49,7 +49,7 @@ class CheckScanningControllerTests: XCTestCase {
 
     @MainActor
     func testFetchInitComponentProps() async throws {
-        let controller = componentManager.createCheckScanningController { _ in return HandleCheckScanSubmittedReturnValue() }
+        let controller = componentManager.createCheckScanningController { _ in }
 
         try await controller.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                                     json: "{}",

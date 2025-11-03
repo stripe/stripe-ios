@@ -58,4 +58,15 @@ class PassiveCaptchaTests: XCTestCase {
         XCTAssertLessThan(errorAnalytic?["duration"] as! Double, 2000.0)
     }
 
+    func testPassiveCaptchaLongTimeout() async {
+        let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
+        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
+        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
+        await passiveCaptchaChallenge.setTimeout(timeout: 30)
+        let startTime = Date()
+        let hcaptchaToken = await passiveCaptchaChallenge.fetchTokenWithTimeout()
+        // didn't time out because it finished early
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
+        XCTAssertNotNil(hcaptchaToken)
+    }
 }

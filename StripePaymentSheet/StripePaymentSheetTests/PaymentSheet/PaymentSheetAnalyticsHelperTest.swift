@@ -17,7 +17,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     @MainActor
     func testPaymentSheetAddsUsage() {
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _, _ in })
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _ in return "" })
 
         // Clear product usage prior to testing PaymentSheet
         STPAnalyticsClient.sharedClient.productUsage = Set()
@@ -655,7 +655,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         // Test case 2: Deferred intent without preparePaymentMethodHandler
         // Should set is_decoupled = true, is_spt = false
         analyticsClient._testLogHistory.removeAll()
-        let deferredIntentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd")) { _, _, _ in }
+        let deferredIntentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd")) { _, _ in return "" }
         let deferredIntent = Intent.deferredIntent(intentConfig: deferredIntentConfig)
         sut.logLoadSucceeded(
             intent: deferredIntent,

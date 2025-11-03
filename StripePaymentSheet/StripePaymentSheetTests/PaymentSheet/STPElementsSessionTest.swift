@@ -57,6 +57,18 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_attestation() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": true]
+
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertTrue(elementsSession.shouldAttestOnConfirmation)
+
+        elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": false]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": true]
@@ -650,6 +662,7 @@ class STPElementsSessionTest: XCTestCase {
     private let testCardJSON = [
         "id": "pm_123card",
         "type": "card",
+        "created": "12345",
         "card": [
             "last4": "4242",
             "brand": "visa",
@@ -662,6 +675,7 @@ class STPElementsSessionTest: XCTestCase {
     private let testCardAmexJSON = [
         "id": "pm_123amexcard",
         "type": "card",
+        "created": "12345",
         "card": [
             "last4": "0005",
             "brand": "amex",

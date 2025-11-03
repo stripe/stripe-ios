@@ -153,7 +153,7 @@ class STPPaymentIntentTest: XCTestCase {
 
         XCTAssertEqual(
             paymentIntent.paymentMethodTypes,
-            [NSNumber(value: STPPaymentMethodType.card.rawValue)]
+            [STPPaymentMethodType.card]
         )
 
         // lastPaymentError
@@ -400,6 +400,7 @@ class STPPaymentIntentTest: XCTestCase {
             "status": "succeeded",
             "payment_method": [
                 "id": "pm_test123",
+                "created": "1753466748",
                 "object": "payment_method",
                 "type": "card",
                 "card": [

@@ -30,7 +30,6 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_card = "icon-pm-card"
     case pm_type_card_outlined = "icon-pm-card-outlined"
     case pm_type_eps = "icon-pm-eps"
-    case pm_type_giropay = "icon-pm-giropay"
     case pm_type_ideal = "icon-pm-ideal"
     case pm_type_klarna = "icon-pm-klarna"
     case pm_type_p24 = "icon-pm-p24"

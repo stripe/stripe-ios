@@ -120,14 +120,14 @@ import Foundation
     static func makeBackupElementsSession(with paymentIntent: STPPaymentIntent) -> STPElementsSession {
         return makeBackupElementsSession(
             allResponseFields: paymentIntent.allResponseFields,
-            paymentMethodTypes: paymentIntent.paymentMethodTypes.map { STPPaymentMethodType.init(rawValue: $0.intValue) ?? .unknown }
+            paymentMethodTypes: paymentIntent.paymentMethodTypes
         )
     }
 
     static func makeBackupElementsSession(with setupIntent: STPSetupIntent) -> STPElementsSession {
         return makeBackupElementsSession(
             allResponseFields: setupIntent.allResponseFields,
-            paymentMethodTypes: setupIntent.paymentMethodTypes.map { STPPaymentMethodType.init(rawValue: $0.intValue) ?? .unknown }
+            paymentMethodTypes: setupIntent.paymentMethodTypes
         )
     }
 
@@ -379,6 +379,10 @@ extension STPElementsSession {
 
     var linkSignupOptInInitialValue: Bool {
         linkFlags["link_sign_up_opt_in_initial_value"] == true
+    }
+
+    var shouldAttestOnConfirmation: Bool {
+        flags["elements_mobile_attest_on_intent_confirmation"] == true
     }
 }
 

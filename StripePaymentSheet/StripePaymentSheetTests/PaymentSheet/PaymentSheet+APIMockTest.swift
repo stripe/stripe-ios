@@ -8,7 +8,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -120,11 +120,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         static let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: MockJson.setupIntent)!
 
         static func deferredPaymentIntentConfiguration(clientSecret: String) -> PaymentSheet.IntentConfiguration {
-            .init(mode: .payment(amount: 123, currency: "USD"), paymentMethodTypes: ["card"]) { _, _, c in c(.success(clientSecret)) }
+            .init(mode: .payment(amount: 123, currency: "USD"), paymentMethodTypes: ["card"]) { _, _ in return clientSecret }
         }
 
         static func deferredSetupIntentConfiguration(clientSecret: String) -> PaymentSheet.IntentConfiguration {
-            .init(mode: .setup(currency: "USD", setupFutureUsage: .offSession), confirmHandler: { _, _, c in c(.success(clientSecret)) })
+            .init(mode: .setup(currency: "USD", setupFutureUsage: .offSession)) { _, _ in return clientSecret }
         }
     }
 

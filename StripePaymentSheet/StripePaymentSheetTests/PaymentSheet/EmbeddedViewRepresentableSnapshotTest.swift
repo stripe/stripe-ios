@@ -20,8 +20,9 @@ class EmbeddedViewRepresentableSnapshotTest: STPSnapshotTestCase {
         let intentConfig = EmbeddedPaymentElement.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "USD"),
             paymentMethodTypes: ["card", "cashapp", "us_bank_account", "link", "apple_pay", "afterpay_clearpay"]
-        ) { _, _, _ in
+        ) { _, _ in
             // In these tests, we don't call confirm, so pass an empty handler.
+            return ""
         }
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)

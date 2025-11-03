@@ -6,8 +6,8 @@
 //
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
-@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable@_spi(STP) import StripePayments
+@testable @_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -195,8 +195,9 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         )
         let elementsSession = try await apiClient.retrieveDeferredElementsSession(
             withIntentConfig: .init(mode: .setup(currency: "usd", setupFutureUsage: .offSession),
-                                    confirmHandler: { _, _, _ in
+                                    confirmHandler: { _, _ in
                                         // no-op
+                                        return ""
                                     }),
             clientDefaultPaymentMethod: nil,
             configuration: configuration

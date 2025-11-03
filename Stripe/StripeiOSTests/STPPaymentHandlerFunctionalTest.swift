@@ -196,7 +196,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
 
     func test_confirm_payment_intent_sends_analytic() {
         // Confirming a hardcoded already-confirmed PI with invalid params...
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A", paymentMethodType: .card)
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A", paymentMethodType: .card)
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
@@ -228,7 +228,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
 
     func test_confirm_payment_intent_savedpm_sends_analytic() {
         // Confirming a hardcoded already-confirmed PI with invalid params...
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A")
         paymentIntentParams.paymentMethodId = "pm_123"
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
