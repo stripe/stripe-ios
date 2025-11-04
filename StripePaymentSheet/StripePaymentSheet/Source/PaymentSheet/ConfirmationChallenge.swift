@@ -21,6 +21,7 @@ actor ConfirmationChallenge {
 
     typealias ChallengeTokens = (hcaptchaToken: String?, assertion: StripeAttest.Assertion?)
 
+    // enablePassiveCaptcha and enableAttestation are determined by the playground switches and will be removed on release
     public init(enablePassiveCaptcha: Bool, enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
         if enablePassiveCaptcha, let passiveCaptchaData = elementsSession.passiveCaptchaData {
             self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
