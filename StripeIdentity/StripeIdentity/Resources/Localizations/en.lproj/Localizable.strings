@@ -44,9 +44,6 @@
 /* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Could not capture image";
 
-/* Label for Date of birth field */
-"Date of Birth" = "Date of Birth";
-
 /* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Date of birth does not look valid";
 
