@@ -138,19 +138,20 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         container.layer.cornerRadius = Constants.infoContainerCornerRadius
         container.layer.masksToBounds = true
 
-        let stackView = UIStackView(arrangedSubviews: [
-            VerifyKYCInfoRowView(title: "Name", value: formattedName),
-            makeDivider(),
-            VerifyKYCInfoRowView(title: "Date of Birth", value: formattedDateOfBirth),
-            makeDivider(),
-            VerifyKYCInfoRowView(title: "Last 4 digits of SSN", value: info.idNumberLast4 ?? ""),
-            makeDivider(),
-            VerifyKYCInfoRowView(title: "Address", value: formattedAddress, editAction: { [weak self] in
-                self?.onResult?(.updateAddress)
-            }),
-        ])
-
+        let stackView = UIStackView()
         stackView.axis = .vertical
+
+        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: "Name", value: formattedName))
+        stackView.addArrangedSubview(makeDivider())
+        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: "Date of Birth", value: formattedDateOfBirth))
+        stackView.addArrangedSubview(makeDivider())
+        if let idNumberLast4 = info.idNumberLast4, !idNumberLast4.isEmpty {
+            stackView.addArrangedSubview(VerifyKYCInfoRowView(title: "Last 4 digits of SSN", value: idNumberLast4))
+            stackView.addArrangedSubview(makeDivider())
+        }
+        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: "Address", value: formattedAddress, editAction: { [weak self] in
+            self?.onResult?(.updateAddress)
+        }))
 
         container.addAndPinSubview(stackView)
 
