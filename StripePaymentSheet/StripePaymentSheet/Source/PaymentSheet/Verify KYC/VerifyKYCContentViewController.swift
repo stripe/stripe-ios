@@ -13,7 +13,6 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     private enum Constants {
         static let layoutMargins = NSDirectionalEdgeInsets.insets(leading: 24, trailing: 24)
         static let ctaLayoutMargins = NSDirectionalEdgeInsets.insets(amount: 24)
-        static let infoContainerCornerRadius: CGFloat = 12
     }
 
     // MARK: - BottomSheetContentViewController
@@ -135,7 +134,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         container.translatesAutoresizingMaskIntoConstraints = false
 
         container.backgroundColor = .linkSurfaceSecondary
-        container.layer.cornerRadius = Constants.infoContainerCornerRadius
+        container.layer.cornerRadius = LinkUI.cornerRadius
         container.layer.masksToBounds = true
 
         let stackView = UIStackView()
