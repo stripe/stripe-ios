@@ -14,7 +14,11 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     // MARK: - BottomSheetContentViewController
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navigationBar = LinkSheetNavigationBar(isTestMode: false, appearance: .default)
+        let navigationBar = LinkSheetNavigationBar(
+            isTestMode: false,
+            appearance: .default,
+            shouldLogPaymentSheetAnalyticsOnDismissal: false
+        )
         navigationBar.setStyle(.close(showAdditionalButton: false))
         navigationBar.delegate = self
         return navigationBar
