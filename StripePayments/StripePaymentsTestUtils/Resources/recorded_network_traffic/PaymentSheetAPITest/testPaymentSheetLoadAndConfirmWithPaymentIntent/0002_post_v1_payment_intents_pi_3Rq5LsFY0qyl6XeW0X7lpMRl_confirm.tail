@@ -122,7 +122,7 @@ X-Stripe-Mock-Request: client_secret=pi_3Rq5LsFY0qyl6XeW0X7lpMRl_secret_6NdqB1gx
     "ideal",
     "card",
     "bancontact",
-    "sofort"
+    
   ],
   "setup_future_usage" : null,
   "created" : 1753764084,

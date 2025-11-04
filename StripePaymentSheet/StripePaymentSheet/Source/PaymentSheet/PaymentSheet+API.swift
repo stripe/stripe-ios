@@ -342,7 +342,7 @@ extension PaymentSheet {
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
                     case .paymentIntent(let paymentIntent):
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.paymentMethodParams = paymentMethodParams
                         paymentIntentParams.returnURL = configuration.returnURL
                         let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
@@ -415,7 +415,7 @@ extension PaymentSheet {
                     let mandateData = STPMandateDataParams(customerAcceptance: mandateCustomerAcceptanceParams)
                     switch intent {
                     case .paymentIntent(let paymentIntent):
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                         paymentIntentParams.paymentMethodId = paymentMethod.stripeId
                         paymentIntentParams.returnURL = configuration.returnURL
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
@@ -720,15 +720,15 @@ extension PaymentSheet {
         paymentIntent: STPPaymentIntent,
         configuration: PaymentElementConfiguration,
         mandateData: STPMandateDataParams? = nil
-    ) -> STPPaymentIntentParams {
-        let params: STPPaymentIntentParams
+    ) -> STPPaymentIntentConfirmParams {
+        let params: STPPaymentIntentConfirmParams
         let shouldSave: Bool
         let paymentMethodType: STPPaymentMethodType
         switch confirmPaymentMethodType {
         case .saved(let paymentMethod, let paymentMethodOptions, let clientAttributionMetadata, let radarOptions):
             shouldSave = false
             paymentMethodType = paymentMethod.type
-            params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
+            params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
             params.paymentMethodOptions = paymentMethodOptions
             params.paymentMethodId = paymentMethod.stripeId
             params.radarOptions = radarOptions
@@ -737,11 +737,11 @@ extension PaymentSheet {
             shouldSave = _shouldSave
             if let paymentMethod = paymentMethod {
                 paymentMethodType = paymentMethod.type
-                params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
+                params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
                 params.paymentMethodId = paymentMethod.stripeId
                 params.paymentMethodOptions = paymentMethodoptions
             } else {
-                params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
                 params.paymentMethodOptions = paymentMethodoptions
                 paymentMethodType = paymentMethodParams.type

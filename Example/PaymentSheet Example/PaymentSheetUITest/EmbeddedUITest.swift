@@ -1035,6 +1035,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
     func testSwiftUI() throws {
         app.launch()
+
+        app.swipeUp() // scroll to make list item available on screen
         XCTAssertTrue(app.staticTexts["EmbeddedPaymentElement (SwiftUI)"].waitForExistenceAndTap())
 
         app.buttons["Card"].waitForExistenceAndTap(timeout: 10)

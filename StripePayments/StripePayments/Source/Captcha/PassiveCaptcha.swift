@@ -40,10 +40,6 @@ import Foundation
 }
 
 @_spi(STP) public actor PassiveCaptchaChallenge {
-    enum PassiveCaptchaError: Error {
-        case timeout
-    }
-
     private let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
@@ -61,7 +57,11 @@ import Foundation
 
     private func fetchToken() async throws -> String {
         if let tokenTask {
-            return try await tokenTask.value
+            return try await withTaskCancellationHandler {
+                try await tokenTask.value
+            } onCancel: {
+                tokenTask.cancel()
+            }
         }
 
         let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, rqdata = passiveCaptchaData.rqdata, hcaptchaFactory, weak self] () -> String in
@@ -108,7 +108,11 @@ import Foundation
             }
         }
         self.tokenTask = tokenTask
-        return try await tokenTask.value
+        return try await withTaskCancellationHandler {
+            try await tokenTask.value
+        } onCancel: {
+            tokenTask.cancel()
+        }
     }
 
     private func setValidationComplete() {
@@ -116,34 +120,18 @@ import Foundation
     }
 
     public func fetchTokenWithTimeout(_ timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6) async -> String? {
-        let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
         let siteKey = passiveCaptchaData.siteKey
-        do {
-            return try await withThrowingTaskGroup(of: String.self) { group in
-                let isReady = hasFetchedToken
-                // Add hcaptcha task
-                group.addTask {
-                    return try await self.fetchToken()
-                }
-                // Add timeout task
-                group.addTask {
-                    try await Task.sleep(nanoseconds: timeoutNs)
-                    throw PassiveCaptchaError.timeout
-                }
-                defer {
-                    // ⚠️ TaskGroups can't return until all child tasks have completed, so we need to cancel remaining tasks and handle cancellation to complete as quickly as possible
-                    tokenTask?.cancel()
-                    group.cancelAll()
-                }
-                // Wait for first completion
-                let result = try await group.next()
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
-                return result
-            }
-        } catch {
-            // Only log if PassiveCaptchaError. Other errors should already be logged
-            if error is PassiveCaptchaError {
+        let isReady = hasFetchedToken
+        let passiveCaptchaResult = await withTimeout(timeout) {
+            try await self.fetchToken()
+        }
+        switch passiveCaptchaResult {
+        case .success(let token):
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
+            return token
+        case .failure(let error):
+            if error is TimeoutError {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
             }
             return nil
