@@ -75,6 +75,10 @@ import Foundation
         STPLocalizedString("Billing address is same as shipping", "Label for a checkbox that makes customers billing address same as their shipping address")
     }
 
+    static var date_of_birth: String {
+        STPLocalizedString("Date of Birth", "Label for Date of birth field")
+    }
+
     // MARK: - Phone number
 
     static var phoneNumber: String {
