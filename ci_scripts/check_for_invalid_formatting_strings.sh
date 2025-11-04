@@ -23,7 +23,7 @@ done
 
 if [ $HAS_INVALID_FORMAT == 0 ]
 then
-    echo -e "\t\033[0;32mAll good in '$1'!\033[0m"
+    echo -e "\t\033[0;32mAll formatting is valid in '$1'!\033[0m"
 else
     echo -e "\t\033[0;31m$Found invalid formatting in '$1'.\033[0m"
 fi

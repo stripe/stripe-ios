@@ -192,13 +192,11 @@ extension STPPaymentMethodType {
                 return .pm_type_sepa
             case .EPS:
                 return .pm_type_eps
-            case .giropay:
-                return .pm_type_giropay
             case .przelewy24:
                 return .pm_type_p24
             case .afterpayClearpay:
                 return AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) ? .pm_type_cashapp : .pm_type_afterpay
-            case .sofort, .klarna:
+            case .klarna:
                 return .pm_type_klarna
             case .affirm:
                 return .pm_type_affirm

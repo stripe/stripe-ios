@@ -145,7 +145,7 @@ extension STPAnalyticsClientPaymentsTest {
 // MARK: - Mock types
 
 private struct MockAnalytic: Analytic {
-    let event = STPAnalyticEvent.sourceCreation
+    let event = STPAnalyticEvent.tokenCreation
 
     let params: [String: Any] = [
         "test_param1": 1,

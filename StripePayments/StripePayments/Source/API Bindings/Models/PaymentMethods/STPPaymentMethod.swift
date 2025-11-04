@@ -16,7 +16,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// Unique identifier for the object.
     @objc private(set) public var stripeId: String
     /// Time at which the object was created. Measured in seconds since the Unix epoch.
-    @objc private(set) public var created: Date?
+    @objc private(set) public var created: Date
     /// `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
     @objc private(set) public var liveMode = false
     /// The type of the PaymentMethod.  The corresponding, similarly named property contains additional information specific to the PaymentMethod type.
@@ -42,8 +42,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var bacsDebit: STPPaymentMethodBacsDebit?
     /// If this is an AU BECS Debit PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAUBECSDebit`), this contains additional details.
     @objc private(set) public var auBECSDebit: STPPaymentMethodAUBECSDebit?
-    /// If this is a giropay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeGiropay`), this contains additional details.
-    @objc private(set) public var giropay: STPPaymentMethodGiropay?
     /// If this is an EPS PaymentMethod (i.e. `self.type == STPPaymentMethodTypeEPS`), this contains additional details.
     @objc private(set) public var eps: STPPaymentMethodEPS?
     /// If this is a Przelewy24 PaymentMethod (i.e. `self.type == STPPaymentMethodTypePrzelewy24`), this contains additional details.
@@ -54,8 +52,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var netBanking: STPPaymentMethodNetBanking?
     /// If this is an OXXO PaymentMethod (i.e. `self.type == STPPaymentMethodTypeOXXO`), this contains additional details.
     @objc private(set) public var oxxo: STPPaymentMethodOXXO?
-    /// If this is a Sofort PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSofort`), this contains additional details.
-    @objc private(set) public var sofort: STPPaymentMethodSofort?
     /// If this is a UPI PaymentMethod (i.e. `self.type == STPPaymentMethodTypeUPI`), this contains additional details. :nodoc:
     @objc private(set) public var upi: STPPaymentMethodUPI?
     /// If this is a PayPal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPal`), this contains additional details. :nodoc:
@@ -106,18 +102,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
-    // MARK: - Deprecated
-
-    /// Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
-    /// @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
-    /// - seealso: https://stripe.com/docs/api#metadata
-    @available(
-        *,
-        deprecated,
-        message:
-            "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using your secret key instead."
-    )
-    @objc private(set) public var metadata: [String: String]?
 
     /// The payment details of a PaymentMethod that was created using Link.
     @_spi(STP) public var linkPaymentDetails: LinkPaymentDetails?
@@ -151,14 +135,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "ideal = \(String(describing: iDEAL))",
             "eps = \(String(describing: eps))",
             "fpx = \(String(describing: fpx))",
-            "giropay = \(String(describing: giropay))",
             "netBanking = \(String(describing: netBanking))",
             "oxxo = \(String(describing: oxxo))",
             "grabPay = \(String(describing: grabPay))",
             "payPal = \(String(describing: payPal))",
             "przelewy24 = \(String(describing: przelewy24))",
             "sepaDebit = \(String(describing: sepaDebit))",
-            "sofort = \(String(describing: sofort))",
             "upi = \(String(describing: upi))",
             "afterpay_clearpay = \(String(describing: afterpayClearpay))",
             "blik = \(String(describing: blik))",
@@ -210,12 +192,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         }) ?? .unspecified
     }
 
-    class func types(from strings: [String]) -> [NSNumber] {
-        var types: [AnyHashable] = []
+    class func types(from strings: [String]) -> [STPPaymentMethodType] {
+        var types: [STPPaymentMethodType] = []
         for string in strings {
-            types.append(NSNumber(value: self.type(from: string).rawValue))
+            types.append(self.type(from: string))
         }
-        return types as? [NSNumber] ?? []
+        return types
     }
 
     class func paymentMethodTypes(from strings: [String]) -> [STPPaymentMethodType] {
@@ -230,10 +212,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
     @objc @_spi(STP) public required init(
         stripeId: String,
+        created: Date,
         type: STPPaymentMethodType,
         allowRedisplay: STPPaymentMethodAllowRedisplay = .unspecified
     ) {
         self.stripeId = stripeId
+        self.created = created
         self.type = type
         self.allowRedisplay = allowRedisplay
         super.init()
@@ -247,16 +231,17 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         let dict = response.stp_dictionaryByRemovingNulls()
 
         // Required fields
-        guard let stripeId = dict.stp_string(forKey: "id") else {
+        guard let stripeId = dict.stp_string(forKey: "id"),
+              let created = dict.stp_date(forKey: "created") else {
             return nil
         }
 
         let paymentMethod = self.init(stripeId: stripeId,
+                                      created: created,
                                       type: self.type(from: dict.stp_string(forKey: "type") ?? ""),
                                       allowRedisplay: self.allowRedisplay(from: dict.stp_string(forKey: "allow_redisplay") ?? ""))
         paymentMethod.allResponseFields = response
         paymentMethod.stripeId = stripeId
-        paymentMethod.created = dict.stp_date(forKey: "created")
         paymentMethod.liveMode = dict.stp_bool(forKey: "livemode", or: false)
         paymentMethod.billingDetails = STPPaymentMethodBillingDetails.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "billing_details")
@@ -284,9 +269,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.auBECSDebit = STPPaymentMethodAUBECSDebit.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "au_becs_debit")
         )
-        paymentMethod.giropay = STPPaymentMethodGiropay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "giropay")
-        )
         paymentMethod.eps = STPPaymentMethodEPS.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "eps")
         )
@@ -301,9 +283,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.oxxo = STPPaymentMethodOXXO.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "oxxo")
-        )
-        paymentMethod.sofort = STPPaymentMethodSofort.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "sofort")
         )
         paymentMethod.upi = STPPaymentMethodUPI.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "upi")

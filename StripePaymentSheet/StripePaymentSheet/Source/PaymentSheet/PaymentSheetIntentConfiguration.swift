@@ -45,7 +45,7 @@ public extension PaymentSheet {
         /// - Returns: The `client_secret` of the PaymentIntent or SetupIntent created by your server.
         /// - Throws: An error if one occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         /// - SeeAlso: [Confirmation Tokens documentation](https://stripe.com/docs/api/confirmation_tokens) for more information about how confirmation tokens work.
-        public typealias ConfirmationTokenConfirmHandler = @MainActor (
+        public typealias ConfirmationTokenConfirmHandler = (
             _ confirmationToken: STPConfirmationToken
         ) async throws -> String
 
@@ -267,6 +267,39 @@ public extension PaymentSheet {
                 return PaymentSheetError.intentConfigurationValidationFailed(message: errorMessage)
             }
             return nil
+        }
+
+        // MARK: - Deprecated
+
+        @available(*, deprecated, message: "The confirmHandler closure has been replaced by an async version. To update, delete the `intentCreationCallback` argument in the closure and return the intent client secret or throw an error. See https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2500 for help.")
+        public init(
+            mode: Mode,
+            paymentMethodTypes: [String]? = nil,
+            onBehalfOf: String? = nil,
+            paymentMethodConfigurationId: String? = nil,
+            confirmHandler: @escaping (
+                _ paymentMethod: STPPaymentMethod,
+                _ shouldSavePaymentMethod: Bool,
+                _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
+            ) -> Void,
+            requireCVCRecollection: Bool = false
+        ) {
+            self.init(
+                mode: mode,
+                paymentMethodTypes: paymentMethodTypes,
+                onBehalfOf: onBehalfOf,
+                paymentMethodConfigurationId: paymentMethodConfigurationId,
+                confirmHandler: { paymentMethod, shouldSavePaymentMethod in
+                    return try await withCheckedThrowingContinuation { continuation in
+                        Task { @MainActor in
+                            confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
+                                continuation.resume(with: result)
+                            }
+                        }
+                    }
+                },
+                requireCVCRecollection: requireCVCRecollection
+            )
         }
     }
 }

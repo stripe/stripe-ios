@@ -70,7 +70,7 @@ request-id: req_FFZ1tIFiBegFtS
     "ideal",
     "card",
     "bancontact",
-    "sofort"
+    
   ],
   "setup_future_usage" : null,
   "created" : 1753764084,

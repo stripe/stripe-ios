@@ -82,8 +82,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     func testPaymentSheetLoadAndConfirmWithPaymentIntent() {
         let expectation = XCTestExpectation(description: "Retrieve Payment Intent With Preferences")
-        let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected = [.card, .iDEAL, .bancontact, .sofort]
+        let types = ["ideal", "card", "bancontact"]
+        let expected = [.card, .iDEAL, .bancontact]
             .filter { PaymentSheet.supportedPaymentMethods.contains($0) }
 
         // 0. Create a PI on our test backend
@@ -313,7 +313,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     authenticationContext: self,
                     intent: loadResult.intent,
                     elementsSession: loadResult.elementsSession,
-                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", type: .card), confirmParams: nil),
+                    paymentOption: .saved(paymentMethod: .init(stripeId: "pm_card_visa", created: Date(), type: .card), confirmParams: nil),
                     paymentHandler: self.paymentHandler,
                     analyticsHelper: ._testValue()
                 ) { result, _ in
@@ -795,7 +795,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }
 
     func testDeferredConfirm_saved_insufficient_funds_card() {
-        let insufficient_funds_saved_PM = STPPaymentMethod(stripeId: "pm_card_visa_chargeDeclinedInsufficientFunds", type: .card)
+        let insufficient_funds_saved_PM = STPPaymentMethod(stripeId: "pm_card_visa_chargeDeclinedInsufficientFunds", created: Date(), type: .card)
         _testDeferredConfirm(
             inputPaymentOption: .saved(paymentMethod: insufficient_funds_saved_PM, confirmParams: nil),
             expectedShouldSavePaymentMethod: false,
@@ -1186,7 +1186,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     /// Setting SFU to `true` when a customer is set should set the parameter to `off_session`.
     func testPaymentIntentParamsWithSFUTrueAndCustomer() {
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "")
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             true,
@@ -1209,7 +1209,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     /// Setting SFU to `false` when a customer is set should set the parameter to an empty string.
     func testPaymentIntentParamsWithSFUFalseAndCustomer() {
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "")
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
@@ -1232,7 +1232,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     /// Setting SFU to `true` when no customer is set shouldn't set the parameter.
     func testPaymentIntentParamsWithSFUTrueAndNoCustomer() {
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "")
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
@@ -1246,7 +1246,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     /// Setting SFU to `false` when no customer is set shouldn't set the parameter.
     func testPaymentIntentParamsWithSFUFalseAndNoCustomer() {
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "")
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
@@ -1314,7 +1314,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     func testMakeIntentParams_paypal_sets_mandate() {
         let paypalPaymentMethodParams = STPPaymentMethodParams(payPal: .init(), billingDetails: nil, metadata: nil)
-        let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal"])!
+        let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal", "created": "12345"])!
         let paymentOptions = STPConfirmPaymentMethodOptions()
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
