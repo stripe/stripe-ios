@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {

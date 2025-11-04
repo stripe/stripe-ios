@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import UIKit
 
-@_spi(STP)
-import StripeCryptoOnramp
+@_spi(STP) import StripeCryptoOnramp
+@_spi(STP) import StripePaymentSheet
 
 extension View {
 
@@ -36,6 +37,14 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
             if isShown {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
+                        Button {
+                            verifyKYC()
+                        } label: {
+                            Label("Verify KYC Info…", systemImage: "doc.text.magnifyingglass")
+                        }
+
+                        Divider()
+
                         Button(role: .destructive) {
                             logOut()
                         } label: {
@@ -76,6 +85,27 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                     flowCoordinator?.path = []
                     print("Log out failed. Still returning to root view. Error: \(error)")
                 }
+            }
+        }
+    }
+
+    private func verifyKYC() {
+        guard let presentingVC = UIApplication.shared.findTopViewController() else { return }
+        Task {
+            do {
+                let result = try await coordinator.verifyKYCInfo(from: presentingVC)
+                switch result {
+                case .confirmed:
+                    print("KYC verification confirmed")
+                case .updateAddress:
+                    print("KYC verification: user chose to update address")
+                case .canceled:
+                    print("KYC verification canceled")
+                @unknown default:
+                    break
+                }
+            } catch {
+                print("Error during KYC verification: \(error)")
             }
         }
     }

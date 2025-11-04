@@ -102,4 +102,7 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // Embedded payment element
     case embedded_check = "icon_check"
+
+    // KYC Refresh
+    case iconEditOutline = "icon_edit_outline"
 }
