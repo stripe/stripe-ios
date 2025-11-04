@@ -99,12 +99,15 @@ import Foundation
                         hcaptcha.stop()
                     }
                 }
+                // Check cancellation after continuation
+                try Task.checkCancellation()
                 // Mark as complete
                 await self?.setValidationComplete()
                 let duration = Date().timeIntervalSince(startTime)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
                 return result
             } catch {
+                try Task.checkCancellation()
                 let duration = Date().timeIntervalSince(startTime)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
                 throw error
