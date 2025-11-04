@@ -8,4 +8,3 @@
  This is a dummy placeholder swift file to make `pod lib lint` validate.
 */
 import Foundation
-

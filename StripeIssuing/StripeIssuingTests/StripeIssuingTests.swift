@@ -5,8 +5,8 @@
 //  Created by Zi Yu Bai on 2025-10-30.
 //
 
-import Testing
 @testable import StripeIssuing
+import Testing
 
 struct StripeIssuingTests {
 
