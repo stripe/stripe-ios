@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "kyc_verify_edit.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
