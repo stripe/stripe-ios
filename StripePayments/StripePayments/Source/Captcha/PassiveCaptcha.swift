@@ -80,7 +80,7 @@ import Foundation
                     try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
                         // Prevent Swift Task continuation misuse - the validate completion block can get called multiple times
                         var nillableContinuation: CheckedContinuation<String, Error>? = continuation
-                        
+
                         hcaptcha.validate { result in
                             Task { @MainActor in // MainActor to prevent continuation from different threads
                                 do {
