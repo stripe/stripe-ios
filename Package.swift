@@ -106,7 +106,7 @@ let package = Package(
             path: "StripeIssuingPushProvision/StripeIssuingPushProvision",
             exclude: ["Info.plist"],
             resources: [
-                .process("Resources/Images")
+                .process("Resources")
             ]
         ),
         .target(
