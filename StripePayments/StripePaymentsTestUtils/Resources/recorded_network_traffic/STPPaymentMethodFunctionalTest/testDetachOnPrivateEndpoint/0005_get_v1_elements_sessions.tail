@@ -32,7 +32,7 @@ request-id: req_YXOdxVKcQ2ONmT
       "paypal",
       "sepa_debit",
       "bancontact",
-      "sofort"
+      
     ]
   },
   "capability_enabled_card_networks" : [
@@ -192,7 +192,7 @@ request-id: req_YXOdxVKcQ2ONmT
         "bancontact",
         "ideal",
         "sepa_debit",
-        "sofort",
+        
         "paypal"
       ]
     },
@@ -555,7 +555,7 @@ request-id: req_YXOdxVKcQ2ONmT
         {
           "type" : "country",
           "api_path" : {
-            "v1" : "sofort[country]"
+          "v1" : "sofort[country]"
           },
           "allowed_country_codes" : [
             "AT",
@@ -619,7 +619,7 @@ request-id: req_YXOdxVKcQ2ONmT
     "paypal",
     "sepa_debit",
     "bancontact",
-    "sofort"
+    
   ],
   "unverified_payment_methods_on_domain" : [
     "apple_pay"
@@ -769,7 +769,7 @@ request-id: req_YXOdxVKcQ2ONmT
     "sepa_debit",
     "bancontact",
     "google_pay",
-    "sofort"
+    
   ],
   "customer_error" : null
 }

@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "Obremenitev SEPA";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Pri preverjanju pristnosti vašega načina plačila je potekla časovna omejitev. Poskusite znova.";
@@ -57,7 +55,5 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Pristnosti vašega načina plačila ni mogoče preveriti. Izberite drugačen način plačila in poskusite znova.";
 
 "WeChat Pay" = "WeChat Pay";
-
-"giropay" = "giropay";
 
 "iDEAL" = "iDEAL";

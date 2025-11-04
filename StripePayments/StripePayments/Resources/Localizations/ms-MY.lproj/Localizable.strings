@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "Debit SEPA";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Masa tamat ketika mensahihkan kaedah pembayaran anda -- cuba lagi";
@@ -57,7 +55,5 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Kami tidak dapat mensahihkan kaedah pembayaran anda. Sila pilih kaedah pembayaran yang berbeza dan cuba lagi.";
 
 "WeChat Pay" = "WeChat Pay";
-
-"giropay" = "giropay";
 
 "iDEAL" = "iDEAL";

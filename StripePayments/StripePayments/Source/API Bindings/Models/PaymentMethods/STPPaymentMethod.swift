@@ -42,8 +42,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var bacsDebit: STPPaymentMethodBacsDebit?
     /// If this is an AU BECS Debit PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAUBECSDebit`), this contains additional details.
     @objc private(set) public var auBECSDebit: STPPaymentMethodAUBECSDebit?
-    /// If this is a giropay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeGiropay`), this contains additional details.
-    @objc private(set) public var giropay: STPPaymentMethodGiropay?
     /// If this is an EPS PaymentMethod (i.e. `self.type == STPPaymentMethodTypeEPS`), this contains additional details.
     @objc private(set) public var eps: STPPaymentMethodEPS?
     /// If this is a Przelewy24 PaymentMethod (i.e. `self.type == STPPaymentMethodTypePrzelewy24`), this contains additional details.
@@ -54,8 +52,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var netBanking: STPPaymentMethodNetBanking?
     /// If this is an OXXO PaymentMethod (i.e. `self.type == STPPaymentMethodTypeOXXO`), this contains additional details.
     @objc private(set) public var oxxo: STPPaymentMethodOXXO?
-    /// If this is a Sofort PaymentMethod (i.e. `self.type == STPPaymentMethodTypeSofort`), this contains additional details.
-    @objc private(set) public var sofort: STPPaymentMethodSofort?
     /// If this is a UPI PaymentMethod (i.e. `self.type == STPPaymentMethodTypeUPI`), this contains additional details. :nodoc:
     @objc private(set) public var upi: STPPaymentMethodUPI?
     /// If this is a PayPal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPal`), this contains additional details. :nodoc:
@@ -139,14 +135,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "ideal = \(String(describing: iDEAL))",
             "eps = \(String(describing: eps))",
             "fpx = \(String(describing: fpx))",
-            "giropay = \(String(describing: giropay))",
             "netBanking = \(String(describing: netBanking))",
             "oxxo = \(String(describing: oxxo))",
             "grabPay = \(String(describing: grabPay))",
             "payPal = \(String(describing: payPal))",
             "przelewy24 = \(String(describing: przelewy24))",
             "sepaDebit = \(String(describing: sepaDebit))",
-            "sofort = \(String(describing: sofort))",
             "upi = \(String(describing: upi))",
             "afterpay_clearpay = \(String(describing: afterpayClearpay))",
             "blik = \(String(describing: blik))",
@@ -275,9 +269,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.auBECSDebit = STPPaymentMethodAUBECSDebit.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "au_becs_debit")
         )
-        paymentMethod.giropay = STPPaymentMethodGiropay.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "giropay")
-        )
         paymentMethod.eps = STPPaymentMethodEPS.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "eps")
         )
@@ -292,9 +283,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.oxxo = STPPaymentMethodOXXO.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "oxxo")
-        )
-        paymentMethod.sofort = STPPaymentMethodSofort.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "sofort")
         )
         paymentMethod.upi = STPPaymentMethodUPI.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "upi")

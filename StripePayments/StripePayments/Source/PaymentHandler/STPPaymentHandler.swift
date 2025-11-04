@@ -810,7 +810,6 @@ public class STPPaymentHandler: NSObject {
         case .SEPADebit,
             .bacsDebit,  // Bacs Debit takes 2-3 business days
             .AUBECSDebit,
-            .sofort,
             .USBankAccount:
             return true
 
@@ -821,7 +820,6 @@ public class STPPaymentHandler: NSObject {
             .iDEAL,
             .FPX,
             .cardPresent,
-            .giropay,
             .EPS,
             .payPal,
             .przelewy24,

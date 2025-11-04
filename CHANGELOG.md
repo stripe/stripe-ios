@@ -1,3 +1,50 @@
+## 25.0.0 2025-11-03
+This major version introduces many small breaking changes. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.
+
+### All
+* [Added] You can now access the HTTP status code of failed API requests by inspecting `userInfo[STPError.httpStatusCodeKey]` on the error.
+* [Added] You can now access the Stripe request ID of failed API requests by inspecting `userInfo[STPError.stripeRequestIDKey]` on the error.
+* [Changed] Most delegate protocols are now marked as `@MainActor @preconcurrency` to improve support for Swift strict concurrency. This includes: `STPApplePayContextDelegate`, `STPAuthenticationContext`, `STPPaymentCardTextFieldDelegate`, `STPCardFormViewDelegate`, `AddressViewControllerDelegate`, and `STPAUBECSDebitFormViewDelegate`.
+
+### PaymentSheet
+* [Fixed] PaymentSheet, PaymentSheet.FlowController, and EmbeddedPaymentElement return errors when loading with invalid configuration instead of loading in a degraded state.
+* [Added] Added async versions of all completion-block-based PaymentSheet and PaymentSheet.FlowController methods.
+* [Added] CustomerSessions is now generally available.
+* [Added] ConfirmationTokens is now generally available.
+* [Changed] Replaced `ExternalPaymentMethodConfirmHandler` with an async equivalent.
+* [Changed] Replaced `IntentConfiguration.ConfirmHandler` with an async equivalent.
+* [Changed] Replaced `PaymentSheet.ApplePayConfiguration.Handlers` completion-block based `authorizationResultHandler` with an async equivalent.
+* [Removed] Removed `PaymentSheet.reset()` in favor of `PaymentSheet.resetCustomer()`.
+* [Removed] Removed `PaymentSheet.CustomerConfiguration.ephemeralKeySecret`.
+
+### Financial Connections
+* [Added] Added async versions of `present(from:)` and `presentForToken(from:)`.
+
+### CustomerSheet
+* [Added] Added an async version of `present(from:)`.
+* [Added] CustomerSessions is now generally available.
+
+### STPApplePayContext
+* [Added] Added async delegate methods.
+* [Changed] Replaces the `ApplePayContextDelegate.didCreatePaymentMethod` method with an async version.
+
+### Payments
+* [Added] `STPPaymentHandler` and `STPAPIClient` methods with completion blocks now have async equivalents.
+* [Changed] `STPPaymentIntent.paymentMethodTypes` and `STPSetupIntent.paymentMethodTypes` now return `[STPPaymentMethodType]` instead of `[NSNumber]` in Swift for better ergonomics.
+* [Changed] `STPSetupIntentConfirmParams.useStripeSDK`, `STPPaymentIntentConfirmParams.useStripeSDK`, `STPConnectAccountCompanyParams.directorsProvided`, `STPConnectAccountCompanyParams.ownersProvided`, and `STPConnectAccountParams.tosShownAndAccepted` now uses `Bool?` instead of `NSNumber?` in Swift for better ergonomics.
+* [Changed] Renamed STPPaymentHandler's `confirm` and `handleNextAction` methods and added async versions.
+* [Changed] Renamed STPPaymentIntentParams to STPPaymentIntentConfirmParams
+* [Changed] `linkedAccount` on `STPPaymentMethodUSBankAccount` has been renamed to `financialConnectionsAccount`.
+* [Changed] Changed `STPPaymentMethodType.description` to be more consistent.
+* [Removed] Removed `requiresSource` and `requiresSourceAction` statuses from `STPPaymentIntentStatus`. Also removed `STPPaymentIntentSourceActionType`.
+* [Removed] Removed deprecated `STPPaymentIntentParams.saveSourceToCustomer` property. Use `savePaymentMethod` instead.
+* [Removed] Removed `singleUsePaymentMethod` STPPaymentMethodParams initializer.
+* [Removed] Removed STPPaymentMethod `metadata`.
+* [Removed] Sources are no longer supported for non-card payment methods or cards that require 3DS authentication. Please [migrate to the Payment Methods API](https://docs.stripe.com/payments/payment-methods/transitioning). 
+* [Removed] Removed Sofort. Migrate to SEPA Debit or other EU payment methods. See [this page](https://docs.stripe.com/payments/sofort/replace) for more information.
+* [Removed] Removed Giropay. Use alternative payment methods instead. See [this page](https://support.stripe.com/questions/availability-of-giropay-june-2024-update) for more information.
+
+
 ## 24.25.0 2025-10-27
 ### PaymentSheet
 * [Fixed] Blocked emoji input in text fields.

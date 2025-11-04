@@ -193,7 +193,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     // MARK: - SEPA family
 
-    let sepaFamily: [STPPaymentMethodType] = [.SEPADebit, .iDEAL, .bancontact, .sofort]
+    let sepaFamily: [STPPaymentMethodType] = [.SEPADebit, .iDEAL, .bancontact]
 
     func testCanAddSEPAFamily() {
         // iDEAL and bancontact can be added if returnURL provided
@@ -211,8 +211,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             )
         }
 
-        let sepaFamilyAsynchronous: [STPPaymentMethodType] = [.sofort, .SEPADebit]
-        // ...SEPA and sofort also need allowsDelayedPaymentMethod:
+        let sepaFamilyAsynchronous: [STPPaymentMethodType] = [.SEPADebit]
+        // ...SEPA also need allowsDelayedPaymentMethod:
         for pm in sepaFamilyAsynchronous {
             var config = makeConfiguration(hasReturnURL: true)
             XCTAssertEqual(

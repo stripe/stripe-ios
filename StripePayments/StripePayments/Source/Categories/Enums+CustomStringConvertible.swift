@@ -412,73 +412,7 @@ extension STPPaymentMethodCardWalletType: CustomStringConvertible {
 /// :nodoc:
 extension STPPaymentMethodType: CustomStringConvertible {
     public var description: String {
-        switch self {
-        case .AUBECSDebit:
-            return "AUBECSDebit"
-        case .EPS:
-            return "EPS"
-        case .FPX:
-            return "FPX"
-        case .OXXO:
-            return "OXXO"
-        case .SEPADebit:
-            return "SEPADebit"
-        case .UPI:
-            return "UPI"
-        case .USBankAccount:
-            return "USBankAccount"
-        case .affirm:
-            return "affirm"
-        case .afterpayClearpay:
-            return "afterpayClearpay"
-        case .alipay:
-            return "alipay"
-        case .bacsDebit:
-            return "bacsDebit"
-        case .bancontact:
-            return "bancontact"
-        case .blik:
-            return "blik"
-        case .boleto:
-            return "boleto"
-        case .card:
-            return "card"
-        case .cardPresent:
-            return "cardPresent"
-        case .giropay:
-            return "giropay"
-        case .grabPay:
-            return "grabPay"
-        case .iDEAL:
-            return "iDEAL"
-        case .klarna:
-            return "klarna"
-        case .link:
-            return "link"
-        case .netBanking:
-            return "netBanking"
-        case .payPal:
-            return "payPal"
-        case .przelewy24:
-            return "przelewy24"
-        case .sofort:
-            return "sofort"
-        case .unknown:
-            return "unknown"
-        case .weChatPay:
-            return "weChatPay"
-        case .cashApp:
-            return "cashApp"
-        case .swish:
-            return "swish"
-        case .twint:
-            return "TWINT"
-        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay, .alma, .konbini, .promptPay, .sunbit, .billie, .satispay, .crypto, .shopPay:
-            // `description` is the value used when this type is converted to a string for debugging purposes, just use the display name.
-            return displayName
-        case .multibanco:
-            return "multibanco"
-        }
+        return identifier
     }
 }
 

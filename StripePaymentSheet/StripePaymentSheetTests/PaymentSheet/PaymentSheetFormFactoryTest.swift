@@ -739,55 +739,23 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.sofort)
+            paymentMethod: .stripe(.iDEAL)
         )
         let spec = FormSpec(
-            type: "sofort",
+            type: "ideal",
             async: false,
             fields: [.country(.init(apiPath: nil, allowedCountryCodes: ["AT", "BE"]))],
             selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
-        let params = IntentConfirmParams(type: .stripe(.sofort))
+        let params = IntentConfirmParams(type: .stripe(.iDEAL))
 
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "AT")
         XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sofort")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
-    }
-
-    func testMakeFormElement_Country_DefinedAPIPath_forSofort() {
-        let configuration = PaymentSheet.Configuration()
-        let factory = PaymentSheetFormFactory(
-            intent: ._testValue(), elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.sofort)
-        )
-        let spec = FormSpec(
-            type: "sofort",
-            async: false,
-            fields: [
-                .country(
-                    .init(apiPath: ["v1": "sofort[country]"], allowedCountryCodes: ["AT", "BE"])
-                ),
-            ],
-            selectorIcon: nil
-        )
-        let formElement = factory.makeFormElementFromSpec(spec: spec)
-        let params = IntentConfirmParams(type: .stripe(.sofort))
-
-        let updatedParams = formElement.updateParams(params: params)
-
-        XCTAssertNil(updatedParams?.paymentMethodParams.sofort?.country)
-        XCTAssertEqual(
-            updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"]
-                as! String,
-            "AT"
-        )
-        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sofort")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "ideal")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .iDEAL)
     }
 
     func testMakeFormElement_Country() {
@@ -795,69 +763,30 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.sofort)
+            paymentMethod: .stripe(.iDEAL)
         )
         let country = factory.makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
         (country as! PaymentMethodElementWrapper<DropdownFieldElement>).element.select(index: 1) // select a different index than the default of 0
 
-        let params = IntentConfirmParams(type: .stripe(.sofort))
+        let params = IntentConfirmParams(type: .stripe(.iDEAL))
         let updatedParams = country.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "BE")
         XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sofort")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "ideal")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .iDEAL)
 
         // Using the params as previous customer input...
         let country_with_previous_input = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.sofort),
+            paymentMethod: .stripe(.iDEAL),
             previousCustomerInput: updatedParams
         ).makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
         // ...should result in a valid, filled out element
         XCTAssert(country_with_previous_input.validationState == .valid)
-        let updatedParams_with_previous_input = country_with_previous_input.updateParams(params: .init(type: .stripe(.sofort)))
+        let updatedParams_with_previous_input = country_with_previous_input.updateParams(params: .init(type: .stripe(.iDEAL)))
         XCTAssertEqual(updatedParams_with_previous_input?.paymentMethodParams.billingDetails?.address?.country, "BE")
-    }
-
-    func testMakeFormElement_Country_withAPIPath() {
-        let configuration = PaymentSheet.Configuration()
-        func makeCountry(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElement {
-            let factory = PaymentSheetFormFactory(
-                intent: ._testValue(),
-                elementsSession: ._testCardValue(),
-                configuration: .paymentElement(configuration),
-                paymentMethod: .stripe(.sofort),
-                previousCustomerInput: previousCustomerInput
-            )
-            let country = factory.makeCountry(countryCodes: ["AT", "BE"], apiPath: "sofort[country]")
-            return country
-        }
-        let country = makeCountry(previousCustomerInput: nil)
-        (country as! PaymentMethodElementWrapper<DropdownFieldElement>).element.select(index: 1) // select a different index than the default of 0
-
-        let params = IntentConfirmParams(type: .stripe(.sofort))
-        let updatedParams = country.updateParams(params: params)
-
-        XCTAssertNil(updatedParams?.paymentMethodParams.sofort?.country)
-        XCTAssertEqual(
-            updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"]
-                as! String,
-            "BE"
-        )
-        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "sofort")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .sofort)
-
-        // Using the params as previous customer input...
-        let country_with_previous_input = makeCountry(previousCustomerInput: updatedParams)
-        // ...should result in a valid, filled out element
-        XCTAssert(country_with_previous_input.validationState == .valid)
-        let updatedParams_with_previous_input = country_with_previous_input.updateParams(params: .init(type: .stripe(.sofort)))
-        XCTAssertEqual(
-            updatedParams_with_previous_input?.paymentMethodParams.additionalAPIParameters["sofort[country]"] as! String,
-            "BE"
-        )
     }
 
     func testMakeFormElement_Iban_UndefinedAPIPath() {

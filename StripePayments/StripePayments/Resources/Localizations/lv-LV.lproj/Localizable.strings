@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "SEPA debets";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Autentificējot jūsu maksājuma metodi, iestājās noildze — mēģiniet vēlreiz";
@@ -57,7 +55,5 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nevaram autentificēt jūsu maksājuma metodi. Lūdzu, izvēlieties citu maksājuma metodi un mēģiniet vēlreiz.";
 
 "WeChat Pay" = "WeChat Pay";
-
-"giropay" = "giropay";
 
 "iDEAL" = "iDEAL";

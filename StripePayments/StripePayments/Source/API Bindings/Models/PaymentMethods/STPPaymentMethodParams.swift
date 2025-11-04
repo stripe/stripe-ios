@@ -53,8 +53,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var bacsDebit: STPPaymentMethodBacsDebitParams?
     /// If this is an AU BECS Debit PaymentMethod, this contains details about the bank to debit.
     @objc public var auBECSDebit: STPPaymentMethodAUBECSDebitParams?
-    /// If this is a giropay PaymentMethod, this contains additional details.
-    @objc public var giropay: STPPaymentMethodGiropayParams?
     /// If this is a PayPal PaymentMethod, this contains additional details. :nodoc:
     @objc public var payPal: STPPaymentMethodPayPalParams?
     /// If this is a Przelewy24 PaymentMethod, this contains additional details.
@@ -67,8 +65,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var netBanking: STPPaymentMethodNetBankingParams?
     /// If this is an OXXO PaymentMethod, this contains additional details.
     @objc public var oxxo: STPPaymentMethodOXXOParams?
-    /// If this is a Sofort PaymentMethod, this contains additional details.
-    @objc public var sofort: STPPaymentMethodSofortParams?
     /// If this is a UPI PaymentMethod, this contains additional details.
     @objc public var upi: STPPaymentMethodUPIParams?
     /// If this is a GrabPay PaymentMethod, this contains additional details.
@@ -234,24 +230,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
-    /// Creates params for a giropay PaymentMethod;
-    /// - Parameters:
-    ///   - giropay:   An object containing additional giropay details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` is required for giropay PaymentMethods.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc
-    public convenience init(
-        giropay: STPPaymentMethodGiropayParams,
-        billingDetails: STPPaymentMethodBillingDetails,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .giropay
-        self.giropay = giropay
-        self.billingDetails = billingDetails
-        self.metadata = metadata
-    }
-
     /// Creates params for an EPS PaymentMethod;
     /// - Parameters:
     ///   - eps:   An object containing additional EPS details.
@@ -356,24 +334,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.type = .OXXO
         self.oxxo = oxxo
         self.billingDetails = billingDetails
-    }
-
-    /// Creates params for a Sofort PaymentMethod;
-    /// - Parameters:
-    ///   - sofort:   An object containing additional Sofort details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` and `billingDetails.email` are required to save bank details from a Sofort payment.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc
-    public convenience init(
-        sofort: STPPaymentMethodSofortParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .sofort
-        self.sofort = sofort
-        self.billingDetails = billingDetails
-        self.metadata = metadata
     }
 
     /// Creates params for a UPI PaymentMethod;
@@ -788,13 +748,11 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: sepaDebit)): "sepa_debit",
             NSStringFromSelector(#selector(getter: bacsDebit)): "bacs_debit",
             NSStringFromSelector(#selector(getter: auBECSDebit)): "au_becs_debit",
-            NSStringFromSelector(#selector(getter: giropay)): "giropay",
             NSStringFromSelector(#selector(getter: grabPay)): "grabpay",
             NSStringFromSelector(#selector(getter: przelewy24)): "p24",
             NSStringFromSelector(#selector(getter: bancontact)): "bancontact",
             NSStringFromSelector(#selector(getter: netBanking)): "netbanking",
             NSStringFromSelector(#selector(getter: oxxo)): "oxxo",
-            NSStringFromSelector(#selector(getter: sofort)): "sofort",
             NSStringFromSelector(#selector(getter: upi)): "upi",
             NSStringFromSelector(#selector(getter: afterpayClearpay)): "afterpayClearpay",
             NSStringFromSelector(#selector(getter: weChatPay)): "wechat_pay",
@@ -934,24 +892,6 @@ extension STPPaymentMethodParams {
         )
     }
 
-    /// Creates params for a giropay PaymentMethod;
-    /// - Parameters:
-    ///   - giropay:   An object containing additional giropay details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` is required for giropay PaymentMethods.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc(paramsWithGiropay:billingDetails:metadata:)
-    public class func paramsWith(
-        giropay: STPPaymentMethodGiropayParams,
-        billingDetails: STPPaymentMethodBillingDetails,
-        metadata: [String: String]?
-    ) -> STPPaymentMethodParams {
-        return STPPaymentMethodParams(
-            giropay: giropay,
-            billingDetails: billingDetails,
-            metadata: metadata
-        )
-    }
-
     /// Creates params for an EPS PaymentMethod;
     /// - Parameters:
     ///   - eps:   An object containing additional EPS details.
@@ -1051,24 +991,6 @@ extension STPPaymentMethodParams {
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
             grabPay: grabPay,
-            billingDetails: billingDetails,
-            metadata: metadata
-        )
-    }
-
-    /// Creates params for a Sofort PaymentMethod;
-    /// - Parameters:
-    ///   - sofort:   An object containing additional Sofort details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` and `billingDetails.email` are required to save bank details from a Sofort payment.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc(paramsWithSofort:billingDetails:metadata:)
-    public class func paramsWith(
-        sofort: STPPaymentMethodSofortParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) -> STPPaymentMethodParams {
-        return STPPaymentMethodParams(
-            sofort: sofort,
             billingDetails: billingDetails,
             metadata: metadata
         )
@@ -1239,8 +1161,6 @@ extension STPPaymentMethodParams {
             auBECSDebit = STPPaymentMethodAUBECSDebitParams()
         case .bacsDebit:
             bacsDebit = STPPaymentMethodBacsDebitParams()
-        case .giropay:
-            giropay = STPPaymentMethodGiropayParams()
         case .przelewy24:
             przelewy24 = STPPaymentMethodPrzelewy24Params()
         case .EPS:
@@ -1251,8 +1171,6 @@ extension STPPaymentMethodParams {
             netBanking = STPPaymentMethodNetBankingParams()
         case .OXXO:
             oxxo = STPPaymentMethodOXXOParams()
-        case .sofort:
-            sofort = STPPaymentMethodSofortParams()
         case .UPI:
             upi = STPPaymentMethodUPIParams()
         case .payPal:
