@@ -57,7 +57,7 @@ final class VerifyKYCInfoRowView: UIView {
     private lazy var editButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(Image.kycVerifyEdit.makeImage(), for: .normal)
+        button.setImage(Image.iconEditOutline.makeImage(), for: .normal)
         button.tintColor = .linkIconPrimary
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

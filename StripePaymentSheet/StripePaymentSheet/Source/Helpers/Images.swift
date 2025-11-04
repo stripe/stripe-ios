@@ -104,5 +104,5 @@ enum Image: String, CaseIterable, ImageMaker {
     case embedded_check = "icon_check"
 
     // KYC Refresh
-    case kycVerifyEdit = "kyc_verify_edit"
+    case iconEditOutline = "icon_edit_outline"
 }
