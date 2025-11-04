@@ -33,8 +33,8 @@ let package = Package(
             targets: ["StripeIdentity"]
         ),
         .library(
-            name: "StripeIssuingPushProvision",
-            targets: ["StripeIssuingPushProvision"]
+            name: "StripeIssuing",
+            targets: ["StripeIssuing"]
         ),
         .library(
             name: "StripeCardScan",
@@ -102,8 +102,8 @@ let package = Package(
             ]
         ),
         .target(
-            name: "StripeIssuingPushProvision",
-            path: "StripeIssuingPushProvision/StripeIssuingPushProvision",
+            name: "StripeIssuing",
+            path: "StripeIssuing/StripeIssuing",
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources")

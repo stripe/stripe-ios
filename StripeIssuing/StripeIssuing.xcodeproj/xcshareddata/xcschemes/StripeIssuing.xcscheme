@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3D136BB92EB4493500186DA1"
-               BuildableName = "StripeIssuingPushProvision.framework"
-               BlueprintName = "StripeIssuingPushProvision"
-               ReferencedContainer = "container:StripeIssuingPushProvision.xcodeproj">
+               BuildableName = "StripeIssuing.framework"
+               BlueprintName = "StripeIssuing"
+               ReferencedContainer = "container:StripeIssuing.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -51,9 +51,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3D136BB92EB4493500186DA1"
-            BuildableName = "StripeIssuingPushProvision.framework"
-            BlueprintName = "StripeIssuingPushProvision"
-            ReferencedContainer = "container:StripeIssuingPushProvision.xcodeproj">
+            BuildableName = "StripeIssuing.framework"
+            BlueprintName = "StripeIssuing"
+            ReferencedContainer = "container:StripeIssuing.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

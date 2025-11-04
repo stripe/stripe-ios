@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3D136BC62EB4493500186DA1 /* StripeIssuingPushProvision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */; };
+		3D136BC62EB4493500186DA1 /* StripeIssuing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D136BBA2EB4493500186DA1 /* StripeIssuing.framework */; };
 		3D136BE22EB4494900186DA1 /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDC2EB4494900186DA1 /* StripeiOS Tests-Shared.xcconfig */; };
 		3D136BE32EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BDA2EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig */; };
 		3D136BE42EB4494900186DA1 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */; };
@@ -26,13 +26,13 @@
 			containerPortal = 3D136BB12EB4493500186DA1 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 3D136BB92EB4493500186DA1;
-			remoteInfo = StripeIssuingPushProvision;
+			remoteInfo = StripeIssuing;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIssuingPushProvision.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D136BC52EB4493500186DA1 /* StripeIssuingPushProvisionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeIssuingPushProvisionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D136BBA2EB4493500186DA1 /* StripeIssuing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIssuing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D136BC52EB4493500186DA1 /* StripeIssuingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeIssuingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		3D136BD82EB4494900186DA1 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		3D136BD92EB4494900186DA1 /* Project-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Shared.xcconfig"; sourceTree = "<group>"; };
@@ -46,27 +46,27 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3D8CA9FA2EB5733B001E9D0F /* Exceptions for "StripeIssuingPushProvision" folder in "StripeIssuingPushProvision" target */ = {
+		3D8CA9FA2EB5733B001E9D0F /* Exceptions for "StripeIssuing" folder in "StripeIssuing" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
-				StripeIssuingPushProvision.h,
+				StripeIssuing.h,
 			);
-			target = 3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */;
+			target = 3D136BB92EB4493500186DA1 /* StripeIssuing */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		3D136BBC2EB4493500186DA1 /* StripeIssuingPushProvision */ = {
+		3D136BBC2EB4493500186DA1 /* StripeIssuing */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3D8CA9FA2EB5733B001E9D0F /* Exceptions for "StripeIssuingPushProvision" folder in "StripeIssuingPushProvision" target */,
+				3D8CA9FA2EB5733B001E9D0F /* Exceptions for "StripeIssuing" folder in "StripeIssuing" target */,
 			);
-			path = StripeIssuingPushProvision;
+			path = StripeIssuing;
 			sourceTree = "<group>";
 		};
-		3D136BC92EB4493500186DA1 /* StripeIssuingPushProvisionTests */ = {
+		3D136BC92EB4493500186DA1 /* StripeIssuingTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = StripeIssuingPushProvisionTests;
+			path = StripeIssuingTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -83,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D136BC62EB4493500186DA1 /* StripeIssuingPushProvision.framework in Frameworks */,
+				3D136BC62EB4493500186DA1 /* StripeIssuing.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,8 +94,8 @@
 			isa = PBXGroup;
 			children = (
 				3D136BE12EB4494900186DA1 /* BuildConfigurations */,
-				3D136BBC2EB4493500186DA1 /* StripeIssuingPushProvision */,
-				3D136BC92EB4493500186DA1 /* StripeIssuingPushProvisionTests */,
+				3D136BBC2EB4493500186DA1 /* StripeIssuing */,
+				3D136BC92EB4493500186DA1 /* StripeIssuingTests */,
 				3D136BBB2EB4493500186DA1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,8 +103,8 @@
 		3D136BBB2EB4493500186DA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */,
-				3D136BC52EB4493500186DA1 /* StripeIssuingPushProvisionTests.xctest */,
+				3D136BBA2EB4493500186DA1 /* StripeIssuing.framework */,
+				3D136BC52EB4493500186DA1 /* StripeIssuingTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -140,9 +140,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */ = {
+		3D136BB92EB4493500186DA1 /* StripeIssuing */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D136BCE2EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingPushProvision" */;
+			buildConfigurationList = 3D136BCE2EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuing" */;
 			buildPhases = (
 				3D136BB52EB4493500186DA1 /* Headers */,
 				3D136BB62EB4493500186DA1 /* Sources */,
@@ -154,18 +154,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				3D136BBC2EB4493500186DA1 /* StripeIssuingPushProvision */,
+				3D136BBC2EB4493500186DA1 /* StripeIssuing */,
 			);
-			name = StripeIssuingPushProvision;
+			name = StripeIssuing;
 			packageProductDependencies = (
 			);
-			productName = StripeIssuingPushProvision;
-			productReference = 3D136BBA2EB4493500186DA1 /* StripeIssuingPushProvision.framework */;
+			productName = StripeIssuing;
+			productReference = 3D136BBA2EB4493500186DA1 /* StripeIssuing.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		3D136BC42EB4493500186DA1 /* StripeIssuingPushProvisionTests */ = {
+		3D136BC42EB4493500186DA1 /* StripeIssuingTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D136BD12EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingPushProvisionTests" */;
+			buildConfigurationList = 3D136BD12EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingTests" */;
 			buildPhases = (
 				3D136BC12EB4493500186DA1 /* Sources */,
 				3D136BC22EB4493500186DA1 /* Frameworks */,
@@ -177,13 +177,13 @@
 				3D136BC82EB4493500186DA1 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				3D136BC92EB4493500186DA1 /* StripeIssuingPushProvisionTests */,
+				3D136BC92EB4493500186DA1 /* StripeIssuingTests */,
 			);
-			name = StripeIssuingPushProvisionTests;
+			name = StripeIssuingTests;
 			packageProductDependencies = (
 			);
-			productName = StripeIssuingPushProvisionTests;
-			productReference = 3D136BC52EB4493500186DA1 /* StripeIssuingPushProvisionTests.xctest */;
+			productName = StripeIssuingTests;
+			productReference = 3D136BC52EB4493500186DA1 /* StripeIssuingTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -204,7 +204,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3D136BB42EB4493500186DA1 /* Build configuration list for PBXProject "StripeIssuingPushProvision" */;
+			buildConfigurationList = 3D136BB42EB4493500186DA1 /* Build configuration list for PBXProject "StripeIssuing" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -218,8 +218,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */,
-				3D136BC42EB4493500186DA1 /* StripeIssuingPushProvisionTests */,
+				3D136BB92EB4493500186DA1 /* StripeIssuing */,
+				3D136BC42EB4493500186DA1 /* StripeIssuingTests */,
 			);
 		};
 /* End PBXProject section */
@@ -271,7 +271,7 @@
 /* Begin PBXTargetDependency section */
 		3D136BC82EB4493500186DA1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3D136BB92EB4493500186DA1 /* StripeIssuingPushProvision */;
+			target = 3D136BB92EB4493500186DA1 /* StripeIssuing */;
 			targetProxy = 3D136BC72EB4493500186DA1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -364,7 +364,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIssuingPushProvisionTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIssuingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -380,7 +380,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIssuingPushProvisionTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIssuingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -392,7 +392,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3D136BB42EB4493500186DA1 /* Build configuration list for PBXProject "StripeIssuingPushProvision" */ = {
+		3D136BB42EB4493500186DA1 /* Build configuration list for PBXProject "StripeIssuing" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D136BCC2EB4493500186DA1 /* Debug */,
@@ -401,7 +401,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D136BCE2EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingPushProvision" */ = {
+		3D136BCE2EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuing" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D136BCF2EB4493500186DA1 /* Debug */,
@@ -410,7 +410,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D136BD12EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingPushProvisionTests" */ = {
+		3D136BD12EB4493500186DA1 /* Build configuration list for PBXNativeTarget "StripeIssuingTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D136BD22EB4493500186DA1 /* Debug */,

@@ -1,4 +1,4 @@
-# Stripe Issuing Push Provision Onramp iOS SDK
+# Stripe Issuing iOS SDK
 
 Placeholder
 

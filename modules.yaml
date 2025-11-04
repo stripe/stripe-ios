@@ -148,15 +148,15 @@ modules:
     readme: StripeIdentity/README.md
   size_report: true
 
-- podspec: StripeIssuingPushProvision.podspec
-  scheme: StripeIssuingPushProvision
-  framework_name: StripeIssuingPushProvision
-  localization_dir: StripeIssuingPushProvision/StripeIssuingPushProvision
-  custom_string_convertible_dir: StripeIssuingPushProvision/StripeIssuingPushProvision/Source
+- podspec: StripeIssuing.podspec
+  scheme: StripeIssuing
+  framework_name: StripeIssuing
+  localization_dir: StripeIssuing/StripeIssuing
+  custom_string_convertible_dir: StripeIssuing/StripeIssuing/Source
   supports_catalyst: false
   docs:
-    output: docs/StripeIssuingPushProvision
-    readme: StripeIssuingPushProvision/README.md
+    output: docs/StripeIssuing
+    readme: StripeIssuing/README.md
   size_report: true
 
 - podspec: StripeApplePay.podspec
@@ -241,4 +241,4 @@ pod_push_order:
 - StripeFinancialConnections.podspec
 - StripeConnect.podspec
 - StripeCryptoOnramp.podspec
-- StripeIssuingPushProvision.podspec
+- StripeIssuing.podspec

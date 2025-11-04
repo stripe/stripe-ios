@@ -1,6 +1,6 @@
 //
-//  StripeIssuingPushProvision.swift
-//  StripeIssuingPushProvision
+//  StripeIssuing.swift
+//  StripeIssuing
 //
 //  Created by Zi Yu Bai on 2025-10-30.
 //
