@@ -63,7 +63,11 @@ import Foundation
 
     private func fetchToken() async throws -> String {
         if let tokenTask {
-            return try await tokenTask.value
+            return try await withTaskCancellationHandler {
+                try await tokenTask.value
+            } onCancel: {
+                tokenTask.cancel()
+            }
         }
 
         let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, rqdata = passiveCaptchaData.rqdata, hcaptchaFactory, weak self] () -> String in
@@ -72,21 +76,27 @@ import Foundation
             do {
                 let hcaptcha = try hcaptchaFactory.create(siteKey: siteKey, rqdata: rqdata)
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
-                let result =  try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
-                    // Prevent Swift Task continuation misuse - the validate completion block can get called multiple times
-                    var nillableContinuation: CheckedContinuation<String, Error>? = continuation
-
-                    hcaptcha.validate { result in
-                        Task { @MainActor in // MainActor to prevent continuation from different threads
-                            do {
-                                let token = try result.dematerialize()
-                                nillableContinuation?.resume(returning: token)
-                                nillableContinuation = nil
-                            } catch {
-                                nillableContinuation?.resume(throwing: error)
-                                nillableContinuation = nil
+                let result = try await withTaskCancellationHandler {
+                    try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
+                        // Prevent Swift Task continuation misuse - the validate completion block can get called multiple times
+                        var nillableContinuation: CheckedContinuation<String, Error>? = continuation
+                        
+                        hcaptcha.validate { result in
+                            Task { @MainActor in // MainActor to prevent continuation from different threads
+                                do {
+                                    let token = try result.dematerialize()
+                                    nillableContinuation?.resume(returning: token)
+                                    nillableContinuation = nil
+                                } catch {
+                                    nillableContinuation?.resume(throwing: error)
+                                    nillableContinuation = nil
+                                }
                             }
                         }
+                    }
+                } onCancel: {
+                    Task { @MainActor in
+                        hcaptcha.stop()
                     }
                 }
                 // Mark as complete
@@ -101,7 +111,11 @@ import Foundation
             }
         }
         self.tokenTask = tokenTask
-        return try await tokenTask.value
+        return try await withTaskCancellationHandler {
+            try await tokenTask.value
+        } onCancel: {
+            tokenTask.cancel()
+        }
     }
 
     private func setValidationComplete() {
