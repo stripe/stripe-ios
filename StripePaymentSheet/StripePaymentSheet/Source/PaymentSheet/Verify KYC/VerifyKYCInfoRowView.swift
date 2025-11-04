@@ -11,10 +11,6 @@ import UIKit
 
 /// Displays an individual KYC detail (e.g. name) with an optional edit button.
 final class VerifyKYCInfoRowView: UIView {
-    private enum Constants {
-        static let editButtonSize = CGSize(width: LinkUI.minimumButtonHeight, height: LinkUI.minimumButtonHeight)
-    }
-
     private lazy var containerStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [labelsStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -61,8 +57,8 @@ final class VerifyKYCInfoRowView: UIView {
         button.tintColor = .linkIconPrimary
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: Constants.editButtonSize.width),
-            button.heightAnchor.constraint(equalToConstant: Constants.editButtonSize.height),
+            button.widthAnchor.constraint(equalToConstant: LinkUI.minimumButtonHeight),
+            button.heightAnchor.constraint(equalToConstant: LinkUI.minimumButtonHeight),
         ])
         return button
     }()

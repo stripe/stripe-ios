@@ -10,10 +10,6 @@ import UIKit
 
 /// The content view of `VerifyKYCViewController`, which displays a list of KYC fields with the optional ability to initiate editing of the address.
 final class VerifyKYCContentViewController: UIViewController, BottomSheetContentViewController {
-    private enum Constants {
-        static let layoutMargins = NSDirectionalEdgeInsets.insets(leading: 24, trailing: 24)
-        static let ctaLayoutMargins = NSDirectionalEdgeInsets.insets(amount: 24)
-    }
 
     // MARK: - BottomSheetContentViewController
 
@@ -73,7 +69,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         stackView.axis = .vertical
         stackView.spacing = LinkUI.contentSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = Constants.layoutMargins
+        stackView.directionalLayoutMargins = .insets(leading: LinkUI.largeContentSpacing, trailing: LinkUI.largeContentSpacing)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -170,7 +166,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     private lazy var bottomButtonContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.addAndPinSubviewToSafeArea(confirmButton, insets: Constants.ctaLayoutMargins)
+        view.addAndPinSubviewToSafeArea(confirmButton, insets: .insets(amount: LinkUI.largeContentSpacing))
         return view
     }()
 
