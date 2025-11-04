@@ -9,10 +9,6 @@ import UIKit
 
 /// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
 @_spi(STP) public final class VerifyKYCViewController: BottomSheetViewController {
-    private enum Constants {
-        static let sheetCornerRadius: CGFloat = 24
-    }
-
     private weak var contentViewController: VerifyKYCContentViewController?
 
     /// Closure called when a user takes action (confirm, cancel, or initiate editing of the address).
@@ -25,7 +21,7 @@ import UIKit
     // MARK: - BottomSheetViewController
 
     @_spi(STP) public override var sheetCornerRadius: CGFloat? {
-        Constants.sheetCornerRadius
+        LinkUI.largeCornerRadius
     }
 
     // MARK: - VerifyKYCViewController
