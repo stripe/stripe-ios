@@ -56,8 +56,12 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return super.leftmostElement
     }
 
-    override init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
-        super.init(isTestMode: isTestMode, appearance: appearance)
+    override init(isTestMode: Bool, appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
+        super.init(
+            isTestMode: isTestMode,
+            appearance: appearance,
+            shouldLogPaymentSheetAnalyticsOnDismissal: shouldLogPaymentSheetAnalyticsOnDismissal
+        )
 
         logoView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(logoView)
