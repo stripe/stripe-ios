@@ -104,7 +104,6 @@ let package = Package(
         .target(
             name: "StripeIssuing",
             path: "StripeIssuing/StripeIssuing",
-            exclude: ["Info.plist"],
             resources: [
                 .process("Resources")
             ]
