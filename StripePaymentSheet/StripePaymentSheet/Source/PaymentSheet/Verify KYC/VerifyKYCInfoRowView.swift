@@ -12,7 +12,7 @@ import UIKit
 /// Displays an individual KYC detail (e.g. name) with an optional edit button.
 final class VerifyKYCInfoRowView: UIView {
     private enum Constants {
-        static let editButtonSize = CGSize(width: 44, height: 44)
+        static let editButtonSize = CGSize(width: LinkUI.minimumButtonHeight, height: LinkUI.minimumButtonHeight)
     }
 
     private lazy var containerStackView: UIStackView = {
