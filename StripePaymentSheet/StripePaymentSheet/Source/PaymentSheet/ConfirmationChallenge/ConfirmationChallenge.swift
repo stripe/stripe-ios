@@ -52,7 +52,7 @@ actor ConfirmationChallenge {
             guard let attestationConfirmationChallenge = self.attestationChallenge else {
                 return nil
             }
-            return try await attestationConfirmationChallenge.fetchAssertion()
+            return await attestationConfirmationChallenge.fetchAssertion()
         }
 
         let (hcaptchaTokenResult, assertionResult) = await withTimeout(timeout, getPassiveCaptchaToken, getAttestationAssertion)

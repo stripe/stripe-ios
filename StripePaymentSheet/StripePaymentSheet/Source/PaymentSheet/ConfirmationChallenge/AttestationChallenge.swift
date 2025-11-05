@@ -13,7 +13,7 @@ actor AttestationChallenge {
     private let canSyncState: Bool
     private var assertionHandle: StripeAttest.AssertionHandle?
     private let attestationTask: Task<Void, Error>
-    private var assertionTask: Task<StripeAttest.Assertion?, Error>?
+    private var assertionTask: Task<StripeAttest.Assertion?, Never>?
 
     public init(stripeAttest: StripeAttest, canSyncState: Bool = false) {
         self.stripeAttest = stripeAttest
@@ -38,15 +38,15 @@ actor AttestationChallenge {
         }
     }
 
-    func fetchAssertion() async throws -> StripeAttest.Assertion? {
+    func fetchAssertion() async -> StripeAttest.Assertion? {
         if let assertionTask {
-            return try await withTaskCancellationHandler {
-                return try await assertionTask.value
+            return await withTaskCancellationHandler {
+                return await assertionTask.value
             } onCancel: {
                 assertionTask.cancel()
             }
         }
-        let assertionTask = Task<StripeAttest.Assertion?, Error> {
+        let assertionTask = Task<StripeAttest.Assertion?, Never> {
             // Wait for prewarm to complete first to avoid race conditions
             do {
                 try await withTaskCancellationHandler {
@@ -67,18 +67,22 @@ actor AttestationChallenge {
                         await stripeAttest.cancel()
                     }
                 }
-                try Task.checkCancellation()
+                if Task.isCancelled {
+                    assertionHandle?.complete()
+                }
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
             } catch {
                 assertionHandle = nil
-                try Task.checkCancellation()
+                if Task.isCancelled {
+                    return nil
+                }
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenFailed(duration: Date().timeIntervalSince(startTime))
             }
             return assertionHandle?.assertion
         }
         self.assertionTask = assertionTask
-        return try await withTaskCancellationHandler {
-            return try await assertionTask.value
+        return await withTaskCancellationHandler {
+            return await assertionTask.value
         } onCancel: {
             assertionTask.cancel()
         }
