@@ -1,5 +1,5 @@
 //
-//  PassiveCaptcha.swift
+//  PassiveCaptchaChallenge.swift
 //  StripePayments
 //
 //  Created by Joyce Qin on 8/3/25.
@@ -7,12 +7,13 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 /// PassiveCaptcha, delivered in the `v1/elements/sessions` response.
 /// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/elements/api/resources/elements_passive_captcha_resource.rb
 @_spi(STP) public struct PassiveCaptchaData: Equatable, Hashable {
 
-    public let siteKey: String
+    let siteKey: String
     let rqdata: String?
 
     /// Helper method to decode the `v1/elements/sessions` response's `passive_captcha` hash.
@@ -40,10 +41,10 @@ import Foundation
 }
 
 @_spi(STP) public actor PassiveCaptchaChallenge {
-    private let passiveCaptchaData: PassiveCaptchaData
+    let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
-    private var hasFetchedToken = false
+    var hasFetchedToken = false
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
@@ -55,7 +56,7 @@ import Foundation
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
-    private func fetchToken() async throws -> String {
+    public func fetchToken() async throws -> String {
         if let tokenTask {
             return try await withTaskCancellationHandler {
                 try await tokenTask.value
@@ -119,25 +120,6 @@ import Foundation
         hasFetchedToken = true
     }
 
-    public func fetchTokenWithTimeout(_ timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6) async -> String? {
-        let startTime = Date()
-        let siteKey = passiveCaptchaData.siteKey
-        let isReady = hasFetchedToken
-        let passiveCaptchaResult = await withTimeout(timeout) {
-            try await self.fetchToken()
-        }
-        switch passiveCaptchaResult {
-        case .success(let token):
-            STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
-            return token
-        case .failure(let error):
-            if error is TimeoutError {
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
-            }
-            return nil
-        }
-    }
-
 }
 
 // Protocol for creating HCaptcha instances
@@ -180,7 +162,7 @@ extension STPAnalyticsClient {
         )
     }
 
-    public func logPassiveCaptchaAttach(siteKey: String, isReady: Bool, duration: TimeInterval) {
+    func logPassiveCaptchaAttach(siteKey: String, isReady: Bool, duration: TimeInterval) {
         log(
             analytic: GenericAnalytic(event: .passiveCaptchaAttach, params: ["site_key": siteKey, "is_ready": isReady, "duration": duration * 1000])
         )

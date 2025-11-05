@@ -69,8 +69,8 @@ extension CustomerSheet {
                 setupIntentParams.returnURL = configuration.returnURL
                 setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
                 paymentHandler.confirmSetupIntent(
-                    setupIntentParams,
-                    with: authenticationContext,
+                    params: setupIntentParams,
+                    authenticationContext: authenticationContext,
                     completion: { status, intent, error in
                         Task { await confirmationChallenge?.complete() }
                         paymentHandlerCompletion(status, intent, error)

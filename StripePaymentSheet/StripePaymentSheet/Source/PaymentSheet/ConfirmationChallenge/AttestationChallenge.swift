@@ -17,7 +17,7 @@ actor AttestationChallenge {
     private let canSyncState: Bool
     private var assertionHandle: StripeAttest.AssertionHandle?
     private let attestationTask: Task<Void, Error>
-    private var assertionTask: Task<StripeAttest.Assertion?, Never>?
+    private var assertionTask: Task<StripeAttest.Assertion?, Error>?
 
     public init(stripeAttest: StripeAttest, canSyncState: Bool = false) {
         self.stripeAttest = stripeAttest
@@ -28,12 +28,12 @@ actor AttestationChallenge {
             try await withTaskCancellationHandler {
                 try Task.checkCancellation()
                 let didAttest = await stripeAttest.prepareAttestation()
+                try Task.checkCancellation()
                 if didAttest {
                     STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareSucceeded(duration: Date().timeIntervalSince(startTime))
                 } else {
                     STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareFailed(duration: Date().timeIntervalSince(startTime))
                 }
-                try Task.checkCancellation()
             } onCancel: {
                 Task {
                     await stripeAttest.cancel()
@@ -42,14 +42,22 @@ actor AttestationChallenge {
         }
     }
 
-    private func fetchAssertion() async -> StripeAttest.Assertion? {
+    func fetchAssertion() async throws -> StripeAttest.Assertion? {
         if let assertionTask {
-            return await assertionTask.value
+            return try await withTaskCancellationHandler {
+                return try await assertionTask.value
+            } onCancel: {
+                assertionTask.cancel()
+            }
         }
-        let assertionTask = Task<StripeAttest.Assertion?, Never> {
+        let assertionTask = Task<StripeAttest.Assertion?, Error> {
             // Wait for prewarm to complete first to avoid race conditions
             do {
-                try await attestationTask.value
+                try await withTaskCancellationHandler {
+                    try await attestationTask.value
+                } onCancel: {
+                    attestationTask.cancel()
+                }
             } catch {
                 return nil
             }
@@ -63,36 +71,20 @@ actor AttestationChallenge {
                         await stripeAttest.cancel()
                     }
                 }
+                try Task.checkCancellation()
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
             } catch {
                 assertionHandle = nil
+                try Task.checkCancellation()
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenFailed(duration: Date().timeIntervalSince(startTime))
             }
             return assertionHandle?.assertion
         }
         self.assertionTask = assertionTask
-        return await assertionTask.value
-    }
-
-    public func fetchAssertionWithTimeout(_ timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6) async -> StripeAttest.Assertion? {
-        let timeoutNs = UInt64(timeout) * 1_000_000_000
-        return await withTaskGroup(of: StripeAttest.Assertion?.self) { group in
-            // Add assertion task
-            group.addTask {
-                return await self.fetchAssertion()
-            }
-            // Add timeout task
-            group.addTask {
-                try? await Task.sleep(nanoseconds: timeoutNs)
-                return nil
-            }
-            defer {
-                // ⚠️ TaskGroups can't return until all child tasks have completed, so we need to cancel remaining tasks and handle cancellation to complete as quickly as possible
-                cancel()
-                group.cancelAll()
-            }
-            // Wait for first completion
-            return await group.next()?.flatMap { $0 }
+        return try await withTaskCancellationHandler {
+            return try await assertionTask.value
+        } onCancel: {
+            assertionTask.cancel()
         }
     }
 
@@ -101,10 +93,6 @@ actor AttestationChallenge {
         assertionHandle?.complete()
     }
 
-    public func cancel() {
-        attestationTask.cancel()
-        assertionTask?.cancel()
-    }
 }
 
 // All duration analytics are in milliseconds
@@ -142,6 +130,12 @@ extension STPAnalyticsClient {
     func logAttestationConfirmationRequestTokenFailed(duration: TimeInterval) {
         log(
             analytic: GenericAnalytic(event: .attestationConfirmationRequestTokenFailed, params: ["duration": duration * 1000])
+        )
+    }
+
+    func logAttestationConfirmationError(error: Error, duration: TimeInterval) {
+        log(
+            analytic: ErrorAnalytic(event: .attestationConfirmationError, error: error, additionalNonPIIParams: ["duration": duration * 1000])
         )
     }
 }

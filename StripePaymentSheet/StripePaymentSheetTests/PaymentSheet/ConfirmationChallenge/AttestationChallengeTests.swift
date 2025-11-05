@@ -56,7 +56,9 @@ class AttestationChallengeTests: XCTestCase {
         // wait to make sure that the assertion will be ready by the time we call fetchAssertion
         try await Task.sleep(nanoseconds: 6_000_000_000)
         let startTime = Date()
-        let assertion = await attestationChallenge.fetchAssertionWithTimeout(30)
+        let assertion = try await withTimeout(30) {
+            try await attestationChallenge.fetchAssertion()
+        }.get()?.flatMap { $0 }
         // didn't take the full timeout time, exited early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
         XCTAssertNotNil(assertion)
@@ -70,11 +72,14 @@ class AttestationChallengeTests: XCTestCase {
         await mockAttestService.setAttestationDelay(5.0)
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
         let startTime = Date()
-        let assertion = await attestationChallenge.fetchAssertionWithTimeout(1)
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
-        // should return nil due to timeout
-        XCTAssertNil(assertion)
+        let assertionResult = await withTimeout(1) {
+            try await attestationChallenge.fetchAssertion()
+        }
         await attestationChallenge.complete()
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
+        // should return TimeoutError
+        XCTAssertFalse(assertionResult.success)
+        XCTAssertThrowsError(try assertionResult.get())
     }
 
     func testAttestationChallengeTimeoutDuringAssertion() async throws {
@@ -82,10 +87,13 @@ class AttestationChallengeTests: XCTestCase {
         await mockAttestService.setGenerateAssertionDelay(5.0)
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
         let startTime = Date()
-        let assertion = await attestationChallenge.fetchAssertionWithTimeout(1)
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
-        // should return nil due to timeout
-        XCTAssertNil(assertion)
+        let assertionResult = await withTimeout(1) {
+            try await attestationChallenge.fetchAssertion()
+        }
         await attestationChallenge.complete()
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
+        // should return TimeoutError
+        XCTAssertFalse(assertionResult.success)
+        XCTAssertThrowsError(try assertionResult.get())
     }
 }
