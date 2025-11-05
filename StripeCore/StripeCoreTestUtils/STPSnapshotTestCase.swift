@@ -28,13 +28,13 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         }
     }
 
-    var isIOS26: Bool {
+    var isIOS26_1: Bool {
         let isiOS26_1 = UIDevice.current.systemVersion == TEST_DEVICE_OS_VERSION_26_1
         #if compiler(>=6.2.1)
         let isXcode26_1 = true
         #else
         let isXcode26_1 = false
-        Swift.assert(!isiOS26, "Running iOS 26 on Xcode 16 is possible but an error because iOS 26 specific code won't be compiled")
+        Swift.assert(!isiOS26_1, "Running iOS 26 on Xcode 16 is possible but an error because iOS 26 specific code won't be compiled")
         #endif
         return isiOS26_1 && isXcode26_1
     }
@@ -52,7 +52,7 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
     ) {
         // Append "iOS26" to snapshot filename if testing on iOS 26
         let ios26Identifier = identifier.map { "\($0)_iOS26" } ?? "iOS26"
-        let identifier = isIOS26 ? ios26Identifier : identifier
+        let identifier = isIOS26_1 ? ios26Identifier : identifier
 
         if let autoSizingHeightForWidth {
             view.autosizeHeight(width: autoSizingHeightForWidth)
