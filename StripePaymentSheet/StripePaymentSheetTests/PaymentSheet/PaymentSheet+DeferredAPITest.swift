@@ -422,7 +422,6 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         // Given
         let testPaymentMethod = try await createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
-        let completionCalledExpectation = expectation(description: "Completion called")
 
         var intentCreationCallbackInvoked = false
 
