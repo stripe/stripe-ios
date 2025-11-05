@@ -24,7 +24,7 @@ extension PaymentSheet {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         // Route based on which handler is available in the intent configuration
-        if intentConfig.confirmationTokenConfirmHandler != nil {
+        if let confirmationTokenConfirmHandler = intentConfig.confirmationTokenConfirmHandler {
             guard let elementsSession else {
                 stpAssertionFailure("Unexpected nil elementsSession when handling deferred intent confirmation with confirmation token flow")
                 return
@@ -40,9 +40,10 @@ extension PaymentSheet {
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 elementsSession: elementsSession,
                 mandateData: mandateData,
+                confirmHandler: confirmationTokenConfirmHandler,
                 completion: completion
             )
-        } else {
+        } else if let confirmHandler = intentConfig.confirmHandler {
             // Use regular confirmation flow
             handleDeferredIntentConfirmation(
                 confirmType: confirmType,
@@ -53,8 +54,11 @@ extension PaymentSheet {
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 mandateData: mandateData,
+                confirmHandler: confirmHandler,
                 completion: completion
             )
+        } else {
+            stpAssertionFailure("Unexpectedly found nil confirmHandler and confirmationTokenConfirmHandler in intentConfig")
         }
     }
 
@@ -67,6 +71,7 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         mandateData: STPMandateDataParams? = nil,
+        confirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmHandler,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
@@ -121,8 +126,8 @@ extension PaymentSheet {
                     // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
                     return getShouldSavePaymentMethodValue(for: paymentMethod.type, intentConfiguration: intentConfig)
                 }()
-                // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-4186 Fix the force unwrap
-                let clientSecret = try await intentConfig.confirmHandler!(paymentMethod, shouldSavePaymentMethod)
+
+                let clientSecret = try await confirmHandler(paymentMethod, shouldSavePaymentMethod)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
                     completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)

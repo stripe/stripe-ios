@@ -19,6 +19,7 @@ extension PaymentSheet {
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession,
         mandateData: STPMandateDataParams? = nil,
+        confirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
@@ -46,11 +47,7 @@ extension PaymentSheet {
                                                                                                   additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
 
                 // 3. Vend the ConfirmationToken and fetch the client secret from the merchant
-                guard let handler = intentConfig.confirmationTokenConfirmHandler else {
-                    stpAssertionFailure("No confirmationTokenConfirmHandler available")
-                    throw PaymentSheetError.unknown(debugDescription: "No confirmationTokenConfirmHandler available")
-                }
-                let clientSecret = try await handler(confirmationToken)
+                let clientSecret = try await confirmHandler(confirmationToken)
 
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
