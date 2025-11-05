@@ -16,6 +16,7 @@ enum CryptoOnrampOperation: String {
     case authenticateUserWithAuthToken = "authenticate_user_with_auth_token"
     case authorize = "authorize"
     case attachKycInfo = "attach_kyc_info"
+    case verifyKycInfo = "verify_kyc_info"
     case verifyIdentity = "verify_identity"
     case registerWalletAddress = "register_wallet_address"
     case collectPaymentMethod = "collect_payment_method"
@@ -37,6 +38,8 @@ enum CryptoOnrampAnalyticsEvent {
     case identityVerificationStarted
     case identityVerificationCompleted
     case kycInfoSubmitted
+    case kycInfoVerificationStarted
+    case kycInfoVerificationCompleted
     case walletRegistered(network: String)
     case collectPaymentMethodStarted(paymentMethodType: String)
     case collectPaymentMethodCompleted(paymentMethodType: String)
@@ -72,6 +75,10 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.identity_verification_completed"
         case .kycInfoSubmitted:
             return "onramp.kyc_info_submitted"
+        case .kycInfoVerificationStarted:
+            return "onramp.kyc_info_verification_started"
+        case .kycInfoVerificationCompleted:
+            return "onramp.kyc_info_verification_completed"
         case .walletRegistered:
             return "onramp.wallet_registered"
         case .collectPaymentMethodStarted:
@@ -103,6 +110,8 @@ enum CryptoOnrampAnalyticsEvent {
              .identityVerificationStarted,
              .identityVerificationCompleted,
              .kycInfoSubmitted,
+             .kycInfoVerificationStarted,
+             .kycInfoVerificationCompleted,
              .userLoggedOut:
             return [:]
         case let .linkAccountLookupCompleted(hasLinkAccount):
