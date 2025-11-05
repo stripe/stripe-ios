@@ -125,7 +125,11 @@ struct PaymentSheetTestPlayground: View {
                             setting: integrationTypeBinding,
                             disabledSettings: playgroundController.settings.uiStyle == .embedded ? [.normal] : []
                         )
-                        SettingView(setting: $playgroundController.settings.customerKeyType)
+                        // Only show confirmation mode for deferred integration types
+                        if playgroundController.settings.integrationType != .normal {
+                            SettingView(setting: confirmationModeBinding)
+                        }
+                        SettingView(setting: customerKeyTypeBinding)
                         SettingView(setting: customerModeBinding)
                         HStack {
                             SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
@@ -328,6 +332,32 @@ struct PaymentSheetTestPlayground: View {
                 playgroundController.settings.uiStyle = .paymentSheet
             }
             playgroundController.settings.integrationType = newIntegrationType
+        }
+    }
+
+    var confirmationModeBinding: Binding<PaymentSheetTestPlaygroundSettings.ConfirmationMode> {
+        Binding<PaymentSheetTestPlaygroundSettings.ConfirmationMode> {
+            return playgroundController.settings.confirmationMode
+        } set: { newMode in
+            // If switching to confirmation token mode and legacy (ephemeral key) is selected,
+            // automatically switch to customer session
+            if newMode == .confirmationToken && playgroundController.settings.customerKeyType == .legacy {
+                playgroundController.settings.customerKeyType = .customerSession
+            }
+            playgroundController.settings.confirmationMode = newMode
+        }
+    }
+
+    var customerKeyTypeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerKeyType> {
+        Binding<PaymentSheetTestPlaygroundSettings.CustomerKeyType> {
+            return playgroundController.settings.customerKeyType
+        } set: { newType in
+            // If switching to legacy (ephemeral key) and confirmation token is selected,
+            // automatically switch to payment method mode
+            if newType == .legacy && playgroundController.settings.confirmationMode == .confirmationToken {
+                playgroundController.settings.confirmationMode = .paymentMethod
+            }
+            playgroundController.settings.customerKeyType = newType
         }
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 extension UIViewController {
     /// Convenience method that presents the view controller in a custom 'bottom sheet' style
-    func presentAsBottomSheet(
+    @_spi(STP) public func presentAsBottomSheet(
         _ viewControllerToPresent: BottomSheetPresentable,
         appearance: PaymentSheet.Appearance,
         completion: (() -> Void)? = nil

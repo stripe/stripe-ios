@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripePaymentSheet
 
 /// KYC information common to the KYC-refresh-related APIs:
 /// - /v1/crypto/internal/kyc_data_retrieve
@@ -22,11 +23,23 @@ struct KYCRefreshInfo {
     let dateOfBirth: KycInfo.DateOfBirth
 
     /// The user’s address.
-    let address: Address
+    var address: Address
 
     /// The last four digits of the user’s id number.
     let idNumberLast4: String?
 
     /// The type of the id number.
     let idType: IdType?
+}
+
+extension KYCRefreshInfo: VerifyKYCInfo {
+    var dateOfBirthDay: Int { dateOfBirth.day }
+    var dateOfBirthMonth: Int { dateOfBirth.month }
+    var dateOfBirthYear: Int { dateOfBirth.year }
+    var line1: String? { address.line1 }
+    var line2: String? { address.line2 }
+    var city: String? { address.city }
+    var state: String? { address.state }
+    var postalCode: String? { address.postalCode }
+    var country: String? { address.country }
 }
