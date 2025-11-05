@@ -633,7 +633,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
             ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown", "link.inline_signup.shown"]
         )
-        XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.starts(with: "elements.attestation.confirmation") ?? false) || $0[string: "event"]?.starts(with: "link") ?? false }).last?[string: "selected_lpm"], "card")
+        XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.contains("attestation") ?? false) || $0[string: "event"]?.starts(with: "link") ?? false }).last?[string: "selected_lpm"], "card")
 
         try? fillCardData(app, container: nil)
 
