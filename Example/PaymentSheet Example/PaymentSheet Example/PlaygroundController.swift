@@ -838,6 +838,7 @@ extension PlaygroundController {
         var body = [
             "customer": customerIdOrType,
             "customer_key_type": settings.customerKeyType.rawValue,
+            "customShop": "stripe_shop_live",
             "currency": settings.currency.rawValue,
             "amount": settings.amount.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
