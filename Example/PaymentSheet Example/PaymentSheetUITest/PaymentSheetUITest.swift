@@ -644,7 +644,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         XCTAssertEqual(
             analyticsLog.suffix(10).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "elements.captcha.passive.attach", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "elements.captcha.passive.attach", "stripeios.confirmation_token_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         // Make sure they all have the same session id
@@ -1030,6 +1030,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_mc
+        settings.confirmationMode = .paymentMethod
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -1155,6 +1156,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_mc
+        settings.confirmationMode = .paymentMethod
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
@@ -1185,7 +1187,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
     func testDeferredPaymentIntent_ApplePay_ConfirmationToken_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
-        settings.integrationType = .deferred_csc_ct
+        settings.integrationType = .deferred_csc
+        settings.confirmationMode = .confirmationToken
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
@@ -1201,7 +1204,8 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.mode = .paymentWithSetup
-        settings.integrationType = .deferred_ssc_ct
+        settings.integrationType = .deferred_ssc
+        settings.confirmationMode = .confirmationToken
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
@@ -1869,6 +1873,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
+        settings.confirmationMode = .paymentMethod
 
         loadPlayground(app, settings)
 
@@ -1918,6 +1923,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        settings.confirmationMode = .paymentMethod
 
         _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: settings)
     }
@@ -1937,6 +1943,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.paymentMethodRemove = .enabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
         settings.paymentMethodRemoveLast = .disabled
+        settings.confirmationMode = .paymentMethod
 
         _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: settings)
     }
@@ -2472,7 +2479,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
-        settings.integrationType = .deferred_csc_ct
+        settings.integrationType = .deferred_csc
+        settings.confirmationMode = .confirmationToken
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2493,7 +2501,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.apmsEnabled = .on
         settings.linkPassthroughMode = .pm
-        settings.integrationType = .deferred_ssc_ct
+        settings.integrationType = .deferred_ssc
+        settings.confirmationMode = .confirmationToken
         settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
 
         loadPlayground(app, settings)
@@ -2886,11 +2895,13 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     // MARK: Link bank payments
 
-    func testLinkCardBrand() {
+    // TODO: Re-enable once ir-draft-remote is resolved.
+    func disabled_testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
 
-    func testLinkCardBrand_flowController() {
+    // TODO: Re-enable once ir-draft-remote is resolved.
+    func disabled_testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
 
@@ -2900,7 +2911,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         testBankPaymentInNativeLink(passthroughMode: false)
     }
 
-    func testBankPaymentInNativeLinkInPassthroughMode() {
+    // TODO: Re-enable once ir-draft-remote is resolved.
+    func disabled_testBankPaymentInNativeLinkInPassthroughMode() {
         testBankPaymentInNativeLink(passthroughMode: true)
     }
 
