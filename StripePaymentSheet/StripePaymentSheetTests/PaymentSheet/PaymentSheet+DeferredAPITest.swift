@@ -77,10 +77,9 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
                 return clientSecret
             }
 
-        let expectation = expectation(description: "Confirm intent")
         // When we confirm the Intent...
         let examplePaymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
-        PaymentSheet.routeDeferredIntentConfirmation(
+        _ = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .new(params: examplePaymentMethodParams, paymentOptions: .init(), paymentMethod: nil, shouldSave: false, shouldSetAsDefaultPM: nil),
             configuration: configuration,
             intentConfig: intentConfig,
@@ -88,10 +87,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             paymentHandler: paymentHandler,
             isFlowController: false,
             elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
-        ) { _, _ in
-            expectation.fulfill()
-        }
-        await fulfillment(of: [expectation])
+        )
 
         // ...the PaymentIntent should have PMO SFU set.
         let paymentIntent = try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
@@ -222,7 +218,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
     // MARK: - Shared Payment Token Session Tests
 
-    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_callsHandlerWithCorrectParameters() {
+    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_callsHandlerWithCorrectParameters() async {
         // Given
         let testPaymentMethod = createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
@@ -252,7 +248,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.routeDeferredIntentConfirmation(
+        let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
@@ -260,14 +256,12 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
             isFlowController: false,
             elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
-        ) { result, deferredType in
-            capturedResult = result
-            capturedDeferredType = deferredType
-            completionCalledExpectation.fulfill()
-        }
+        )
+        capturedResult = result.result
+        capturedDeferredType = result.deferredIntentConfirmationType
 
         // Then
-        wait(for: [handlerCalledExpectation, completionCalledExpectation], timeout: 5.0)
+        await fulfillment(of: [handlerCalledExpectation], timeout: 5.0)
 
         XCTAssertNotNil(capturedPaymentMethod, "Payment method should be passed to handler")
         XCTAssertEqual(capturedPaymentMethod?.stripeId, testPaymentMethod.stripeId, "Correct payment method should be passed")
@@ -287,7 +281,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         XCTAssertEqual(capturedDeferredType, .completeWithoutConfirmingIntent, "Should complete without confirming intent")
     }
 
-    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_newPaymentMethod() {
+    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_newPaymentMethod() async {
         // Given
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
         let completionCalledExpectation = expectation(description: "Completion called")
@@ -319,7 +313,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.routeDeferredIntentConfirmation(
+        let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .new(
                 params: paymentMethodParams,
                 paymentOptions: .init(),
@@ -333,13 +327,11 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
             isFlowController: false,
             elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
-        ) { result, _ in
-            capturedResult = result
-            completionCalledExpectation.fulfill()
-        }
+        )
+        capturedResult = result.result
 
         // Then
-        wait(for: [handlerCalledExpectation, completionCalledExpectation], timeout: 10.0)
+        await fulfillment(of: [handlerCalledExpectation], timeout: 10.0)
 
         XCTAssertNotNil(capturedPaymentMethod, "Payment method should be created and passed to handler")
         XCTAssertEqual(capturedPaymentMethod?.type, .card, "Payment method should be of type card")
@@ -350,7 +342,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_setupMode() {
+    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_setupMode() async {
         // Given
         let testPaymentMethod = createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
@@ -369,7 +361,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.routeDeferredIntentConfirmation(
+        let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
@@ -377,13 +369,11 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
             isFlowController: false,
             elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
-        ) { result, _ in
-            capturedResult = result
-            completionCalledExpectation.fulfill()
-        }
+        )
+        capturedResult = result.result
 
         // Then
-        wait(for: [handlerCalledExpectation, completionCalledExpectation], timeout: 5.0)
+        await fulfillment(of: [handlerCalledExpectation], timeout: 5.0)
 
         guard case .completed = capturedResult else {
             XCTFail("Result should be .completed")
@@ -391,7 +381,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testHandleDeferredIntentConfirmation_withoutPreparePaymentMethodHandler_proceedsToNormalFlow() {
+    func testHandleDeferredIntentConfirmation_withoutPreparePaymentMethodHandler_proceedsToNormalFlow() async {
         // Given
         let testPaymentMethod = createValidSavedPaymentMethod()
         let completionCalledExpectation = expectation(description: "Completion called")
@@ -414,7 +404,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         )
 
         // When
-        PaymentSheet.routeDeferredIntentConfirmation(
+        let result = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
@@ -422,14 +412,11 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
             isFlowController: false,
             elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
-        ) { result, deferredType in
-            capturedResult = result
-            capturedDeferredType = deferredType
-            completionCalledExpectation.fulfill()
-        }
+        )
+        capturedResult = result.result
+        capturedDeferredType = result.deferredIntentConfirmationType
 
-        // Then
-        wait(for: [completionCalledExpectation], timeout: 10.0)
+        // Then (no need to wait anymore, async already completed)
 
         // Should proceed to normal confirmation flow, not early return
         XCTAssertNotEqual(capturedDeferredType, .completeWithoutConfirmingIntent, "Should not complete immediately without confirming intent")
@@ -438,7 +425,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(capturedResult, "Result should be set")
     }
 
-    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_doesNotProceedToIntentConfirmation() {
+    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_doesNotProceedToIntentConfirmation() async {
         // Given
         let testPaymentMethod = createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
@@ -464,7 +451,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         }
 
         // When
-        PaymentSheet.routeDeferredIntentConfirmation(
+        _ = await PaymentSheet.routeDeferredIntentConfirmation(
             confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil),
             configuration: configuration,
             intentConfig: intentConfig,
@@ -472,12 +459,10 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
             isFlowController: false,
             elementsSession: nil // Non ConfirmationToken flow does not require elementsSession
-        ) { _, _ in
-            completionCalledExpectation.fulfill()
-        }
+        )
 
         // Then
-        wait(for: [handlerCalledExpectation, completionCalledExpectation], timeout: 5.0)
+        await fulfillment(of: [handlerCalledExpectation], timeout: 5.0)
 
         XCTAssertFalse(intentCreationCallbackInvoked, "Intent creation callback should not be invoked when using preparePaymentMethodHandler")
     }
