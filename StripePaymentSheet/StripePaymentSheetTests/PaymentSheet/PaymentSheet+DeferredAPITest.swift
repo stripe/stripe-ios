@@ -39,19 +39,16 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
     }()
 
     // MARK: Helpers
-    func createValidSavedPaymentMethod() -> STPPaymentMethod {
-        var validSavedPM: STPPaymentMethod?
-        let createPMExpectation = expectation(description: "Create PM")
-        apiClient.createPaymentMethod(with: ._testValidCardValue()) { paymentMethod, error in
-            guard let paymentMethod = paymentMethod else {
-                XCTFail(String(describing: error))
-                return
+    func createValidSavedPaymentMethod() async throws -> STPPaymentMethod {
+        return try await withCheckedThrowingContinuation { continuation in
+            apiClient.createPaymentMethod(with: ._testValidCardValue()) { paymentMethod, error in
+                if let paymentMethod = paymentMethod {
+                    continuation.resume(returning: paymentMethod)
+                } else {
+                    continuation.resume(throwing: error ?? NSError(domain: "TestError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create payment method"]))
+                }
             }
-            validSavedPM = paymentMethod
-            createPMExpectation.fulfill()
         }
-        waitForExpectations(timeout: 10)
-        return validSavedPM!
     }
 
     // MARK: - PMO SFU test
@@ -218,11 +215,10 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
     // MARK: - Shared Payment Token Session Tests
 
-    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_callsHandlerWithCorrectParameters() async {
+    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_callsHandlerWithCorrectParameters() async throws {
         // Given
-        let testPaymentMethod = createValidSavedPaymentMethod()
+        let testPaymentMethod = try await createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
-        let completionCalledExpectation = expectation(description: "Completion called")
 
         var capturedPaymentMethod: STPPaymentMethod?
         var capturedShippingAddress: STPAddress?
@@ -284,7 +280,6 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
     func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_newPaymentMethod() async {
         // Given
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
-        let completionCalledExpectation = expectation(description: "Completion called")
 
         var capturedPaymentMethod: STPPaymentMethod?
         var capturedResult: PaymentSheetResult?
@@ -342,11 +337,10 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_setupMode() async {
+    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_setupMode() async throws {
         // Given
-        let testPaymentMethod = createValidSavedPaymentMethod()
+        let testPaymentMethod = try await createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
-        let completionCalledExpectation = expectation(description: "Completion called")
 
         var capturedResult: PaymentSheetResult?
 
@@ -381,10 +375,9 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testHandleDeferredIntentConfirmation_withoutPreparePaymentMethodHandler_proceedsToNormalFlow() async {
+    func testHandleDeferredIntentConfirmation_withoutPreparePaymentMethodHandler_proceedsToNormalFlow() async throws {
         // Given
-        let testPaymentMethod = createValidSavedPaymentMethod()
-        let completionCalledExpectation = expectation(description: "Completion called")
+        let testPaymentMethod = try await createValidSavedPaymentMethod()
 
         var capturedResult: PaymentSheetResult?
         var capturedDeferredType: STPAnalyticsClient.DeferredIntentConfirmationType?
@@ -425,9 +418,9 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(capturedResult, "Result should be set")
     }
 
-    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_doesNotProceedToIntentConfirmation() async {
+    func testHandleDeferredIntentConfirmation_withPreparePaymentMethodHandler_doesNotProceedToIntentConfirmation() async throws {
         // Given
-        let testPaymentMethod = createValidSavedPaymentMethod()
+        let testPaymentMethod = try await createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
         let completionCalledExpectation = expectation(description: "Completion called")
 
