@@ -8,11 +8,11 @@
 import UIKit
 
 /// Container view controller that displays a list of KYC fields with the optional ability to initiate editing of the address.
-@_spi(STP) public final class VerifyKYCViewController: BottomSheetViewController {
+final class VerifyKYCViewController: BottomSheetViewController {
     private weak var contentViewController: VerifyKYCContentViewController?
 
     /// Closure called when a user takes action (confirm, cancel, or initiate editing of the address).
-    @_spi(STP) public var onResult: ((VerifyKYCResult) -> Void)? {
+    var onResult: ((VerifyKYCResult) -> Void)? {
         didSet {
             contentViewController?.onResult = onResult
         }
@@ -20,7 +20,7 @@ import UIKit
 
     // MARK: - BottomSheetViewController
 
-    @_spi(STP) public override var sheetCornerRadius: CGFloat? {
+    override var sheetCornerRadius: CGFloat? {
         LinkUI.largeCornerRadius
     }
 
@@ -30,7 +30,7 @@ import UIKit
     /// - Parameters:
     ///   - info: The KYC information to display.
     ///   - appearance: Determines the colors, corner radius, and height of the "Confirm" button and the user interface style (i.e. light, dark, or system).
-    @_spi(STP) public init(info: VerifyKYCInfo, appearance: LinkAppearance) {
+    init(info: VerifyKYCInfo, appearance: LinkAppearance) {
         let contentViewController = VerifyKYCContentViewController(info: info, appearance: appearance)
         self.contentViewController = contentViewController
 
@@ -54,7 +54,7 @@ import UIKit
 
     // MARK: - BottomSheetViewController
 
-    @_spi(STP) public override func didTapOrSwipeToDismiss() {
+    override func didTapOrSwipeToDismiss() {
         contentViewController?.didTapOrSwipeToDismiss()
     }
 }
