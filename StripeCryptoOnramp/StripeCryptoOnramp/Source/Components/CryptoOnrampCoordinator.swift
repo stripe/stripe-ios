@@ -406,24 +406,19 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
 
             // Present the UI for the user to confirm their KYC information is correct.
-            let result = await linkController.presentKYCVerification(
+            let result = try await linkController.presentKYCVerification(
                 info: displayInfo,
                 appearance: appearance,
-                from: viewController
+                from: viewController,
+                onConfirm: { [apiClient, analyticsClient] in
+                    // When confirming, we make the API call for confirmation before dismissal.
+                    // If the API call fails, the error will be caught and returned to the caller.
+                    try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
+                    analyticsClient.log(.kycInfoVerificationCompleted)
+                }
             )
 
-            switch result {
-            case .confirmed:
-                // When confirming, we make the API call for confirmation before returning success.
-                // If the API call fails, the error will be caught and returned to the caller.
-                try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
-                analyticsClient.log(.kycInfoVerificationCompleted)
-                return result
-            case .canceled, .updateAddress:
-                return result
-            @unknown default:
-                return result
-            }
+            return result
         } catch {
             analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
             throw error
