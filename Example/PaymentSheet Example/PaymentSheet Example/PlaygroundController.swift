@@ -405,7 +405,7 @@ class PlaygroundController: ObservableObject {
         }
 
         // Use confirmation token handler for CT integration types
-        if settings.integrationType == .deferred_csc_ct || settings.integrationType == .deferred_ssc_ct {
+        if settings.confirmationMode == .confirmationToken {
             let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] confirmationToken in
                 guard let self = self else {
                     throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
@@ -668,7 +668,7 @@ class PlaygroundController: ObservableObject {
             case .setup:
                 mc = PaymentSheet(setupIntentClientSecret: self.clientSecret!, configuration: configuration)
             }
-        case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc, .deferred_csc_ct, .deferred_ssc_ct:
+        case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         }
 
@@ -838,7 +838,6 @@ extension PlaygroundController {
         var body = [
             "customer": customerIdOrType,
             "customer_key_type": settings.customerKeyType.rawValue,
-            "customShop": "stripe_shop_live",
             "currency": settings.currency.rawValue,
             "amount": settings.amount.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
@@ -848,7 +847,7 @@ extension PlaygroundController {
             "link_mode": settings.linkEnabledMode.rawValue,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
-            "is_confirmation_token": settings.integrationType == .deferred_csc_ct || settings.integrationType == .deferred_ssc_ct,
+            "is_confirmation_token": settings.confirmationMode == .confirmationToken,
             "customer_session_component_name": "mobile_payment_element",
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
             "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
@@ -963,7 +962,7 @@ extension PlaygroundController {
                             )
                         }
 
-                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp, .deferred_csc_ct, .deferred_ssc_ct:
+                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
                         PaymentSheet.FlowController.create(
                             intentConfiguration: self.intentConfig,
                             configuration: self.configuration,
@@ -1049,8 +1048,6 @@ extension PlaygroundController {
             return
         case .deferred_mc, .deferred_ssc:
             break
-        case .deferred_csc_ct, .deferred_ssc_ct:
-            assertionFailure("Confirmation token integration types should use confirmationTokenConfirmHandler, not confirmHandler")
         case .normal:
             assertionFailure()
         }
@@ -1065,10 +1062,12 @@ extension PlaygroundController {
 
     func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken) async throws -> String {
         switch settings.integrationType {
-        case .deferred_csc_ct:
+        case .deferred_mp:
+            return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
+        case .deferred_csc:
             try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second simulate creating an intent
             return self.clientSecret!
-        case .deferred_ssc_ct:
+        case .deferred_mc, .deferred_ssc:
             break
         default:
             throw NSError(domain: "PlaygroundController.confirmationTokenConfirmHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unhandled integration type"])
