@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-// https://trailhead.corp.stripe.com/docs/payment-method-messaging/pmme-platform/api-schema
 private let pmmeApiEndpoint = URL(string: "https://ppm.stripe.com/config")!
 
 extension PaymentMethodMessagingElement {
