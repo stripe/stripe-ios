@@ -406,7 +406,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
 
             // Present the UI for the user to confirm their KYC information is correct.
-            let result = try await linkController.presentKYCVerification(
+            return try await linkController.presentKYCVerification(
                 info: displayInfo,
                 appearance: appearance,
                 from: viewController,
@@ -417,8 +417,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     analyticsClient.log(.kycInfoVerificationCompleted)
                 }
             )
-
-            return result
         } catch {
             analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
             throw error

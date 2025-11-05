@@ -557,14 +557,14 @@ import UIKit
                 let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
                 verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
                     verifyKYCViewController?.onResult = nil
-                    
+
                     // We'll report the result back to the caller after dismissal of the sheet.
                     let dismissAndResumeWithResult: (Result<VerifyKYCResult, Swift.Error>) -> Void = { continuationResult in
                         verifyKYCViewController?.dismiss(animated: true) {
                             continuation.resume(with: continuationResult)
                         }
                     }
-                    
+
                     switch result {
                     case .canceled, .updateAddress:
                         dismissAndResumeWithResult(.success(result))
@@ -582,7 +582,7 @@ import UIKit
                         dismissAndResumeWithResult(.success(result))
                     }
                 }
-                
+
                 viewController.presentAsBottomSheet(verifyKYCViewController, appearance: .init())
             }
         }
