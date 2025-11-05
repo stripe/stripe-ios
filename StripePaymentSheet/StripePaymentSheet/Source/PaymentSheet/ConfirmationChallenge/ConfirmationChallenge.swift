@@ -57,7 +57,7 @@ actor ConfirmationChallenge {
 
         let (hcaptchaTokenResult, assertionResult) = await withTimeout(timeout, getPassiveCaptchaToken, getAttestationAssertion)
         if let passiveCaptchaChallenge, case .failure(let error) = hcaptchaTokenResult, error is TimeoutError {
-            await STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey:  passiveCaptchaChallenge.passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
+            await STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
         }
         if case .failure(let error) = assertionResult, error is TimeoutError {
             STPAnalyticsClient.sharedClient.logAttestationConfirmationError(error: error, duration: Date().timeIntervalSince(startTime))
