@@ -9,10 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 
 actor AttestationChallenge {
-    enum AttestationError: Error {
-        case timeout
-    }
-
     private let stripeAttest: StripeAttest
     private let canSyncState: Bool
     private var assertionHandle: StripeAttest.AssertionHandle?

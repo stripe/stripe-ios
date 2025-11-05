@@ -185,14 +185,15 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testConfirmationChallengeCaptchaTimeout() async {
         let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
-        await confirmationChallenge.setTimeout(timeout: 2)
+        await confirmationChallenge.setTimeout(timeout: 1)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 3)
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
         // should return nil due to timeout
         XCTAssertNil(hcaptcha)
         // assertion is really fast in test mode, so it returns in time
         XCTAssertNotNil(assertion)
+        await confirmationChallenge.complete()
     }
 
     func testConfirmationChallengeAttestationTimeout() async throws {

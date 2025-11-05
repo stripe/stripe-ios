@@ -13,7 +13,7 @@ actor ConfirmationChallenge {
     private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
     private var attestationChallenge: AttestationChallenge?
 
-    var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
+    private var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
 
     func setTimeout(timeout: TimeInterval) {
         self.timeout = timeout
