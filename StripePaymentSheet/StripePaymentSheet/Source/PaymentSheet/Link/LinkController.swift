@@ -534,6 +534,38 @@ import UIKit
         }
     }
 
+    /// Presents KYC verification UI to the user.
+    ///
+    /// This method presents a bottom sheet displaying the provided KYC information for user review.
+    /// The user can confirm the information, request to update their address, or cancel.
+    ///
+    /// - Parameters:
+    ///   - info: The KYC information to display to the user.
+    ///   - appearance: Appearance configuration for the verification UI.
+    ///   - viewController: The view controller from which to present the verification flow.
+    /// - Returns: A `VerifyKYCResult` indicating whether the user confirmed, requested an address update, or canceled.
+    @_spi(STP) public func presentKYCVerification(
+        info: VerifyKYCInfo,
+        appearance: LinkAppearance,
+        from viewController: UIViewController
+    ) async -> VerifyKYCResult {
+        return await withCheckedContinuation { continuation in
+            Task { @MainActor in
+                let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
+                verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
+                    verifyKYCViewController?.onResult = nil
+                    
+                    // Dismiss the sheet and report the result
+                    verifyKYCViewController?.dismiss(animated: true) {
+                        continuation.resume(returning: result)
+                    }
+                }
+                
+                viewController.presentAsBottomSheet(verifyKYCViewController, appearance: .init())
+            }
+        }
+    }
+
     /// Logs out the current Link user, if any.
     @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
         func clearLinkAccountContextAndComplete() {
