@@ -2895,11 +2895,13 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     // MARK: Link bank payments
 
-    func testLinkCardBrand() {
+    // TODO: Re-enable once ir-draft-remote is resolved.
+    func disabled_testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
 
-    func testLinkCardBrand_flowController() {
+    // TODO: Re-enable once ir-draft-remote is resolved.
+    func disabled_testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
 
@@ -2909,7 +2911,8 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         testBankPaymentInNativeLink(passthroughMode: false)
     }
 
-    func testBankPaymentInNativeLinkInPassthroughMode() {
+    // TODO: Re-enable once ir-draft-remote is resolved.
+    func disabled_testBankPaymentInNativeLinkInPassthroughMode() {
         testBankPaymentInNativeLink(passthroughMode: true)
     }
 
