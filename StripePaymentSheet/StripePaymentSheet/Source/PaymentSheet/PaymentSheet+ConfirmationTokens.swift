@@ -74,7 +74,7 @@ extension PaymentSheet {
                         return radarOptions
                     case .new:
                         // Radar options is already attached to the paymentMethodData that was used to create the confirmation token
-                        return nil
+                        return confirmationTokenParams.paymentMethodData?.radarOptions
                     }
                 }()
 

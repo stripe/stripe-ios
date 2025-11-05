@@ -840,6 +840,7 @@ extension PlaygroundController {
             "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
             "amount": settings.amount.rawValue,
+            "merchant": "stripe_shop_test",
             "merchant_country_code": settings.merchantCountryCode.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
