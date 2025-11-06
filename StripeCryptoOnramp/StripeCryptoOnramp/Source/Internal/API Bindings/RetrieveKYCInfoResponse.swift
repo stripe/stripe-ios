@@ -13,12 +13,6 @@ struct RetrieveKYCInfoResponse: Decodable {
     /// The KYC info retrieved from the API.
     let kycInfo: KYCRefreshInfo
 
-    /// Creates a new instance of `RetrieveKYCInfoResponse`.
-    /// - Parameter kycInfo: The `KYCRefreshInfo` instance containing the user’s information.
-    init(kycInfo: KYCRefreshInfo) {
-        self.kycInfo = kycInfo
-    }
-
     // MARK: - Decodable
 
     private enum CodingKeys: String, CodingKey {
