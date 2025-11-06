@@ -88,6 +88,18 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func attachKYCInfo(info: KycInfo) async throws
 
+    /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
+    ///
+    /// - Parameters:
+    ///   - updatedAddress: An optional updated address. Specify this parameter if the user has elected to change the address after a prior call to this API returned `VerifyKYCResult.updateAddress`. Otherwise, specify `nil` to show the user’s existing KYC information on the presented flow.
+    ///   - viewController: The view controller from which to present the KYC verification flow.
+    /// - Returns: An instance of `VerifyKYCResult` indicating the following:
+    ///     - `VerifyKYCResult.confirmed`: The user has confirmed that the KYC information displayed is accurate.
+    ///     - `VerifyKYCResult.updateAddress`: The user has elected to update the displayed address. The verification UI will be dismissed, and the caller must collect new address information, and call this API again, specifying the new address in the `updatedAddress` parameter.
+    ///     - `VerifyKYCResult.canceled`: The user canceled the flow, dismissing the verification UI.
+    /// Throws if an authenticated Link user is not available, KYC information has not yet been collected, or an API error occurs.
+    func verifyKYCInfo(updatedAddress: Address?, from viewController: UIViewController) async throws -> VerifyKYCResult
+
     /// Creates an identity verification session and launches the document verification flow.
     /// Requires an authenticated Link user.
     ///
@@ -375,6 +387,38 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.kycInfoSubmitted)
         } catch {
             analyticsClient.log(.errorOccurred(during: .attachKycInfo, errorMessage: error.localizedDescription))
+            throw error
+        }
+    }
+
+    public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKYCResult {
+        analyticsClient.log(.kycInfoVerificationStarted)
+        do {
+            let linkAccountInfo = try await self.linkAccountInfo
+
+            // Fetch existing KYC info to display for confirmation.
+            let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
+            var displayInfo = response.kycInfo
+
+            // Update the address for the displayed information, if any was passed in.
+            if let updatedAddress {
+                displayInfo.address = updatedAddress
+            }
+
+            // Present the UI for the user to confirm their KYC information is correct.
+            return try await linkController.presentKYCVerification(
+                info: displayInfo,
+                appearance: appearance,
+                from: viewController,
+                onConfirm: { [apiClient, analyticsClient] in
+                    // When confirming, we make the API call for confirmation before dismissal.
+                    // If the API call fails, the error will be caught and returned to the caller.
+                    try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
+                    analyticsClient.log(.kycInfoVerificationCompleted)
+                }
+            )
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
             throw error
         }
     }

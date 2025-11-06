@@ -1,4 +1,8 @@
-## 25.0.0 2025-XX-YY
+## X.Y.Z
+### PaymentSheet
+* [Fixed] Fixed an issue where async APIs did not run on the main thread.
+
+## 25.0.0 2025-11-03
 This major version introduces many small breaking changes. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.
 
 ### All

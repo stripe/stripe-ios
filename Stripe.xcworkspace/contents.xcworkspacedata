@@ -26,6 +26,9 @@
          location = "group:StripeConnectExample/StripeConnect Example.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:CryptoOnramp Example/CryptoOnramp Example.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:UI Examples/UI Examples.xcodeproj">
       </FileRef>
    </Group>
@@ -61,6 +64,9 @@
    </FileRef>
    <FileRef
       location = "group:StripeIdentity/StripeIdentity.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripeIssuing/StripeIssuing.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:StripePaymentSheet/StripePaymentSheet.xcodeproj">

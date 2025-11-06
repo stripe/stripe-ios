@@ -62,7 +62,11 @@ extension PayWithLinkViewController {
         var requiresFullScreen: Bool { false }
 
         lazy var navigationBar: SheetNavigationBar = {
-            let navBar = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+            let navBar = LinkSheetNavigationBar(
+                isTestMode: false,
+                appearance: LinkUI.appearance,
+                shouldLogPaymentSheetAnalyticsOnDismissal: false
+            )
             navBar.title = navigationTitle
             return navBar
         }()

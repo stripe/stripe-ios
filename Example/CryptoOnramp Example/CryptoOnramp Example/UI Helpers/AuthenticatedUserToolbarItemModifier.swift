@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import UIKit
 
-@_spi(STP)
-import StripeCryptoOnramp
+@_spi(STP) import StripeCryptoOnramp
+@_spi(STP) import StripePaymentSheet
 
 extension View {
 
@@ -29,13 +30,50 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     let flowCoordinator: CryptoOnrampFlowCoordinator?
 
     @Environment(\.isLoading) private var isLoading
+    @State private var isPresentingUpdateAddress = false
+    @State private var alert: Alert?
+
+    private var isPresentingAlert: Binding<Bool> {
+        Binding(get: {
+            alert != nil
+        }, set: { newValue in
+            if !newValue { alert = nil }
+        })
+    }
 
     func body(content: Content) -> some View {
         content
+        .sheet(isPresented: $isPresentingUpdateAddress) {
+            UpdateAddressView { address in
+                // Wait for dismissal to be fully complete, otherwise, we'll try to
+                // present a view controller while another is already attached.
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+                    verifyKYC(updatedAddress: address)
+                }
+            }
+        }
+        .alert(
+            alert?.title ?? "Error",
+            isPresented: isPresentingAlert,
+            presenting: alert,
+            actions: { _ in
+                Button("OK") {}
+            }, message: { alert in
+                Text(alert.message)
+            }
+        )
         .toolbar {
             if isShown {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
+                        Button {
+                            verifyKYC()
+                        } label: {
+                            Label("Verify KYC Info…", systemImage: "doc.text.magnifyingglass")
+                        }
+
+                        Divider()
+
                         Button(role: .destructive) {
                             logOut()
                         } label: {
@@ -75,6 +113,42 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                     isLoading.wrappedValue = false
                     flowCoordinator?.path = []
                     print("Log out failed. Still returning to root view. Error: \(error)")
+                }
+            }
+        }
+    }
+
+    private func verifyKYC(updatedAddress: Address? = nil) {
+        guard let presentingVC = UIApplication.shared.findTopViewController() else { return }
+        Task {
+            do {
+                let result = try await coordinator.verifyKYCInfo(updatedAddress: updatedAddress, from: presentingVC)
+                switch result {
+                case .confirmed:
+                    await MainActor.run {
+                        alert = Alert(title: "Success", message: "KYC information confirmed.")
+                    }
+                case .updateAddress:
+                    await MainActor.run {
+                        isPresentingUpdateAddress = true
+                    }
+                case .canceled:
+                    break
+                @unknown default:
+                    break
+                }
+            } catch {
+                await MainActor.run {
+                    let errorMessage = if
+                        let stripeError = error as? StripeError,
+                        case let .apiError(stripeAPIError) = stripeError,
+                        let message = stripeAPIError.message {
+                        message + " (\(stripeAPIError.code ?? "no error code"))"
+                    } else {
+                        error.localizedDescription
+                    }
+
+                    alert = Alert(title: "KYC verification failed", message: errorMessage)
                 }
             }
         }

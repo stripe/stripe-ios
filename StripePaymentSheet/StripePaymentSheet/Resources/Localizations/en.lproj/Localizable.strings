@@ -165,6 +165,9 @@ with the transaction. */
 /* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Confirm your CVC";
 
+/* Title label for a know-your-customer (KYC) verification screen */
+"Confirm your information" = "Confirm your information";
+
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 
@@ -222,6 +225,9 @@ to be saved and used in future checkout sessions. */
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
+
+/* Label for displaying the last 4 digits of the user's social security number */
+"Last 4 digits of SSN" = "Last 4 digits of SSN";
 
 /* Title for a button that indicates a user can log in or sign up. */
 "Log in or sign up" = "Log in or sign up";
