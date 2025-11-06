@@ -61,7 +61,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         verify(subview, identifier: "pmme_representable_multi_partner")
     }
 
-    func testPMMERepresentable_CustomAppearance() async {
+    func testPMMERepresentable_SinglePartner_CustomAppearance() async {
         var appearance = PaymentMethodMessagingElement.Appearance()
         appearance.font = .boldSystemFont(ofSize: 20)
         appearance.textColor = .red
@@ -84,6 +84,28 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         let subview = hostingVC.view.subviews[0]
 
         verify(subview, identifier: "pmme_representable_custom_appearance")
+    }
+
+    func testPMMERepresentable_MultiPartner_CustomAppearance() async {
+        var appearance = PaymentMethodMessagingElement.Appearance()
+        appearance.font = .boldSystemFont(ofSize: 20)
+        appearance.textColor = .red
+
+        let viewData = makeViewData(
+            mode: .multiPartner(logos: [makeLogoSet(), makeLogoSet(color: .systemGreen)]),
+            promotion: "Buy now or pay later",
+            appearance: appearance
+        )
+
+        let swiftUIView = PMMELoadedViewWrapper(viewData: viewData)
+            .animation(nil)
+
+        let (hostingVC, window) = makeWindowWithView(swiftUIView)
+
+        hostingVC.view.setNeedsLayout()
+        hostingVC.view.layoutIfNeeded()
+
+        XCTAssertFalse(hostingVC.view.subviews.isEmpty)
     }
 
     // MARK: - Helpers
