@@ -24,12 +24,12 @@ protocol BottomSheetContentViewController: UIViewController {
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
 @objc(STP_Internal_BottomSheetViewController)
-@_spi(STP) public class BottomSheetViewController: UIViewController, BottomSheetPresentable {
+class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
 
-    @_spi(STP) public var sheetCornerRadius: CGFloat? {
+    var sheetCornerRadius: CGFloat? {
         BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
     }
 
@@ -502,14 +502,14 @@ protocol BottomSheetContentViewController: UIViewController {
         return nil
     }
 
-    @_spi(STP) public func didTapOrSwipeToDismiss() {
+    func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
     }
 }
 
 extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
-    @_spi(STP) public func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
         // On iPad, tapping outside the sheet dismisses it without informing us - so we override this method to be informed.
         didTapOrSwipeToDismiss()
         return false
@@ -518,7 +518,7 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
 
 // MARK: - UIScrollViewDelegate
 extension BottomSheetViewController: UIScrollViewDelegate {
-    @_spi(STP) public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 0 {
             contentViewController.navigationBar.setShadowHidden(false)
         } else {
@@ -530,21 +530,21 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 // MARK: - PaymentSheetAuthenticationContext
 extension BottomSheetViewController: PaymentSheetAuthenticationContext {
 
-    @_spi(STP) public func authenticationPresentingViewController() -> UIViewController {
+    func authenticationPresentingViewController() -> UIViewController {
         return findTopMostPresentedViewController()
     }
 
-    @_spi(STP) public func configureSafariViewController(_ viewController: SFSafariViewController) {
+    func configureSafariViewController(_ viewController: SFSafariViewController) {
         // Change to a from bottom modal presentation. This also avoids a bug where the contents is squished when returning
         viewController.modalPresentationStyle = .overFullScreen
     }
 
-    @_spi(STP) public func authenticationContextWillDismiss(_ viewController: UIViewController) {
+    func authenticationContextWillDismiss(_ viewController: UIViewController) {
         view.setNeedsLayout()
     }
 
     // TODO: Remove these three methods! BottomSheetVC shouldn't be aware of any of these specific VCs; it should expose generic present/dismiss methods
-    @_spi(STP) public func present(
+    func present(
         _ authenticationViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
@@ -555,13 +555,13 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         self.removeBlurEffect(animated: true, completion: completion)
     }
 
-    @_spi(STP) public func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
+    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?) {
         let pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
                                                       appearance: self.appearance, safariViewController: safariViewController)
         pushContentViewController(pollingVC)
     }
 
-    @_spi(STP) public func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
+    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
         guard contentViewController is BottomSheet3DS2ViewController || contentViewController is PollingViewController else {
             assertionFailure("Dismiss called, but it will do nothing!")
             return
@@ -575,14 +575,14 @@ extension BottomSheetViewController: UIViewControllerTransitioningDelegate {}
 
 // MARK: - UIGestureRecognizerDelegate
 extension BottomSheetViewController: UIGestureRecognizerDelegate {
-    @_spi(STP) public func gestureRecognizer(
+    func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
         return true
     }
 
-    @_spi(STP) public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
         -> Bool
     {
         // I can't find another way to allow custom UIControl subclasses to receive touches
