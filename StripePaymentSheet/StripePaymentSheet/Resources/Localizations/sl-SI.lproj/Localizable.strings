@@ -122,6 +122,8 @@
 
 "Default payment method" = "Privzeti način plačila";
 
+"Did you mean %@? %@." = "Ali ste mislili %1$@? %2$@.";
+
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Naslov vnesite ročno";
@@ -133,8 +135,6 @@
 "Failed to connect" = "Povezave ni bilo mogoče vzpostaviti";
 
 "Fast, secure checkout" = "Hitra in varna izvedba plačil";
-
-"For security, please re-enter your card’s security code." = "Iz varnostnih razlogov morate znova vnesti varnostno kodo svoje kartice.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Pridobite %@ povračila za prvo plačilo prek svojega bančnega računa. <terms>Oglejte si pogoje</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Ta kartica je potekla. Posodobite podatke o kartici ali izberite drug način plačila.";
-
 "This is your default" = "To je vaš privzeti način plačila";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Ta način plačila bo odstranjen, vendar bo še naprej na voljo za naročnine %@.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Naslov za račun uporabi kot naslov za pošiljanje";
 
 "View more" = "Prikaži več";
+
+"Yes, update" = "Da, posodobi";
 
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
 

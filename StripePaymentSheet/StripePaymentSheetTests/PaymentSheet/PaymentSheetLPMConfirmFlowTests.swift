@@ -9,7 +9,7 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import SwiftUI
@@ -132,24 +132,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             form.getTextFieldElement("Email").setText("f@z.c")
             XCTAssertNotNil(form.getMandateElement())
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
-        }
-    }
-
-    func testSofortConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .sofort, defaultCountry: "AT") { form in
-            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
-            XCTAssertNil(form.getTextFieldElement("Full name"))
-            XCTAssertNil(form.getTextFieldElement("Email"))
-            XCTAssertNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
-        }
-
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .sofort, defaultCountry: "AT") { form in
-            XCTAssertNotNil(form.getDropdownFieldElement("Country or region"))
-            form.getTextFieldElement("Full name").setText("Foo")
-            form.getTextFieldElement("Email").setText("f@z.c")
-            XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
         }
     }
 
@@ -439,22 +421,51 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         let customer = "cus_OaMPphpKbeixCz"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
         let savedSepaPM = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_1NnBnhFY0qyl6XeW9ThDjAvw", // A hardcoded SEPA PM for the ^ customer
+            "created": "12345",
             "type": "sepa_debit",
         ])!
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
+
+        // Create customer session for confirmation token support
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+            customerID: customer,
+            merchantCountry: "us",
+            paymentMethodSave: true
+        )
+
         let configuration: PaymentSheet.Configuration = {
             var config = PaymentSheet.Configuration()
             config.apiClient = apiClient
             config.allowsDelayedPaymentMethods = true
             config.returnURL = "https://foo.com"
+            config.customer = PaymentSheet.CustomerConfiguration(
+                id: customerAndCustomerSession.customer,
+                customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
+            )
             return config
         }()
 
         // Confirm saved SEPA with every confirm variation
         for intentKind in IntentKind.allCases {
             for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
+
+                // Create elements session with customer configuration for proper ephemeral keys
+                let elementsSession: STPElementsSession
+                switch intent {
+                case .paymentIntent, .setupIntent:
+                    // For regular intents, use test value
+                    elementsSession = ._testValue(intent: intent)
+                case .deferredIntent(let intentConfig):
+                    // For deferred intents, create real elements session with customer config
+                    elementsSession = try await apiClient.retrieveDeferredElementsSession(
+                        withIntentConfig: intentConfig,
+                        clientDefaultPaymentMethod: nil,
+                        configuration: configuration
+                    )
+                }
+
                 let e = expectation(description: "")
                 // Confirm the intent with the form details
                 let paymentHandler = STPPaymentHandler(apiClient: apiClient)
@@ -462,7 +473,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                     configuration: configuration,
                     authenticationContext: self,
                     intent: intent,
-                    elementsSession: ._testValue(intent: intent),
+                    elementsSession: elementsSession,
                     paymentOption: .saved(paymentMethod: savedSepaPM, confirmParams: nil),
                     paymentHandler: paymentHandler,
                     analyticsHelper: ._testValue()
@@ -553,8 +564,20 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testCardConfirmFlowsSetAsDefault() async throws {
-        let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_123", customerSessionClientSecret: "cuss_12345")
+        // Create a real customer with customer session
+        let customer = "cus_OaMPphpKbeixCz"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        let merchantCountry = MerchantCountry.US
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+
+        // Create customer session for confirmation token support
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+            customerID: customer,
+            merchantCountry: merchantCountry.rawValue,
+            paymentMethodSave: true
+        )
+
         var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = apiClient
         configuration.billingDetailsCollectionConfiguration.address = .never
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.email = .never
@@ -562,12 +585,15 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
         configuration.allowsPaymentMethodsRequiringShippingAddress = true
-        configuration.customer = customerConfig
+        configuration.customer = PaymentSheet.CustomerConfiguration(
+            id: customerAndCustomerSession.customer,
+            customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
+        )
         try await _testConfirm(
             intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
             currency: "USD",
             paymentMethodType: .card,
-            merchantCountry: .US,
+            merchantCountry: merchantCountry,
             configuration: configuration,
             allowsSetAsDefaultPM: true
         ) { form in
@@ -762,7 +788,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
-        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _, _ in })
+        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
         _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
 
         // Update the API client based on the merchant country
@@ -781,7 +807,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         }()
         configuration.apiClient = apiClient
 
-        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, apiClient: apiClient)
+        let intents = try await makeTestIntents(intentKind: intentKind, currency: currency, amount: amount, paymentMethod: paymentMethodType, merchantCountry: merchantCountry, customer: configuration.customer?.id, apiClient: apiClient)
 
         // Check that the form respects billingDetailsCollection
         verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: paymentMethodType, defaultCountry: defaultCountry)
@@ -890,7 +916,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             return .deferredIntent(intentConfig: intentConfig)
         }
 
-        var intents: [(String, Intent)]
+        var intents: [(String, Intent)] = []
         let paymentMethodTypes = [paymentMethod.identifier].compactMap { $0 }
         switch intentKind {
         case .paymentIntent:
@@ -940,6 +966,34 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 ("Deferred PaymentIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
             ]
 
+            // Confirmation token variations
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer
+                )
+            })
+
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer,
+                    confirm: true,
+                    otherParams: ["confirmation_token": confirmationToken.stripeId]
+                )
+            })
+
+            intents += [
+                ("Deferred PaymentIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                ("Deferred PaymentIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+            ]
+
             return intents
         case .paymentIntentWithSetupFutureUsage:
             let paymentIntent: STPPaymentIntent = try await {
@@ -978,10 +1032,35 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                     otherParams: otherParams
                 )
             }
+            // Confirmation token variations
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer
+                )
+            })
+
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .payment(amount: amount ?? 1099, currency: currency, setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer,
+                    confirm: true,
+                    otherParams: [
+                        "confirmation_token": confirmationToken.stripeId
+                    ]
+                )
+            })
+
             return [
-                ("PaymentIntent w/ setup_future_usage", .paymentIntent(paymentIntent)),
-                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
+
+                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
         case .setupIntent:
             let setupIntent: STPSetupIntent = try await {
@@ -994,10 +1073,21 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             let deferredSSC = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession)) { paymentMethod, _ in
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, paymentMethodID: paymentMethod.stripeId, customerID: customer, confirm: true, otherParams: paramsForServerSideConfirmation)
             }
+            // Confirmation token variations
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { _ in
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer)
+            })
+
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(mode: .setup(setupFutureUsage: .offSession), paymentMethodTypes: [paymentMethod.identifier], confirmationTokenConfirmHandler: { confirmationToken in
+                return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, confirm: true, otherParams: ["confirmation_token": confirmationToken.stripeId])
+            })
+
             return [
                 ("SetupIntent", .setupIntent(setupIntent)),
                 ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
+                ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
         }
     }
@@ -1036,9 +1126,9 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         XCTAssertNil(form.getTextFieldElement("Address line 2"))
         XCTAssertNil(form.getTextFieldElement(addressSpec.cityNameType.localizedLabel))
         XCTAssertNil(getState(from: form))
-        // Klarna and Sofort have a bug where the country is still shown; rather than change this and potentially break integrations,
+        // Klarna has a bug where the country is still shown; rather than change this and potentially break integrations,
         // we'll preserve existing behavior until the next major version
-        if ![.klarna, .sofort].contains(paymentMethodType) {
+        if ![.klarna].contains(paymentMethodType) {
             XCTAssertNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))

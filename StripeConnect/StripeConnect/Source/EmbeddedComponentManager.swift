@@ -149,7 +149,8 @@ public final class EmbeddedComponentManager {
 
     /// Creates a `PayoutsViewController`
     /// - Seealso: [Payouts component documentation](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios)
-    @_spi(PrivateBetaConnect)
+    @_spi(PreviewConnect)
+    @_documentation(visibility: public)
     public func createPayoutsViewController() -> PayoutsViewController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
@@ -160,7 +161,7 @@ public final class EmbeddedComponentManager {
     /// - Seealso: [Payments component documentation](https://docs.stripe.com/connect/supported-embedded-components/payments?platform=ios)
     /// - Parameters:
     ///   - defaultFilters: The default filters to apply to the payments list
-    @_spi(PrivateBetaConnect)
+    @_spi(PreviewConnect)
     @_documentation(visibility: public)
     public func createPaymentsViewController(
         defaultFilters: EmbeddedComponentManager.PaymentsListDefaultFiltersOptions = .init()
@@ -169,6 +170,16 @@ public final class EmbeddedComponentManager {
               loadContent: shouldLoadContent,
               analyticsClientFactory: analyticsClientFactory,
               defaultFilters: defaultFilters)
+    }
+
+    @_spi(DashboardOnly)
+    public func createCheckScanningController(
+        handleCheckScanSubmitted: @escaping HandleCheckScanSubmittedFn
+    ) -> CheckScanningController {
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory,
+              handleCheckScanSubmitted: handleCheckScanSubmitted)
     }
 
     /// Used to keep reference of all web views associated with this component manager.

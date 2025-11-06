@@ -32,6 +32,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
 
@@ -55,8 +56,12 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return super.leftmostElement
     }
 
-    override init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
-        super.init(isTestMode: isTestMode, appearance: appearance)
+    override init(isTestMode: Bool, appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
+        super.init(
+            isTestMode: isTestMode,
+            appearance: appearance,
+            shouldLogPaymentSheetAnalyticsOnDismissal: shouldLogPaymentSheetAnalyticsOnDismissal
+        )
 
         logoView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(logoView)
@@ -203,7 +208,13 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         // When title is too long, centering would conflict with leading/trailing constraints,
         // so we remove the center constraint and let it align left:
         // [Button] [ Very Long Title Message .. ]
-        layoutIfNeeded()
+
+        // This method is called initially the width of the view is 0.
+        // Activitating the constraint system at this time causes a layout conflict since nothing can layout in width 0.
+        // Hold off on laying anything out until self has width.
+        if bounds.width > 0 {
+            layoutIfNeeded()
+        }
         let titleSize = titleLabel.sizeThatFits(
             CGSize(
                 width: CGFloat.greatestFiniteMagnitude,

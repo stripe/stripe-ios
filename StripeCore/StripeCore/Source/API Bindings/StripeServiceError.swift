@@ -30,7 +30,7 @@ import Foundation
     /// For example, you can use this to display a message near the correct form field.
     @_spi(STP) public var param: String?
     /// The response’s HTTP status code.
-    @_spi(STP) public var statusCode: Int?
+    @_spi(STP) public var httpStatusCode: Int?
     /// The Stripe API request ID, if available. Looks like `req_123`.
     @_spi(STP) public var requestID: String?
 

@@ -455,8 +455,8 @@ class MockPaymentSheetFlowController {
         self.configuration = configuration
         self.intent = .deferredIntent(intentConfig: PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "USD"),
-            confirmHandler: { _, _, completion in
-                completion(.success("pm_123"))
+            confirmHandler: { _, _ in
+                    return "pm_123"
             }
         ))
     }

@@ -47,8 +47,12 @@ class ExampleDeferredCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            try await withCheckedThrowingContinuation { continuation in
+                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
+                    continuation.resume(with: result)
+                }
+            }
         }
     }
 
@@ -60,7 +64,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
             merchantCountryCode: "US"
         )
         configuration.returnURL = "payments-example://stripe-redirect"
-        // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
+        // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
         configuration.allowsDelayedPaymentMethods = true
         return configuration
     }()
@@ -150,6 +154,7 @@ class ExampleDeferredCheckoutViewController: UIViewController {
     func serverSideConfirmHandler(_ paymentMethodID: String,
                                   _ shouldSavePaymentMethod: Bool,
                                   _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+
         // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret
         confirmIntent(paymentMethodID: paymentMethodID, shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
             switch result {

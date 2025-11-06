@@ -122,6 +122,8 @@
 
 "Default payment method" = "默认支付方式";
 
+"Did you mean %@? %@." = "你是指 %1$@ 吗？%2$@。";
+
 "EPS Bank" = "EPS 银行";
 
 "Enter address manually" = "手动输入地址";
@@ -133,8 +135,6 @@
 "Failed to connect" = "连接失败";
 
 "Fast, secure checkout" = "快速、安全的结账";
-
-"For security, please re-enter your card’s security code." = "出于安全原因，请重新输入您的银行卡的安全码。";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "通过您的银行首次支付时获得 %@ 的返现。<terms>查看条款</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "提供的验证码不正确。";
 
-"This card has expired. Update your card info or choose a different payment method." = "该卡已过期。更新您的银行卡信息或选择另一支付方式。";
-
 "This is your default" = "这是您的默认地址";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式将被移除，但仍可用于 %@ 订阅。";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "使用账单地址作为配送地址";
 
 "View more" = "查看更多";
+
+"Yes, update" = "是的，更新";
 
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 应以两个字母的国家代码开头。";
 

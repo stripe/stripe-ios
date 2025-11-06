@@ -252,9 +252,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.buttons["+ Add"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
-        // Should fire the `mc_form_shown` event w/ `selected_lpm` = card
-        XCTAssertEqual(analyticsLog.last?[string: "event"], "mc_form_shown")
-        XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
+        let formShownAnalytic = try XCTUnwrap(analyticsLog.first { $0[string: "event"] == "mc_form_shown" }, "Should fire the `mc_form_shown`")
+        XCTAssertEqual(formShownAnalytic[string: "selected_lpm"], "card", "The `mc_form_shown` event should have `selected_lpm` = card")
 
         try! fillCardData(app)
 
@@ -434,41 +433,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Success!"))
-    }
-
-    func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.applePayEnabled = .off
-        settings.currency = .eur
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-        let payButton = app.buttons["Pay €50.99"]
-
-        guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
-            XCTFail()
-            return
-        }
-        iDEAL.tap()
-
-        XCTAssertFalse(payButton.isEnabled)
-        let name = app.textFields["Full name"]
-        name.tap()
-        name.typeText("John Doe")
-        name.typeText(XCUIKeyboardKey.return.rawValue)
-
-        let bank = app.textFields["iDEAL Bank"]
-        bank.tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")
-        app.toolbars.buttons["Done"].tap()
-
-        payButton.tap()
-
-        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
-        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
-        webviewCloseButton.tap()
     }
 
     func testUPIPaymentMethodPolling() throws {
@@ -667,9 +631,9 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             // filter out async passive captcha logs
             analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" && !($0?.starts(with: "elements.captcha.passive") ?? false) }),
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown"]
+            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown", "link.inline_signup.shown"]
         )
-        XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false) }).last?[string: "selected_lpm"], "card")
+        XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.starts(with: "link") ?? false) }).last?[string: "selected_lpm"], "card")
 
         try? fillCardData(app, container: nil)
 
@@ -680,7 +644,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         XCTAssertEqual(
             analyticsLog.suffix(10).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "elements.captcha.passive.attach", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "elements.captcha.passive.attach", "stripeios.confirmation_token_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
         // Make sure they all have the same session id
@@ -1066,6 +1030,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_mc
+        settings.confirmationMode = .paymentMethod
         settings.uiStyle = .flowController
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -1191,6 +1156,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_mc
+        settings.confirmationMode = .paymentMethod
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
@@ -1207,6 +1173,39 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_mp
+        settings.apmsEnabled = .off
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+
+        payWithApplePay()
+    }
+
+    func testDeferredPaymentIntent_ApplePay_ConfirmationToken_ClientSideConfirmation() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.integrationType = .deferred_csc
+        settings.confirmationMode = .confirmationToken
+        settings.apmsEnabled = .off
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+
+        payWithApplePay()
+    }
+
+    func testDeferredPaymentIntent_ApplePay_ConfirmationToken_ServerSideConfirmation() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.mode = .paymentWithSetup
+        settings.integrationType = .deferred_ssc
+        settings.confirmationMode = .confirmationToken
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
@@ -1874,6 +1873,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
+        settings.confirmationMode = .paymentMethod
 
         loadPlayground(app, settings)
 
@@ -1923,6 +1923,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.paymentMethodRemove = .disabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .off
+        settings.confirmationMode = .paymentMethod
 
         _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: settings)
     }
@@ -1942,6 +1943,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.paymentMethodRemove = .enabled
         settings.allowsRemovalOfLastSavedPaymentMethod = .on
         settings.paymentMethodRemoveLast = .disabled
+        settings.confirmationMode = .paymentMethod
 
         _testPSPaymentMethodRemoveDisabled_keeplastSavedPaymentMethod_CBC(settings: settings)
     }
@@ -2470,6 +2472,50 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
+    // Tests Native Link with confirmation tokens - client-side confirmation
+    func testLinkPaymentSheet_native_ConfirmationToken_ClientSideConfirmation() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkPassthroughMode = .pm
+        settings.integrationType = .deferred_csc
+        settings.confirmationMode = .confirmationToken
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let codeField = app.textViews["Code field"]
+        _ = codeField.waitForExistence(timeout: 5.0)
+        codeField.typeText("000000")
+        let pwlController = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        let payButton = pwlController.buttons["Pay $50.99"]
+        _ = payButton.waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    // Tests Native Link with confirmation tokens - server-side confirmation
+    func testLinkPaymentSheet_native_ConfirmationToken_ServerSideConfirmation() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.customerMode = .new
+        settings.apmsEnabled = .on
+        settings.linkPassthroughMode = .pm
+        settings.integrationType = .deferred_ssc
+        settings.confirmationMode = .confirmationToken
+        settings.defaultBillingAddress = .on // the email on the default billings details is signed up for Link
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let codeField = app.textViews["Code field"]
+        _ = codeField.waitForExistence(timeout: 5.0)
+        codeField.typeText("000000")
+        let pwlController = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        let payButton = pwlController.buttons["Pay $50.99"]
+        _ = payButton.waitForExistenceAndTap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
     // Tests the #5 flow in PaymentSheet where the merchant enables saved payment methods, buyer has SPMs and first time Link user
     func testLinkPaymentSheet_enabledSPM_hasSPMs_firstTimeLinkUser_legacy() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
@@ -2887,7 +2933,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         let bankRow = app
             .otherElements
-            .matching(NSPredicate(format: "label CONTAINS 'Test Institution'"))
+            .matching(NSPredicate(format: "label CONTAINS 'Success'"))
             .firstMatch
         XCTAssertTrue(bankRow.waitForExistenceAndTap())
 

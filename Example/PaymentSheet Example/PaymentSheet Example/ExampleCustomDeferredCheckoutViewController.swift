@@ -44,8 +44,12 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            try await withCheckedThrowingContinuation { continuation in
+                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
+                    continuation.resume(with: result)
+                }
+            }
         }
     }
 
@@ -273,7 +277,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
-                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
+                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
                 configuration.allowsDelayedPaymentMethods = true
                 DispatchQueue.main.async {
                     PaymentSheet.FlowController.create(

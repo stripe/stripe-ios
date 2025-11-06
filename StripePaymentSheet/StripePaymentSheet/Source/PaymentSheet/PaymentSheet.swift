@@ -3,7 +3,7 @@
 //  StripePaymentSheet
 //
 //  Created by Yuki Tokuhiro on 9/3/20.
-//  Copyright © 2020 Stripe, Inc. All rights reserved.
+//  Copyright © 2025 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -153,8 +153,8 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
-                if self.configuration.enablePassiveCaptcha, let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
-                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+                if self.configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
+                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
                 }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
@@ -211,16 +211,19 @@ public class PaymentSheet {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
-    /// Deletes all persisted authentication state associated with a customer.
-    ///
-    /// You must call this method when the user logs out from your app.
-    /// This will ensure that any persisted authentication state in PaymentSheet,
-    /// such as authentication cookies, is also cleared during logout.
-    ///
-    /// - Warning: Deprecated. Use `PaymentSheet.resetCustomer()` instead.
-    @available(*, deprecated, renamed: "resetCustomer()")
-    public static func reset() {
-        resetCustomer()
+    /// Presents a sheet for a customer to complete their payment
+    /// - Parameter presentingViewController: The view controller to present a payment sheet
+    /// - Returns: The result of the payment after the payment sheet is dismissed.
+    public func present(
+        from presentingViewController: UIViewController
+    ) async -> PaymentSheetResult {
+        return await withCheckedContinuation { continuation in
+            Task { @MainActor in
+                present(from: presentingViewController) { result in
+                    continuation.resume(returning: result)
+                }
+            }
+        }
     }
 
     /// Deletes all persisted authentication state associated with a customer.

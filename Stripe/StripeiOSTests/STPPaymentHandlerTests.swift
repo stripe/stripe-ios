@@ -26,85 +26,6 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         super.setUp()
     }
 
-    func testCanPresentErrorsAreReported() {
-        let createPaymentIntentExpectation = expectation(
-            description: "createPaymentIntentExpectation"
-        )
-        var retrievedClientSecret: String?
-        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) {
-            (createdPIClientSecret, _) in
-            if let createdPIClientSecret = createdPIClientSecret {
-                retrievedClientSecret = createdPIClientSecret
-                createPaymentIntentExpectation.fulfill()
-            } else {
-                XCTFail()
-            }
-        }
-        wait(for: [createPaymentIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
-        guard let clientSecret = retrievedClientSecret
-        else {
-            XCTFail()
-            return
-        }
-
-        let expiryYear = NSNumber(value: 2040)
-        let expiryMonth = NSNumber(1)
-
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4000000000003220"
-        cardParams.expYear = expiryYear
-        cardParams.expMonth = expiryMonth
-        cardParams.cvc = "123"
-
-        let address = STPPaymentMethodAddress()
-        address.postalCode = "12345"
-        let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.address = address
-
-        let paymentMethodParams = STPPaymentMethodParams.paramsWith(
-            card: cardParams,
-            billingDetails: billingDetails,
-            metadata: nil
-        )
-
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
-        paymentIntentParams.paymentMethodParams = paymentMethodParams
-
-        // STPTestingDefaultPublishableKey
-        STPAPIClient.shared.publishableKey = "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"
-
-        let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
-        STPPaymentHandler.shared().checkCanPresentInTest = true
-        let analyticsClient = STPAnalyticsClient()
-        STPPaymentHandler.sharedHandler.analyticsClient = analyticsClient
-        STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) {
-            (status, paymentIntent, error) in
-            let firstAnalytic = analyticsClient._testLogHistory.first
-            XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
-            XCTAssertEqual(firstAnalytic?["intent_id"] as? String, paymentIntentParams.stripeId)
-            XCTAssertEqual(firstAnalytic?["payment_method_type"] as? String, "card")
-            let lastAnalytic = analyticsClient._testLogHistory.last
-            XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmFinished.rawValue)
-            XCTAssertEqual(lastAnalytic?["intent_id"] as? String, paymentIntentParams.stripeId)
-            XCTAssertEqual(lastAnalytic?["status"] as? String, "failed")
-            XCTAssertEqual(lastAnalytic?["payment_method_type"] as? String, "card")
-            XCTAssertEqual(lastAnalytic?["error_type"] as? String, "STPPaymentHandlerErrorDomain")
-            XCTAssertEqual(lastAnalytic?["error_code"] as? String, "requiresAuthenticationContextErrorCode")
-            XCTAssertEqual(lastAnalytic?[jsonDict: "error_details"]?["com.stripe.lib:ErrorMessageKey"] as? String, "authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead.")
-            XCTAssertTrue(status == .failed)
-            XCTAssertNotNil(paymentIntent)
-            XCTAssertNotNil(error)
-            XCTAssertEqual(
-                error?.userInfo[STPError.errorMessageKey] as? String,
-                "authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead."
-            )
-            paymentHandlerExpectation.fulfill()
-        }
-        // 2*STPTestingNetworkRequestTimeout payment handler needs to make an ares for this
-        // test in addition to fetching the payment intent
-        wait(for: [paymentHandlerExpectation], timeout: 2 * 8)
-    }
-
     func testPollingBehaviorWithFinalCall() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
@@ -117,7 +38,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         let paymentIntent = STPFixtures.paymentIntent(
             paymentMethodTypes: ["card"],
             status: .processing,
-            paymentMethod: ["id": "pm_test", "type": "card"]
+            paymentMethod: ["id": "pm_test", "type": "card", "created": Date().timeIntervalSince1970]
         )
 
         mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
@@ -297,7 +218,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         let setupIntent = STPFixtures.setupIntent(
             paymentMethodTypes: ["card"],
             status: .processing,
-            paymentMethod: ["id": "pm_test", "type": "card"]
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
         )
 
         mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in

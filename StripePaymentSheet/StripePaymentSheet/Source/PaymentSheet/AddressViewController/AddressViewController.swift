@@ -12,6 +12,7 @@ import Foundation
 import UIKit
 
 /// A delegate for `AddressViewController`
+@MainActor @preconcurrency
 public protocol AddressViewControllerDelegate: AnyObject {
     /// Called when the customer finishes entering their address or dismisses the view controller. Your implementation should dismiss the view controller.
     /// - Parameter address: A valid address or nil if the address information is incomplete or invalid.
@@ -179,7 +180,10 @@ public class AddressViewController: UIViewController {
 
         guard isCompatible else { return nil }
 
-        // Default to checked if shipping address (defaultValues) is empty or not provided
+        // Only show checkbox if billing address has at least line1
+        guard billingAddress.address.line1?.nonEmpty != nil else { return nil }
+
+        // Default to checked if shipping address (defaultValues) is empty
         let isSelectedByDefault = configuration.defaultValues.address.isEmpty
 
         return CheckboxElement(

@@ -101,19 +101,8 @@ class PaymentSheetFormFactory {
                 return false
             }
 
-            // If attestation is enabled for this app but the specific device doesn't support attestation, don't show inline signup: It's unlikely to provide a good experience. We'll only allow the web popup flow.
-            let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
-            if useAttestationEndpoints && !deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
-                return false
-            }
-
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
-
-            // In live mode, we only show signup if the customer hasn't used Link in the merchant app before.
-            // In test mode, we continue to show it to make testing easier.
-            let canShowSignup = !UserDefaults.standard.customerHasUsedLink || configuration.apiClient.isTestmode
-
-            return isAccountNotRegisteredOrMissing && canShowSignup
+            return isAccountNotRegisteredOrMissing
         }()
         let paymentMethodType: STPPaymentMethodType = {
             if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {
@@ -136,7 +125,7 @@ class PaymentSheetFormFactory {
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
                   isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
-                  countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
+                  countryCode: elementsSession.countryCode,
                   currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
@@ -263,15 +252,12 @@ class PaymentSheetFormFactory {
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-                stpAssertionFailure("Failed to get form spec for \(paymentMethod.identifier)!")
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
                 analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
             }
             if paymentMethod == .iDEAL {
                 return makeiDEAL(spec: spec)
-            } else if paymentMethod == .sofort {
-                return makeSofort(spec: spec)
             } else if paymentMethod == .SEPADebit {
                 return makeSepaDebit()
             }
@@ -589,36 +575,6 @@ extension PaymentSheetFormFactory {
 
     // MARK: - PaymentMethod form definitions
 
-    func makeSofort(spec: FormSpec) -> PaymentMethodElement {
-        let contactSection: Element? = makeContactInformationSection(
-            nameRequiredByPaymentMethod: isSettingUp,
-            emailRequiredByPaymentMethod: isSettingUp,
-            phoneRequiredByPaymentMethod: false
-        )
-        // Hack: Use the luxe spec to get the latest list of accepted countries rather than hardcoding it here
-        let countries: [String]? = spec.fields.reduce(nil) { countries, fieldSpec in
-            if case let .country(countrySpec) = fieldSpec {
-                return countrySpec.allowedCountryCodes
-            }
-            return countries
-        }
-
-        let addressSection: Element? = {
-            if configuration.billingDetailsCollectionConfiguration.address == .full {
-                return makeBillingAddressSection(countries: countries, countryAPIPath: "sofort[country]")
-            } else {
-                return makeCountry(countryCodes: countries, apiPath: "sofort[country]")
-            }
-        }()
-        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
-        let checkboxElement: Element? = makeSepaBasedPMCheckbox()
-        let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
-        return FormElement(
-            autoSectioningElements: elements.compactMap { $0 },
-            theme: theme
-        )
-    }
-
     func makeSepaDebit() -> PaymentMethodElement {
         let contactSection: Element? = makeContactInformationSection(
             nameRequiredByPaymentMethod: true,
@@ -758,8 +714,11 @@ extension PaymentSheetFormFactory {
         let contactInfoSection = makeContactInformationSection(nameRequiredByPaymentMethod: true, emailRequiredByPaymentMethod: true, phoneRequiredByPaymentMethod: false)
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let konbiniPhoneNumber = PaymentMethodElementWrapper(TextFieldElement.makeKonbini(theme: theme)) { textField, params in
-            params.confirmPaymentMethodOptions.konbiniOptions = .init()
-            params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = textField.text
+            let confirmationNumber = textField.text
+            if !confirmationNumber.isEmpty {
+                params.confirmPaymentMethodOptions.konbiniOptions = .init()
+                params.confirmPaymentMethodOptions.konbiniOptions?.confirmationNumber = confirmationNumber
+            }
             return params
         }
         let elements = [contactInfoSection, konbiniPhoneNumber, billingDetails].compactMap { $0 }
@@ -853,7 +812,13 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {
-        return SubtitleElement(view: AfterpayPriceBreakdownView(currency: currency, theme: theme), isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(
+            view: AfterpayPriceBreakdownView(
+                currency: currency,
+                appearance: configuration.appearance
+            ),
+            isHorizontalMode: configuration.isHorizontalMode
+        )
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {

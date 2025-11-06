@@ -62,8 +62,8 @@ public class STPPinManagementService: NSObject {
                     parameters: parameters
                 ) { details, _, error in
                     // Find if there were errors
-                    if details?.error != nil {
-                        let code = details?.error?["code"] as? String
+                    if let error = error as? NSError {
+                        let code = error.userInfo[STPError.stripeErrorCodeKey] as? String
                         if "api_key_expired" == code {
                             completion(nil, .ephemeralKeyError, error)
                         } else if "expired" == code {
@@ -117,8 +117,8 @@ public class STPPinManagementService: NSObject {
                     parameters: parameters
                 ) { details, _, error in
                     // Find if there were errors
-                    if details?.error != nil {
-                        let code = details?.error?["code"] as? String
+                    if let error = error as? NSError {
+                        let code = error.userInfo[STPError.stripeErrorCodeKey] as? String
                         if "api_key_expired" == code {
                             completion(nil, .ephemeralKeyError, error)
                         } else if "expired" == code {

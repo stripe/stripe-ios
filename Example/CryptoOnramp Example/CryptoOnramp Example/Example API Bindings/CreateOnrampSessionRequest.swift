@@ -14,7 +14,8 @@ struct CreateOnrampSessionRequest: Encodable {
     let sourceCurrency: String
     let destinationCurrency: String
     let destinationNetwork: String
+    let destinationCurrencies: [String]
+    let destinationNetworks: [String]
     let walletAddress: String
-    let cryptoCustomerId: String
     let customerIpAddress: String
 }

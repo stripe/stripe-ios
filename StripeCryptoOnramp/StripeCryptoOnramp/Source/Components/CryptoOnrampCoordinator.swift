@@ -61,6 +61,11 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
     func updatePhoneNumber(to phoneNumber: String) async throws
 
+    /// Authenticates the user with an encrypted Link auth token.
+    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    /// Throws if the auth token is expired, has already been used, has been revoked, or an API error occurs.
+    func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws
+
     /// Presents Link UI to authenticate an existing Link user.
     /// `hasLinkAccount` must be called before this.
     ///
@@ -82,6 +87,18 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter info: The KYC info to attach to the Link user.
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func attachKYCInfo(info: KycInfo) async throws
+
+    /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
+    ///
+    /// - Parameters:
+    ///   - updatedAddress: An optional updated address. Specify this parameter if the user has elected to change the address after a prior call to this API returned `VerifyKYCResult.updateAddress`. Otherwise, specify `nil` to show the user’s existing KYC information on the presented flow.
+    ///   - viewController: The view controller from which to present the KYC verification flow.
+    /// - Returns: An instance of `VerifyKYCResult` indicating the following:
+    ///     - `VerifyKYCResult.confirmed`: The user has confirmed that the KYC information displayed is accurate.
+    ///     - `VerifyKYCResult.updateAddress`: The user has elected to update the displayed address. The verification UI will be dismissed, and the caller must collect new address information, and call this API again, specifying the new address in the `updatedAddress` parameter.
+    ///     - `VerifyKYCResult.canceled`: The user canceled the flow, dismissing the verification UI.
+    /// Throws if an authenticated Link user is not available, KYC information has not yet been collected, or an API error occurs.
+    func verifyKYCInfo(updatedAddress: Address?, from viewController: UIViewController) async throws -> VerifyKYCResult
 
     /// Creates an identity verification session and launches the document verification flow.
     /// Requires an authenticated Link user.
@@ -301,6 +318,18 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
+    public func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws {
+        do {
+            try await linkController.lookupLinkAuthToken(linkAuthTokenClientSecret)
+            let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
+            await cryptoCustomerState.setCustomerId(customerId)
+            analyticsClient.log(.linkUserAuthenticationWithTokenCompleted)
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
+            throw error
+        }
+    }
+
     public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
         analyticsClient.log(.linkUserAuthenticationStarted)
         do {
@@ -362,6 +391,38 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
+    public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKYCResult {
+        analyticsClient.log(.kycInfoVerificationStarted)
+        do {
+            let linkAccountInfo = try await self.linkAccountInfo
+
+            // Fetch existing KYC info to display for confirmation.
+            let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
+            var displayInfo = response.kycInfo
+
+            // Update the address for the displayed information, if any was passed in.
+            if let updatedAddress {
+                displayInfo.address = updatedAddress
+            }
+
+            // Present the UI for the user to confirm their KYC information is correct.
+            return try await linkController.presentKYCVerification(
+                info: displayInfo,
+                appearance: appearance,
+                from: viewController,
+                onConfirm: { [apiClient, analyticsClient] in
+                    // When confirming, we make the API call for confirmation before dismissal.
+                    // If the API call fails, the error will be caught and returned to the caller.
+                    try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
+                    analyticsClient.log(.kycInfoVerificationCompleted)
+                }
+            )
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
+            throw error
+        }
+    }
+
     public func verifyIdentity(from viewController: UIViewController) async throws -> IdentityVerificationResult {
         analyticsClient.log(.identityVerificationStarted)
         do {
@@ -376,7 +437,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 verificationSessionId: response.id,
                 ephemeralKeySecret: ephemeralKey,
                 configuration: IdentityVerificationSheet.Configuration(
-                    brandLogo: await fetchMerchantImageWithFallback()
+                    brandLogo: Image.linkIconSquare.makeImage()
                 )
             )
 
@@ -423,7 +484,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     ) async throws -> PaymentMethodDisplayData? {
         switch type {
         case .card, .bankAccount:
-            let email = try? await linkAccountInfo.email
+            let linkAccountInfo = try await linkAccountInfo
+            guard linkAccountInfo.sessionState == .verified else {
+                throw Error.linkAccountNotVerified
+            }
+
             guard let supportedPaymentMethodType = type.linkPaymentMethodType else {
                 return nil
             }
@@ -432,7 +497,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             let collectName = type == .bankAccount
             guard let result = await linkController.collectPaymentMethod(
                 from: viewController,
-                with: email,
+                with: linkAccountInfo.email,
                 supportedPaymentMethodTypes: [supportedPaymentMethodType],
                 collectName: collectName
             ) else {
@@ -600,12 +665,11 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
     public func applePayContext(
         _ context: STPApplePayContext,
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
-        paymentInformation: PKPayment,
-        completion: @escaping STPIntentClientSecretCompletionBlock
-    ) {
+        paymentInformation: PKPayment
+    ) async throws -> String {
         selectedPaymentSource = .applePay(paymentMethod)
 
-        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+        return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
     }
 
     public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Swift.Error?) {
@@ -631,18 +695,6 @@ private enum NextActionResult {
 }
 
 private extension CryptoOnrampCoordinator {
-    func fetchMerchantImageWithFallback() async -> UIImage {
-        guard let merchantLogoUrl = await linkController.merchantLogoUrl else {
-            return Image.wallet.makeImage()
-        }
-
-        do {
-            return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
-        } catch {
-            return Image.wallet.makeImage()
-        }
-    }
-
     @MainActor
     func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in

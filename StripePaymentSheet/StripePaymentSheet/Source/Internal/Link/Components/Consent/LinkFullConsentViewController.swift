@@ -133,7 +133,11 @@ final class LinkFullConsentViewController: UIViewController, BottomSheetContentV
 
 extension LinkFullConsentViewController {
     var navigationBar: SheetNavigationBar {
-        let navBar = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        let navBar = LinkSheetNavigationBar(
+            isTestMode: false,
+            appearance: LinkUI.appearance,
+            shouldLogPaymentSheetAnalyticsOnDismissal: false
+        )
         navBar.setStyle(.close(showAdditionalButton: false))
         navBar.delegate = self
         return navBar

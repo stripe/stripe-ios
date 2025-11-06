@@ -196,7 +196,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
 
     func test_confirm_payment_intent_sends_analytic() {
         // Confirming a hardcoded already-confirmed PI with invalid params...
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A", paymentMethodType: .card)
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A", paymentMethodType: .card)
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
@@ -209,6 +209,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "pi_3P20wFFY0qyl6XeW0dSOQ6W7")
+            XCTAssertNotNil(firstAnalytic?["action_id"] as? String)
             XCTAssertEqual(firstAnalytic?["payment_method_type"] as? String, "card")
             let lastAnalytic = analyticsClient._testLogHistory.last
             XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmFinished.rawValue)
@@ -218,6 +219,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "payment_intent_unexpected_state")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertNotNil(lastAnalytic?["action_id"] as? String)
             XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
@@ -226,7 +228,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
 
     func test_confirm_payment_intent_savedpm_sends_analytic() {
         // Confirming a hardcoded already-confirmed PI with invalid params...
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_3P20wFFY0qyl6XeW0dSOQ6W7_secret_9V8GkrCOt1MEW8SBmAaGnmT6A")
         paymentIntentParams.paymentMethodId = "pm_123"
         let paymentHandlerExpectation = expectation(description: "paymentHandlerExpectation")
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
@@ -239,6 +241,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "pi_3P20wFFY0qyl6XeW0dSOQ6W7")
+            XCTAssertNotNil(firstAnalytic?["action_id"] as? String)
             XCTAssertEqual(firstAnalytic?["payment_method_id"] as? String, "pm_123")
             let lastAnalytic = analyticsClient._testLogHistory.last
             XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmFinished.rawValue)
@@ -248,6 +251,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "resource_missing")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertNotNil(lastAnalytic?["action_id"] as? String)
             XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
@@ -270,6 +274,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "seti_1P1xLBFY0qyl6XeWc7c2LrMK")
+            XCTAssertNotNil(firstAnalytic?["action_id"] as? String)
             XCTAssertEqual(firstAnalytic?["payment_method_type"] as? String, "card")
             let lastAnalytic = analyticsClient._testLogHistory.last
             XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmFinished.rawValue)
@@ -279,6 +284,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "parameter_missing")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertNotNil(lastAnalytic?["action_id"] as? String)
             XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
@@ -301,6 +307,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "seti_1P1xLBFY0qyl6XeWc7c2LrMK")
+            XCTAssertNotNil(firstAnalytic?["action_id"] as? String)
             XCTAssertEqual(firstAnalytic?["payment_method_id"] as? String, "pm_123")
             let lastAnalytic = analyticsClient._testLogHistory.last
             XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmFinished.rawValue)
@@ -310,6 +317,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "resource_missing")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertNotNil(lastAnalytic?["action_id"] as? String)
             XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
@@ -327,6 +335,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "pi_3P232pFY0qyl6XeW0FFRtE0A")
+            XCTAssertNotNil(firstAnalytic?["action_id"] as? String)
             let lastAnalytic = analyticsClient._testLogHistory.last
             XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionFinished.rawValue)
             XCTAssertEqual(lastAnalytic?["intent_id"] as? String, "pi_3P232pFY0qyl6XeW0FFRtE0A")
@@ -334,6 +343,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "payment_intent_invalid_parameter")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertNotNil(lastAnalytic?["action_id"] as? String)
             XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
@@ -353,6 +363,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "123")
+            XCTAssertNotNil(firstAnalytic?["action_id"] as? String)
             let lastAnalytic = analyticsClient._testLogHistory.last
             XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionFinished.rawValue)
             XCTAssertEqual(lastAnalytic?["payment_method_id"] as? String, "pm_123456789")
@@ -364,6 +375,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
                 "NSLocalizedDescription": "There was an unexpected error -- try again in a few seconds",
                 "com.stripe.lib:ErrorMessageKey": "Unknown authentication action type",
             ])
+            XCTAssertNotNil(lastAnalytic?["action_id"] as? String)
             XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
@@ -381,6 +393,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "seti_3P232pFY0qyl6XeW0FFRtE0A")
+            XCTAssertNotNil(firstAnalytic?["action_id"] as? String)
             let lastAnalytic = analyticsClient._testLogHistory.last
             XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionFinished.rawValue)
             XCTAssertEqual(lastAnalytic?["intent_id"] as? String, "seti_3P232pFY0qyl6XeW0FFRtE0A")
@@ -388,6 +401,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             XCTAssertEqual(lastAnalytic?["error_type"] as? String, "invalid_request_error")
             XCTAssertEqual(lastAnalytic?["error_code"] as? String, "resource_missing")
             XCTAssertTrue((lastAnalytic?["request_id"] as? String)!.starts(with: "req_"))
+            XCTAssertNotNil(lastAnalytic?["action_id"] as? String)
             XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }
@@ -410,6 +424,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionStarted.rawValue)
             XCTAssertEqual(firstAnalytic?["intent_id"] as? String, "seti_123456789")
+            XCTAssertNotNil(firstAnalytic?["action_id"] as? String)
             XCTAssertEqual(firstAnalytic?["payment_method_id"] as? String, "pm_123456789")
             let lastAnalytic = analyticsClient._testLogHistory.last
             XCTAssertEqual(lastAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerHandleNextActionFinished.rawValue)
@@ -422,6 +437,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
                 "NSLocalizedDescription": "There was an unexpected error -- try again in a few seconds",
                 "com.stripe.lib:ErrorMessageKey": "Unknown authentication action type",
             ])
+            XCTAssertNotNil(lastAnalytic?["action_id"] as? String)
             XCTAssertEqual((lastAnalytic?["duration"] as? TimeInterval)!.rounded(.up), 1.0)
             paymentHandlerExpectation.fulfill()
         }

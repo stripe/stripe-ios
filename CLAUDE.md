@@ -36,11 +36,6 @@ To verify the simulator is properly configured, run:
 source <(./ci_scripts/setup_simulator.sh) && echo "✅ Simulator configured: $DEVICE_ID_FROM_USER_SETTINGS"
 ```
 
-## Adding new files
-If you create a new file, it MUST be added to the `.xcodeproj`. There is no reasonable way to do this on your own, you MUST ask the user to add the file manually before continuing.
-
-Ask the user to add the file to the `.xcodeproj`. Once they've completed this task, you can continue making progress.
-
 ## Build Commands
 
 ### Core Testing Commands
@@ -114,7 +109,7 @@ The Stripe iOS SDK is organized as a multi-module framework with clear dependenc
 
 ### Key Workspaces and Projects
 - **Main workspace**: `Stripe.xcworkspace` - Contains all modules and examples
-- **Individual projects**: Each module has its own `.xcodeproj` for focused development
+- **Individual projects**: Each module has its own `.xcodeproj`
 - **Test configurations**: Located in `BuildConfigurations/` directories
 
 ### Package Manager Support

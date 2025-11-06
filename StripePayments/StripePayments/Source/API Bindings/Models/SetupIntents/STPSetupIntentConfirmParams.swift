@@ -63,7 +63,19 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// If set to false, STPSetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
     /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
     /// app.
-    @objc public var useStripeSDK: NSNumber?
+    @objc(useStripeSDK)
+    @available(swift, obsoleted: 1.0, renamed: "useStripeSDK")
+    public var useStripeSDK_objc: NSNumber? {
+        get {
+            return useStripeSDK.map { NSNumber(value: $0) }
+        }
+        set { useStripeSDK = newValue?.boolValue }
+    }
+    /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any SetupIntent next actions.
+    /// If set to false, STPSetupIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
+    /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
+    /// app.
+    public var useStripeSDK: Bool?
     /// Details about the Mandate to create.
     /// @note If this value is null, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context if it's required for `self.paymentMethodType`
     @objc public var mandateData: STPMandateDataParams? {
@@ -71,13 +83,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             if let _mandateData = _mandateData {
                 return _mandateData
             }
-            switch paymentMethodType {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount,
-                    .cashApp, .payPal, .revolutPay, .klarna, .amazonPay:
-                return .makeWithInferredValues()
-            default: break
+            guard let paymentMethodType = paymentMethodType else {
+                return nil
             }
-            return nil
+            return Self.mandateDataIfRequired(for: paymentMethodType)
         }
         set(newMandateData) {
             _mandateData = newMandateData
@@ -116,7 +125,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "returnURL = \(returnURL ?? "")",
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
-            "useStripeSDK = \(useStripeSDK ?? 0)",
+            "useStripeSDK = \(useStripeSDK ?? false)",
             // Set as default payment method
             "setAsDefaultPM = \(setAsDefaultPM ?? 0)",
             // Mandate
@@ -168,7 +177,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: paymentMethodID)): "payment_method",
             NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
-            NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
+            NSStringFromSelector(#selector(getter: useStripeSDK_apiValue)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
@@ -177,6 +186,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     // MARK: - Utilities
+    @objc private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
     static private let regex = try! NSRegularExpression(
         pattern: "^seti_[^_]+_secret_[^_]+$",
         options: []
@@ -188,5 +198,18 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
                 options: .anchored,
                 range: NSRange(location: 0, length: clientSecret.count)
             )) == 1
+    }
+
+    /// Returns mandate data for the specified payment method type, if required.
+    /// - Parameter paymentMethodType: The payment method type to check
+    /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
+    @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
+        switch paymentMethodType {
+        case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount,
+             .cashApp, .payPal, .revolutPay, .klarna, .amazonPay:
+            return .makeWithInferredValues()
+        default:
+            return nil
+        }
     }
 }

@@ -195,11 +195,11 @@ extension PaymentSheetViewController {
 
         private func createApplePayButton(pkPaymentButtonStyle: PKPaymentButtonStyle) -> UIView {
             let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: pkPaymentButtonStyle)
-            // The corner configuration API that powers ios26_applyCapsuleCornerConfiguration doesn't work on PKPaymentButton
-            // Instead, we set the cornerRadius directly
+            // The corner configuration API that powers ios26_applyDefaultCornerConfiguration doesn't work on PKPaymentButton
+            // Instead, we set the cornerRadius directly to half the button height to emulate the behavior
             // TODO(gbirch): align Apple Pay button liquid glass styling with other elements
             if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
-                button.cornerRadius = 34
+                button.cornerRadius = Constants.applePayButtonHeight / 2
             } else {
                 button.cornerRadius = appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
             }

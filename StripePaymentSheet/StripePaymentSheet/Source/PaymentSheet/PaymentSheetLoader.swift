@@ -50,6 +50,7 @@ final class PaymentSheetLoader {
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
+        isUpdate: Bool = false,
         completion: @escaping (Result<LoadResult, Error>) -> Void
     ) {
         analyticsHelper.logLoadStarted()
@@ -93,7 +94,11 @@ final class PaymentSheetLoader {
                 async let savedPaymentMethods = fetchSavedPaymentMethods(elementsSession: elementsSession, configuration: configuration)
 
                 // Load link account session. Continue without Link if it errors.
-                let linkAccount = try? await lookupLinkAccount(elementsSession: elementsSession, configuration: configuration)
+                let linkAccount = try? await lookupLinkAccount(
+                    elementsSession: elementsSession,
+                    configuration: configuration,
+                    isUpdate: isUpdate
+                )
                 LinkAccountContext.shared.account = linkAccount
 
                 // Log experiment exposures
@@ -159,6 +164,14 @@ final class PaymentSheetLoader {
                     defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
                 )
                 let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+
+                // Assert if using konbini or blik with confirmation tokens
+                if case .deferredIntent(let intentConfiguration) = mode,
+                   intentConfiguration.confirmationTokenConfirmHandler != nil {
+                    if paymentMethodTypes.contains(.stripe(.konbini)) || paymentMethodTypes.contains(.stripe(.blik)) {
+                        stpAssertionFailure("Konbini and BLIK payment methods are not supported with ConfirmationTokens. Use init(mode:paymentMethodTypes:onBehalfOf:paymentMethodConfigurationId:confirmHandler:requireCVCRecollection:) instead.")
+                    }
+                }
 
                 // Ensure that there's at least 1 payment method type available for the intent and configuration.
                 guard !paymentMethodTypes.isEmpty else {
@@ -232,7 +245,17 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> PaymentSheetLinkAccount? {
+    static func lookupLinkAccount(
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration,
+        isUpdate: Bool
+    ) async throws -> PaymentSheetLinkAccount? {
+        // If we already have a verified Link account and the merchant is just calling `update` on FlowController,
+        // keep the account logged-in. Otherwise, the user has to verify via OTP again.
+        if isUpdate, let currentLinkAccount = LinkAccountContext.shared.account, currentLinkAccount.sessionState == .verified {
+            return currentLinkAccount
+        }
+
         // Lookup Link account if Link is enabled or the holdback killswitch is not enabled.
         // Note: When the holdback experiment is over, we can ignore the killswitch and only lookup when Link is enabled.
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
@@ -281,7 +304,7 @@ final class PaymentSheetLoader {
         if let email = configuration.defaultBillingDetails.email {
             return try await lookUpConsumerSession(email: email, emailSource: .customerEmail)
         } else if let customerID = configuration.customer?.id,
-                  let ephemeralKey = configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
+                  let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
         {
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
             // If there's an error in this call we can just ignore it
@@ -311,6 +334,9 @@ final class PaymentSheetLoader {
                                                                                                              configuration: configuration)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                guard shouldFallback(for: error) else {
+                    throw error
+                }
                 // Fallback to regular retrieve PI when retrieve PI with preferences fails
                 paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret)
                 elementsSession = .makeBackupElementsSession(with: paymentIntent)
@@ -328,6 +354,9 @@ final class PaymentSheetLoader {
                                                                                                            configuration: configuration)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                guard shouldFallback(for: error) else {
+                    throw error
+                }
                 // Fallback to regular retrieve SI when retrieve SI with preferences fails
                 setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret)
                 elementsSession = .makeBackupElementsSession(with: setupIntent)
@@ -343,11 +372,12 @@ final class PaymentSheetLoader {
                                                                                                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                 configuration: configuration)
                 intent = .deferredIntent(intentConfig: intentConfig)
-            } catch let error as NSError where error == NSError.stp_genericFailedToParseResponseError() {
-                // Most errors are useful and should be reported back to the merchant to help them debug their integration (e.g. bad connection, unknown parameter, invalid api key).
-                // If we get `stp_genericFailedToParseResponseError`, it means the request succeeded but we couldn't parse the response.
-                // In this case, fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
+            } catch {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                guard shouldFallback(for: error) else {
+                    throw error
+                }
+                // Fall back to a backup ElementsSession with the payment methods from the merchant's intent config or, if none were supplied, a card.
                 let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
@@ -363,6 +393,21 @@ final class PaymentSheetLoader {
             print(message)
         }
         return (elementsSession, intent)
+    }
+
+    static func shouldFallback(for error: Error) -> Bool {
+        let error = error as NSError
+        // Show fallback for unknown server errors (500s).
+        // Otherwise, don't fall back in order to
+        // 1. avoid loading a potentially degraded UX instead of prompting the customer to retry loading (e.g. bad network).
+        // 2. let the merchant see potential integration errors (e.g. bad publishable key, invalid intent configuration)
+        if
+            let httpStatusCode = error.userInfo[STPError.httpStatusCodeKey] as? Int,
+            httpStatusCode >= 500
+        {
+            return true
+        }
+        return false
     }
 
     static func defaultStripePaymentMethodId(forCustomerID customerID: String?) -> String? {
@@ -402,8 +447,7 @@ final class PaymentSheetLoader {
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
         guard let customerID = configuration.customer?.id,
-              let ephemeralKey = configuration.customer?.ephemeralKeySecret,
-              !ephemeralKey.isEmpty else {
+              case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider else {
             return []
         }
 

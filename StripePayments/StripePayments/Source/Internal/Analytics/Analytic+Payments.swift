@@ -14,14 +14,12 @@ import Foundation
 /// Any new analytic events should create a new type and conform to `PaymentAnalytic`.
 struct GenericPaymentAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
-    let paymentConfiguration: NSObject?
     let additionalParams: [String: Any]
 }
 
 /// Represents a generic payment error analytic
 struct GenericPaymentErrorAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
-    let paymentConfiguration: NSObject?
     let additionalParams: [String: Any]
     let error: Error
 }
@@ -35,21 +33,8 @@ extension GenericPaymentAnalytic {
         params["ocr_type"] = PaymentsSDKVariant.ocrTypeString
         params["pay_var"] = PaymentsSDKVariant.variant
 
-        if let paymentConfiguration = paymentConfiguration,
-            let analyticsSerializerClass = GenericPaymentAnalytic.STPBasicUIAnalyticsSerializerClass
-        {
-            let configurationDictionary = analyticsSerializerClass.serializeConfiguration(
-                paymentConfiguration
-            )
-            params = params.merging(configurationDictionary) { (_, new) in new }
-        }
-
         return params
     }
-
-    static let STPBasicUIAnalyticsSerializerClass: STPAnalyticsSerializer.Type? =
-        NSClassFromString("Stripe.STPBasicUIAnalyticsSerializer") as? STPAnalyticsSerializer.Type
-
 }
 
 @_spi(STP) public protocol STPAnalyticsSerializer {

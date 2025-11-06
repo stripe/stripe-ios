@@ -122,6 +122,8 @@
 
 "Default payment method" = "デフォルトの決済手段";
 
+"Did you mean %@? %@." = "%1$@ のことですか？ %2$@。";
+
 "EPS Bank" = "EPS 銀行";
 
 "Enter address manually" = "住所を手動で入力";
@@ -133,8 +135,6 @@
 "Failed to connect" = "接続できませんでした";
 
 "Fast, secure checkout" = "迅速で安全な決済";
-
-"For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "ご利用の銀行での初回支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
 
-"This card has expired. Update your card info or choose a different payment method." = "このカードは有効期限が切れています。カード情報を更新するか、別の決済手段を選択してください。";
-
 "This is your default" = "これはデフォルトです";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "この決済手段は削除されますが、%@ のサブスクリプションでは引き続き使用できます。";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "請求先住所を配送先として使用";
 
 "View more" = "さらに表示";
+
+"Yes, update" = "はい、更新します";
 
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 

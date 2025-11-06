@@ -166,20 +166,18 @@ final class LinkVerificationViewController: UIViewController {
 extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
     func verificationViewDidCancel(_ view: LinkVerificationView) {
-        // Mark email as logged out to prevent automatically showing
-        // the 2FA modal in future checkout sessions.
-        linkAccount.markEmailAsLoggedOut()
-
         STPAnalyticsClient.sharedClient.logLink2FACancel()
         finish(withResult: .canceled)
     }
 
     func verificationViewResendCode(_ view: LinkVerificationView) {
+        STPAnalyticsClient.sharedClient.logLink2FAResendCode()
+
         view.sendingCode = true
         view.errorMessage = nil
 
         // To resend the code we just start a new verification session.
-        linkAccount.startVerification { [weak self] (result) in
+        linkAccount.startVerification(isResendingSmsCode: true) { [weak self] (result) in
             view.sendingCode = false
 
             switch result {
@@ -243,8 +241,6 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
 extension LinkVerificationViewController {
 
     private func finish(withResult result: VerificationResult) {
-        // Delete the last "signup email" cookie, if any, after the user completes or declines verification.
-        LinkAccountService.defaultCookieStore.delete(key: .lastSignupEmail)
         delegate?.verificationController(self, didFinishWithResult: result)
     }
 

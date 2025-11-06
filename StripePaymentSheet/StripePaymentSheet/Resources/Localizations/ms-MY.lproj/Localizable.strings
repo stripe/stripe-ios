@@ -122,6 +122,8 @@
 
 "Default payment method" = "Kaedah pembayaran tetapan asal";
 
+"Did you mean %@? %@." = "Adakah anda maksudkan %1$@? %2$@.";
+
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
@@ -133,8 +135,6 @@
 "Failed to connect" = "Gagal disambungkan";
 
 "Fast, secure checkout" = "Proses bayar dan keluar yang pantas dan selamat";
-
-"For security, please re-enter your card’s security code." = "Bagi tujuan keselamatan, sila masukkan semula kod keselamatan kad anda.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran untuk kali pertama dengan bank anda. <terms>Lihat terma</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Kad ini telah tamat tempoh. Kemas kinikan maklumat kad anda atau pilih kaedah pembayaran yang lain.";
-
 "This is your default" = "Ini tetapan asal anda";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Kaedah pembayaran ini akan dialih keluar tetapi akan kekal tersedia untuk langganan %@.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Gunakan alamat pengebilan untuk penghantaran";
 
 "View more" = "Lihat lebih banyak";
+
+"Yes, update" = "Ya, kemas kini";
 
 "Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
 

@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "SEPA Bankamatik";
 
-"Sofort" = "Sofort";
-
 "Swish" = "İsveççe";
 
 "Timed out authenticating your payment method -- try again" = "Ödeme metodunuz doğrulanırken zaman aşımına uğradı -- tekrar deneyin";
@@ -57,7 +55,5 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ödeme metodunuzu doğrulayamadık. Lütfen farklı bir ödeme metodu seçin ve tekrar deneyin.";
 
 "WeChat Pay" = "WeChat Pay";
-
-"giropay" = "giropay";
 
 "iDEAL" = "iDEAL";

@@ -149,7 +149,6 @@ final class LinkPaymentMethodPicker: UIView {
         ])
 
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
         stackView.clipsToBounds = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView

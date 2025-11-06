@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=qF4V4jkULvgXD35R03WRA_GUiNmpNM705Wh2vy4TFmwK1OdHghZjST4yjyC0BCbPqaf2z69mRXzSPVN3
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=5NlpBQ5b5ySeaM6cHLNJq0SD_Ad5toPWBjBUeAYHjATA9OyzZWdwKqvnXIUwY9PQh9-Fm2vZcjlZTYJW
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_56fORw2nftoiQ2
+request-id: req_lfk1wa1aFAoCwY
 Content-Length: 606
 Vary: Origin
-Date: Thu, 07 Aug 2025 16:11:19 GMT
-original-request: req_56fORw2nftoiQ2
+Date: Mon, 27 Oct 2025 16:22:51 GMT
+original-request: req_lfk1wa1aFAoCwY
 stripe-version: 2020-08-27
-idempotency-key: e14f4d4d-426f-41e3-be36-ca4bef2f9182
+idempotency-key: 9ee6e675-29c0-49e4-8e50-203f974a0e60
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=0
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RtWPTGoesj9fw9QZ17zn22W",
+  "id" : "pm_1SMtC3Goesj9fw9QA2b3bQcR",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
@@ -49,7 +49,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=0
     "sort_code" : "108800"
   },
   "allow_redisplay" : "unspecified",
-  "created" : 1754583079,
+  "created" : 1761582171,
   "customer" : null,
   "type" : "bacs_debit"
 }

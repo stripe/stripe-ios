@@ -122,6 +122,8 @@
 
 "Default payment method" = "Vaikemakseviis";
 
+"Did you mean %@? %@." = "Kas te pidasite silmas %1$@? %2$@.";
+
 "EPS Bank" = "EPS pank";
 
 "Enter address manually" = "Sisestage aadress käsitsi";
@@ -133,8 +135,6 @@
 "Failed to connect" = "Ühendamine ebaõnnestus";
 
 "Fast, secure checkout" = "Kiire ja turvaline kassa";
-
-"For security, please re-enter your card’s security code." = "Turvalisuse huvides sisestage palun uuesti oma kaardi turvakood.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saate %@ tagasi, kui maksate esimest korda oma panga kaudu. <terms>Vaata tingimusi</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "Esitatud tuvastuskood on vale.";
 
-"This card has expired. Update your card info or choose a different payment method." = "See kaart on aegunud. Ajakohastage oma kaarditeavet või kasutage muud makseviisi.";
-
 "This is your default" = "See on teie vaikimisi makseviis";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "See makseviis eemaldatakse, kuid jääb %@ kordustellimuste jaoks saadavale.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Kasutage saatmiseks arveldusaadressi";
 
 "View more" = "Kuva rohkem";
+
+"Yes, update" = "Jah, uuenda";
 
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
 

@@ -42,7 +42,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         let mockAnalytic = MockAnalytic()
         let payload = client.payload(from: mockAnalytic)
 
-        XCTAssertEqual(payload.count, 17)
+        XCTAssertEqual(payload.count, 18)
 
         // Verify event name is included
         XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
@@ -145,7 +145,7 @@ extension STPAnalyticsClientPaymentsTest {
 // MARK: - Mock types
 
 private struct MockAnalytic: Analytic {
-    let event = STPAnalyticEvent.sourceCreation
+    let event = STPAnalyticEvent.tokenCreation
 
     let params: [String: Any] = [
         "test_param1": 1,

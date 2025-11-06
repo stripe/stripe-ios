@@ -73,7 +73,7 @@ extension PaymentSheet {
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
-        func makeImage(forDarkBackground: Bool = false, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+        func makeImage(forDarkBackground: Bool, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
@@ -303,14 +303,14 @@ extension PaymentSheet {
                         return [.returnURL]
                     case .USBankAccount, .boleto:
                         return [.userSupportsDelayedPaymentMethods]
-                    case .sofort, .iDEAL, .bancontact:
-                        // n.b. While sofort, iDEAL, and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
+                    case .iDEAL, .bancontact:
+                        // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .SEPADebit, .AUBECSDebit:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+                    case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
                         .sunbit, .billie, .crypto, .shopPay:
@@ -324,7 +324,7 @@ extension PaymentSheet {
                     switch paymentMethod {
                     case .blik, .card, .cardPresent, .UPI, .weChatPay, .paynow, .promptPay, .shopPay:
                         return []
-                    case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
+                    case .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,
                             .mobilePay, .swish, .twint, .sunbit, .billie, .satispay, .crypto, .afterpayClearpay:
                         return [.returnURL]
@@ -335,7 +335,7 @@ extension PaymentSheet {
                         ]
                     case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini, .multibanco:
                         return [.userSupportsDelayedPaymentMethods]
-                    case .bacsDebit, .sofort:
+                    case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
                     case .link, .unknown:
                         return [.unsupported]
@@ -452,7 +452,7 @@ extension PaymentSheet {
             }
             // This payment method and its requirements are hardcoded on the client
             switch paymentMethodType {
-            case .card, .USBankAccount, .iDEAL, .sofort, .bancontact, .SEPADebit:
+            case .card, .USBankAccount, .iDEAL, .bancontact, .SEPADebit:
                 return true
             default:
                 return false
@@ -580,7 +580,7 @@ extension STPPaymentMethodParams {
             } else {
                 return "FPX"
             }
-        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .giropay, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .sofort, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent:
+        case .paynow, .zip, .amazonPay, .alma, .mobilePay, .konbini, .promptPay, .swish, .sunbit, .billie, .satispay, .crypto, .iDEAL, .SEPADebit, .bacsDebit, .AUBECSDebit, .przelewy24, .EPS, .bancontact, .netBanking, .OXXO, .UPI, .grabPay, .payPal, .afterpayClearpay, .blik, .weChatPay, .boleto, .link, .klarna, .affirm, .USBankAccount, .cashApp, .revolutPay, .twint, .multibanco, .alipay, .cardPresent:
             // Use the label already defined in STPPaymentMethodType; the params object for these types don't contain additional information that affect the display label (like cards do)
             return type.displayName
         case .unknown:

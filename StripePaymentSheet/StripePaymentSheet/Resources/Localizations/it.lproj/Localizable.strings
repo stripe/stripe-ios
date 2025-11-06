@@ -122,6 +122,8 @@
 
 "Default payment method" = "Metodo di pagamento predefinito";
 
+"Did you mean %@? %@." = "Volevi dire %1$@? %2$@.";
+
 "EPS Bank" = "Banca EPS";
 
 "Enter address manually" = "Inserisci manualmente l'indirizzo";
@@ -133,8 +135,6 @@
 "Failed to connect" = "Connessione non riuscita";
 
 "Fast, secure checkout" = "Checkout veloce e sicuro";
-
-"For security, please re-enter your card’s security code." = "Per motivi di sicurezza inserisci di nuovo il codice di sicurezza della tua carta.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Ti restituiamo %@ quando effettui il primo pagamento con la tua banca. <terms>Consulta i termini</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "Il codice di verifica specificato non è corretto.";
 
-"This card has expired. Update your card info or choose a different payment method." = "La carta è scaduta. Aggiorna i dati della carta o scegli un altro metodo di pagamento.";
-
 "This is your default" = "È la tua impostazione predefinita";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Questo metodo di pagamento sarà rimosso, ma rimarrà disponibile per gli abbonamenti %@.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Usa l'indirizzo di fatturazione per la spedizione";
 
 "View more" = "Visualizza altro";
+
+"Yes, update" = "Sì, aggiorna";
 
 "Your IBAN should start with a two-letter country code." = "L'IBAN deve iniziare con un codice di paese di due lettere.";
 

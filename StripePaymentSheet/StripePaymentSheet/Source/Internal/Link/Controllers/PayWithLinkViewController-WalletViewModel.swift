@@ -99,6 +99,11 @@ extension PayWithLinkViewController {
             mandate != nil
         }
 
+        /// Client attribution metadata for analytics
+        var clientAttributionMetadata: STPClientAttributionMetadata? {
+            STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+        }
+
         /// Returns a hint message, if it is supported.
         /// - The `link_show_prefer_debit_card_hint` flag must be enabled.
         /// - A non-empty hint message must exist in the `LinkConfiguration`.
@@ -115,31 +120,6 @@ extension PayWithLinkViewController {
             } else {
                 return nil
             }
-        }
-
-        var noticeText: String? {
-            if shouldRecollectCardExpiryDate {
-                return STPLocalizedString(
-                    "This card has expired. Update your card info or choose a different payment method.",
-                    "A text notice shown when the user selects an expired card."
-                )
-            }
-
-            if shouldRecollectCardCVC {
-                return STPLocalizedString(
-                    "For security, please re-enter your card’s security code.",
-                    """
-                    A text notice shown when the user selects a card that requires
-                    re-entering the security code (CVV/CVC).
-                    """
-                )
-            }
-
-            return nil
-        }
-
-        var shouldShowNotice: Bool {
-            return noticeText != nil
         }
 
         var shouldShowRecollectionSection: Bool {
@@ -275,7 +255,8 @@ extension PayWithLinkViewController {
 
             linkAccount.updatePaymentDetails(
                 id: paymentMethod.stripeID,
-                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil)
+                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil),
+                clientAttributionMetadata: clientAttributionMetadata
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {
                     paymentMethods.forEach({ $0.isDefault = false })
@@ -331,6 +312,7 @@ extension PayWithLinkViewController {
             linkAccount.updatePaymentDetails(
                 id: id,
                 updateParams: UpdatePaymentDetailsParams(details: .card(expiryDate: expiryDate)),
+                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
         }

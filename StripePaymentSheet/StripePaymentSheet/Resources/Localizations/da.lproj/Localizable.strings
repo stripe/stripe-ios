@@ -122,6 +122,8 @@
 
 "Default payment method" = "Standardbetalingsmetode";
 
+"Did you mean %@? %@." = "Mente du %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Indtast adresse manuelt";
@@ -133,8 +135,6 @@
 "Failed to connect" = "Kunne ikke oprette forbindelse";
 
 "Fast, secure checkout" = "Hurtig og sikker betaling";
-
-"For security, please re-enter your card’s security code." = "Af hensyn til sikkerheden skal du indtaste dit korts sikkerhedskode igen.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Få %@ tilbage, første gang du betaler med din bank. <terms>Se vilkår</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "Den angivne verifikationskode er forkert.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Dette kort er udløbet. Opdater dine kortoplysninger eller vælg en anden betalingsmetode.";
-
 "This is your default" = "Dette er din standard";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmetode vil blive fjernet, men vil fortsat være tilgængelig for %@-abonnementer.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Brug faktureringsadresse til forsendelse";
 
 "View more" = "Vis mere";
+
+"Yes, update" = "Ja, opdater";
 
 "Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
 

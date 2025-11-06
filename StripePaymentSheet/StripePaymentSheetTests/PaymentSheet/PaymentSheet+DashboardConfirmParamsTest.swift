@@ -81,11 +81,11 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
         static let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: MockJson.setupIntent)!
 
         static func deferredPaymentIntentConfiguration(clientSecret: String) -> PaymentSheet.IntentConfiguration {
-            .init(mode: .payment(amount: 123, currency: "USD"), paymentMethodTypes: ["card"]) { _, _, c in c(.success(clientSecret)) }
+            .init(mode: .payment(amount: 123, currency: "USD"), paymentMethodTypes: ["card"]) { _, _ in return clientSecret }
         }
 
         static func deferredSetupIntentConfiguration(clientSecret: String) -> PaymentSheet.IntentConfiguration {
-            .init(mode: .setup(currency: "USD", setupFutureUsage: .offSession), confirmHandler: { _, _, c in c(.success(clientSecret)) })
+            .init(mode: .setup(currency: "USD", setupFutureUsage: .offSession), confirmHandler: { _, _ in return clientSecret })
         }
     }
 
@@ -314,7 +314,7 @@ private extension PaymentSheet_ConfirmParamsTest {
 
     func bodyParams(from request: URLRequest, line: UInt) -> [String: String] {
         guard let httpBody = request.httpBodyOrBodyStream,
-              let query = String(decoding: httpBody, as: UTF8.self).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+              let query = String(data: httpBody, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
               let components = URLComponents(string: "http://someurl.com?\(query)") else {
             XCTFail("Request body empty", line: line)
             return [:]

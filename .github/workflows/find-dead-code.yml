@@ -7,7 +7,6 @@ on:
 
 jobs:
   dead-code-check:
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip dead code check') }}
     runs-on: macos-15
     permissions:
       pull-requests: write
@@ -22,7 +21,7 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
 
       - name: Install Periphery
-        run: brew install peripheryapp/periphery/periphery
+        run: brew install periphery
 
       - name: Build project and run Periphery scan
         id: periphery-scan
@@ -61,16 +60,15 @@ jobs:
             echo "No new dead code detected."
           fi
 
-      - uses: peter-evans/find-comment@v3
+      - uses: davidme-stripe/find-comment@v3
         id: find_comment
-        if: env.diff != ''
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body-includes: '🚨 New dead code detected'
+          body-includes: '[find-dead-code]'
 
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: davidme-stripe/create-or-update-comment@v3
         id: create_update_comment
-        if: env.diff != ''
+        if: env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'skip dead code check')
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
@@ -85,6 +83,44 @@ jobs:
             If this is intentional, you can bypass this check by adding the label `skip dead code check` to this PR.
 
             ℹ️ If this comment appears to be left in error, double check that the flagged code is actually used and/or make sure your branch is up-to-date with `master`.
+
+            [find-dead-code]
+
+          edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: davidme-stripe/create-or-update-comment@v3
+        id: create_update_comment_ignored
+        if: env.diff != '' && contains(github.event.pull_request.labels.*.name, 'skip dead code check')
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ⚠️  New dead code detected in this PR but ignored:
+
+            ```diff
+            ${{ env.diff }}
+            ```
+
+            This dead code check has been bypassed with the `skip dead code check` label.
+
+            ℹ️ If this comment appears to be left in error, double check that the flagged code is actually used and/or make sure your branch is up-to-date with `master`.
+
+            [find-dead-code]
+
+          edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: davidme-stripe/create-or-update-comment@v3
+        id: resolve_comment
+        if: env.diff == '' && steps.find_comment.outputs.comment-id != ''
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ✅ Dead code has been resolved in this PR.
+
+            [find-dead-code]
 
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}

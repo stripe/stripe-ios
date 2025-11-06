@@ -165,6 +165,9 @@ with the transaction. */
 /* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Confirm your CVC";
 
+/* Title label for a know-your-customer (KYC) verification screen */
+"Confirm your information" = "Confirm your information";
+
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 
@@ -187,6 +190,9 @@ to be saved and used in future checkout sessions. */
 /* Label for a disabled checked checkbox identifying the default payment method. */
 "Default payment method" = "Default payment method";
 
+/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
+"Did you mean %@? %@." = "Did you mean %1$@? %2$@.";
+
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
@@ -201,10 +207,6 @@ to be saved and used in future checkout sessions. */
 
 /* Title for the Link signup screen */
 "Fast, secure checkout" = "Fast, secure checkout";
-
-/* A text notice shown when the user selects a card that requires
-re-entering the security code (CVV/CVC). */
-"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
 
 /* Select a bank dropdown for FPX */
 "FPX Bank" = "FPX Bank";
@@ -223,6 +225,9 @@ re-entering the security code (CVV/CVC). */
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
+
+/* Label for displaying the last 4 digits of the user's social security number */
+"Last 4 digits of SSN" = "Last 4 digits of SSN";
 
 /* Title for a button that indicates a user can log in or sign up. */
 "Log in or sign up" = "Log in or sign up";
@@ -440,9 +445,6 @@ is not supported by the merchant */
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
 
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
-
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";
 
@@ -467,6 +469,9 @@ the heading the screen itself. */
 
 /* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";
+
+/* Text for a tappable link that will update the email field with a suggested email address. */
+"Yes, update" = "Yes, update";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";

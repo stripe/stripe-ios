@@ -2,6 +2,7 @@
   "account_id": null,
   "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
+  "config_id": "76b45db4-70c4-4b04-9df0-f96e42d3350e",
   "experiments": {
     "element_link_autofill_in_link_authentication_element": "control",
     "element_link_autofill_in_payment_element": "control_test",

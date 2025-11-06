@@ -40,10 +40,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
 
         let fillCardAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
-            .suffix(5)
+            .suffix(6)
         XCTAssertEqual(
             fillCardAnalytics,
-            ["mc_form_shown", "mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
+            ["mc_form_shown", "link.inline_signup.shown", "mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
@@ -162,7 +162,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
-        settings.customerKeyType = .legacy
+        settings.customerKeyType = .customerSession
+        settings.confirmationMode = .confirmationToken
         settings.customerMode = .new
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -177,7 +178,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             app,
             cardNumber: "4000002500001001",
             postalEnabled: true,
-            disableDefaultOptInIfNeeded: true
+            tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases"
         )
 
         // Complete payment
@@ -320,7 +321,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.mode = .paymentWithSetup
         settings.uiStyle = .embedded
         settings.integrationType = .deferred_csc
-        settings.customerKeyType = .legacy
+        settings.customerKeyType = .customerSession
         settings.customerMode = .returning
         settings.merchantCountryCode = .FR
         settings.currency = .eur
@@ -1035,6 +1036,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
     func testSwiftUI() throws {
         app.launch()
+
+        app.swipeUp() // scroll to make list item available on screen
         XCTAssertTrue(app.staticTexts["EmbeddedPaymentElement (SwiftUI)"].waitForExistenceAndTap())
 
         app.buttons["Card"].waitForExistenceAndTap(timeout: 10)

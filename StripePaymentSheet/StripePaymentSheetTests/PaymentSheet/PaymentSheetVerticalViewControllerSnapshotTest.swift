@@ -341,7 +341,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
 
     func testCVCRecollection() {
         let savedCard = STPPaymentMethod._testCard()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: { _, _, _ in }, requireCVCRecollection: true)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: { _, _ in return "" }, requireCVCRecollection: true)
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"], customerSessionData: nil, isLinkPassthroughModeEnabled: false)
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(

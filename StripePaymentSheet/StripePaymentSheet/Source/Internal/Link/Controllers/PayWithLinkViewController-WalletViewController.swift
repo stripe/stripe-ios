@@ -55,7 +55,10 @@ extension PayWithLinkViewController {
             callToAction: viewModel.confirmButtonCallToAction,
             showProcessingLabel: context.showProcessingLabel,
             compact: viewModel.shouldUseCompactConfirmButton,
-            linkAppearance: viewModel.linkAppearance
+            linkAppearance: viewModel.linkAppearance,
+            didTapWhenDisabled: { [weak self] in
+                self?.cardDetailsRecollectionSection.showAllValidationErrors()
+            }
         ) { [weak self] in
             guard let self else {
                 return
@@ -107,36 +110,17 @@ extension PayWithLinkViewController {
             return TextFieldElement(configuration: configuration, theme: theme)
         }()
 
-        private lazy var expiredCardNoticeView: LinkNoticeView = {
-            let noticeView = LinkNoticeView(type: .error)
-            noticeView.text = viewModel.noticeText
-            return noticeView
-        }()
-
         private lazy var debitCardHintView: LinkHintMessageView? = {
             guard let hintMessage = viewModel.debitCardHintIfSupported(for: linkAccount) else {
                 return nil
             }
-            return LinkHintMessageView(message: hintMessage)
+            return LinkHintMessageView(message: hintMessage, style: .filled)
         }()
 
-        private var cardDetailsRecollectionElements: [Element]? {
-            var elements: [Element] = []
-            if viewModel.shouldRecollectCardExpiryDate {
-                elements.append(expiryDateElement)
-            }
-            if viewModel.shouldRecollectCardCVC {
-                elements.append(cvcElement)
-            }
-            return elements.isEmpty ? nil : elements
-        }
+        private lazy var cardDetailsRecollectionRow = SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
 
         private lazy var cardDetailsRecollectionSection: SectionElement = {
-            let sectionElement = SectionElement(
-                elements: [
-                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
-                ], theme: theme
-            )
+            let sectionElement = SectionElement(elements: [cardDetailsRecollectionRow], theme: theme)
             sectionElement.delegate = self
             return sectionElement
         }()
@@ -148,32 +132,28 @@ extension PayWithLinkViewController {
                 arrangedSubviews.append(debitCardHintView)
             }
 
-            arrangedSubviews.append(contentsOf: [mandateView, expiredCardNoticeView])
-
             let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
             return stackView
         }()
 
-        private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: theme)
-            label.textAlignment = .center
-            label.isHidden = true
-            return label
+        private lazy var errorView: LinkHintMessageView = {
+            let view = LinkHintMessageView(message: nil, style: .error)
+            view.isHidden = true
+            return view
         }()
 
         private lazy var containerView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
-                errorLabel,
+                errorView,
+                mandateView,
                 confirmButton,
             ])
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPickerContainerView)
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: cardDetailsRecollectionSection.view)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = preferredContentMargins
             return stackView
@@ -277,25 +257,17 @@ extension PayWithLinkViewController {
                 animated: animated
             )
 
-            expiredCardNoticeView.text = viewModel.noticeText
-            containerView.toggleArrangedSubview(
-                expiredCardNoticeView,
-                shouldShow: viewModel.shouldShowNotice,
-                animated: animated
-            )
-
             containerView.toggleArrangedSubview(
                 cardDetailsRecollectionSection.view,
                 shouldShow: viewModel.shouldShowRecollectionSection,
                 animated: animated
             )
 
-            if let cardDetailsRecollectionElements {
-                UIView.performWithoutAnimation {
-                    cardDetailsRecollectionSection.elements = [
-                        SectionElement.MultiElementRow(cardDetailsRecollectionElements, theme: theme)
-                    ]
-                }
+            UIView.performWithoutAnimation {
+                expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
+                cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
+                cardDetailsRecollectionRow.updateDividerVisibility()
+                cardDetailsRecollectionSection.view.layoutIfNeeded()
             }
 
             confirmButton.update(
@@ -305,8 +277,8 @@ extension PayWithLinkViewController {
         }
 
         func updateErrorLabel(for error: Error?) {
-            errorLabel.text = error?.nonGenericDescription
-            containerView.toggleArrangedSubview(errorLabel, shouldShow: error != nil, animated: true)
+            errorView.text = error?.nonGenericDescription
+            containerView.toggleArrangedSubview(errorView, shouldShow: error != nil, animated: true)
         }
 
         func reloadPaymentDetails(completion: (() -> Void)?) {
@@ -365,13 +337,7 @@ extension PayWithLinkViewController {
                     case .success(let paymentDetails):
                         confirmWithPaymentDetails(paymentDetails)
                     case .failure(let error):
-                        let alertController = UIAlertController(
-                            title: nil,
-                            message: error.localizedDescription,
-                            preferredStyle: .alert
-                        )
-                        alertController.addAction(.init(title: String.Localized.ok, style: .default))
-                        self?.present(alertController, animated: true)
+                        self?.updateErrorLabel(for: error)
                         self?.confirmButton.update(state: .enabled)
                     }
                 }

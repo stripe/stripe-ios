@@ -103,10 +103,13 @@ class LinkBillingDetailsValidator {
             details: .card(billingDetails: billingDetails)
         )
 
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
+
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             self?.linkAccount.updatePaymentDetails(
                 id: paymentDetailsID,
-                updateParams: updateParams
+                updateParams: updateParams,
+                clientAttributionMetadata: clientAttributionMetadata
             ) { result in
                 switch result {
                 case .success(let updatedPaymentDetails):

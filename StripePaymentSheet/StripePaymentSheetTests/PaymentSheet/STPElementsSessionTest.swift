@@ -57,26 +57,38 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_attestation() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": true]
+
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertTrue(elementsSession.shouldAttestOnConfirmation)
+
+        elementsSessionJson["flags"] = ["elements_mobile_attest_on_intent_confirmation": false]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": true]
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002", "rqdata": nil]
 
         var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNotNil(elementsSession.passiveCaptcha)
+        XCTAssertNotNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002"]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNotNil(elementsSession.passiveCaptcha)
+        XCTAssertNotNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["passive_captcha"] = ["rqdata": "data"]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNil(elementsSession.passiveCaptcha)
+        XCTAssertNil(elementsSession.passiveCaptchaData)
 
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": false]
         elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002", "rqdata": nil]
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
-        XCTAssertNil(elementsSession.passiveCaptcha)
+        XCTAssertNil(elementsSession.passiveCaptchaData)
     }
 
     func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {
@@ -650,6 +662,7 @@ class STPElementsSessionTest: XCTestCase {
     private let testCardJSON = [
         "id": "pm_123card",
         "type": "card",
+        "created": "12345",
         "card": [
             "last4": "4242",
             "brand": "visa",
@@ -662,6 +675,7 @@ class STPElementsSessionTest: XCTestCase {
     private let testCardAmexJSON = [
         "id": "pm_123amexcard",
         "type": "card",
+        "created": "12345",
         "card": [
             "last4": "0005",
             "brand": "amex",

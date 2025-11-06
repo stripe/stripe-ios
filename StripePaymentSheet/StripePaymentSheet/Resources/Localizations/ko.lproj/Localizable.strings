@@ -120,6 +120,8 @@
 
 "Default payment method" = "기본 결제 방식";
 
+"Did you mean %@? %@." = "%1$@을(를) 의미하는 건가요? %2$@.";
+
 "EPS Bank" = "EPS 은행";
 
 "Enter address manually" = "주소 직접 입력";
@@ -131,8 +133,6 @@
 "Failed to connect" = "연결 실패";
 
 "Fast, secure checkout" = "빠르고 안전한 체크아웃";
-
-"For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "은행으로 처음 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
 
@@ -282,8 +282,6 @@
 
 "The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
 
-"This card has expired. Update your card info or choose a different payment method." = "이 카드의 유효기간이 만료되었습니다. 카드 정보를 업데이트하거나 다른 결제 방식을 선택하십시오.";
-
 "This is your default" = "기본값입니다";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "이 결제 방식은 제거되지만 %@ 구독에는 계속 사용할 수 있습니다.";
@@ -299,6 +297,8 @@
 "Use billing address for shipping" = "배송에 청구지 주소 사용";
 
 "View more" = "자세히 보기";
+
+"Yes, update" = "예, 업데이트합니다";
 
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
 

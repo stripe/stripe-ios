@@ -74,7 +74,7 @@ extension CryptoExampleViewController {
                 }
 
                 // 2. Confirm the payment and redirect the user to Crypto
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     crypto: STPPaymentMethodCryptoParams(),
                     billingDetails: nil,

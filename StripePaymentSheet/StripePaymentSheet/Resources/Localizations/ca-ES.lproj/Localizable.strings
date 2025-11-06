@@ -122,6 +122,8 @@
 
 "Default payment method" = "Mètode de pagament per defecte";
 
+"Did you mean %@? %@." = "Volíeu dir %1$@? %2$@.";
+
 "EPS Bank" = "Banc EPS";
 
 "Enter address manually" = "Introduir l'adreça manualment";
@@ -133,8 +135,6 @@
 "Failed to connect" = "No s'ha pogut connectar";
 
 "Fast, secure checkout" = "Finalització de la compra ràpida i segura";
-
-"For security, please re-enter your card’s security code." = "Per raons de seguretat, torna a introduir el codi de seguretat de la targeta.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Obteniu %@ de reembossament quan pagueu per primera vegada amb el compte bancari. <terms>Consulteu les condicions</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Aquesta targeta ha caducat. Actualitzeu-ne la informació o trieu un altre mètode de pagament.";
-
 "This is your default" = "Aquesta és l'opció per defecte";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Aquesta forma de pagament se suprimirà, però continuarà disponible per a les subscripcions del %@.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Utilitzar l'adreça de facturació per a l'enviament";
 
 "View more" = "Visualitza més";
+
+"Yes, update" = "Sí, actualitzar";
 
 "Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
 

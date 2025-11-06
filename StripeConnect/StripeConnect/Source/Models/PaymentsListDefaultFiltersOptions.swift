@@ -21,7 +21,7 @@ private extension String {
 }
 
 @available(iOS 15, *)
-@_spi(PrivateBetaConnect)
+@_spi(PreviewConnect)
 @_documentation(visibility: public)
 extension EmbeddedComponentManager {
     @_documentation(visibility: public)
@@ -141,7 +141,6 @@ extension EmbeddedComponentManager {
             case googlePay
             case eps
             case fpx
-            case giropay
             case grabpay
             case ideal
             case idBankTransfer
@@ -181,7 +180,6 @@ extension EmbeddedComponentManager {
             case samsungPay
             case sepaCreditTransfer
             case sepaDebit
-            case sofort
             case southKoreaMarket
             case swish
             case threeDSecure

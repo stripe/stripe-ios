@@ -120,6 +120,8 @@
 
 "Default payment method" = "Alapértelmezett fizetési mód";
 
+"Did you mean %@? %@." = "Erre gondolt: %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Cím megadása kézzel";
@@ -131,8 +133,6 @@
 "Failed to connect" = "Nem sikerült csatlakozni";
 
 "Fast, secure checkout" = "Gyors és biztonságos fizetés";
-
-"For security, please re-enter your card’s security code." = "Biztonsági okból adja meg újra kártyája biztonsági kódját.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Kapjon vissza %@ összeget, amikor először fizet bankjával. <terms>Olvassa el a feltételeket</terms>";
 
@@ -282,8 +282,6 @@
 
 "The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Ez a kártya lejárt. Frissítse a kártyájat, vagy használjon másik fizetési módot.";
-
 "This is your default" = "Ez az alapértelmezett";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Ez a fizetési mód eltávolításra kerül, de továbbra is elérhető marad %@ előfizetések esetén.";
@@ -299,6 +297,8 @@
 "Use billing address for shipping" = "Számlázási cím használata a szállításhoz";
 
 "View more" = "Továbbiak megjelenítése";
+
+"Yes, update" = "Igen, frissítés";
 
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 

@@ -122,6 +122,8 @@
 
 "Default payment method" = "Predvolený spôsob platby";
 
+"Did you mean %@? %@." = "Mysleli ste %1$@? %2$@.";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Zadať adresu manuálne";
@@ -133,8 +135,6 @@
 "Failed to connect" = "Pripojenie sa nepodarilo";
 
 "Fast, secure checkout" = "Rýchla, bezpečná platba";
-
-"For security, please re-enter your card’s security code." = "Z dôvodu bezpečnosti znovu zadajte bezpečnostný kód vašej karty.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Získajte %@ späť pri prvej platbe so svojou bankou. <terms>Pozrite si podmienky</terms>";
 
@@ -284,8 +284,6 @@
 
 "The provided verification code is incorrect." = "Zadaný overovací kód je nesprávny.";
 
-"This card has expired. Update your card info or choose a different payment method." = "Platnosť tejto karty vypršala. Aktualizujte údaje karty alebo zvoľte iný spôsob platby.";
-
 "This is your default" = "Toto je váš predvolený spôsob platby";
 
 "This payment method will be removed but will remain available for %@ subscriptions." = "Tento spôsob platby sa odstráni, ale ostane k dispozícii pre predplatné %@.";
@@ -301,6 +299,8 @@
 "Use billing address for shipping" = "Použiť fakturačnú adresu na doručenie";
 
 "View more" = "Zobraziť viac";
+
+"Yes, update" = "Áno, aktualizovať";
 
 "Your IBAN should start with a two-letter country code." = "Váš IBAN by mal začínať dvojpísmenovým kódom krajiny.";
 

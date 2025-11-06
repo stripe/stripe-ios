@@ -32,8 +32,9 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
             return .completed
         })
 
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
+            return ""
         }))
 
         // Make the form
@@ -103,8 +104,9 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
             phone: "+15551234567"
         )
 
-        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
             XCTFail("Intent confirm handler shouldn't be called")
+            return ""
         }))
 
         // (1) ...should result in the custom payment method form showing billing detail fields pre-populated with default values...
@@ -147,8 +149,9 @@ final class PaymentSheetCustomPaymentMethodTests: XCTestCase {
                 // The merchant's returned result should be passed back in `PaymentSheet.confirm`
                 return merchantReturnedResult
             })
-            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in
+            let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in
                 XCTFail("Intent confirm handler shouldn't be called")
+                return ""
             }))
             PaymentSheet.confirm(
                 configuration: configuration,
