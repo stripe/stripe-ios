@@ -212,7 +212,7 @@ final class LinkAccountPickerViewController: UIViewController {
                 }
                 self.didSelectConnectAccounts()
             },
-            didSelectMerchantDataAccessLearnMore: { [weak self] _ in
+            didSelectMerchantDataAccessLearnMore: { [weak self] url in
                 guard let self = self else { return }
                 self.dataSource
                     .analyticsClient
@@ -228,6 +228,8 @@ final class LinkAccountPickerViewController: UIViewController {
                         }
                     )
                     dataAccessNoticeViewController.present(on: self)
+                } else {
+                    self.didSelectURLInTextFromBackend(url)
                 }
             }
         )
