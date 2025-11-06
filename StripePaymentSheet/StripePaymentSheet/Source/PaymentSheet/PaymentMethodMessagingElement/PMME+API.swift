@@ -79,6 +79,7 @@ extension PaymentMethodMessagingElement {
             let lightThemePng: IconInfo
             let darkThemePng: IconInfo
             let flatThemePng: IconInfo
+            let paymentMethodType: String
             let role: String
             let text: String
 

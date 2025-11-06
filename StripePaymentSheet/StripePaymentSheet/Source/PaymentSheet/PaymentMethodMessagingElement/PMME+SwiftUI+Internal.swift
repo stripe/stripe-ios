@@ -12,6 +12,7 @@ import UIKit
 struct PMMEViewRepresentable: UIViewRepresentable {
 
     let viewData: PaymentMethodMessagingElement.ViewData
+    let integrationType: PMMEAnalyticsHelper.IntegrationType
     let didUpdateHeight: (CGFloat) -> Void
 
     public func makeUIView(context: Context) -> UIView {
@@ -31,7 +32,7 @@ struct PMMEViewRepresentable: UIViewRepresentable {
     }
 
     private func createView(andAddTo parentView: UIView) {
-        let view = PMMEUIView(viewData: viewData, didUpdateHeight: didUpdateHeight)
+        let view = PMMEUIView(viewData: viewData, integrationType: integrationType, didUpdateHeight: didUpdateHeight)
 
         view.translatesAutoresizingMaskIntoConstraints = false
         parentView.addSubview(view)
@@ -53,10 +54,14 @@ extension PaymentMethodMessagingElement {
 
         @State private var height: CGFloat = 0
         let viewData: ViewData
+        let integrationType: PMMEAnalyticsHelper.IntegrationType
 
         public var body: some SwiftUI.View {
             // Have the PMMEUIView report back its height and set the frame to it
-            PMMEViewRepresentable(viewData: viewData, didUpdateHeight: { newHeight in
+            PMMEViewRepresentable(
+                viewData: viewData,
+                integrationType: integrationType,
+                didUpdateHeight: { newHeight in
                 self.height = newHeight
             })
             .frame(height: height)
@@ -87,7 +92,14 @@ extension PaymentMethodMessagingElement.View {
             let loadResult = await PaymentMethodMessagingElement.create(configuration: config)
             switch loadResult {
             case let .success(element):
-                self.phase = .loaded(view: AnyView(PaymentMethodMessagingElement.PMMELoadedView(viewData: element.viewData)))
+                self.phase = .loaded(
+                    view: AnyView(
+                        PaymentMethodMessagingElement.PMMELoadedView(
+                            viewData: element.viewData,
+                            integrationType: integrationType
+                        )
+                    )
+                )
             case .noContent:
                 self.phase = .noContent
             case let .failed(error):

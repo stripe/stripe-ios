@@ -12,13 +12,11 @@ import UIKit
 enum PaymentMethodMessagingElementError: Error, LocalizedError {
     case missingPublishableKey
     case unexpectedResponseFromStripeAPI
-    case unknown
 
     public var debugDescription: String {
         switch self {
         case .missingPublishableKey: return "The publishable key is missing from the API client."
         case .unexpectedResponseFromStripeAPI: return "Unexpected response from Stripe API."
-        case .unknown: return "An unknown error occurred."
         }
     }
 }
@@ -37,11 +35,12 @@ extension PaymentMethodMessagingElement {
         let light: UIImage
         let dark: UIImage
         let altText: String
+        let code: String
     }
 
     // Initialize element from API response
     // Uses this logic tree: https://trailhead.corp.stripe.com/docs/payment-method-messaging/pmme-platform/elements-mobile
-    convenience init?(apiResponse: APIResponse, configuration: Configuration) async throws {
+    convenience init?(apiResponse: APIResponse, configuration: Configuration, analyticsHelper: PMMEAnalyticsHelper) async throws {
         // no content case
         guard let firstPaymentPlan = apiResponse.paymentPlanGroups.first else {
             return nil
@@ -52,8 +51,7 @@ extension PaymentMethodMessagingElement {
 
             // invalid response scenario
             guard let infoUrl = firstPaymentPlan.content.learnMore?.url else {
-                // TODO(gbirch) add error analytics
-                throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
+                throw Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
             }
             guard let logo = try await Self.getIconSet(
                 for: firstPaymentPlan.content.images,
@@ -61,17 +59,19 @@ extension PaymentMethodMessagingElement {
             ).first else {
                 // This should never happen, but if it does we log an error and attempt to fall back to a multi-partner style
                 //      (so that we can use the promotion text, which doesn't require a logo, instead of inline) without logos
-                stpAssertionFailure("No images returned by API")
-                // TODO(gbirch) add error analytics
+                _ = Self.assertAndLogMissingField("logo", apiClient: configuration.apiClient)
+
                 if let topLevelPromotion = apiResponse.content.promotion?.message {
                     self.init(
                         mode: .multiPartner(logos: []),
                         infoUrl: infoUrl,
                         promotion: topLevelPromotion,
-                        appearance: configuration.appearance
+                        appearance: configuration.appearance,
+                        analyticsHelper: analyticsHelper
                     )
                     return
                 } else {
+                    // We already log the missing logos scenario above, so no need to do so here
                     throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
                 }
             }
@@ -82,7 +82,8 @@ extension PaymentMethodMessagingElement {
                     mode: .singlePartner(logo: logo),
                     infoUrl: infoUrl,
                     promotion: inlinePromo,
-                    appearance: configuration.appearance
+                    appearance: configuration.appearance,
+                    analyticsHelper: analyticsHelper
                 )
                 return
             } else if let topLevelPromotion = apiResponse.content.promotion?.message {
@@ -91,7 +92,8 @@ extension PaymentMethodMessagingElement {
                     mode: .multiPartner(logos: [logo]),
                     infoUrl: infoUrl,
                     promotion: topLevelPromotion,
-                    appearance: configuration.appearance
+                    appearance: configuration.appearance,
+                    analyticsHelper: analyticsHelper
                 )
                 return
             } else {
@@ -103,8 +105,7 @@ extension PaymentMethodMessagingElement {
 
             // invalid response scenario
             guard let infoUrl = apiResponse.content.learnMore?.url else {
-                // TODO(gbirch) add error analytics
-                throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
+                throw Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
             }
 
             // no content scenario
@@ -118,10 +119,19 @@ extension PaymentMethodMessagingElement {
                 mode: .multiPartner(logos: logos),
                 infoUrl: infoUrl,
                 promotion: promotion,
-                appearance: configuration.appearance
+                appearance: configuration.appearance,
+                analyticsHelper: analyticsHelper
             )
             return
         }
+    }
+
+    private static func assertAndLogMissingField(_ missingField: String, apiClient: STPAPIClient) -> Error {
+        stpAssertionFailure("Missing expected field from API response: \(missingField)")
+        let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
+        let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["missing_field": "info_url"])
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
+        return error
     }
 
     private static func getIconSet(for iconUrls: [APIResponse.Image], style: Appearance.UserInterfaceStyle) async throws -> [LogoSet] {
@@ -140,25 +150,56 @@ extension PaymentMethodMessagingElement {
                         async let lightImage = DownloadManager.sharedManager.downloadImage(url: image.lightThemePng.url)
                         async let darkImage = DownloadManager.sharedManager.downloadImage(url: image.darkThemePng.url)
                         let (light, dark) = try await (lightImage, darkImage)
-                        return (index: i, iconSet: LogoSet(light: light, dark: dark, altText: image.text))
+                        return (
+                            index: i,
+                            iconSet: LogoSet(
+                                light: light,
+                                dark: dark,
+                                altText: image.text,
+                                code: image.paymentMethodType
+                            )
+                        )
                     }
                 case .alwaysLight:
                     // For all non-automatic styles, we fetch one image and use it for
                     //     both light and dark
                     taskGroup.addTask {
                         let lightImage = try await DownloadManager.sharedManager.downloadImage(url: image.lightThemePng.url)
-                        return (index: i, iconSet: LogoSet(light: lightImage, dark: lightImage, altText: image.text))
+                        return (
+                            index: i,
+                            iconSet: LogoSet(
+                                light: lightImage,
+                                dark: lightImage,
+                                altText: image.text,
+                                code: image.paymentMethodType
+                            )
+                        )
                     }
                 case .alwaysDark:
                     taskGroup.addTask {
                         let darkImage = try await DownloadManager.sharedManager.downloadImage(url: image.darkThemePng.url)
-                        return (index: i, iconSet: LogoSet(light: darkImage, dark: darkImage, altText: image.text))
+                        return (
+                            index: i,
+                            iconSet: LogoSet(
+                                light: darkImage,
+                                dark: darkImage,
+                                altText: image.text,
+                                code: image.paymentMethodType
+                            )
+                        )
                     }
                 case .flat:
                     taskGroup.addTask {
                         let flatImage = try await DownloadManager.sharedManager.downloadImage(url: image.flatThemePng.url)
-                        return (index: i, iconSet: LogoSet(light: flatImage, dark: flatImage, altText: image.text))
-
+                        return (
+                            index: i,
+                            iconSet: LogoSet(
+                                light: flatImage,
+                                dark: flatImage,
+                                altText: image.text,
+                                code: image.paymentMethodType
+                            )
+                        )
                     }
                 }
             }
@@ -180,4 +221,8 @@ extension PaymentMethodMessagingElement.Appearance {
     var scaledFont: UIFont {
         UIFontMetrics.default.scaledFont(for: font, maximumPointSize: 25)
     }
+}
+
+extension PaymentMethodMessagingElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "PaymentMethodMessagingElement"
 }

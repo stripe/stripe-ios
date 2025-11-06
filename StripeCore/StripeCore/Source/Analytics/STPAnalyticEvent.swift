@@ -259,6 +259,14 @@ import Foundation
     case paymentSheetSetDefaultPaymentMethod = "mc_set_default_payment_method"
     case paymentSheetSetDefaultPaymentMethodFailed = "mc_set_default_payment_method_failed"
 
+    // MARK: - Payment Method Messaging Element (PMME)
+    case paymentMethodMessagingElementInit = "payment_method_messaging_element_init"
+    case paymentMethodMessagingElementLoadStarted = "payment_method_messaging_element_load_started"
+    case paymentMethodMessagingElementLoadSucceeded = "payment_method_messaging_element_load_succeeded"
+    case paymentMethodMessagingElementLoadFailed = "payment_method_messaging_element_load_failed"
+    case paymentMethodMessagingElementDisplayed = "payment_method_messaging_element_displayed"
+    case paymentMethodMessagingElementTapped = "payment_method_messaging_element_tapped"
+
     // MARK: - STPBankAccountCollector
     case bankAccountCollectorStarted = "stripeios.bankaccountcollector.started"
     case bankAccountCollectorFinished = "stripeios.bankaccountcollector.finished"
