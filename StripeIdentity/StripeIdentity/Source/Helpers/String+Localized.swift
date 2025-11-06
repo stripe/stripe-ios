@@ -75,6 +75,13 @@ extension String.Localized {
         )
     }
 
+    static var incorrect_side_flip: String {
+        return STPLocalizedString(
+            "Incorrect side detected, flip document over",
+            "Instructional text when the opposite side of the ID is shown"
+        )
+    }
+
     static var position_in_center_identity_card: String {
         return STPLocalizedString(
             "Position your identity document in the center of the frame",

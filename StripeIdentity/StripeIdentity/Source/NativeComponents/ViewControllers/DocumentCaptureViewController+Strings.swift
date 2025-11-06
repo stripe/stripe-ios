@@ -70,7 +70,15 @@ extension DocumentCaptureViewController {
             let zoomLevel = idDetectorOutput.computeZoomLevel()
             switch (side, matchesClassification, zoomLevel) {
             case (.front, false, _), (.back, false, _):
-                return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
+                // If wrong side is shown, provide explicit flip guidance
+                switch (side, foundClassification) {
+                case (.front, .idCardBack):
+                    return String.Localized.incorrect_side_flip
+                case (.back, .idCardFront), (.back, .passport):
+                    return String.Localized.incorrect_side_flip
+                default:
+                    return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
+                }
             case (_, true, .ok):
                 return String.Localized.scanning
             case (_, true, .tooClose):

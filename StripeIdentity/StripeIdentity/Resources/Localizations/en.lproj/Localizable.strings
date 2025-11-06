@@ -64,6 +64,9 @@
 /* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
+/* Instructional text when the opposite side of the ID is shown */
+"Incorrect side detected, flip document over" = "Incorrect side detected, flip document over";
+
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
 
