@@ -117,7 +117,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Continue"].tap() // For some reason, waitForExistenceAndTap() does not tap this!
         XCTAssertEqual(
             // filter out async passive captcha and attestation logs
-            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attestation") ?? false) }),
+            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
             ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_lpms_render", "mc_custom_paymentoption_savedpm_select", "mc_lpms_render", "mc_confirm_button_tapped"]
         )

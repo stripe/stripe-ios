@@ -69,6 +69,8 @@ actor AttestationChallenge {
                 }
                 if Task.isCancelled {
                     assertionHandle?.complete()
+                    assertionHandle = nil
+                    return nil
                 }
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
             } catch {

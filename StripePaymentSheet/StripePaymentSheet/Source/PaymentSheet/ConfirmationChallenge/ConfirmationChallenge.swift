@@ -13,7 +13,7 @@ actor ConfirmationChallenge {
     private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
     private var attestationChallenge: AttestationChallenge?
 
-    private var timeout: TimeInterval = STPAnalyticsClient.isUnitOrUITest ? 0 : 6 // same as web
+    private var timeout: TimeInterval = 6 // same as web
 
     func setTimeout(timeout: TimeInterval) {
         self.timeout = timeout
@@ -38,14 +38,12 @@ actor ConfirmationChallenge {
 
     func fetchTokensWithTimeout() async -> ChallengeTokens {
         let startTime = Date()
+        let isReady = await passiveCaptchaChallenge?.hasFetchedToken ?? false
         let getPassiveCaptchaToken: () async throws -> String? = {
             guard let passiveCaptchaChallenge = self.passiveCaptchaChallenge else {
                 return nil
             }
-            let isReady = await passiveCaptchaChallenge.hasFetchedToken
-            let token = try await passiveCaptchaChallenge.fetchToken()
-            await STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
-            return token
+            return try await passiveCaptchaChallenge.fetchToken()
         }
 
         let getAttestationAssertion: () async throws -> StripeAttest.Assertion? = {
@@ -56,8 +54,15 @@ actor ConfirmationChallenge {
         }
 
         let (hcaptchaTokenResult, assertionResult) = await withTimeout(timeout, getPassiveCaptchaToken, getAttestationAssertion)
-        if let passiveCaptchaChallenge, case .failure(let error) = hcaptchaTokenResult, error is TimeoutError {
-            await STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
+        if let passiveCaptchaChallenge {
+            switch hcaptchaTokenResult {
+            case .success:
+                await STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
+            case .failure(let error):
+                if error is TimeoutError {
+                    await STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
+                }
+            }
         }
         if case .failure(let error) = assertionResult, error is TimeoutError {
             STPAnalyticsClient.sharedClient.logAttestationConfirmationError(error: error, duration: Date().timeIntervalSince(startTime))
