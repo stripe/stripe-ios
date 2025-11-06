@@ -653,7 +653,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             ["elements.captcha.passive.init",
              "elements.captcha.passive.execute",
              "elements.captcha.passive.success",
-             "elements.captcha.passive.attach",]
+             "elements.captcha.passive.attach", ]
         )
 
         XCTAssertEqual(
@@ -661,7 +661,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             ["elements.attestation.confirmation.prepare",
              "elements.attestation.confirmation.prepare_failed",
              "elements.attestation.confirmation.request_token",
-             "elements.attestation.confirmation.request_token_succeeded",]
+             "elements.attestation.confirmation.request_token_succeeded", ]
         )
 
         // Make sure they all have the same session id
