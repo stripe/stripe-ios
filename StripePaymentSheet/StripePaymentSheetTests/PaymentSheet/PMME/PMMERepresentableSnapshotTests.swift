@@ -28,7 +28,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
             .animation(nil) // Disable animations for testing
 
         // Embed in UIWindow for rendering
-        let (hostingVC, window) = makeWindowWithView(swiftUIView)
+        let hostingVC = makeWindowWithView(swiftUIView)
 
         hostingVC.view.setNeedsLayout()
         hostingVC.view.layoutIfNeeded()
@@ -50,7 +50,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         let swiftUIView = PMMELoadedViewWrapper(viewData: viewData)
             .animation(nil)
 
-        let (hostingVC, window) = makeWindowWithView(swiftUIView)
+        let hostingVC = makeWindowWithView(swiftUIView)
 
         hostingVC.view.setNeedsLayout()
         hostingVC.view.layoutIfNeeded()
@@ -75,7 +75,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         let swiftUIView = PMMELoadedViewWrapper(viewData: viewData)
             .animation(nil)
 
-        let (hostingVC, window) = makeWindowWithView(swiftUIView)
+        let hostingVC = makeWindowWithView(swiftUIView)
 
         hostingVC.view.setNeedsLayout()
         hostingVC.view.layoutIfNeeded()
@@ -100,7 +100,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         let swiftUIView = PMMELoadedViewWrapper(viewData: viewData)
             .animation(nil)
 
-        let (hostingVC, window) = makeWindowWithView(swiftUIView)
+        let hostingVC = makeWindowWithView(swiftUIView)
 
         hostingVC.view.setNeedsLayout()
         hostingVC.view.layoutIfNeeded()
@@ -124,7 +124,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         _ swiftUIView: some View,
         width: CGFloat = 375,
         height: CGFloat = 600
-    ) -> (UIViewController, UIWindow) {
+    ) -> UIViewController {
         // Create a UIHostingController for the SwiftUI view
         let hostingController = UIHostingController(rootView: swiftUIView)
         hostingController.view.layoutMargins = .zero
@@ -139,8 +139,8 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         hostingController.view.setNeedsLayout()
         hostingController.view.layoutIfNeeded()
 
-        // Return both so window stays alive
-        return (hostingController, window)
+        // Return hosting controller (window is kept alive through rootViewController relationship)
+        return hostingController
     }
 
     private func makeViewData(
