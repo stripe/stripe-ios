@@ -13,6 +13,7 @@ import WebKit
 /// View controller for handling intent confirmation challenges via WebView
 /// This handles the `intent_confirmation_challenge` next action type by loading
 /// a Stripe-hosted web page that performs authentication via Stripe.js
+@available(iOS 14.0, *)
 class IntentConfirmationChallengeViewController: UIViewController {
 
     // MARK: - Properties
@@ -21,7 +22,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private let completion: (Result<Void, Error>) -> Void
 
     private var webView: WKWebView!
-    private var activityIndicator: UIActivityIndicatorView!
 
     // Hard-coded challenge URL
     private let challengeURL = URL(string: "http://localhost:3004")!
@@ -43,12 +43,16 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     // MARK: - Lifecycle
+
+    override func loadView() {
+        // Create main view
+        view = UIView()
+        view.backgroundColor = .clear
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemBackground
-
-        setupActivityIndicator()
         setupWebView()
         setupConstraints()
 
@@ -56,23 +60,9 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     // MARK: - Setup
-    private func setupActivityIndicator() {
-//        activityIndicator = UIActivityIndicatorView(style: .large)
-//        activityIndicator.color = .systemGray
-//        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-//        activityIndicator.startAnimating()
-//        view.addSubview(activityIndicator)
-    }
-
     private func setupWebView() {
         let configuration = WKWebViewConfiguration()
-
-        // Enable JavaScript (required for Stripe.js)
-        if #available(iOS 14.0, *) {
-            configuration.defaultWebpagePreferences.allowsContentJavaScript = true
-        } else {
-            // Fallback on earlier versions
-        }
+        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
 
         // Setup message handlers
         let contentController = WKUserContentController()
@@ -93,8 +83,8 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView.uiDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
 
-        // Safari user agent (prevents mobile web restrictions)
-        webView.customUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1.1 Mobile/15E148 Safari/604.1"
+        // Make webview transparent
+        webView.isOpaque = false
 
         #if DEBUG
         if #available(iOS 16.4, *) {
@@ -111,9 +101,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
-//            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
 
@@ -156,12 +143,37 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         // Inject at document start (BEFORE the page's scripts run)
         let startScript = WKUserScript(
-            source: initParamsScript + "\n" + consoleInterceptor,
+            source: consoleInterceptor + "\n" + initParamsScript,
             injectionTime: .atDocumentStart,
             forMainFrameOnly: false
         )
 
         contentController.addUserScript(startScript)
+
+        // Hide mobile-confirmation-challenge UI, show only Stripe.js content
+        let hideReactUIScript = """
+        const style = document.createElement('style');
+        style.innerHTML = `
+            /* Make page background transparent */
+            html, body {
+                background: transparent !important;
+            }
+
+            /* Hide react-root */
+            #react-root {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+        """
+
+        let hideUIScript = WKUserScript(
+            source: hideReactUIScript,
+            injectionTime: .atDocumentEnd,
+            forMainFrameOnly: false
+        )
+
+        contentController.addUserScript(hideUIScript)
     }
 
     private func loadChallenge() {
@@ -173,10 +185,8 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private func handleReady() {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3) {
-//                self.activityIndicator.alpha = 0.0
                 self.webView.alpha = 1.0
             } completion: { _ in
-//                self.activityIndicator.stopAnimating()
             }
         }
     }
@@ -208,6 +218,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 }
 
 // MARK: - WKScriptMessageHandler
+@available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
     func userContentController(
         _ userContentController: WKUserContentController,
@@ -230,7 +241,15 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
 
         case "onReady":
             #if DEBUG
-            print("[IntentConfirmationChallenge] ✅ Ready")
+            let timestamp = Date().timeIntervalSince1970
+            print("[IntentConfirmationChallenge] ✅ Ready at \(timestamp)")
+
+            // Log timing from page load to ready
+            webView.evaluateJavaScript("Date.now() - window.pageLoadStart") { result, _ in
+                if let ms = result as? Double {
+                    print("[IntentConfirmationChallenge] 📊 Total time from injection to ready: \(ms)ms")
+                }
+            }
             #endif
             handleReady()
 
@@ -286,17 +305,41 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
 }
 
 // MARK: - WKNavigationDelegate
+@available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        #if DEBUG
+        print("[IntentConfirmationChallenge] 🌐 Started loading: \(webView.url?.absoluteString ?? "unknown")")
+        #endif
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        #if DEBUG
+        let timestamp = Date().timeIntervalSince1970
+        print("[IntentConfirmationChallenge] 🌐 Finished loading at \(timestamp): \(webView.url?.absoluteString ?? "unknown")")
+
+        // Add timing marker in the page
+        webView.evaluateJavaScript("window.pageDidFinishLoading = Date.now(); console.log('[TIMING] Native didFinishLoading at', window.pageDidFinishLoading - window.pageLoadStart, 'ms');") { _, _ in }
+        #endif
+    }
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        #if DEBUG
+        print("[IntentConfirmationChallenge] ❌ Navigation failed: \(error.localizedDescription)")
+        #endif
         handleError(ChallengeError.navigationFailed(error))
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        #if DEBUG
+        print("[IntentConfirmationChallenge] ❌ Provisional navigation failed: \(error.localizedDescription)")
+        #endif
         handleError(ChallengeError.navigationFailed(error))
     }
 }
 
 // MARK: - WKUIDelegate
+@available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController: WKUIDelegate {
     // Handle JavaScript alerts if needed
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {

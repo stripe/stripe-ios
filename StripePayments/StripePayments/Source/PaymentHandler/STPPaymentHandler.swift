@@ -1368,7 +1368,11 @@ public class STPPaymentHandler: NSObject {
                     }
                     _handleRedirect(to: redirectURL, withReturn: returnURL, useWebAuthSession: false)
                 case .intentConfirmationChallenge:
-                    _handleIntentConfirmationChallenge()
+                    if #available(iOS 14.0, *) {
+                        _handleIntentConfirmationChallenge()
+                    } else {
+                        // Fallback on earlier versions
+                    }
                 }
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1917,6 +1921,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     /// Handles intent confirmation challenge by presenting a WebView with the Stripe-hosted challenge page
+    @available(iOS 14.0, *)
     func _handleIntentConfirmationChallenge() {
         guard let currentAction else {
             stpAssertionFailure("Calling _handleRedirect without a currentAction")
