@@ -241,15 +241,7 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
 
         case "onReady":
             #if DEBUG
-            let timestamp = Date().timeIntervalSince1970
-            print("[IntentConfirmationChallenge] ✅ Ready at \(timestamp)")
-
-            // Log timing from page load to ready
-            webView.evaluateJavaScript("Date.now() - window.pageLoadStart") { result, _ in
-                if let ms = result as? Double {
-                    print("[IntentConfirmationChallenge] 📊 Total time from injection to ready: \(ms)ms")
-                }
-            }
+            print("[IntentConfirmationChallenge] ✅ Ready")
             #endif
             handleReady()
 
@@ -307,33 +299,11 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
 // MARK: - WKNavigationDelegate
 @available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        #if DEBUG
-        print("[IntentConfirmationChallenge] 🌐 Started loading: \(webView.url?.absoluteString ?? "unknown")")
-        #endif
-    }
-
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        #if DEBUG
-        let timestamp = Date().timeIntervalSince1970
-        print("[IntentConfirmationChallenge] 🌐 Finished loading at \(timestamp): \(webView.url?.absoluteString ?? "unknown")")
-
-        // Add timing marker in the page
-        webView.evaluateJavaScript("window.pageDidFinishLoading = Date.now(); console.log('[TIMING] Native didFinishLoading at', window.pageDidFinishLoading - window.pageLoadStart, 'ms');") { _, _ in }
-        #endif
-    }
-
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        #if DEBUG
-        print("[IntentConfirmationChallenge] ❌ Navigation failed: \(error.localizedDescription)")
-        #endif
         handleError(ChallengeError.navigationFailed(error))
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        #if DEBUG
-        print("[IntentConfirmationChallenge] ❌ Provisional navigation failed: \(error.localizedDescription)")
-        #endif
         handleError(ChallengeError.navigationFailed(error))
     }
 }
