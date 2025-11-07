@@ -84,7 +84,7 @@ class AttestationChallengeTests: XCTestCase {
 
     func testAttestationChallengeTimeoutDuringAssertion() async throws {
         // Inject a delay longer than the timeout to force cancellation during assertion
-        await mockAttestService.setGenerateAssertionDelay(5.0)
+        await mockAttestService.setAssertionDelay(5.0)
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
         let startTime = Date()
         let assertionResult = await withTimeout(1) {

@@ -201,7 +201,7 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testConfirmationChallengeAttestationTimeout() async throws {
         // Inject a delay longer than timeout to force assertion to time out
-        await mockAttestService.setGenerateAssertionDelay(15.0)
+        await mockAttestService.setAssertionDelay(15.0)
         let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 5)
         let startTime = Date()
@@ -215,7 +215,7 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testConfirmationChallengeTimeout() async throws {
         // Inject delays to force both to time out
-        await mockAttestService.setGenerateAssertionDelay(15.0)
+        await mockAttestService.setAssertionDelay(15.0)
         let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 0)
         let startTime = Date()

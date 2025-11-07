@@ -375,7 +375,7 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
-        self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: configuration.enablePassiveCaptcha, enableAttestation: configuration.enableAttestationOnConfirmation, elementsSession: elementsSession, stripeAttest: configuration.apiClient.stripeAttest)
+        self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: configuration.enablePassiveCaptcha, enableAttestation: configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: configuration.apiClient.stripeAttest)
     }
 }
 

@@ -26,7 +26,7 @@ import UIKit
     var shouldFailAttestationWithError: Error?
     var attestationUsingDevelopmentEnvironment: Bool = false
     var attestationDelay: TimeInterval = 0
-    var generateAssertionDelay: TimeInterval = 0
+    var assertionDelay: TimeInterval = 0
 
     func setShouldFailKeygenWithError(_ error: Error?) async {
         shouldFailKeygenWithError = error
@@ -48,8 +48,8 @@ import UIKit
         attestationDelay = delay
     }
 
-    func setGenerateAssertionDelay(_ delay: TimeInterval) async {
-        generateAssertionDelay = delay
+    func setAssertionDelay(_ delay: TimeInterval) async {
+        assertionDelay = delay
     }
 
     var keys: [String: FakeKey] = [:]
@@ -69,8 +69,8 @@ import UIKit
     }
 
     @_spi(STP) public func generateAssertion(_ keyId: String, clientDataHash: Data) async throws -> Data {
-        if generateAssertionDelay > 0 {
-            try await Task.sleep(nanoseconds: UInt64(generateAssertionDelay * 1_000_000_000))
+        if assertionDelay > 0 {
+            try await Task.sleep(nanoseconds: UInt64(assertionDelay * 1_000_000_000))
         }
         guard var key = keys[keyId] else {
             // Throw the same error that the real service would throw
