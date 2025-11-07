@@ -47,20 +47,20 @@ actor ConfirmationChallenge {
         }
 
         let getAttestationAssertion: () async throws -> StripeAttest.Assertion? = {
-            guard let attestationConfirmationChallenge = self.attestationChallenge else {
+            guard let attestationChallenge = self.attestationChallenge else {
                 return nil
             }
-            return await attestationConfirmationChallenge.fetchAssertion()
+            return await attestationChallenge.fetchAssertion()
         }
 
         let (hcaptchaTokenResult, assertionResult) = await withTimeout(timeout, getPassiveCaptchaToken, getAttestationAssertion)
         if let passiveCaptchaChallenge {
             switch hcaptchaTokenResult {
             case .success:
-                await STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime))
             case .failure(let error):
                 if error is TimeoutError {
-                    await STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
+                    STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaChallenge.passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
                 }
             }
         }

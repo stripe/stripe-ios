@@ -368,65 +368,6 @@ extension STPAPIClient {
         )
     }
 
-    /// Make a POST request using the passed parameters with async/await.
-    /// This method supports Task cancellation - if the Task is cancelled, the network request will be cancelled.
-    ///
-    /// - Returns: The decoded response.
-    @_spi(STP) public func post<T: Decodable>(
-        resource: String,
-        parameters: [String: Any],
-        ephemeralKeySecret: String? = nil,
-        consumerPublishableKey: String? = nil
-    ) async throws -> T {
-        let url = apiURL.appendingPathComponent(resource)
-        return try await post(
-            url: url,
-            parameters: parameters,
-            ephemeralKeySecret: ephemeralKeySecret,
-            consumerPublishableKey: consumerPublishableKey
-        )
-    }
-
-    /// Make a POST request using the passed parameters with async/await.
-    /// This method supports Task cancellation - if the Task is cancelled, the network request will be cancelled.
-    ///
-    /// - Returns: The decoded response.
-    @_spi(STP) public func post<T: Decodable>(
-        url: URL,
-        parameters: [String: Any],
-        ephemeralKeySecret: String? = nil,
-        consumerPublishableKey: String? = nil
-    ) async throws -> T {
-        var request = configuredRequest(for: url)
-        let formData = URLEncoder.queryString(from: parameters).data(using: .utf8)
-        request.httpBody = formData
-        request.setValue(
-            String(format: "%lu", UInt(formData?.count ?? 0)),
-            forHTTPHeaderField: "Content-Length"
-        )
-        request.setValue(
-            "application/x-www-form-urlencoded",
-            forHTTPHeaderField: "Content-Type"
-        )
-        #if DEBUG
-        if StripeAPIConfiguration.includeDebugParamsHeader {
-            request.setValue(URLEncoder.queryString(from: parameters), forHTTPHeaderField: "X-Stripe-Mock-Request")
-        }
-        #endif
-        request.httpMethod = HTTPMethod.post.rawValue
-        for (k, v) in authorizationHeader(using: ephemeralKeySecret ?? consumerPublishableKey) {
-            request.setValue(v, forHTTPHeaderField: k)
-        }
-
-        if consumerPublishableKey != nil {
-            // If we now have a consumer publishable key, we no longer send the connected account
-            // in the header, as otherwise the request will justifiably fail.
-            request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
-        }
-
-        return try await sendRequest(request: request)
-    }
-
     func request<T: Decodable>(
         method: HTTPMethod,
         parameters: [String: Any],
@@ -594,20 +535,6 @@ extension STPAPIClient {
                 }
             }
         )
-    }
-
-    /// Send a request using async/await with automatic cancellation support.
-    /// This method uses URLSession's native async API with retry logic, which automatically cancels
-    /// the network request if the Task is cancelled.
-    func sendRequest<T: Decodable>(request: URLRequest) async throws -> T {
-        let (data, response) = try await urlSession.stp_performDataTask(with: request)
-        let result: Result<T, Error> = STPAPIClient.decodeResponse(
-            data: data,
-            error: nil,
-            response: response,
-            request: request
-        )
-        return try result.get()
     }
 
     @_spi(STP) public static func decodeResponse<T: Decodable>(

@@ -57,7 +57,7 @@ class AttestationChallengeTests: XCTestCase {
         try await Task.sleep(nanoseconds: 6_000_000_000)
         let startTime = Date()
         let assertion = try await withTimeout(30) {
-            try await attestationChallenge.fetchAssertion()
+            await attestationChallenge.fetchAssertion()
         }.get()?.flatMap { $0 }
         // didn't take the full timeout time, exited early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
@@ -73,7 +73,7 @@ class AttestationChallengeTests: XCTestCase {
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
         let startTime = Date()
         let assertionResult = await withTimeout(1) {
-            try await attestationChallenge.fetchAssertion()
+            await attestationChallenge.fetchAssertion()
         }
         await attestationChallenge.complete()
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
@@ -88,7 +88,7 @@ class AttestationChallengeTests: XCTestCase {
         let attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest)
         let startTime = Date()
         let assertionResult = await withTimeout(1) {
-            try await attestationChallenge.fetchAssertion()
+            await attestationChallenge.fetchAssertion()
         }
         await attestationChallenge.complete()
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)

@@ -12,7 +12,6 @@ actor AttestationChallenge {
     private let stripeAttest: StripeAttest
     private let canSyncState: Bool
     private var assertionHandle: StripeAttest.AssertionHandle?
-    private let attestationTask: Task<Void, Error>
     private var assertionTask: Task<StripeAttest.Assertion?, Never>?
 
     public init(stripeAttest: StripeAttest, canSyncState: Bool = false) {
@@ -20,25 +19,23 @@ actor AttestationChallenge {
         self.canSyncState = canSyncState
         STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepare()
         let startTime = Date()
-        self.attestationTask = Task { // Intentionally not blocking loading/initialization!
-            try await withTaskCancellationHandler {
-                try Task.checkCancellation()
-                let didAttest = await stripeAttest.prepareAttestation()
-                try Task.checkCancellation()
-                if didAttest {
-                    STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareSucceeded(duration: Date().timeIntervalSince(startTime))
-                } else {
-                    STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareFailed(duration: Date().timeIntervalSince(startTime))
-                }
+        Task { // Intentionally not blocking loading/initialization!
+            let didAttest = await withTaskCancellationHandler {
+                await stripeAttest.prepareAttestation()
             } onCancel: {
                 Task {
                     await stripeAttest.cancel()
                 }
             }
+            if didAttest {
+                STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareSucceeded(duration: Date().timeIntervalSince(startTime))
+            } else {
+                STPAnalyticsClient.sharedClient.logAttestationConfirmationPrepareFailed(duration: Date().timeIntervalSince(startTime))
+            }
         }
     }
 
-    func fetchAssertion() async -> StripeAttest.Assertion? {
+    public func fetchAssertion() async -> StripeAttest.Assertion? {
         if let assertionTask {
             return await withTaskCancellationHandler {
                 return await assertionTask.value
@@ -47,27 +44,12 @@ actor AttestationChallenge {
             }
         }
         let assertionTask = Task<StripeAttest.Assertion?, Never> {
-            // Wait for prewarm to complete first to avoid race conditions
-            do {
-                try await withTaskCancellationHandler {
-                    try await attestationTask.value
-                } onCancel: {
-                    attestationTask.cancel()
-                }
-            } catch {
-                return nil
-            }
             STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestToken()
             let startTime = Date()
             do {
-                assertionHandle = try await withTaskCancellationHandler {
-                    try await stripeAttest.assert(canSyncState: canSyncState)
-                } onCancel: {
-                    Task {
-                        await stripeAttest.cancel()
-                    }
-                }
+                assertionHandle = try await stripeAttest.assert(canSyncState: canSyncState)
                 if Task.isCancelled {
+                    // Clean up the queue, as we're not returning it as an AssertionHandle
                     assertionHandle?.complete()
                     assertionHandle = nil
                     return nil
@@ -75,9 +57,7 @@ actor AttestationChallenge {
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenSucceeded(duration: Date().timeIntervalSince(startTime))
             } catch {
                 assertionHandle = nil
-                if Task.isCancelled {
-                    return nil
-                }
+                if Task.isCancelled { return nil }
                 STPAnalyticsClient.sharedClient.logAttestationConfirmationRequestTokenFailed(duration: Date().timeIntervalSince(startTime))
             }
             return assertionHandle?.assertion

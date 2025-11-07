@@ -11,7 +11,7 @@ import Foundation
 
 /// PassiveCaptcha, delivered in the `v1/elements/sessions` response.
 /// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/elements/api/resources/elements_passive_captcha_resource.rb
-@_spi(STP) public struct PassiveCaptchaData: Equatable, Hashable {
+struct PassiveCaptchaData: Equatable, Hashable {
 
     let siteKey: String
     let rqdata: String?
@@ -40,7 +40,7 @@ import Foundation
 
 }
 
-@_spi(STP) public actor PassiveCaptchaChallenge {
+actor PassiveCaptchaChallenge {
     let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
