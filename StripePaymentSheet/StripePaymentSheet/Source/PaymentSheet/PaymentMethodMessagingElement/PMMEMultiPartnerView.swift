@@ -16,11 +16,25 @@ class PMMEMultiPartnerView: UIView {
     private let promotion: String
     private let appearance: PaymentMethodMessagingElement.Appearance
 
-    private static let horizontalPadding: CGFloat = 8
-    private static let verticalPadding: CGFloat = 8
-
     private var logoViews = [UIImageView]()
     private let promotionLabel = UILabel()
+    private let logoStack = UIStackView()
+    private let mainStack = UIStackView()
+
+    // With the default font, padding between logos is 8
+    private var logoHorizontalPadding: CGFloat {
+        fontScaled(8)
+    }
+    // With the default font, padding between logos and text is 4
+    private var verticalPadding: CGFloat {
+        fontScaled(4)
+    }
+
+    private func fontScaled(_ x: CGFloat) -> CGFloat {
+        let defaultFontCapheight = PaymentMethodMessagingElement.Appearance().font.capHeight
+        let xToFontHeightRatio = x / defaultFontCapheight
+        return xToFontHeightRatio * appearance.scaledFont.capHeight
+    }
 
     init(
         logoSets: [PaymentMethodMessagingElement.LogoSet],
@@ -36,13 +50,11 @@ class PMMEMultiPartnerView: UIView {
     }
 
     private func setupView() {
-        let mainStack = UIStackView()
         mainStack.axis = .vertical
-        mainStack.spacing = Self.verticalPadding
+        mainStack.spacing = verticalPadding
 
-        let logoStack = UIStackView()
         logoStack.axis = .horizontal
-        logoStack.spacing = Self.horizontalPadding
+        logoStack.spacing = logoHorizontalPadding
         for logoSet in logoSets {
             // Empty placeholder for initialization, we'll populate with the correct light/dark asset in willMove()
             let imageView = ScalingImageView(appearance: appearance)
@@ -81,6 +93,10 @@ class PMMEMultiPartnerView: UIView {
         promotionLabel.attributedText = getPromotionAttributedString()
         // icon view scales may have changed
         logoViews.forEach { $0.invalidateIntrinsicContentSize() }
+
+        // Adjust padding if content size changed
+        logoStack.spacing = logoHorizontalPadding
+        mainStack.spacing = verticalPadding
     }
 
     private func updateLogoStyles() {
