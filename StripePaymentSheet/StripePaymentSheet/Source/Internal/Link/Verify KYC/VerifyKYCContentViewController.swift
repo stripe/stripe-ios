@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 10/30/25.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -14,7 +15,11 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     // MARK: - BottomSheetContentViewController
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navigationBar = LinkSheetNavigationBar(isTestMode: false, appearance: .default)
+        let navigationBar = LinkSheetNavigationBar(
+            isTestMode: false,
+            appearance: .default,
+            shouldLogPaymentSheetAnalyticsOnDismissal: false
+        )
         navigationBar.setStyle(.close(showAdditionalButton: false))
         navigationBar.delegate = self
         return navigationBar
@@ -79,7 +84,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = LinkUI.font(forTextStyle: .title)
         label.textColor = .linkTextPrimary
-        label.text = "Confirm your information"
+        label.text = String.Localized.confirm_your_information
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -136,15 +141,15 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         let stackView = UIStackView()
         stackView.axis = .vertical
 
-        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: "Name", value: formattedName))
+        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: String.Localized.name, value: formattedName))
         stackView.addArrangedSubview(makeDivider())
-        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: "Date of Birth", value: formattedDateOfBirth))
+        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: String.Localized.date_of_birth, value: formattedDateOfBirth))
         stackView.addArrangedSubview(makeDivider())
         if let idNumberLast4 = info.idNumberLast4, !idNumberLast4.isEmpty {
-            stackView.addArrangedSubview(VerifyKYCInfoRowView(title: "Last 4 digits of SSN", value: idNumberLast4))
+            stackView.addArrangedSubview(VerifyKYCInfoRowView(title: String.Localized.last_4_digits_of_ssn, value: idNumberLast4))
             stackView.addArrangedSubview(makeDivider())
         }
-        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: "Address", value: formattedAddress, editAction: { [weak self] in
+        stackView.addArrangedSubview(VerifyKYCInfoRowView(title: String.Localized.address, value: formattedAddress, editAction: { [weak self] in
             self?.onResult?(.updateAddress)
         }))
 
@@ -171,7 +176,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     }()
 
     private lazy var confirmButton = ConfirmButton.makeLinkButton(
-        callToAction: .custom(title: "Confirm"),
+        callToAction: .custom(title: String.Localized.confirm),
         showProcessingLabel: false,
         linkAppearance: appearance
     ) { [weak self] in

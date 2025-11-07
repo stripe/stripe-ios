@@ -63,6 +63,9 @@ Section header for address fields */
 Label of an address field */
 "County" = "County";
 
+/* Label for Date of birth field */
+"Date of Birth" = "Date of Birth";
+
 /* Label of an address field */
 "Department" = "Department";
 

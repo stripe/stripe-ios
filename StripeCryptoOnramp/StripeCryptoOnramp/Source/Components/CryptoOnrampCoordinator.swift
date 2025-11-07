@@ -392,9 +392,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKYCResult {
+        analyticsClient.log(.kycInfoVerificationStarted)
         do {
             let linkAccountInfo = try await self.linkAccountInfo
-            let apiClient = self.apiClient
 
             // Fetch existing KYC info to display for confirmation.
             let response = try await apiClient.retrieveKycInfo(linkAccountInfo: linkAccountInfo)
@@ -406,42 +406,19 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
 
             // Present the UI for the user to confirm their KYC information is correct.
-            return try await withCheckedThrowingContinuation { continuation in
-                Task { @MainActor in
-                    let verifyKYCViewController = VerifyKYCViewController(info: displayInfo, appearance: appearance)
-                    verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
-                        verifyKYCViewController?.onResult = nil
-
-                        // We’ll report the result back to the user after full dismissal of the sheet.
-                        let dismissAndResumeWithResult: (Result<VerifyKYCResult, Swift.Error>) -> Void = { continuationResult in
-                            verifyKYCViewController?.dismiss(animated: true) {
-                                continuation.resume(with: continuationResult)
-                            }
-                        }
-
-                        switch result {
-                        case .canceled, .updateAddress:
-                            dismissAndResumeWithResult(.success(result))
-                        case .confirmed:
-                            Task {
-                                do {
-                                    // When confirming, we make the API call for confirmation before returning success.
-                                    // If the API call fails, the error will be caught and returned to the caller.
-                                    try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
-                                    dismissAndResumeWithResult(.success(result))
-                                } catch {
-                                    dismissAndResumeWithResult(.failure(error))
-                                }
-                            }
-                        @unknown default:
-                            break
-                        }
-                    }
-
-                    viewController.presentAsBottomSheet(verifyKYCViewController, appearance: .init())
+            return try await linkController.presentKYCVerification(
+                info: displayInfo,
+                appearance: appearance,
+                from: viewController,
+                onConfirm: { [apiClient, analyticsClient] in
+                    // When confirming, we make the API call for confirmation before dismissal.
+                    // If the API call fails, the error will be caught and returned to the caller.
+                    try await apiClient.refreshKycInfo(info: displayInfo, linkAccountInfo: linkAccountInfo)
+                    analyticsClient.log(.kycInfoVerificationCompleted)
                 }
-            }
+            )
         } catch {
+            analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
             throw error
         }
     }

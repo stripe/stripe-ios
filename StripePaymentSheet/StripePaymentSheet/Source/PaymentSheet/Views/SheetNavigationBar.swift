@@ -72,6 +72,7 @@ class SheetNavigationBar: UIView {
 
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
+    let shouldLogPaymentSheetAnalyticsOnDismissal: Bool
 
     override var isUserInteractionEnabled: Bool {
         didSet {
@@ -83,9 +84,10 @@ class SheetNavigationBar: UIView {
         }
     }
 
-    init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
+    init(isTestMode: Bool, appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
         testModeView.isHidden = !isTestMode
         self.appearance = appearance
+        self.shouldLogPaymentSheetAnalyticsOnDismissal = shouldLogPaymentSheetAnalyticsOnDismissal
         super.init(frame: .zero)
 
         if appearance.navigationBarStyle.isPlain {
@@ -130,7 +132,9 @@ class SheetNavigationBar: UIView {
 
     @objc
     private func didTapCloseButton() {
-        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+        if shouldLogPaymentSheetAnalyticsOnDismissal {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetDismissed)
+        }
         delegate?.sheetNavigationBarDidClose(self)
     }
 
