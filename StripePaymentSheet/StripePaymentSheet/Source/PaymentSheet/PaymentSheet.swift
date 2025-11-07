@@ -216,8 +216,10 @@ public class PaymentSheet {
         from presentingViewController: UIViewController
     ) async -> PaymentSheetResult {
         return await withCheckedContinuation { continuation in
-            present(from: presentingViewController) { result in
-                continuation.resume(returning: result)
+            Task { @MainActor in
+                present(from: presentingViewController) { result in
+                    continuation.resume(returning: result)
+                }
             }
         }
     }
