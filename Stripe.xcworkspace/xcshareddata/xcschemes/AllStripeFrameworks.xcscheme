@@ -216,6 +216,20 @@
                ReferencedContainer = "container:StripeConnect/StripeConnect.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3D136BB92EB4493500186DA1"
+               BuildableName = "StripeIssuing.framework"
+               BlueprintName = "StripeIssuing"
+               ReferencedContainer = "container:StripeIssuing/StripeIssuing.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
