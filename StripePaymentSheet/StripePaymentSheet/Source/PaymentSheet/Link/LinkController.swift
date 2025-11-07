@@ -534,6 +534,60 @@ import UIKit
         }
     }
 
+    /// Presents KYC verification UI to the user.
+    ///
+    /// This method presents a bottom sheet displaying the provided KYC information for user review.
+    /// The user can confirm the information, request to update their address, or cancel.
+    ///
+    /// - Parameters:
+    ///   - info: The KYC information to display to the user.
+    ///   - appearance: Appearance configuration for the verification UI.
+    ///   - viewController: The view controller from which to present the verification flow.
+    ///   - onConfirm: An async closure called when the user confirms. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
+    /// - Returns: A `VerifyKYCResult` indicating whether the user confirmed, requested an address update, or canceled.
+    /// Throws any error thrown by the `onConfirm` handler.
+    @_spi(STP) public func presentKYCVerification(
+        info: VerifyKYCInfo,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onConfirm: @escaping (() async throws -> Void)
+    ) async throws -> VerifyKYCResult {
+        return try await withCheckedThrowingContinuation { continuation in
+            Task { @MainActor in
+                let verifyKYCViewController = VerifyKYCViewController(info: info, appearance: appearance)
+                verifyKYCViewController.onResult = { [weak verifyKYCViewController] result in
+                    verifyKYCViewController?.onResult = nil
+
+                    // We'll report the result back to the caller after dismissal of the sheet.
+                    let dismissAndResumeWithResult: (Result<VerifyKYCResult, Swift.Error>) -> Void = { continuationResult in
+                        verifyKYCViewController?.dismiss(animated: true) {
+                            continuation.resume(with: continuationResult)
+                        }
+                    }
+
+                    switch result {
+                    case .canceled, .updateAddress:
+                        dismissAndResumeWithResult(.success(result))
+                    case .confirmed:
+                        Task {
+                            do {
+                                // Complete any async operation from the caller before dismissing.
+                                try await onConfirm()
+                                dismissAndResumeWithResult(.success(result))
+                            } catch {
+                                dismissAndResumeWithResult(.failure(error))
+                            }
+                        }
+                    @unknown default:
+                        dismissAndResumeWithResult(.success(result))
+                    }
+                }
+
+                viewController.presentAsBottomSheet(verifyKYCViewController, appearance: .init())
+            }
+        }
+    }
+
     /// Logs out the current Link user, if any.
     @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
         func clearLinkAccountContextAndComplete() {
