@@ -56,7 +56,7 @@ class ConfirmationChallengeTests: XCTestCase {
         let expectation = self.expectation(description: "Wait for teardown")
         Task { @MainActor in
             await mockAttestService.setAttestationDelay(0)
-            await mockAttestService.setGenerateAssertionDelay(0)
+            await mockAttestService.setAssertionDelay(0)
             expectation.fulfill()
         }
         waitForExpectations(timeout: 5)
@@ -147,7 +147,7 @@ class ConfirmationChallengeTests: XCTestCase {
 
     func testAttestationConfirmationChallengeTimeoutDuringAssertion() async throws {
         // Inject a delay longer than the timeout to force cancellation
-        await mockAttestService.setGenerateAssertionDelay(5.0)
+        await mockAttestService.setAssertionDelay(5.0)
         let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: false, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 1)
         let startTime = Date()

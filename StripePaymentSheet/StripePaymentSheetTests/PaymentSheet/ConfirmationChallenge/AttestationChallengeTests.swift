@@ -44,7 +44,7 @@ class AttestationChallengeTests: XCTestCase {
         let expectation = self.expectation(description: "Wait for teardown")
         Task { @MainActor in
             await mockAttestService.setAttestationDelay(0)
-            await mockAttestService.setGenerateAssertionDelay(0)
+            await mockAttestService.setAssertionDelay(0)
             expectation.fulfill()
         }
         waitForExpectations(timeout: 5)
