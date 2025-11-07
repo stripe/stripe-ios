@@ -179,6 +179,13 @@ extension String.Localized {
         )
     }
 
+    static var center_document: String {
+        return STPLocalizedString(
+            "Move ID to the center",
+            "Instructional text when the document is not centered in the frame"
+        )
+    }
+
     static var point_camera_to_document: String {
         return STPLocalizedString(
             "No document detected",

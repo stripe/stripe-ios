@@ -128,6 +128,9 @@
 /* Instructional text when the document is too blurry */
 "Make sure all details are visible and focus" = "Make sure all details are visible and focus";
 
+/* Instructional text when the document is not centered in the frame */
+"Move ID to the center" = "Move ID to the center";
+
 /* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
 
