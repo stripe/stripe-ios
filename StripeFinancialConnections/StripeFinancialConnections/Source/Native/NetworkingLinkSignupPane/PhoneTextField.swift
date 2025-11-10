@@ -19,9 +19,21 @@ protocol PhoneTextFieldDelegate: AnyObject {
 
 final class PhoneTextField: UIView {
 
+    enum LocalizedStrings {
+        static let textfieldPlaceholder = STPLocalizedString(
+            "Phone number",
+            "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type a phone number."
+        )
+
+        static let invalidPhoneNumber = STPLocalizedString(
+            "Your mobile phone number is invalid.",
+            "An error message that instructs the user to keep typing their phone number in a user-input field."
+        )
+    }
+
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
-            placeholder: STPLocalizedString("Phone number", "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type a phone number."),
+            placeholder: LocalizedStrings.textfieldPlaceholder,
             showDoneToolbar: true,
             appearance: appearance
         )
@@ -158,12 +170,20 @@ final class PhoneTextField: UIView {
                 if text.isEmpty {
                     // no error message if empty
                 } else {
-                    textField.errorText = STPLocalizedString("Your mobile phone number is incomplete.", "An error message that instructs the user to keep typing their phone number in a user-input field.")
+                    textField.errorText = LocalizedStrings.invalidPhoneNumber
                 }
             }
         }
 
         delegate?.phoneTextField(self, didChangePhoneNumber: phoneNumber)
+    }
+
+    func setErrorText(_ errorMessage: String) {
+        textField.errorText = errorMessage
+    }
+
+    func clearErrorText() {
+        textField.errorText = nil
     }
 }
 

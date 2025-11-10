@@ -201,6 +201,7 @@ final class LinkLoginViewController: UIViewController {
                         }
                     } else {
                         formView?.showAndEditPhoneNumberFieldIfNeeded()
+                        setContinueWithLinkButtonDisabledState()
                     }
                 case .failure(let error):
                     self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
@@ -245,7 +246,21 @@ final class LinkLoginViewController: UIViewController {
             case .success(let response):
                 self.delegate?.linkLoginViewController(self, signedUpAttachedAndSynchronized: response)
             case .failure(let error):
-                self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
+                func completeWithTerminalError() {
+                    self.delegate?.linkLoginViewController(self, didReceiveTerminalError: error)
+                }
+
+                guard let stripeError = error as? StripeError, case .apiError(let stripeAPIError) = stripeError else {
+                    return completeWithTerminalError()
+                }
+
+                // Hack to determine if the error is related to the phone number.
+                // If so, show a generic error message under the phone textfield.
+                if let errorMessage = stripeAPIError.message, errorMessage.contains("phone") {
+                    formView.phoneTextField.setErrorText(PhoneTextField.LocalizedStrings.invalidPhoneNumber)
+                } else {
+                    completeWithTerminalError()
+                }
             }
         }
     }
