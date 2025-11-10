@@ -57,6 +57,7 @@ class PassiveCaptchaTests: XCTestCase {
         let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.error" })
         XCTAssertEqual(errorAnalytic?["site_key"] as? String, siteKey)
         XCTAssertEqual(errorAnalytic?["error_type"] as? String, "StripeCore.TimeoutError")
+        XCTAssertEqual(errorAnalytic?["error_code"] as? String, "timeout")
         XCTAssertLessThan(errorAnalytic?["duration"] as! Double, 2000.0)
     }
 
