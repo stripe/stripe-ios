@@ -26,54 +26,57 @@ class ExampleCustomCheckoutViewController: UIViewController {
         paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
         paymentMethodButton.isEnabled = false
 
+        Task {
+            do {
+                try await loadCheckout()
+            } catch {
+                print("Failed to load checkout: \(error)")
+            }
+        }
+    }
+
+    private func loadCheckout() async throws {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
-        let task = URLSession.shared.dataTask(
-            with: request,
-            completionHandler: { [weak self] (data, _, error) in
-                guard let data = data,
-                    let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                        as? [String: Any],
-                    let paymentIntentClientSecret = json["paymentIntent"] as? String,
-                    let customerId = json["customer"] as? String,
-                    let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
-                    let publishableKey = json["publishableKey"] as? String,
-                    let self = self
-                else {
-                    // Handle error
-                    return
-                }
-                // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
-                STPAPIClient.shared.publishableKey = publishableKey
 
-                // MARK: Create a PaymentSheet.FlowController instance
-                var configuration = PaymentSheet.Configuration()
-                configuration.merchantDisplayName = "Example, Inc."
-                configuration.applePay = .init(
-                    merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
-                    merchantCountryCode: "US"
-                )
-                configuration.customer = .init(
-                    id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
-                configuration.returnURL = "payments-example://stripe-redirect"
-                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
-                configuration.allowsDelayedPaymentMethods = true
-                PaymentSheet.FlowController.create(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
-                    configuration: configuration
-                ) { [weak self] result in
-                    switch result {
-                    case .failure(let error):
-                        print(error)
-                    case .success(let paymentSheetFlowController):
-                        self?.paymentSheetFlowController = paymentSheetFlowController
-                        self?.paymentMethodButton.isEnabled = true
-                        self?.updateButtons()
-                    }
-                }
-            })
-        task.resume()
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        guard
+            let paymentIntentClientSecret = json?["paymentIntent"] as? String,
+            let customerId = json?["customer"] as? String,
+            let customerEphemeralKeySecret = json?["ephemeralKey"] as? String,
+            let publishableKey = json?["publishableKey"] as? String
+        else {
+            throw ExampleError(errorDescription: "Invalid response from backend")
+        }
+        // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
+        STPAPIClient.shared.publishableKey = publishableKey
+
+        // MARK: Create a PaymentSheet.FlowController instance
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example, Inc."
+        configuration.applePay = .init(
+            merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
+            merchantCountryCode: "US"
+        )
+        configuration.customer = .init(
+            id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+        configuration.returnURL = "payments-example://stripe-redirect"
+        // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
+        configuration.allowsDelayedPaymentMethods = true
+
+        let paymentSheetFlowController = try await PaymentSheet.FlowController.create(
+            paymentIntentClientSecret: paymentIntentClientSecret,
+            configuration: configuration
+        )
+        self.paymentSheetFlowController = paymentSheetFlowController
+        self.paymentMethodButton.isEnabled = true
+        self.updateButtons()
+    }
+
+    struct ExampleError: LocalizedError {
+       var errorDescription: String?
     }
 
     // MARK: - Button handlers
