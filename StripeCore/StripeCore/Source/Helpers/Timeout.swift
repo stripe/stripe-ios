@@ -7,10 +7,8 @@
 
 import Foundation
 
-@_spi(STP) public enum TimeoutError: Error {
-    case timeout
-    case unexpected
-}
+@_spi(STP) public struct TimeoutError: Error {}
+@_spi(STP) public struct UnexpectedNilError: Error {}
 
 /// Runs multiple operations in parallel with individual timeouts
 /// - Parameters:
@@ -54,7 +52,7 @@ private func withTimeout<T>(
                 // Add timeout task
                 group.addTask {
                     try await Task.sleep(nanoseconds: timeoutNs)
-                    throw TimeoutError.timeout
+                    throw TimeoutError()
                 }
 
                 // Cancel remaining task
@@ -66,7 +64,7 @@ private func withTimeout<T>(
                     // Get the winner
                     guard let result = try await group.next() else {
                         stpAssertionFailure("Result could not be unwrapped.")
-                        throw TimeoutError.unexpected // should never happen; only nil when group is empty
+                        throw UnexpectedNilError() // should never happen; only nil when group is empty
                     }
                     // Operation finished before the timeout
                     continuation.resume(returning: result)
