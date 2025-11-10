@@ -66,6 +66,9 @@
       location = "group:StripeIdentity/StripeIdentity.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:StripeIssuing/StripeIssuing.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:StripePaymentSheet/StripePaymentSheet.xcodeproj">
    </FileRef>
    <FileRef
