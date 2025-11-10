@@ -71,7 +71,7 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         mandateData: STPMandateDataParams? = nil,
-        confirmHandler: @escaping IntentConfiguration.ConfirmHandler,
+        confirmHandler: @escaping IntentConfiguration.ConfirmHandler
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
             var confirmType = confirmType
