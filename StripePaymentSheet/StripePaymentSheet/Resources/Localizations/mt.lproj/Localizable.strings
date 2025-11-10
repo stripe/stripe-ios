@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Ikkonferma l-kodiċi CVC tiegħek";
 
+"Confirm your information" = "Ikkonferma l-informazzjoni tiegħek";
+
 "Contact information" = "Id-dettalji tal-kuntatt";
 
 "Continue another way" = "Kompli mod ieħor";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jiena nifhem li Stripe se tkun qed tiġbor id-Debiti Diretti f'isem %@ u nikkonferma li jiena d-detentur tal-kont u l-unika persuna meħtieġa biex tawtorizza d-debiti minn dan il-kont.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "L-aħħar 4 ċifri tal-SSN";
 
 "Log in or sign up" = "Idħol jew irreġistra";
 

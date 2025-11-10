@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "ยืนยัน CVC ของคุณ";
 
+"Confirm your information" = "ยืนยันข้อมูลของคุณ";
+
 "Contact information" = "ข้อมูลติดต่อ";
 
 "Continue another way" = "ดำเนินการต่อด้วยวิธีอื่น";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "ฉันเข้าใจว่า Stripe จะดำเนินการหักบัญชีอัตโนมัติในนามของ %@ และยืนยันว่าฉันเป็นเจ้าของบัญชีและเป็นบุคคลเดียวเท่านั้นที่อนุญาตให้หักเงินจากบัญชีนี้ได้";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "ตัวเลข 4 หลักสุดท้ายของ SSN";
 
 "Log in or sign up" = "เข้าสู่ระบบหรือลงทะเบียน";
 

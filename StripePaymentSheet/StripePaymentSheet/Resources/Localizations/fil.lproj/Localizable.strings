@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Kumpirmahin ang iyong CVC";
 
+"Confirm your information" = "Kumpirmahin ang iyong impormasyon";
+
 "Contact information" = "Impormasyon sa pakikipag-ugnayan";
 
 "Continue another way" = "Magpatuloy sa ibang paraan";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Nauunawaan ko na mangongolekta ang Stripe ng Direct Debits sa ngalan ng  %@ at kinukumpirma ko na ako ang may-ari ng account at tanging taong kinakailangan na magpahintulot sa mga debit mula sa account na ito..";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Huling 4 na digit ng SSN";
 
 "Log in or sign up" = "Mag-log in o mag-sign up";
 
