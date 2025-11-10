@@ -48,8 +48,33 @@ import UIKit
         } else {
             image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
         }
+
+        // If image failed to load and we have a system fallback, use it to prevent crashes
+        if image.size == .zero, let fallbackImage = systemFallback(for: imageName, template: templateIfAvailable) {
+            assert(false, "Failed to find an image named \(imageName), using system fallback")
+            return fallbackImage
+        }
+
         assert(image.size != .zero, "Failed to find an image named \(imageName)")
         return image
+    }
+
+    private static func systemFallback(for imageName: String, template: Bool) -> UIImage? {
+        guard #available(iOS 13.0, *) else {
+            return nil
+        }
+
+        switch imageName {
+        case "icon_x_standalone":
+            let config = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium)
+            var image = UIImage(systemName: "xmark", withConfiguration: config)
+            if template {
+                image = image?.withRenderingMode(.alwaysTemplate)
+            }
+            return image
+        default:
+            return nil
+        }
     }
 }
 
