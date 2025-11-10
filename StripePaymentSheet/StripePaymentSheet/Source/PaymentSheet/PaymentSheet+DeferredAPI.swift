@@ -53,8 +53,7 @@ extension PaymentSheet {
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 mandateData: mandateData,
-                confirmHandler: confirmHandler,
-                preparePaymentMethodHandler: intentConfig.preparePaymentMethodHandler
+                confirmHandler: confirmHandler
             )
         } else {
             stpAssertionFailure("Unexpectedly found nil confirmHandler and confirmationTokenConfirmHandler in intentConfig")
@@ -73,7 +72,6 @@ extension PaymentSheet {
         allowsSetAsDefaultPM: Bool = false,
         mandateData: STPMandateDataParams? = nil,
         confirmHandler: @escaping IntentConfiguration.ConfirmHandler,
-        preparePaymentMethodHandler: IntentConfiguration.PreparePaymentMethodHandler?
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
             var confirmType = confirmType
@@ -95,7 +93,7 @@ extension PaymentSheet {
             }
 
             // 2a. If we have a preparePaymentMethodHandler, use the shared payment token session flow
-            if let preparePaymentMethodHandler = preparePaymentMethodHandler {
+            if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
                 // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
                 // Note: Shipping address is passed for Apple Pay in STPApplePayContext+PaymentSheet.swift.
                 // For other payment methods, get shipping address from configuration.
