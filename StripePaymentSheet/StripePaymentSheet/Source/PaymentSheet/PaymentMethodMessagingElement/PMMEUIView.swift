@@ -20,7 +20,6 @@ class PMMEUIView: UIView {
     private let didUpdateHeight: ((CGFloat) -> Void)?
     private var previousHeight: CGFloat?
 
-    // TODO(gbirch) add accessibilityHint property with instructions about opening info url
     init(viewData: PaymentMethodMessagingElement.ViewData, didUpdateHeight: ((CGFloat) -> Void)? = nil) {
         self.infoUrl = viewData.infoUrl
         self.appearance = viewData.appearance
@@ -37,14 +36,22 @@ class PMMEUIView: UIView {
             overrideUserInterfaceStyle = .light
         }
 
+        isAccessibilityElement = true
+        accessibilityHint = STPLocalizedString(
+            "Open to see more information.",
+            "Accessibility hint to tell the user that they can open a form sheet with more information."
+        )
+
         // choose which style to initialize
         switch viewData.mode {
         case .singlePartner(let logo):
             let view = PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
             addAndPinSubview(view)
+            accessibilityLabel = view.customAccessibilityLabel
         case .multiPartner(let logos):
             let view = PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
             addAndPinSubview(view)
+            accessibilityLabel = view.customAccessibilityLabel
         }
     }
 
