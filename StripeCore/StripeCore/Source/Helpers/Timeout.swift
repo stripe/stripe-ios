@@ -16,7 +16,7 @@ import Foundation
 /// - Parameters:
 ///   - timeout: The maximum time interval to wait for each operation to complete
 ///   - operations: Variadic operations to run with timeout
-/// - Returns: Tuple of Results in the order that the operations were passed in, where each Result contains either the task's value or its error
+/// - Returns: Tuple of Results in the order that the operations were passed in, where each Result contains either the operation's value or its error
  @_spi(STP) public func withTimeout<each T>(
     _ timeout: TimeInterval,
     _ operations: repeat @escaping () async throws -> each T
