@@ -454,13 +454,12 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     result: result,
                     deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
+                self.isPaymentInFlight = false
                 switch result {
                 case .canceled:
-                    self.isPaymentInFlight = false
                     // Do nothing, keep customer on payment sheet
                     self.updateUI()
                 case .failed(let error):
-                    self.isPaymentInFlight = false
                     #if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
                     #endif
@@ -478,7 +477,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 #endif
                         self.buyButton.update(state: .succeeded, animated: true) {
                             // Wait a bit before closing the sheet
-                            self.isPaymentInFlight = false
                             self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
                     }

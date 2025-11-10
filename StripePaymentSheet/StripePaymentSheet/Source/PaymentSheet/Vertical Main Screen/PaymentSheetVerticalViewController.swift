@@ -637,14 +637,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
 
+                self.isPaymentInFlight = false
                 switch result {
                 case .canceled:
-                    self.isPaymentInFlight = false
                     // Keep customer on payment sheet
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
-                    self.isPaymentInFlight = false
 #if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
@@ -673,7 +672,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
-                            self.isPaymentInFlight = false
                             self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
                     }
