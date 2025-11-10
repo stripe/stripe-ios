@@ -33,6 +33,10 @@ let package = Package(
             targets: ["StripeIdentity"]
         ),
         .library(
+            name: "StripeIssuing",
+            targets: ["StripeIssuing"]
+        ),
+        .library(
             name: "StripeCardScan",
             targets: ["StripeCardScan"]
         ),
@@ -95,6 +99,13 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources/Images")
+            ]
+        ),
+        .target(
+            name: "StripeIssuing",
+            path: "StripeIssuing/StripeIssuing",
+            resources: [
+                .process("Resources")
             ]
         ),
         .target(
