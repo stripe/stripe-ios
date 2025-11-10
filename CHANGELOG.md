@@ -1,4 +1,6 @@
-## X.Y.Z
+## X.Y.Z - changes pending release 
+
+## 25.0.1 2025-11-10
 ### PaymentSheet
 * [Fixed] Fixed an issue where async APIs did not run on the main thread.
 
