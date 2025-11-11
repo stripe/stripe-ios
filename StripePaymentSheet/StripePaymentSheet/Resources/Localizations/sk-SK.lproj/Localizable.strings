@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Zadať adresu manuálne";
 
-"Enter the code sent to %@." = "Zadajte kód zaslaný na %s.";
+"Enter the code sent to %@." = "Zadajte kód zaslaný na %@.";
 
 "FPX Bank" = "FPX Bank";
 

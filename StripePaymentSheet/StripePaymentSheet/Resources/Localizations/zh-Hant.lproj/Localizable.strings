@@ -112,7 +112,7 @@
 
 "Enter address manually" = "手動輸入地址";
 
-"Enter the code sent to %@." = "請輸入傳送至 %s 的驗證碼。";
+"Enter the code sent to %@." = "請輸入傳送至 %@ 的驗證碼。";
 
 "FPX Bank" = "FPX Bank";
 
