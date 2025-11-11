@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Patvirtinkite savo CVC";
 
+"Confirm your information" = "Patvirtinkite informaciją";
+
 "Contact information" = "Kontaktinė informacija";
 
 "Continue another way" = "Tęsti kitu būdu";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Suprantu, kad \"Stripe\" atliks tiesioginio debeto nuskaitymus \"%@\" vardu ir patvirtinu, kad esu sąskaitos turėtojas bei vienintelis asmuo, galintis leisti atlikti debeto nuskaitymus nuo šios sąskaitos.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Paskutiniai 4 SSN skaitmenys";
 
 "Log in or sign up" = "Prisijungti arba prisiregistruoti";
 
