@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Kinnita CVC";
 
+"Confirm your information" = "Kinnitage oma teave";
+
 "Contact information" = "Kontaktandmed";
 
 "Continue another way" = "Jätka muul viisil";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Mõistan, et Stripe kogub ettevõtte %@ nimel otsekorraldusi, ja kinnitan, et olen kontoomanik ja ainus isik, kes peab selle konto debiteerimist autoriseerima.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN-i 4 viimast numbrit";
 
 "Log in or sign up" = "Logi sisse või registreeru";
 

@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Confirma tu CVC";
 
+"Confirm your information" = "Confirma tus datos";
+
 "Contact information" = "Información de contacto";
 
 "Continue another way" = "Continúa de otra manera";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entiendo que Stripe cobrará débitos directos en nombre de %@ y confirmo que soy el titular de la cuenta y la única persona que se requiere que autorice los débitos a esta cuenta.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Últimos 4 dígitos del número de seguridad social (SSN)";
 
 "Log in or sign up" = "Inicia sesión o crea tu cuenta";
 

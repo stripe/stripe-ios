@@ -42,21 +42,21 @@ extension PaymentMethodMessagingElement {
     // Initialize element from API response
     // Uses this logic tree: https://trailhead.corp.stripe.com/docs/payment-method-messaging/pmme-platform/elements-mobile
     convenience init?(apiResponse: APIResponse, configuration: Configuration) async throws {
-        // no content case
-        guard let firstPaymentPlan = apiResponse.paymentPlanGroups.first else {
-            return nil
-        }
+        if apiResponse.paymentPlanGroups.count == 1, let paymentPlan = apiResponse.paymentPlanGroups.first {
+            // case 1: 1 payment plan
 
-        if apiResponse.paymentPlanGroups.count == 1 {
-            // single partner
+            // no content case - expected
+            guard let inlinePromo = paymentPlan.content.inlinePartnerPromotion?.message else {
+                return nil
+            }
 
-            // invalid response scenario
-            guard let infoUrl = firstPaymentPlan.content.learnMore?.url else {
+            // unexpected / error cases
+            guard let infoUrl = paymentPlan.content.learnMore?.url else {
                 // TODO(gbirch) add error analytics
                 throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
             }
             guard let logo = try await Self.getIconSet(
-                for: firstPaymentPlan.content.images,
+                for: paymentPlan.content.images,
                 style: configuration.appearance.style
             ).first else {
                 // This should never happen, but if it does we log an error and attempt to fall back to a multi-partner style
@@ -76,51 +76,41 @@ extension PaymentMethodMessagingElement {
                 }
             }
 
-            if let inlinePromo = firstPaymentPlan.content.inlinePartnerPromotion?.message {
-                // standard case, we display single partner style
-                self.init(
-                    mode: .singlePartner(logo: logo),
-                    infoUrl: infoUrl,
-                    promotion: inlinePromo,
-                    appearance: configuration.appearance
-                )
-                return
-            } else if let topLevelPromotion = apiResponse.content.promotion?.message {
-                // fallback case, we don't have an inline promo so we use the main promo in a multi-partner style
-                self.init(
-                    mode: .multiPartner(logos: [logo]),
-                    infoUrl: infoUrl,
-                    promotion: topLevelPromotion,
-                    appearance: configuration.appearance
-                )
-                return
-            } else {
-                // if we also don't have a top-level promo text, then this is a no content scenario
+            // success
+            self.init(
+                mode: .singlePartner(logo: logo),
+                infoUrl: infoUrl,
+                promotion: inlinePromo,
+                appearance: configuration.appearance
+            )
+            return
+        } else {
+            // case 2: 0 or 2+ payment plans
+
+            // no content case - expected
+            guard let promo = apiResponse.content.promotion?.message else {
                 return nil
             }
-        } else {
-            // multi-partner
 
-            // invalid response scenario
+            // unexpected / error case
             guard let infoUrl = apiResponse.content.learnMore?.url else {
                 // TODO(gbirch) add error analytics
                 throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
             }
 
-            // no content scenario
-            guard let promotion = apiResponse.content.promotion?.message else {
-                return nil
-            }
-
             let apiImages = apiResponse.paymentPlanGroups.flatMap { $0.content.images }
-            let logos = try await Self.getIconSet(for: apiImages, style: configuration.appearance.style)
+            let logos = try await Self.getIconSet(
+                for: apiImages,
+                style: configuration.appearance.style
+            )
+
+            // success
             self.init(
                 mode: .multiPartner(logos: logos),
                 infoUrl: infoUrl,
-                promotion: promotion,
+                promotion: promo,
                 appearance: configuration.appearance
             )
-            return
         }
     }
 

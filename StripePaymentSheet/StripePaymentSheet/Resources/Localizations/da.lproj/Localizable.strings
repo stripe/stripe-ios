@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Bekræft dit CVC";
 
+"Confirm your information" = "Bekræft dine oplysninger";
+
 "Contact information" = "Kontaktoplysninger";
 
 "Continue another way" = "Fortsæt på en anden måde";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg er indforstået med, at Stripe vil opkræve direkte debiteringer på vegne af %@ og bekræfter, at jeg er kontoindehaveren og den eneste person, der skal godkende debiteringer fra denne konto.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Sidste 4 cifre af SSN";
 
 "Log in or sign up" = "Log på, eller tilmeld dig";
 
