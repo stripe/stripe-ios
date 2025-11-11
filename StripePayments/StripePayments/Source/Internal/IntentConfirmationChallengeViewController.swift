@@ -76,7 +76,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.alpha = 0.0
 
         // Make webview transparent
         webView.isOpaque = false
@@ -185,7 +184,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         }
     }
 
-    private func handleSuccess(_ result: Any?) {
+    private func handleSuccess() {
         completion(.success(()))
     }
 
@@ -237,7 +236,7 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
             #if DEBUG
             print("[IntentConfirmationChallenge] ✅ Success: \(message.body)")
             #endif
-            handleSuccess(message.body)
+            handleSuccess()
 
         case "onError":
             if let errorDict = message.body as? [String: Any],
