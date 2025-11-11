@@ -41,7 +41,7 @@ private func withTimeout<T>(
 
     // TaskGroups don't return until all of its child tasks have completed, so we use a continuation to escape hatch out of the TaskGroup with the winner of the race (value or TimeoutError)
     return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<T, Error>) in
-        Task {
+        Task(priority: .high) {
             // Race the operation against a timeout
             await withThrowingTaskGroup(of: T.self) { group in
                 // Add the task
