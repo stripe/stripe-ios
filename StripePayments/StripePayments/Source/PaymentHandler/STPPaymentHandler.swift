@@ -1924,7 +1924,7 @@ public class STPPaymentHandler: NSObject {
     @available(iOS 14.0, *)
     func _handleIntentConfirmationChallenge() {
         guard let currentAction else {
-            stpAssertionFailure("Calling _handleRedirect without a currentAction")
+            stpAssertionFailure("Calling _handleIntentConfirmationChallenge without a currentAction")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _handleIntentConfirmationChallenge without a currentAction"])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
             return
@@ -1954,13 +1954,13 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
+        let presentingVC = context.authenticationPresentingViewController()
+
         let challengeVC = IntentConfirmationChallengeViewController(
             apiClient: apiClient,
             clientSecret: clientSecret
         ) { [weak self] result in
             guard let self = self else { return }
-
-            let presentingVC = context.authenticationPresentingViewController()
 
             // Dismiss the challenge view
             presentingVC.dismiss(animated: true) {
@@ -1976,17 +1976,15 @@ public class STPPaymentHandler: NSObject {
             }
         }
 
-        let presentingVC = context.authenticationPresentingViewController()
-
-        let doPresent: STPVoidBlock = {
+        let doChallenge: STPVoidBlock = {
             challengeVC.modalPresentationStyle = .overFullScreen
             presentingVC.present(challengeVC, animated: true, completion: nil)
         }
 
         if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
-            context.prepare?(forPresentation: doPresent)
+            context.prepare?(forPresentation: doChallenge)
         } else {
-            doPresent()
+            doChallenge()
         }
     }
 

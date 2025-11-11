@@ -138,8 +138,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case chf
     }
 
-    enum MerchantCountry: String, PickerEnum {
-        static var enumName: String { "MerchantCountry" }
+    enum Merchant: String, PickerEnum {
+        static var enumName: String { "Merchant" }
 
         case US
         case GB
@@ -154,6 +154,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
+        case stripeShop = "stripe_shop_test"
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -672,7 +673,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var customerMode: CustomerMode
     var currency: Currency
     var amount: Amount
-    var merchantCountryCode: MerchantCountry
+    var merchant: Merchant
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
     var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage
@@ -733,7 +734,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             customerMode: .guest,
             currency: .usd,
             amount: ._5099,
-            merchantCountryCode: .US,
+            merchant: .US,
             apmsEnabled: .on,
             paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,
@@ -785,7 +786,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static let nsUserDefaultsCustomerIDKey = "PaymentSheetTestPlaygroundCustomerId"
     static let nsUserDefaultsAppearanceKey = "PaymentSheetTestPlaygroundAppearance"
 
-    static let baseEndpoint = "http://192.168.4.48:8081"
+    static let baseEndpoint = "http://localhost:8081"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"
     }

@@ -52,6 +52,7 @@ struct PMMETestPlayground: View {
 
     // ViewData
     @State private var viewData: PaymentMethodMessagingElement.ViewData?
+    @State private var viewDataIntegrationText: String? // text to show for viewdata integration style
 
     @State private var showUiKitSheet = false
 
@@ -118,13 +119,13 @@ struct PMMETestPlayground: View {
                         Text("loading")
                     case .noContent:
                         Text("no content")
-                    @unknown default:
-                        fatalError()
                     }
                 }
             case .viewData:
                 if let viewData {
                     PaymentMethodMessagingElement.View(viewData)
+                } else if let viewDataIntegrationText {
+                    Text(viewDataIntegrationText)
                 } else {
                     Text("loading")
                         .onAppear {
@@ -149,16 +150,18 @@ struct PMMETestPlayground: View {
     // Manual configuration for MVVM-style integration
     private func configure() {
         guard implementation == .viewData else { return }
+        viewDataIntegrationText = "loading"
         Task { @MainActor in
             switch await PaymentMethodMessagingElement.create(configuration: config) {
             case let .success(element):
                 self.viewData = element.viewData
+                viewDataIntegrationText = nil
             case .noContent:
-                print("no content")
+                self.viewData = nil
+                viewDataIntegrationText = "no content"
             case let .failed(error):
-                print("something went wrong: \(error.localizedDescription)")
-            @unknown default:
-                assertionFailure()
+                self.viewData = nil
+                viewDataIntegrationText = "something went wrong: \(error.localizedDescription)"
             }
         }
     }

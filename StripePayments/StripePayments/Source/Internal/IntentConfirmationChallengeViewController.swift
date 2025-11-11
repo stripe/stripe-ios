@@ -44,18 +44,12 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    override func loadView() {
-        // Create main view
-        view = UIView()
-        view.backgroundColor = .clear
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .clear
 
         setupWebView()
         setupConstraints()
-
         loadChallenge()
     }
 
@@ -82,6 +76,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.alpha = 0.0
 
         // Make webview transparent
         webView.isOpaque = false
@@ -186,18 +181,11 @@ class IntentConfirmationChallengeViewController: UIViewController {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3) {
                 self.webView.alpha = 1.0
-            } completion: { _ in
             }
         }
     }
 
     private func handleSuccess(_ result: Any?) {
-        #if DEBUG
-        if let result = result {
-            print("[IntentConfirmationChallenge] Success: \(result)")
-        }
-        #endif
-
         completion(.success(()))
     }
 
@@ -209,7 +197,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         completion(.failure(error))
     }
 
-    // MARK: - Security
+    /// Validates that the message comes from the expected Stripe origin
     private func isValidMessageOrigin(_ message: WKScriptMessage) -> Bool {
         let validHosts = ["pay.stripe.com", "js.stripe.com", "localhost"]
         let host = message.frameInfo.securityOrigin.host
@@ -256,14 +244,8 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
                let errorMessage = errorDict["message"] as? String {
                 let errorType = errorDict["type"] as? String ?? "unknown"
                 let errorCode = errorDict["code"] as? String
-                #if DEBUG
-                print("[IntentConfirmationChallenge] ❌ Error: type=\(errorType), message=\(errorMessage), code=\(errorCode ?? "none")")
-                #endif
                 handleError(ChallengeError.webError(message: errorMessage, type: errorType, code: errorCode))
             } else {
-                #if DEBUG
-                print("[IntentConfirmationChallenge] ❌ Error: \(message.body)")
-                #endif
                 handleError(ChallengeError.unknownError)
             }
 
@@ -323,24 +305,18 @@ extension IntentConfirmationChallengeViewController: WKUIDelegate {
 
 // MARK: - Errors
 enum ChallengeError: LocalizedError {
-    case invalidURL
-    case invalidOrigin
     case webError(message: String, type: String, code: String?)
     case navigationFailed(Error)
     case unknownError
 
     var errorDescription: String? {
         switch self {
-        case .invalidURL:
-            return "Invalid URL for intent confirmation challenge"
-        case .invalidOrigin:
-            return "Received message from invalid origin"
         case .webError(let message, _, _):
             return message
         case .navigationFailed(let error):
             return "Navigation failed: \(error.localizedDescription)"
         case .unknownError:
-            return NSError.stp_unexpectedErrorMessage()
+            return "Unknown error."
         }
     }
 }

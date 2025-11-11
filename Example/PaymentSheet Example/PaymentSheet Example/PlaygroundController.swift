@@ -840,8 +840,7 @@ extension PlaygroundController {
             "customer_key_type": settings.customerKeyType.rawValue,
             "currency": settings.currency.rawValue,
             "amount": settings.amount.rawValue,
-            "merchant": "stripe_shop_test",
-            "merchant_country_code": settings.merchantCountryCode.rawValue,
+            "merchant": settings.merchant.rawValue,
             "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
             "use_link": settings.linkPassthroughMode == .pm,
@@ -1095,7 +1094,7 @@ extension PlaygroundController {
     ) {
         var body = [
             "client_secret": clientSecret!,
-            "merchant_country_code": settings.merchantCountryCode.rawValue,
+            "merchant_country_code": settings.merchant.rawValue,
             "mode": intentConfig.mode.requestBody,
             "link_mode": settings.linkEnabledMode.rawValue,
             "return_url": configuration.returnURL ?? "",
