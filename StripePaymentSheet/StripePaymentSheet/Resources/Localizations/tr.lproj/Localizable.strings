@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "CVC kodunuzu onaylayın";
 
+"Confirm your information" = "Bilgilerinizi onaylayın";
+
 "Contact information" = "İletişim bilgileri";
 
 "Continue another way" = "Başka bir yöntemle devam et";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN'nin son 4 hanesi";
 
 "Log in or sign up" = "Oturum açın veya kaydolun";
 

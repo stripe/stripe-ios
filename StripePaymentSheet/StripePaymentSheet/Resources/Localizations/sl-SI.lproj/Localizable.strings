@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Potrdite svojo kodo CVC";
 
+"Confirm your information" = "Potrdite svoje podatke";
+
 "Contact information" = "Podatki za stik";
 
 "Continue another way" = "Nadaljuj na drug način";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Potrjujem, da bo družba Stripe zbirala direktne obremenitve v imenu podjetja %@ ter da sem lastnik računa in edina oseba, ki lahko odobri bremenitve s tega računa.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Zadnje 4 števke SSN";
 
 "Log in or sign up" = "Vpis ali prijava";
 

@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Confirmă CVC-ul";
 
+"Confirm your information" = "Confirmați-vă informațiile";
+
 "Contact information" = "Informații de contact";
 
 "Continue another way" = "Continuați într-un alt mod";
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Înțeleg că Stripe va colecta debite directe în numele %@ și confirm că sunt titularul contului și singura persoană necesară pentru a autoriza debite din acest cont.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Ultimele 4 cifre de la SSN";
 
 "Log in or sign up" = "Conectați-vă sau înregistrați-vă";
 

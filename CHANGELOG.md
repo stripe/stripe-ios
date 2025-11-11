@@ -1,6 +1,9 @@
-## X.Y.Z
+## X.Y.Z - changes pending release 
+
+## 25.0.1 2025-11-10
 ### PaymentSheet
 * [Fixed] Fixed an issue where async APIs did not run on the main thread.
+* [Fixed] Fixed a crash when presenting PaymentSheet with liquid glass navigation bar style from a view controller not embedded in a UINavigationController.
 
 ## 25.0.0 2025-11-03
 This major version introduces many small breaking changes. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.

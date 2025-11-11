@@ -398,6 +398,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     func enableNavigationBarBlurInteraction() {
         guard let navigationBarBlur,
             navigationBarBlur.view == nil,
+            navigationController != nil,
         // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
         NSClassFromString("XCTest") == nil else {
             return
