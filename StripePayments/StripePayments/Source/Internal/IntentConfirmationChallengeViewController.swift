@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 import UIKit
-import WebKit
+@preconcurrency import WebKit
 
 /// View controller for handling intent confirmation challenges via WebView
 /// This handles the `intent_confirmation_challenge` next action type by loading
