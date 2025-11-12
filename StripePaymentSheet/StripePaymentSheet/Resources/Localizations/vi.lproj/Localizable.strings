@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
-"Enter the code sent to %@." = "Nhập mã đã được gửi tới %s.";
+"Enter the code sent to %@." = "Nhập mã đã được gửi tới %@.";
 
 "FPX Bank" = "Ngân hàng FPX";
 

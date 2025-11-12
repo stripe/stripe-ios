@@ -128,7 +128,7 @@
 
 "Enter address manually" = "주소 직접 입력";
 
-"Enter the code sent to %@." = "%s번으로 보낸 코드를 입력해 주십시오.";
+"Enter the code sent to %@." = "%@번으로 보낸 코드를 입력해 주십시오.";
 
 "FPX Bank" = "FPX 은행";
 

@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
-"Enter the code sent to %@." = "Ievadiet kodu, kas nosūtīts uz %s.";
+"Enter the code sent to %@." = "Ievadiet kodu, kas nosūtīts uz %@.";
 
 "FPX Bank" = "FPX banka";
 

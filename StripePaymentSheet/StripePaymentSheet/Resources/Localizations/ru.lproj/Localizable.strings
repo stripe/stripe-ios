@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Введите адрес вручную";
 
-"Enter the code sent to %@." = "Введите код, отправленный на %s.";
+"Enter the code sent to %@." = "Введите код, отправленный на %@.";
 
 "FPX Bank" = "Банк FPX";
 
