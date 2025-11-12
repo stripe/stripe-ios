@@ -58,7 +58,7 @@ class AttestationChallengeTests: XCTestCase {
         let startTime = Date()
         let assertion = try await withTimeout(30) {
             await attestationChallenge.fetchAssertion()
-        }.get()?.flatMap { $0 }
+        }.get()
         // didn't take the full timeout time, exited early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
         XCTAssertNotNil(assertion)

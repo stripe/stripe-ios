@@ -255,25 +255,25 @@ extension PaymentSheet {
                     )
                     // MARK: ↪ Deferred Intent
                 case .deferredIntent(let intentConfig):
-                    routeDeferredIntentConfirmation(
-                        confirmType: .new(
-                            params: confirmParams.paymentMethodParams,
-                            paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                            shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
-                            shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
-                        ),
-                        configuration: configuration,
-                        intentConfig: intentConfig,
-                        authenticationContext: authenticationContext,
-                        paymentHandler: paymentHandler,
-                        isFlowController: isFlowController,
-                        allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                        elementsSession: elementsSession,
-                        completion: { result, confirmType in
-                            Task { await confirmationChallenge?.complete() }
-                            completion(result, confirmType)
-                        }
-                    )
+                    Task { @MainActor in
+                        let result = await routeDeferredIntentConfirmation(
+                            confirmType: .new(
+                                params: confirmParams.paymentMethodParams,
+                                paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                                shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
+                                shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                            ),
+                            configuration: configuration,
+                            intentConfig: intentConfig,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            isFlowController: isFlowController,
+                            allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                            elementsSession: elementsSession
+                        )
+                        await confirmationChallenge?.complete()
+                        completion(result.result, result.deferredIntentConfirmationType)
+                    }
                 }
             }
 
@@ -318,16 +318,18 @@ extension PaymentSheet {
                     ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
-                routeDeferredIntentConfirmation(
-                    confirmType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil),
-                    configuration: configuration,
-                    intentConfig: intentConfig,
-                    authenticationContext: authenticationContext,
-                    paymentHandler: paymentHandler,
-                    isFlowController: isFlowController,
-                    elementsSession: elementsSession,
-                    completion: completion
-                )
+                Task { @MainActor in
+                    let result = await routeDeferredIntentConfirmation(
+                        confirmType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil),
+                        configuration: configuration,
+                        intentConfig: intentConfig,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler,
+                        isFlowController: isFlowController,
+                        elementsSession: elementsSession
+                    )
+                    completion(result.result, result.deferredIntentConfirmationType)
+                }
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -380,26 +382,26 @@ extension PaymentSheet {
                             }
                         )
                     case .deferredIntent(let intentConfig):
-                        routeDeferredIntentConfirmation(
-                            confirmType: .new(
-                                params: paymentMethodParams,
-                                paymentOptions: STPConfirmPaymentMethodOptions(),
-                                shouldSave: shouldSave
-                            ),
-                            configuration: configuration,
-                            intentConfig: intentConfig,
-                            authenticationContext: authenticationContext,
-                            paymentHandler: paymentHandler,
-                            isFlowController: isFlowController,
-                            elementsSession: elementsSession,
-                            completion: { psResult, confirmationType in
-                                Task { await confirmationChallenge?.complete() }
-                                if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
-                                    linkAccount?.logout()
-                                }
-                                completion(psResult, confirmationType)
+                        Task { @MainActor in
+                            let result = await routeDeferredIntentConfirmation(
+                                confirmType: .new(
+                                    params: paymentMethodParams,
+                                    paymentOptions: STPConfirmPaymentMethodOptions(),
+                                    shouldSave: shouldSave
+                                ),
+                                configuration: configuration,
+                                intentConfig: intentConfig,
+                                authenticationContext: authenticationContext,
+                                paymentHandler: paymentHandler,
+                                isFlowController: isFlowController,
+                                elementsSession: elementsSession
+                            )
+                            if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
+                                linkAccount?.logout()
                             }
-                        )
+                            await confirmationChallenge?.complete()
+                            completion(result.result, result.deferredIntentConfirmationType)
+                        }
                     }
                 }
             }
@@ -457,22 +459,22 @@ extension PaymentSheet {
                             }
                         )
                     case .deferredIntent(let intentConfig):
-                        routeDeferredIntentConfirmation(
-                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
-                            configuration: configuration,
-                            intentConfig: intentConfig,
-                            authenticationContext: authenticationContext,
-                            paymentHandler: paymentHandler,
-                            isFlowController: isFlowController,
-                            elementsSession: elementsSession,
-                            completion: { psResult, confirmationType in
-                                Task { await confirmationChallenge?.complete() }
-                                if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
-                                    linkAccount?.logout()
-                                }
-                                completion(psResult, confirmationType)
+                        Task { @MainActor in
+                            let result = await routeDeferredIntentConfirmation(
+                                confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
+                                configuration: configuration,
+                                intentConfig: intentConfig,
+                                authenticationContext: authenticationContext,
+                                paymentHandler: paymentHandler,
+                                isFlowController: isFlowController,
+                                elementsSession: elementsSession
+                            )
+                            if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
+                                linkAccount?.logout()
                             }
-                        )
+                            await confirmationChallenge?.complete()
+                            completion(result.result, result.deferredIntentConfirmationType)
+                        }
                     }
                 }
             }

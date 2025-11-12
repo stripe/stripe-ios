@@ -119,8 +119,6 @@ struct PMMETestPlayground: View {
                         Text("loading")
                     case .noContent:
                         Text("no content")
-                    @unknown default:
-                        fatalError()
                     }
                 }
             case .viewData:
@@ -164,8 +162,6 @@ struct PMMETestPlayground: View {
             case let .failed(error):
                 self.viewData = nil
                 viewDataIntegrationText = "something went wrong: \(error.localizedDescription)"
-            @unknown default:
-                assertionFailure()
             }
         }
     }

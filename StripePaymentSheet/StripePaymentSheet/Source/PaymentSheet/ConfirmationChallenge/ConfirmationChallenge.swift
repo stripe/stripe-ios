@@ -67,8 +67,8 @@ actor ConfirmationChallenge {
         if case .failure(let error) = assertionResult, error is TimeoutError {
             STPAnalyticsClient.sharedClient.logAttestationConfirmationError(error: error, duration: Date().timeIntervalSince(startTime))
         }
-        let hcaptchaToken: String? = try? hcaptchaTokenResult.get()?.flatMap { $0 }
-        let assertion: StripeAttest.Assertion? = try? assertionResult.get()?.flatMap { $0 }
+        let hcaptchaToken: String? = try? hcaptchaTokenResult.get()
+        let assertion: StripeAttest.Assertion? = try? assertionResult.get()
         return (hcaptchaToken: hcaptchaToken, assertion: assertion)
     }
 

@@ -62,12 +62,16 @@ class PassiveCaptchaChallengeTests: XCTestCase {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: TestDelayHCaptchaFactory())
+        let startTime = Date()
         let hcaptchaTokenResult = await withTimeout(1) {
             try await passiveCaptchaChallenge.fetchToken()
         }
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 1.5)
         // should return TimeoutError
         XCTAssertFalse(hcaptchaTokenResult.success)
         XCTAssertThrowsError(try hcaptchaTokenResult.get())
+        let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
+        XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute"])
     }
 
     func testPassiveCaptchaLongTimeout() async throws {

@@ -92,7 +92,7 @@
 
 "Change" = "更改";
 
-"Choose a payment method" = "選擇一個支付方式";
+"Choose a payment method" = "選擇支付方式";
 
 "Close card scanner" = "關閉銀行卡掃描器";
 
@@ -109,6 +109,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@内在您的銀行應用中確認付款，完成購物。";
 
 "Confirm your CVC" = "請確認您的 CVC";
+
+"Confirm your information" = "確認您的資訊";
 
 "Contact information" = "聯絡資訊";
 
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "手動輸入地址";
 
-"Enter the code sent to %@." = "請輸入發送至 %s 的驗證碼。";
+"Enter the code sent to %@." = "請輸入發送至 %@ 的驗證碼。";
 
 "FPX Bank" = "FPX Bank";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 將代表 %@ 收取直接扣款，且確認我是該賬戶持有人，且是唯一一個需要授權該賬戶扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN 的最後 4 位數字";
 
 "Log in or sign up" = "登入或註冊";
 
@@ -212,7 +216,7 @@
 
 "Please choose a valid payment method." = "請選擇一個有效的支付方式。";
 
-"Please go back and select another payment method" = "請返回並選擇另一個支付方式。";
+"Please go back and select another payment method" = "請返回並選擇另一種支付方式";
 
 "Point the camera at your card." = "將相機正對銀行卡。";
 

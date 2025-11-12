@@ -8,19 +8,19 @@
 import Foundation
 
 @_spi(STP) public struct TimeoutError: Error {}
+@_spi(STP) public struct UnexpectedNilError: Error {}
 
-// MARK: - Timeout with TaskGroup and CheckedContinuation escape hatch
 /// Runs multiple operations in parallel with individual timeouts
 /// - Parameters:
 ///   - timeout: The maximum time interval to wait for each operation to complete
 ///   - operations: Variadic operations to run with timeout
-/// - Returns: Tuple of Results, where each Result contains either the task's value or its error
+/// - Returns: Tuple of Results in the order that the operations were passed in, where each Result contains either the operation's value or its error
  @_spi(STP) public func withTimeout<each T>(
     _ timeout: TimeInterval,
     _ operations: repeat @escaping () async throws -> each T
- ) async -> (repeat Result<(each T)?, Error>) {
+ ) async -> (repeat Result<each T, Error>) {
     // Wrap each operation with timeout logic
-    let timeoutTasks = (repeat Task<(each T)?, Error> {
+    let timeoutTasks = (repeat Task<each T, Error> {
         return try await withTimeout(timeout) { try await (each operations)() }
     })
 
@@ -32,15 +32,17 @@ import Foundation
 /// - Parameters:
 ///   - timeout: The maximum time interval to wait for the operation to complete
 ///   - operation: The operation to run with a timeout
-/// - Returns: A Task whose result contains either the operation's value or its error
+/// - Returns: The operation's value
 private func withTimeout<T>(
     _ timeout: TimeInterval,
     _ operation: @escaping () async throws -> T
-) async throws -> T? {
+) async throws -> T {
     let timeoutNs = UInt64(timeout) * 1_000_000_000
 
-    return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<T?, Error>) in
-        Task {
+    // TaskGroups don't return until all of its child tasks have completed, so we use a continuation to escape hatch out of the TaskGroup with the winner of the race (value or TimeoutError)
+    return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<T, Error>) in
+        Task(priority: .high) {
+            // Race the operation against a timeout
             await withThrowingTaskGroup(of: T.self) { group in
                 // Add the task
                 group.addTask {
@@ -53,13 +55,21 @@ private func withTimeout<T>(
                     throw TimeoutError()
                 }
 
+                // Cancel remaining task
                 defer {
                     group.cancelAll()
                 }
 
                 do {
-                    continuation.resume(returning: try await group.next())
+                    // Get the winner
+                    guard let result = try await group.next() else {
+                        stpAssertionFailure("Result could not be unwrapped.")
+                        throw UnexpectedNilError() // should never happen; only nil when group is empty
+                    }
+                    // Operation finished before the timeout
+                    continuation.resume(returning: result)
                 } catch {
+                    // Operation timed out
                     continuation.resume(throwing: error)
                 }
             }

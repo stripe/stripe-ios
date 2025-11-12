@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Je CVC bevestigen";
 
+"Confirm your information" = "Bevestig je gegevens";
+
 "Contact information" = "Contactgegevens";
 
 "Continue another way" = "Op een andere manier doorgaan";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "Adres handmatig invoeren";
 
-"Enter the code sent to %@." = "Voer de code in die is verstuurd naar %s.";
+"Enter the code sent to %@." = "Voer de code in die is verstuurd naar %@.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ik begrijp dat Stripe namens %@ bedragen via automatische incasso gaat afschrijven en ik bevestig dat ik als rekeninghouder de enige vereiste persoon ben om afschrijvingen van deze rekening te autoriseren.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Laatste 4 cijfers van BSN";
 
 "Log in or sign up" = "Aanmelden of registreren";
 

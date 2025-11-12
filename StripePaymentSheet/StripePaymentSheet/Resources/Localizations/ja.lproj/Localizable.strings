@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "セキュリティコードを確定";
 
+"Confirm your information" = "情報を確認する";
+
 "Contact information" = "連絡先情報";
 
 "Continue another way" = "別の方法で続行";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "住所を手動で入力";
 
-"Enter the code sent to %@." = "%s に送信されたコードを入力してください。";
+"Enter the code sent to %@." = "%@ に送信されたコードを入力してください。";
 
 "FPX Bank" = "FPX 銀行";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "私は、Stripe が %@ の代理として口座引き落としによる回収を行うことを理解しています。また、私が当該口座を保有しており、この口座からの引き落としを承認すべき唯一の人間であることを認めます。";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN の末尾 4 桁";
 
 "Log in or sign up" = "ログイン / 登録";
 

@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "确认您的 CVC";
 
+"Confirm your information" = "确认您的信息";
+
 "Contact information" = "联系信息";
 
 "Continue another way" = "用另一方式继续";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "手动输入地址";
 
-"Enter the code sent to %@." = "请输入发送至 %s 的验证码。";
+"Enter the code sent to %@." = "请输入发送至 %@ 的验证码。";
 
 "FPX Bank" = "FPX 银行";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "我理解 Stripe 将代表 %@ 收取直接借记，且确认我是该账户持有人，且是唯一一个需要授权该账户扣款的人。";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "社会保障号码 (SSN) 最后 4 位";
 
 "Log in or sign up" = "登录或注册";
 

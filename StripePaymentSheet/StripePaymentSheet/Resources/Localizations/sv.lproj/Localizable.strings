@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Bekräfta din CVC-kod";
 
+"Confirm your information" = "Bekräfta informationen";
+
 "Contact information" = "Kontaktinformation";
 
 "Continue another way" = "Fortsätt på ett annat sätt";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "Ange adress manuellt";
 
-"Enter the code sent to %@." = "Ange koden som skickades till %s.";
+"Enter the code sent to %@." = "Ange koden som skickades till %@.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jag är införstådd med att Stripe samlar in autogireringar på uppdrag av %@ och bekräftar att jag är kontoinnehavaren och den enda person som krävs för att godkänna debiteringar från detta konto.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Sista 4 siffrorna i SSN";
 
 "Log in or sign up" = "Logga in eller registrera dig";
 

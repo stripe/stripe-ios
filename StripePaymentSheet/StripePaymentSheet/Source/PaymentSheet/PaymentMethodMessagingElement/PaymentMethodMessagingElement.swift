@@ -21,7 +21,7 @@ public class PaymentMethodMessagingElement {
     }()
 
     /// The result of an attempt to create a PaymentMethodMessagingElement.
-    public enum CreationResult {
+    @frozen public enum CreationResult {
 
         /// The PaymentMethodMessagingElement was success fully created.
         /// - Parameter PaymentMethodMessagingElement: The created Element object.

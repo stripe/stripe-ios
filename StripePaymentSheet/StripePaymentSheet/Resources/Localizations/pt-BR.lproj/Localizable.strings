@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Confirme seu CVC";
 
+"Confirm your information" = "Confirme seus dados";
+
 "Contact information" = "Dados de contato";
 
 "Continue another way" = "Continuar de outro modo";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "Inserir endereço manualmente";
 
-"Enter the code sent to %@." = "Insira o código enviado para %s.";
+"Enter the code sent to %@." = "Insira o código enviado para %@.";
 
 "FPX Bank" = "Banco do FPX";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entendo que a Stripe fará débitos automáticos em nome de %@ e confirmo que sou titular da conta e a única pessoa necessária para autorizar débitos nesta conta.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Últimos 4 dígitos do SSN";
 
 "Log in or sign up" = "Faça login ou registre-se";
 
