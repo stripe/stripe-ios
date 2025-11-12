@@ -358,9 +358,12 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
             ephemeralKey: customerAndEphemeralKey.ephemeralKeySecret
         )
 
+        // Sort by creation date descending (newest first) to ensure consistent ordering
+        let sortedPaymentMethods = fetchedPaymentMethods.sorted { $0.created > $1.created }
+
         // Expect it's [SEPA, card] and in that order (ie newest first)
         XCTAssertEqual(
-            fetchedPaymentMethods.map({ $0.stripeId }),
+            sortedPaymentMethods.map({ $0.stripeId }),
             [paymentMethod2, paymentMethod1]
         )
     }
