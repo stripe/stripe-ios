@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
 
-"Enter the code sent to %@." = "Εισαγάγετε τον κωδικό που στάλθηκε στο %s.";
+"Enter the code sent to %@." = "Εισαγάγετε τον κωδικό που στάλθηκε στο %@.";
 
 "FPX Bank" = "FPX Bank";
 

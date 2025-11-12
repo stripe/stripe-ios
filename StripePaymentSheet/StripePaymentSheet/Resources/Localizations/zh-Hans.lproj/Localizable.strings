@@ -130,7 +130,7 @@
 
 "Enter address manually" = "手动输入地址";
 
-"Enter the code sent to %@." = "请输入发送至 %s 的验证码。";
+"Enter the code sent to %@." = "请输入发送至 %@ 的验证码。";
 
 "FPX Bank" = "FPX 银行";
 

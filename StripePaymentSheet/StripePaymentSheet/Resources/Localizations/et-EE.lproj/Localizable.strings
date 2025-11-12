@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
-"Enter the code sent to %@." = "Sisestage kood, mis saadeti numbrile %s.";
+"Enter the code sent to %@." = "Sisestage kood, mis saadeti numbrile %@.";
 
 "FPX Bank" = "FPX Bank";
 

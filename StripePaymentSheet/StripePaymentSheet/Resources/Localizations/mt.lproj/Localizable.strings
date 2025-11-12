@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
 
-"Enter the code sent to %@." = "Daħħal il-kodiċi li bgħatna lil %s.";
+"Enter the code sent to %@." = "Daħħal il-kodiċi li bgħatna lil %@.";
 
 "FPX Bank" = "FPX Bank";
 

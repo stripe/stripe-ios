@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
-"Enter the code sent to %@." = "Syötä koodi, joka lähetettiin numeroon %s.";
+"Enter the code sent to %@." = "Syötä koodi, joka lähetettiin numeroon %@.";
 
 "FPX Bank" = "FPX-pankki";
 

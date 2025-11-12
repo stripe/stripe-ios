@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
-"Enter the code sent to %@." = "Masukkan kod yang dihantar ke %s.";
+"Enter the code sent to %@." = "Masukkan kod yang dihantar ke %@.";
 
 "FPX Bank" = "Bank untuk FPX";
 

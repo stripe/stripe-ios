@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
-"Enter the code sent to %@." = "Angi koden som er sendt til %s.";
+"Enter the code sent to %@." = "Angi koden som er sendt til %@.";
 
 "FPX Bank" = "FPX Bank";
 

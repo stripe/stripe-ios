@@ -130,7 +130,7 @@
 
 "Enter address manually" = "Introduceți adresa manual";
 
-"Enter the code sent to %@." = "Introduceți codul trimis la %s.";
+"Enter the code sent to %@." = "Introduceți codul trimis la %@.";
 
 "FPX Bank" = "FPX Bank";
 
