@@ -24,7 +24,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private var webView: WKWebView!
 
     // Hard-coded challenge URL
-    private let challengeURL = URL(string: "http://localhost:3004")!
+    private let challengeURL = URL(string: "https://mobile-active-challenge-764603794666.us-central1.run.app/")!
 
     // MARK: - Initialization
     init(
