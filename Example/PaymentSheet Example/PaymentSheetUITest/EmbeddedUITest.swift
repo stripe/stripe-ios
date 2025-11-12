@@ -165,7 +165,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.customerKeyType = .customerSession
         settings.confirmationMode = .confirmationToken
         settings.customerMode = .new
-        settings.merchantCountryCode = .FR
+        settings.merchant = .FR
         settings.currency = .eur
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
@@ -254,7 +254,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.formSheetAction = .confirm
         settings.customerKeyType = .legacy
         settings.customerMode = .new
-        settings.merchantCountryCode = .FR
+        settings.merchant = .FR
         settings.currency = .eur
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
@@ -323,7 +323,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.integrationType = .deferred_csc
         settings.customerKeyType = .customerSession
         settings.customerMode = .returning
-        settings.merchantCountryCode = .FR
+        settings.merchant = .FR
         settings.currency = .eur
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
@@ -359,7 +359,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.uiStyle = .embedded
         settings.customerKeyType = .legacy
         settings.customerMode = .returning
-        settings.merchantCountryCode = .US
+        settings.merchant = .US
         settings.currency = .usd
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
@@ -434,7 +434,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.integrationType = .deferred_csc
         settings.customerKeyType = .legacy
         settings.customerMode = .returning
-        settings.merchantCountryCode = .US
+        settings.merchant = .US
         settings.currency = .usd
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
@@ -577,7 +577,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.customerMode = .returning
         settings.mode = .setup
         settings.applePayEnabled = .on
-        settings.merchantCountryCode = .US
+        settings.merchant = .US
         settings.currency = .usd
         loadPlayground(app, settings)
 
@@ -1080,7 +1080,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         settings.uiStyle = .embedded
         settings.formSheetAction = .continue
         settings.currency = .sgd
-        settings.merchantCountryCode = .SG
+        settings.merchant = .SG
         loadPlayground(app, settings)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
 

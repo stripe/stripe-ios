@@ -186,7 +186,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
 
         // Using GB for web-based Link merchant account
-        settings.merchantCountryCode = .GB
+        settings.merchant = .GB
         settings.mode = .payment
         settings.layout = .vertical
         loadPlayground(app, settings)
@@ -204,7 +204,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.customerMode = .returning
         settings.currency = .eur
         settings.layout = .vertical
-        settings.merchantCountryCode = .FR
+        settings.merchant = .FR
         settings.mode = .setup
         loadPlayground(app, settings)
 
