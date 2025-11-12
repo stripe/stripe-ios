@@ -18,6 +18,8 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        /// Network metrics for the Elements/Sessions call (if available)
+        let elementsSessionNetworkMetrics: NetworkMetrics?
     }
 
     enum IntegrationShape {
@@ -177,11 +179,16 @@ final class PaymentSheetLoader {
                 guard !paymentMethodTypes.isEmpty else {
                     throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
                 }
+
+                // Capture network metrics for Elements/Sessions call
+                let networkMetrics = STPAPIClient.networkMetricsDelegate?.lastElementsSessionMetrics
+
                 analyticsHelper.logLoadSucceeded(
                     intent: intent,
                     elementsSession: elementsSession,
                     defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
-                    orderedPaymentMethodTypes: paymentMethodTypes
+                    orderedPaymentMethodTypes: paymentMethodTypes,
+                    networkMetrics: networkMetrics
                 )
                 if integrationShape.shouldStartCheckoutMeasurementOnLoad {
                     analyticsHelper.startTimeMeasurement(.checkout)
@@ -195,8 +202,10 @@ final class PaymentSheetLoader {
                     intent: intent,
                     elementsSession: elementsSession,
                     savedPaymentMethods: filteredSavedPaymentMethods,
-                    paymentMethodTypes: paymentMethodTypes
+                    paymentMethodTypes: paymentMethodTypes,
+                    elementsSessionNetworkMetrics: networkMetrics
                 )
+
                 completion(.success(loadResult))
             } catch {
                 analyticsHelper.logLoadFailed(error: error)

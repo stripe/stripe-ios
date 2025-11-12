@@ -122,7 +122,8 @@ final class PaymentSheetAnalyticsHelper {
         intent: Intent,
         elementsSession: STPElementsSession,
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
-        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        networkMetrics: NetworkMetrics?
     ) {
         stpAssert(loadingStartDate != nil)
         self.intent = intent
@@ -166,6 +167,11 @@ final class PaymentSheetAnalyticsHelper {
 
         params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
         params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
+
+        // Add network metrics if available
+        if let metrics = networkMetrics {
+            params.mergeAssertingOnOverwrites(metrics.analyticsPayload(prefix: "elements_session_"))
+        }
 
         log(
             event: .paymentSheetLoadSucceeded,

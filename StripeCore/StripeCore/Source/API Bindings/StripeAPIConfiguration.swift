@@ -16,6 +16,10 @@ import Foundation
     #if DEBUG
     /// If true, embed the params in an X-Stripe-Mock-Request header for network mocking.
     @_spi(STP) public static var includeDebugParamsHeader = false
+
+    /// If true, enables detailed network metrics logging for performance debugging.
+    /// This will log DNS lookup time, connection establishment, TLS handshake, server processing, etc.
+    @_spi(STP) public static var enableNetworkMetricsLogging = true
     #endif
 
 }
