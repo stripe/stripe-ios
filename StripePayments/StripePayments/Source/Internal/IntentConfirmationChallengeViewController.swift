@@ -173,16 +173,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
         }
     }
 
-    private func completeChallenge(with result: Result<Void, Error>) {
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.7) {
-                self.dimmedBackgroundView.alpha = 0
-                self.webView.alpha = 0
-            }
-        }
-        completion(result)
-    }
-
     // MARK: - Handlers
     private func handleReady() {
         DispatchQueue.main.async {
@@ -193,7 +183,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     private func handleSuccess() {
-        completeChallenge(with: .success(()))
+        completion(.success(()))
     }
 
     private func handleError(_ error: Error) {
@@ -201,7 +191,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         print("[IntentConfirmationChallenge] Error: \(error)")
         #endif
 
-        completeChallenge(with: .failure(error))
+        completion(.failure(error))
     }
 
     /// Validates that the message comes from the expected Stripe origin
