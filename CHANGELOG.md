@@ -1,5 +1,5 @@
 ## X.Y.Z - changes pending release
-### Payments
+### PaymentSheet
 * [Added] Added `card` property to `STPPaymentMethodPreview` to expose card details (brand, country, exp_month, exp_year, funding, last4, display_brand) from ConfirmationTokens.
 
 ## 25.0.1 2025-11-10
