@@ -25,6 +25,23 @@ enum PaymentMethodMessagingElementError: Error, LocalizedError {
 
 extension PaymentMethodMessagingElement {
 
+    /// Internal version of create() that allows injection of a DownloadManager for testing.
+    /// - Parameter configuration: Configuration for the PaymentMethodMessagingElement.
+    /// - Parameter downloadManager: The DownloadManager instance to use for downloading images.
+    /// - Returns: A `CreationResult` object representing the result of the attempt to load the element.
+    static func create(configuration: Configuration, downloadManager: DownloadManager) async -> CreationResult {
+        do {
+            let apiResponse = try await get(configuration: configuration)
+            if let pmme = try await PaymentMethodMessagingElement(apiResponse: apiResponse, configuration: configuration, downloadManager: downloadManager) {
+                return .success(pmme)
+            } else {
+                return .noContent
+            }
+        } catch {
+            return .failed(error)
+        }
+    }
+
     enum Mode: Equatable {
         case singlePartner(logo: LogoSet)
         case multiPartner(logos: [LogoSet])
@@ -41,7 +58,7 @@ extension PaymentMethodMessagingElement {
 
     // Initialize element from API response
     // Uses this logic tree: https://trailhead.corp.stripe.com/docs/payment-method-messaging/pmme-platform/elements-mobile
-    convenience init?(apiResponse: APIResponse, configuration: Configuration) async throws {
+    convenience init?(apiResponse: APIResponse, configuration: Configuration, downloadManager: DownloadManager = .sharedManager) async throws {
         if apiResponse.paymentPlanGroups.count == 1, let paymentPlan = apiResponse.paymentPlanGroups.first {
             // case 1: 1 payment plan
 
@@ -57,7 +74,8 @@ extension PaymentMethodMessagingElement {
             }
             guard let logo = try await Self.getIconSet(
                 for: paymentPlan.content.images,
-                style: configuration.appearance.style
+                style: configuration.appearance.style,
+                downloadManager: downloadManager
             ).first else {
                 // This should never happen, but if it does we log an error and attempt to fall back to a multi-partner style
                 //      (so that we can use the promotion text, which doesn't require a logo, instead of inline) without logos
@@ -101,7 +119,8 @@ extension PaymentMethodMessagingElement {
             let apiImages = apiResponse.paymentPlanGroups.flatMap { $0.content.images }
             let logos = try await Self.getIconSet(
                 for: apiImages,
-                style: configuration.appearance.style
+                style: configuration.appearance.style,
+                downloadManager: downloadManager
             )
 
             // success
@@ -114,7 +133,7 @@ extension PaymentMethodMessagingElement {
         }
     }
 
-    private static func getIconSet(for iconUrls: [APIResponse.Image], style: Appearance.UserInterfaceStyle) async throws -> [LogoSet] {
+    private static func getIconSet(for iconUrls: [APIResponse.Image], style: Appearance.UserInterfaceStyle, downloadManager: DownloadManager) async throws -> [LogoSet] {
         // Fetch all images concurrently
         // We want to preserve the order of the icons as provided by the API,
         //     so we have tasks return their index along with the image
@@ -127,8 +146,8 @@ extension PaymentMethodMessagingElement {
                     //     since the device interface style may change at any time
                     //     and we don't want to have to re-fetch the images
                     taskGroup.addTask {
-                        async let lightImage = DownloadManager.sharedManager.downloadImage(url: image.lightThemePng.url)
-                        async let darkImage = DownloadManager.sharedManager.downloadImage(url: image.darkThemePng.url)
+                        async let lightImage = downloadManager.downloadImage(url: image.lightThemePng.url)
+                        async let darkImage = downloadManager.downloadImage(url: image.darkThemePng.url)
                         let (light, dark) = try await (lightImage, darkImage)
                         return (index: i, iconSet: LogoSet(light: light, dark: dark, altText: image.text))
                     }
@@ -136,17 +155,17 @@ extension PaymentMethodMessagingElement {
                     // For all non-automatic styles, we fetch one image and use it for
                     //     both light and dark
                     taskGroup.addTask {
-                        let lightImage = try await DownloadManager.sharedManager.downloadImage(url: image.lightThemePng.url)
+                        let lightImage = try await downloadManager.downloadImage(url: image.lightThemePng.url)
                         return (index: i, iconSet: LogoSet(light: lightImage, dark: lightImage, altText: image.text))
                     }
                 case .alwaysDark:
                     taskGroup.addTask {
-                        let darkImage = try await DownloadManager.sharedManager.downloadImage(url: image.darkThemePng.url)
+                        let darkImage = try await downloadManager.downloadImage(url: image.darkThemePng.url)
                         return (index: i, iconSet: LogoSet(light: darkImage, dark: darkImage, altText: image.text))
                     }
                 case .flat:
                     taskGroup.addTask {
-                        let flatImage = try await DownloadManager.sharedManager.downloadImage(url: image.flatThemePng.url)
+                        let flatImage = try await downloadManager.downloadImage(url: image.flatThemePng.url)
                         return (index: i, iconSet: LogoSet(light: flatImage, dark: flatImage, altText: image.text))
 
                     }
