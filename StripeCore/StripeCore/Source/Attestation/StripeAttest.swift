@@ -235,6 +235,8 @@ import UIKit
         defer { attestationTask = nil } // Clear the task after it's done
         do {
             try await task.value
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .attestationFailed, error: error)
             if let apiClient {
@@ -244,6 +246,7 @@ import UIKit
         }
     }
     private var attestationTask: Task<Void, Error>?
+    private var keyGenerationTask: Task<String, Error>?
 
     private var assertionInProgress: Bool = false
     private var assertionWaiters: [CheckedContinuation<Void, Error>] = []
@@ -291,6 +294,9 @@ import UIKit
     }
 
     func _attest() async throws {
+        // Check at entry point
+        try Task.checkCancellation()
+
         // It's dangerous to attest, as it increments a permanent counter for the device.
         // Check if we've reached the daily limit of attempts.
         let now = Date()
@@ -330,6 +336,9 @@ import UIKit
 
         let deviceId = try await getDeviceID()
         let appId = try getAppID()
+
+        // Check before expensive operation
+        try Task.checkCancellation()
 
         do {
             let attestation = try await appAttestService.attestKey(keyId, clientDataHash: hash)
@@ -371,8 +380,18 @@ import UIKit
         if let keyId = storedKeyID {
             return keyId
         }
+        // Check if another task is already generating a key
+        if let existingTask = keyGenerationTask {
+            return try await existingTask.value
+        }
         // If we don't have a key, generate one.
-        return try await self.createKey()
+        let task = Task<String, Error> {
+            try await createKey()
+        }
+        keyGenerationTask = task
+        defer { keyGenerationTask = nil }
+
+        return try await task.value
     }
 
     @_spi(STP) public func resetKey() {
@@ -442,6 +461,10 @@ import UIKit
             // For other errors, we'll want to retry attestation later with the same key.
             throw error
         }
+    }
+
+    public func cancel() {
+        attestationTask?.cancel()
     }
 
     // MARK: Assertion concurrency

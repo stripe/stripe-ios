@@ -42,8 +42,9 @@ class LinkEmailElement: Element {
             trailing: theme.textFieldInsets.trailing
         )
         if let infoView = infoView {
+            // Use stack view's custom spacing instead of manual constraints to avoid conflicts
+            stackView.setCustomSpacing(ElementsUI.contentViewInsets.trailing, after: activityIndicator)
             NSLayoutConstraint.activate([
-                activityIndicator.trailingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: -ElementsUI.contentViewInsets.trailing),
                 infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth),
             ])
         }

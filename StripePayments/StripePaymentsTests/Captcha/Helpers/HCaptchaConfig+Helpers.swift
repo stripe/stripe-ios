@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@testable import StripePayments
+@_spi(STP) @testable import StripePayments
 
 extension HCaptchaConfig {
     init(html: String = HCaptchaHtml.template,

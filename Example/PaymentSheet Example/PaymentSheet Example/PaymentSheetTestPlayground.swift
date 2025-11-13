@@ -42,6 +42,7 @@ struct PaymentSheetTestPlayground: View {
                 .textInputAutocapitalization(.never)
         }
         SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
+        SettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation)
         Group {
             if playgroundController.settings.merchant == .US {
                 SettingView(setting: linkEnabledModeBinding)

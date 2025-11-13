@@ -354,7 +354,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x-edge
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_0
@@ -420,7 +420,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x-edge
+        stack: osx-xcode-26.1.x
   test-builds-xcode-26-release:
     steps:
     - script@1:
@@ -433,7 +433,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x-edge
+        stack: osx-xcode-26.1.x
   install-tests:
     steps:
     - fastlane@3:

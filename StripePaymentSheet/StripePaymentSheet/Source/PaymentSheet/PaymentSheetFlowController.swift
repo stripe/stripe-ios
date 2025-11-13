@@ -278,7 +278,7 @@ extension PaymentSheet {
 
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
-        private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+        private var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
 
         // MARK: - Initializer (Internal)
@@ -293,10 +293,8 @@ extension PaymentSheet {
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsViewState: self.walletButtonsViewState)
             self.viewController.flowControllerDelegate = self
-            if configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
-                self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
-                self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
-            }
+            self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: self.configuration.enablePassiveCaptcha, enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+            self.viewController.confirmationChallenge = self.confirmationChallenge
             updatePaymentOption()
         }
 
@@ -499,7 +497,7 @@ extension PaymentSheet {
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
-                passiveCaptchaChallenge: passiveCaptchaChallenge,
+                confirmationChallenge: confirmationChallenge,
                 callback: completionCallback
             )
         }
@@ -567,7 +565,7 @@ extension PaymentSheet {
                     paymentOption: paymentOption,
                     paymentHandler: paymentHandler,
                     integrationShape: .flowController,
-                    passiveCaptchaChallenge: passiveCaptchaChallenge,
+                    confirmationChallenge: confirmationChallenge,
                     analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
                     analyticsHelper.logPayment(
@@ -832,7 +830,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var passiveCaptchaChallenge: PassiveCaptchaChallenge? { get set }
+    var confirmationChallenge: ConfirmationChallenge? { get set }
     func clearSelection()
 }
 
