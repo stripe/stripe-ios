@@ -1,0 +1,98 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3ST2vFFY0qyl6XeW0Q1RCvQJ\/refresh$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2h_g_AdPmnGwEyRd5ZS5xH3WViNKVOWERf7cNlAPwQrTsWPQyGiwlACmZJ-ZB2_HQ9-flx6IDL0Uoxj6
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_HAgciNJTVmvNBW
+Content-Length: 1738
+Vary: Origin
+Date: Thu, 13 Nov 2025 15:58:58 GMT
+original-request: req_HAgciNJTVmvNBW
+stripe-version: 2020-08-27
+idempotency-key: 722eb14b-5ece-4049-90c5-be5a0f315624
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3ST2vFFY0qyl6XeW0Q1RCvQJ_secret_gVxbs0xxvQ8H6CDSkEH09Rm8Z&expand\[0]=payment_method
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_TPsgQF9v8OAHGBfq7kUx6PbgnDgbCu4?useWebAuthSession=true&followRedirectsInSDK=true"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "klarna" : {
+
+    },
+    "id" : "pm_1ST2vEFY0qyl6XeWt7642v90",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : "US",
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1763049536,
+    "allow_redisplay" : "unspecified",
+    "type" : "klarna",
+    "customer" : null
+  },
+  "client_secret" : "pi_3ST2vFFY0qyl6XeW0Q1RCvQJ_secret_gVxbs0xxvQ8H6CDSkEH09Rm8Z",
+  "id" : "pi_3ST2vFFY0qyl6XeW0Q1RCvQJ",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "klarna"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1763049537,
+  "description" : null
+}

@@ -1,0 +1,18 @@
+POST
+https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
+200
+text/html
+Content-Type: text/html;charset=utf-8
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Set-Cookie: rack.session=xHUXjIaagClIOCTf4ZPdSnPBs9Ijdo6u%2B0aVrrq469v6iS5N%2BX7baq4m49LabSTTpgl%2BOFSPQ%2BUA4hWOta6Ro9U8KyBWSh50KuRNdx%2FfamzQJNdXj9HdHAcvsdLgjFd14mAd%2Fpgfp0xQKxzc4%2Bg9VeXqhZXApuN9lVcZjEgxmgT9V4tXzoylQ9y9J8FJSzVxm9hEHRGCcYEf0n0iy7euidcqrjjZqMFFxn4sfwPBrAA%3D; path=/
+Server: Google Frontend
+x-cloud-trace-context: e0abb9fa3ab695461d8b21d789c2424e
+Via: 1.1 google
+x-xss-protection: 1; mode=block
+Date: Thu, 13 Nov 2025 15:53:24 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 196
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+
+{"intent":"pi_3ST2psFY0qyl6XeW0h9gZU9g","secret":"pi_3ST2psFY0qyl6XeW0h9gZU9g_secret_rZ6LrYqxYuuKLpraPmgWskdQo","status":"succeeded","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}

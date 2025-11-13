@@ -1,0 +1,88 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3ST2l6Goesj9fw9Q0m18DQ5O\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=p_UqiPpOS9dDPQs1K1ZHkzAfMq5EeaSdilY_jGTPiMrdpiaNUVC3DxLA5rbvMnyQwrSodid_0YGVty7Z
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_rqOY112e0fcmKP
+Content-Length: 1489
+Vary: Origin
+Date: Thu, 13 Nov 2025 15:48:29 GMT
+original-request: req_rqOY112e0fcmKP
+stripe-version: 2020-08-27
+idempotency-key: 14ca51f0-a7bc-42c6-a365-8ea78ea0a42f
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3ST2l6Goesj9fw9Q0m18DQ5O_secret_67LKypafzmS6Xn7WAvsTIesLb&confirmation_token=ctoken_1ST2l6Goesj9fw9QB4PE0MFL&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "processing",
+  "object" : "payment_intent",
+  "currency" : "gbp",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1ST2l5Goesj9fw9QWA8w6ngw",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : "CA",
+        "country" : "US",
+        "line2" : "",
+        "city" : "South San Francisco",
+        "line1" : "354 Oyster Point Blvd",
+        "postal_code" : "94080"
+      }
+    },
+    "livemode" : false,
+    "bacs_debit" : {
+      "fingerprint" : "t1p3TcYKGDRQAC4o",
+      "last4" : "2345",
+      "sort_code" : "108800"
+    },
+    "allow_redisplay" : "unspecified",
+    "created" : 1763048908,
+    "customer" : null,
+    "type" : "bacs_debit"
+  },
+  "client_secret" : "pi_3ST2l6Goesj9fw9Q0m18DQ5O_secret_67LKypafzmS6Xn7WAvsTIesLb",
+  "id" : "pi_3ST2l6Goesj9fw9Q0m18DQ5O",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "bacs_debit"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1763048908,
+  "description" : null
+}
