@@ -27,6 +27,9 @@ public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     private(set) public var customerId: String?
 
+    /// If this is a card PaymentMethod, this contains the user's card details.
+    private(set) public var card: STPPaymentMethodCard?
+
     /// :nodoc:
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
@@ -62,6 +65,13 @@ public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
         // Parse customer ID
         paymentMethodPreview.customerId = response["customer"] as? String
 
+        // Parse card details
+        if let cardDict = response["card"] as? [AnyHashable: Any] {
+            paymentMethodPreview.card = STPPaymentMethodCard.decodedObject(fromAPIResponse: cardDict)
+        } else {
+            paymentMethodPreview.card = nil
+        }
+
         return paymentMethodPreview
     }
 
@@ -77,6 +87,7 @@ public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
             "billing_details = \(billingDetails?.description ?? "nil")",
             "allow_redisplay = \(allowRedisplay.rawValue)",
             "customer = \(customerId ?? "nil")",
+            "card = \(card?.description ?? "nil")",
         ]
 
         return "<\(props.joined(separator: "; "))>"
