@@ -8,7 +8,7 @@
 
 "Default payment method was not updated. Please try again." = "Le mode de paiement par défaut n'a pas été mis à jour. Veuillez réessayer.";
 
-"Enter the code sent to %@." = "Saisir le code envoyé à [ %s].";
+"Enter the code sent to %@." = "Saisir le code envoyé à %@.";
 
 "Failed to connect" = "Échec de la connexion";
 
