@@ -60,7 +60,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         dimmedBackgroundView = UIView()
         dimmedBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         dimmedBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        dimmedBackgroundView.alpha = 0
+        dimmedBackgroundView.alpha = 0 // Initially hidden
 
         view.addSubview(dimmedBackgroundView)
 
@@ -166,17 +166,13 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private func loadChallenge() {
         let request = URLRequest(url: challengeURL)
         webView.load(request)
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.7) {
-                self.dimmedBackgroundView.alpha = 1.0
-            }
-        }
     }
 
     // MARK: - Handlers
     private func handleReady() {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.7) {
+                self.dimmedBackgroundView.alpha = 1.0
                 self.webView.alpha = 1.0
             }
         }

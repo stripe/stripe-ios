@@ -1979,7 +1979,7 @@ public class STPPaymentHandler: NSObject {
         let doChallenge: STPVoidBlock = {
             challengeVC.modalPresentationStyle = .overFullScreen
             challengeVC.modalTransitionStyle = .crossDissolve
-            presentingVC.present(challengeVC, animated: false, completion: nil)
+            presentingVC.present(challengeVC, animated: true, completion: nil)
         }
 
         if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
