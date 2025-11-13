@@ -9,7 +9,7 @@
 import Foundation
 
 /// Status types for an STPSetupIntent
-@objc public enum STPSetupIntentStatus: Int {
+@objc @frozen public enum STPSetupIntentStatus: Int {
     /// Unknown status
     case unknown
     /// This SetupIntent requires a PaymentMethod
@@ -29,7 +29,7 @@ import Foundation
 
 /// Indicates how the payment method is intended to be used in the future.
 /// - seealso: https://stripe.com/docs/api/setup_intents/create#create_setup_intent-usage
-@objc public enum STPSetupIntentUsage: Int {
+@objc @frozen public enum STPSetupIntentUsage: Int {
     /// Unknown value.  Update your SDK, or use `allResponseFields` for custom handling.
     case unknown
     /// No value was provided.

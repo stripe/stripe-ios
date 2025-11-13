@@ -77,7 +77,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
     func testUpdateVerificationPageData() throws {
         let mockVerificationData = VerificationPageDataUpdateMock.default
         let encodedMockVerificationData = URLEncoder.queryString(
-            from: try mockVerificationData.encodeJSONDictionary()
+            from: try StripeJSONEncoder().encodeJSONDictionary(mockVerificationData)
         )
 
         let mockVerificationPageData = VerificationPageDataMock.response200

@@ -11,7 +11,7 @@ import UIKit
 
 /// The various funding sources for a payment card.
 @objc
-public enum STPCardFundingType: Int {
+@frozen public enum STPCardFundingType: Int {
     /// Debit card funding
     case debit
     /// Credit card funding

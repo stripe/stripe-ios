@@ -10,7 +10,7 @@ import Foundation
 
 /// Possible Token types
 @objc
-public enum STPTokenType: Int {
+@frozen public enum STPTokenType: Int {
     /// Account token type
     case account = 0
     /// Bank account token type

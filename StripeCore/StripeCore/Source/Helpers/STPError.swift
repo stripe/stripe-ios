@@ -297,7 +297,7 @@ extension NSError {
 ///
 /// These values will come back in the error `userInfo` dictionary
 /// under the `STPCardErrorCodeKey` key.
-public enum STPCardErrorCode: String {
+@frozen public enum STPCardErrorCode: String {
     /// The card number is not a valid credit card number.
     case invalidNumber = "com.stripe.lib:InvalidNumber"
     /// The card has an invalid expiration month.
