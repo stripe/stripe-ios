@@ -219,7 +219,6 @@ import UIKit
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.textAlignment = .center
         return label
     }()
 
