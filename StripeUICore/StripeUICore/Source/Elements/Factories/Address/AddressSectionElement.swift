@@ -106,17 +106,29 @@ import UIKit
     }
 
     // MARK: Element protocol
-    public let elements: [Element]
+    public var elements: [Element] {
+        addressSections + [sameAsCheckbox]
+    }
+
     public weak var delegate: ElementDelegate?
+
     public lazy var view: UIView = {
-        let vStack = UIStackView(arrangedSubviews: [addressSection.view, sameAsCheckbox.view].compactMap { $0 })
+        let vStack = UIStackView()
         vStack.axis = .vertical
-        vStack.spacing = 16
+        vStack.spacing = separatorStyle.stackSpacing
         return vStack
     }()
 
     // MARK: Elements
-    let addressSection: SectionElement
+    var addressSections: [SectionElement] = []
+
+    /// For backward compatibility - returns a section containing all address fields
+    @available(*, deprecated, message: "Access addressSections directly")
+    var addressSection: SectionElement {
+        let allElements = addressSections.flatMap(\.elements)
+        return SectionElement(elements: allElements, separatorStyle: separatorStyle, theme: theme)
+    }
+
     public let name: TextFieldElement?
     public let phone: PhoneNumberElement?
     public let email: TextFieldElement?
@@ -156,6 +168,7 @@ import UIKit
 
     public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
+    let separatorStyle: SeparatorDisplayStyle
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
     @_spi(STP) public var didTapAutocompleteButton: () -> Void
@@ -180,6 +193,7 @@ import UIKit
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
         additionalFields: AdditionalFields = .init(),
+        separatorStyle: SeparatorDisplayStyle = .divider,
         theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
     ) {
@@ -196,6 +210,7 @@ import UIKit
         )
         self.defaults = defaults
         self.addressSpecProvider = addressSpecProvider
+        self.separatorStyle = separatorStyle
         self.theme = theme
         self.didTapAutocompleteButton = presentAutoComplete
 
@@ -238,9 +253,8 @@ import UIKit
         } else {
             sameAsCheckbox.view.isHidden = true
         }
-        addressSection = SectionElement(title: title, elements: [], theme: theme)
-        elements = ([addressSection, sameAsCheckbox] as [Element?]).compactMap { $0 }
-        elements.forEach { $0.delegate = self }
+
+        sameAsCheckbox.delegate = self
 
         self.updateAddressFields(
             for: initialCountry,
@@ -382,7 +396,32 @@ import UIKit
         initialElements.append(autoCompleteLine)
         let emailElement: [Element?] = [email]
         let phoneElement: [Element?] = [phone]
-        addressSection.elements = (emailElement + phoneElement + initialElements + addressFields).compactMap { $0 }
+
+        // Create sections based on separator style:
+        // - .divider: Single section with all fields and divider lines between them
+        // - .spacing: Each field in its own bordered section
+        let allFields = (emailElement + phoneElement + initialElements + addressFields).compactMap { $0 }
+
+        addressSections = switch separatorStyle {
+        case .divider:
+            [SectionElement(elements: allFields, separatorStyle: .divider, theme: theme)]
+        case .spacing:
+            allFields.map { SectionElement(elements: [$0], theme: theme) }
+        }
+
+        addressSections.forEach { $0.delegate = self }
+        updateViewWithSections()
+    }
+
+    private func updateViewWithSections() {
+        guard let stackView = view as? UIStackView else { return }
+
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        addressSections.forEach { stackView.addArrangedSubview($0.view) }
+
+        if !sameAsCheckbox.view.isHidden {
+            stackView.addArrangedSubview(sameAsCheckbox.view)
+        }
     }
 
     /// Returns `true` iff all **displayed** address fields match the given `address`, treating `nil` and "" as equal.

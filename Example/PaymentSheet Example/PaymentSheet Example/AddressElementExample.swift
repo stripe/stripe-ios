@@ -7,13 +7,39 @@
 //
 
 @_spi(STP) import StripeCore
-import StripePaymentSheet
+@_spi(AddressViewControllerSeparatorStylePreview) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
 public struct AddressElementExampleView: View {
     @State private var showingAddressSheet = false
     @State private var collectedAddress: AddressElement.AddressDetails?
+    @State private var selectedSeparatorStyle: SeparatorStyleOption = .divider
+
+    enum SeparatorStyleOption: String, CaseIterable, Identifiable {
+        case divider = "Divider Lines"
+        case spacing8 = "Spacing (8pt)"
+        case spacing12 = "Spacing (12pt)"
+        case spacing16 = "Spacing (16pt)"
+        case spacing20 = "Spacing (20pt)"
+
+        var id: String { rawValue }
+
+        var separatorStyle: AddressViewController.SeparatorDisplayStyle {
+            switch self {
+            case .divider:
+                return .divider
+            case .spacing8:
+                return .spacing(8.0)
+            case .spacing12:
+                return .spacing(12.0)
+            case .spacing16:
+                return .spacing(16.0)
+            case .spacing20:
+                return .spacing(20.0)
+            }
+        }
+    }
 
     private func makeConfiguration() -> AddressElement.Configuration {
         STPAPIClient.shared.publishableKey = "pk_test"
@@ -21,6 +47,7 @@ public struct AddressElementExampleView: View {
         var config = AddressElement.Configuration()
         config.allowedCountries = ["US", "CA", "GB", "AU"]
         config.buttonTitle = "Save Address"
+        config.separatorStyle = selectedSeparatorStyle.separatorStyle
 
         // Pre-populate with existing address if available
         if let address = collectedAddress {
@@ -39,6 +66,23 @@ public struct AddressElementExampleView: View {
     public var body: some View {
         NavigationView {
             VStack(spacing: 20) {
+                // Separator style picker
+                HStack(alignment: .center, spacing: 0) {
+                    Text("Separator Style:")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+
+                    Spacer(minLength: 8)
+
+                    Picker("Separator Style", selection: $selectedSeparatorStyle) {
+                        ForEach(SeparatorStyleOption.allCases) { option in
+                            Text(option.rawValue).tag(option)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .padding(.horizontal)
+
                 // Example: Using .sheet with isPresented
                 Button("Collect Address") {
                     showingAddressSheet = true

@@ -76,6 +76,23 @@ import UIKit
     }
 }
 
+/// Defines how separators between elements are displayed
+public enum SeparatorDisplayStyle {
+    /// Use visible divider lines.
+    case divider
+    /// Use spacing without visible divider lines.
+    case spacing(CGFloat)
+
+    var stackSpacing: CGFloat {
+        switch self {
+        case .divider:
+            return 12
+        case .spacing(let amount):
+            return amount
+        }
+    }
+}
+
 /// Describes the appearance of an Element
 /// A superset of `StripePaymentSheet.PaymentSheetAppearance`. This exists b/c we can't see that type from `StripeUICore`, and we don't want to the public StripePaymentSheet API to be a typealias of this.
 @_spi(STP) public struct ElementsAppearance {

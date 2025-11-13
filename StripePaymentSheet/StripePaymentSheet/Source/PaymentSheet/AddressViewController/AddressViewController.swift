@@ -426,6 +426,7 @@ extension AddressViewController {
             defaults: .init(from: defaultValues),
             collectionMode: showFullForm ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
             additionalFields: .init(from: configuration.additionalFields),
+            separatorStyle: configuration.separatorStyle,
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
                 self?.presentAutocomplete()
