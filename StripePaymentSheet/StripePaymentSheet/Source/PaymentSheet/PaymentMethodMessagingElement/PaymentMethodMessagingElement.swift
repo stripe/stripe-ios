@@ -96,6 +96,9 @@ public class PaymentMethodMessagingElement {
         public var appearance: PaymentMethodMessagingElement.Appearance = PaymentMethodMessagingElement.Appearance()
     }
 
+    /// Creates an instance of `PaymentMethodMessagingElement`.
+    /// - Parameter configuration: Configuration for the PaymentMethodMessagingElement, such as the amount and currency of the purchase.
+    /// - Returns: A `CreationResult` object representing the result of the attempt to load the element and an instance of the element if applicable.
     public static func create(configuration: Configuration) async -> CreationResult {
         return await create(configuration: configuration, downloadManager: .sharedManager)
     }

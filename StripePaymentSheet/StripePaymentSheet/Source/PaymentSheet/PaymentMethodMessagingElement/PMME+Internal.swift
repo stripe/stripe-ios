@@ -26,16 +26,22 @@ extension PaymentMethodMessagingElement {
     /// Internal version of create() that allows injection of a DownloadManager for testing.
     /// - Parameter configuration: Configuration for the PaymentMethodMessagingElement.
     /// - Parameter downloadManager: The DownloadManager instance to use for downloading images.
+    /// - Parameter analyticsClient: Optional analytics client for testing. Defaults to shared client.
     /// - Returns: A `CreationResult` object representing the result of the attempt to load the element.
-    static func create(configuration: Configuration, downloadManager: DownloadManager) async -> CreationResult {
+    static func create(configuration: Configuration, downloadManager: DownloadManager, analyticsClient: STPAnalyticsClient = .sharedClient) async -> CreationResult {
         AnalyticsHelper.shared.generateSessionID()
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingElement.self)
-        let analyticsHelper = PMMEAnalyticsHelper(configuration: configuration)
+        analyticsClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingElement.self)
+        let analyticsHelper = PMMEAnalyticsHelper(configuration: configuration, analyticsClient: analyticsClient)
         analyticsHelper.logLoadStarted()
 
         do {
             let apiResponse = try await get(configuration: configuration)
-            if let pmme = try await PaymentMethodMessagingElement(apiResponse: apiResponse, configuration: configuration, analyticsHelper: analyticsHelper, downloadManager: downloadManager) {
+            if let pmme = try await PaymentMethodMessagingElement(
+                apiResponse: apiResponse,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                downloadManager: downloadManager
+            ) {
                 analyticsHelper.logLoadSucceeded(mode: pmme.mode)
                 return .success(pmme)
             } else {
@@ -135,7 +141,7 @@ extension PaymentMethodMessagingElement {
             self.init(
                 mode: .multiPartner(logos: logos),
                 infoUrl: infoUrl,
-                promotion: promotion,
+                promotion: promo,
                 appearance: configuration.appearance,
                 analyticsHelper: analyticsHelper
             )
