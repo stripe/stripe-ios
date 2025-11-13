@@ -65,7 +65,6 @@ public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
         // Parse customer ID
         paymentMethodPreview.customerId = response["customer"] as? String
 
-        // Parse card details
         if let cardDict = response["card"] as? [AnyHashable: Any] {
             paymentMethodPreview.card = STPPaymentMethodCard.decodedObject(fromAPIResponse: cardDict)
         } else {
