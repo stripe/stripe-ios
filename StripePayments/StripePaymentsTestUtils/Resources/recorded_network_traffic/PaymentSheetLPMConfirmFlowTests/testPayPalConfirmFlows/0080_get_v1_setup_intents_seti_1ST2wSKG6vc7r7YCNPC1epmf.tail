@@ -1,0 +1,76 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1ST2wSKG6vc7r7YCNPC1epmf\?client_secret=seti_1ST2wSKG6vc7r7YCNPC1epmf_secret_TPshRNz8GlQ2A5PhM39iJPt4ceG3gEp&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=GA4M3YQ2k4-mVYmLfbXoUbdNpakwzv9tpVXSG7H8iHY99beuzG5Jxouoh1YnhuRcSJsQAgasf5lE2cji
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Thu, 13 Nov 2025 16:00:13 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1427
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_RRqZs8VKXuC3mX
+
+{
+  "id" : "seti_1ST2wSKG6vc7r7YCNPC1epmf",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1JtgfQKG6vc7r7YC\/sa_nonce_TPshKxU553YZ76JwLiDHOzbsyiOBabg?useWebAuthSession=true&followRedirectsInSDK=true"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "paypal" : {
+      "country" : null,
+      "payer_id" : null,
+      "payer_email" : null
+    },
+    "id" : "pm_1ST2wSKG6vc7r7YCz7wniCar",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1763049612,
+    "allow_redisplay" : "unspecified",
+    "type" : "paypal",
+    "customer" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "paypal"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1763049612,
+  "client_secret" : "seti_1ST2wSKG6vc7r7YCNPC1epmf_secret_TPshRNz8GlQ2A5PhM39iJPt4ceG3gEp",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}
