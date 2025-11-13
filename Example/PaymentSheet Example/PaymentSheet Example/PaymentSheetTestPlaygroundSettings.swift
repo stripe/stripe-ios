@@ -138,7 +138,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case chf
     }
 
-    enum Merchant: String, PickerEnum {
+    enum MerchantCountry: String, PickerEnum {
         static var enumName: String { "Merchant" }
 
         case US
@@ -680,7 +680,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var customerMode: CustomerMode
     var currency: Currency
     var amount: Amount
-    var merchant: Merchant
+    var merchantCountryCode: MerchantCountry
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
     var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage
@@ -742,7 +742,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             customerMode: .guest,
             currency: .usd,
             amount: ._5099,
-            merchant: .US,
+            merchantCountryCode: .US,
             apmsEnabled: .on,
             paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,

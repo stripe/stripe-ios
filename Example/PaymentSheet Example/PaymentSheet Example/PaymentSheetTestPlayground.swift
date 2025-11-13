@@ -44,7 +44,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
         SettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation)
         Group {
-            if playgroundController.settings.merchant == .US {
+            if playgroundController.settings.merchantCountryCode == .US {
                 SettingView(setting: linkEnabledModeBinding)
             }
             SettingView(setting: $playgroundController.settings.linkPassthroughMode)
@@ -53,7 +53,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.userOverrideCountry)
         SettingView(setting: $playgroundController.settings.externalPaymentMethods)
         // The hardcoded CPM id is only available on our US merchant
-        if playgroundController.settings.merchant == .US {
+        if playgroundController.settings.merchantCountryCode == .US {
             SettingView(setting: $playgroundController.settings.customPaymentMethods)
         }
         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
@@ -137,7 +137,7 @@ struct PaymentSheetTestPlayground: View {
                             })
                             SettingPickerView(setting: $playgroundController.settings.currency)
                         }
-                        SettingPickerView(setting: merchantBinding)
+                        SettingPickerView(setting: merchantCountryBinding)
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
                         if playgroundController.settings.apmsEnabled == .off {
                             TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
@@ -274,19 +274,19 @@ struct PaymentSheetTestPlayground: View {
         }
     }
 
-    var merchantBinding: Binding<PaymentSheetTestPlaygroundSettings.Merchant> {
-        Binding<PaymentSheetTestPlaygroundSettings.Merchant> {
-            return playgroundController.settings.merchant
-        } set: { newMerchant in
-            // Reset customer id if merchant changes
-            if playgroundController.settings.merchant.rawValue != newMerchant.rawValue {
+    var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
+        Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
+            return playgroundController.settings.merchantCountryCode
+        } set: { newCountry in
+            // Reset customer id if country changes
+            if playgroundController.settings.merchantCountryCode.rawValue != newCountry.rawValue {
                 playgroundController.settings.customerMode = .guest
             }
             // Disable CPMs if we switch to non-US merchant
-            if newMerchant != .US {
+            if newCountry != .US {
                 playgroundController.settings.customPaymentMethods = .off
             }
-            playgroundController.settings.merchant = newMerchant
+            playgroundController.settings.merchantCountryCode = newCountry
         }
     }
 

@@ -52,7 +52,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         settings.customerMode = .guest
         settings.uiStyle = .flowController
         settings.currency = .usd
-        settings.merchant = .US
+        settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
         settings.linkPassthroughMode = .passthrough
@@ -114,7 +114,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .guest
-        settings.merchant = .US
+        settings.merchantCountryCode = .US
         settings.currency = .usd
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
@@ -180,7 +180,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.layout = .horizontal
         settings.customerMode = .guest
         settings.currency = .usd
-        settings.merchant = .US
+        settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off
@@ -239,7 +239,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         settings.layout = .horizontal
         settings.customerMode = .guest
         settings.currency = .usd
-        settings.merchant = .US
+        settings.merchantCountryCode = .US
         settings.applePayEnabled = .off
         settings.shippingInfo = .onWithDefaults
         settings.apmsEnabled = .off

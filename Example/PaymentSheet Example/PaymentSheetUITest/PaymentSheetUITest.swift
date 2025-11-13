@@ -363,7 +363,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.apmsEnabled = .off
         settings.supportedPaymentMethods = "link,card"
         // Use a non-US merchant because the US merchant is gated into Link RUX in FlowController
-        settings.merchant = .FR
+        settings.merchantCountryCode = .FR
         loadPlayground(app, settings)
 
         let paymentMethodButton = app.buttons["Payment method"]
@@ -440,7 +440,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.layout = .horizontal
         settings.customerMode = .new
         settings.customerKeyType = .legacy
-        settings.merchant = .IN
+        settings.merchantCountryCode = .IN
         settings.currency = .inr
         settings.apmsEnabled = .off
         loadPlayground(app, settings)
@@ -476,7 +476,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
-                settings.merchant = .FR
+                settings.merchantCountryCode = .FR
         settings.currency = .pln
         loadPlayground(app, settings)
 
@@ -1737,7 +1737,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .returning
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.merchant = .FR
+        settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.linkEnabledMode = .off
         settings.linkDisplay = .never
@@ -1805,7 +1805,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.customerMode = .returning
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
-        settings.merchant = .FR
+        settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.linkEnabledMode = .off
         settings.collectAddress = .full
@@ -1884,7 +1884,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.paymentMethodRedisplay = .enabled
         settings.paymentMethodAllowRedisplayFilters = .unspecified_limited_always
         settings.customerMode = .new
-        settings.merchant = .FR
+        settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
@@ -1934,7 +1934,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.paymentMethodRedisplay = .enabled
         settings.paymentMethodAllowRedisplayFilters = .unspecified_limited_always
         settings.customerMode = .new
-        settings.merchant = .FR
+        settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
@@ -1953,7 +1953,7 @@ class PaymentSheetCustomerSessionCBCUITests: PaymentSheetUITestCase {
         settings.paymentMethodRedisplay = .enabled
         settings.paymentMethodAllowRedisplayFilters = .unspecified_limited_always
         settings.customerMode = .new
-        settings.merchant = .FR
+        settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
@@ -2201,7 +2201,7 @@ class PaymentSheetCVCRecollectionUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         // Use the GB merchant to use web-based Link
-        settings.merchant = .GB
+        settings.merchantCountryCode = .GB
         settings.uiStyle = .flowController
         settings.customerMode = .new
         settings.applePayEnabled = .off
@@ -3155,7 +3155,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
     func testDefaultSPMHorizontalNavigation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
-        settings.merchant = .FR
+        settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning
         settings.layout = .horizontal
@@ -3171,7 +3171,7 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
     func testDefaultSPMVerticalNavigation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
-        settings.merchant = .FR
+        settings.merchantCountryCode = .FR
         settings.currency = .eur
         settings.customerMode = .returning
         settings.layout = .vertical
