@@ -66,6 +66,7 @@ struct ElementsCustomer: Equatable, Hashable {
                 }
             } else {
                 if let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: json) {
+                    paymentMethod.isLinkPassthroughMode = paymentMethod.card?.wallet?.type == .link
                     paymentMethods.append(paymentMethod)
                 }
             }

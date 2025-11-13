@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Подтвердить код CVV карты";
 
+"Confirm your information" = "Подтвердите свою информацию";
+
 "Contact information" = "Контактные данные";
 
 "Continue another way" = "Продолжить другим способом";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "Введите адрес вручную";
 
-"Enter the code sent to %@." = "Введите код, отправленный на %s.";
+"Enter the code sent to %@." = "Введите код, отправленный на %@.";
 
 "FPX Bank" = "Банк FPX";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Последние 4 цифры SSN";
 
 "Log in or sign up" = "Войдите или зарегистрируйтесь";
 

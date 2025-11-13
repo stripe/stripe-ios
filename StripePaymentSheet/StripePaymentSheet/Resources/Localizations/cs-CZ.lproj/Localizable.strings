@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Potvrďte vaše CVC";
 
+"Confirm your information" = "Potvrďte své údaje";
+
 "Contact information" = "Kontaktní údaje";
 
 "Continue another way" = "Pokračovat jiným způsobem";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "Zadejte adresu ručně";
 
-"Enter the code sent to %@." = "Zadejte kód zaslaný %s.";
+"Enter the code sent to %@." = "Zadejte kód zaslaný %@.";
 
 "FPX Bank" = "Banka FPX";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumím tomu, že Stripe bude vybírat přímé debety jménem %@, a potvrzuji, že jsem držitelem účtu a jedinou osobou, která je nezbytná k autorizování debetů z tohoto účtu.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Poslední 4 číslice SSN";
 
 "Log in or sign up" = "Registrovat nebo přihlásit";
 

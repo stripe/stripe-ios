@@ -6,7 +6,7 @@
 //
 
 import Combine
-@_spi(STP) import StripeCore
+import StripeCore
 import StripePayments
 import SwiftUI
 import UIKit
@@ -21,7 +21,7 @@ public class PaymentMethodMessagingElement {
     }()
 
     /// The result of an attempt to create a PaymentMethodMessagingElement.
-    public enum CreationResult {
+    @frozen public enum CreationResult {
 
         /// The PaymentMethodMessagingElement was success fully created.
         /// - Parameter PaymentMethodMessagingElement: The created Element object.
@@ -96,28 +96,8 @@ public class PaymentMethodMessagingElement {
         public var appearance: PaymentMethodMessagingElement.Appearance = PaymentMethodMessagingElement.Appearance()
     }
 
-    /// Creates an instance of `PaymentMethodMessagingElement`.
-    /// - Parameter configuration: Configuration for the PaymentMethodMessagingElement, such as the amount and currency of the purchase.
-    /// - Returns: A `CreationResult` object representing the result of the attempt to load the element and an instance of the element if applicable.
-    static func create(configuration: Configuration) async -> CreationResult {
-        AnalyticsHelper.shared.generateSessionID()
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingElement.self)
-        let analyticsHelper = PMMEAnalyticsHelper(configuration: configuration)
-        analyticsHelper.logLoadStarted()
-
-        do {
-            let apiResponse = try await get(configuration: configuration)
-            if let pmme = try await PaymentMethodMessagingElement(apiResponse: apiResponse, configuration: configuration, analyticsHelper: analyticsHelper) {
-                analyticsHelper.logLoadSucceeded(mode: pmme.mode)
-                return .success(pmme)
-            } else {
-                analyticsHelper.logLoadSucceededNoContent()
-                return .noContent
-            }
-        } catch {
-            analyticsHelper.logLoadFailed(error: error)
-            return .failed(error)
-        }
+    public static func create(configuration: Configuration) async -> CreationResult {
+        return await create(configuration: configuration, downloadManager: .sharedManager)
     }
 
     // MARK: - Internal

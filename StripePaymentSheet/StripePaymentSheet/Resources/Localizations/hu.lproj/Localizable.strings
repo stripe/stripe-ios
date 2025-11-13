@@ -108,6 +108,8 @@
 
 "Confirm your CVC" = "CVC megerősítése";
 
+"Confirm your information" = "Adatainak megerősítése";
+
 "Contact information" = "Kapcsolattartási adatok";
 
 "Continue another way" = "Folytatás más módon";
@@ -126,7 +128,7 @@
 
 "Enter address manually" = "Cím megadása kézzel";
 
-"Enter the code sent to %@." = "Adja meg a(z) %s telefonszámra küldött kódot.";
+"Enter the code sent to %@." = "Adja meg a(z) %@ telefonszámra küldött kódot.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -141,6 +143,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tudomásul veszem, hogy a Stripe beszedéseket végez a(z) %@ nevében, és megerősítem, hogy én vagyok a számla tulajdonosa és az egyetlen személy, aki a terheléseket engedélyezheti erről a számláról.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Az SSN utolsó 4 számjegye";
 
 "Log in or sign up" = "Bejelentkezés vagy regisztrálás";
 

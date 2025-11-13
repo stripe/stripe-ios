@@ -17,6 +17,7 @@ struct PMMETestPlayground: View {
         .init(
             amount: amount,
             currency: country.currency,
+            apiClient: apiClient,
             countryCode: country.stringValue,
             paymentMethodTypes: paymentMethodTypes,
             appearance: .init(
@@ -33,6 +34,11 @@ struct PMMETestPlayground: View {
             afterpayClearpay == .on ? .afterpayClearpay : nil,
         ].compactMap { $0 }
     }
+    private var apiClient: STPAPIClient {
+        let client = STPAPIClient(publishableKey: country.publishableKey)
+        client.stripeAccount = connectedAccount.accountId
+        return client
+    }
 
     // Appearance
     @State private var style = PaymentMethodMessagingElement.Appearance.UserInterfaceStyle.automatic
@@ -47,11 +53,15 @@ struct PMMETestPlayground: View {
     @State private var klarna = PMMEPlaygroundToggle.on
     @State private var affirm = PMMEPlaygroundToggle.on
     @State private var afterpayClearpay = PMMEPlaygroundToggle.off
+    @State private var connectedAccount = PMMEPlaygroundConnectedAccountSetting.none
+
+    // Playground
     @State private var playgroundBackground = PMMEPlaygroundColorSetting.default
     @State private var implementation = PMMEPlaygroundImplSetting.config
 
     // ViewData
     @State private var viewData: PaymentMethodMessagingElement.ViewData?
+    @State private var viewDataIntegrationText: String? // text to show for viewdata integration style
 
     @State private var showUiKitSheet = false
 
@@ -85,6 +95,8 @@ struct PMMETestPlayground: View {
             PMMEPlaygroundSettingView(title: "affirm", selectedOption: $affirm, onChange: configure)
             PMMEPlaygroundSettingView(title: "afterpayClearpay", selectedOption: $afterpayClearpay, onChange: configure)
             PMMEPlaygroundSpacedText(part1: "↳ paymentMethodTypes:", part2: "\(paymentMethodTypes.map { $0.identifier })\(paymentMethodTypes.isEmpty ? " (default/dynamic payment methods)" : "")")
+            PMMEPlaygroundSettingView(title: "connected account", selectedOption: $connectedAccount, onChange: configure)
+            PMMEPlaygroundSpacedText(part1: "↳ stripeAccount:", part2: connectedAccount.accountId ?? "nil")
             Divider()
 
             // Playground
@@ -118,18 +130,15 @@ struct PMMETestPlayground: View {
                         Text("loading")
                     case .noContent:
                         Text("no content")
-                    @unknown default:
-                        fatalError()
                     }
                 }
             case .viewData:
                 if let viewData {
                     PaymentMethodMessagingElement.View(viewData)
+                } else if let viewDataIntegrationText {
+                    Text(viewDataIntegrationText)
                 } else {
                     Text("loading")
-                        .onAppear {
-                            configure()
-                        }
                 }
             }
             Text("Hi! I'm here to show whether or not the element's height is correctly set in SwiftUI")
@@ -138,10 +147,7 @@ struct PMMETestPlayground: View {
         .padding(.horizontal)
         .background(playgroundBackground == .default ? nil : Color(UIColor(hex: playgroundBackground.rawValue)))
         .onAppear {
-            STPAPIClient.shared.publishableKey = country.publishableKey
-        }
-        .onChange(of: country) { _ in
-            STPAPIClient.shared.publishableKey = country.publishableKey
+            configure()
         }
         .font(.system(size: 14))
     }
@@ -149,16 +155,18 @@ struct PMMETestPlayground: View {
     // Manual configuration for MVVM-style integration
     private func configure() {
         guard implementation == .viewData else { return }
+        viewDataIntegrationText = "loading"
         Task { @MainActor in
             switch await PaymentMethodMessagingElement.create(configuration: config) {
             case let .success(element):
                 self.viewData = element.viewData
+                viewDataIntegrationText = nil
             case .noContent:
-                print("no content")
+                self.viewData = nil
+                viewDataIntegrationText = "no content"
             case let .failed(error):
-                print("something went wrong: \(error.localizedDescription)")
-            @unknown default:
-                assertionFailure()
+                self.viewData = nil
+                viewDataIntegrationText = "something went wrong: \(error.localizedDescription)"
             }
         }
     }
@@ -258,6 +266,18 @@ enum PMMEPlaygroundCountrySetting: PMMEPlaygroundSetting {
         case .GB: "pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"
         case .FR: "pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"
         case .AU: "pk_test_51KaoFxCPXw4rvZpfi7MgGvQHAyqydlZgq7qfazb65457ApNZVN12LdVmiZh0bmDfgBEDUlXtSM72F9rPweMN0QJP00hVaYXMkx"
+        }
+    }
+}
+
+enum PMMEPlaygroundConnectedAccountSetting: PMMEPlaygroundSetting {
+    case none
+    case affirmOnly
+
+    var accountId: String? {
+        switch self {
+        case .none: nil
+        case .affirmOnly: "acct_1SSPcCLmk7lnVRaw"
         }
     }
 }

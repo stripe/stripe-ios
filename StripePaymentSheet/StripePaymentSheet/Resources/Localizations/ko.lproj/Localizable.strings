@@ -108,6 +108,8 @@
 
 "Confirm your CVC" = "CVC 확인";
 
+"Confirm your information" = "귀하의 정보 확인";
+
 "Contact information" = "연락처 정보";
 
 "Continue another way" = "다른 방식으로 계속";
@@ -126,7 +128,7 @@
 
 "Enter address manually" = "주소 직접 입력";
 
-"Enter the code sent to %@." = "%s번으로 보낸 코드를 입력해 주십시오.";
+"Enter the code sent to %@." = "%@번으로 보낸 코드를 입력해 주십시오.";
 
 "FPX Bank" = "FPX 은행";
 
@@ -141,6 +143,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN의 마지막 4자리";
 
 "Log in or sign up" = "로그인 또는 등록";
 

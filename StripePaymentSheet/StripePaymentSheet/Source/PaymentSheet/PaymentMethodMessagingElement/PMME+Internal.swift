@@ -23,6 +23,31 @@ enum PaymentMethodMessagingElementError: Error, LocalizedError {
 
 extension PaymentMethodMessagingElement {
 
+    /// Internal version of create() that allows injection of a DownloadManager for testing.
+    /// - Parameter configuration: Configuration for the PaymentMethodMessagingElement.
+    /// - Parameter downloadManager: The DownloadManager instance to use for downloading images.
+    /// - Returns: A `CreationResult` object representing the result of the attempt to load the element.
+    static func create(configuration: Configuration, downloadManager: DownloadManager) async -> CreationResult {
+        AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingElement.self)
+        let analyticsHelper = PMMEAnalyticsHelper(configuration: configuration)
+        analyticsHelper.logLoadStarted()
+
+        do {
+            let apiResponse = try await get(configuration: configuration)
+            if let pmme = try await PaymentMethodMessagingElement(apiResponse: apiResponse, configuration: configuration, analyticsHelper: analyticsHelper, downloadManager: downloadManager) {
+                analyticsHelper.logLoadSucceeded(mode: pmme.mode)
+                return .success(pmme)
+            } else {
+                analyticsHelper.logLoadSucceededNoContent()
+                return .noContent
+            }
+        } catch {
+            analyticsHelper.logLoadFailed(error: error)
+            return .failed(error)
+        }
+    }
+
     enum Mode: Equatable {
         case singlePartner(logo: LogoSet)
         case multiPartner(logos: [LogoSet])
@@ -40,22 +65,24 @@ extension PaymentMethodMessagingElement {
 
     // Initialize element from API response
     // Uses this logic tree: https://trailhead.corp.stripe.com/docs/payment-method-messaging/pmme-platform/elements-mobile
-    convenience init?(apiResponse: APIResponse, configuration: Configuration, analyticsHelper: PMMEAnalyticsHelper) async throws {
-        // no content case
-        guard let firstPaymentPlan = apiResponse.paymentPlanGroups.first else {
-            return nil
-        }
+    convenience init?(apiResponse: APIResponse, configuration: Configuration, analyticsHelper: PMMEAnalyticsHelper, downloadManager: DownloadManager = .sharedManager) async throws {
+        if apiResponse.paymentPlanGroups.count == 1, let paymentPlan = apiResponse.paymentPlanGroups.first {
+            // case 1: 1 payment plan
 
-        if apiResponse.paymentPlanGroups.count == 1 {
-            // single partner
+            // no content case - expected
+            guard let inlinePromo = paymentPlan.content.inlinePartnerPromotion?.message else {
+                return nil
+            }
 
-            // invalid response scenario
-            guard let infoUrl = firstPaymentPlan.content.learnMore?.url else {
-                throw Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
+            // unexpected / error cases
+            guard let infoUrl = paymentPlan.content.learnMore?.url else {
+                // TODO(gbirch) add error analytics
+                throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
             }
             guard let logo = try await Self.getIconSet(
-                for: firstPaymentPlan.content.images,
-                style: configuration.appearance.style
+                for: paymentPlan.content.images,
+                style: configuration.appearance.style,
+                downloadManager: downloadManager
             ).first else {
                 // This should never happen, but if it does we log an error and attempt to fall back to a multi-partner style
                 //      (so that we can use the promotion text, which doesn't require a logo, instead of inline) without logos
@@ -75,46 +102,36 @@ extension PaymentMethodMessagingElement {
                     throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
                 }
             }
+            // success
+            self.init(
+                mode: .singlePartner(logo: logo),
+                infoUrl: infoUrl,
+                promotion: inlinePromo,
+                appearance: configuration.appearance,
+                analyticsHelper: analyticsHelper
+            )
+            return
+        } else {
+            // case 2: 0 or 2+ payment plans
 
-            if let inlinePromo = firstPaymentPlan.content.inlinePartnerPromotion?.message {
-                // standard case, we display single partner style
-                self.init(
-                    mode: .singlePartner(logo: logo),
-                    infoUrl: infoUrl,
-                    promotion: inlinePromo,
-                    appearance: configuration.appearance,
-                    analyticsHelper: analyticsHelper
-                )
-                return
-            } else if let topLevelPromotion = apiResponse.content.promotion?.message {
-                // fallback case, we don't have an inline promo so we use the main promo in a multi-partner style
-                self.init(
-                    mode: .multiPartner(logos: [logo]),
-                    infoUrl: infoUrl,
-                    promotion: topLevelPromotion,
-                    appearance: configuration.appearance,
-                    analyticsHelper: analyticsHelper
-                )
-                return
-            } else {
-                // if we also don't have a top-level promo text, then this is a no content scenario
+            // no content case - expected
+            guard let promo = apiResponse.content.promotion?.message else {
                 return nil
             }
-        } else {
-            // multi-partner
 
-            // invalid response scenario
+            // unexpected / error case
             guard let infoUrl = apiResponse.content.learnMore?.url else {
                 throw Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
             }
 
-            // no content scenario
-            guard let promotion = apiResponse.content.promotion?.message else {
-                return nil
-            }
-
             let apiImages = apiResponse.paymentPlanGroups.flatMap { $0.content.images }
-            let logos = try await Self.getIconSet(for: apiImages, style: configuration.appearance.style)
+            let logos = try await Self.getIconSet(
+                for: apiImages,
+                style: configuration.appearance.style,
+                downloadManager: downloadManager
+            )
+
+            // success
             self.init(
                 mode: .multiPartner(logos: logos),
                 infoUrl: infoUrl,
@@ -122,7 +139,6 @@ extension PaymentMethodMessagingElement {
                 appearance: configuration.appearance,
                 analyticsHelper: analyticsHelper
             )
-            return
         }
     }
 
@@ -134,7 +150,7 @@ extension PaymentMethodMessagingElement {
         return error
     }
 
-    private static func getIconSet(for iconUrls: [APIResponse.Image], style: Appearance.UserInterfaceStyle) async throws -> [LogoSet] {
+    private static func getIconSet(for iconUrls: [APIResponse.Image], style: Appearance.UserInterfaceStyle, downloadManager: DownloadManager) async throws -> [LogoSet] {
         // Fetch all images concurrently
         // We want to preserve the order of the icons as provided by the API,
         //     so we have tasks return their index along with the image
@@ -147,8 +163,8 @@ extension PaymentMethodMessagingElement {
                     //     since the device interface style may change at any time
                     //     and we don't want to have to re-fetch the images
                     taskGroup.addTask {
-                        async let lightImage = DownloadManager.sharedManager.downloadImage(url: image.lightThemePng.url)
-                        async let darkImage = DownloadManager.sharedManager.downloadImage(url: image.darkThemePng.url)
+                        async let lightImage = downloadManager.downloadImage(url: image.lightThemePng.url)
+                        async let darkImage = downloadManager.downloadImage(url: image.darkThemePng.url)
                         let (light, dark) = try await (lightImage, darkImage)
                         return (
                             index: i,

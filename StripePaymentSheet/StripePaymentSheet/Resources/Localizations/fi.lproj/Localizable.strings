@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Vahvista CVC";
 
+"Confirm your information" = "Vahvista tietosi";
+
 "Contact information" = "Yhteystiedot";
 
 "Continue another way" = "Jatka toisella tavalla";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
-"Enter the code sent to %@." = "Syötä koodi, joka lähetettiin numeroon %s.";
+"Enter the code sent to %@." = "Syötä koodi, joka lähetettiin numeroon %@.";
 
 "FPX Bank" = "FPX-pankki";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN:n 4 viimeistä numeroa";
 
 "Log in or sign up" = "Kirjaudu sisään tai rekisteröidy";
 

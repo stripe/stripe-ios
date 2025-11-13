@@ -110,6 +110,8 @@
 
 "Confirm your CVC" = "Confirmeu el vostre CVC";
 
+"Confirm your information" = "Confirma la teva informació";
+
 "Contact information" = "Informació de contacte";
 
 "Continue another way" = "Continua d'una altra manera";
@@ -128,7 +130,7 @@
 
 "Enter address manually" = "Introduir l'adreça manualment";
 
-"Enter the code sent to %@." = "Introduïu el codi que us hem enviat a %s.";
+"Enter the code sent to %@." = "Introduïu el codi que us hem enviat a %@.";
 
 "FPX Bank" = "Banc FPX";
 
@@ -143,6 +145,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Últims 4 dígits del número de la seguretat social (SSN)";
 
 "Log in or sign up" = "Inicia sessió o registra't";
 
