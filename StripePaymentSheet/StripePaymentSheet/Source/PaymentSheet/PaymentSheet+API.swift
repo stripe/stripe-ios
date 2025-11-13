@@ -742,7 +742,6 @@ extension PaymentSheet {
                 params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
                 params.paymentMethodId = paymentMethod.stripeId
                 params.paymentMethodOptions = paymentMethodoptions
-                params.radarOptions = paymentMethodParams.radarOptions
             } else {
                 params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
                 params.paymentMethodParams = paymentMethodParams
