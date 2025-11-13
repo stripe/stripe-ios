@@ -1963,7 +1963,7 @@ public class STPPaymentHandler: NSObject {
             guard let self = self else { return }
 
             // Dismiss the challenge view
-            presentingVC.dismiss(animated: false) {
+            presentingVC.dismiss(animated: true) {
                 switch result {
                 case .success:
                     // The web page handled the next action via Stripe.js
@@ -1978,6 +1978,7 @@ public class STPPaymentHandler: NSObject {
 
         let doChallenge: STPVoidBlock = {
             challengeVC.modalPresentationStyle = .overFullScreen
+            challengeVC.modalTransitionStyle = .crossDissolve
             presentingVC.present(challengeVC, animated: false, completion: nil)
         }
 

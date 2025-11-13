@@ -60,7 +60,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         dimmedBackgroundView = UIView()
         dimmedBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         dimmedBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        dimmedBackgroundView.alpha = 0 // Initially hidden
+        dimmedBackgroundView.alpha = 0
 
         view.addSubview(dimmedBackgroundView)
 
