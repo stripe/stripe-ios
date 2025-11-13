@@ -22,6 +22,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private let completion: (Result<Void, Error>) -> Void
 
     private var webView: WKWebView!
+    private var dimmedBackgroundView: UIView!
 
     // Hard-coded challenge URL
     private let challengeURL = URL(string: "https://mobile-active-challenge-764603794666.us-central1.run.app/")!
@@ -48,12 +49,29 @@ class IntentConfirmationChallengeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .clear
 
+        setupDimmedBackground()
         setupWebView()
         setupConstraints()
         loadChallenge()
     }
 
     // MARK: - Setup
+    private func setupDimmedBackground() {
+        dimmedBackgroundView = UIView()
+        dimmedBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        dimmedBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        dimmedBackgroundView.alpha = 0 // Initially hidden
+
+        view.addSubview(dimmedBackgroundView)
+
+        NSLayoutConstraint.activate([
+            dimmedBackgroundView.topAnchor.constraint(equalTo: view.topAnchor),
+            dimmedBackgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            dimmedBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dimmedBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+    }
+
     private func setupWebView() {
         let configuration = WKWebViewConfiguration()
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
@@ -64,7 +82,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
         contentController.add(self, name: "onReady")
         contentController.add(self, name: "onSuccess")
         contentController.add(self, name: "onError")
-        contentController.add(self, name: "consoleLog")
 
         configuration.userContentController = contentController
 
@@ -111,33 +128,9 @@ class IntentConfirmationChallengeViewController: UIViewController {
         });
         """
 
-        // Console interceptor for debugging
-        let consoleInterceptor = """
-        (function() {
-            ['log', 'error', 'warn', 'info', 'debug'].forEach(method => {
-                const original = console[method];
-                console[method] = function(...args) {
-                    original.apply(console, args);
-                    try {
-                        window.webkit.messageHandlers.consoleLog.postMessage({
-                            level: method,
-                            message: args.map(arg => {
-                                if (typeof arg === 'object') {
-                                    try { return JSON.stringify(arg); }
-                                    catch(e) { return String(arg); }
-                                }
-                                return String(arg);
-                            }).join(' ')
-                        });
-                    } catch(e) {}
-                };
-            });
-        })();
-        """
-
         // Inject at document start (BEFORE the page's scripts run)
         let startScript = WKUserScript(
-            source: consoleInterceptor + "\n" + initParamsScript,
+            source: initParamsScript,
             injectionTime: .atDocumentStart,
             forMainFrameOnly: false
         )
@@ -173,19 +166,34 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private func loadChallenge() {
         let request = URLRequest(url: challengeURL)
         webView.load(request)
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.7) {
+                self.dimmedBackgroundView.alpha = 1.0
+            }
+        }
+    }
+
+    private func completeChallenge(with result: Result<Void, Error>) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.7) {
+                self.dimmedBackgroundView.alpha = 0
+                self.webView.alpha = 0
+            }
+        }
+        completion(result)
     }
 
     // MARK: - Handlers
     private func handleReady() {
         DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.7) {
                 self.webView.alpha = 1.0
             }
         }
     }
 
     private func handleSuccess() {
-        completion(.success(()))
+        completeChallenge(with: .success(()))
     }
 
     private func handleError(_ error: Error) {
@@ -193,12 +201,12 @@ class IntentConfirmationChallengeViewController: UIViewController {
         print("[IntentConfirmationChallenge] Error: \(error)")
         #endif
 
-        completion(.failure(error))
+        completeChallenge(with: .failure(error))
     }
 
     /// Validates that the message comes from the expected Stripe origin
     private func isValidMessageOrigin(_ message: WKScriptMessage) -> Bool {
-        let validHosts = ["pay.stripe.com", "js.stripe.com", "localhost"]
+        let validHosts = ["pay.stripe.com", "js.stripe.com", "mobile-active-challenge-764603794666.us-central1.run.app"]
         let host = message.frameInfo.securityOrigin.host
         return validHosts.contains(host)
     }
