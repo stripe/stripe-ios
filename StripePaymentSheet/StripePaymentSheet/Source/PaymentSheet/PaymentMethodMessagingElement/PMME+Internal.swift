@@ -29,6 +29,8 @@ extension PaymentMethodMessagingElement {
     /// - Parameter analyticsClient: Optional analytics client for testing. Defaults to shared client.
     /// - Returns: A `CreationResult` object representing the result of the attempt to load the element.
     static func create(configuration: Configuration, downloadManager: DownloadManager, analyticsClient: STPAnalyticsClientProtocol) async -> CreationResult {
+        // This being a singleton can theoretically cause problems when using multiple sessions-generating products at once
+        // TODO(ocs-mobile): Make this not a singleton
         AnalyticsHelper.shared.generateSessionID()
         analyticsClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingElement.self)
         let analyticsHelper = PMMEAnalyticsHelper(configuration: configuration, analyticsClient: analyticsClient)
@@ -89,6 +91,7 @@ extension PaymentMethodMessagingElement {
                 style: configuration.appearance.style,
                 downloadManager: downloadManager
             ).first else {
+                // There were no images in `paymentPlan.content.images`
                 // This should never happen, but if it does we log an error and attempt to fall back to a multi-partner style
                 //      (so that we can use the promotion text, which doesn't require a logo, instead of inline) without logos
                 _ = Self.assertAndLogMissingField("logo", apiClient: configuration.apiClient)
@@ -129,6 +132,7 @@ extension PaymentMethodMessagingElement {
                 throw Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
             }
 
+            // Use the list of images returned as the source of truth for what images to display and thus don't validate
             let apiImages = apiResponse.paymentPlanGroups.flatMap { $0.content.images }
             let logos = try await Self.getIconSet(
                 for: apiImages,
@@ -155,6 +159,7 @@ extension PaymentMethodMessagingElement {
         return error
     }
 
+    // Throws when the underlying downloadManager throws
     private static func getIconSet(for iconUrls: [APIResponse.Image], style: Appearance.UserInterfaceStyle, downloadManager: DownloadManager) async throws -> [LogoSet] {
         // Fetch all images concurrently
         // We want to preserve the order of the icons as provided by the API,
@@ -185,7 +190,7 @@ extension PaymentMethodMessagingElement {
                     // For all non-automatic styles, we fetch one image and use it for
                     //     both light and dark
                     taskGroup.addTask {
-                        let lightImage = try await DownloadManager.sharedManager.downloadImage(url: image.lightThemePng.url)
+                        let lightImage = try await downloadManager.downloadImage(url: image.lightThemePng.url)
                         return (
                             index: i,
                             iconSet: LogoSet(
@@ -198,7 +203,7 @@ extension PaymentMethodMessagingElement {
                     }
                 case .alwaysDark:
                     taskGroup.addTask {
-                        let darkImage = try await DownloadManager.sharedManager.downloadImage(url: image.darkThemePng.url)
+                        let darkImage = try await downloadManager.downloadImage(url: image.darkThemePng.url)
                         return (
                             index: i,
                             iconSet: LogoSet(
@@ -211,7 +216,7 @@ extension PaymentMethodMessagingElement {
                     }
                 case .flat:
                     taskGroup.addTask {
-                        let flatImage = try await DownloadManager.sharedManager.downloadImage(url: image.flatThemePng.url)
+                        let flatImage = try await downloadManager.downloadImage(url: image.flatThemePng.url)
                         return (
                             index: i,
                             iconSet: LogoSet(
