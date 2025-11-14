@@ -84,7 +84,8 @@ extension PaymentMethodMessagingElement {
 
             // unexpected / error cases
             guard let infoUrl = paymentPlan.content.learnMore?.url else {
-                throw Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
+                Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
+                return nil
             }
             guard let logo = try await Self.getIconSet(
                 for: paymentPlan.content.images,
@@ -94,7 +95,7 @@ extension PaymentMethodMessagingElement {
                 // There were no images in `paymentPlan.content.images`
                 // This should never happen, but if it does we log an error and attempt to fall back to a multi-partner style
                 //      (so that we can use the promotion text, which doesn't require a logo, instead of inline) without logos
-                _ = Self.assertAndLogMissingField("logo", apiClient: configuration.apiClient)
+                Self.assertAndLogMissingField("logo", apiClient: configuration.apiClient)
 
                 if let topLevelPromotion = apiResponse.content.promotion?.message {
                     self.init(
@@ -129,7 +130,8 @@ extension PaymentMethodMessagingElement {
 
             // unexpected / error case
             guard let infoUrl = apiResponse.content.learnMore?.url else {
-                throw Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
+                Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
+                return nil
             }
 
             // Use the list of images returned as the source of truth for what images to display and thus don't validate
@@ -151,12 +153,11 @@ extension PaymentMethodMessagingElement {
         }
     }
 
-    private static func assertAndLogMissingField(_ missingField: String, apiClient: STPAPIClient) -> Error {
+    private static func assertAndLogMissingField(_ missingField: String, apiClient: STPAPIClient) {
         stpAssertionFailure("Missing expected field from API response: \(missingField)")
         let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
         let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["missing_field": "info_url"])
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
-        return error
     }
 
     // Throws when the underlying downloadManager throws
