@@ -96,6 +96,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         // Make webview transparent
         webView.isOpaque = false
+        webView.alpha = 0
 
         #if DEBUG
         if #available(iOS 16.4, *) {
@@ -242,16 +243,6 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
                 handleError(ChallengeError.unknownError)
             }
 
-        case "consoleLog":
-            #if DEBUG
-            if let logDict = message.body as? [String: Any],
-               let level = logDict["level"] as? String,
-               let logMessage = logDict["message"] as? String {
-                let emoji = logEmojiForLevel(level)
-                print("[IntentConfirmationChallenge][\(emoji)] \(logMessage)")
-            }
-            #endif
-
         default:
             #if DEBUG
             print("[IntentConfirmationChallenge] Unknown message: \(message.name)")
@@ -259,16 +250,6 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
         }
     }
 
-    private func logEmojiForLevel(_ level: String) -> String {
-        switch level.lowercased() {
-        case "error": return "❌"
-        case "warn": return "⚠️"
-        case "info": return "ℹ️"
-        case "debug": return "🐛"
-        case "log": return "📝"
-        default: return "💬"
-        }
-    }
 }
 
 // MARK: - WKNavigationDelegate
