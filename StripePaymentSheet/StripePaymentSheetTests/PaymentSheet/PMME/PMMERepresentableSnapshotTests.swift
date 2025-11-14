@@ -16,12 +16,7 @@ import XCTest
 @MainActor
 class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
 
-    nonisolated(unsafe) var mockAnalyticsClient: MockAnalyticsClient!
-
-    override func setUp() {
-        super.setUp()
-        mockAnalyticsClient = MockAnalyticsClient()
-    }
+    var mockAnalyticsClient = MockAnalyticsClient()
 
     func testPMMERepresentable_SinglePartner() async {
         let viewData = makeViewData(

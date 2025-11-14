@@ -22,7 +22,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
     var downloadManager: DownloadManager!
     var apiClient: STPAPIClient!
-    var mockAnalyticsClient: MockAnalyticsClient!
+    var mockAnalyticsClient = MockAnalyticsClient()
 
     override func setUp() {
         super.setUp()
@@ -35,9 +35,6 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
         // Create an STPAPIClient with the US test publishable key
         apiClient = STPAPIClient(publishableKey: Self.usPublishableKey)
-
-        // Create mock analytics client for testing
-        mockAnalyticsClient = MockAnalyticsClient()
 
         // Stub image downloads to return local mock PNG files
         // Note: These will still be recorded in .tail files, but we use the stubs to run the tests

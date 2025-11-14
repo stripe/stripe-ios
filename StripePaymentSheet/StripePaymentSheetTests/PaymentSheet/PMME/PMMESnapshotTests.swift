@@ -15,12 +15,7 @@ import XCTest
 @MainActor
 class PMMESnapshotTests: STPSnapshotTestCase {
 
-    nonisolated(unsafe) var mockAnalyticsClient: MockAnalyticsClient!
-
-    override func setUp() {
-        super.setUp()
-        mockAnalyticsClient = MockAnalyticsClient()
-    }
+    var mockAnalyticsClient = MockAnalyticsClient()
 
     // MARK: - Single Partner Mode Tests
 
