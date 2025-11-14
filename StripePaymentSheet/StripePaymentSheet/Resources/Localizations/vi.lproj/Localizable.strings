@@ -100,8 +100,6 @@
 
 "Confirm" = "Xác nhận";
 
-"Confirm it's you" = "Xác nhận đó là bạn";
-
 "Confirm payment details" = "Xác nhận thông tin thanh toán";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
-"Enter the code sent to %@." = "Nhập mã đã được gửi tới %@.";
-
 "FPX Bank" = "Ngân hàng FPX";
-
-"Failed to connect" = "Không thể kết nối";
 
 "Fast, secure checkout" = "Thanh toán nhanh chóng, an toàn";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Xóa thẻ?";
 
 "Remove linked account" = "Xóa tài khoản liên kết";
-
-"Resend code" = "Gửi lại mã";
 
 "SEPA debit details cannot be changed." = "Không thể thay đổi thông tin Ghi nợ SEPA.";
 

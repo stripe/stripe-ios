@@ -100,8 +100,6 @@
 
 "Confirm" = "ยืนยัน";
 
-"Confirm it's you" = "ยืนยันว่าเป็นคุณจริงๆ";
-
 "Confirm payment details" = "ยืนยันรายละเอียดการชำระเงิน";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารหรือแอปชำระเงินภายใน %@ เพื่อชำระเงินให้เสร็จสิ้น";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "ป้อนที่อยู่ด้วยตนเอง";
 
-"Enter the code sent to %@." = "ป้อนรหัสที่เราส่งให้ที่ %@";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
 
 "Fast, secure checkout" = "การชำระเงินที่รวดเร็วและปลอดภัย";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "นำบัตรออกไหม";
 
 "Remove linked account" = "นำบัญชีที่ลิงก์ไว้ออก";
-
-"Resend code" = "ส่งรหัสอีกครั้ง";
 
 "SEPA debit details cannot be changed." = "เปลี่ยนแปลงรายละเอียดการหักบัญชีอัตโนมัติแบบ SEPA ไม่ได้";
 

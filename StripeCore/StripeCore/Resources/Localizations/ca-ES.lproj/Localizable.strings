@@ -4,7 +4,15 @@
 
 "Close" = "Tanca";
 
+"Confirm it's you" = "Confirmeu la vostra identitat";
+
 "Default payment method was not updated. Please try again." = "El mètode de pagament per defecte no s'ha pogut actualitzar. Torneu-ho a provar.";
+
+"Enter the code sent to %@." = "Introdueix el codi enviat a %@.";
+
+"Failed to connect" = "No s'ha pogut connectar";
+
+"Resend code" = "Tornar a enviar el codi";
 
 "Scan Card" = "Escanejar targeta";
 

@@ -4,7 +4,15 @@
 
 "Close" = "Aizvērt";
 
+"Confirm it's you" = "Apstipriniet, ka tas esat jūs";
+
 "Default payment method was not updated. Please try again." = "Noklusējuma maksājumu veids netika atjaunināts. Mēģiniet vēlreiz.";
+
+"Enter the code sent to %@." = "Ievadiet kodu, kas tika nosūtīts uz %@.";
+
+"Failed to connect" = "Neizdevās izveidot savienojumu";
+
+"Resend code" = "Sūtīt kodu vēlreiz";
 
 "Scan Card" = "Skenēt karti";
 

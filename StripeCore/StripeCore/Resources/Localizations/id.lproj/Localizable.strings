@@ -4,7 +4,15 @@
 
 "Close" = "Tutup";
 
+"Confirm it's you" = "Konfirmasikan diri Anda";
+
 "Default payment method was not updated. Please try again." = "Metode pembayaran default tidak diperbarui. Cobalah lagi.";
+
+"Enter the code sent to %@." = "Masukkan kode yang dikirim ke %@.";
+
+"Failed to connect" = "Gagal menghubungkan";
+
+"Resend code" = "Kirim ulang kode";
 
 "Scan Card" = "Pindai Kartu";
 

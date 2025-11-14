@@ -100,8 +100,6 @@
 
 "Confirm" = "Onayla";
 
-"Confirm it's you" = "Siz olduğunuzu teyit edin";
-
 "Confirm payment details" = "Ödeme bilgilerini onayla";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ içinde banka veya ödeme uygulamanızla ödemeyi onaylayarak satın almayı tamamlayın.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Adresi manuel olarak girin";
 
-"Enter the code sent to %@." = "%@ yoluyla gönderilen kodu girin.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Bağlantı başarısız.";
 
 "Fast, secure checkout" = "Hızlı, güvenli ödeme";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Kart kaldırılsın mı?";
 
 "Remove linked account" = "Bağlı hesabı kaldır";
-
-"Resend code" = "Kodu tekrar gönder";
 
 "SEPA debit details cannot be changed." = "SEPA bankamatik ayrıntıları değiştirilemiyor.";
 

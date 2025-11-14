@@ -4,7 +4,15 @@
 
 "Close" = "关闭";
 
+"Confirm it's you" = "确认是您本人";
+
 "Default payment method was not updated. Please try again." = "未更新默认支付方式，请重试。";
+
+"Enter the code sent to %@." = "输入发送到 %@ 的代码。";
+
+"Failed to connect" = "关联失败";
+
+"Resend code" = "重新发送验证码";
 
 "Scan Card" = "扫描银行卡";
 

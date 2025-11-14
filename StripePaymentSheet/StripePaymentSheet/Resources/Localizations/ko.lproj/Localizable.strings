@@ -98,8 +98,6 @@
 
 "Confirm" = "확인";
 
-"Confirm it's you" = "본인 확인";
-
 "Confirm payment details" = "결제 세부사항 확인";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 이내에 은행 또는 결제 앱에서 결제를 확인하여 구매를 완료하십시오.";
@@ -128,11 +126,7 @@
 
 "Enter address manually" = "주소 직접 입력";
 
-"Enter the code sent to %@." = "%@번으로 보낸 코드를 입력해 주십시오.";
-
 "FPX Bank" = "FPX 은행";
-
-"Failed to connect" = "연결 실패";
 
 "Fast, secure checkout" = "빠르고 안전한 체크아웃";
 
@@ -225,8 +219,6 @@
 "Remove card?" = "카드를 삭제하시겠습니까?";
 
 "Remove linked account" = "연결된 계좌 제거";
-
-"Resend code" = "코드 재전송";
 
 "SEPA debit details cannot be changed." = "SEPA 자동 이체 세부사항은 설정되면 변경할 수 없습니다.";
 

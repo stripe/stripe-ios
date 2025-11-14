@@ -100,8 +100,6 @@
 
 "Confirm" = "Подтвердить";
 
-"Confirm it's you" = "Подтвердите, что это вы";
-
 "Confirm payment details" = "Подтвердить реквизиты платежа";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Чтобы завершить оформление покупки, подтвердите платеж в своем банковском или платежном приложении в течение %@.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Введите адрес вручную";
 
-"Enter the code sent to %@." = "Введите код, отправленный на %@.";
-
 "FPX Bank" = "Банк FPX";
-
-"Failed to connect" = "Не удалось подключиться";
 
 "Fast, secure checkout" = "Быстрое и безопасное оформление заказа";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Удалить карту?";
 
 "Remove linked account" = "Удалить привязанный счет";
-
-"Resend code" = "Послать код вторично";
 
 "SEPA debit details cannot be changed." = "Реквизиты платежа дебетованием SEPA нельзя изменить.";
 

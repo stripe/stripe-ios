@@ -100,8 +100,6 @@
 
 "Confirm" = "Kumpirmahin";
 
-"Confirm it's you" = "Kumpirmahin na ikaw ito";
-
 "Confirm payment details" = "Kumpirmahin ang mga detalye ng pagbabayad";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong bangko o app ng pagbabayad sa loob ng %@ para kumpletuhin ang pagbili.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Manwal na ilagay ang address";
 
-"Enter the code sent to %@." = "Ilagay ang code na ipinadala sa %@.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Nabigong kumonekta";
 
 "Fast, secure checkout" = "Mabilis at ligtas na pag-checkout";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Alisin ang kard?";
 
 "Remove linked account" = "Alisin ang naka-link na account";
-
-"Resend code" = "Ipadala muli ang code";
 
 "SEPA debit details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng SEPA debit.";
 

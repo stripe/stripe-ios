@@ -100,8 +100,6 @@
 
 "Confirm" = "Sahkan";
 
-"Confirm it's you" = "Sahkan andalah orangnya";
-
 "Confirm payment details" = "Sahkan butiran pembayaran";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
-"Enter the code sent to %@." = "Masukkan kod yang dihantar ke %@.";
-
 "FPX Bank" = "Bank untuk FPX";
-
-"Failed to connect" = "Gagal disambungkan";
 
 "Fast, secure checkout" = "Proses bayar dan keluar yang pantas dan selamat";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Alih keluar kad?";
 
 "Remove linked account" = "Alih keluar akaun yang dipautkan";
-
-"Resend code" = "Hantar semula kod";
 
 "SEPA debit details cannot be changed." = "Butiran debit SEPA tidak boleh diubah.";
 

@@ -4,7 +4,15 @@
 
 "Close" = "Close";
 
+"Confirm it's you" = "Confirm it's you";
+
 "Default payment method was not updated. Please try again." = "Default payment method was not updated. Please try again.";
+
+"Enter the code sent to %@." = "Enter the code sent to %@.";
+
+"Failed to connect" = "Failed to connect";
+
+"Resend code" = "Resend code";
 
 "Scan Card" = "Scan Card";
 
