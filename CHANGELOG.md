@@ -1,5 +1,8 @@
 ## X.Y.Z - changes pending release 
 
+### Financial Connections
+* [Added] `StripeFinancialConnections` SDK is now localized!
+
 ## 25.0.1 2025-11-10
 ### PaymentSheet
 * [Fixed] Fixed an issue where async APIs did not run on the main thread.
@@ -62,9 +65,6 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 ## 24.24.4 2025-10-20
 ### PaymentSheet
 * [Fixed] Fixed a bug with `FlowController` and `EmbeddedPaymentElement` in dark mode where `paymentOption.image` could be a blank icon for Alma, Billie, Multibanco, Paynow, Promptpay, Satispay, and Sunbit
-
-### Financial Connections
-* [Added] `StripeFinancialConnections` SDK is now localized!
 
 ## 24.24.3 2025-10-13
 ### PaymentSheet
