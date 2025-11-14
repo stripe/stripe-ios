@@ -100,16 +100,7 @@ public class PaymentMethodMessagingElement {
     /// - Parameter configuration: Configuration for the PaymentMethodMessagingElement, such as the amount and currency of the purchase.
     /// - Returns: A `CreationResult` object representing the result of the attempt to load the element and an instance of the element if applicable.
     public static func create(configuration: Configuration) async -> CreationResult {
-        do {
-            let apiResponse = try await get(configuration: configuration)
-            if let pmme = try await PaymentMethodMessagingElement(apiResponse: apiResponse, configuration: configuration) {
-                return .success(pmme)
-            } else {
-                return .noContent
-            }
-        } catch {
-            return .failed(error)
-        }
+        return await create(configuration: configuration, downloadManager: .sharedManager)
     }
 
     // MARK: - Internal

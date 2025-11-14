@@ -1058,7 +1058,9 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             })
 
             return [
-
+                ("PaymentIntent", .paymentIntent(paymentIntent)),
+                ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with payment method flow", makeDeferredIntent(deferredCSC)),
+                ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with payment method flow", makeDeferredIntent(deferredSSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
