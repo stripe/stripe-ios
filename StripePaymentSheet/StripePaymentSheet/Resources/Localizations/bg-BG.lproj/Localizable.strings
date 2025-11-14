@@ -100,8 +100,6 @@
 
 "Confirm" = "Потвърждаване";
 
-"Confirm it's you" = "Потвърдете, че сте вие";
-
 "Confirm payment details" = "Потвърждаване на данните за плащане";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Потвърдете плащането във Вашата банка или приложение за плащане в рамките на %@, за да завършите покупката.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Ръчно въвеждане на адрес";
 
-"Enter the code sent to %@." = "Въведете кода, изпратен на %@.";
-
 "FPX Bank" = "Банка FPX";
-
-"Failed to connect" = "Неуспешно свързване";
 
 "Fast, secure checkout" = "Бързо и сигурно финализиране на плащане";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Премахване на банковата карта?";
 
 "Remove linked account" = "Премахване на свързан акаунт";
-
-"Resend code" = "Повторно изпращане на кода";
 
 "SEPA debit details cannot be changed." = "Данните на SEPA дебит не могат да бъдат променяни.";
 

@@ -100,8 +100,6 @@
 
 "Confirm" = "確定する";
 
-"Confirm it's you" = "本人であると確定";
-
 "Confirm payment details" = "支払い情報を確定する";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 内で銀行または決済アプリで支払いを確定して、購入を完了します。";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "住所を手動で入力";
 
-"Enter the code sent to %@." = "%@ に送信されたコードを入力してください。";
-
 "FPX Bank" = "FPX 銀行";
-
-"Failed to connect" = "接続できませんでした";
 
 "Fast, secure checkout" = "迅速で安全な決済";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "カードを削除しますか？";
 
 "Remove linked account" = "関連付けられた口座を削除";
-
-"Resend code" = "コードを再送信";
 
 "SEPA debit details cannot be changed." = "SEPA デビットの詳細は変更できません。";
 

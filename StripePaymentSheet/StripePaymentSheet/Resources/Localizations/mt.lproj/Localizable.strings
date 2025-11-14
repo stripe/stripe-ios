@@ -100,8 +100,6 @@
 
 "Confirm" = "Ikkonferma";
 
-"Confirm it's you" = "Ikkonferma li int min qed tgħid li int";
-
 "Confirm payment details" = "Ikkonferma d-dettalji tal-pagament";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Biex tlesti x-xirja kkonferma l-pagament, fl-app tal-bank jew fl-app tal-pagamenti, fi żmien %@.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
 
-"Enter the code sent to %@." = "Daħħal il-kodiċi li bgħatna lil %@.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Ma nistgħux naqbdu";
 
 "Fast, secure checkout" = "Ħlas għax-xirja veloċi u sigur";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Tixtieq tneħħi l-karta?";
 
 "Remove linked account" = "Neħħi l-kont marbut";
-
-"Resend code" = "Erġa' ibgħat il-kodiċi";
 
 "SEPA debit details cannot be changed." = "Id-dettalji tad-debitu SEPA ma jistgħux jinbidlu.";
 

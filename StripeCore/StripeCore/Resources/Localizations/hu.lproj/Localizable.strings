@@ -4,7 +4,15 @@
 
 "Close" = "Bezárás";
 
+"Confirm it's you" = "Igazolja személyazonosságát";
+
 "Default payment method was not updated. Please try again." = "Az alapértelmezett fizetési mód nem frissült, próbálja újra.";
+
+"Enter the code sent to %@." = "Írja be a(z) %@ címre küldött kódot.";
+
+"Failed to connect" = "Nem sikerült csatlakozni";
+
+"Resend code" = "Kód újraküldése";
 
 "Scan Card" = "Kártya beolvasása";
 

@@ -4,7 +4,15 @@
 
 "Close" = "Sluiten";
 
+"Confirm it's you" = "Bevestig dat jij het bent";
+
 "Default payment method was not updated. Please try again." = "De standaardbetaalmethode is niet bijgewerkt. Probeer het opnieuw.";
+
+"Enter the code sent to %@." = "Voer de code in die is verstuurd naar %@.";
+
+"Failed to connect" = "Kan geen verbinding maken";
+
+"Resend code" = "Code opnieuw verzenden";
 
 "Scan Card" = "Kaart scannen";
 

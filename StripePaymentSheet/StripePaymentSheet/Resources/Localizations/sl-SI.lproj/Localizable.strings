@@ -100,8 +100,6 @@
 
 "Confirm" = "Potrdi";
 
-"Confirm it's you" = "Potrdite svojo identiteto";
-
 "Confirm payment details" = "Potrdite podatke o plačilu";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke ali aplikaciji za plačilo v %@, da zaključite nakup.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Naslov vnesite ročno";
 
-"Enter the code sent to %@." = "Vnesite kodo, ki je bila poslana na %@.";
-
 "FPX Bank" = "Banka FPX";
-
-"Failed to connect" = "Povezave ni bilo mogoče vzpostaviti";
 
 "Fast, secure checkout" = "Hitra in varna izvedba plačil";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Ali želite odstranit kartico?";
 
 "Remove linked account" = "Odstrani povezan račun";
-
-"Resend code" = "Znova pošlji kodo";
 
 "SEPA debit details cannot be changed." = "Podrobnosti obremenitve SEPA ni mogoče spremeniti.";
 
