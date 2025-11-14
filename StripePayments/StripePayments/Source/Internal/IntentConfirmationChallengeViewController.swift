@@ -51,7 +51,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         setupDimmedBackground()
         setupWebView()
-        setupConstraints()
         loadChallenge()
     }
 
@@ -91,7 +90,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
         // Create WebView
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
-        webView.uiDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
 
         // Make webview transparent
@@ -105,9 +103,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         #endif
 
         view.addSubview(webView)
-    }
 
-    private func setupConstraints() {
         NSLayoutConstraint.activate([
             webView.topAnchor.constraint(equalTo: view.topAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -137,31 +133,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
         )
 
         contentController.addUserScript(startScript)
-
-        // Hide mobile-confirmation-challenge UI, show only Stripe.js content
-        let hideReactUIScript = """
-        const style = document.createElement('style');
-        style.innerHTML = `
-            /* Make page background transparent */
-            html, body {
-                background: transparent !important;
-            }
-
-            /* Hide react-root */
-            #react-root {
-                display: none !important;
-            }
-        `;
-        document.head.appendChild(style);
-        """
-
-        let hideUIScript = WKUserScript(
-            source: hideReactUIScript,
-            injectionTime: .atDocumentEnd,
-            forMainFrameOnly: false
-        )
-
-        contentController.addUserScript(hideUIScript)
     }
 
     private func loadChallenge() {
@@ -261,19 +232,6 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         handleError(ChallengeError.navigationFailed(error))
-    }
-}
-
-// MARK: - WKUIDelegate
-@available(iOS 14.0, *)
-extension IntentConfirmationChallengeViewController: WKUIDelegate {
-    // Handle JavaScript alerts if needed
-    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-            completionHandler()
-        })
-        present(alert, animated: true)
     }
 }
 
