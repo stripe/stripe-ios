@@ -8,7 +8,7 @@
 import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(STP)@testable import StripeCore
-import StripeCoreTestUtils
+@_spi(STP) import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
@@ -22,6 +22,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
     var downloadManager: DownloadManager!
     var apiClient: STPAPIClient!
+    var mockAnalyticsClient = MockAnalyticsClient()
 
     override func setUp() {
         super.setUp()
@@ -55,9 +56,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify success and correct ViewData
@@ -73,25 +76,34 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: loadTestImage("cashapp-afterpay-logo"),
                     dark: loadTestImage("cashapp-afterpay-logo-dark"),
-                    altText: "Cash App Afterpay"
+                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: loadTestImage("affirm-logo"),
                     dark: loadTestImage("affirm-logo-dark"),
-                    altText: "Affirm"
+                    altText: "Affirm", code: "affirm"
                 ),
                 .init(
                     light: loadTestImage("klarna-logo"),
                     dark: loadTestImage("klarna-logo-dark"),
-                    altText: "Klarna"
+                    altText: "Klarna", code: "klarna"
                 ),
             ]),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
             promotion: "4 interest-free payments of $12.50",
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: actualViewData.analyticsHelper
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
+            configuration: configuration,
+            paymentMethods: "afterpay_clearpay,affirm,klarna",
+            contentType: "multi_partner"
+        )
     }
 
     func testCreate_connectedAccount_singlePartner() async {
@@ -107,9 +119,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify success with single partner
@@ -125,14 +139,23 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             mode: .singlePartner(logo: .init(
                 light: loadTestImage("affirm-logo"),
                 dark: loadTestImage("affirm-logo-dark"),
-                altText: "Affirm"
+                altText: "Affirm", code: "affirm"
             )),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=Learn%20more")!,
             promotion: "4 interest-free payments of $12.50 with {partner}",
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: actualViewData.analyticsHelper
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
+            configuration: configuration,
+            paymentMethods: "affirm",
+            contentType: "single_partner"
+        )
     }
 
     func testCreate_multiPartner_alwaysDark() async {
@@ -146,9 +169,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify success and correct ViewData
@@ -169,25 +194,34 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: darkImage1,
                     dark: darkImage1,
-                    altText: "Cash App Afterpay"
+                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: darkImage2,
                     dark: darkImage2,
-                    altText: "Affirm"
+                    altText: "Affirm", code: "affirm"
                 ),
                 .init(
                     light: darkImage3,
                     dark: darkImage3,
-                    altText: "Klarna"
+                    altText: "Klarna", code: "klarna"
                 ),
             ]),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
             promotion: "4 interest-free payments of $12.50",
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: actualViewData.analyticsHelper
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
+            configuration: configuration,
+            paymentMethods: "afterpay_clearpay,affirm,klarna",
+            contentType: "multi_partner"
+        )
     }
 
     func testCreate_multiPartner_flat() async {
@@ -201,9 +235,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify success and correct ViewData
@@ -224,25 +260,34 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: flatImage1,
                     dark: flatImage1,
-                    altText: "Cash App Afterpay"
+                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: flatImage2,
                     dark: flatImage2,
-                    altText: "Affirm"
+                    altText: "Affirm", code: "affirm"
                 ),
                 .init(
                     light: flatImage3,
                     dark: flatImage3,
-                    altText: "Klarna"
+                    altText: "Klarna", code: "klarna"
                 ),
             ]),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
             promotion: "4 interest-free payments of $12.50",
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: actualViewData.analyticsHelper
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
+            configuration: configuration,
+            paymentMethods: "afterpay_clearpay,affirm,klarna",
+            contentType: "multi_partner"
+        )
     }
 
     func testCreate_singlePartner() async {
@@ -257,9 +302,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         configuration.paymentMethodTypes = [.klarna]
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify success and correct ViewData with single partner
@@ -274,14 +321,23 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             mode: .singlePartner(logo: .init(
                 light: loadTestImage("klarna-logo"),
                 dark: loadTestImage("klarna-logo-dark"),
-                altText: "Klarna"
+                altText: "Klarna", code: "klarna"
             )),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more")!,
             promotion: "4 interest-free payments of $12.50 with {partner}",
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: actualViewData.analyticsHelper
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
+            configuration: configuration,
+            paymentMethods: "klarna",
+            contentType: "single_partner"
+        )
     }
 
     func testCreate_invalidCurrency() async {
@@ -295,9 +351,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify we get a failure result
@@ -316,6 +374,15 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
         XCTAssertEqual(apiError.param, "currency")
         XCTAssertEqual(apiError.message, "unsupported_currency: gel")
+
+        // Verify analytics events - load_started and load_failed (with error info) are logged
+        // Note: init is NOT logged for failed loads
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadFailed],
+            configuration: configuration,
+            errorType: "invalid_request_error",
+            errorCode: ""
+        )
     }
 
     func testCreate_invalidCountry() async {
@@ -330,9 +397,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         configuration.countryCode = "ZZ"  // Invalid country code
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify we get a failure result with proper error details
@@ -349,6 +418,14 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
         XCTAssertEqual(apiError.param, "country")
         XCTAssertEqual(apiError.message, "nonexistent_country: ZZ")
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadFailed],
+            configuration: configuration,
+            errorType: "invalid_request_error",
+            errorCode: ""
+        )
     }
 
     func testCreate_negativeAmount() async {
@@ -362,9 +439,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify we get no content
@@ -373,6 +452,14 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             XCTFail("Expected .noContent for negative amount, got \(result)")
             return
         }
+
+        // Verify analytics events - load_started and load_succeeded (no content) are logged
+        // Note: init is NOT logged for no-content loads
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded],
+            configuration: configuration,
+            contentType: "no_content"
+        )
     }
 
     func testCreate_missingPublishableKey() async {
@@ -387,9 +474,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify we get a failure with the specific missingPublishableKey error
@@ -403,6 +492,14 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             XCTFail("Expected PaymentMethodMessagingElementError.missingPublishableKey, got \(String(describing: error))")
             return
         }
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadFailed],
+            configuration: configuration,
+            errorType: "StripePaymentSheet.PaymentMethodMessagingElementError",
+            errorCode: "missingPublishableKey"
+        )
     }
 
     func testCreate_countryFrance_currencyUSD() async {
@@ -417,9 +514,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         configuration.countryCode = "FR"
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify we get no content
@@ -428,6 +527,13 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             XCTFail("Expected .noContent for France/USD combination, got \(result)")
             return
         }
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded],
+            configuration: configuration,
+            contentType: "no_content"
+        )
     }
 
     func testCreate_countryFrance_currencyEUR() async {
@@ -444,9 +550,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         configuration.countryCode = "FR"
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify success with French market payment methods
@@ -462,14 +570,23 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             mode: .singlePartner(logo: .init(
                 light: loadTestImage("klarna-logo"),
                 dark: loadTestImage("klarna-logo-dark"),
-                altText: "Klarna"
+                altText: "Klarna", code: "klarna"
             )),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=FR&currency=EUR&key=\(Self.frenchPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more")!,
             promotion: "3 interest-free payments of €16.67 with {partner}",
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: actualViewData.analyticsHelper
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
+            configuration: configuration,
+            paymentMethods: "klarna",
+            contentType: "single_partner"
+        )
     }
 
     func testCreate_localeFrench() async {
@@ -484,9 +601,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         configuration.locale = "fr"  // French locale
 
         // When: Creating the element
+        mockAnalyticsClient.reset()
         let result = await PaymentMethodMessagingElement.create(
             configuration: configuration,
-            downloadManager: downloadManager
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
         )
 
         // Then: Verify success with French-localized messaging but still US/USD info
@@ -502,28 +621,91 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 .init(
                     light: loadTestImage("cashapp-afterpay-logo"),
                     dark: loadTestImage("cashapp-afterpay-logo-dark"),
-                    altText: "Cash App Afterpay"
+                    altText: "Cash App Afterpay", code: "afterpay_clearpay"
                 ),
                 .init(
                     light: loadTestImage("affirm-logo"),
                     dark: loadTestImage("affirm-logo-dark"),
-                    altText: "Affirm"
+                    altText: "Affirm", code: "affirm"
                 ),
                 .init(
                     light: loadTestImage("klarna-logo"),
                     dark: loadTestImage("klarna-logo-dark"),
-                    altText: "Klarna"
+                    altText: "Klarna", code: "klarna"
                 ),
             ]),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=fr&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=En%20savoir%20plus")!,
             promotion: "4 paiements de 12,50 $US sans intérêts",
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: actualViewData.analyticsHelper
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
+            configuration: configuration,
+            paymentMethods: "afterpay_clearpay,affirm,klarna",
+            contentType: "multi_partner"
+        )
     }
 
     // MARK: - Helper Methods
+
+    /// Verifies that the expected analytics events were logged with correct parameters
+    private func assertAnalyticsLogged(
+        events: [STPAnalyticEvent],
+        configuration: PaymentMethodMessagingElement.Configuration,
+        paymentMethods: String? = nil,
+        contentType: String? = nil,
+        errorType: String? = nil,
+        errorCode: String? = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        // Verify we have exactly the expected number of events (one of each)
+        XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, events.count, "Expected \(events.count) analytics events", file: file, line: line)
+
+        // Check that each expected event was logged exactly once
+        for expectedEvent in events {
+            let matchingEvents = mockAnalyticsClient.loggedAnalytics.filter { analytic in
+                guard let paymentSheetAnalytic = analytic as? PaymentSheetAnalytic else { return false }
+                return paymentSheetAnalytic.event == expectedEvent
+            }
+
+            XCTAssertEqual(matchingEvents.count, 1, "Expected exactly one \(expectedEvent) event, found \(matchingEvents.count)", file: file, line: line)
+
+            guard let event = matchingEvents.first as? PaymentSheetAnalytic else { continue }
+
+            // Verify common parameters for all events
+            XCTAssertEqual(event.additionalParams["amount"] as? Int, configuration.amount, "Amount mismatch for \(expectedEvent)", file: file, line: line)
+            XCTAssertEqual(event.additionalParams["currency"] as? String, configuration.currency, "Currency mismatch for \(expectedEvent)", file: file, line: line)
+            XCTAssertEqual(event.additionalParams["requested_locale"] as? String, configuration.locale, "Locale mismatch for \(expectedEvent)", file: file, line: line)
+
+            // Verify event-specific parameters
+            if expectedEvent == .paymentMethodMessagingElementLoadSucceeded {
+                if let paymentMethods = paymentMethods {
+                    XCTAssertEqual(event.additionalParams["payment_methods"] as? String, paymentMethods, "Payment methods mismatch for load succeeded", file: file, line: line)
+                }
+                if let contentType = contentType {
+                    XCTAssertEqual(event.additionalParams["content_type"] as? String, contentType, "Content type mismatch for load succeeded", file: file, line: line)
+                }
+                XCTAssertNotNil(event.additionalParams["duration"], "Duration should be present for load succeeded", file: file, line: line)
+            } else if expectedEvent == .paymentMethodMessagingElementLoadFailed {
+                // Verify error-related parameters
+                XCTAssertNotNil(event.additionalParams["duration"], "Duration should be present for load failed", file: file, line: line)
+
+                if let errorType = errorType {
+                    XCTAssertEqual(event.additionalParams["error_type"] as? String, errorType, "Error type mismatch for load failed", file: file, line: line)
+                }
+
+                if let errorCode = errorCode {
+                    XCTAssertEqual(event.additionalParams["error_code"] as? String, errorCode, "Error code mismatch for load failed", file: file, line: line)
+                }
+            }
+        }
+    }
 
     /// Compares two ViewData instances, comparing UIImages by their PNG data instead of identity
     /// - Parameters:
