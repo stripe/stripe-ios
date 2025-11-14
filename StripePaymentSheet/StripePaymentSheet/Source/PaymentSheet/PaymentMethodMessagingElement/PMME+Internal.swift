@@ -82,8 +82,7 @@ extension PaymentMethodMessagingElement {
 
             // unexpected / error cases
             guard let infoUrl = paymentPlan.content.learnMore?.url else {
-                // TODO(gbirch) add error analytics
-                throw PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
+                throw Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
             }
             guard let logo = try await Self.getIconSet(
                 for: paymentPlan.content.images,
