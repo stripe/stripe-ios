@@ -28,7 +28,7 @@ extension PaymentMethodMessagingElement {
     /// - Parameter downloadManager: The DownloadManager instance to use for downloading images.
     /// - Parameter analyticsClient: Optional analytics client for testing. Defaults to shared client.
     /// - Returns: A `CreationResult` object representing the result of the attempt to load the element.
-    static func create(configuration: Configuration, downloadManager: DownloadManager, analyticsClient: STPAnalyticsClient = .sharedClient) async -> CreationResult {
+    static func create(configuration: Configuration, downloadManager: DownloadManager, analyticsClient: STPAnalyticsClientProtocol) async -> CreationResult {
         AnalyticsHelper.shared.generateSessionID()
         analyticsClient.addClass(toProductUsageIfNecessary: PaymentMethodMessagingElement.self)
         let analyticsHelper = PMMEAnalyticsHelper(configuration: configuration, analyticsClient: analyticsClient)

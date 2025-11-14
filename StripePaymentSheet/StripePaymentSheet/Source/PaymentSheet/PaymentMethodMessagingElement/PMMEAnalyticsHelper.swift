@@ -19,14 +19,14 @@ final class PMMEAnalyticsHelper {
     }
 
     private let configuration: PaymentMethodMessagingElement.Configuration
-    private let analyticsClient: STPAnalyticsClient
+    private let analyticsClient: STPAnalyticsClientProtocol
 
     private var loadingStartDate: Date?
     private var hasLoggedDisplay = false
 
     init(
         configuration: PaymentMethodMessagingElement.Configuration,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsClient: STPAnalyticsClientProtocol = STPAnalyticsClient.sharedClient
     ) {
         self.configuration = configuration
         self.analyticsClient = analyticsClient
@@ -70,7 +70,7 @@ final class PMMEAnalyticsHelper {
         additionalParams["duration"] = getLoadingDuration()
         additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
 
-        log(event: .paymentMethodMessagingElementLoadSucceeded, additionalParams: additionalParams)
+        log(event: .paymentMethodMessagingElementLoadFailed, additionalParams: additionalParams)
     }
 
     func logDisplayed(integrationType: IntegrationType) {
