@@ -168,8 +168,9 @@ final class PaymentSheetAnalyticsHelper {
         params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
         params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
 
-        // Add network metrics if available
-        if let metrics = networkMetrics {
+        // Add network metrics if available and enabled by backend flag
+        if let metrics = networkMetrics,
+           elementsSession.shouldSendNetworkAnalytics {
             params.mergeAssertingOnOverwrites(metrics.analyticsPayload(prefix: "elements_session_"))
         }
 

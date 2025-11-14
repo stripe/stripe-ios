@@ -384,6 +384,10 @@ extension STPElementsSession {
     var shouldAttestOnConfirmation: Bool {
         flags["elements_mobile_attest_on_intent_confirmation"] == true
     }
+
+    var shouldSendNetworkAnalytics: Bool {
+        flags["mpe_send_network_analytics"] == true
+    }
 }
 
 extension STPElementsSession {

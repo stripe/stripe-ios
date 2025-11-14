@@ -181,7 +181,7 @@ final class PaymentSheetLoader {
                 }
 
                 // Capture network metrics for Elements/Sessions call
-                let networkMetrics = STPAPIClient.networkMetricsDelegate?.lastElementsSessionMetrics
+                let networkMetrics = STPAPIClient.networkMetricsDelegate.lastElementsSessionMetrics
 
                 analyticsHelper.logLoadSucceeded(
                     intent: intent,
