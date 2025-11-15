@@ -12,13 +12,11 @@ public enum IntegrationMethod: String, CaseIterable {
     case card = "Card"
     case cardSetupIntents = "Card (SetupIntents)"
     case applePay = "Apple Pay"
-    case sofort = "Sofort"
     case sepaDebit = "SEPA Debit"
     case iDEAL
     case alipay = "Alipay"
     case bacsDebit = "Bacs Debit"
     case aubecsDebit = "AU BECS Debit"
-    case giropay
     case przelewy24 = "Przelewy24"
     case bancontact = "Bancontact"
     case eps = "EPS"
@@ -37,10 +35,6 @@ extension IntegrationMethod {
       case .iDEAL:
           let ideal = STPPaymentMethodiDEALParams()
           return STPPaymentMethodParams(iDEAL: ideal, billingDetails: nil, metadata: nil)
-      case .sofort:
-          let sofort = STPPaymentMethodSofortParams()
-          sofort.country = "NL"
-          return STPPaymentMethodParams(sofort: sofort, billingDetails: nil, metadata: nil)
       case .sepaDebit:
           let sepaDebit = STPPaymentMethodSEPADebitParams()
           return STPPaymentMethodParams(sepaDebit: sepaDebit, billingDetails: Self.defaultBillingDetails, metadata: nil)
@@ -59,9 +53,6 @@ extension IntegrationMethod {
       case .aubecsDebit:
           let aubecsDebit = STPPaymentMethodAUBECSDebitParams()
           return STPPaymentMethodParams(aubecsDebit: aubecsDebit, billingDetails: Self.defaultBillingDetails, metadata: nil)
-      case .giropay:
-          let giropay = STPPaymentMethodGiropayParams()
-          return STPPaymentMethodParams(giropay: giropay, billingDetails: Self.defaultBillingDetails, metadata: nil)
       case .przelewy24:
           let przelewy24 = STPPaymentMethodPrzelewy24Params()
           return STPPaymentMethodParams(przelewy24: przelewy24, billingDetails: Self.defaultBillingDetails, metadata: nil)

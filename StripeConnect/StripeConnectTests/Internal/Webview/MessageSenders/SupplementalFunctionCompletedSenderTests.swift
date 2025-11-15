@@ -4,7 +4,7 @@ import XCTest
 class SupplementalFunctionCompletedSenderTests: ScriptWebTestBase {
     func testSendMessage_successResult() throws {
         try validateMessageSent(sender: SupplementalFunctionCompletedSender(
-            payload: .init(functionName: .handleCheckScanSubmitted, invocationId: "testInvocationId", result: .success(.handleCheckScanSubmitted(.init())))
+            payload: .init(functionName: .handleCheckScanSubmitted, invocationId: "testInvocationId", result: .success(.handleCheckScanSubmitted))
         ))
     }
 
@@ -17,7 +17,7 @@ class SupplementalFunctionCompletedSenderTests: ScriptWebTestBase {
     func testSenderSignature_successResult() {
         XCTAssertEqual(
             try SupplementalFunctionCompletedSender(
-                payload: .init(functionName: .handleCheckScanSubmitted, invocationId: "testInvocationId", result: .success(.handleCheckScanSubmitted(.init())))
+                payload: .init(functionName: .handleCheckScanSubmitted, invocationId: "testInvocationId", result: .success(.handleCheckScanSubmitted))
             ).javascriptMessage(),
             """
             window.supplementalFunctionCompleted({"functionName":"handleCheckScanSubmitted","invocationId":"testInvocationId","result":"success","returnValue":{}});

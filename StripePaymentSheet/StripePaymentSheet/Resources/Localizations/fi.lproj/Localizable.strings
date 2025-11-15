@@ -100,8 +100,6 @@
 
 "Confirm" = "Vahvista";
 
-"Confirm it's you" = "Vahvista, että se olet sinä";
-
 "Confirm payment details" = "Vahvista maksutiedot";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi kanssa tai maksusovelluksessa %@.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Suorita osto vahvistamalla maksu pankkisi sovelluksessa %@.";
 
 "Confirm your CVC" = "Vahvista CVC";
+
+"Confirm your information" = "Vahvista tietosi";
 
 "Contact information" = "Yhteystiedot";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Syötä osoite manuaalisesti";
 
-"Enter the code sent to %@." = "Syötä koodi, joka lähetettiin numeroon %s.";
-
 "FPX Bank" = "FPX-pankki";
-
-"Failed to connect" = "Yhteyden muodostaminen epäonnistui";
 
 "Fast, secure checkout" = "Nopea, turvallinen maksaminen";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ymmärrän, että Stripe kerää suoraveloituksia yrityksen %@ puolesta sekä vahvistan, että olen tilinhaltija ja ainoa henkilö, jota tarvitaan tämän tilin veloitusten varmentamiseen.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN:n 4 viimeistä numeroa";
 
 "Log in or sign up" = "Kirjaudu sisään tai rekisteröidy";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Poista kortti?";
 
 "Remove linked account" = "Poista linkitetty tili";
-
-"Resend code" = "Lähetä koodi uudelleen";
 
 "SEPA debit details cannot be changed." = "SEPA-pankkimaksun tietoja ei voi muuttaa.";
 

@@ -193,7 +193,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     // MARK: - SEPA family
 
-    let sepaFamily: [STPPaymentMethodType] = [.SEPADebit, .iDEAL, .bancontact, .sofort]
+    let sepaFamily: [STPPaymentMethodType] = [.SEPADebit, .iDEAL, .bancontact]
 
     func testCanAddSEPAFamily() {
         // iDEAL and bancontact can be added if returnURL provided
@@ -211,8 +211,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             )
         }
 
-        let sepaFamilyAsynchronous: [STPPaymentMethodType] = [.sofort, .SEPADebit]
-        // ...SEPA and sofort also need allowsDelayedPaymentMethod:
+        let sepaFamilyAsynchronous: [STPPaymentMethodType] = [.SEPADebit]
+        // ...SEPA also need allowsDelayedPaymentMethod:
         for pm in sepaFamilyAsynchronous {
             var config = makeConfiguration(hasReturnURL: true)
             XCTAssertEqual(
@@ -880,14 +880,14 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
     func testPaymentMethodOrder() {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _, completion in
+        configuration.externalPaymentMethodConfiguration = .init(externalPaymentMethods: ["external_paypal"], externalPaymentMethodConfirmHandler: { _, _ in
             XCTFail()
-            completion(.canceled)
+            return .canceled
         })
 
         func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String], externalPMTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(
-                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _, _ in })
+                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
             )
             // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, externalPaymentMethodTypes: externalPMTypes), configuration: configuration)

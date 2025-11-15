@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "SEPA inkaso";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Vypršal čas autentifikácie vášho spôsobu platby -- skúste znova";
@@ -57,7 +55,5 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nemôžeme overiť váš spôsob platby. Vyberte iný spôsob platby a skúste to znova.";
 
 "WeChat Pay" = "WeChat Pay";
-
-"giropay" = "giropay";
 
 "iDEAL" = "iDEAL";

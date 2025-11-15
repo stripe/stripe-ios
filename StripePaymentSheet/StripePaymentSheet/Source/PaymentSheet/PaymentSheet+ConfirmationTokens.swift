@@ -6,9 +6,10 @@
 //
 
 import Foundation
-@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@_spi(STP) import StripePayments
 
 extension PaymentSheet {
+    @MainActor
     static func handleDeferredIntentConfirmation_confirmationToken(
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
@@ -19,121 +20,139 @@ extension PaymentSheet {
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession,
         mandateData: STPMandateDataParams? = nil,
-        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-    ) {
-        Task { @MainActor in
-            do {
+        confirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler
+    ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
+        do {
             // 1. Create the confirmation token params
             let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
                                                                         configuration: configuration,
                                                                         intentConfig: intentConfig,
-                                                                        elementsSession: elementsSession)
+                                                                        allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                                                                        elementsSession: elementsSession,
+                                                                        mandateData: mandateData)
 
-                let ephemeralKeySecret: String? = {
-                    // Only needed when using existing saved payment methods, API will error if provided for new payment methods
-                    guard confirmationTokenParams.paymentMethod != nil else { return nil }
-                    // Link saved payment methods don't require ephemeral keys, API will error if provided
-                    guard !isSavedFromLink(from: confirmType) else { return nil }
+            let ephemeralKeySecret: String? = {
+                // Only needed when using existing saved payment methods, API will error if provided for new payment methods
+                guard confirmationTokenParams.paymentMethod != nil else { return nil }
+                // Link saved payment methods don't require ephemeral keys, API will error if provided
+                guard !isSavedFromLink(from: confirmType) else { return nil }
 
-                    return configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
-                }()
+                return configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
+            }()
 
-                // 2. Create the ConfirmationToken
-                let confirmationToken = try await configuration.apiClient.createConfirmationToken(with: confirmationTokenParams,
-                                                                                                  ephemeralKeySecret: ephemeralKeySecret,
-                                                                                                  additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
+            // 2. Create the ConfirmationToken
+            let confirmationToken = try await configuration.apiClient.createConfirmationToken(with: confirmationTokenParams,
+                                                                                              ephemeralKeySecret: ephemeralKeySecret,
+                                                                                              additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
 
-                // 3. Vend the ConfirmationToken and fetch the client secret from the merchant
-                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
-                                                                  confirmationToken: confirmationToken)
+            // 3. Vend the ConfirmationToken and fetch the client secret from the merchant
+            let clientSecret = try await confirmHandler(confirmationToken)
 
-                guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
-                    // Force close PaymentSheet and early exit
-                    completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
-                    return
+            guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                // Force close PaymentSheet and early exit
+                return (.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
+            }
+
+            let savedPaymentMethodRadarOptions: STPRadarOptions? = {
+                switch confirmType {
+                case .saved(_, _, _, let radarOptions):
+                    // Edge-case we need to send radarOptions to level for CSC as there is no top level radarOptions property on the CT
+                    // hCaptcha is only supported client-side so this is acceptable
+                    return radarOptions
+                case .new:
+                    // Radar options is already attached to the paymentMethodData that was used to create the confirmation token
+                    return nil
                 }
+            }()
 
-                // Overwrite `completion` to ensure we set the default if necessary before completing.
-                let completion = { (status: STPPaymentHandlerActionStatus, paymentOrSetupIntent: PaymentOrSetupIntent?, error: NSError?, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType) in
-                    if let paymentOrSetupIntent {
-                        setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: paymentOrSetupIntent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
-                    }
-                    completion(makePaymentSheetResult(for: status, error: error), deferredIntentConfirmationType)
-                }
+            // 4. Retrieve the PaymentIntent or SetupIntent and confirm
+            let result: (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?)
+            switch intentConfig.mode {
+            case .payment:
+                let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
-                let savedPaymentMethodRadarOptions: STPRadarOptions? = {
-                    switch confirmType {
-                    case .saved(_, _, _, let radarOptions):
-                        // Edge-case we need to send radarOptions to level for CSC as there is no top level radarOptions property on the CT
-                        // hCaptcha is only supported client-side so this is acceptable
-                        return radarOptions
-                    case .new:
-                        // Radar options is already attached to the paymentMethodData that was used to create the confirmation token
-                        return nil
-                    }
-                }()
+                // Check if it needs confirmation
+                if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
+                    // 5a. Client-side confirmation with confirmation token
+                    let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret)
+                    paymentIntentParams.confirmationToken = confirmationToken.stripeId
+                    paymentIntentParams.returnURL = configuration.returnURL
+                    paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
+                    paymentIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
-                // 4. Retrieve the PaymentIntent or SetupIntent
-                switch intentConfig.mode {
-                case .payment:
-                    let paymentIntent = try await configuration.apiClient.retrievePaymentIntent(clientSecret: clientSecret, expand: ["payment_method"])
-
-                    // Check if it needs confirmation
-                    if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
-                        // 5a. Client-side confirmation with confirmation token
-                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
-                        paymentIntentParams.confirmationToken = confirmationToken.stripeId
-                        paymentIntentParams.returnURL = configuration.returnURL
-                        paymentIntentParams.radarOptions = savedPaymentMethodRadarOptions
-
-                        paymentHandler.confirmPayment(
-                            paymentIntentParams,
-                            with: authenticationContext
+                    result = await withCheckedContinuation { continuation in
+                        paymentHandler.confirmPaymentIntent(
+                            params: paymentIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, paymentIntent, error in
-                            completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .client)
+                            let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
+                            if let intent {
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                            }
+                            continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
-                    } else {
-                        // 5b. Server-side confirmation
-                        // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
+                    }
+                } else {
+                    // 5b. Server-side confirmation
+                    // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
+                    result = await withCheckedContinuation { continuation in
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
                             with: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, paymentIntent, error in
-                            completion(status, paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }, error, .server)
+                            let intent = paymentIntent.flatMap { PaymentOrSetupIntent.paymentIntent($0) }
+                            if let intent {
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                            }
+                            continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
                     }
-                case .setup:
-                    let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
+                }
+            case .setup:
+                let setupIntent = try await configuration.apiClient.retrieveSetupIntent(clientSecret: clientSecret, expand: ["payment_method"])
 
-                    if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
-                        // 6a. Client-side confirmation with confirmation token
-                        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
-                        setupIntentParams.confirmationToken = confirmationToken.stripeId
-                        setupIntentParams.returnURL = configuration.returnURL
-                        setupIntentParams.radarOptions = savedPaymentMethodRadarOptions
+                if [STPSetupIntentStatus.requiresPaymentMethod, STPSetupIntentStatus.requiresConfirmation].contains(setupIntent.status) {
+                    // 6a. Client-side confirmation with confirmation token
+                    let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                    setupIntentParams.confirmationToken = confirmationToken.stripeId
+                    setupIntentParams.returnURL = configuration.returnURL
+                    setupIntentParams.radarOptions = savedPaymentMethodRadarOptions
+                    setupIntentParams.clientAttributionMetadata = confirmationTokenParams.clientAttributionMetadata
 
+                    result = await withCheckedContinuation { continuation in
                         paymentHandler.confirmSetupIntent(
-                            setupIntentParams,
-                            with: authenticationContext
+                            params: setupIntentParams,
+                            authenticationContext: authenticationContext
                         ) { status, setupIntent, error in
-                            completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .client)
+                            let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
+                            if let intent {
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                            }
+                            continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .client))
                         }
-                    } else {
-                        // 6b. Server-side confirmation
-                        // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
+                    }
+                } else {
+                    // 6b. Server-side confirmation
+                    // Note: We cannot validate the ConfirmationToken used to confirm server-side, the backend does not return the CT on the intent object
+                    result = await withCheckedContinuation { continuation in
                         paymentHandler.handleNextAction(
                             for: setupIntent,
                             with: authenticationContext,
                             returnURL: configuration.returnURL
                         ) { status, setupIntent, error in
-                            completion(status, setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }, error, .server)
+                            let intent = setupIntent.flatMap { PaymentOrSetupIntent.setupIntent($0) }
+                            if let intent {
+                                setDefaultPaymentMethodIfNecessary(actionStatus: status, intent: intent, configuration: configuration, paymentMethodSetAsDefault: allowsSetAsDefaultPM)
+                            }
+                            continuation.resume(returning: (makePaymentSheetResult(for: status, error: error), .server))
                         }
                     }
                 }
-            } catch {
-                completion(.failed(error: error), nil)
             }
+            return result
+        } catch {
+            return (.failed(error: error), nil)
         }
     }
 
@@ -216,7 +235,7 @@ extension PaymentSheet {
 
                 // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
                 if confirmationTokenParams.mandateData == nil {
-                    confirmationTokenParams.mandateData = STPPaymentIntentParams.mandateDataIfRequired(for: paymentMethodType)
+                    confirmationTokenParams.mandateData = STPPaymentIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
                 }
             case .setup:
                 // Setup intents always require mandate data for certain payment methods
@@ -254,29 +273,9 @@ extension PaymentSheet {
     private static func isSavedFromLink(from confirmType: ConfirmPaymentMethodType) -> Bool {
         switch confirmType {
         case .saved(let paymentMethod, _, _, _):
-            return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.usBankAccount?.linkedAccount != nil || paymentMethod.link != nil
+            return paymentMethod.card?.wallet?.type == .link || paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode || paymentMethod.link != nil
         case .new:
             return false
-        }
-    }
-
-    /// Calls merchant app confirm handler to get the intent client secret
-    ///
-    /// - Parameters:
-    ///   - intentConfig: The Intent configuration
-    ///   - confirmationToken: The newly created confirmation token
-    /// - Returns: Client secret for the PaymentIntent or SetupIntent
-    /// - Throws: Any error from the merchant's confirmation handler
-    private static func fetchIntentClientSecretFromMerchant(
-        intentConfig: IntentConfiguration,
-        confirmationToken: STPConfirmationToken
-    ) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                intentConfig.confirmationTokenConfirmHandler?(confirmationToken) { result in
-                    continuation.resume(with: result)
-                }
-            }
         }
     }
 }

@@ -6,7 +6,7 @@
 //
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@testable@_spi(STP) import StripePayments
 import XCTest
 
 class STPPaymentMethodPreviewTest: XCTestCase {
@@ -240,6 +240,106 @@ class STPPaymentMethodPreviewTest: XCTestCase {
     func testPaymentMethodPreviewNilResponse() {
         let paymentMethodPreview = STPPaymentMethodPreview.decodedObject(fromAPIResponse: nil)
         XCTAssertNil(paymentMethodPreview, "decodedObject should return nil for nil response")
+    }
+
+    // MARK: - Card Field Tests
+
+    func testPaymentMethodPreviewCardFields() {
+        let json = [
+            "type": "card",
+            "billing_details": [
+                "name": "John Doe"
+            ],
+            "card": [
+                "brand": "visa",
+                "country": "US",
+                "exp_month": 12,
+                "exp_year": 2030,
+                "funding": "credit",
+                "last4": "4242",
+                "display_brand": "visa",
+            ],
+        ] as [String: Any]
+
+        let paymentMethodPreview = STPPaymentMethodPreview.decodedObject(fromAPIResponse: json)
+
+        XCTAssertNotNil(paymentMethodPreview)
+        XCTAssertNotNil(paymentMethodPreview?.card)
+        XCTAssertEqual(paymentMethodPreview?.card?.brand, .visa)
+        XCTAssertEqual(paymentMethodPreview?.card?.country, "US")
+        XCTAssertEqual(paymentMethodPreview?.card?.expMonth, 12)
+        XCTAssertEqual(paymentMethodPreview?.card?.expYear, 2030)
+        XCTAssertEqual(paymentMethodPreview?.card?.funding, "credit")
+        XCTAssertEqual(paymentMethodPreview?.card?.last4, "4242")
+        XCTAssertEqual(paymentMethodPreview?.card?.displayBrand, "visa")
+    }
+
+    func testPaymentMethodPreviewCardFieldsWithAdditionalData() {
+        let json = [
+            "type": "card",
+            "card": [
+                "brand": "mastercard",
+                "country": "GB",
+                "exp_month": 6,
+                "exp_year": 2025,
+                "funding": "debit",
+                "last4": "5678",
+                "display_brand": "mastercard",
+                "fingerprint": "fingerprint123",
+                "networks": [
+                    "available": ["mastercard"],
+                    "preferred": "mastercard",
+                ],
+                "checks": [
+                    "cvc_check": "pass"
+                ],
+                "three_d_secure_usage": [
+                    "supported": true
+                ],
+            ],
+        ] as [String: Any]
+
+        let paymentMethodPreview = STPPaymentMethodPreview.decodedObject(fromAPIResponse: json)
+
+        XCTAssertNotNil(paymentMethodPreview)
+        XCTAssertNotNil(paymentMethodPreview?.card)
+        XCTAssertEqual(paymentMethodPreview?.card?.brand, .mastercard)
+        XCTAssertEqual(paymentMethodPreview?.card?.country, "GB")
+        XCTAssertEqual(paymentMethodPreview?.card?.expMonth, 6)
+        XCTAssertEqual(paymentMethodPreview?.card?.expYear, 2025)
+        XCTAssertEqual(paymentMethodPreview?.card?.funding, "debit")
+        XCTAssertEqual(paymentMethodPreview?.card?.last4, "5678")
+        XCTAssertEqual(paymentMethodPreview?.card?.displayBrand, "mastercard")
+        XCTAssertEqual(paymentMethodPreview?.card?.fingerprint, "fingerprint123")
+        XCTAssertNotNil(paymentMethodPreview?.card?.networks)
+        XCTAssertNotNil(paymentMethodPreview?.card?.checks)
+        XCTAssertNotNil(paymentMethodPreview?.card?.threeDSecureUsage)
+    }
+
+    func testPaymentMethodPreviewCardFieldsNil() {
+        let json = [
+            "type": "card"
+        ] as [String: Any]
+
+        let paymentMethodPreview = STPPaymentMethodPreview.decodedObject(fromAPIResponse: json)
+
+        XCTAssertNotNil(paymentMethodPreview)
+        XCTAssertNil(paymentMethodPreview?.card)
+    }
+
+    func testPaymentMethodPreviewNonCardTypeWithoutCardFields() {
+        let json = [
+            "type": "sepa_debit",
+            "billing_details": [
+                "name": "John Doe"
+            ],
+        ] as [String: Any]
+
+        let paymentMethodPreview = STPPaymentMethodPreview.decodedObject(fromAPIResponse: json)
+
+        XCTAssertNotNil(paymentMethodPreview)
+        XCTAssertEqual(paymentMethodPreview?.type, .SEPADebit)
+        XCTAssertNil(paymentMethodPreview?.card)
     }
 
     // MARK: - AllResponseFields Test

@@ -259,6 +259,14 @@ import Foundation
     case paymentSheetSetDefaultPaymentMethod = "mc_set_default_payment_method"
     case paymentSheetSetDefaultPaymentMethodFailed = "mc_set_default_payment_method_failed"
 
+    // MARK: - Payment Method Messaging Element (PMME)
+    case paymentMethodMessagingElementInit = "payment_method_messaging_element_init"
+    case paymentMethodMessagingElementLoadStarted = "payment_method_messaging_element_load_started"
+    case paymentMethodMessagingElementLoadSucceeded = "payment_method_messaging_element_load_succeeded"
+    case paymentMethodMessagingElementLoadFailed = "payment_method_messaging_element_load_failed"
+    case paymentMethodMessagingElementDisplayed = "payment_method_messaging_element_displayed"
+    case paymentMethodMessagingElementTapped = "payment_method_messaging_element_tapped"
+
     // MARK: - STPBankAccountCollector
     case bankAccountCollectorStarted = "stripeios.bankaccountcollector.started"
     case bankAccountCollectorFinished = "stripeios.bankaccountcollector.finished"
@@ -270,6 +278,7 @@ import Foundation
     case unexpectedStripeUICoreBSBNumberProvider = "unexpected_error.stripeuicore.bsbnumberprovider"
     case unexpectedPaymentSheetError = "unexpected_error.paymentsheet"
     case unexpectedCustomerSheetError = "unexpected_error.customersheet"
+    case unexpectedPMMEError = "unexpected_error.paymentmethodmessagingelement"
     case unexpectedPaymentSheetConfirmationError = "unexpected_error.paymentsheet.confirmation"
     case unexpectedPaymentSheetViewControllerError = "unexpected_error.paymentsheet.paymentsheetviewcontroller"
     case unexpectedFlowControllerViewControllerError = "unexpected_error.paymentsheet.flowcontrollerviewcontroller"
@@ -314,6 +323,15 @@ import Foundation
     case passiveCaptchaSuccess = "elements.captcha.passive.success"
     case passiveCaptchaError = "elements.captcha.passive.error"
     case passiveCaptchaAttach = "elements.captcha.passive.attach"
+
+    // MARK: - Attestation on Confirmation
+    case attestationConfirmationPrepare = "elements.attestation.confirmation.prepare"
+    case attestationConfirmationPrepareSucceeded = "elements.attestation.confirmation.prepare_succeeded"
+    case attestationConfirmationPrepareFailed = "elements.attestation.confirmation.prepare_failed"
+    case attestationConfirmationRequestToken = "elements.attestation.confirmation.request_token"
+    case attestationConfirmationRequestTokenSucceeded = "elements.attestation.confirmation.request_token_succeeded"
+    case attestationConfirmationRequestTokenFailed = "elements.attestation.confirmation.request_token_failed"
+    case attestationConfirmationError = "elements.attestation.confirmation.error"
 
     // MARK: - STPApplePayContext
     case applePayContextStarted = "stripeios.applepaycontext.confirm.started"

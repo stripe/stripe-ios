@@ -5,7 +5,7 @@ app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: "120"
   - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-  - DEFAULT_TEST_DEVICE_26_0: platform=iOS Simulator,name=iPhone 12 mini,OS=26.0
+  - DEFAULT_TEST_DEVICE_26_0: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - GIT_AUTHOR_NAME: Bitrise CI
   - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
@@ -354,7 +354,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.0.x-edge
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_0
@@ -415,12 +415,12 @@ workflows:
         - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2: {}
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.0
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.1
     before_run:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.0.x-edge
+        stack: osx-xcode-26.1.x
   test-builds-xcode-26-release:
     steps:
     - script@1:
@@ -428,12 +428,12 @@ workflows:
         - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
         title: Build release builds
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.0
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.1
     before_run:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.0.x-edge
+        stack: osx-xcode-26.1.x
   install-tests:
     steps:
     - fastlane@3:

@@ -4,7 +4,15 @@
 
 "Close" = "Luk";
 
+"Confirm it's you" = "Bekræft, at det er dig";
+
 "Default payment method was not updated. Please try again." = "Standardbetalingsmetoden blev ikke opdateret. Prøv igen.";
+
+"Enter the code sent to %@." = "Indtast koden, der blev sendt til %@.";
+
+"Failed to connect" = "Kunne ikke oprette forbindelse";
+
+"Resend code" = "Send koden igen";
 
 "Scan Card" = "Scan kort";
 

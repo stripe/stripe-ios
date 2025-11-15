@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "SEPA Debit";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
@@ -57,7 +55,5 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 수단을 인증할 수 없습니다. 다른 결제 수단을 선택하고 다시 시도하십시오.";
 
 "WeChat Pay" = "WeChat Pay";
-
-"giropay" = "giropay";
 
 "iDEAL" = "iDEAL";

@@ -80,7 +80,7 @@ extension KlarnaExampleViewController {
                 billingDetails.address = billingAddress
 
                 // 3. Confirm the payment and redirect the user to Klarna
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     klarna: STPPaymentMethodKlarnaParams(),
                     billingDetails: billingDetails,

@@ -111,6 +111,10 @@ extension ConsumerSession {
         verificationSessions.containsVerifiedSMSSession
     }
 
+    var isVerifiedWithLinkAuthToken: Bool {
+        verificationSessions.containsVerifiedLinkAuthTokenSession
+    }
+
     var hasStartedSMSVerification: Bool {
         verificationSessions.contains( where: { $0.type == .sms && $0.state == .started })
     }
@@ -137,7 +141,6 @@ extension ConsumerSession {
         sessionID: String,
         customerID: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         doNotLogConsumerFunnelEvent: Bool,
@@ -149,7 +152,6 @@ extension ConsumerSession {
             emailSource: emailSource,
             sessionID: sessionID,
             customerID: customerID,
-            cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
@@ -163,7 +165,6 @@ extension ConsumerSession {
         sessionID: String,
         customerID: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
@@ -173,7 +174,6 @@ extension ConsumerSession {
             linkAuthTokenClientSecret,
             sessionID: sessionID,
             customerID: customerID,
-            cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface,
@@ -186,7 +186,6 @@ extension ConsumerSession {
         sessionID: String,
         customerID: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
@@ -196,7 +195,6 @@ extension ConsumerSession {
             linkAuthIntentID: linkAuthIntentID,
             sessionID: sessionID,
             customerID: customerID,
-            cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
             canSyncAttestationState: canSyncAttestationState,
             requestSurface: requestSurface,
@@ -371,12 +369,14 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
         updateParams: UpdatePaymentDetailsParams,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         apiClient.updatePaymentDetails(
             for: clientSecret, id: id,
             updateParams: updateParams,
+            clientAttributionMetadata: clientAttributionMetadata,
             requestSurface: requestSurface,
             completion: completion)
     }

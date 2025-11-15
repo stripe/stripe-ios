@@ -29,8 +29,6 @@ import Foundation
     @objc(STPPaymentMethodTypeAUBECSDebit) case AUBECSDebit
     /// A Bacs Debit payment method.
     case bacsDebit
-    /// A giropay payment method.
-    case giropay
     /// A Przelewy24 Debit payment method.
     case przelewy24
     /// An EPS payment method.
@@ -41,8 +39,6 @@ import Foundation
     case netBanking
     /// An OXXO payment method.
     @objc(STPPaymentMethodTypeOXXO) case OXXO
-    /// A Sofort payment method.
-    case sofort
     /// A UPI payment method.
     case UPI
     /// A PayPal payment method. :nodoc:
@@ -118,8 +114,6 @@ import Foundation
             return STPLocalizedString("AU Direct Debit", "Payment Method type brand name.")
         case .grabPay:
             return STPLocalizedString("GrabPay", "Payment Method type brand name.")
-        case .giropay:
-            return STPLocalizedString("giropay", "Payment Method type brand name.")
         case .EPS:
             return STPLocalizedString("EPS", "Payment Method type brand name.")
         case .przelewy24:
@@ -130,8 +124,6 @@ import Foundation
             return STPLocalizedString("NetBanking", "Payment Method type brand name")
         case .OXXO:
             return STPLocalizedString("OXXO", "Payment Method type brand name")
-        case .sofort:
-            return STPLocalizedString("Sofort", "Payment Method type brand name")
         case .UPI:
             return STPLocalizedString("UPI", "Payment Method type brand name")
         case .payPal:
@@ -223,8 +215,6 @@ import Foundation
             return "au_becs_debit"
         case .bacsDebit:
             return "bacs_debit"
-        case .giropay:
-            return "giropay"
         case .przelewy24:
             return "p24"
         case .EPS:
@@ -235,8 +225,6 @@ import Foundation
             return "netbanking"
         case .OXXO:
             return "oxxo"
-        case .sofort:
-            return "sofort"
         case .UPI:
             return "upi"
         case .payPal:

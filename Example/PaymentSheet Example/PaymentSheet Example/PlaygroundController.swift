@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(ConfirmationTokensPublicPreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -57,16 +57,15 @@ class PlaygroundController: ObservableObject {
                     request.paymentSummaryItems = [billing]
                     return request
                 },
-                authorizationResultHandler: { result, completion in
+                authorizationResultHandler: { result in
                     // Hardcoded order details:
-                    // In a real app, you should fetch these details from your service and call the completion() block on
-                    // the main queue.
+                    // In a real app, you should fetch these details from your service
                     result.orderDetails = PKPaymentOrderDetails(
                         orderTypeIdentifier: "com.myapp.order",
                         orderIdentifier: "ABC123-AAAA-1111",
                         webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
                         authenticationToken: "abc123")
-                    completion(result)
+                    return result
                 }
             )
             return PaymentSheet.ApplePayConfiguration(
@@ -83,7 +82,7 @@ class PlaygroundController: ObservableObject {
                     request.requiredShippingContactFields = [.name, .postalAddress]
                     return request
                 },
-                authorizationResultHandler: { result, completion in
+                authorizationResultHandler: { result in
                     // Hardcoded order details:
                     // In a real app, you should fetch these details from your service and call the completion() block on
                     // the main queue.
@@ -92,7 +91,7 @@ class PlaygroundController: ObservableObject {
                         orderIdentifier: "ABC123-AAAA-1111",
                         webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
                         authenticationToken: "abc123")
-                    completion(result)
+                    return result
                 },
                 shippingMethodUpdateHandler: { shippingMethod, completion in
                     // Get tax rate from somewhere (either stored from last contact update or default)
@@ -215,6 +214,10 @@ class PlaygroundController: ObservableObject {
             configuration.enablePassiveCaptcha = true
         }
 
+        if settings.enableAttestationOnConfirmation == .on {
+            configuration.enableAttestationOnConfirmation = true
+        }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -335,6 +338,10 @@ class PlaygroundController: ObservableObject {
             configuration.enablePassiveCaptcha = true
         }
 
+        if settings.enableAttestationOnConfirmation == .on {
+            configuration.enableAttestationOnConfirmation = true
+        }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -406,9 +413,12 @@ class PlaygroundController: ObservableObject {
         }
 
         // Use confirmation token handler for CT integration types
-        if settings.integrationType == .deferred_csc_ct || settings.integrationType == .deferred_ssc_ct {
-            let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] in
-                self?.confirmationTokenConfirmHandler($0, $1)
+        if settings.confirmationMode == .confirmationToken {
+            let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] confirmationToken in
+                guard let self = self else {
+                    throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
+                }
+                return try await self.confirmationTokenConfirmHandler(confirmationToken)
             }
 
             switch settings.mode {
@@ -437,9 +447,13 @@ class PlaygroundController: ObservableObject {
                 )
             }
         } else {
-            // Use regular confirmation handler for non-CT integration types
-            let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
-                self?.confirmHandler($0, $1, $2)
+            // Use payment method confirmation handler for non-CT integration types
+            let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] pm, billingDetails in
+                try await withCheckedThrowingContinuation { continuation in
+                    self?.confirmHandler(pm, billingDetails) { result in
+                        continuation.resume(with: result)
+                    }
+                }
             }
 
             switch settings.mode {
@@ -485,11 +499,11 @@ class PlaygroundController: ObservableObject {
         guard let externalPaymentMethods = settings.externalPaymentMethods.paymentMethods else {
             return nil
         }
-
         return .init(
             externalPaymentMethods: externalPaymentMethods
-        ) { [weak self] externalPaymentMethodType, billingDetails, completion in
-            self?.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails, completion: completion)
+        ) { [weak self] externalPaymentMethodType, billingDetails in
+            guard let self else { return .canceled }
+            return await self.handleExternalPaymentMethod(type: externalPaymentMethodType, billingDetails: billingDetails)
         }
     }
 
@@ -523,36 +537,32 @@ class PlaygroundController: ObservableObject {
         _ customPaymentMethodType: PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod,
         _ billingDetails: STPPaymentMethodBillingDetails
     ) async -> PaymentSheetResult {
-        return await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails) { result in
-                    continuation.resume(returning: result)
-                }
-            }
-        }
+        return await self.handleExternalPaymentMethod(type: customPaymentMethodType.id, billingDetails: billingDetails)
     }
 
-    func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails, completion: @escaping (PaymentSheetResult) -> Void) {
+    @MainActor
+    func handleExternalPaymentMethod(type: String, billingDetails: STPPaymentMethodBillingDetails) async -> PaymentSheetResult {
         print("Customer is attempting to complete payment with \(type). Their billing details: \(billingDetails)")
         print(billingDetails)
-        let alert = UIAlertController(title: "Confirm \(type)?", message: nil, preferredStyle: .alert)
-        alert.addAction(.init(title: "Confirm", style: .default) {_ in
-            completion(.completed)
-        })
-        alert.addAction(.init(title: "Cancel", style: .default) {_ in
-            completion(.canceled)
-        })
-        alert.addAction(.init(title: "Fail", style: .default) {_ in
-            let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
-            completion(.failed(error: exampleError))
-        })
+        return await withCheckedContinuation { continuation in
+            let alert = UIAlertController(title: "Confirm \(type)?", message: nil, preferredStyle: .alert)
+            alert.addAction(.init(title: "Confirm", style: .default) { _ in
+                continuation.resume(returning: .completed)
+            })
+            alert.addAction(.init(title: "Cancel", style: .default) {_ in
+                continuation.resume(returning: .canceled)
+            })
+            alert.addAction(.init(title: "Fail", style: .default) {_ in
+                let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
+                continuation.resume(returning: .failed(error: exampleError))
+            })
+            guard let topMostVC = UIViewController.topMostViewController() else {
+                assertionFailure("Unable to find top most view controller")
+                return
+            }
 
-        guard let topMostVC = UIViewController.topMostViewController() else {
-            print("Unable to find top most view controller")
-            return
+            topMostVC.present(alert, animated: true)
         }
-
-        topMostVC.present(alert, animated: true)
     }
 
     var clientSecret: String?
@@ -666,7 +676,7 @@ class PlaygroundController: ObservableObject {
             case .setup:
                 mc = PaymentSheet(setupIntentClientSecret: self.clientSecret!, configuration: configuration)
             }
-        case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc, .deferred_csc_ct, .deferred_ssc_ct:
+        case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         }
 
@@ -690,6 +700,12 @@ class PlaygroundController: ObservableObject {
         self.settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         PaymentSheet.resetCustomer()
         self.appearance = PaymentSheet.Appearance.default
+    }
+
+    func didTapResetAttestation() {
+        Task {
+            await StripeAttest(apiClient: .shared).resetKey()
+        }
     }
 
     func appearanceButtonTapped() {
@@ -839,7 +855,7 @@ extension PlaygroundController {
             "link_mode": settings.linkEnabledMode.rawValue,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
-            "is_confirmation_token": settings.integrationType == .deferred_csc_ct || settings.integrationType == .deferred_ssc_ct,
+            "is_confirmation_token": settings.confirmationMode == .confirmationToken,
             "customer_session_component_name": "mobile_payment_element",
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
             "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
@@ -954,7 +970,7 @@ extension PlaygroundController {
                             )
                         }
 
-                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp, .deferred_csc_ct, .deferred_ssc_ct:
+                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
                         PaymentSheet.FlowController.create(
                             intentConfiguration: self.intentConfig,
                             configuration: self.configuration,
@@ -1040,8 +1056,6 @@ extension PlaygroundController {
             return
         case .deferred_mc, .deferred_ssc:
             break
-        case .deferred_csc_ct, .deferred_ssc_ct:
-            assertionFailure("Confirmation token integration types should use confirmationTokenConfirmHandler, not confirmHandler")
         case .normal:
             assertionFailure()
         }
@@ -1054,28 +1068,29 @@ extension PlaygroundController {
         )
     }
 
-    func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken,
-                                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
+    func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken) async throws -> String {
         switch settings.integrationType {
-        case .deferred_csc_ct:
-            if settings.integrationType == .deferred_csc_ct {
-                DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1) {
-                    intentCreationCallback(.success(self.clientSecret!))
-                }
-            }
-            return
-        case .deferred_ssc_ct:
+        case .deferred_mp:
+            return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
+        case .deferred_csc:
+            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second simulate creating an intent
+            return self.clientSecret!
+        case .deferred_mc, .deferred_ssc:
             break
         default:
-            assertionFailure("Unhandled integration type in confirmationTokenConfirmHandler setup")
+            throw NSError(domain: "PlaygroundController.confirmationTokenConfirmHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unhandled integration type"])
         }
 
-        confirmHandlerInternal(
-            paymentMethodId: nil,
-            shouldSavePaymentMethod: nil,
-            confirmationTokenId: confirmationToken.stripeId,
-            intentCreationCallback: intentCreationCallback
-        )
+        return try await withCheckedThrowingContinuation { continuation in
+            confirmHandlerInternal(
+                paymentMethodId: nil,
+                shouldSavePaymentMethod: nil,
+                confirmationTokenId: confirmationToken.stripeId,
+                intentCreationCallback: { result in
+                    continuation.resume(with: result)
+                }
+            )
+        }
     }
 
     // Internal helper that handles both payment method and confirmation token flows

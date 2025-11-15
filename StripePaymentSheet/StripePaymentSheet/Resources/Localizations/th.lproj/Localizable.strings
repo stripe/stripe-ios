@@ -100,8 +100,6 @@
 
 "Confirm" = "ยืนยัน";
 
-"Confirm it's you" = "ยืนยันว่าเป็นคุณจริงๆ";
-
 "Confirm payment details" = "ยืนยันรายละเอียดการชำระเงิน";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารหรือแอปชำระเงินภายใน %@ เพื่อชำระเงินให้เสร็จสิ้น";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "ยืนยันการชำระเงินในแอปของธนาคารภายใน %@ เพื่อชำระเงินให้เสร็จสิ้น";
 
 "Confirm your CVC" = "ยืนยัน CVC ของคุณ";
+
+"Confirm your information" = "ยืนยันข้อมูลของคุณ";
 
 "Contact information" = "ข้อมูลติดต่อ";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "ป้อนที่อยู่ด้วยตนเอง";
 
-"Enter the code sent to %@." = "ป้อนรหัสที่เราส่งให้ที่ %s";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
 
 "Fast, secure checkout" = "การชำระเงินที่รวดเร็วและปลอดภัย";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "ฉันเข้าใจว่า Stripe จะดำเนินการหักบัญชีอัตโนมัติในนามของ %@ และยืนยันว่าฉันเป็นเจ้าของบัญชีและเป็นบุคคลเดียวเท่านั้นที่อนุญาตให้หักเงินจากบัญชีนี้ได้";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "ตัวเลข 4 หลักสุดท้ายของ SSN";
 
 "Log in or sign up" = "เข้าสู่ระบบหรือลงทะเบียน";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "นำบัตรออกไหม";
 
 "Remove linked account" = "นำบัญชีที่ลิงก์ไว้ออก";
-
-"Resend code" = "ส่งรหัสอีกครั้ง";
 
 "SEPA debit details cannot be changed." = "เปลี่ยนแปลงรายละเอียดการหักบัญชีอัตโนมัติแบบ SEPA ไม่ได้";
 

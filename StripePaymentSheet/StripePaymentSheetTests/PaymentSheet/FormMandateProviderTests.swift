@@ -25,7 +25,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: embeddedConfiguration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
@@ -39,7 +39,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
@@ -55,7 +55,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["us_bank_account"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
@@ -73,7 +73,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["sepa_debit"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "eur"),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
@@ -91,7 +91,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
@@ -109,7 +109,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["us_bank_account"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "usd"),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
@@ -126,7 +126,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .setup(currency: "USD", setupFutureUsage: .offSession),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
@@ -143,7 +143,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .onSession),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
@@ -160,7 +160,7 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 100, currency: "USD"),
-            confirmHandler: { _, _, _ in }
+            confirmHandler: { _, _ in return "" }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())

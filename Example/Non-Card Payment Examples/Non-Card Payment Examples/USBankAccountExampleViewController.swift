@@ -156,7 +156,7 @@ extension USBankAccountExampleViewController {
                 let paymentMethodParams = STPPaymentMethodParams(usBankAccount: usBankAccountParams,
                                                                  billingDetails: billingDetails,
                                                                  metadata: nil)
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = paymentMethodParams
                 paymentIntentParams.returnURL = "payments-example://stripe/"
 

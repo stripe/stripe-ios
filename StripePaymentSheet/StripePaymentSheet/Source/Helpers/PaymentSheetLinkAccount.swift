@@ -72,7 +72,6 @@ struct LinkPMDisplayDetails {
 
     // Dependencies
     let apiClient: STPAPIClient
-    let cookieStore: LinkCookieStore
 
     let useMobileEndpoints: Bool
     let canSyncAttestationState: Bool
@@ -100,8 +99,8 @@ struct LinkPMDisplayDetails {
 
     @_spi(STP) public var sessionState: SessionState {
         if let currentSession = currentSession {
-            // sms verification is not required if we are in the signup flow
-            return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup
+            // sms verification is not required if we are in the signup flow or are using seamless sign-in
+            return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup || currentSession.isVerifiedWithLinkAuthToken
                 ? .verified : .requiresVerification
         } else {
             return .requiresSignUp
@@ -138,7 +137,6 @@ struct LinkPMDisplayDetails {
         publishableKey: String?,
         displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?,
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
@@ -149,7 +147,6 @@ struct LinkPMDisplayDetails {
         self.publishableKey = publishableKey
         self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
-        self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.canSyncAttestationState = canSyncAttestationState
         self.requestSurface = requestSurface
@@ -451,6 +448,7 @@ struct LinkPMDisplayDetails {
     func updatePaymentDetails(
         id: String,
         updateParams: UpdatePaymentDetailsParams,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { [apiClient] completionRetryingOnAuthErrors in
@@ -469,6 +467,7 @@ struct LinkPMDisplayDetails {
                 with: apiClient,
                 id: id,
                 updateParams: updateParams,
+                clientAttributionMetadata: clientAttributionMetadata,
                 requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
@@ -537,15 +536,6 @@ struct LinkPMDisplayDetails {
         session.logout(with: apiClient, requestSurface: requestSurface) { _ in
             // We don't need to do anything if this fails, the key will expire automatically.
         }
-    }
-
-    func markEmailAsLoggedOut() {
-        guard let hashedEmail = email.lowercased().sha256 else {
-            stpAssertionFailure()
-            return
-        }
-
-        cookieStore.write(key: .lastLogoutEmail, value: hashedEmail)
     }
 }
 

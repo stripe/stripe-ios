@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ は現在ご利用になれません";
+
+"%@ is undergoing maintenance" = "%@ はメンテナンス中です";
+
+"Account number is required." = "口座番号は必須です。";
+
+"Almost there" = "もうすぐ完了です";
+
+"Can't find your bank?" = "ご利用の銀行が見つからない場合";
+
+"Checking and savings accounts are supported." = "当座預金口座と普通預金口座に対応しています。";
+
+"Choose a different bank" = "別の銀行を選択";
+
+"Click “Resend code” and try again, or %@." = "「コードを再送信」をクリックしてもう一度試しください。あるいは、%@。";
+
+"Confirm account number" = "口座番号を再入力 (確認)";
+
+"Confirm the account number." = "口座番号を確認してください。";
+
+"Connect account" = "口座を連結";
+
+"Connect accounts" = "口座を連結";
+
+"Connect another account" = "別の口座を連結";
+
+"Continue linking your account" = "口座の関連付けを続行する";
+
+"Continue with Link" = "Link で続行";
+
+"Email address" = "メールアドレス";
+
+"Enter bank details" = "銀行口座情報を入力する";
+
+"Enter bank details manually" = "銀行口座情報を手動で入力";
+
+"Enter the code sent to %@" = "%@ に送信されたコードを入力してください";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "%@ に送信されたコードを入力してください。この追加手順は、アカウントを安全に保つために定期的に実行いたします。";
+
+"Exit without connecting?" = "連結せずに終了しますか？";
+
+"Hmm, that code didn’t work. Double check it and try again." = "そのコードは一致しませんでした。再度確認してから、もう一度お試しください。";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "無効な銀行口座番号です。数値のみの %li 桁の番号を指定してください。";
+
+"Invalid routing number." = "金融番号が無効です。";
+
+"It looks like the verification code you provided is not valid anymore." = "入力した確認コードは有効期限が切れているようです。";
+
+"Learn more" = "もっと知る";
+
+"Maintenance is scheduled to end at %@." = "メンテナンスは %@ に終了する予定です。";
+
+"Maintenance is scheduled to end on %@ at %@." = "メンテナンスは %1$@ の %2$@ に終了する予定です。";
+
+"Manually enter details" = "詳細を手動で入力する";
+
+"No payment accounts available" = "利用可能な支払い口座がありません";
+
+"No results" = "結果がありません";
+
+"Not now" = "今はしない";
+
+"Only checking accounts are supported." = "当座預金口座のみに対応しています。";
+
+"Please enter %d digits for your routing number." = "金融番号は %li 桁で入力してください。";
+
+"Please enter your bank details manually or select another bank." = "ご利用の銀行口座の情報を手動で入力するか、別の銀行を選択してください。";
+
+"Please select another bank or try again later." = "別の銀行口座を選択するか、後でもう一度お試しください。";
+
+"Please select another bank or try again." = "別の銀行口座を選択するか、もう一度お試しください。";
+
+"Please select another bank." = "別の銀行を選択してください。";
+
+"Please try selecting another bank account." = "別の銀行口座の選択をお試しください。";
+
+"Please try selecting another bank." = "別の銀行の選択をお試しください。";
+
+"Retrieving accounts..." = "口座の取得中...";
+
+"Routing number" = "金融番号";
+
+"Routing number is required." = "金融番号が必要です。";
+
+"Search for more banks" = "さらに銀行を検索";
+
+"Select account" = "口座を選択する";
+
+"Select accounts" = "口座を選択する";
+
+"Select another bank" = "別の銀行を選択";
+
 "Select bank" = "銀行を選択";
+
+"Something went wrong" = "問題が発生しました";
+
+"Submit" = "送信";
+
+"Success" = "成功";
+
+"The account you selected isn't available for payments" = "選択した口座は、お支払いには使用できません";
+
+"The accounts you selected aren't available for payments" = "選択した口座は、お支払いには使用できません";
+
+"There was a problem accessing your %@ account" = "ご利用の %@ の口座へのアクセスしようとしたときに問題が発生しました";
+
+"Try again, or %@." = "もう一度お試しください。あるいは、%@。";
+
+"Try searching another bank" = "別の銀行を検索してみてください";
+
+"Try searching another bank or %@" = "別の銀行を検索してみてください。あるいは、%@";
+
+"Use information you previously saved with your Link account." = "Link アカウントにすでに保存されている情報を使用します。";
+
+"Use test account" = "テストアカウントを使用";
+
+"Use test code" = "テストコードを使用";
+
+"Verify your email" = "メールアドレスを確認する";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "%1$li %2$@ 口座が見つかりましたが、%3$@ にリンクできるのはアメリカの当座預金口座のみです。";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "%1$li %2$@ 口座が見つかりましたが、リンクできるのはアメリカの当座預金口座のみです。";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "%1$li %2$@ 口座が見つかりましたが、%3$@ にリンクできるのは当座預金または貯蓄預金口座のみです。";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "%1$li %2$@ 口座が見つかりましたが、リンクできるのは当座預金または貯蓄預金口座のみです。";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "%1$@ 口座が 1 件見つかりましたが、%2$@ にリンクできるのはアメリカの当座預金口座のみです。";
+
+"We found 1 %@ account but you can only link US checking accounts." = "%@ の口座が 1 件見つかりましたが、リンクできるのはアメリカの当座預金口座のみです。";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "%1$@ 口座が 1 件見つかりましたが、%2$@ にリンクできるのは当座預金口座または普通預金口座のみです。";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "1 つの %@ 口座が見つかりましたが、リンクできるのは当座預金口座または普通預金口座のみです。";
+
+"Yes, exit" = "はい、終了します";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "1 ～ 2 日以内に ••••%@ の口座に少額入金を行い、その後の手順を記載したメールをお送りします。";
+
+"You haven't finished linking your account. Press continue to finish the process." = "銀行口座の可憐付けはまだ完了していないため、処理を続行して完了してください。";
+
+"You haven't finished linking your bank account and all progress will be lost." = "銀行口座の関連付けは完了していないため、これまでの作業内容が失われます。";
+
+"You're in test mode." = "テスト環境をご利用中です。";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "現時点では、口座の連結ができていません。銀行口座情報を手動で入力するか、後でもう一度お試しください。";
+
+"Your account can’t be connected at this time. Please try again later." = "現時点では、口座の連結ができていません。後でもう一度お試しください。";
+
+"Your account number couldn’t be accessed at this time" = "現時点で、ご利用の口座番号にアクセスできていません";
+
+"Your account numbers don't match." = "口座番号が一致しません。";
+
+"Your account was connected, but couldn't be saved to Link." = "口座は連結されましたが、Link に保存できませんでした。";
+
+"Your account was connected." = "口座が連結されました。";
+
+"Your accounts were connected, but couldn't be saved to Link." = "口座は連結されましたが、Link に保存できませんでした。";
+
+"Your accounts were connected." = "口座が連結されました。";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "通常 1 ～ 2 営業日以内に、お取引口座に少額入金を行うことで銀行情報を確認します。当座預金口座のみをご使用いただけます。";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "お取引口座に少額入金を行うことで銀行情報を確認します。これには通常 1 ～ 2 営業日かかります。";
+
+"Your email address is invalid." = "メールアドレスが無効です。";
+
+"Your mobile phone number is incomplete." = "携帯電話番号の入力に不備があります。";
+
+"contact us" = "お問い合わせはこちら";
+
+"manually enter details" = "詳細を手動で入力する";

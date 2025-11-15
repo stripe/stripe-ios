@@ -100,8 +100,6 @@
 
 "Confirm" = "Επιβεβαίωση";
 
-"Confirm it's you" = "Επιβεβαιώστε ότι είστε εσείς";
-
 "Confirm payment details" = "Επιβεβαίωση στοιχείων πληρωμής";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή τράπεζας ή πληρωμής σας μέσα σε %@ για να ολοκληρώσετε την αγορά.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή της τράπεζάς σας μέσα σε %@ για την ολοκλήρωση της αγοράς.";
 
 "Confirm your CVC" = "Επιβεβαιώστε τον κωδικό CVC";
+
+"Confirm your information" = "Επιβεβαίωση των στοιχείων σας";
 
 "Contact information" = "Στοιχεία επικοινωνίας";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Πληκτρολογήστε τη διεύθυνση";
 
-"Enter the code sent to %@." = "Εισαγάγετε τον κωδικό που στάλθηκε στο %s.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Δεν ήταν δυνατή η σύνδεση";
 
 "Fast, secure checkout" = "Γρήγορο, ασφαλές ταμείο";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Κατανοώ ότι η Stripe θα εισπράττει άμεσες χρεώσεις εκ μέρους της %@ και επιβεβαιώνω ότι είμαι ο δικαιούχος του λογαριασμού και το μόνο άτομο που απαιτείται για την έγκριση των χρεώσεων από αυτόν τον λογαριασμό.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "4 τελευταία ψηφία SSN";
 
 "Log in or sign up" = "Σύνδεση ή εγγραφή";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Αφαίρεση κάρτας;";
 
 "Remove linked account" = "Αφαίρεση συνδεδεμένου λογαριασμού";
-
-"Resend code" = "Επανάληψη αποστολής κωδικού";
 
 "SEPA debit details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων χρέωσης SEPA.";
 

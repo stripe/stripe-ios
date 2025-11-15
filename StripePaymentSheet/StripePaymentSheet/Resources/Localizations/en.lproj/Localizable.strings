@@ -149,9 +149,6 @@
 /* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
 
-/* Two factor authentication screen heading */
-"Confirm it's you" = "Confirm it's you";
-
 /* Title of a screen where the user can update their payment method before continuing
 with the transaction. */
 "Confirm payment details" = "Confirm payment details";
@@ -164,6 +161,9 @@ with the transaction. */
 
 /* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Confirm your CVC";
+
+/* Title label for a know-your-customer (KYC) verification screen */
+"Confirm your information" = "Confirm your information";
 
 /* Title for the contact information section */
 "Contact information" = "Contact information";
@@ -193,14 +193,8 @@ to be saved and used in future checkout sessions. */
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
-/* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@." = "Enter the code sent to %@.";
-
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
-
-/* Label shown when a network-related error has occured. */
-"Failed to connect" = "Failed to connect";
 
 /* Title for the Link signup screen */
 "Fast, secure checkout" = "Fast, secure checkout";
@@ -222,6 +216,9 @@ to be saved and used in future checkout sessions. */
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
+
+/* Label for displaying the last 4 digits of the user's social security number */
+"Last 4 digits of SSN" = "Last 4 digits of SSN";
 
 /* Title for a button that indicates a user can log in or sign up. */
 "Log in or sign up" = "Log in or sign up";
@@ -344,9 +341,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Title for a button that when tapped removes a linked bank account. */
 "Remove linked account" = "Remove linked account";
-
-/* Label for a button that re-sends the a login code when tapped */
-"Resend code" = "Resend code";
 
 /* A button used for saving a new payment method
    Label on a button that when tapped, updates a card brand. */

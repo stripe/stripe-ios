@@ -61,7 +61,6 @@ request-id: req_jfI3J4cKEXpMD7
         "ideal",
         "card",
         "bancontact",
-        "sofort"
       ],
       "setup_future_usage" : null,
       "created" : 1753764084,
@@ -69,7 +68,6 @@ request-id: req_jfI3J4cKEXpMD7
     },
     "ordered_payment_method_types" : [
       "card",
-      "sofort",
       "bancontact",
       "ideal"
     ],

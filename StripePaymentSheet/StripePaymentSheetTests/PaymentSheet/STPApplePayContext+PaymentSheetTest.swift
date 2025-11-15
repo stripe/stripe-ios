@@ -7,13 +7,13 @@
 
 @testable import StripeApplePay
 @_spi(STP) import StripeCore
-@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(ConfirmationTokensPublicPreview) import StripePaymentSheet
+@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
 final class STPApplePayContext_PaymentSheetTest: XCTestCase {
-    let dummyDeferredConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in /* no-op */ }
-    let dummyConfirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { _, _ in /* no-op */ }
+    let dummyDeferredConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in return "" /* no-op */ }
+    let dummyConfirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { _ in return "" }
     let applePayConfiguration = PaymentSheet.ApplePayConfiguration(merchantId: "merchant_id", merchantCountryCode: "GB")
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration._testValue_MostPermissive()

@@ -46,12 +46,12 @@ jobs:
           else
             echo "Missing translations detected, continue workflow..."
           fi
-      - uses: peter-evans/find-comment@v3.0.0
+      - uses: davidme-stripe/find-comment@v3.0.0
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Missing Translations
-      - uses: peter-evans/create-or-update-comment@v4
+      - uses: davidme-stripe/create-or-update-comment@v4
         if: steps.missing.outputs.translations
         with:
           body: |

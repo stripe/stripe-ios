@@ -68,7 +68,7 @@ class AfterpayPriceBreakdownView: UIView {
         return NSMutableAttributedString.bnplPromoString(
             font: appearance.asElementsTheme.fonts.subheadline,
             textColor: appearance.colors.text,
-            infoIconColor: appearance.colors.icon,
+            infoIconColor: appearance.colors.text,
             template: template,
             substitution: ("<img/>", afterpayMarkImage)
         )
@@ -78,7 +78,7 @@ class AfterpayPriceBreakdownView: UIView {
     private func didTapInfoButton() {
         if let url = infoURL {
             let safariController = SFSafariViewController(url: url)
-            safariController.modalPresentationStyle = .overCurrentContext
+            safariController.modalPresentationStyle = .formSheet
             parentViewController?.present(safariController, animated: true)
         }
     }

@@ -4,7 +4,15 @@
 
 "Close" = "Sule";
 
+"Confirm it's you" = "Kinnitage, et see olete teie";
+
 "Default payment method was not updated. Please try again." = "Vaikemakseviisi ei värskendatud. Palun proovige uuesti.";
+
+"Enter the code sent to %@." = "Sisestage numbrile %@ saadetud kood.";
+
+"Failed to connect" = "Ühenduse loomine ebaõnnestus";
+
+"Resend code" = "Saada kood uuesti";
 
 "Scan Card" = "Skanni kaart";
 

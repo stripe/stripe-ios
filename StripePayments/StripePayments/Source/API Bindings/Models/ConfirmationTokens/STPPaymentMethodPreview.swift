@@ -9,7 +9,7 @@ import Foundation
 
 /// Preview of payment method details captured by the ConfirmationToken.
 /// - seealso: https://docs.stripe.com/api/confirmation_tokens/object#confirmation_token_object-payment_method_preview
-@_spi(ConfirmationTokensPublicPreview) public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
+public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
     /// You cannot directly instantiate an `STPPaymentMethodPreview`. You should only use one that is returned from the Stripe API.
     required internal override init() {
         super.init()
@@ -26,6 +26,9 @@ import Foundation
 
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     private(set) public var customerId: String?
+
+    /// If this is a card PaymentMethod, this contains the user's card details.
+    private(set) public var card: STPPaymentMethodCard?
 
     /// :nodoc:
     private(set) public var allResponseFields: [AnyHashable: Any] = [:]
@@ -62,6 +65,12 @@ import Foundation
         // Parse customer ID
         paymentMethodPreview.customerId = response["customer"] as? String
 
+        if let cardDict = response["card"] as? [AnyHashable: Any] {
+            paymentMethodPreview.card = STPPaymentMethodCard.decodedObject(fromAPIResponse: cardDict)
+        } else {
+            paymentMethodPreview.card = nil
+        }
+
         return paymentMethodPreview
     }
 
@@ -77,6 +86,7 @@ import Foundation
             "billing_details = \(billingDetails?.description ?? "nil")",
             "allow_redisplay = \(allowRedisplay.rawValue)",
             "customer = \(customerId ?? "nil")",
+            "card = \(card?.description ?? "nil")",
         ]
 
         return "<\(props.joined(separator: "; "))>"

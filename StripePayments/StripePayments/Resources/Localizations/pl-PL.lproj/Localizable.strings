@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "Polecenie zapłaty SEPA";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "Przekroczono czas uwierzytelnienia metody płatności – spróbuj ponownie";
@@ -57,7 +55,5 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nie możemy wykonać uwierzytelnienia Twojej metody płatności. Wybierz inną metodę i spróbuj ponownie.";
 
 "WeChat Pay" = "WeChat Pay";
-
-"giropay" = "giropay";
 
 "iDEAL" = "iDEAL";

@@ -42,8 +42,6 @@
 
 "SEPA Debit" = "การหักบัญชีอัตโนมัติแบบ SEPA";
 
-"Sofort" = "Sofort";
-
 "Swish" = "Swish";
 
 "Timed out authenticating your payment method -- try again" = "หมดเวลาตรวจสอบสิทธิ์วิธีการชำระเงินแล้ว โปรดลองอีกครั้ง";
@@ -57,7 +55,5 @@
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "เราตรวจสอบสิทธิ์วิธีการชำระเงินของคุณไม่ได้ โปรดเลือกวิธีการชำระเงินอื่นแล้วลองอีกครั้ง";
 
 "WeChat Pay" = "WeChat Pay";
-
-"giropay" = "giropay";
 
 "iDEAL" = "iDEAL";

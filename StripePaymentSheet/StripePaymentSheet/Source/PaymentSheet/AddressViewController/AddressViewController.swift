@@ -12,6 +12,7 @@ import Foundation
 import UIKit
 
 /// A delegate for `AddressViewController`
+@MainActor @preconcurrency
 public protocol AddressViewControllerDelegate: AnyObject {
     /// Called when the customer finishes entering their address or dismisses the view controller. Your implementation should dismiss the view controller.
     /// - Parameter address: A valid address or nil if the address information is incomplete or invalid.
@@ -134,6 +135,8 @@ public class AddressViewController: UIViewController {
             if isAddressCompatible(configuration.defaultValues) {
                 return configuration.defaultValues
             }
+        } else if configuration.defaultValues.name?.isEmpty == false {
+            return configuration.defaultValues
         }
 
         // Fall back to billing address
@@ -415,12 +418,13 @@ extension AddressViewController {
         guard hasLoadedSpecs else { return nil }
 
         let defaultValues = compatibleDefaultValues ?? .init()
+        let showFullForm = compatibleDefaultValues?.address.line1?.isEmpty == false
 
         return AddressSectionElement(
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            collectionMode: compatibleDefaultValues != nil ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
+            collectionMode: showFullForm ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in

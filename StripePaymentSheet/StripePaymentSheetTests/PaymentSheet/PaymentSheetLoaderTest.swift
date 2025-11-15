@@ -37,7 +37,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     @MainActor
     func testPaymentSheetLoadWithPaymentIntent() async throws {
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
+        let types = ["ideal", "card", "bancontact"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         // Given a PaymentIntent client secret...
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { result in
@@ -67,8 +67,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     func testPaymentSheetLoadWithSetupIntent() async throws {
         let expectation = XCTestExpectation(description: "Retrieve Setup Intent With Preferences")
-        let types = ["ideal", "card", "bancontact", "sofort"]
-        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort]
+        let types = ["ideal", "card", "bancontact"]
+        let expected: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact]
         let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: types)
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret(clientSecret),
@@ -124,8 +124,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     func testPaymentSheetLoadDeferredIntentSucceeds() {
         // Test PaymentSheetLoader.load can load various IntentConfigurations
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")
+            return ""
         }
         let intentConfigTestcases: [PaymentSheet.IntentConfiguration] = [
             // Typical auto pm payment config
@@ -163,8 +164,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration, analyticsClient: STPAnalyticsClient())
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
         // Test PaymentSheetLoader.load can load various IntentConfigurations
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")
+            return ""
         }
         let intentConfigTestcases: [(config: PaymentSheet.IntentConfiguration, expectedErrorType: String)] = [
             // Bad currency
@@ -223,8 +225,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Load PaymentSheet...
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")
+            return ""
         }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
@@ -269,8 +272,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Load PaymentSheet...
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")
+            return ""
         }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
@@ -290,13 +294,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     func testPaymentSheetLoadWithExternalPaymentMethods() async throws {
         // Loading PaymentSheet...
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
+        let types = ["ideal", "card", "bancontact"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         var configuration = self.configuration
         // ...with valid external payment methods configured...
         configuration.externalPaymentMethodConfiguration = .init(
             externalPaymentMethods: ["external_paypal"],
-            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
+            externalPaymentMethodConfirmHandler: { _, _ in /* no-op */ return .canceled }
         )
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { result in
             expectation.fulfill()
@@ -331,13 +335,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         STPAnalyticsClient.sharedClient._testLogHistory = []
         // Loading PaymentSheet...
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
+        let types = ["ideal", "card", "bancontact"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         var configuration = self.configuration
         // ...with invalid external payment methods configured...
         configuration.externalPaymentMethodConfiguration = .init(
             externalPaymentMethods: ["external_invalid_value"],
-            externalPaymentMethodConfirmHandler: { _, _, _ in /* no-op */ }
+            externalPaymentMethodConfirmHandler: { _, _ in /* no-op */ return .canceled }
         )
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
             expectation.fulfill()
@@ -370,7 +374,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     func testPaymentSheetLoadWithCustomPaymentMethods() async throws {
         // Loading PaymentSheet...
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
-        let types = ["ideal", "card", "bancontact", "sofort"]
+        let types = ["ideal", "card", "bancontact"]
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: types)
         var configuration = self.configuration
         // ...with valid custom payment methods configured...
@@ -433,8 +437,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Load PaymentSheet...
         let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")
+            return ""
         }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { result in
@@ -452,7 +457,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     }
 
     func testLoadPerformance() {
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in }
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in return "" }
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1050, currency: "USD"),
                                                             confirmHandler: confirmHandler)
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
@@ -480,8 +485,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     // MARK: - PMO SFU
     func testDeferredIntentWithPaymentMethodOptions() async throws {
         let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in
             XCTFail("Confirm handler shouldn't be called.")
+            return ""
         }
 
         // Test successful load with valid payment method options
@@ -517,8 +523,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     func testDeferredIntentWithInvalidPaymentMethodOptions() async throws {
         let loadExpectation = XCTestExpectation(description: "Load deferred intent with invalid PMO SFU")
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in
             XCTFail("Confirm handler shouldn't be called.")
+            return ""
         }
 
         // Test failure with invalid payment method options (cardPresent with off_session)
@@ -556,8 +563,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     func testDeferredIntentAllPMOSFUValues() async throws {
         let loadExpectation = XCTestExpectation(description: "Load deferred intent with PMO SFU")
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _, _ in
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in
             XCTFail("Confirm handler shouldn't be called.")
+            return ""
         }
 
         // Test successful load with valid payment method options

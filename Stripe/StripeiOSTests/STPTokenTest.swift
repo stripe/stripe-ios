@@ -42,8 +42,7 @@ class STPTokenTest: XCTestCase {
 
     func testCreatingTokenWithAttributeDictionarySetsAttributes() {
         guard
-            let token = STPToken.decodedObject(fromAPIResponse: buildTokenResponse()),
-            let timeInterval = token.created?.timeIntervalSince1970
+            let token = STPToken.decodedObject(fromAPIResponse: buildTokenResponse())
         else {
             XCTFail()
             return
@@ -52,7 +51,7 @@ class STPTokenTest: XCTestCase {
         XCTAssertEqual(token.livemode, false, "Generated token has the correct livemode")
         XCTAssertEqual(token.type, STPTokenType.card, "Generated token has incorrect type")
 
-        XCTAssertEqual(timeInterval, 1353025450.0, accuracy: 1.0, "Generated token has the correct created time")
+        XCTAssertEqual(token.created.timeIntervalSince1970, 1353025450.0, accuracy: 1.0, "Generated token has the correct created time")
     }
 
     func testCreatingTokenSetsAdditionalResponseFields() {

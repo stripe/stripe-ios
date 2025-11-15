@@ -20,7 +20,6 @@ extension STPAPIClient {
         emailSource: EmailSource?,
         sessionID: String,
         customerID: String?,
-        cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         doNotLogConsumerFunnelEvent: Bool,
@@ -62,7 +61,6 @@ extension STPAPIClient {
         _ linkAuthTokenClientSecret: String,
         sessionID: String,
         customerID: String?,
-        cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
@@ -90,7 +88,6 @@ extension STPAPIClient {
         linkAuthIntentID: String,
         sessionID: String,
         customerID: String?,
-        cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
         canSyncAttestationState: Bool,
         requestSurface: LinkRequestSurface = .default,
@@ -531,6 +528,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         updateParams: UpdatePaymentDetailsParams,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -572,6 +570,10 @@ extension STPAPIClient {
 
         if let isDefault = updateParams.isDefault {
             parameters["is_default"] = isDefault
+        }
+
+        if let clientAttributionMetadata {
+            parameters = Self.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         }
 
         makePaymentDetailsRequest(
@@ -661,7 +663,7 @@ extension STPAPIClient {
             switch type {
             case .sms:
                 return "SMS"
-            case .unparsable, .signup, .email:
+            case .unparsable, .signup, .email, .linkAuthToken:
                 assertionFailure("We don't support any verification except sms")
                 return ""
             }

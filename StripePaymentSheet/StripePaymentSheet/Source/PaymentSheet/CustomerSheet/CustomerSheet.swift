@@ -3,10 +3,6 @@
 //  StripePaymentSheet
 //
 //
-//  ⚠️🏗 This is feature has not been released yet, and is under construction
-//  Note: Do not import Stripe using `@_spi(STP)` in production.
-//  Doing so exposes internal functionality which may cause unexpected behavior if used directly.
-//
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -94,7 +90,6 @@ public class CustomerSheet {
     ///   a new payment method
     /// - Parameter customerSessionClientSecretProvider: A callback that returns a newly created
     ///   instance of CustomerSessionClientSecret
-    @_spi(CustomerSessionBetaAccess)
     public init(configuration: CustomerSheet.Configuration,
                 intentConfiguration: CustomerSheet.IntentConfiguration,
                 customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
@@ -110,7 +105,7 @@ public class CustomerSheet {
     let customerSheetIntentConfiguration: CustomerSheet.IntentConfiguration?
     let customerAdapter: CustomerAdapter?
 
-    var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    var confirmationChallenge: ConfirmationChallenge?
 
     private var csCompletion: CustomerSheetCompletion?
 
@@ -126,6 +121,16 @@ public class CustomerSheet {
 
         /// An error occurred when presenting the sheet
         case error(Error)
+    }
+
+    public func present(from presentingViewController: UIViewController) async -> CustomerSheetResult {
+        await withCheckedContinuation { continuation in
+            Task { @MainActor in
+                present(from: presentingViewController) { result in
+                    continuation.resume(returning: result)
+                }
+            }
+        }
     }
 
     public func present(from presentingViewController: UIViewController,
@@ -168,9 +173,7 @@ public class CustomerSheet {
         customerSheetDataSource.loadPaymentMethodInfo { result in
             switch result {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
-                if self.configuration.enablePassiveCaptcha, let passiveCaptchaData = elementsSession.passiveCaptchaData {
-                   self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
-                }
+                self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: self.configuration.enablePassiveCaptcha, enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
                 let paymentMethodRemoveIsPartial = customerSheetDataSource.paymentMethodRemoveIsPartial(elementsSession: elementsSession)
@@ -244,7 +247,7 @@ public class CustomerSheet {
                                                                                 paymentMethodSyncDefault: paymentMethodSyncDefault,
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
-                                                                                passiveCaptchaChallenge: self.passiveCaptchaChallenge,
+                                                                                confirmationChallenge: self.confirmationChallenge,
                                                                                 elementsSessionConfigId: elementsSessionConfigId,
                                                                                 csCompletion: self.csCompletion,
                                                                                 delegate: self)
@@ -292,11 +295,8 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
             completion(.failed(error: CustomerSheetError.unknown(debugDescription: "No setup intent available")))
             return
         }
-        Task {
-            let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
-            self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, hcaptchaToken: hcaptchaToken) { result in
-                completion(result)
-            }
+        self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, confirmationChallenge: confirmationChallenge) { result in
+            completion(result)
         }
     }
 
@@ -351,7 +351,6 @@ extension CustomerSheet {
     /// Returns the selected Payment Option
     /// You can use this to obtain the selected payment method
     /// Calling this method causes CustomerSheet to load and throws an error if loading fails.
-    @_spi(CustomerSessionBetaAccess)
     public func retrievePaymentOptionSelection() async throws -> CustomerSheet.PaymentOptionSelection? {
         guard let customerSheetDataSource = createCustomerSheetDataSource() else {
             return nil
@@ -396,7 +395,6 @@ extension CustomerSheet {
 }
 
 public extension CustomerSheet {
-    @_spi(CustomerSessionBetaAccess)
     struct IntentConfiguration {
         internal var paymentMethodTypes: [String]?
         internal var onBehalfOf: String?
@@ -423,14 +421,13 @@ public extension CustomerSheet {
     }
 }
 
-@_spi(CustomerSessionBetaAccess)
 public struct CustomerSessionClientSecret {
     /// The identifier of the Stripe Customer object.
     /// See https://stripe.com/docs/api/customers/object#customer_object-id
     internal let customerId: String
 
     /// Customer session client secret
-    /// See: https://docs.corp.stripe.com/api/customer_sessions/object
+    /// See: https://docs.stripe.com/api/customer_sessions/object
     internal let clientSecret: String
 
     public init(customerId: String, clientSecret: String) {

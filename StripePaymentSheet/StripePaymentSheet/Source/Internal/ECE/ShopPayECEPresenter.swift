@@ -314,8 +314,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
 
         // Create payment method
         do {
-            let paymentMethod = try await flowController.configuration.apiClient.createPaymentMethod(with: paymentMethodParams,
-                                                                                                 additionalPaymentUserAgentValues: [])
+            let paymentMethod = try await flowController.configuration.apiClient.createPaymentMethod(with: paymentMethodParams)
             // Dismiss ECE and return the payment method ID on the main thread
             Task { @MainActor in
                 dismissECE { [weak self] in

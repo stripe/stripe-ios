@@ -4,7 +4,15 @@
 
 "Close" = "Închidere";
 
+"Confirm it's you" = "Confirmați că sunteți dvs.";
+
 "Default payment method was not updated. Please try again." = "Metoda de plată implicită nu a fost actualizată. Încercați din nou.";
+
+"Enter the code sent to %@." = "Introduceți codul trimis la %@.";
+
+"Failed to connect" = "Nu s-a reușit conectarea";
+
+"Resend code" = "Retrimitere cod";
 
 "Scan Card" = "Scanare card";
 

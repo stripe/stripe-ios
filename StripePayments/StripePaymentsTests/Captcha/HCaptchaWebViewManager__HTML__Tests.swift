@@ -6,7 +6,7 @@
 //  Copyright © 2021 HCaptcha. All rights reserved.
 //
 
-@testable import StripePayments
+@_spi(STP) @testable import StripePayments
 
 import WebKit
 import XCTest

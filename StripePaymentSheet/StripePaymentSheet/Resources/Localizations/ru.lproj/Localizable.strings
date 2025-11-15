@@ -100,8 +100,6 @@
 
 "Confirm" = "Подтвердить";
 
-"Confirm it's you" = "Подтвердите, что это вы";
-
 "Confirm payment details" = "Подтвердить реквизиты платежа";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Чтобы завершить оформление покупки, подтвердите платеж в своем банковском или платежном приложении в течение %@.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Подтвердите платеж в вашем банковском приложении в течение %@ для оформления покупки.";
 
 "Confirm your CVC" = "Подтвердить код CVV карты";
+
+"Confirm your information" = "Подтвердите свою информацию";
 
 "Contact information" = "Контактные данные";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Введите адрес вручную";
 
-"Enter the code sent to %@." = "Введите код, отправленный на %s.";
-
 "FPX Bank" = "Банк FPX";
-
-"Failed to connect" = "Не удалось подключиться";
 
 "Fast, secure checkout" = "Быстрое и безопасное оформление заказа";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Последние 4 цифры SSN";
 
 "Log in or sign up" = "Войдите или зарегистрируйтесь";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Удалить карту?";
 
 "Remove linked account" = "Удалить привязанный счет";
-
-"Resend code" = "Послать код вторично";
 
 "SEPA debit details cannot be changed." = "Реквизиты платежа дебетованием SEPA нельзя изменить.";
 

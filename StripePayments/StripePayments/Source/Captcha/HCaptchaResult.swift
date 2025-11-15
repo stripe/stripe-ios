@@ -13,7 +13,7 @@ import Foundation
  This may contain the validation token on success, or an error that may have occurred.
  */
 @objc
-class HCaptchaResult: NSObject {
+@_spi(STP) public class HCaptchaResult: NSObject {
 
     /// Result token
     let token: String?
@@ -38,7 +38,7 @@ class HCaptchaResult: NSObject {
      - Throws: `HCaptchaError`
      */
     @objc
-    func dematerialize() throws -> String {
+    public func dematerialize() throws -> String {
         manager.resultHandled = true
 
         if let token = self.token {
