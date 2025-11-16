@@ -206,7 +206,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     func clearTextFields() {
-        paymentMethodFormElement.clearTextFields()
+        PaymentMethodElementUtils.clearTextFields(in: paymentMethodFormElement)
     }
 }
 

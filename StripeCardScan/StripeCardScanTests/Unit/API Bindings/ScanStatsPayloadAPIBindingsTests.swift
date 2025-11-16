@@ -74,7 +74,7 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
     /// Check that scan stats tasks is encoded properly
     func testScanStatsTasks() throws {
         /// Check that scan stats tasks is encoded properly
-        let jsonDictionary = try scanStatsTasks.encodeJSONDictionary()
+        let jsonDictionary = try StripeJSONEncoder().encodeJSONDictionary(scanStatsTasks)
         let tasksDictionary = jsonDictionary["tasks"] as! [String: Any]
         let repeatingTaskDictionary = jsonDictionary["repeating_tasks"] as! [String: Any]
 
@@ -85,7 +85,7 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
     /// Check that non repeating tasks are encoded properly
     func testNonRepeatingTasks() throws {
         /// Check that the JSON dictionary is formed properly
-        let jsonDictionary = try nonRepeatingTasks.encodeJSONDictionary()
+        let jsonDictionary = try StripeJSONEncoder().encodeJSONDictionary(nonRepeatingTasks)
         let jsonCameraPermissions = jsonDictionary["camera_permission"] as! [[String: Any]]
         XCTAssertEqual(jsonCameraPermissions.count, 1)
         XCTAssertEqual(jsonCameraPermissions[0]["result"] as! String, "success")
@@ -111,7 +111,7 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
     /// Check that repeating tasks are encoded properly
     func testRepeatingTasks() throws {
         /// Check that the JSON dictionary is formed properly
-        let jsonDictionary = try repeatingTasks.encodeJSONDictionary()
+        let jsonDictionary = try StripeJSONEncoder().encodeJSONDictionary(repeatingTasks)
         let jsonMainLoop = jsonDictionary["main_loop_images_processed"] as! [String: Any]
         XCTAssertEqual(jsonMainLoop["executions"] as? Int, -1)
     }
@@ -130,7 +130,7 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
                 scanStats: scanStatsTasks
             )
         )
-        let jsonDictionary = try scanStatsPayload.encodeJSONDictionary()
+        let jsonDictionary = try StripeJSONEncoder().encodeJSONDictionary(scanStatsPayload)
         /// Create query string
         let queryString = URLEncoder.queryString(from: jsonDictionary)
 

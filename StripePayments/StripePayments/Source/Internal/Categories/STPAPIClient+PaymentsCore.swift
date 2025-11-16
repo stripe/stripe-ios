@@ -31,7 +31,7 @@ extension STPAPIClient {
         )
         var newParams = params
         do {
-            newParams["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+            newParams["client_attribution_metadata"] = try StripeJSONEncoder().encodeJSONDictionary(clientAttributionMetadata)
         } catch {
             stpAssertionFailure("Could not encode clientAttributionMetadata to JSON: \(error)")
         }
