@@ -79,8 +79,7 @@ import Stripe3DS2
     case missingReturnURL
 
     /// The action is not supported for this iOS version.
-    @objc(STPPaymentHandlerUnsupportedVersionErrorCode)
-    case unsupportedVersionErrorCode
+    @_spi(STP) case unsupportedVersionErrorCode
 
     /// The SDK encountered an unexpected error, indicating a problem with the SDK or the Stripe API.
     @objc(STPPaymentHandlerUnexpectedErrorCode)
