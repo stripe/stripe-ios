@@ -21,7 +21,6 @@ class STPPaymentMethodAffirmParamsTests: STPNetworkStubbingTestCase {
 
         let params = STPPaymentMethodParams(
             affirm: affirmParams,
-            billingDetails: nil,
             metadata: nil
         )
 
