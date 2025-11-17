@@ -1136,7 +1136,6 @@ extension STPPaymentMethodParams {
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
             affirm: affirm,
-            billingDetails: nil,
             metadata: metadata
         )
     }
