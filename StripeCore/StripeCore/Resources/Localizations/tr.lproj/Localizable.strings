@@ -4,7 +4,15 @@
 
 "Close" = "Kapat";
 
+"Confirm it's you" = "Siz olduğunuzu teyit edin";
+
 "Default payment method was not updated. Please try again." = "Varsayılan ödeme yöntemi güncellenmedi. Lütfen tekrar deneyin.";
+
+"Enter the code sent to %@." = "%@’a gönderilen kodu girin.";
+
+"Failed to connect" = "Bağlantı başarısız oldu";
+
+"Resend code" = "Kodu tekrar gönder";
 
 "Scan Card" = "Kartı Tara";
 

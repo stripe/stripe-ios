@@ -100,8 +100,6 @@
 
 "Confirm" = "Onayla";
 
-"Confirm it's you" = "Siz olduğunuzu teyit edin";
-
 "Confirm payment details" = "Ödeme bilgilerini onayla";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ içinde banka veya ödeme uygulamanızla ödemeyi onaylayarak satın almayı tamamlayın.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "%@ içinde banka uygulamanızda ödemeyi onaylayarak satın almayı tamamlayın.";
 
 "Confirm your CVC" = "CVC kodunuzu onaylayın";
+
+"Confirm your information" = "Bilgilerinizi onaylayın";
 
 "Contact information" = "İletişim bilgileri";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Adresi manuel olarak girin";
 
-"Enter the code sent to %@." = "%s yoluyla gönderilen kodu girin.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Bağlantı başarısız.";
 
 "Fast, secure checkout" = "Hızlı, güvenli ödeme";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Stripe'ın %@ adına Otomatik Ödeme alacağını anlıyorum. Hesap sahibi ve bu hesaptan ödemeleri yetkilendirmek için gereken tek kişi olduğumu onaylıyorum.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN'nin son 4 hanesi";
 
 "Log in or sign up" = "Oturum açın veya kaydolun";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Kart kaldırılsın mı?";
 
 "Remove linked account" = "Bağlı hesabı kaldır";
-
-"Resend code" = "Kodu tekrar gönder";
 
 "SEPA debit details cannot be changed." = "SEPA bankamatik ayrıntıları değiştirilemiyor.";
 

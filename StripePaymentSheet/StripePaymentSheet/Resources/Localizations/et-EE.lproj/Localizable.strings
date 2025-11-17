@@ -100,8 +100,6 @@
 
 "Confirm" = "Kinnita";
 
-"Confirm it's you" = "Kinnitage, et see olete teie";
-
 "Confirm payment details" = "Kinnitage makseandmed";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma panga- või makserakenduses %@ jooksul.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma pangarakenduses %@ jooksul.";
 
 "Confirm your CVC" = "Kinnita CVC";
+
+"Confirm your information" = "Kinnitage oma teave";
 
 "Contact information" = "Kontaktandmed";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
-"Enter the code sent to %@." = "Sisestage kood, mis saadeti numbrile %s.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Ühendamine ebaõnnestus";
 
 "Fast, secure checkout" = "Kiire ja turvaline kassa";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Mõistan, et Stripe kogub ettevõtte %@ nimel otsekorraldusi, ja kinnitan, et olen kontoomanik ja ainus isik, kes peab selle konto debiteerimist autoriseerima.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN-i 4 viimast numbrit";
 
 "Log in or sign up" = "Logi sisse või registreeru";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Kas soovite kaardi eemaldada?";
 
 "Remove linked account" = "Eemalda lingitud konto";
-
-"Resend code" = "Saada kood uuesti";
 
 "SEPA debit details cannot be changed." = "SEPA deebeti andmeid ei saa muuta.";
 

@@ -100,8 +100,6 @@
 
 "Confirm" = "Bekräfta";
 
-"Confirm it's you" = "Bekräfta att det är du";
-
 "Confirm payment details" = "Bekräfta betalningsuppgifter";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekräfta betalningen i din bankapp eller betalningsapp inom %@ för att slutföra köpet.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekräfta betalningen i din banks app inom %@ för att slutföra köpet.";
 
 "Confirm your CVC" = "Bekräfta din CVC-kod";
+
+"Confirm your information" = "Bekräfta informationen";
 
 "Contact information" = "Kontaktinformation";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Ange adress manuellt";
 
-"Enter the code sent to %@." = "Ange koden som skickades till %s.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Det gick inte att ansluta";
 
 "Fast, secure checkout" = "Snabb och säker kassabetalning";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jag är införstådd med att Stripe samlar in autogireringar på uppdrag av %@ och bekräftar att jag är kontoinnehavaren och den enda person som krävs för att godkänna debiteringar från detta konto.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Sista 4 siffrorna i SSN";
 
 "Log in or sign up" = "Logga in eller registrera dig";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Ta bort kort?";
 
 "Remove linked account" = "Ta bort länkat konto";
-
-"Resend code" = "Skicka koden igen";
 
 "SEPA debit details cannot be changed." = "Uppgifter för SEPA-debitering kan inte ändras.";
 

@@ -14,7 +14,7 @@ import WebKit
   hCaptcha SDK facade (entry point)
 */
 @objc
-class HCaptcha: NSObject {
+@_spi(STP) public class HCaptcha: NSObject {
     fileprivate struct Constants {
         struct InfoDictKeys {
             static let APIKey = "HCaptchaKey"
@@ -59,7 +59,7 @@ class HCaptcha: NSObject {
      - Throws: Rethrows any exceptions thrown by `String(contentsOfFile:)`
      */
     @objc
-    convenience init(
+    public convenience init(
         apiKey: String? = nil,
         passiveApiKey: Bool = false,
         baseURL: URL? = URL(string: "http://localhost"),
@@ -139,7 +139,7 @@ class HCaptcha: NSObject {
      Starts the challenge validation
     */
     @objc
-    func validate(on view: UIView? = nil, resetOnError: Bool = true, completion: @escaping (HCaptchaResult) -> Void) {
+    public func validate(on view: UIView? = nil, resetOnError: Bool = true, completion: @escaping (HCaptchaResult) -> Void) {
         Log.debug(".validate on: \(String(describing: view)) resetOnError: \(resetOnError)")
 
         manager.shouldResetOnError = resetOnError
@@ -150,7 +150,7 @@ class HCaptcha: NSObject {
 
     /// Stops the execution of the webview
     @objc
-    func stop() {
+    public func stop() {
         Log.debug(".stop")
 
         manager.stop()

@@ -41,11 +41,11 @@ struct KYCRefreshRequest: Encodable {
         try container.encode(kycInfo.dateOfBirth, forKey: .dob)
         try container.encode(kycInfo.idNumberLast4, forKey: .idNumberLast4)
         try container.encode(kycInfo.idType, forKey: .idType)
-        try container.encodeIfPresent(kycInfo.address.line1, forKey: .line1)
-        try container.encodeIfPresent(kycInfo.address.line2, forKey: .line2)
-        try container.encodeIfPresent(kycInfo.address.city, forKey: .city)
-        try container.encodeIfPresent(kycInfo.address.state, forKey: .state)
-        try container.encodeIfPresent(kycInfo.address.postalCode, forKey: .zip)
-        try container.encodeIfPresent(kycInfo.address.country, forKey: .country)
+        try container.encode(kycInfo.address.line1 ?? "", forKey: .line1)
+        try container.encode(kycInfo.address.line2 ?? "", forKey: .line2)
+        try container.encode(kycInfo.address.city ?? "", forKey: .city)
+        try container.encode(kycInfo.address.state ?? "", forKey: .state)
+        try container.encode(kycInfo.address.postalCode ?? "", forKey: .zip)
+        try container.encode(kycInfo.address.country ?? "", forKey: .country)
     }
 }

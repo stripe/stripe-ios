@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "현재 %@을(를) 이용할 수 없습니다";
+
+"%@ is undergoing maintenance" = "%@이(가) 유지관리 중입니다";
+
+"Account number is required." = "계좌 번호가 필요합니다.";
+
+"Almost there" = "거의 끝나갑니다";
+
+"Can't find your bank?" = "은행을 찾을 수 없습니까?";
+
+"Checking and savings accounts are supported." = "당좌 또는 저축 계좌가 지원됩니다.";
+
+"Choose a different bank" = "다른 은행 선택";
+
+"Click “Resend code” and try again, or %@." = "“코드 재전송”을 클릭하고 다시 시도해 보거나 %@하십시오.";
+
+"Confirm account number" = "계좌 번호 확인";
+
+"Confirm the account number." = "계좌 번호를 확인하십시오.";
+
+"Connect account" = "계좌 연결";
+
+"Connect accounts" = "계좌 연결";
+
+"Connect another account" = "다른 계좌 연결";
+
+"Continue linking your account" = "계속 계좌 연결";
+
+"Continue with Link" = "Link에서 계속";
+
+"Email address" = "이메일 주소";
+
+"Enter bank details" = "은행 세부사항 입력";
+
+"Enter bank details manually" = "은행 세부사항을 직접 입력";
+
+"Enter the code sent to %@" = "%@에 전송된 코드를 입력하십시오.";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "%@(으)로 전송된 코드를 입력하십시오. 계정을 안전하게 보호하기 위해 정기적으로 이 추가 단계를 요청합니다.";
+
+"Exit without connecting?" = "연결하지 않고 종료하시겠습니까?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "이 코드는 작동하지 않는 것 같습니다. 한 번 더 확인하고 다시 시도하십시오.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "잘못된 은행 계좌 번호: 숫자만 포함된 최대 %li자리여야 합니다.";
+
+"Invalid routing number." = "잘못된 라우팅 번호입니다.";
+
+"It looks like the verification code you provided is not valid anymore." = "제공해 주신 확인 코드가 유효하지 않은 것 같습니다.";
+
+"Learn more" = "자세히 알아보기";
+
+"Maintenance is scheduled to end at %@." = "유지관리는 %@에 종료될 예정입니다.";
+
+"Maintenance is scheduled to end on %@ at %@." = "유지관리는 %2$@의 %1$@에 종료될 예정입니다.";
+
+"Manually enter details" = "직접 세부사항 입력";
+
+"No payment accounts available" = "사용 가능한 결제 계좌 없음";
+
+"No results" = "결과 없음";
+
+"Not now" = "나중에 확인";
+
+"Only checking accounts are supported." = "당좌 계좌만 지원됩니다.";
+
+"Please enter %d digits for your routing number." = "라우팅 번호 %li자를 입력하십시오.";
+
+"Please enter your bank details manually or select another bank." = "수동으로 은행 세부사항을 입력하거나 다른 은행을 선택하십시오.";
+
+"Please select another bank or try again later." = "다른 은행을 선택하거나 나중에 다시 시도해 주십시오.";
+
+"Please select another bank or try again." = "다른 은행을 선택하거나 다시 시도해 주십시오.";
+
+"Please select another bank." = "다른 은행을 선택해 주십시오.";
+
+"Please try selecting another bank account." = "다른 은행 계좌를 선택해 주십시오.";
+
+"Please try selecting another bank." = "다른 은행을 선택해 주십시오.";
+
+"Retrieving accounts..." = "계좌를 가져오는 중...";
+
+"Routing number" = "라우팅 번호";
+
+"Routing number is required." = "라우팅 번호가 필요합니다";
+
+"Search for more banks" = "더 많은 은행 검색";
+
+"Select account" = "계좌 선택";
+
+"Select accounts" = "계좌 선택";
+
+"Select another bank" = "다른 은행 선택";
+
 "Select bank" = "은행 선택";
+
+"Something went wrong" = "문제 발생";
+
+"Submit" = "제출";
+
+"Success" = "성공";
+
+"The account you selected isn't available for payments" = "귀하가 선택한 계좌는 결제를 위해 사용할 수 없습니다.";
+
+"The accounts you selected aren't available for payments" = "귀하가 선택한 계좌는 결제를 위해 사용할 수 없습니다.";
+
+"There was a problem accessing your %@ account" = "%@ 계좌에 액세스하는 중에 문제가 발생했습니다";
+
+"Try again, or %@." = "다시 시도하거나 %@하십시오.";
+
+"Try searching another bank" = "다른 은행 검색 시도";
+
+"Try searching another bank or %@" = "다른 은행 또는 %@에서 검색하십시오.";
+
+"Use information you previously saved with your Link account." = "이전에 Link 계정에 저장한 정보를 사용하십시오.";
+
+"Use test account" = "테스트 계정 사용";
+
+"Use test code" = "테스트 코드 사용";
+
+"Verify your email" = "이메일 확인";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "%1$li개의 %2$@ 계좌를 찾았지만 %3$@에는 미국 당좌예금 계좌만 링크할 수 있습니다.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "%1$li개의 %2$@ 계좌를 찾았지만 미국 당좌예금 계좌만 링크할 수 있습니다.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "%1$li개의 %2$@ 계좌를 찾았지만 %3$@에는 당좌예금 또는 저축예금 계좌만 링크할 수 있습니다.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "%1$li개의 %2$@ 계좌를 찾았지만 당좌예금 또는 저축예금 계좌만 링크할 수 있습니다.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "1개의 %1$@ 계좌를 찾았지만 %2$@에는 미국 당좌예금 계좌만 링크할 수 있습니다.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "1개의 %@ 계좌를 발견했지만 미국 당좌예금 계좌만 링크할 수 있습니다.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "1개의 %1$@ 계좌를 찾았지만 %2$@에는 당좌예금 또는 저축예금 계좌만 링크할 수 있습니다.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "1개의 %@ 계좌를 발견했지만 당좌예금 또는 저축예금 계좌만 링크할 수 있습니다.";
+
+"Yes, exit" = "예, 종료합니다";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "영업일 기준 1-2일 후에 끝자리가 ••••%@인 계좌로 소액 입금과 추가 지침이 포함된 이메일이 전송될 예정입니다.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "계정 연결이 완료되지 않았습니다. 계속을 눌러 프로세스를 완료하십시오.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "은행 계좌 연결이 완료되지 않아 모든 진행 상황이 사라집니다.";
+
+"You're in test mode." = "테스트 모드입니다.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "현재 계좌를 연결할 수 없습니다. 직접 은행 세부사항을 입력하거나 나중에 다시 시도하십시오.";
+
+"Your account can’t be connected at this time. Please try again later." = "현재 계좌를 연결할 수 없습니다. 나중에 다시 시도하십시오.";
+
+"Your account number couldn’t be accessed at this time" = "현재 귀하의 계좌 번호에 액세스할 수 없음";
+
+"Your account numbers don't match." = "계좌 번호가 일치하지 않습니다.";
+
+"Your account was connected, but couldn't be saved to Link." = "귀하의 계정이 연결되었지만 Link로 저장할 수 없습니다.";
+
+"Your account was connected." = "귀하의 계정이 연결되었습니다.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "귀하의 계정이 연결되었지만 Link로 저장할 수 없습니다.";
+
+"Your accounts were connected." = "귀하의 계정이 연결되었습니다.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "귀하의 은행 정보는 일반적으로 영업일 기준 1-2일 내에 귀하의 계좌에 소액 입금하여 확인합니다. 당좌 계좌만 지원됩니다.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "귀하의 은행 정보는 귀하의 계좌에 소액 입금하여 확인합니다. 일반적으로 영업일 기준 1-2일이 소요됩니다.";
+
+"Your email address is invalid." = "이메일 주소가 유효하지 않습니다.";
+
+"Your mobile phone number is incomplete." = "휴대폰 번호가 불완전합니다.";
+
+"contact us" = "문의하기";
+
+"manually enter details" = "직접 세부사항 입력";

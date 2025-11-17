@@ -100,8 +100,6 @@
 
 "Confirm" = "Confirma";
 
-"Confirm it's you" = "Confirmeu la vostra identitat";
-
 "Confirm payment details" = "Confirmació de les dades de pagament";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmeu el pagament al vostre banc o a l'aplicació de pagament en un termini de %@ per completar la compra.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmeu el pagament a l'aplicació del vostre banc en un termini de %@ per completar la compra.";
 
 "Confirm your CVC" = "Confirmeu el vostre CVC";
+
+"Confirm your information" = "Confirma la teva informació";
 
 "Contact information" = "Informació de contacte";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Introduir l'adreça manualment";
 
-"Enter the code sent to %@." = "Introduïu el codi que us hem enviat a %s.";
-
 "FPX Bank" = "Banc FPX";
-
-"Failed to connect" = "No s'ha pogut connectar";
 
 "Fast, secure checkout" = "Finalització de la compra ràpida i segura";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Entenc que Stripe cobrarà els dèbits directes de part de %@ i confirmo que soc el titular del compte i l'única persona requerida per autoritzar dèbits des d'aquest compte.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Últims 4 dígits del número de la seguretat social (SSN)";
 
 "Log in or sign up" = "Inicia sessió o registra't";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Voleu eliminar la targeta?";
 
 "Remove linked account" = "Elimina el compte vinculat";
-
-"Resend code" = "Reenvia'm el codi";
 
 "SEPA debit details cannot be changed." = "Les dades de la domiciliació SEPA no es poden canviar.";
 

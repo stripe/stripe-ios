@@ -100,8 +100,6 @@
 
 "Confirm" = "Kumpirmahin";
 
-"Confirm it's you" = "Kumpirmahin na ikaw ito";
-
 "Confirm payment details" = "Kumpirmahin ang mga detalye ng pagbabayad";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa iyong bangko o app ng pagbabayad sa loob ng %@ para kumpletuhin ang pagbili.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Kumpirmahin ang pagbabayad sa app ng iyong bangko sa loob ng %@ para kumpletuhin ang pagbili.";
 
 "Confirm your CVC" = "Kumpirmahin ang iyong CVC";
+
+"Confirm your information" = "Kumpirmahin ang iyong impormasyon";
 
 "Contact information" = "Impormasyon sa pakikipag-ugnayan";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Manwal na ilagay ang address";
 
-"Enter the code sent to %@." = "Ilagay ang code na ipinadala sa %s.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Nabigong kumonekta";
 
 "Fast, secure checkout" = "Mabilis at ligtas na pag-checkout";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Nauunawaan ko na mangongolekta ang Stripe ng Direct Debits sa ngalan ng  %@ at kinukumpirma ko na ako ang may-ari ng account at tanging taong kinakailangan na magpahintulot sa mga debit mula sa account na ito..";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Huling 4 na digit ng SSN";
 
 "Log in or sign up" = "Mag-log in o mag-sign up";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Alisin ang kard?";
 
 "Remove linked account" = "Alisin ang naka-link na account";
-
-"Resend code" = "Ipadala muli ang code";
 
 "SEPA debit details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng SEPA debit.";
 

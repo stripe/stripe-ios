@@ -17,10 +17,7 @@ class LoadingView: UIView {
 
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
-        label.text = STPLocalizedString(
-            "Failed to connect",
-            "Error message that displays when we're unable to connect to the server."
-        )
+        label.text = String.Localized.failed_to_connect
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = Styling.errorLabelFont

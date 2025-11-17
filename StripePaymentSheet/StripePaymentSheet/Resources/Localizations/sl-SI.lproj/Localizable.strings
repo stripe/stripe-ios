@@ -100,8 +100,6 @@
 
 "Confirm" = "Potrdi";
 
-"Confirm it's you" = "Potrdite svojo identiteto";
-
 "Confirm payment details" = "Potrdite podatke o plačilu";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke ali aplikaciji za plačilo v %@, da zaključite nakup.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke %@, da zaključite nakup.";
 
 "Confirm your CVC" = "Potrdite svojo kodo CVC";
+
+"Confirm your information" = "Potrdite svoje podatke";
 
 "Contact information" = "Podatki za stik";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Naslov vnesite ročno";
 
-"Enter the code sent to %@." = "Vnesite kodo, ki je bila poslana na %s.";
-
 "FPX Bank" = "Banka FPX";
-
-"Failed to connect" = "Povezave ni bilo mogoče vzpostaviti";
 
 "Fast, secure checkout" = "Hitra in varna izvedba plačil";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Potrjujem, da bo družba Stripe zbirala direktne obremenitve v imenu podjetja %@ ter da sem lastnik računa in edina oseba, ki lahko odobri bremenitve s tega računa.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Zadnje 4 števke SSN";
 
 "Log in or sign up" = "Vpis ali prijava";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Ali želite odstranit kartico?";
 
 "Remove linked account" = "Odstrani povezan račun";
-
-"Resend code" = "Znova pošlji kodo";
 
 "SEPA debit details cannot be changed." = "Podrobnosti obremenitve SEPA ni mogoče spremeniti.";
 

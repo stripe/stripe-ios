@@ -111,7 +111,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
-    var passiveCaptchaChallenge: StripePayments.PassiveCaptchaChallenge?
+    var confirmationChallenge: ConfirmationChallenge?
 
     // MARK: - UI properties
 
@@ -556,7 +556,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            confirmationChallenge: confirmationChallenge,
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
@@ -637,13 +637,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
 
-                self.isPaymentInFlight = false
                 switch result {
                 case .canceled:
+                    self.isPaymentInFlight = false
                     // Keep customer on payment sheet
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
+                    self.isPaymentInFlight = false
 #if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
@@ -672,6 +673,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
+                            self.isPaymentInFlight = false
                             self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
                     }

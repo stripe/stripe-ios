@@ -100,8 +100,6 @@
 
 "Confirm" = "Ikkonferma";
 
-"Confirm it's you" = "Ikkonferma li int min qed tgħid li int";
-
 "Confirm payment details" = "Ikkonferma d-dettalji tal-pagament";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Biex tlesti x-xirja kkonferma l-pagament, fl-app tal-bank jew fl-app tal-pagamenti, fi żmien %@.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Ikkonferma l-pagament fl-app tal-bank fi żmien %@ biex tlesti x-xirja.";
 
 "Confirm your CVC" = "Ikkonferma l-kodiċi CVC tiegħek";
+
+"Confirm your information" = "Ikkonferma l-informazzjoni tiegħek";
 
 "Contact information" = "Id-dettalji tal-kuntatt";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Ikteb l-indirizz int stess";
 
-"Enter the code sent to %@." = "Daħħal il-kodiċi li bgħatna lil %s.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Ma nistgħux naqbdu";
 
 "Fast, secure checkout" = "Ħlas għax-xirja veloċi u sigur";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jiena nifhem li Stripe se tkun qed tiġbor id-Debiti Diretti f'isem %@ u nikkonferma li jiena d-detentur tal-kont u l-unika persuna meħtieġa biex tawtorizza d-debiti minn dan il-kont.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "L-aħħar 4 ċifri tal-SSN";
 
 "Log in or sign up" = "Idħol jew irreġistra";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Tixtieq tneħħi l-karta?";
 
 "Remove linked account" = "Neħħi l-kont marbut";
-
-"Resend code" = "Erġa' ibgħat il-kodiċi";
 
 "SEPA debit details cannot be changed." = "Id-dettalji tad-debitu SEPA ma jistgħux jinbidlu.";
 

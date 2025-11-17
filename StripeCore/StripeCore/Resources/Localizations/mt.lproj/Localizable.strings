@@ -4,7 +4,15 @@
 
 "Close" = "Agħlaq";
 
+"Confirm it's you" = "Ikkonferma li int min qed tgħid li int";
+
 "Default payment method was not updated. Please try again." = "Il-metodu tal-pagament standard ma nbidilx. Jekk jogħġbok erġa' pprova.";
+
+"Enter the code sent to %@." = "Daħħal il-kodiċi mibgħut lil %@.";
+
+"Failed to connect" = "Ma rnexxilux jikkonnettja";
+
+"Resend code" = "Erġa’ ibgħat il-kodiċi";
 
 "Scan Card" = "Skennja l-Karta";
 

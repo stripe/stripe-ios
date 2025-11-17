@@ -100,8 +100,6 @@
 
 "Confirm" = "Xác nhận";
 
-"Confirm it's you" = "Xác nhận đó là bạn";
-
 "Confirm payment details" = "Xác nhận thông tin thanh toán";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng hoặc ứng dụng thanh toán của bạn trong vòng %@ để hoàn tất giao dịch mua.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Hãy xác nhận thanh toán trong ứng dụng ngân hàng của quý vị trong vòng %@ để hoàn tất giao dịch mua.";
 
 "Confirm your CVC" = "Xác nhận CVC của bạn";
+
+"Confirm your information" = "Xác nhận thông tin của bạn";
 
 "Contact information" = "Thông tin liên lạc";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
 
-"Enter the code sent to %@." = "Nhập mã đã được gửi tới %s.";
-
 "FPX Bank" = "Ngân hàng FPX";
-
-"Failed to connect" = "Không thể kết nối";
 
 "Fast, secure checkout" = "Thanh toán nhanh chóng, an toàn";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Tôi hiểu rằng Stripe sẽ thu Ghi nợ Trực tiếp thay mặt %@ và tôi xác nhận rằng tôi là chủ tài khoản và là người duy nhất cần có để ủy quyền ghi nợ từ tài khoản này.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "4 chữ số cuối của SSN";
 
 "Log in or sign up" = "Đăng nhập hoặc đăng ký";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Xóa thẻ?";
 
 "Remove linked account" = "Xóa tài khoản liên kết";
-
-"Resend code" = "Gửi lại mã";
 
 "SEPA debit details cannot be changed." = "Không thể thay đổi thông tin Ghi nợ SEPA.";
 

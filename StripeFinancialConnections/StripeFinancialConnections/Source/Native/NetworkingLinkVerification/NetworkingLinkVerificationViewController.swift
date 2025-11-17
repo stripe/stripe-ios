@@ -56,10 +56,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
                 iconView: nil,
-                title: STPLocalizedString(
-                    "Confirm it's you",
-                    "The title of a screen where users are informed that they can sign-in-to Link."
-                ),
+                title: String.Localized.confirm_its_you,
                 subtitle: String(format: STPLocalizedString(
                     "Enter the code sent to %@",
                     "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."

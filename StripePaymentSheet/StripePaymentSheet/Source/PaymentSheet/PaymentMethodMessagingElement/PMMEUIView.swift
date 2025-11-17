@@ -15,15 +15,25 @@ class PMMEUIView: UIView {
 
     private let infoUrl: URL
     private let appearance: PaymentMethodMessagingElement.Appearance
+    private let analyticsHelper: PMMEAnalyticsHelper
 
     // Callback to notify SwiftUI of height changes. Unneeded if used in a UIKit context.
     private let didUpdateHeight: ((CGFloat) -> Void)?
     private var previousHeight: CGFloat?
 
+    // What UI context the view is shown from, for analytics purposes
+    private let integrationType: PMMEAnalyticsHelper.IntegrationType
+
     // TODO(gbirch) add accessibilityHint property with instructions about opening info url
-    init(viewData: PaymentMethodMessagingElement.ViewData, didUpdateHeight: ((CGFloat) -> Void)? = nil) {
+    init(
+        viewData: PaymentMethodMessagingElement.ViewData,
+        integrationType: PMMEAnalyticsHelper.IntegrationType,
+        didUpdateHeight: ((CGFloat) -> Void)? = nil
+    ) {
         self.infoUrl = viewData.infoUrl
         self.appearance = viewData.appearance
+        self.analyticsHelper = viewData.analyticsHelper
+        self.integrationType = integrationType
         self.didUpdateHeight = didUpdateHeight
         super.init(frame: .zero)
 
@@ -65,7 +75,14 @@ class PMMEUIView: UIView {
         }
     }
 
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        analyticsHelper.logDisplayed(integrationType: integrationType)
+    }
+
     @objc private func didTap() {
+        analyticsHelper.logTapped()
+
         // Construct themed info url
         let themeParam = switch (appearance.style, traitCollection.isDarkMode) {
         case (.alwaysLight, _), (.automatic, false): "stripe"
