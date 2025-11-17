@@ -5,7 +5,6 @@
 //  Created by Joyce Qin on 11/4/25.
 //
 
-import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 @preconcurrency import WebKit
@@ -17,7 +16,7 @@ import UIKit
 class IntentConfirmationChallengeViewController: UIViewController {
 
     // MARK: - Properties
-    private let apiClient: STPAPIClient
+    private let publishableKey: String
     private let clientSecret: String
     private let completion: (Result<Void, Error>) -> Void
 
@@ -25,15 +24,16 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private var dimmedBackgroundView: UIView!
 
     // Hard-coded challenge URL
-    private let challengeURL = URL(string: "https://mobile-active-challenge-764603794666.us-central1.run.app/")!
+    private static let challengeHost = "mobile-active-challenge-764603794666.us-central1.run.app"
+    private let challengeURL = URL(string: "https://\(challengeHost)/")!
 
     // MARK: - Initialization
     init(
-        apiClient: STPAPIClient,
+        publishableKey: String,
         clientSecret: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        self.apiClient = apiClient
+        self.publishableKey = publishableKey
         self.clientSecret = clientSecret
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
@@ -121,7 +121,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         };
         window.setInitParams({
             clientSecret: "\(clientSecret)",
-            publishableKey: "\(apiClient.publishableKey ?? "")"
+            publishableKey: "\(publishableKey)"
         });
         """
 
@@ -143,7 +143,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     // MARK: - Handlers
     private func handleReady() {
         DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.7) {
+            UIView.animate(withDuration: 0.3) {
                 self.dimmedBackgroundView.alpha = 1.0
                 self.webView.alpha = 1.0
             }
@@ -164,9 +164,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
     /// Validates that the message comes from the expected Stripe origin
     private func isValidMessageOrigin(_ message: WKScriptMessage) -> Bool {
-        let validHosts = ["pay.stripe.com", "js.stripe.com", "mobile-active-challenge-764603794666.us-central1.run.app"]
-        let host = message.frameInfo.securityOrigin.host
-        return validHosts.contains(host)
+        return message.frameInfo.securityOrigin.host == Self.challengeHost
     }
 }
 
