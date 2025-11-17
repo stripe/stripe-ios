@@ -5,6 +5,7 @@
 //  Created by Joyce Qin on 11/4/25.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 @preconcurrency import WebKit
 
@@ -26,6 +27,8 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private static let challengeHost = "mobile-active-challenge-764603794666.us-central1.run.app"
     private let challengeURL = URL(string: "https://\(challengeHost)/")!
 
+    private let startTime: Date
+
     // MARK: - Initialization
     init(
         publishableKey: String,
@@ -35,6 +38,8 @@ class IntentConfirmationChallengeViewController: UIViewController {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
         self.completion = completion
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeStart()
+        self.startTime = Date()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -141,6 +146,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
     // MARK: - Handlers
     private func handleReady() {
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime))
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3) {
                 self.dimmedBackgroundView.alpha = 1.0
@@ -150,14 +156,16 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     private func handleSuccess() {
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeSuccess(duration: Date().timeIntervalSince(startTime))
         completion(.success(()))
     }
 
     private func handleError(_ error: Error) {
-        #if DEBUG
-        print("[IntentConfirmationChallenge] Error: \(error)")
-        #endif
-
+        if case ChallengeError.webError(_, let type, let code) = error {
+            STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(errorType: type, errorCode: code, duration: Date().timeIntervalSince(startTime), fromBridge: true)
+        } else {
+            STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime), fromBridge: false)
+        }
         completion(.failure(error))
     }
 
@@ -190,15 +198,9 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
             #endif
 
         case "onReady":
-            #if DEBUG
-            print("[IntentConfirmationChallenge] ✅ Ready")
-            #endif
             handleReady()
 
         case "onSuccess":
-            #if DEBUG
-            print("[IntentConfirmationChallenge] ✅ Success: \(message.body)")
-            #endif
             handleSuccess()
 
         case "onError":
@@ -246,6 +248,46 @@ enum ChallengeError: LocalizedError {
             return "Navigation failed: \(error.localizedDescription)"
         case .unknownError:
             return "Unknown error."
+        }
+    }
+}
+
+// All duration analytics are in milliseconds
+extension STPAnalyticsClient {
+    func logIntentConfirmationChallengeStart() {
+        log(
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeStart, params: [:])
+        )
+    }
+
+    func logIntentConfirmationChallengeSuccess(duration: TimeInterval) {
+        log(
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeSuccess, params: ["duration": duration * 1000])
+        )
+    }
+
+    func logIntentConfirmationChallengeWebViewLoaded(duration: TimeInterval) {
+        log(
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeWebViewLoaded, params: ["duration": duration * 1000])
+        )
+    }
+
+    func logIntentConfirmationChallengeError(error: Error? = nil, errorType: String? = nil, errorCode: String? = nil, duration: TimeInterval, fromBridge: Bool) {
+        var params: [String: Any] = ["duration": duration * 1000, "from_bridge": fromBridge]
+        if let error {
+            log(
+                analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: params)
+            )
+        } else {
+            if let errorType {
+                params["error_type"] = errorType
+            }
+            if let errorCode {
+                params["error_code"] = errorCode
+            }
+            log(
+                analytic: GenericAnalytic(event: .intentConfirmationChallengeError, params: params)
+            )
         }
     }
 }
