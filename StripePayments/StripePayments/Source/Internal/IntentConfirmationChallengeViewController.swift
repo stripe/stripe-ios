@@ -37,7 +37,9 @@ class IntentConfirmationChallengeViewController: UIViewController {
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
-        self.completion = completion
+        self.completion = { result in
+            completion(result)
+        }
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeStart()
         self.startTime = Date()
         super.init(nibName: nil, bundle: nil)
@@ -144,6 +146,14 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView.load(request)
     }
 
+    // break retain cycle
+    private func cleanup() {
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: "getInitParams")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: "onReady")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: "onSuccess")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: "onError")
+    }
+
     // MARK: - Handlers
     private func handleReady() {
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime))
@@ -157,6 +167,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
     private func handleSuccess() {
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeSuccess(duration: Date().timeIntervalSince(startTime))
+        cleanup()
         completion(.success(()))
     }
 
@@ -166,6 +177,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         } else {
             STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime), fromBridge: false)
         }
+        cleanup()
         completion(.failure(error))
     }
 
@@ -192,7 +204,6 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
 
         switch message.name {
         case "getInitParams":
-            // This shouldn't be called since we inject params, but handle it anyway
             #if DEBUG
             print("[IntentConfirmationChallenge] getInitParams called (params already injected)")
             #endif
@@ -214,9 +225,7 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
             }
 
         default:
-            #if DEBUG
-            print("[IntentConfirmationChallenge] Unknown message: \(message.name)")
-            #endif
+            stpAssertionFailure("Unknown message: \(message.name)")
         }
     }
 
