@@ -480,15 +480,18 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     /// Creates params for an Affirm PaymentMethod. :nodoc:
     /// - Parameters:
     ///   - affirm:   An object containing additional Affirm details.
+    ///   - billingDetails:      An object containing the user's billing details.
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc
     public convenience init(
         affirm: STPPaymentMethodAffirmParams,
+        billingDetails: STPPaymentMethodBillingDetails? = nil,
         metadata: [String: String]?
     ) {
         self.init()
         self.type = .affirm
         self.affirm = affirm
+        self.billingDetails = billingDetails
         self.metadata = metadata
     }
 
@@ -1133,6 +1136,25 @@ extension STPPaymentMethodParams {
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
             affirm: affirm,
+            billingDetails: nil,
+            metadata: metadata
+        )
+    }
+
+    /// Creates params for an Affirm PaymentMethod.
+    /// - Parameters:
+    ///   - affirm:   An object containing additional Affirm details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata: Additional information to attach to the PaymentMethod.
+    @objc(paramsWithAffirm:billingDetails:metadata:)
+    public class func paramsWith(
+        affirm: STPPaymentMethodAffirmParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) -> STPPaymentMethodParams {
+        return STPPaymentMethodParams(
+            affirm: affirm,
+            billingDetails: billingDetails,
             metadata: metadata
         )
     }
