@@ -2368,8 +2368,13 @@ public class STPPaymentHandler: NSObject {
             userInfo[NSLocalizedDescriptionKey] =
                 userInfo[NSLocalizedDescriptionKey] ?? NSError.stp_unexpectedErrorMessage()
 
+        // Unsupported action for iOS version
+        case .unsupportedVersionErrorCode:
+            userInfo[NSLocalizedDescriptionKey] = userInfo[NSLocalizedDescriptionKey] ?? STPLocalizedString("Unable to perform action for this iOS version.", "Error when action is not supported for the current iOS version.")
+
         case .unexpectedErrorCode:
             break
+        
         }
         return STPPaymentHandlerError(code: errorCode, loggingSafeUserInfo: userInfo) as NSError
     }
