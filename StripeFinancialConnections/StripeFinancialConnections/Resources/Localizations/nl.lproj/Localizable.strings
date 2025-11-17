@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ is nu niet beschikbaar";
+
+"%@ is undergoing maintenance" = "Er wordt onderhoud uitgevoerd bij %@";
+
+"Account number is required." = "Het rekeningnummer is vereist.";
+
+"Almost there" = "Bijna klaar";
+
+"Can't find your bank?" = "Kun je je bank niet vinden?";
+
+"Checking and savings accounts are supported." = "Betaal- en spaarrekeningen worden ondersteund.";
+
+"Choose a different bank" = "Een andere bank kiezen";
+
+"Click “Resend code” and try again, or %@." = "Klik op 'Code opnieuw versturen' en probeer het daarna nog eens, of %@.";
+
+"Confirm account number" = "Rekeningnummer bevestigen";
+
+"Confirm the account number." = "Bevestig het rekeningnummer.";
+
+"Connect account" = "Rekening koppelen";
+
+"Connect accounts" = "Rekeningen koppelen";
+
+"Connect another account" = "Een andere rekening koppelen";
+
+"Continue linking your account" = "Doorgaan met het koppelen van je rekening";
+
+"Continue with Link" = "Doorgaan met Link";
+
+"Email address" = "E-mailadres";
+
+"Enter bank details" = "Bankgegevens invoeren";
+
+"Enter bank details manually" = "Bankgegevens handmatig invoeren";
+
+"Enter the code sent to %@" = "Voer de code in die is verstuurd naar %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Voer de code in die naar %@ is gestuurd. We vragen je regelmatig om deze extra stap uit te voeren, zodat je account veilig blijft.";
+
+"Exit without connecting?" = "Afsluiten zonder te koppelen?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "De code werkt niet. Controleer de code en probeer het nogmaals.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Ongeldig bankrekeningnummer: moet minstens %li tekens (alleen cijfers) bevatten.";
+
+"Invalid routing number." = "Ongeldig routingnummer.";
+
+"It looks like the verification code you provided is not valid anymore." = "De opgegeven verificatiecode is niet meer geldig.";
+
+"Learn more" = "Ontdek meer";
+
+"Maintenance is scheduled to end at %@." = "Het onderhoud is naar verwachting voltooid om %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Het onderhoud is naar verwachting voltooid op %1$@ om %2$@.";
+
+"Manually enter details" = "Handmatig gegevens invoeren";
+
+"No payment accounts available" = "Geen betaalrekeningen beschikbaar";
+
+"No results" = "Geen resultaten";
+
+"Not now" = "Niet nu";
+
+"Only checking accounts are supported." = "Alleen betaalrekeningen worden ondersteund.";
+
+"Please enter %d digits for your routing number." = "Voer %li cijfers in voor het routingnummer.";
+
+"Please enter your bank details manually or select another bank." = "Voer je bankgegevens handmatig in of selecteer een andere bank.";
+
+"Please select another bank or try again later." = "Selecteer een andere bank of probeer het later opnieuw.";
+
+"Please select another bank or try again." = "Selecteer een andere bank of probeer het nog eens.";
+
+"Please select another bank." = "Selecteer een andere bank.";
+
+"Please try selecting another bank account." = "Selecteer een andere bankrekening.";
+
+"Please try selecting another bank." = "Selecteer een andere bank.";
+
+"Retrieving accounts..." = "Rekeningen ophalen...";
+
+"Routing number" = "Routingnummer";
+
+"Routing number is required." = "Routingnummer is vereist.";
+
+"Search for more banks" = "Meer banken zoeken";
+
+"Select account" = "Rekening selecteren";
+
+"Select accounts" = "Rekeningen selecteren";
+
+"Select another bank" = "Een andere bank selecteren";
+
 "Select bank" = "Bank selecteren";
+
+"Something went wrong" = "Er is iets misgegaan";
+
+"Submit" = "Indienen";
+
+"Success" = "Geslaagd";
+
+"The account you selected isn't available for payments" = "De rekening die je hebt geselecteerd is niet beschikbaar voor betalingen";
+
+"The accounts you selected aren't available for payments" = "De rekeningen die je hebt geselecteerd zijn niet beschikbaar voor betalingen";
+
+"There was a problem accessing your %@ account" = "Er is een probleem met de toegang tot je %@-rekening.";
+
+"Try again, or %@." = "Proberen het nogmaals of %@.";
+
+"Try searching another bank" = "Zoek naar een andere bank";
+
+"Try searching another bank or %@" = "Zoek naar een andere bank of %@";
+
+"Use information you previously saved with your Link account." = "Gebruik informatie die je eerder hebt opgeslagen met je Link-account.";
+
+"Use test account" = "Testaccount gebruiken";
+
+"Use test code" = "Testcode gebruiken";
+
+"Verify your email" = "Je e-mailadres verifiëren";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "We hebben %1$li %2$@ accounts gevonden, maar je kunt alleen Amerikaanse betaalrekeningen aan %3$@ koppelen.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "We hebben %1$li %2$@ accounts gevonden, maar je kunt alleen Amerikaanse betaalrekeningen koppelen.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "We hebben %1$li %2$@ accounts gevonden, maar je kunt alleen betaal- of spaarrekeningen aan %3$@ koppelen.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "We hebben %1$li %2$@ accounts gevonden, maar je kunt alleen betaal- of spaarrekeningen koppelen.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "We hebben 1 %1$@ accounts gevonden, maar je kunt alleen Amerikaanse betaalrekeningen aan %2$@ koppelen.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "We hebben 1 %@ account gevonden, maar je kunt alleen Amerikaanse betaalrekeningen koppelen.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "We hebben 1 %1$@ account gevonden, maar je kunt alleen betaal- of spaarrekeningen aan %2$@ koppelen.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "We hebben 1 %@ account gevonden, maar je kunt alleen betaal- of spaarrekeningen koppelen.";
+
+"Yes, exit" = "Ja, afsluiten";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Er worden binnen 1-2 dagen microstortingen gedaan op rekening ••••%@. Je ontvangt vervolgens een e-mail met verdere instructies.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Je hebt je rekening nog niet gekoppeld. Ga door om het proces te voltooien.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Het proces om je bankrekening te koppelen is nog niet voltooid, en alle voortgang gaat verloren.";
+
+"You're in test mode." = "Je werkt nu in de testmodus.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Je rekening kan op dit moment niet worden gekoppeld. Voer je bankgegevens handmatig in of probeer het later opnieuw.";
+
+"Your account can’t be connected at this time. Please try again later." = "Je rekening kan op dit moment niet worden gekoppeld. Probeer het later opnieuw.";
+
+"Your account number couldn’t be accessed at this time" = "We hebben op dit moment geen toegang tot je rekeningnummer";
+
+"Your account numbers don't match." = "Je rekeningnummers komen niet overeen.";
+
+"Your account was connected, but couldn't be saved to Link." = "Je rekening is gekoppeld, maar kan niet worden opgeslagen met Link.";
+
+"Your account was connected." = "Je rekening is gekoppeld.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Je rekeningen zijn gekoppeld, maar kunnen niet worden opgeslagen met Link.";
+
+"Your accounts were connected." = "Je rekeningen zijn gekoppeld.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Je bankgegevens worden gecontroleerd met microstortingen op je rekening. Dit duurt meestal 1-2 werkdagen. Alleen betaalrekeningen worden ondersteund.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Je bankgegevens worden gecontroleerd met microstortingen op je rekening. Dit duurt meestal 1-2 werkdagen.";
+
+"Your email address is invalid." = "Je e-mailadres is ongeldig.";
+
+"Your mobile phone number is incomplete." = "Je mobiele telefoonnummer is onvolledig.";
+
+"contact us" = "neem contact met ons op";
+
+"manually enter details" = "voer de gegevens handmatig in";

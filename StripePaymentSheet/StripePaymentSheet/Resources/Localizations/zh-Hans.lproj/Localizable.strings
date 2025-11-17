@@ -100,8 +100,6 @@
 
 "Confirm" = "确定";
 
-"Confirm it's you" = "确认是您本人";
-
 "Confirm payment details" = "确认支付详情";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "在您的银行或支付应用程序中确认向 %@ 的付款，以完成购物。";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "手动输入地址";
 
-"Enter the code sent to %@." = "请输入发送至 %@ 的验证码。";
-
 "FPX Bank" = "FPX 银行";
-
-"Failed to connect" = "连接失败";
 
 "Fast, secure checkout" = "快速、安全的结账";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "移除卡？";
 
 "Remove linked account" = "移除关联账户";
-
-"Resend code" = "重新发送验证码";
 
 "SEPA debit details cannot be changed." = "无法更改 SEPA 借记详情。";
 

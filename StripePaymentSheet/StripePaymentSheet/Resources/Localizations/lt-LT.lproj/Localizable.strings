@@ -100,8 +100,6 @@
 
 "Confirm" = "Patvirtinti";
 
-"Confirm it's you" = "Patvirtinkite, kad tai jūs";
-
 "Confirm payment details" = "Patvirtinti mokėjimo duomenis";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Patvirtinkite mokėjimą banke ar programėlėje per %@ ir užbaikite pirkimą.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Įvesti adresą rankiniu būdu";
 
-"Enter the code sent to %@." = "Įveskite kodą, išsiųstą %@.";
-
 "FPX Bank" = "FPX bankas";
-
-"Failed to connect" = "Nepavyko prisijungti";
 
 "Fast, secure checkout" = "Greitas ir saugus pirkimo užbaigimas";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Ištraukti kortelę?";
 
 "Remove linked account" = "Pašalinti susietą paskyrą";
-
-"Resend code" = "Pakartotinai siųsti kodą";
 
 "SEPA debit details cannot be changed." = "SEPA debeto duomenų keisti negalima.";
 

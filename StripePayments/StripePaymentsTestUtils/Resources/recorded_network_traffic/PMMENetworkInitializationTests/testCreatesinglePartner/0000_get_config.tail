@@ -1,0 +1,270 @@
+GET
+https:\/\/ppm\.stripe\.com\/config\?amount=5000&currency=usd&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en-US&payment_methods%5B0%5D=klarna$
+200
+application/json
+access-control-allow-methods: DELETE, GET, HEAD, PATCH, POST, PUT
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=hXoAtruroz1oaH3NJ72J3_pzc5qLJVZgRI8jB650VFmq2a4eM5GWpuuMBgDD-aaCy-MQC5cRZnFHv3v0LpBaJWdmq1A%3D
+Server: nginx
+Cache-Control: max-age=300, public
+reporting-endpoints: coop="https://q.stripe.com/coop-report"
+x-robots-tag: none
+x-wc: ABCDEFGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+referrer-policy: strict-origin-when-cross-origin
+x-stripe-proxy-response: upstream
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 6296
+Vary: Origin
+Date: Tue, 11 Nov 2025 22:31:54 GMT
+Expires: 0
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-stripe-server-rpc-duration-micros: 309211
+x-content-type-options: nosniff
+
+{
+  "payment_plan_groups" : [
+    {
+      "content" : {
+        "inline_partner_promotion" : {
+          "message" : "4 interest-free payments of $12.50 with {partner}",
+          "url" : null
+        },
+        "learn_more" : {
+          "message" : "Learn more",
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/learn-more\/index.html?amount=5000&country=US&currency=USD&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more"
+        },
+        "promotion" : {
+          "message" : "4 interest-free payments of $12.50",
+          "url" : null
+        },
+        "images" : [
+          {
+            "flat_theme_svg" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-flat.svg",
+              "width" : 78,
+              "height" : 40
+            },
+            "dark_theme_svg" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-dark.svg",
+              "width" : 78,
+              "height" : 40
+            },
+            "light_theme_png" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo.png",
+              "width" : 98,
+              "height" : 40
+            },
+            "light_theme_svg" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo.svg",
+              "width" : 98,
+              "height" : 40
+            },
+            "role" : "logo",
+            "payment_method_type" : "klarna",
+            "text" : "Klarna",
+            "flat_theme_png" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-flat.png",
+              "width" : 78,
+              "height" : 40
+            },
+            "dark_theme_png" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-dark.png",
+              "width" : 78,
+              "height" : 40
+            }
+          },
+          {
+            "flat_theme_svg" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon-flat.svg",
+              "width" : 16,
+              "height" : 16
+            },
+            "dark_theme_svg" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.svg",
+              "width" : 16,
+              "height" : 16
+            },
+            "light_theme_png" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.png",
+              "width" : 16,
+              "height" : 16
+            },
+            "light_theme_svg" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.svg",
+              "width" : 16,
+              "height" : 16
+            },
+            "role" : "icon",
+            "payment_method_type" : "klarna",
+            "text" : "Klarna",
+            "flat_theme_png" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon-flat.png",
+              "width" : 16,
+              "height" : 16
+            },
+            "dark_theme_png" : {
+              "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.png",
+              "width" : 16,
+              "height" : 16
+            }
+          }
+        ],
+        "summary" : {
+          "message" : "Pay now, or in 4 interest-free payments of $12.50.",
+          "url" : null
+        }
+      },
+      "type" : "KLARNA",
+      "payment_plans" : [
+        {
+          "installment_amount" : 1250,
+          "id" : "508d83ca-e6f1-45fe-8920-acc2f000355b",
+          "interest_rate" : 0,
+          "total_amount" : 5000,
+          "due_days" : null,
+          "number_of_installments" : 4,
+          "type" : "INSTALLMENTS",
+          "terms" : "Pay in 4 is offered by Klarna, Inc. It’s available to eligible US residents in most states. Initial payments may be higher. Missed payments are subject to late fees. For CA residents, loans made or arranged by Klarna, Inc. pursuant to a California Financing Law license. [Review the Pay in 4 terms](https:\/\/cdn.klarna.com\/1.0\/shared\/content\/legal\/terms\/0\/en_us\/sliceitinx).",
+          "interval" : {
+            "unit" : "week",
+            "frequency" : 2
+          }
+        },
+        {
+          "installment_amount" : null,
+          "id" : "a3663b53-535a-421a-bfed-f6a67e9ad3e3",
+          "interest_rate" : 0,
+          "total_amount" : 5000,
+          "due_days" : null,
+          "number_of_installments" : null,
+          "type" : "PAY_NOW",
+          "terms" : "[Terms](https:\/\/www.klarna.com\/us\/legal\/).",
+          "interval" : null
+        },
+        {
+          "installment_amount" : null,
+          "id" : "af199f2f-b22d-4eaf-8ecb-ffb541344ef6",
+          "interest_rate" : 0,
+          "total_amount" : 5000,
+          "due_days" : null,
+          "number_of_installments" : null,
+          "type" : "PAY_NOW",
+          "terms" : "[Terms](https:\/\/www.klarna.com\/us\/legal\/).",
+          "interval" : null
+        }
+      ]
+    }
+  ],
+  "country" : "US",
+  "payment_methods" : [
+    "klarna"
+  ],
+  "content" : {
+    "learn_more" : {
+      "message" : "Learn more",
+      "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/learn-more\/index.html?amount=5000&country=US&currency=USD&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more"
+    },
+    "promotion" : {
+      "message" : "4 interest-free payments of $12.50",
+      "url" : null
+    },
+    "images" : [
+      {
+        "flat_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-flat.svg",
+          "width" : 78,
+          "height" : 40
+        },
+        "dark_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-dark.svg",
+          "width" : 78,
+          "height" : 40
+        },
+        "light_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo.png",
+          "width" : 98,
+          "height" : 40
+        },
+        "light_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo.svg",
+          "width" : 98,
+          "height" : 40
+        },
+        "role" : "logo",
+        "payment_method_type" : "klarna",
+        "text" : "Klarna",
+        "flat_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-flat.png",
+          "width" : 78,
+          "height" : 40
+        },
+        "dark_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-dark.png",
+          "width" : 78,
+          "height" : 40
+        }
+      },
+      {
+        "flat_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon-flat.svg",
+          "width" : 16,
+          "height" : 16
+        },
+        "dark_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.svg",
+          "width" : 16,
+          "height" : 16
+        },
+        "light_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.png",
+          "width" : 16,
+          "height" : 16
+        },
+        "light_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.svg",
+          "width" : 16,
+          "height" : 16
+        },
+        "role" : "icon",
+        "payment_method_type" : "klarna",
+        "text" : "Klarna",
+        "flat_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon-flat.png",
+          "width" : 16,
+          "height" : 16
+        },
+        "dark_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.png",
+          "width" : 16,
+          "height" : 16
+        }
+      }
+    ],
+    "summary" : {
+      "message" : "Pay now, or in 4 interest-free payments of $12.50.",
+      "url" : null
+    }
+  },
+  "partner_configs" : {
+
+  },
+  "merchant_id" : "acct_1HvTI7Lu5o3P18Zp",
+  "api_feature_flags" : [
+    {
+      "key" : "affirm_enable_ca_shell_url",
+      "result" : false
+    }
+  ],
+  "experiments" : {
+    "event_id" : "",
+    "experiment_assignments" : {
+
+    }
+  }
+}

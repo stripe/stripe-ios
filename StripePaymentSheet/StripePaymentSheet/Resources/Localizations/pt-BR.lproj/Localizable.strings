@@ -100,8 +100,6 @@
 
 "Confirm" = "Confirmar";
 
-"Confirm it's you" = "Confirme sua identidade";
-
 "Confirm payment details" = "Confirmar dados de pagamento";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirme o pagamento no seu banco ou aplicativo de pagamento em até %@ para concluir a compra.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Inserir endereço manualmente";
 
-"Enter the code sent to %@." = "Insira o código enviado para %@.";
-
 "FPX Bank" = "Banco do FPX";
-
-"Failed to connect" = "Falha ao conectar";
 
 "Fast, secure checkout" = "Checkout rápido e seguro";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Remover cartão?";
 
 "Remove linked account" = "Remover conta vinculada";
-
-"Resend code" = "Reenviar código";
 
 "SEPA debit details cannot be changed." = "Os dados do débito SEPA não podem ser alterados.";
 

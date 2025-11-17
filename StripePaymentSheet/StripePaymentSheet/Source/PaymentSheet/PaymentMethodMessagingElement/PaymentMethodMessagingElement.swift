@@ -6,7 +6,7 @@
 //
 
 import Combine
-import StripeCore
+@_spi(STP) import StripeCore
 import StripePayments
 import SwiftUI
 import UIKit
@@ -17,7 +17,7 @@ public class PaymentMethodMessagingElement {
 
     /// A UIKit view of the element.
     public lazy var view: UIView = {
-        PMMEUIView(viewData: viewData)
+        PMMEUIView(viewData: viewData, integrationType: .uiKit)
     }()
 
     /// The result of an attempt to create a PaymentMethodMessagingElement.
@@ -100,16 +100,7 @@ public class PaymentMethodMessagingElement {
     /// - Parameter configuration: Configuration for the PaymentMethodMessagingElement, such as the amount and currency of the purchase.
     /// - Returns: A `CreationResult` object representing the result of the attempt to load the element and an instance of the element if applicable.
     public static func create(configuration: Configuration) async -> CreationResult {
-        do {
-            let apiResponse = try await get(configuration: configuration)
-            if let pmme = try await PaymentMethodMessagingElement(apiResponse: apiResponse, configuration: configuration) {
-                return .success(pmme)
-            } else {
-                return .noContent
-            }
-        } catch {
-            return .failed(error)
-        }
+        return await create(configuration: configuration, downloadManager: .sharedManager, analyticsClient: STPAnalyticsClient.sharedClient)
     }
 
     // MARK: - Internal
@@ -118,12 +109,15 @@ public class PaymentMethodMessagingElement {
     let infoUrl: URL
     let promotion: String
     let appearance: Appearance
+    let analyticsHelper: PMMEAnalyticsHelper
 
-    init(mode: Mode, infoUrl: URL, promotion: String, appearance: PaymentMethodMessagingElement.Appearance) {
+    init(mode: Mode, infoUrl: URL, promotion: String, appearance: PaymentMethodMessagingElement.Appearance, analyticsHelper: PMMEAnalyticsHelper) {
         self.mode = mode
         self.infoUrl = infoUrl
         self.promotion = promotion
         self.appearance = appearance
+        self.analyticsHelper = analyticsHelper
+        analyticsHelper.logInitialized()
     }
 }
 

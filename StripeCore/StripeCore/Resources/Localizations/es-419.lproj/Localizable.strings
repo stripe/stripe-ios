@@ -4,7 +4,15 @@
 
 "Close" = "Cerrar";
 
+"Confirm it's you" = "Confirma que eres tú";
+
 "Default payment method was not updated. Please try again." = "El método de pago predeterminado no se actualizó. Vuelve a intentarlo.";
+
+"Enter the code sent to %@." = "Ingresa el código que se envió a %@.";
+
+"Failed to connect" = "Error al establecer conexión";
+
+"Resend code" = "Volver a enviar el código";
 
 "Scan Card" = "Escanear tarjeta";
 

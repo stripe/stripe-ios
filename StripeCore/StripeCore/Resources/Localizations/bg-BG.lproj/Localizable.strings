@@ -4,7 +4,15 @@
 
 "Close" = "Затваряне";
 
+"Confirm it's you" = "Потвърдете, че сте вие";
+
 "Default payment method was not updated. Please try again." = "Начинът на плащане по подразбиране не беше актуализиран. Моля, опитайте отново.";
+
+"Enter the code sent to %@." = "Въведете кода, изпратен до %@.";
+
+"Failed to connect" = "Неуспешно свързване";
+
+"Resend code" = "Повторно изпращане на код";
 
 "Scan Card" = "Сканиране на картата";
 

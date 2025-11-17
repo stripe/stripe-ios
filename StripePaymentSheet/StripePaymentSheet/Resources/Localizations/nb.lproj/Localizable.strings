@@ -100,8 +100,6 @@
 
 "Confirm" = "Bekreft";
 
-"Confirm it's you" = "Bekreft at det er deg";
-
 "Confirm payment details" = "Bekreft betalingsopplysninger";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekreft betalingen i bankens app eller i betalingsapp innen %@ for å fullføre kjøpet.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
-"Enter the code sent to %@." = "Angi koden som er sendt til %@.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Kunne ikke koble til";
 
 "Fast, secure checkout" = "Rask og sikker utsjekking";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Vil du fjerne kortet?";
 
 "Remove linked account" = "Fjern tilkoblet konto";
-
-"Resend code" = "Send koden på nytt";
 
 "SEPA debit details cannot be changed." = "SEPA-debetopplysninger kan ikke endres.";
 

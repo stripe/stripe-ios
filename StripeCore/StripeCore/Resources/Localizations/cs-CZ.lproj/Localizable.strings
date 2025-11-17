@@ -4,7 +4,15 @@
 
 "Close" = "Zavřít";
 
+"Confirm it's you" = "Potvrďte, že jste to vy";
+
 "Default payment method was not updated. Please try again." = "Výchozí způsob platby nebyl aktualizován. Zkuste to prosím znovu.";
+
+"Enter the code sent to %@." = "Zadejte kód zaslaný na %@.";
+
+"Failed to connect" = "Propojení se nezdařilo";
+
+"Resend code" = "Znovu odeslat kód";
 
 "Scan Card" = "Naskenovat kartu";
 

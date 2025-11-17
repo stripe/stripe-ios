@@ -23,8 +23,12 @@ actor ConfirmationChallenge {
 
     // enablePassiveCaptcha and enableAttestation are determined by the playground switches and will be removed on release
     public init(enablePassiveCaptcha: Bool, enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
+        self.init(enablePassiveCaptcha: enablePassiveCaptcha, enableAttestation: enableAttestation, elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: PassiveHCaptchaFactory())
+    }
+
+    init(enablePassiveCaptcha: Bool, enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest, hcaptchaFactory: HCaptchaFactory) {
         if enablePassiveCaptcha, let passiveCaptchaData = elementsSession.passiveCaptchaData {
-            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
+            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: hcaptchaFactory)
         }
         if enableAttestation, elementsSession.shouldAttestOnConfirmation {
             self.attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest, canSyncState: elementsSession.linkSettings?.attestationStateSyncEnabled ?? false)

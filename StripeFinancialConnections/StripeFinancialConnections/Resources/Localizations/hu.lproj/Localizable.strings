@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "A(z) %@ jelenleg nem érhető el";
+
+"%@ is undergoing maintenance" = "A(z) %@ karbantartás alatt áll";
+
+"Account number is required." = "Számlaszám megadása kötelező.";
+
+"Almost there" = "Mindjárt kész";
+
+"Can't find your bank?" = "Nem találja a bankját?";
+
+"Checking and savings accounts are supported." = "Csekkszámlák és megtakarítási számlák is támogatottak.";
+
+"Choose a different bank" = "Másik bank választása";
+
+"Click “Resend code” and try again, or %@." = "Kattintson a „Kód újraküldése” gombra, és próbálja újra vagy %@.";
+
+"Confirm account number" = "Számlaszám megerősítése";
+
+"Confirm the account number." = "Erősítse meg a számlaszámot.";
+
+"Connect account" = "Számla összekapcsolása";
+
+"Connect accounts" = "Számlák összekapcsolása";
+
+"Connect another account" = "Másik számla összekapcsolása";
+
+"Continue linking your account" = "Számla összekapcsolásának folytatása";
+
+"Continue with Link" = "Folytatás a Linkkel";
+
+"Email address" = "E-mail-cím";
+
+"Enter bank details" = "Banki adatok megadása";
+
+"Enter bank details manually" = "Banki adatok kézi bevitele";
+
+"Enter the code sent to %@" = "Adja meg a(z) %@ telefonszámra küldött kódot.";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Adja meg a(z) %@ címre küldött kódot. Időnként kérjük ezt a plusz lépést, hogy biztonságban tartsuk a fiókját.";
+
+"Exit without connecting?" = "Kilép csatlakoztatás nélkül?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Nem jó kód, ellenőrizze és próbálja újra.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Érvénytelen számlaszám: legfeljebb %li számjegy hosszú lehet és csak számokat tartalmazhat.";
+
+"Invalid routing number." = "Érvénytelen bankazonosító szám.";
+
+"It looks like the verification code you provided is not valid anymore." = "Úgy tűnik, a megadott ellenőrző kód már nem érvényes.";
+
+"Learn more" = "További tudnivalók";
+
+"Maintenance is scheduled to end at %@." = "Az ütemezett karbantartás vége: %@";
+
+"Maintenance is scheduled to end on %@ at %@." = "Az ütemezett karbantartás vége: %1$@ %2$@";
+
+"Manually enter details" = "Írja be manuálisan az adatokat";
+
+"No payment accounts available" = "Nem érhető el fizetési számla";
+
+"No results" = "Nincs találat";
+
+"Not now" = "Most nem";
+
+"Only checking accounts are supported." = "Csak csekkszámlák támogatottak.";
+
+"Please enter %d digits for your routing number." = "Írjon be %li számjegyet a bankazonosítójához.";
+
+"Please enter your bank details manually or select another bank." = "Adja meg a bankadatait kézzel, vagy válasszon másik bankot.";
+
+"Please select another bank or try again later." = "Válasszon másik bankot, vagy később próbálja meg újra.";
+
+"Please select another bank or try again." = "Válasszon másik bankot, vagy próbálja meg újra.";
+
+"Please select another bank." = "Válasszon másik bankot.";
+
+"Please try selecting another bank account." = "Válasszon másik bankszámlát.";
+
+"Please try selecting another bank." = "Válasszon másik bankot.";
+
+"Retrieving accounts..." = "Számlák lekérése...";
+
+"Routing number" = "Bankazonosító";
+
+"Routing number is required." = "A bankazonosító megadása kötelező.";
+
+"Search for more banks" = "További bankok keresése";
+
+"Select account" = "Számla kiválasztása";
+
+"Select accounts" = "Számlák kiválasztása";
+
+"Select another bank" = "Válasszon másik bankot";
+
 "Select bank" = "Bankválasztás";
+
+"Something went wrong" = "Hiba történt";
+
+"Submit" = "Elküldés";
+
+"Success" = "Sikeres";
+
+"The account you selected isn't available for payments" = "A kiválasztott számla nem alkalmas fizetésre";
+
+"The accounts you selected aren't available for payments" = "A kiválasztott számlák nem alkalmasak fizetésre";
+
+"There was a problem accessing your %@ account" = "Probléma merült fel %@ számlájának elérésekor";
+
+"Try again, or %@." = "Próbálja újra vagy %@.";
+
+"Try searching another bank" = "Másik bank keresése";
+
+"Try searching another bank or %@" = "Próbáljon meg másik bankot keresni, vagy %@.";
+
+"Use information you previously saved with your Link account." = "Használja az előzőleg a Link számlájára mentett adatokat.";
+
+"Use test account" = "Próbaszámla használata";
+
+"Use test code" = "Próbakód használata";
+
+"Verify your email" = "E-mail-cím igazolása";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Találtunk %1$li %2$@ számlákat, de csak egyesült államokbeli folyószámlákat lehet összekapcsolni a következővel: %3$@.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Találtunk %1$li %2$@ számlákat, de csak egyesült államokbeli folyószámlákat lehet csatlakoztatni.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Találtunk %1$li %2$@ számlákat, de csak folyószámlákat vagy megtakarítási számlákat lehet összekapcsolni a következővel: %3$@.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Találtunk %1$li %2$@ számlákat, de csak folyószámlákat és megtakarítási számlákat lehet csatlakoztatni.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Találtunk 1 %1$@ számlát, de csak egyesült államokbeli folyószámlákat lehet összekapcsolni a következővel: %2$@.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Találtunk 1 %@ számlát, de csak egyesült államokbeli folyószámlákat lehet csatlakoztatni.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Találtunk 1 %1$@ számlát, de csak folyószámlákat vagy megtakarítási számlákat lehet csatlakoztatni a következőhöz: %2$@.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Találtunk 1 %@ számlát, de csak folyószámlákat vagy megtakarítási számlákat lehet csatlakoztatni.";
+
+"Yes, exit" = "Igen, kilépek";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Várhatóan 1-2 napon belül megérkeznek a mikroösszegű utalások a(z) ••••%@ bankszámlára, a további teendőkről e-mailben tájékoztatjuk.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Nem fejezte be a bankszámla csatlakoztatását. Nyomja meg a folytatás gombot a folyamat befejezéséhez.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Nem fejezte be a bankszámla csatlakoztatását, és minden eddigi művelet el fog veszni.";
+
+"You're in test mode." = "Ön tesztüzemmódban van.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "A számláját pillanatnyilag nem sikerült csatlakoztatni. Adja meg a bankadatait kézzel, vagy később próbálkozzon újra.";
+
+"Your account can’t be connected at this time. Please try again later." = "A számlája jelenleg nem csatlakoztatható, próbálja meg újra később.";
+
+"Your account number couldn’t be accessed at this time" = "A számlaszáma jelenleg nem hozzáférhető";
+
+"Your account numbers don't match." = "A számlaszámai nem egyeznek.";
+
+"Your account was connected, but couldn't be saved to Link." = "Számlája csatlakoztatva lett, de nem sikerült menteni a Linkbe.";
+
+"Your account was connected." = "Számlája csatlakoztatva lett.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Számlái csatlakoztatva lettek, de nem sikerült menteni a Linkbe.";
+
+"Your accounts were connected." = "Számlái csatlakoztatva lettek.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "A banki adatait mikroösszegek bankszámlájára való utalásával ellenőrizzük, jellemzően 1-2 munkanapon belül. Csak csekkszámlák támogatottak.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "A banki adatait mikroösszegek bankszámlájára való utalásával ellenőrizzük. Ez jellemzően 1-2 munkanapot vesz igénybe.";
+
+"Your email address is invalid." = "Az e-mail-címe érvénytelen.";
+
+"Your mobile phone number is incomplete." = "A mobiltelefonszáma hiányos.";
+
+"contact us" = "vegye fel velünk a kapcsolatot";
+
+"manually enter details" = "írja be manuálisan az adatokat";

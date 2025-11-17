@@ -100,8 +100,6 @@
 
 "Confirm" = "Apstiprināt";
 
-"Confirm it's you" = "Apstipriniet, ka tas esat jūs";
-
 "Confirm payment details" = "Apstiprināt maksājuma informāciju";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas vai maksājumu lietotnē %@, lai pabeigtu maksājumu.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
-"Enter the code sent to %@." = "Ievadiet kodu, kas nosūtīts uz %@.";
-
 "FPX Bank" = "FPX banka";
-
-"Failed to connect" = "Neizdevās izveidot savienojumu";
 
 "Fast, secure checkout" = "Ātra un droša norēķināšanās";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Noņemt karti?";
 
 "Remove linked account" = "Noņemt piesaistītu kontu";
-
-"Resend code" = "Nosūtīt kodu vēlreiz";
 
 "SEPA debit details cannot be changed." = "SEPA debeta informāciju nevar mainīt.";
 

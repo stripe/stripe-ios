@@ -98,8 +98,6 @@
 
 "Confirm" = "Megerősítés";
 
-"Confirm it's you" = "Igazolja, hogy Ön az";
-
 "Confirm payment details" = "Fizetési adatok megerősítése";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "A vásárlás befejezéséhez %@ percen belül erősítse meg a fizetést a bankjánál vagy a fizetést biztosító alkalmazásban.";
@@ -128,11 +126,7 @@
 
 "Enter address manually" = "Cím megadása kézzel";
 
-"Enter the code sent to %@." = "Adja meg a(z) %@ telefonszámra küldött kódot.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Nem sikerült csatlakozni";
 
 "Fast, secure checkout" = "Gyors és biztonságos fizetés";
 
@@ -225,8 +219,6 @@
 "Remove card?" = "Kártya eltávolítása?";
 
 "Remove linked account" = "Kapcsolt számla törlése";
-
-"Resend code" = "Kód újraküldése";
 
 "SEPA debit details cannot be changed." = "A SEPA beszedés adatai nem módosíthatók.";
 

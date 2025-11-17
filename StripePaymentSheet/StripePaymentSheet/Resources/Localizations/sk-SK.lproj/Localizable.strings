@@ -100,8 +100,6 @@
 
 "Confirm" = "Potvrdiť";
 
-"Confirm it's you" = "Potvrdenie vašej totožnosti";
-
 "Confirm payment details" = "Potvrdiť informácie o platbe";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v banke alebo platobnej aplikácii v priebehu %@.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Zadať adresu manuálne";
 
-"Enter the code sent to %@." = "Zadajte kód zaslaný na %@.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Pripojenie sa nepodarilo";
 
 "Fast, secure checkout" = "Rýchla, bezpečná platba";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Odstrániť kartu?";
 
 "Remove linked account" = "Odstrániť prepojený účet";
-
-"Resend code" = "Znovu odoslať kód";
 
 "SEPA debit details cannot be changed." = "Informácie o SEPA inkase nie je možné meniť.";
 

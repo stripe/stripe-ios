@@ -21,7 +21,7 @@ final class PhoneTextField: UIView {
 
     fileprivate lazy var textField: RoundedTextField = {
         let textField = RoundedTextField(
-            placeholder: STPLocalizedString("Phone number", "The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type a phone number."),
+            placeholder: String.Localized.phoneNumber,
             showDoneToolbar: true,
             appearance: appearance
         )

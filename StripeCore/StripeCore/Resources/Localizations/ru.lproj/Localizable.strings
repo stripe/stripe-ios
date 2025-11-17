@@ -4,7 +4,15 @@
 
 "Close" = "Закрыть";
 
+"Confirm it's you" = "Подтвердите, что это вы";
+
 "Default payment method was not updated. Please try again." = "Способ оплаты по умолчанию не был изменен. Попробуйте еще раз.";
+
+"Enter the code sent to %@." = "Введите код, отправленный на %@.";
+
+"Failed to connect" = "Не удалось подключиться";
+
+"Resend code" = "Отправить код еще раз";
 
 "Scan Card" = "Сканировать карту";
 
