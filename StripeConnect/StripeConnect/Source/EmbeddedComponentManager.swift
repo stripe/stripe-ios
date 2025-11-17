@@ -172,14 +172,13 @@ public final class EmbeddedComponentManager {
               defaultFilters: defaultFilters)
     }
 
-    @_spi(DashboardOnly)
-    public func createCheckScanningController(
-        handleCheckScanSubmitted: @escaping HandleCheckScanSubmittedFn
-    ) -> CheckScanningController {
+    /// Creates a `CheckScanningController`
+    /// - Seealso: [Check scanning component documentation](https://docs.stripe.com/connect/supported-embedded-components/check-scanning?platform=ios)
+    @_spi(PreviewConnect)
+    public func createCheckScanningController() -> CheckScanningController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
-              analyticsClientFactory: analyticsClientFactory,
-              handleCheckScanSubmitted: handleCheckScanSubmitted)
+              analyticsClientFactory: analyticsClientFactory)
     }
 
     /// Used to keep reference of all web views associated with this component manager.

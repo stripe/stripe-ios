@@ -1,20 +1,21 @@
-@_spi(DashboardOnly) @testable import StripeConnect
+@_spi(PreviewConnect) @testable import StripeConnect
 import XCTest
 
 final class SupplementalFunctionsTests: XCTestCase {
     func testCallSucceeds() async throws {
-        let handleCheckScanSubmitted: HandleCheckScanSubmittedFn = { _ in }
-        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: handleCheckScanSubmitted)
+        var received: CheckScanningController.CheckScanDetails?
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { details in received = details })
 
         let result = try await supplementalFunctions.call(.handleCheckScanSubmitted(.init(checkScanToken: "testToken")))
 
         XCTAssertEqual(result, SupplementalFunctionReturnValue.handleCheckScanSubmitted)
+        XCTAssertEqual(received, .init(checkScanToken: "testToken"))
     }
 
     func testCallNotRegistered() async throws {
         let supplementalFunctions = SupplementalFunctions()
 
-        let args = SupplementalFunctionArgs.handleCheckScanSubmitted(HandleCheckScanSubmittedArgs(checkScanToken: "testToken"))
+        let args = SupplementalFunctionArgs.handleCheckScanSubmitted(.init(checkScanToken: "testToken"))
         let result = try await supplementalFunctions.call(args)
 
         XCTAssertNil(result)
