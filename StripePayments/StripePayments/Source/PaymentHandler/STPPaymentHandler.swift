@@ -2374,7 +2374,7 @@ public class STPPaymentHandler: NSObject {
 
         case .unexpectedErrorCode:
             break
-        
+
         }
         return STPPaymentHandlerError(code: errorCode, loggingSafeUserInfo: userInfo) as NSError
     }
