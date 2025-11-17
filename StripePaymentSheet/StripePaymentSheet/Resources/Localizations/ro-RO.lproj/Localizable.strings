@@ -100,8 +100,6 @@
 
 "Confirm" = "Confirmare";
 
-"Confirm it's you" = "Confirmați că sunteți dvs.";
-
 "Confirm payment details" = "Confirmare detalii de plată";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. sau în aplicația de plăți în termen de %@ pentru a finaliza achiziția.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Introduceți adresa manual";
 
-"Enter the code sent to %@." = "Introduceți codul trimis la %@.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Eroare de conexiune";
 
 "Fast, secure checkout" = "Finalizare comandă rapidă și sigură";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Doresti sa elimini cardul?";
 
 "Remove linked account" = "Eliminare cont asociat";
-
-"Resend code" = "Retrimitere cod";
 
 "SEPA debit details cannot be changed." = "Detaliile debitului SEPA nu pot fi modificate.";
 

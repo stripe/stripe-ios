@@ -4,7 +4,15 @@
 
 "Close" = "Stäng";
 
+"Confirm it's you" = "Bekräfta att det är du";
+
 "Default payment method was not updated. Please try again." = "Standardbetalningsmetoden uppdaterades inte. Försök igen.";
+
+"Enter the code sent to %@." = "Ange koden som skickades till %@.";
+
+"Failed to connect" = "Det gick inte att ansluta";
+
+"Resend code" = "Återsänd kod";
 
 "Scan Card" = "Skanna kort";
 

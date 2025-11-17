@@ -4,7 +4,15 @@
 
 "Close" = "ปิด";
 
+"Confirm it's you" = "ยืนยันว่าเป็นคุณจริงๆ";
+
 "Default payment method was not updated. Please try again." = "ระบบไม่ได้อัปเดตวิธีการชำระเงินเริ่มต้น โปรดลองอีกครั้ง";
+
+"Enter the code sent to %@." = "ป้อนรหัสที่ส่งไปยัง %@";
+
+"Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
+
+"Resend code" = "ส่งรหัสอีกครั้ง";
 
 "Scan Card" = "สแกนบัตร";
 

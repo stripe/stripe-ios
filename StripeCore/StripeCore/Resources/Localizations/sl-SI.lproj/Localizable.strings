@@ -4,7 +4,15 @@
 
 "Close" = "Zapri";
 
+"Confirm it's you" = "Potrdite svojo identiteto";
+
 "Default payment method was not updated. Please try again." = "Privzet način plačila ni bil posodobljen. Poskusite znova.";
+
+"Enter the code sent to %@." = "Vnesite kodo, poslano v %@.";
+
+"Failed to connect" = "Povezava ni bila vzpostavljena";
+
+"Resend code" = "Ponovno pošljite kodo";
 
 "Scan Card" = "Optično preberi kartico";
 

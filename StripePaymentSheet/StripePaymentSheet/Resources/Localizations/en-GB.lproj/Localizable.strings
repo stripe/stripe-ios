@@ -100,8 +100,6 @@
 
 "Confirm" = "Confirm";
 
-"Confirm it's you" = "Confirm it's you";
-
 "Confirm payment details" = "Confirm payment details";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Enter address manually";
 
-"Enter the code sent to %@." = "Enter the code sent to %@.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Failed to connect";
 
 "Fast, secure checkout" = "Fast, secure checkout";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Remove card?";
 
 "Remove linked account" = "Remove linked account";
-
-"Resend code" = "Resend code";
 
 "SEPA debit details cannot be changed." = "SEPA debit details cannot be changed.";
 

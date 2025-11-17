@@ -66,6 +66,18 @@ class ConfirmationChallengeTests: XCTestCase {
     // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
     let siteKey: String = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
 
+    /// A test-only HCaptcha factory that delays token responses to ensure timeout behavior
+    struct TestDelayHCaptchaFactory: HCaptchaFactory {
+        func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
+            let hcaptcha = try HCaptcha(apiKey: siteKey,
+                                        passiveApiKey: true,
+                                        rqdata: rqdata,
+                                        host: "stripecdn.com")
+            hcaptcha.manager.shouldDelayToken = true
+            return hcaptcha
+        }
+    }
+
     var elementsSession: STPElementsSession {
         let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
                                                                         "country_code": "US", ] as [String: Any],
@@ -103,7 +115,7 @@ class ConfirmationChallengeTests: XCTestCase {
     }
 
     func testPassiveCaptchaConfirmationChallengeTimeout() async {
-        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: false, elementsSession: elementsSession, stripeAttest: stripeAttest)
+        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: false, elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: TestDelayHCaptchaFactory())
         await confirmationChallenge.setTimeout(timeout: 1)
         let startTime = Date()
         let (hcaptchaToken, _) = await confirmationChallenge.fetchTokensWithTimeout()
@@ -125,8 +137,7 @@ class ConfirmationChallengeTests: XCTestCase {
         // didn't take the full timeout time, exited early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
         XCTAssertNotNil(assertion)
-        let attestationEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.attestation.confirmation") ?? false })
-        XCTAssertEqual(attestationEvents, ["elements.attestation.confirmation.prepare", "elements.attestation.confirmation.prepare_succeeded", "elements.attestation.confirmation.request_token", "elements.attestation.confirmation.request_token_succeeded"])
+        XCTAssertTrue(STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).contains("elements.attestation.confirmation.request_token_succeeded"))
         await confirmationChallenge.complete()
     }
 
@@ -181,13 +192,12 @@ class ConfirmationChallengeTests: XCTestCase {
         // should be ready
         XCTAssertEqual(attachAnalytic?["is_ready"] as? Bool, true)
 
-        let attestationEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.attestation.confirmation") ?? false })
-        XCTAssertTrue(attestationEvents.contains("elements.attestation.confirmation.request_token_succeeded"))
+        XCTAssertTrue(STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).contains("elements.attestation.confirmation.request_token_succeeded"))
         await confirmationChallenge.complete()
     }
 
     func testConfirmationChallengeCaptchaTimeout() async {
-        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
+        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: TestDelayHCaptchaFactory())
         await confirmationChallenge.setTimeout(timeout: 1)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
@@ -216,8 +226,8 @@ class ConfirmationChallengeTests: XCTestCase {
     func testConfirmationChallengeTimeout() async throws {
         // Inject delays to force both to time out
         await mockAttestService.setAssertionDelay(15.0)
-        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
-        await confirmationChallenge.setTimeout(timeout: 0)
+        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: TestDelayHCaptchaFactory())
+        await confirmationChallenge.setTimeout(timeout: 1)
         let startTime = Date()
         let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)

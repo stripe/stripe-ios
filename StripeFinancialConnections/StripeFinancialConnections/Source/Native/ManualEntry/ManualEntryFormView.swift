@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
@@ -52,10 +53,7 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberTextField: RoundedTextField = {
         let accountNumberTextField = RoundedTextField(
-            placeholder: STPLocalizedString(
-                "Account number",
-                "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number."
-            ),
+            placeholder: String.Localized.accountNumber,
             showDoneToolbar: true,
             appearance: appearance
         )
@@ -75,7 +73,8 @@ final class ManualEntryFormView: UIView {
         )
         accountNumberConfirmationTextField.textField.keyboardType = .numberPad
         accountNumberConfirmationTextField.delegate = self
-        accountNumberConfirmationTextField.textField.accessibilityIdentifier = "manual_entry_account_number_confirmation_text_field"
+        accountNumberConfirmationTextField.textField.accessibilityIdentifier =
+            "manual_entry_account_number_confirmation_text_field"
         return accountNumberConfirmationTextField
     }()
 

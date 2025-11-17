@@ -4,7 +4,15 @@
 
 "Close" = "Užverti";
 
+"Confirm it's you" = "Patvirtinkite, kad tai jūs";
+
 "Default payment method was not updated. Please try again." = "Numatytasis mokėjimo būdas neatnaujintas. Bandykite dar kartą.";
+
+"Enter the code sent to %@." = "Įveskite į %@ išsiųstą kodą.";
+
+"Failed to connect" = "Susieti nepavyko";
+
+"Resend code" = "Siųsti kodą iš naujo";
 
 "Scan Card" = "Skenuoti kortelę";
 

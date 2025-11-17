@@ -4,7 +4,15 @@
 
 "Close" = "Đóng";
 
+"Confirm it's you" = "Xác nhận đó là bạn";
+
 "Default payment method was not updated. Please try again." = "Phương thức thanh toán mặc định chưa cập nhật. Vui lòng thử lại.";
+
+"Enter the code sent to %@." = "Nhập mã đã được gửi tới %@.";
+
+"Failed to connect" = "Không thể kết nối";
+
+"Resend code" = "Gửi lại mã";
 
 "Scan Card" = "Quét thẻ";
 

@@ -1,4 +1,9 @@
-## X.Y.Z - changes pending release 
+## X.Y.Z - changes pending release
+### PaymentSheet
+* [Added] Added `card` property to `STPPaymentMethodPreview` to expose card details (brand, country, exp_month, exp_year, funding, last4, display_brand) from ConfirmationTokens.
+
+### Financial Connections
+* [Added] `StripeFinancialConnections` SDK is now localized!
 
 ## 25.0.1 2025-11-10
 ### PaymentSheet

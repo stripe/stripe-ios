@@ -4,7 +4,15 @@
 
 "Close" = "닫기";
 
+"Confirm it's you" = "본인 확인";
+
 "Default payment method was not updated. Please try again." = "기본 결제 방식이 업데이트되지 않았습니다. 다시 시도하십시오.";
+
+"Enter the code sent to %@." = "%@(으)로 전송된 코드를 입력하십시오.";
+
+"Failed to connect" = "연결 실패";
+
+"Resend code" = "코드 재전송";
 
 "Scan Card" = "카드 스캔";
 

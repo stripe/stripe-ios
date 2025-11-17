@@ -6,7 +6,7 @@
 //
 
 @_spi(STP)@testable import StripeCore
-import StripeCoreTestUtils
+@_spi(STP) import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 import SwiftUI
@@ -15,6 +15,8 @@ import XCTest
 @available(iOS 15.0, *)
 @MainActor
 class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
+
+    var mockAnalyticsClient = MockAnalyticsClient()
 
     func testPMMERepresentable_SinglePartner() async {
         let viewData = makeViewData(
@@ -115,7 +117,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         let viewData: PaymentMethodMessagingElement.ViewData
 
         var body: some View {
-            PaymentMethodMessagingElement.PMMELoadedView(viewData: viewData)
+            PaymentMethodMessagingElement.PMMELoadedView(viewData: viewData, integrationType: .viewData)
         }
     }
 
@@ -149,14 +151,27 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle = .automatic,
         appearance: PaymentMethodMessagingElement.Appearance? = nil
     ) -> PaymentMethodMessagingElement.ViewData {
+        // Reset analytics at the start of each test
+        mockAnalyticsClient.reset()
+
         var finalAppearance = appearance ?? PaymentMethodMessagingElement.Appearance()
         finalAppearance.style = style
+
+        let configuration = PaymentMethodMessagingElement.Configuration(
+            amount: 5000,
+            currency: "usd"
+        )
+        let analyticsHelper = PMMEAnalyticsHelper(
+            configuration: configuration,
+            analyticsClient: mockAnalyticsClient
+        )
 
         return PaymentMethodMessagingElement.ViewData(
             mode: mode,
             infoUrl: URL(string: "https://stripe.com")!,
             promotion: promotion,
-            appearance: finalAppearance
+            appearance: finalAppearance,
+            analyticsHelper: analyticsHelper
         )
     }
 
@@ -169,7 +184,8 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         return PaymentMethodMessagingElement.LogoSet(
             light: lightImage,
             dark: darkImage,
-            altText: "Partner Logo"
+            altText: "Partner Logo",
+            code: "test_partner"
         )
     }
 
@@ -210,5 +226,17 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         line: UInt = #line
     ) {
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+
+        // Verify analytics - displayed event should be logged
+        assertDisplayedEventLogged(file: file, line: line)
+    }
+
+    private func assertDisplayedEventLogged(file: StaticString = #filePath, line: UInt = #line) {
+        let displayedEvents = mockAnalyticsClient.loggedAnalytics.filter { analytic in
+            guard let paymentSheetAnalytic = analytic as? PaymentSheetAnalytic else { return false }
+            return paymentSheetAnalytic.event == .paymentMethodMessagingElementDisplayed
+        }
+
+        XCTAssertEqual(displayedEvents.count, 1, "Expected exactly one displayed event", file: file, line: line)
     }
 }

@@ -100,8 +100,6 @@
 
 "Confirm" = "Kinnita";
 
-"Confirm it's you" = "Kinnitage, et see olete teie";
-
 "Confirm payment details" = "Kinnitage makseandmed";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma panga- või makserakenduses %@ jooksul.";
@@ -130,11 +128,7 @@
 
 "Enter address manually" = "Sisestage aadress käsitsi";
 
-"Enter the code sent to %@." = "Sisestage kood, mis saadeti numbrile %@.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Ühendamine ebaõnnestus";
 
 "Fast, secure checkout" = "Kiire ja turvaline kassa";
 
@@ -227,8 +221,6 @@
 "Remove card?" = "Kas soovite kaardi eemaldada?";
 
 "Remove linked account" = "Eemalda lingitud konto";
-
-"Resend code" = "Saada kood uuesti";
 
 "SEPA debit details cannot be changed." = "SEPA deebeti andmeid ei saa muuta.";
 
