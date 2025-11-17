@@ -1969,7 +1969,7 @@ public class STPPaymentHandler: NSObject {
                     clientSecret: clientSecret
                 ) { [weak self] result in
                     guard let self = self else { return }
-                    
+
                     // Dismiss the challenge view
                     presentingVC.dismiss(animated: true) {
                         switch result {
@@ -1977,13 +1977,12 @@ public class STPPaymentHandler: NSObject {
                             // The web page handled the next action via Stripe.js
                             // Now retrieve the updated intent to check its status
                             self._retrieveAndCheckIntentForCurrentAction()
-                            
+
                         case .failure(let error):
                             currentAction.complete(with: .failed, error: error as NSError)
                         }
                     }
                 }
-            
 
             let doChallenge: STPVoidBlock = {
                 challengeVC.modalPresentationStyle = .overFullScreen
