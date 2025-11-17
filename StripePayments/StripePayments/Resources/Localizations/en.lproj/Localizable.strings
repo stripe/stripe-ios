@@ -73,9 +73,6 @@
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
 
-/* Error when action is not supported for the current iOS version. */
-"Unable to perform action for this iOS version." = "Unable to perform action for this iOS version.";
-
 /* Default missing source type label */
 "Unknown" = "Unknown";
 

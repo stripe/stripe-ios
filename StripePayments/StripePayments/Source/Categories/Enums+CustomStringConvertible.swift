@@ -259,8 +259,6 @@ extension STPPaymentHandlerErrorCode: CustomStringConvertible {
             return "unexpectedErrorCode"
         case .missingReturnURL:
             return "missingReturnURL"
-        case .unsupportedVersionErrorCode:
-            return "unsupportedVersionErrorCode"
         }
     }
 }

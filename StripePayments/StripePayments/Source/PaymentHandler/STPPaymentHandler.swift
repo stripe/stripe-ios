@@ -78,9 +78,6 @@ import Stripe3DS2
     @objc(STPPaymentHandlerMissingReturnURL)
     case missingReturnURL
 
-    /// The action is not supported for this iOS version.
-    @_spi(STP) case unsupportedVersionErrorCode
-
     /// The SDK encountered an unexpected error, indicating a problem with the SDK or the Stripe API.
     @objc(STPPaymentHandlerUnexpectedErrorCode)
     case unexpectedErrorCode
@@ -1371,7 +1368,11 @@ public class STPPaymentHandler: NSObject {
                     }
                     _handleRedirect(to: redirectURL, withReturn: returnURL, useWebAuthSession: false)
                 case .intentConfirmationChallenge:
-                    _handleIntentConfirmationChallenge()
+                    if #available(iOS 14.0, *) {
+                        _handleIntentConfirmationChallenge()
+                    } else {
+                        stpAssertionFailure("Unable to perform intent confirmation challenge. Requires iOS version 14.0 or later.")
+                    }
                 }
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1920,6 +1921,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     /// Handles intent confirmation challenge by presenting a WebView with the Stripe-hosted challenge page
+    @available(iOS 14.0, *)
     func _handleIntentConfirmationChallenge() {
         guard let currentAction else {
             stpAssertionFailure("Calling _handleIntentConfirmationChallenge without a currentAction")
@@ -1928,84 +1930,74 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        if #available(iOS 14.0, *) {
-            // Extract client secret
-            let clientSecret: String
-            if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
-                clientSecret = piAction.paymentIntent.clientSecret
-            } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
-                clientSecret = siAction.setupIntent.clientSecret
-            } else {
-                currentAction.complete(
-                    with: .failed,
-                    error: _error(
-                        for: .unexpectedErrorCode,
-                        loggingSafeErrorMessage: "Unable to extract client secret for intent confirmation challenge"
-                    )
-                )
-                return
-            }
-
-            // Extract publishable key
-            guard let publishableKey = apiClient.publishableKey else {
-                currentAction.complete(
-                    with: .failed,
-                    error: _error(
-                        for: .unexpectedErrorCode,
-                        loggingSafeErrorMessage: "Unable to extract publishable key for intent confirmation challenge"
-                    )
-                )
-                return
-            }
-
-            let context = currentAction.authenticationContext
-            var presentationError: NSError?
-            guard _canPresent(with: context, error: &presentationError) else {
-                currentAction.complete(with: .failed, error: presentationError)
-                return
-            }
-
-            let presentingVC = context.authenticationPresentingViewController()
-
-            let challengeVC = IntentConfirmationChallengeViewController(
-                publishableKey: publishableKey,
-                clientSecret: clientSecret
-            ) { [weak self] result in
-                guard let self = self else { return }
-
-                // Dismiss the challenge view
-                presentingVC.dismiss(animated: true) {
-                    switch result {
-                    case .success:
-                        // The web page handled the next action via Stripe.js
-                        // Now retrieve the updated intent to check its status
-                        self._retrieveAndCheckIntentForCurrentAction()
-
-                    case .failure(let error):
-                        currentAction.complete(with: .failed, error: error as NSError)
-                    }
-                }
-            }
-
-            let doChallenge: STPVoidBlock = {
-                challengeVC.modalPresentationStyle = .overFullScreen
-                challengeVC.modalTransitionStyle = .crossDissolve
-                presentingVC.present(challengeVC, animated: true, completion: nil)
-            }
-
-            if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
-                context.prepare?(forPresentation: doChallenge)
-            } else {
-                doChallenge()
-            }
+        // Extract client secret
+        let clientSecret: String
+        if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
+            clientSecret = piAction.paymentIntent.clientSecret
+        } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
+            clientSecret = siAction.setupIntent.clientSecret
         } else {
             currentAction.complete(
                 with: .failed,
                 error: _error(
-                    for: .unsupportedVersionErrorCode,
-                    loggingSafeErrorMessage: "Unable to perform intent confirmation challenge. Requires iOS version 14.0 or later."
+                    for: .unexpectedErrorCode,
+                    loggingSafeErrorMessage: "Unable to extract client secret for intent confirmation challenge"
                 )
             )
+            return
+        }
+
+        // Extract publishable key
+        guard let publishableKey = apiClient.publishableKey else {
+            currentAction.complete(
+                with: .failed,
+                error: _error(
+                    for: .unexpectedErrorCode,
+                    loggingSafeErrorMessage: "Unable to extract publishable key for intent confirmation challenge"
+                )
+            )
+            return
+        }
+
+        let context = currentAction.authenticationContext
+        var presentationError: NSError?
+        guard _canPresent(with: context, error: &presentationError) else {
+            currentAction.complete(with: .failed, error: presentationError)
+            return
+        }
+
+        let presentingVC = context.authenticationPresentingViewController()
+
+        let challengeVC = IntentConfirmationChallengeViewController(
+            publishableKey: publishableKey,
+            clientSecret: clientSecret
+        ) { [weak self] result in
+            guard let self = self else { return }
+
+            // Dismiss the challenge view
+            presentingVC.dismiss(animated: true) {
+                switch result {
+                case .success:
+                    // The web page handled the next action via Stripe.js
+                    // Now retrieve the updated intent to check its status
+                    self._retrieveAndCheckIntentForCurrentAction()
+
+                case .failure(let error):
+                    currentAction.complete(with: .failed, error: error as NSError)
+                }
+            }
+        }
+
+        let doChallenge: STPVoidBlock = {
+            challengeVC.modalPresentationStyle = .overFullScreen
+            challengeVC.modalTransitionStyle = .crossDissolve
+            presentingVC.present(challengeVC, animated: true, completion: nil)
+        }
+
+        if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
+            context.prepare?(forPresentation: doChallenge)
+        } else {
+            doChallenge()
         }
     }
 
@@ -2366,10 +2358,6 @@ public class STPPaymentHandler: NSObject {
                 ?? "The provided Intent client secret does not match the expected client secret format. Make sure your server is returning the correct value and that is passed to `STPPaymentHandler`."
             userInfo[NSLocalizedDescriptionKey] =
                 userInfo[NSLocalizedDescriptionKey] ?? NSError.stp_unexpectedErrorMessage()
-
-        // Unsupported action for iOS version
-        case .unsupportedVersionErrorCode:
-            userInfo[NSLocalizedDescriptionKey] = userInfo[NSLocalizedDescriptionKey] ?? STPLocalizedString("Unable to perform action for this iOS version.", "Error when action is not supported for the current iOS version.")
 
         case .unexpectedErrorCode:
             break
