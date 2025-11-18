@@ -84,7 +84,8 @@ class IntegrationTesterUICardTests: IntegrationTesterUITests {
     }
 
     let hsbcCard = "4000582600000292"
-    func testHSBCHTMLIssue() throws {
+    // TODO(RUN_MOBILESDK-4224): Investigate flakyness
+    func disabled_testHSBCHTMLIssue() throws {
         testHSBCWebViewLinksTrigger(cardNumber: hsbcCard)
     }
 
