@@ -64,8 +64,11 @@
 /* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
-/* Instructional text when the opposite side of the ID is shown */
-"Incorrect side detected, flip document over" = "Incorrect side detected, flip document over";
+/* Instructional text when the user is expected to scan the back of their ID but the camera is seeing the front or a passport instead */
+"Back of ID not detected" = "Back of ID not detected";
+
+/* Instructional text when the user is expected to scan the front of their ID but the camera is seeing the back instead */
+"Front of ID not detected" = "Front of ID not detected";
 
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
@@ -129,7 +132,7 @@
 "Make sure all details are visible and focus" = "Make sure all details are visible and focus";
 
 /* Instructional text when the document is not centered in the frame */
-"Move ID to the center" = "Move ID to the center";
+"Center ID in view" = "Center ID in view";
 
 /* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";

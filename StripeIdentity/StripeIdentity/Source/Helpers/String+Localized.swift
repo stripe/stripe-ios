@@ -75,10 +75,17 @@ extension String.Localized {
         )
     }
 
-    static var incorrect_side_flip: String {
+    static var back_of_id_not_detected: String {
         return STPLocalizedString(
-            "Incorrect side detected, flip document over",
-            "Instructional text when the opposite side of the ID is shown"
+            "Back of ID not detected",
+            "Instructional text when the user is expected to scan the back of their ID but the camera is seeing the front or a passport instead"
+        )
+    }
+
+    static var front_of_id_not_detected: String {
+        return STPLocalizedString(
+            "Front of ID not detected",
+            "Instructional text when the user is expected to scan the front of their ID but the camera is seeing the back instead"
         )
     }
 
@@ -179,9 +186,9 @@ extension String.Localized {
         )
     }
 
-    static var center_document: String {
+    static var center_id_in_view: String {
         return STPLocalizedString(
-            "Move ID to the center",
+            "Center ID in view",
             "Instructional text when the document is not centered in the frame"
         )
     }

@@ -73,17 +73,16 @@ extension DocumentCaptureViewController {
                 let cx = Double(idDetectorOutput.documentBounds.midX)
                 let cy = Double(idDetectorOutput.documentBounds.midY)
                 if abs(cx - 0.5) > 0.08 || abs(cy - 0.5) > 0.08 {
-                    return String.Localized.center_document
+                    return String.Localized.center_id_in_view
                 }
             }
             switch (side, matchesClassification, zoomLevel) {
             case (.front, false, _), (.back, false, _):
-                // If wrong side is shown, provide explicit flip guidance
                 switch (side, foundClassification) {
                 case (.front, .idCardBack):
-                    return String.Localized.incorrect_side_flip
+                    return String.Localized.front_of_id_not_detected
                 case (.back, .idCardFront), (.back, .passport):
-                    return String.Localized.incorrect_side_flip
+                    return String.Localized.back_of_id_not_detected
                 default:
                     return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
                 }
