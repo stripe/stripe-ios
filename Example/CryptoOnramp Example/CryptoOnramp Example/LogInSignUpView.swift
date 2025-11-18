@@ -52,16 +52,10 @@ struct LogInSignUpView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                Image(systemName: "wallet.bifold")
-                    .font(.title.bold())
-                    .offset(y: -1)
-                    .rotationEffect(.degrees(-10))
-                    .foregroundStyle(.white)
-                    .padding(24)
-                    .background {
-                        Circle()
-                            .foregroundStyle(Color.accentColor)
-                    }
+                Image(systemName: "person.circle")
+                    .font(.system(size: 60))
+                    .foregroundColor(Color.accentColor)
+                    .padding()
 
                 FormField("Email") {
                     TextField("Enter email address", text: $email)
