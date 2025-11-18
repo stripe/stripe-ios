@@ -83,16 +83,55 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         // Setup message handlers
         let contentController = WKUserContentController()
-        contentController.add(self, name: "getInitParams")
+        contentController.addScriptMessageHandler(self, contentWorld: .page, name: "getInitParams")
         contentController.add(self, name: "onReady")
         contentController.add(self, name: "onSuccess")
         contentController.add(self, name: "onError")
 
         configuration.userContentController = contentController
 
-        // Inject bridge scripts
-        injectBridgeScripts(into: contentController)
+        // Intercept console logs
+        let consoleInterceptor = """
+        (function() {
+            const originalConsole = {
+                log: console.log,
+                error: console.error,
+                warn: console.warn,
+                info: console.info,
+                debug: console.debug
+            };
 
+            function formatArgs(args) {
+                return Array.from(args).map(arg => {
+                    if (typeof arg === 'object') {
+                        try {
+                            return JSON.stringify(arg, null, 2);
+                        } catch (e) {
+                            return String(arg);
+                        }
+                    }
+                    return String(arg);
+                }).join(' ');
+            }
+
+            ['log', 'error', 'warn', 'info', 'debug'].forEach(method => {
+                console[method] = function(...args) {
+                    originalConsole[method].apply(console, args);
+                    try {
+                        window.webkit.messageHandlers.consoleLog.postMessage({
+                            level: method,
+                            message: formatArgs(args),
+                            stackTrace: method === 'error' ? (new Error()).stack : undefined
+                        });
+                    } catch(e) {}
+                };
+            });
+        })();
+        """
+
+        let earlyScript = WKUserScript(source: consoleInterceptor, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+        contentController.addUserScript(earlyScript)
+        
         // Create WebView
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
@@ -116,29 +155,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-    }
-
-    private func injectBridgeScripts(into contentController: WKUserContentController) {
-        // CRITICAL: Set initParams BEFORE page loads so it's available immediately
-        // The web page expects window.initParams to be set via window.setInitParams()
-        let initParamsScript = """
-        window.setInitParams = function(params) {
-            window.initParams = params;
-        };
-        window.setInitParams({
-            clientSecret: "\(clientSecret)",
-            publishableKey: "\(publishableKey)"
-        });
-        """
-
-        // Inject at document start (BEFORE the page's scripts run)
-        let startScript = WKUserScript(
-            source: initParamsScript,
-            injectionTime: .atDocumentStart,
-            forMainFrameOnly: false
-        )
-
-        contentController.addUserScript(startScript)
     }
 
     private func loadChallenge() {
@@ -172,11 +188,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     private func handleError(_ error: Error) {
-        if case ChallengeError.webError(_, let type, let code) = error {
-            STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(errorType: type, errorCode: code, duration: Date().timeIntervalSince(startTime), fromBridge: true)
-        } else {
-            STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime), fromBridge: false)
-        }
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime))
         cleanup()
         completion(.failure(error))
     }
@@ -184,6 +196,36 @@ class IntentConfirmationChallengeViewController: UIViewController {
     /// Validates that the message comes from the expected Stripe origin
     private func isValidMessageOrigin(_ message: WKScriptMessage) -> Bool {
         return message.frameInfo.securityOrigin.host == Self.challengeHost
+    }
+}
+
+// MARK: - WKScriptMessageHandlerWithReply
+@available(iOS 14.0, *)
+extension IntentConfirmationChallengeViewController:
+WKScriptMessageHandlerWithReply {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage,
+        replyHandler: @escaping (Any?, String?) -> Void
+    ) {
+        // Validate message origin for security
+        guard isValidMessageOrigin(message) else {
+            replyHandler(nil, "Invalid message origin: \(message.frameInfo.securityOrigin.host)")
+            return
+        }
+
+        switch message.name {
+        case "getInitParams":
+            // Return the init params as a dictionary
+            let params: [String: String] = [
+                "clientSecret": clientSecret,
+                "publishableKey": publishableKey
+            ]
+            replyHandler(params, nil)
+
+        default:
+            replyHandler(nil, "Unknown message: \(message.name)")
+        }
     }
 }
 
@@ -196,18 +238,11 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
     ) {
         // Validate message origin for security
         guard isValidMessageOrigin(message) else {
-            #if DEBUG
-            print("[IntentConfirmationChallenge] ⚠️ Invalid message origin: \(message.frameInfo.securityOrigin.host)")
-            #endif
+            stpAssertionFailure("Invalid message origin: \(message.frameInfo.securityOrigin.host)")
             return
         }
 
         switch message.name {
-        case "getInitParams":
-            #if DEBUG
-            print("[IntentConfirmationChallenge] getInitParams called (params already injected)")
-            #endif
-
         case "onReady":
             handleReady()
 
@@ -244,10 +279,37 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
 }
 
 // MARK: - Errors
-enum ChallengeError: LocalizedError {
+enum ChallengeError: LocalizedError, AnalyticLoggableError {
     case webError(message: String, type: String, code: String?)
     case navigationFailed(Error)
     case unknownError
+
+    var analyticsErrorType: String {
+        switch self {
+        case .webError(_, let type, _):
+            return type
+        default:
+            return "IntentConfirmationChallengeError"
+        }
+    }
+
+    var analyticsErrorCode: String {
+        switch self {
+        case .webError(_, _, let code):
+            return code ?? "unknown"
+        default:
+            return (self as NSError).code.description
+        }
+    }
+
+    var additionalNonPIIErrorDetails: [String : Any] {
+        switch self {
+        case .webError:
+            return ["from_bridge": true]
+        default:
+            return ["from_bridge": false]
+        }
+    }
 
     var errorDescription: String? {
         switch self {
@@ -259,6 +321,7 @@ enum ChallengeError: LocalizedError {
             return "Unknown error."
         }
     }
+
 }
 
 // All duration analytics are in milliseconds
@@ -281,22 +344,9 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logIntentConfirmationChallengeError(error: Error? = nil, errorType: String? = nil, errorCode: String? = nil, duration: TimeInterval, fromBridge: Bool) {
-        var params: [String: Any] = ["duration": duration * 1000, "from_bridge": fromBridge]
-        if let error {
-            log(
-                analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: params)
-            )
-        } else {
-            if let errorType {
-                params["error_type"] = errorType
-            }
-            if let errorCode {
-                params["error_code"] = errorCode
-            }
-            log(
-                analytic: GenericAnalytic(event: .intentConfirmationChallengeError, params: params)
-            )
-        }
+    func logIntentConfirmationChallengeError(error: Error, duration: TimeInterval) {
+        log(
+            analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: ["duration": duration * 1000])
+        )
     }
 }
