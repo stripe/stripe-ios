@@ -7,7 +7,7 @@
 
 import Foundation
 import SafariServices
-@_spi(PreviewConnect) @_spi(STP) @testable import StripeConnect
+@_spi(PrivatePreviewConnect) @_spi(STP) @testable import StripeConnect
 @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeFinancialConnections
 import WebKit
