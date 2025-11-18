@@ -131,7 +131,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         let earlyScript = WKUserScript(source: consoleInterceptor, injectionTime: .atDocumentStart, forMainFrameOnly: false)
         contentController.addUserScript(earlyScript)
-        
+
         // Create WebView
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
@@ -219,7 +219,7 @@ WKScriptMessageHandlerWithReply {
             // Return the init params as a dictionary
             let params: [String: String] = [
                 "clientSecret": clientSecret,
-                "publishableKey": publishableKey
+                "publishableKey": publishableKey,
             ]
             replyHandler(params, nil)
 
@@ -302,7 +302,7 @@ enum ChallengeError: LocalizedError, AnalyticLoggableError {
         }
     }
 
-    var additionalNonPIIErrorDetails: [String : Any] {
+    var additionalNonPIIErrorDetails: [String: Any] {
         switch self {
         case .webError:
             return ["from_bridge": true]
