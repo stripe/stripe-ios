@@ -174,7 +174,7 @@ public final class EmbeddedComponentManager {
 
     /// Creates a `CheckScanningController`
     /// - Seealso: [Check scanning component documentation](https://docs.stripe.com/connect/supported-embedded-components/check-scanning?platform=ios)
-    @_spi(PreviewConnect)
+    @_spi(PrivatePreviewConnect)
     public func createCheckScanningController() -> CheckScanningController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
