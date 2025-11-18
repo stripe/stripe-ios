@@ -90,48 +90,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         configuration.userContentController = contentController
 
-        // Intercept console logs
-        let consoleInterceptor = """
-        (function() {
-            const originalConsole = {
-                log: console.log,
-                error: console.error,
-                warn: console.warn,
-                info: console.info,
-                debug: console.debug
-            };
-
-            function formatArgs(args) {
-                return Array.from(args).map(arg => {
-                    if (typeof arg === 'object') {
-                        try {
-                            return JSON.stringify(arg, null, 2);
-                        } catch (e) {
-                            return String(arg);
-                        }
-                    }
-                    return String(arg);
-                }).join(' ');
-            }
-
-            ['log', 'error', 'warn', 'info', 'debug'].forEach(method => {
-                console[method] = function(...args) {
-                    originalConsole[method].apply(console, args);
-                    try {
-                        window.webkit.messageHandlers.consoleLog.postMessage({
-                            level: method,
-                            message: formatArgs(args),
-                            stackTrace: method === 'error' ? (new Error()).stack : undefined
-                        });
-                    } catch(e) {}
-                };
-            });
-        })();
-        """
-
-        let earlyScript = WKUserScript(source: consoleInterceptor, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-        contentController.addUserScript(earlyScript)
-
         // Create WebView
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
