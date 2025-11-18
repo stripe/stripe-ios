@@ -8,11 +8,16 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+private let authErrorCodes: Set<String?> = [
+    "consumer_session_credentials_invalid",
+    "consumer_session_expired",
+]
+
 extension Error {
     var isLinkAuthError: Bool {
         if let stripeError = self as? StripeError,
            case let .apiError(stripeAPIError) = stripeError,
-           stripeAPIError.code == "consumer_session_credentials_invalid" {
+           authErrorCodes.contains(stripeAPIError.code) {
             return true
         }
         return false
