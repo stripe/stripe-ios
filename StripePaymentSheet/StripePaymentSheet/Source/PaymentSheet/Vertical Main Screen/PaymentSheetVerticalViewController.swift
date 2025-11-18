@@ -472,10 +472,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makeWalletHeaderView() -> UIView? {
         var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList && !walletButtonsShownExternally {
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList && !walletButtonsShownExternally && !configuration.willUseWalletButtonsView {
             walletOptions.insert(.applePay)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList && !walletButtonsShownExternally {
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList && !walletButtonsShownExternally && !configuration.willUseWalletButtonsView {
             walletOptions.insert(.link)
         }
         guard !walletOptions.isEmpty else {
