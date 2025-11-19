@@ -165,13 +165,6 @@ extension STPAPIClient {
         )
     }
 
-    /// Uses the Stripe file upload API to upload a JPEG encoded image.
-    ///
-    /// The image will be automatically resized down if:
-    /// 1. The given purpose is recognized by the client.
-    /// 2. It's larger than the maximum allowed file size for the given purpose.
-    ///
-    /// - Parameters:
     @_spi(STP) public func uploadImageAndGetMetrics(
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
