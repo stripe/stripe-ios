@@ -159,8 +159,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
 // MARK: - WKScriptMessageHandlerWithReply
 @available(iOS 14.0, *)
-extension IntentConfirmationChallengeViewController:
-WKScriptMessageHandlerWithReply {
+extension IntentConfirmationChallengeViewController: WKScriptMessageHandlerWithReply {
     func userContentController(
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage,
