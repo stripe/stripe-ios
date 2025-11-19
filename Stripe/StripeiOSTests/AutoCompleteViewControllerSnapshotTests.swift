@@ -17,7 +17,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-// TODO(gbirch) iOS 26 tests temporarily disabled
+// @iOS26
 class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
 
     private var configuration: AddressViewController.Configuration {
