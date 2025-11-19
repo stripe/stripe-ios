@@ -165,6 +165,30 @@ extension STPAPIClient {
         )
     }
 
+    /// Uses the Stripe file upload API to upload a JPEG encoded image.
+    ///
+    /// The image will be automatically resized down if:
+    /// 1. The given purpose is recognized by the client.
+    /// 2. It's larger than the maximum allowed file size for the given purpose.
+    ///
+    /// - Parameters:
+    ///   - image: The image to be uploaded.
+    ///   - compressionQuality: The compression quality to use when encoding the jpeg.
+    ///   - purpose: The purpose of this file.
+    ///   - fileName: The name of the uploaded file. The "jpeg" extension will
+    ///     automatically be appended to this name.
+    ///   - ownedBy: A Stripe-internal property that sets the owner of the file.
+    ///   - ephemeralKeySecret: Authorization key, if applicable.
+    ///
+    /// - Returns: A promise that resolves to a Stripe file and upload metrics, if successful, or an
+    ///   error that may have occurred.
+    ///
+    /// - Note:
+    ///   The provided `purpose` must match a supported Purpose by our API or the
+    ///   API will return an error. Generally, this should match a value in
+    ///   `StripeFile.Purpose`, but can be specified by any string for instances
+    ///   where a Stripe endpoint needs to specify a newer purpose that the client
+    ///   SDK does not recognize.
     @_spi(STP) public func uploadImageAndGetMetrics(
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
