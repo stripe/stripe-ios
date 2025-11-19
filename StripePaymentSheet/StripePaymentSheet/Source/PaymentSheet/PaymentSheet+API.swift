@@ -190,7 +190,7 @@ extension PaymentSheet {
         // MARK: - New Payment Method
         case let .new(confirmParams):
             Task { @MainActor in
-                let radarOptions = await confirmationChallenge?.makeRadarOptions()
+                let radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
                     case .stripe(let paymentMethodType):
@@ -339,7 +339,7 @@ extension PaymentSheet {
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task { @MainActor in
-                    let radarOptions = await confirmationChallenge?.makeRadarOptions()
+                    let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
                     paymentMethodParams.radarOptions = radarOptions
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
@@ -407,7 +407,7 @@ extension PaymentSheet {
             }
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool, STPClientAttributionMetadata?) -> Void = { paymentMethod, linkAccount, shouldSave, clientAttributionMetadata in
                 Task { @MainActor in
-                    let radarOptions = await confirmationChallenge?.makeRadarOptions()
+                    let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethod.type)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                     let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                     // Tell Stripe to infer mandate info from client
