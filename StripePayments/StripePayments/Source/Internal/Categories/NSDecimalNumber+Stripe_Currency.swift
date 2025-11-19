@@ -30,13 +30,6 @@ extension NSDecimalNumber {
         return number.multiplying(byPowerOf10: -Int16(decimalCount))
     }
 
-    @objc @_spi(STP) public func stp_amount(withCurrency currency: String?) -> Int {
-        var ourNumber = self
-        let decimalCount = NSDecimalNumber.decimalCount(for: currency)
-        ourNumber = multiplying(byPowerOf10: Int16(decimalCount))
-        return Int(ourNumber.doubleValue)
-    }
-
     private class func decimalCount(for currency: String?) -> Int {
         if let currency = currency?.uppercased(),
            let specialCase = Self.decimalCountSpecialCases[currency]

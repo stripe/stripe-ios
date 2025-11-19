@@ -288,10 +288,6 @@ import Foundation
         return allCases.first(where: { $0.identifier == identifier }) ?? .unknown
     }
 
-    @_spi(STP) public static func fromNSNumber(_ nsNumber: NSNumber) -> STPPaymentMethodType {
-        return allCases.first(where: { NSNumber(value: $0.rawValue) == nsNumber }) ?? .unknown
-    }
-
 }
 
 extension STPPaymentMethodType: CaseIterable { }

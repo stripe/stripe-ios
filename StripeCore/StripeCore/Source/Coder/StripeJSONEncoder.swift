@@ -14,28 +14,6 @@ import Foundation
 
     @_spi(STP) public var outputFormatting: JSONSerialization.WritingOptions = []
 
-    @_spi(STP) public func encode<T>(_ value: T, includingUnknownFields: Bool = true) throws -> Data
-    where T: Encodable {
-        var outputFormatting = self.outputFormatting
-        outputFormatting.insert(.fragmentsAllowed)
-
-        if value is UnknownFieldsEncodable {
-            let jsonDictionary = try self.encodeJSONDictionary(
-                value,
-                includingUnknownFields: includingUnknownFields
-            )
-            return try JSONSerialization.data(
-                withJSONObject: jsonDictionary,
-                options: outputFormatting
-            )
-        } else {
-            return try JSONSerialization.data(
-                withJSONObject: castToNSObject(value),
-                options: outputFormatting
-            )
-        }
-    }
-
     @_spi(STP) public func encodeJSONDictionary<T>(
         _ value: T,
         includingUnknownFields: Bool = true

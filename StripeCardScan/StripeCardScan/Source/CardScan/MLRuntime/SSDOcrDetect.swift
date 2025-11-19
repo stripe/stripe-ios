@@ -66,19 +66,6 @@ import UIKit
         }
     }
 
-    @_spi(STP) public static func loadModelFromBundle() -> SSDOcr? {
-        guard
-            let ssdOcrUrl = StripeCardScanBundleLocator.resourcesBundle.url(
-                forResource: SSDOcrDetect.ssdOcrResource,
-                withExtension: SSDOcrDetect.ssdOcrExtension
-            )
-        else {
-            return nil
-        }
-
-        return try? SSDOcr(contentsOf: ssdOcrUrl)
-    }
-
     init() {
         if SSDOcrDetect.priors == nil {
             SSDOcrDetect.priors = OcrPriorsGen.combinePriors()
