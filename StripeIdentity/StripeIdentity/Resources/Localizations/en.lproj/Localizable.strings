@@ -129,7 +129,7 @@
 "Loading" = "Loading";
 
 /* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "Make sure all details are visible and focus";
+"Blur detected. Make sure your ID is well-lit and in focus, then try again." = "Blur detected. Make sure your ID is well-lit and in focus, then try again.";
 
 /* Instructional text when the document is not centered in the frame */
 "Center ID in view" = "Center ID in view";

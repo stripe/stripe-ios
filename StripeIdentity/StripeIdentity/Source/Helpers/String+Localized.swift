@@ -181,7 +181,7 @@ extension String.Localized {
 
     static var reduce_blur: String {
         return STPLocalizedString(
-            "Make sure all details are visible and focus",
+            "Blur detected. Make sure your ID is well-lit and in focus, then try again.",
             "Instructional text when the document is too blurry"
         )
     }

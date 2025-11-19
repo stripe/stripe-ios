@@ -64,7 +64,7 @@ extension DocumentCaptureViewController {
         switch documentScannerOutput {
         case .none:
             return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
-        case .some(.legacy(let idDetectorOutput, _, _, _, _)):
+        case .some(.legacy(let idDetectorOutput, _, let motionblur, _, _)):
             let foundClassification = idDetectorOutput.classification
             let matchesClassification = foundClassification.matchesDocument(side: side)
             let zoomLevel = idDetectorOutput.computeZoomLevel()
@@ -87,6 +87,9 @@ extension DocumentCaptureViewController {
                     return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
                 }
             case (_, true, .ok):
+                if motionblur.hasMotionBlur {
+                    return String.Localized.reduce_blur
+                }
                 return String.Localized.scanning
             case (_, true, .tooClose):
                 return String.Localized.move_farther
