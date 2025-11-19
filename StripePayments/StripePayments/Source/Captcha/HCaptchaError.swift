@@ -9,7 +9,7 @@
 import Foundation
 
 /// The codes of possible errors thrown by HCaptcha
-enum HCaptchaError: Error, CustomStringConvertible {
+@_spi(STP) public enum HCaptchaError: Error, CustomStringConvertible {
 
     /// Unexpected error
     case unexpected(Error)
@@ -52,7 +52,7 @@ enum HCaptchaError: Error, CustomStringConvertible {
     }
 
     /// A human-readable description for each error
-    var description: String {
+    public var description: String {
         switch self {
         case .unexpected(let error):
             return "Unexpected Error: \(error)"

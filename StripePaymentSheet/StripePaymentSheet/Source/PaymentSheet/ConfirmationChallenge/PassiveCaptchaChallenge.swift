@@ -42,9 +42,12 @@ struct PassiveCaptchaData: Equatable, Hashable {
 
 actor PassiveCaptchaChallenge {
     let passiveCaptchaData: PassiveCaptchaData
+    var isTokenReady: Bool = false
     private let hcaptchaFactory: HCaptchaFactory
-    private var tokenTask: Task<String, Error>?
-    var hasFetchedToken = false
+    private var hcaptcha: HCaptcha?
+    private var tokenTask: Task<HCaptchaResult, Error>?
+    private var retryCount = 0
+    private let maxRetries = 6
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
@@ -53,10 +56,37 @@ actor PassiveCaptchaChallenge {
     init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
-        Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
+        Task { // Intentionally not blocking loading/initialization!
+            try await createHCaptcha()
+            _ = try await fetchToken()
+        }
     }
 
-    public func fetchToken() async throws -> String {
+    private func createHCaptcha() async throws {
+        STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: passiveCaptchaData.siteKey)
+        let startTime = Date()
+        do {
+            self.hcaptcha = try hcaptchaFactory.create(siteKey: passiveCaptchaData.siteKey, rqdata: passiveCaptchaData.rqdata)
+            self.hcaptcha?.onEvent { event, _ in
+                // if the token expires, reset and retry
+                if case .expired = event {
+                    self.tokenTask = nil
+                    self.isTokenReady = false
+                    if self.retryCount < self.maxRetries {
+                        self.retryCount += 1
+                        Task {
+                            try await self.fetchToken()
+                        }
+                    }
+                }
+            }
+        } catch {
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
+            throw error
+        }
+    }
+
+    public func fetchToken() async throws -> HCaptchaResult {
         if let tokenTask {
             return try await withTaskCancellationHandler {
                 try await tokenTask.value
@@ -65,46 +95,36 @@ actor PassiveCaptchaChallenge {
             }
         }
 
-        let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, rqdata = passiveCaptchaData.rqdata, hcaptchaFactory, weak self] () -> String in
-            STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
+        let tokenTask = Task<HCaptchaResult, Error> { [siteKey = passiveCaptchaData.siteKey, hcaptcha, weak self] () -> HCaptchaResult in
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
             let startTime = Date()
             do {
-                let hcaptcha = try hcaptchaFactory.create(siteKey: siteKey, rqdata: rqdata)
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
                 let result = try await withTaskCancellationHandler {
-                    try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
+                    try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<HCaptchaResult, Error>) in
                         // Prevent Swift Task continuation misuse - the validate completion block can get called multiple times
-                        var nillableContinuation: CheckedContinuation<String, Error>? = continuation
+                        var nillableContinuation: CheckedContinuation<HCaptchaResult, Error>? = continuation
 
-                        hcaptcha.validate { result in
+                        hcaptcha?.validate(resetOnError: false) { result in
                             Task { @MainActor in // MainActor to prevent continuation from different threads
-                                do {
-                                    let token = try result.dematerialize()
-                                    nillableContinuation?.resume(returning: token)
-                                    nillableContinuation = nil
-                                } catch {
-                                    nillableContinuation?.resume(throwing: error)
-                                    nillableContinuation = nil
-                                }
+                                nillableContinuation?.resume(returning: result)
+                                nillableContinuation = nil
                             }
                         }
                     }
                 } onCancel: {
                     Task { @MainActor in
-                        hcaptcha.stop()
+                        hcaptcha?.stop()
                     }
                 }
                 // Check cancellation after continuation
                 try Task.checkCancellation()
                 // Mark as complete
                 await self?.setValidationComplete()
-                let duration = Date().timeIntervalSince(startTime)
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
                 return result
             } catch {
                 try Task.checkCancellation()
-                let duration = Date().timeIntervalSince(startTime)
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: Date().timeIntervalSince(startTime))
                 throw error
             }
         }
@@ -117,7 +137,7 @@ actor PassiveCaptchaChallenge {
     }
 
     private func setValidationComplete() {
-        hasFetchedToken = true
+        self.isTokenReady = true
     }
 
 }
