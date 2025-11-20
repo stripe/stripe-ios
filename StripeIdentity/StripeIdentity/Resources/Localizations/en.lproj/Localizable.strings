@@ -131,6 +131,9 @@
 /* Instructional text when the document is too blurry */
 "Image is blurry. Hold your phone steady and try again." = "Image is blurry. Hold your phone steady and try again.";
 
+/* Instructional text when the scanned document appears not to be a valid ID document */
+"Invalid document" = "Invalid document";
+
 /* Instructional text when the document is not centered in the frame */
 "Center ID in view" = "Center ID in view";
 

@@ -68,6 +68,11 @@ extension DocumentCaptureViewController {
             let foundClassification = idDetectorOutput.classification
             let matchesClassification = foundClassification.matchesDocument(side: side)
             let zoomLevel = idDetectorOutput.computeZoomLevel()
+
+            if foundClassification == .invalid {
+                return String.Localized.invalid_document
+            }
+            
             // If document appears off-center, ask user to center it (only when the side matches)
             if matchesClassification {
                 let cx = Double(idDetectorOutput.documentBounds.midX)

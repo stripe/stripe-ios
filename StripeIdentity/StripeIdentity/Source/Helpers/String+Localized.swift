@@ -186,6 +186,13 @@ extension String.Localized {
         )
     }
 
+    static var invalid_document: String {
+        return STPLocalizedString(
+            "Invalid document",
+            "Instructional text when the scanned document appears not to be a valid ID document"
+        )
+    }
+
     static var center_id_in_view: String {
         return STPLocalizedString(
             "Center ID in view",
