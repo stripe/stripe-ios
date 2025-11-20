@@ -39,7 +39,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let paymentMethodSyncDefault: Bool
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
-    let passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    let confirmationChallenge: ConfirmationChallenge?
     let elementsSessionConfigId: String?
 
     // MARK: - Writable Properties
@@ -163,7 +163,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         paymentMethodSyncDefault: Bool,
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
-        passiveCaptchaChallenge: PassiveCaptchaChallenge?,
+        confirmationChallenge: ConfirmationChallenge?,
         elementsSessionConfigId: String?,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
@@ -180,7 +180,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.paymentMethodSyncDefault = paymentMethodSyncDefault
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
-        self.passiveCaptchaChallenge = passiveCaptchaChallenge
+        self.confirmationChallenge = confirmationChallenge
         self.elementsSessionConfigId = elementsSessionConfigId
         self.csCompletion = csCompletion
         self.delegate = delegate
@@ -610,9 +610,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
         if case .new(let confirmParams) = paymentOption  {
             Task {
-                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchTokenWithTimeout()
-                confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
+                confirmParams.paymentMethodParams.radarOptions = await self.confirmationChallenge?.makeRadarOptions()
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
+                    Task { await self.confirmationChallenge?.complete() }
                     if let error = error {
                         self.error = error
                         self.processingInFlight = false

@@ -100,8 +100,6 @@
 
 "Confirm" = "Potvrdit";
 
-"Confirm it's you" = "Potvrďte, že jste to vy";
-
 "Confirm payment details" = "Potvrdit detaily platby";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Pro dokončení nákupu potvrďte platbu ve své bance nebo platební aplikaci do %@.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Dokončete nákup potvrzením platby v bankovní aplikaci do  %@.";
 
 "Confirm your CVC" = "Potvrďte vaše CVC";
+
+"Confirm your information" = "Potvrďte své údaje";
 
 "Contact information" = "Kontaktní údaje";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Zadejte adresu ručně";
 
-"Enter the code sent to %@." = "Zadejte kód zaslaný %s.";
-
 "FPX Bank" = "Banka FPX";
-
-"Failed to connect" = "Nepodařilo se připojit";
 
 "Fast, secure checkout" = "Rychlé a bezpečné placení";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumím tomu, že Stripe bude vybírat přímé debety jménem %@, a potvrzuji, že jsem držitelem účtu a jedinou osobou, která je nezbytná k autorizování debetů z tohoto účtu.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Poslední 4 číslice SSN";
 
 "Log in or sign up" = "Registrovat nebo přihlásit";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Odebrat kartu?";
 
 "Remove linked account" = "Odebrat propojený účet";
-
-"Resend code" = "Znovu zaslat kód";
 
 "SEPA debit details cannot be changed." = "Údaje pro inkaso SEPA nelze měnit.";
 

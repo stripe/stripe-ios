@@ -221,10 +221,6 @@ extension STPBINRange {
         }
     }
 
-    @_spi(STP) public func minLengthForFullBINRange() -> Int {
-        return kPrefixLengthForMetadataRequest
-    }
-
     /// This is basically a wrapper around:
     ///
     /// 1. Does BIN have variable length pans, i.e. do we need to call the metadata service

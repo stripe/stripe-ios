@@ -1,2 +1,159 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ 目前不可用";
+
+"%@ is undergoing maintenance" = "%@ 正在進行維護";
+
+"Account number is required." = "帳號為必填。";
+
+"Almost there" = "馬上好了";
+
+"Can't find your bank?" = "找不到您的銀行？";
+
+"Checking and savings accounts are supported." = "支援支票帳戶和儲蓄帳戶。";
+
+"Choose a different bank" = "選擇其他銀行";
+
+"Click “Resend code” and try again, or %@." = "按下「重新傳送驗證碼」並重試，或%@。";
+
+"Confirm account number" = "確認帳號";
+
+"Confirm the account number." = "確認帳號。";
+
+"Connect account" = "連接帳戶";
+
+"Connect accounts" = "連接帳戶";
+
+"Connect another account" = "連接另一帳戶";
+
+"Continue linking your account" = "繼續關聯您的帳戶";
+
+"Continue with Link" = "繼續使用 Link";
+
+"Email address" = "電郵地址";
+
+"Enter bank details" = "輸入銀行資訊";
+
+"Enter bank details manually" = "手動輸入銀行資訊";
+
+"Enter the code sent to %@" = "請輸入傳送至 %@ 的驗證碼";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "請輸入傳送至 %@ 的驗證碼。我們會定期要求進行這個額外步驟，以保持您的帳戶安全。";
+
+"Exit without connecting?" = "退出而不關聯？";
+
+"Hmm, that code didn’t work. Double check it and try again." = "呃，這個驗證碼無效。請再次檢查並重試。";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "銀行帳號無效：最多為 %li 位元，且只能包含數字。";
+
+"Invalid routing number." = "路徑號碼無效。";
+
+"It looks like the verification code you provided is not valid anymore." = "您提供的驗證碼似乎已失效。";
+
+"Learn more" = "瞭解更多";
+
+"Maintenance is scheduled to end at %@." = "維護預計於 %@ 結束。";
+
+"Maintenance is scheduled to end on %@ at %@." = "維護計畫於 %1$@ %2$@ 結束。";
+
+"Manually enter details" = "手動輸入詳情";
+
+"No payment accounts available" = "沒有可用的支付帳戶";
+
+"No results" = "沒有結果";
+
+"Not now" = "現在不";
+
+"Only checking accounts are supported." = "僅支援支票帳戶。";
+
+"Please enter %d digits for your routing number." = "請輸入您的 %li 位路徑號碼。";
+
+"Please enter your bank details manually or select another bank." = "請手動輸入您的銀行資訊，或選擇另一銀行。";
+
+"Please select another bank or try again later." = "請選擇另一銀行，或稍後再試。";
+
+"Please select another bank or try again." = "請選擇另一銀行，或重試。";
+
+"Please select another bank." = "請選擇另一銀行。";
+
+"Please try selecting another bank account." = "請嘗試選擇另一銀行帳戶。";
+
+"Please try selecting another bank." = "請嘗試選擇另一銀行。";
+
+"Retrieving accounts..." = "正在檢索帳戶...";
+
+"Routing number" = "匯款路徑號碼";
+
+"Routing number is required." = "路徑號碼為必填。";
+
+"Search for more banks" = "搜尋更多銀行";
+
+"Select account" = "選擇帳戶";
+
+"Select accounts" = "選擇帳戶";
+
+"Select another bank" = "選擇另一銀行";
+
 "Select bank" = "選擇銀行";
+
+"Something went wrong" = "出錯了";
+
+"Submit" = "提交";
+
+"Success" = "成功";
+
+"The account you selected isn't available for payments" = "不能用您選擇的帳戶完成付款";
+
+"The accounts you selected aren't available for payments" = "不能用您選擇的帳戶完成付款";
+
+"There was a problem accessing your %@ account" = "存取您的 %@ 帳戶時遇到了問題";
+
+"Try again, or %@." = "請重試，或%@。";
+
+"Try searching another bank" = "嘗試搜尋另一銀行";
+
+"Try searching another bank or %@" = "嘗試搜尋另一銀行或%@";
+
+"Use information you previously saved with your Link account." = "使用您之前在 Link 帳戶中儲存的資訊。";
+
+"Use test account" = "使用測試帳戶";
+
+"Use test code" = "使用測試碼";
+
+"Verify your email" = "驗證電郵地址";
+
+"Yes, exit" = "是，退出";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "預計 1-2 天內會向您的帳戶 ••••%@ 存入微額存款，同時會給您電郵傳送進一步說明。";
+
+"You haven't finished linking your account. Press continue to finish the process." = "您尚未完成帳戶關聯。按下繼續以完成該過程。";
+
+"You haven't finished linking your bank account and all progress will be lost." = "您尚未完成帳戶關聯，所有進度將丟失。";
+
+"You're in test mode." = "您處於測試模式。";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "目前無法關聯您的帳戶。請手動輸入您的銀行資訊，或稍後再試。";
+
+"Your account can’t be connected at this time. Please try again later." = "目前無法關聯您的帳戶。請稍後再試。";
+
+"Your account number couldn’t be accessed at this time" = "目前無法存取您的帳戶";
+
+"Your account numbers don't match." = "您的帳號不匹配。";
+
+"Your account was connected, but couldn't be saved to Link." = "您的帳戶已關聯至，但無法儲存到 Link。";
+
+"Your account was connected." = "您的帳戶已關聯。";
+
+"Your accounts were connected, but couldn't be saved to Link." = "您的帳戶已關聯，但無法儲存到 Link。";
+
+"Your accounts were connected." = "您的帳戶已關聯。";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "將透過向您的帳戶發送微存款來驗證您的銀行資訊，通常需要 1-2 個工作日。僅支援支票帳戶。";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "將透過向您的帳戶發送微存款來驗證您的銀行資訊，通常需要 1-2 個工作日。";
+
+"Your email address is invalid." = "您的電郵地址無效。";
+
+"Your mobile phone number is incomplete." = "您的手機號碼不完整。";
+
+"contact us" = "聯絡我們";
+
+"manually enter details" = "手動輸入詳情";

@@ -100,8 +100,6 @@
 
 "Confirm" = "Bekreft";
 
-"Confirm it's you" = "Bekreft at det er deg";
-
 "Confirm payment details" = "Bekreft betalingsopplysninger";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bekreft betalingen i bankens app eller i betalingsapp innen %@ for å fullføre kjøpet.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bekreft betalingen i bankens app innen %@ for å fullføre kjøpet.";
 
 "Confirm your CVC" = "Bekreft CVC-koden din";
+
+"Confirm your information" = "Bekreft opplysningene dine";
 
 "Contact information" = "Kontaktinformasjon";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Skriv inn adresse manuelt";
 
-"Enter the code sent to %@." = "Angi koden som er sendt til %s.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Kunne ikke koble til";
 
 "Fast, secure checkout" = "Rask og sikker utsjekking";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Jeg forstår at Stripe vil direktedebitere på vegne av %@ og bekrefter at jeg er kontoinnehaver og den eneste personen som må godkjenne debiteringer fra denne kontoen.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "De siste 4 sifrene i personnummeret ditt";
 
 "Log in or sign up" = "Logg inn eller registrer deg";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Vil du fjerne kortet?";
 
 "Remove linked account" = "Fjern tilkoblet konto";
-
-"Resend code" = "Send koden på nytt";
 
 "SEPA debit details cannot be changed." = "SEPA-debetopplysninger kan ikke endres.";
 

@@ -19,6 +19,7 @@ extension PaymentMethodMessagingElement {
         @State var phase: Phase = .loading
         let content: (Phase) -> Content
         let config: Configuration?
+        let integrationType: PMMEAnalyticsHelper.IntegrationType
 
         /// Initializes a PaymentMethodMessagingElement SwiftUI View.
         /// During loading and in the case of no content being available to display, an invisible size 0 placeholder takes the place of the view.
@@ -32,6 +33,7 @@ extension PaymentMethodMessagingElement {
                     AnyView(EmptyView())
                 }
             }
+            self.integrationType = .config
         }
 
         /// Initializes a PaymentMethodMessagingElement SwiftUI View.
@@ -40,6 +42,7 @@ extension PaymentMethodMessagingElement {
         public init(configuration: Configuration, @ViewBuilder content: @escaping (Phase) -> Content) {
             self.config = configuration
             self.content = content
+            self.integrationType = .content
         }
 
         /// Initializes a PaymentMethodMessagingElement SwiftUI View.
@@ -48,8 +51,9 @@ extension PaymentMethodMessagingElement {
         public init(_ viewData: ViewData) where Content == AnyView {
             self.config = nil
             self.content = { _ in
-                AnyView(PMMELoadedView(viewData: viewData))
+                AnyView(PMMELoadedView(viewData: viewData, integrationType: .viewData))
             }
+            self.integrationType = .viewData
         }
 
         public var body: some SwiftUI.View {
@@ -59,7 +63,7 @@ extension PaymentMethodMessagingElement {
 
     /// The phase of the Payment Method Messaging Element's loading process.
     @available(iOS 15.0, *)
-    public enum Phase {
+    @frozen public enum Phase {
         /// The PaymentMethodMessagingElement is loading data from the Stripe backend.
         case loading
         /// The PaymentMethodMessagingElement was successfully loaded.
@@ -74,15 +78,16 @@ extension PaymentMethodMessagingElement {
 
     /// The element's view data for the SwiftUI view.
     public var viewData: ViewData {
-        .init(mode: mode, infoUrl: infoUrl, promotion: promotion, appearance: appearance)
+        .init(mode: mode, infoUrl: infoUrl, promotion: promotion, appearance: appearance, analyticsHelper: analyticsHelper)
     }
 
     /// Displayable data of an initialized Payment Method Messaging Element.
     /// For use by PaymentMethodMessagingElement.View.
-    public struct ViewData: Equatable {
+    public struct ViewData {
         let mode: Mode
         let infoUrl: URL
         let promotion: String
         let appearance: PaymentMethodMessagingElement.Appearance
+        let analyticsHelper: PMMEAnalyticsHelper
     }
 }

@@ -100,8 +100,6 @@
 
 "Confirm" = "Confirm";
 
-"Confirm it's you" = "Confirm it's you";
-
 "Confirm payment details" = "Confirm payment details";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirm the payment in your bank's app within %@ to complete the purchase.";
 
 "Confirm your CVC" = "Confirm your CVC";
+
+"Confirm your information" = "Confirm your information";
 
 "Contact information" = "Contact information";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Enter address manually";
 
-"Enter the code sent to %@." = "Enter the code sent to %s.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Failed to connect";
 
 "Fast, secure checkout" = "Fast, secure checkout";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Last 4 digits of SSN";
 
 "Log in or sign up" = "Log in or sign up";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Remove card?";
 
 "Remove linked account" = "Remove linked account";
-
-"Resend code" = "Resend code";
 
 "SEPA debit details cannot be changed." = "SEPA debit details cannot be changed.";
 

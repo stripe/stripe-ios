@@ -4,7 +4,15 @@
 
 "Close" = "Sulje";
 
+"Confirm it's you" = "Vahvista, että se olet sinä";
+
 "Default payment method was not updated. Please try again." = "Oletusmaksutapaa ei päivitetty. Yritä uudelleen.";
+
+"Enter the code sent to %@." = "Syötä kohteeseen %@ lähetetty koodi.";
+
+"Failed to connect" = "Yhteyden muodostaminen epäonnistui";
+
+"Resend code" = "Lähetä koodi uudelleen";
 
 "Scan Card" = "Skannaa kortti";
 

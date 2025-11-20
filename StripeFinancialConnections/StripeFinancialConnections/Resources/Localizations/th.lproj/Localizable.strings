@@ -1,0 +1,175 @@
+"%@ is currently unavailable" = "%@ ไม่พร้อมให้บริการในขณะนี้";
+
+"%@ is undergoing maintenance" = "%@ อยู่ระหว่างการบำรุงรักษา";
+
+"Account number is required." = "ต้องระบุหมายเลขบัญชี";
+
+"Almost there" = "ใกล้เสร็จแล้ว";
+
+"Can't find your bank?" = "หากไม่พบธนาคารของคุณ";
+
+"Checking and savings accounts are supported." = "ระบบรองรับทั้งบัญชีกระแสรายวันและออมทรัพย์";
+
+"Choose a different bank" = "เลือกธนาคารอื่น";
+
+"Click “Resend code” and try again, or %@." = "คลิก “ส่งรหัสอีกครั้ง” แล้วลองอีกครั้ง หรือ%@";
+
+"Confirm account number" = "ยืนยันหมายเลขบัญชี";
+
+"Confirm the account number." = "ยืนยันหมายเลขบัญชี";
+
+"Connect account" = "เชื่อมโยงบัญชี";
+
+"Connect accounts" = "เชื่อมโยงบัญชี";
+
+"Connect another account" = "เชื่อมโยงบัญชีอื่น";
+
+"Continue linking your account" = "เชื่อมโยงบัญชีของคุณต่อ";
+
+"Continue with Link" = "ดำเนินการต่อด้วย Link";
+
+"Email address" = "อีเมล";
+
+"Enter bank details" = "ป้อนรายละเอียดของธนาคาร";
+
+"Enter bank details manually" = "ป้อนรายละเอียดของธนาคารด้วยตนเอง";
+
+"Enter the code sent to %@" = "ป้อนรหัสที่ส่งไปยัง %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "ป้อนรหัสที่ส่งไปยัง %@ เราจะขอให้ดำเนินการเพิ่มเติมเป็นระยะๆ เพื่อรักษาบัญชีของคุณให้ปลอดภัย";
+
+"Exit without connecting?" = "ออกโดยไม่เชื่อมโยงใช่ไหม";
+
+"Hmm, that code didn’t work. Double check it and try again." = "รหัสไม่ถูกต้อง โปรดตรวจสอบแล้วลองอีกครั้ง";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "หมายเลขบัญชีธนาคารไม่ถูกต้อง: หมายเลขต้องมีความยาวไม่เกิน %li หลัก และต้องมีเฉพาะตัวเลขเท่านั้น";
+
+"Invalid routing number." = "Routing Number ไม่ถูกต้อง";
+
+"It looks like the verification code you provided is not valid anymore." = "ดูเหมือนว่ารหัสยืนยันที่คุณป้อนจะใช้ไม่ได้อีกต่อไป";
+
+"Learn more" = "ดูข้อมูลเพิ่มเติม";
+
+"Maintenance is scheduled to end at %@." = "การบำรุงรักษามีกำหนดการสิ้นสุดเวลา %@";
+
+"Maintenance is scheduled to end on %@ at %@." = "การบำรุงรักษามีกำหนดการสิ้นสุดวันที่ %1$@ เวลา %2$@";
+
+"Manually enter details" = "ป้อนรายละเอียดด้วยตนเอง";
+
+"No payment accounts available" = "ไม่มีบัญชีการชำระเงินที่พร้อมใช้งาน";
+
+"No results" = "ไม่มีผลลัพธ์";
+
+"Not now" = "ไว้ทีหลัง";
+
+"Only checking accounts are supported." = "ระบบรองรับเฉพาะบัญชีกระแสรายวันเท่านั้น";
+
+"Please enter %d digits for your routing number." = "โปรดป้อน Routing Number %li หลัก";
+
+"Please enter your bank details manually or select another bank." = "โปรดป้อนข้อมูลธนาคารด้วยตัวเองหรือเลือกธนาคารอื่น";
+
+"Please select another bank or try again later." = "โปรดเลือกธนาคารอื่นหรือลองอีกครั้งในภายหลัง";
+
+"Please select another bank or try again." = "โปรดเลือกธนาคารอื่นหรือลองอีกครั้ง";
+
+"Please select another bank." = "โปรดเลือกธนาคารอื่น";
+
+"Please try selecting another bank account." = "โปรดลองเลือกบัญชีธนาคารอื่น";
+
+"Please try selecting another bank." = "โปรดลองเลือกธนาคารอื่น";
+
+"Retrieving accounts..." = "กำลังดึงข้อมูลบัญชี...";
+
+"Routing number" = "Routing Number";
+
+"Routing number is required." = "ต้องระบุ Routing Number";
+
+"Search for more banks" = "ค้นหาธนาคารอื่นๆ";
+
+"Select account" = "เลือกบัญชี";
+
+"Select accounts" = "เลือกบัญชี";
+
+"Select another bank" = "เลือกธนาคารอื่น";
+
+"Select bank" = "เลือกธนาคาร";
+
+"Something went wrong" = "เกิดข้อผิดพลาดบางอย่าง";
+
+"Submit" = "ส่ง";
+
+"Success" = "สำเร็จ";
+
+"The account you selected isn't available for payments" = "บัญชีที่คุณเลือกไม่สามารถทำการชำระเงินได้";
+
+"The accounts you selected aren't available for payments" = "บัญชีที่คุณเลือกไม่สามารถทำการชำระเงินได้";
+
+"There was a problem accessing your %@ account" = "เกิดปัญหาในการเข้าถึงบัญชี %@ ของคุณ";
+
+"Try again, or %@." = "ลองอีกครั้งหรือ %@";
+
+"Try searching another bank" = "ลองค้นหาธนาคารอื่น";
+
+"Try searching another bank or %@" = "ลองค้นหาธนาคารอื่นหรือ %@";
+
+"Use information you previously saved with your Link account." = "ใช้ข้อมูลที่บันทึกไว้ก่อนหน้านี้ด้วยบัญชี Link";
+
+"Use test account" = "ใช้บัญชีทดสอบ";
+
+"Use test code" = "ใช้รหัสทดสอบ";
+
+"Verify your email" = "ยืนยันอีเมลของคุณ";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "เราพบบัญชี %1$li %2$@ รายการ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันของสหรัฐอเมริกากับ %3$@ เท่านั้น";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "เราพบบัญชี %1$li %2$@ รายการ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันของสหรัฐอเมริกาเท่านั้น";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "เราพบบัญชี %1$li %2$@ รายการ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันหรือบัญชีออมทรัพย์กับ %3$@ เท่านั้น";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "เราพบบัญชี %1$li %2$@ รายการ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันหรือบัญชีออมทรัพย์เท่านั้น";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "เราพบ 1 บัญชี %1$@ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันของสหรัฐอเมริกากับ %2$@ เท่านั้น";
+
+"We found 1 %@ account but you can only link US checking accounts." = "เราพบ 1 บัญชี %@ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันของสหรัฐอเมริกาเท่านั้น";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "เราพบ 1 บัญชี %1$li แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันหรือบัญชีออมทรัพย์กับ %2$@ เท่านั้น";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "เราพบ 1 บัญชี %@ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันหรือบัญชีออมทรัพย์เท่านั้น";
+
+"Yes, exit" = "ใช่ ออกจากหน้านี้";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "คุณจะได้รับเงินฝากจำนวนเล็กน้อยในบัญชี ••••%@ ภายใน 1-2 วัน และอีเมลพร้อมคำแนะนำเพิ่มเติม";
+
+"You haven't finished linking your account. Press continue to finish the process." = "คุณยังเชื่อมโยงบัญชีไม่เสร็จ คลิกดำเนินการต่อเพื่อทำให้เสร็จกระบวนการ";
+
+"You haven't finished linking your bank account and all progress will be lost." = "คุณยังเชื่อมโยงบัญชีธนาคารไม่เสร็จ ระบบจะไม่บันทึกความคืบหน้าที่ทำไว้";
+
+"You're in test mode." = "คุณอยู่ในโหมดทดสอบ";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "ไม่สามารถเชื่อมโยงบัญชีได้ในตอนนี้ โปรดป้อนข้อมูลธนาคารด้วยตัวเองหรือลองอีกครั้งในภายหลัง";
+
+"Your account can’t be connected at this time. Please try again later." = "ไม่สามารถเชื่อมโยงบัญชีได้ในตอนนี้ โปรดลองอีกครั้งในภายหลัง";
+
+"Your account number couldn’t be accessed at this time" = "ไม่สามารถเข้าถึงหมายเลขบัญชีของคุณได้ในตอนนี้";
+
+"Your account numbers don't match." = "หมายเลขบัญชีไม่ตรงกัน";
+
+"Your account was connected, but couldn't be saved to Link." = "บัญชีของคุณเชื่อมโยงแล้วแต่ไม่สามารถบันทึกไปยัง Link ได้";
+
+"Your account was connected." = "เชื่อมโยงบัญชีแล้ว";
+
+"Your accounts were connected, but couldn't be saved to Link." = "บัญชีของคุณเชื่อมโยงแล้วแต่ไม่สามารถบันทึกไปยัง Link ได้";
+
+"Your accounts were connected." = "เชื่อมโยงบัญชีแล้ว";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "ข้อมูลธนาคารของคุณจะได้รับการยืนยันด้วยเงินฝากจำนวนเล็กน้อยในบัญชี โดยปกติแล้วขั้นตอนนี้ใช้เวลา 1-2 วันทำการ ระบบรองรับเฉพาะบัญชีกระแสรายวันเท่านั้น";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "ข้อมูลธนาคารของคุณจะได้รับการยืนยันด้วยเงินฝากจำนวนเล็กน้อยในบัญชี โดยปกติแล้วขั้นตอนนี้ใช้เวลา 1-2 วันทำการ";
+
+"Your email address is invalid." = "ที่อยู่อีเมลไม่ถูกต้อง";
+
+"Your mobile phone number is incomplete." = "หมายเลขโทรศัพท์มือถือของคุณไม่ครบถ้วน";
+
+"contact us" = "ติดต่อเรา";
+
+"manually enter details" = "ป้อนรายละเอียดด้วยตนเอง";
