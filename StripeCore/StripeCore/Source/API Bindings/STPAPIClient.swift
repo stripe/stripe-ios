@@ -73,9 +73,21 @@ import UIKit
 
     // MARK: Internal/private properties
     @_spi(STP) public var apiURL: URL! = URL(string: APIBaseURL)
-    @_spi(STP) public var urlSession = URLSession(
-        configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
-    )
+
+    private static let metricsDelegate = URLSessionMetricsDelegate()
+
+    @_spi(STP) public var urlSession: URLSession = {
+        return URLSession(
+            configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration,
+            delegate: metricsDelegate,
+            delegateQueue: nil
+        )
+    }()
+
+    /// Access the metrics delegate for capturing network performance data
+    @_spi(STP) public static var networkMetricsDelegate: URLSessionMetricsDelegate {
+        return metricsDelegate
+    }
 
     /// A set of beta headers to add to Stripe API requests e.g. `Set(["alipay_beta=v1"])`.
     @_spi(STP) public var betas: Set<String> = []
