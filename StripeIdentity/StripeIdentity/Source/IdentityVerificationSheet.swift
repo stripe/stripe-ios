@@ -236,20 +236,6 @@ final public class IdentityVerificationSheet {
 
     // MARK: - API Mocking
 
-    /// The version of the VerificationPage API used for all API requests.
-    /// Modifying this value will use experimental features that are not guaranteed
-    /// to be production-ready or prevent API requests from being decoded.
-
-    @_spi(STP) public var verificationPageAPIVersion: Int {
-        get {
-            return verificationSheetController?.apiClient.apiVersion
-                ?? IdentityAPIClientImpl.productionApiVersion
-        }
-        set {
-            verificationSheetController?.apiClient.apiVersion = newValue
-        }
-    }
-
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

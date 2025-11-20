@@ -12,7 +12,6 @@ import UIKit
 
 protocol IdentityAPIClient: AnyObject {
     var verificationSessionId: String { get }
-    var apiVersion: Int { get set }
 
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage>
 

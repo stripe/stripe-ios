@@ -57,10 +57,6 @@ extension String.Localized {
         STPLocalizedString("Billing address", "Billing address section title for card form entry.")
     }
 
-    @_spi(STP) public static var billing_details_lowercase: String {
-        STPLocalizedString("Billing details", "Billing details section title for card form entry.")
-    }
-
     @_spi(STP) public static var your_card_number_is_incomplete: String {
         STPLocalizedString(
             "Your card number is incomplete.",
