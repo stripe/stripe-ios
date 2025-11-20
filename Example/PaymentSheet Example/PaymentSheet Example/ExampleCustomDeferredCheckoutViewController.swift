@@ -17,6 +17,13 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var paymentMethodButton: UIButton!
     @IBOutlet weak var paymentMethodImage: UIImageView!
 
+    private let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.hidesWhenStopped = true
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        return spinner
+    }()
+
     @IBOutlet weak var hotDogQuantityLabel: UILabel!
     @IBOutlet weak var saladQuantityLabel: UILabel!
     @IBOutlet weak var hotDogStepper: UIStepper!
@@ -45,9 +52,32 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
         ) { [weak self] paymentMethod, shouldSavePaymentMethod in
-            try await withCheckedThrowingContinuation { continuation in
-                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
-                    continuation.resume(with: result)
+            guard let self = self else {
+                throw ExampleError(errorDescription: "View controller deallocated")
+            }
+
+            // Calculate mock surcharge (e.g., 3% of original amount)
+            let originalAmount = self.computedTotals.total
+            let surchargeAmount = originalAmount * 0.03
+
+            // Present surcharge confirmation UI and wait for user decision
+            return try await withCheckedThrowingContinuation { continuation in
+                DispatchQueue.main.async {
+                    let surchargeVC = SurchargeConfirmationViewController(
+                        originalAmount: originalAmount,
+                        surchargeAmount: surchargeAmount,
+                        onAccept: {
+                            // User accepted - proceed with confirmation
+                            self.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
+                                continuation.resume(with: result)
+                            }
+                        },
+                        onDecline: {
+                            // User declined - fail the confirmation
+                            continuation.resume(throwing: ExampleError(errorDescription: "Payment cancelled by user due to surcharge"))
+                        }
+                    )
+                    self.present(surchargeVC, animated: true)
                 }
             }
         }
@@ -73,6 +103,13 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         saladStepper.isEnabled = false
         subscribeSwitch.isEnabled = false
 
+        // Setup spinner
+        view.addSubview(spinner)
+        NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+
         self.loadCheckout()
     }
 
@@ -88,18 +125,30 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
 
     @objc
     func didTapCheckoutButton() {
-        // MARK: Confirm payment
+        spinner.startAnimating()
+        buyButton.isEnabled = false
+        paymentMethodButton.isEnabled = false
+
         paymentSheetFlowController.confirm(from: self) { paymentResult in
-            // MARK: Handle the payment result
-            switch paymentResult {
-            case .completed:
-                self.displayAlert("Your order is confirmed!", success: true)
-            case .canceled:
-                print("Canceled!")
-            case .failed(let error):
-                print(error)
-                self.displayAlert("Payment failed: \n\(error.localizedDescription)", success: false)
-            }
+            self.spinner.stopAnimating()
+            self.handlePaymentResult(paymentResult)
+        }
+    }
+
+    private func handlePaymentResult(_ paymentResult: PaymentSheetResult) {
+        // Re-enable buttons
+        buyButton.isEnabled = true
+        paymentMethodButton.isEnabled = true
+
+        // MARK: Handle the payment result
+        switch paymentResult {
+        case .completed:
+            self.displayAlert("Your order is confirmed!", success: true)
+        case .canceled:
+            print("Canceled!")
+        case .failed(let error):
+            print(error)
+            self.displayAlert("Payment failed: \n\(error.localizedDescription)", success: false)
         }
     }
 
