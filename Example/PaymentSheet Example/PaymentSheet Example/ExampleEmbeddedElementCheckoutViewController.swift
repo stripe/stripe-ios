@@ -124,34 +124,33 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         paymentMethodButton.isEnabled = false
 
         // Update the payment details
-        fetchTotals { [weak self] in
-            guard let self = self else { return }
-            self.updateLabels()
+        Task {
+            do {
+                try await fetchTotals()
+                updateLabels()
 
-            Task {
                 // MARK: - Update payment details
                 // Update Embedded Payment Element with the latest `intentConfig`
-                let updateResult = await self.embeddedPaymentElement.update(intentConfiguration: self.intentConfig)
-                Task.detached { @MainActor [weak self] in
-                    guard let self else { return }
-                    paymentMethodButton.isEnabled = true
-                    switch updateResult {
-                    case .canceled:
-                        // Do nothing; this happens when a subsequent `update` call cancels this one
-                        break
-                    case .failed(error: let error):
-                        // Display error to user in an alert, let them retry
-                        let alertController = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .alert)
-                        alertController.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
-                            self.updateUI()
-                        })
-                        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in })
-                        present(alertController, animated: true, completion: nil)
-                    case .succeeded:
-                        self.updateButtons()
-                        self.updateLabels()
-                    }
+                let updateResult = await embeddedPaymentElement.update(intentConfiguration: intentConfig)
+                paymentMethodButton.isEnabled = true
+                switch updateResult {
+                case .canceled:
+                    // Do nothing; this happens when a subsequent `update` call cancels this one
+                    break
+                case .failed(error: let error):
+                    // Display error to user in an alert, let them retry
+                    let alertController = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
+                        self.updateUI()
+                    })
+                    alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in })
+                    present(alertController, animated: true, completion: nil)
+                case .succeeded:
+                    self.updateButtons()
+                    self.updateLabels()
                 }
+            } catch {
+                displayAlert("Failed to fetch totals: \(error)", shouldDismiss: false)
             }
         }
     }
@@ -194,7 +193,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    private func fetchTotals(completion: @escaping () -> Void) {
+    private func fetchTotals() async throws {
         var request = URLRequest(url: computeTotalsUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -205,23 +204,12 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "is_subscribing": subscribeSwitch.isOn,
         ]
 
-        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
+        request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
 
-        let task = URLSession.shared.dataTask(
-            with: request,
-            completionHandler: { [weak self] (data, _, _) in
-                guard let data = data,
-                      let totals = try? JSONDecoder().decode(ComputedTotals.self, from: data) else {
-                          fatalError("Failed to decode compute_totals response")
-                        }
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let totals = try JSONDecoder().decode(ComputedTotals.self, from: data)
 
-                self?.computedTotals = totals
-                DispatchQueue.main.async {
-                    completion()
-                }
-            })
-
-        task.resume()
+        self.computedTotals = totals
     }
 
     private func loadCheckout() async {
@@ -240,7 +228,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             weak var weakSelf = self
             let (data, _) = try await URLSession.shared.data(for: request)
             guard
-                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                 let customerId = json["customer"] as? String,
                 let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
                 let publishableKey = json["publishableKey"] as? String,
@@ -319,7 +307,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "customer_id": embeddedPaymentElement.configuration.customer?.id,
         ]
 
-        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
+        request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
 
         let (data, _) = try await URLSession.shared.data(for: request)
