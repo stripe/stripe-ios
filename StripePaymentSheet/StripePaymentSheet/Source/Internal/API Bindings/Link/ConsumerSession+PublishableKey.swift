@@ -38,9 +38,10 @@ extension ConsumerSession {
 
 extension ConsumerSession {
     final class DisplayablePaymentDetails: Decodable {
-        enum PaymentType: String, Decodable, CaseIterable {
+        enum PaymentType: String, SafeEnumDecodable, CaseIterable {
             case card = "CARD"
             case bankAccount = "BANK_ACCOUNT"
+            case unparsable = ""
         }
 
         let defaultCardBrand: String?
