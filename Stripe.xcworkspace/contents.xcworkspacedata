@@ -87,4 +87,7 @@
          location = "group:IntegrationTester/IntegrationTester.xcodeproj">
       </FileRef>
    </Group>
+   <FileRef
+      location = "group:StripePaymentSheet/StripePaymentSheet/Source/PaymentSheet/Views/CheckProgressView.swift">
+   </FileRef>
 </Workspace>
