@@ -47,11 +47,15 @@ public final class CheckScanningController {
          loadContent: Bool,
          analyticsClientFactory: ComponentAnalyticsClientFactory) {
         let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { [weak self] details in
-              guard let self = self else {
-                 assertionFailure()
-                 throw CallbackError.controllerDisappeared
-              }
-              try await self.delegate!.checkScanning(self, didSubmitCheckScan: details)
+            guard let self = self else {
+                assertionFailure("CheckScanningController deallocated before callback.")
+                throw CallbackError.controllerDisappeared
+            }
+            guard let delegate = self.delegate else {
+                assertionFailure("Delegate not set for CheckScanningController.")
+                return
+            }
+            try await delegate.checkScanning(self, didSubmitCheckScan: details)
         })
 
         webVC = ConnectComponentWebViewController(
@@ -61,20 +65,21 @@ public final class CheckScanningController {
             analyticsClientFactory: analyticsClientFactory,
             fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
             didFailLoadWithError: { [weak self] error in
-                guard let self else { return }
-                delegate!.checkScanning(self, didFailLoadWithError: error)
+                guard let self = self else { return }
+                guard let delegate = self.delegate else {
+                    assertionFailure("Delegate not set for CheckScanningController.")
+                    return
+                }
+                delegate.checkScanning(self, didFailLoadWithError: error)
             }
         )
     }
 
-    enum DelegateError: Error {
-        case delegateNotSet
-    }
-
     /// Presents the check scanning experience
-    public func present(from viewController: UIViewController, animated: Bool = true) throws {
+    public func present(from viewController: UIViewController, animated: Bool = true) {
         if self.delegate == nil {
-            throw DelegateError.delegateNotSet
+            assertionFailure("Delegate must be set before presenting")
+            return
         }
 
         let navController = UINavigationController(rootViewController: webVC)
