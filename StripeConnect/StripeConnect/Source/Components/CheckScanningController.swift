@@ -9,8 +9,8 @@ public final class CheckScanningController {
 
     /// Contains details about a check scan
     public struct CheckScanDetails: Decodable, Equatable {
-        /// Token identifying the check scan, see UsPaperCheck
-        public var checkScanToken: String
+        /// Token identifying the check scan, see [UsPaperCheck](https://docs.stripe.com/api/us-paper-check)
+        public let checkScanToken: String
 
         public init(checkScanToken: String) {
             self.checkScanToken = checkScanToken
@@ -51,7 +51,7 @@ public final class CheckScanningController {
                  assertionFailure()
                  throw CallbackError.controllerDisappeared
               }
-              try await self.delegate?.checkScanning(self, didSubmitCheckScan: details)
+              try await self.delegate!.checkScanning(self, didSubmitCheckScan: details)
         })
 
         webVC = ConnectComponentWebViewController(
@@ -62,13 +62,21 @@ public final class CheckScanningController {
             fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
             didFailLoadWithError: { [weak self] error in
                 guard let self else { return }
-                delegate?.checkScanning(self, didFailLoadWithError: error)
+                delegate!.checkScanning(self, didFailLoadWithError: error)
             }
         )
     }
 
+    enum DelegateError: Error {
+        case delegateNotSet
+    }
+
     /// Presents the check scanning experience
-    public func present(from viewController: UIViewController, animated: Bool = true) {
+    public func present(from viewController: UIViewController, animated: Bool = true) throws {
+        if self.delegate == nil {
+            throw DelegateError.delegateNotSet
+        }
+
         let navController = UINavigationController(rootViewController: webVC)
         navController.navigationBar.prefersLargeTitles = false
         navController.modalPresentationStyle = .fullScreen
