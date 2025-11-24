@@ -1,4 +1,4 @@
-@_spi(DashboardOnly) @testable import StripeConnect
+@_spi(PrivatePreviewConnect) @testable import StripeConnect
 import XCTest
 
 class CallSupplementalFunctionMessageHandlerTests: ScriptWebTestBase {

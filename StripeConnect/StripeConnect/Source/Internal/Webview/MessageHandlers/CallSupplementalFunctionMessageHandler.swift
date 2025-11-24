@@ -1,3 +1,4 @@
+@available(iOS 15, *)
 class CallSupplementalFunctionMessageHandler: ScriptMessageHandler<CallSupplementalFunctionMessageHandler.Payload> {
     struct Payload: Decodable {
         let functionName: SupplementalFunctionName
