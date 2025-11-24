@@ -364,6 +364,10 @@ workflows:
         inputs:
         - lane: preflight
         title: fastlane preflight
+    - script@1:
+        inputs:
+        - content: rm -rf ~/Library/Caches/org.swift.swiftpm/artifacts
+        title: Clear SPM cache
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
