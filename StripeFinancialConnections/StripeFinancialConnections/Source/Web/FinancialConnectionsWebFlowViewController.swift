@@ -180,16 +180,25 @@ extension FinancialConnectionsWebFlowViewController {
                 switch result {
                 case .success(.success(let returnUrl)):
                     if manifest.isProductInstantDebits {
-                        if let paymentMethod = returnUrl.extractLinkBankPaymentMethod() {
-                            let instantDebitsLinkedBank = createInstantDebitsLinkedBank(
-                                from: returnUrl,
-                                with: paymentMethod,
-                                linkAccountSessionId: manifest.id
-                            )
-                            self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
-                        } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
-                            self.notifyDelegateOfSuccess(result: .linkedAccount(id: linkedAccountId))
-                        } else {
+                        do {
+                            if let paymentMethod = try returnUrl.extractLinkBankPaymentMethod() {
+                                let instantDebitsLinkedBank = createInstantDebitsLinkedBank(
+                                    from: returnUrl,
+                                    with: paymentMethod,
+                                    linkAccountSessionId: manifest.id
+                                )
+                                self.notifyDelegateOfSuccess(result: .instantDebits(instantDebitsLinkedBank))
+                            } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
+                                self.notifyDelegateOfSuccess(result: .linkedAccount(id: linkedAccountId))
+                            } else {
+                                let error = FinancialConnectionsSheetError.unknown(
+                                    debugDescription: "Invalid payment_method returned"
+                                )
+                                self.logInstantDebitsCompletionFailure(error: error)
+                                self.notifyDelegateOfFailure(error: error)
+                            }
+                        } catch {
+                            self.logInstantDebitsCompletionFailure(error: error)
                             self.notifyDelegateOfFailure(
                                 error: FinancialConnectionsSheetError.unknown(
                                     debugDescription: "Invalid payment_method returned"
@@ -318,22 +327,33 @@ extension FinancialConnectionsWebFlowViewController {
 
         notifyDelegate(result: .failed(error: error))
     }
+
+    private func logInstantDebitsCompletionFailure(error: Error) {
+        let errorAnalytic = ErrorAnalytic(
+            event: .instantDebitsCompletionFailed,
+            error: error,
+            additionalNonPIIParams: [
+                "flow": "fc_sdk",
+            ]
+        )
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+    }
 }
 
 private extension URL {
 
     /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
     /// we can parse it back in StripeCore.
-    func extractLinkBankPaymentMethod() -> LinkBankPaymentMethod? {
+    func extractLinkBankPaymentMethod() throws -> LinkBankPaymentMethod? {
         guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
             return nil
         }
 
         guard let data = Data(base64Encoded: encodedPaymentMethod) else {
-            return nil
+            throw FinancialConnectionsSheetError.unknown(debugDescription: "Failed to base64 decode payment_method")
         }
 
-        return try? StripeJSONDecoder().decode(LinkBankPaymentMethod.self, from: data)
+        return try StripeJSONDecoder().decode(LinkBankPaymentMethod.self, from: data)
     }
 
     func extractValue(forKey key: String) -> String? {

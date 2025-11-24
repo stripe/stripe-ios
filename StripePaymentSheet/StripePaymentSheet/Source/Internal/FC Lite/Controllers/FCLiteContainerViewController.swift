@@ -86,11 +86,18 @@ class FCLiteContainerViewController: UIViewController {
         switch result {
         case .success(let returnUrl):
             if isInstantDebits {
-                if let linkedBank = createInstantDebitsLinkedBank(from: returnUrl) {
-                    completion(.completed(.instantDebits(linkedBank)))
-                } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
-                    completion(.completed(.linkedAccount(id: linkedAccountId)))
-                } else {
+                do {
+                    if let linkedBank = try createInstantDebitsLinkedBank(from: returnUrl) {
+                        completion(.completed(.instantDebits(linkedBank)))
+                    } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
+                        completion(.completed(.linkedAccount(id: linkedAccountId)))
+                    } else {
+                        let error = FCLiteError.linkedBankUnavailable
+                        logInstantDebitsCompletionFailure(error: error)
+                        completion(.failed(error: error))
+                    }
+                } catch {
+                    logInstantDebitsCompletionFailure(error: error)
                     completion(.failed(error: FCLiteError.linkedBankUnavailable))
                 }
             } else {
@@ -217,8 +224,8 @@ class FCLiteContainerViewController: UIViewController {
         }
     }
 
-    private func createInstantDebitsLinkedBank(from url: URL) -> InstantDebitsLinkedBank? {
-        guard let paymentMethod = url.extractLinkBankPaymentMethod() else {
+    private func createInstantDebitsLinkedBank(from url: URL) throws -> InstantDebitsLinkedBank? {
+        guard let paymentMethod = try url.extractLinkBankPaymentMethod() else {
             return nil
         }
 
@@ -246,6 +253,17 @@ class FCLiteContainerViewController: UIViewController {
         Task {
             await self.completeFlow(result: .cancelled(.cancelledOutsideWebView))
         }
+    }
+
+    private func logInstantDebitsCompletionFailure(error: Error) {
+        let errorAnalytic = ErrorAnalytic(
+            event: .instantDebitsCompletionFailed,
+            error: error,
+            additionalNonPIIParams: [
+                "flow": "fc_lite",
+            ]
+        )
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
     }
 }
 
@@ -289,16 +307,16 @@ extension FCLiteContainerViewController: UIAdaptivePresentationControllerDelegat
 private extension URL {
     /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
     /// we can parse it back in `StripeCore`.
-    func extractLinkBankPaymentMethod() -> LinkBankPaymentMethod? {
+    func extractLinkBankPaymentMethod() throws -> LinkBankPaymentMethod? {
         guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
             return nil
         }
 
         guard let data = Data(base64Encoded: encodedPaymentMethod) else {
-            return nil
+            throw FCLiteError.linkedBankUnavailable
         }
 
-        return try? StripeJSONDecoder().decode(LinkBankPaymentMethod.self, from: data)
+        return try StripeJSONDecoder().decode(LinkBankPaymentMethod.self, from: data)
     }
 
     func extractValue(forKey key: String) -> String? {
