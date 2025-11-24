@@ -31,9 +31,6 @@
 /* Billing address section title for card form entry. */
 "Billing address" = "Billing address";
 
-/* Billing details section title for card form entry. */
-"Billing details" = "Billing details";
-
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 

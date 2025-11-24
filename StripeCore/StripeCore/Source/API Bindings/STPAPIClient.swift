@@ -333,24 +333,6 @@ extension STPAPIClient {
     }
 
     /// Make a POST request using the passed parameters.
-    @_spi(STP) public func post<T: Decodable>(
-        url: URL,
-        parameters: [String: Any],
-        ephemeralKeySecret: String? = nil,
-        consumerPublishableKey: String? = nil,
-        completion: @escaping (Result<T, Error>) -> Void
-    ) {
-        request(
-            method: .post,
-            parameters: parameters,
-            ephemeralKeySecret: ephemeralKeySecret,
-            consumerPublishableKey: consumerPublishableKey,
-            url: url,
-            completion: completion
-        )
-    }
-
-    /// Make a POST request using the passed parameters.
     ///
     /// - Returns: a promise that is fullfilled when the request is complete.
     @_spi(STP) public func post<T: Decodable>(

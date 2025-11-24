@@ -289,10 +289,6 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
         return nil
     }
 
-    @_spi(STP) public func nextFirstResponderFieldBecomeFirstResponder() {
-        nextFirstResponderField()?.becomeFirstResponder()
-    }
-
     func nextFirstResponderField(_ wantsAutoFocusOnly: Bool = false) -> STPFormInput? {
         if let nextField = nextInSequenceFirstResponderField(wantsAutoFocusOnly) {
             return nextField

@@ -139,7 +139,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     enum MerchantCountry: String, PickerEnum {
-        static var enumName: String { "MerchantCountry" }
+        static var enumName: String { "Merchant" }
 
         case US
         case GB
@@ -154,6 +154,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
+        case stripeShop = "stripe_shop_test"
     }
 
     enum APMSEnabled: String, PickerEnum {

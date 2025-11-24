@@ -238,10 +238,6 @@ public class STPCardFormView: STPFormView {
         }
     }
 
-    @_spi(STP) public func _stpinternal_setCardParams(_ params: STPPaymentMethodParams?) {
-        self.cardParams = params
-    }
-
     var _bindedPaymentMethodParams: STPPaymentMethodParams? {
         didSet {
             updateBindedPaymentMethodParams()
