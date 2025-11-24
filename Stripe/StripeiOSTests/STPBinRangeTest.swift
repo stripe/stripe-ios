@@ -25,7 +25,8 @@ class STPBinRangeTest: XCTestCase {
             brand: .unknown,
             accountRangeLow: "134",
             accountRangeHigh: "167",
-            country: nil
+            country: nil,
+            funding: .other
         )
 
         XCTAssertFalse(binRange.matchesNumber("0"))
@@ -57,7 +58,8 @@ class STPBinRangeTest: XCTestCase {
             brand: .unknown,
             accountRangeLow: "004",
             accountRangeHigh: "017",
-            country: nil
+            country: nil,
+            funding: .other
         )
 
         XCTAssertTrue(binRange.matchesNumber("0"))
@@ -93,7 +95,8 @@ class STPBinRangeTest: XCTestCase {
             brand: .unknown,
             accountRangeLow: "",
             accountRangeHigh: "",
-            country: nil
+            country: nil,
+            funding: .other
         )
         XCTAssertTrue(binRange.matchesNumber(""))
         XCTAssertTrue(binRange.matchesNumber("1"))
@@ -164,14 +167,16 @@ class STPBinRangeTest: XCTestCase {
                 brand: .unionPay,
                 accountRangeLow: "6244780000000000",
                 accountRangeHigh: "6244789999999999",
-                country: "HK"
+                country: "HK",
+                funding: .other
             ),
             STPBINRange(
                 panLength: 16,
                 brand: .unknown,
                 accountRangeLow: "6244780000000000",
                 accountRangeHigh: "6244789999999999",
-                country: "CN"
+                country: "CN",
+                funding: .other
             ),
         ]
 
@@ -186,5 +191,53 @@ class STPBinRangeTest: XCTestCase {
         // Cleanup added values to avoid issues caused by singleton state.
         STPBINController.shared.sRetrievedRanges["624478"] = nil
         STPBINController.shared.sAllRanges = STPBINController.STPBINRangeInitialRanges
+    }
+
+    func testFundingDecoding() throws {
+        let json = """
+        {
+            "pan_length": 16,
+            "brand": "visa",
+            "account_range_low": "4242420000000000",
+            "account_range_high": "4242429999999999",
+            "country": "US",
+            "funding": "credit"
+        }
+        """.data(using: .utf8)!
+        let range = try JSONDecoder().decode(STPBINRange.self, from: json)
+        XCTAssertEqual(range.funding, .credit)
+    }
+
+    func testFundingDecodingHandlesUnknownValues() throws {
+        let unknownFundingJSON = """
+        {
+            "pan_length": 16,
+            "brand": "visa",
+            "account_range_low": "4000000000000000",
+            "account_range_high": "4000009999999999",
+            "country": "US",
+            "funding": "mystery"
+        }
+        """.data(using: .utf8)!
+
+        let decoder = JSONDecoder()
+        let unknownFundingRange = try decoder.decode(STPBINRange.self, from: unknownFundingJSON)
+        XCTAssertEqual(unknownFundingRange.funding, .other)
+    }
+
+    func testDecodingDefaultsFundingWhenMissing() throws {
+        let missingFundingJSON = """
+        {
+            "pan_length": 16,
+            "brand": "visa",
+            "account_range_low": "4111110000000000",
+            "account_range_high": "4111119999999999",
+            "country": "US"
+        }
+        """.data(using: .utf8)!
+
+        let decoder = JSONDecoder()
+        let missingFundingRange = try decoder.decode(STPBINRange.self, from: missingFundingJSON)
+        XCTAssertEqual(missingFundingRange.funding, .other)
     }
 }
