@@ -18,8 +18,8 @@ public enum STPCardFundingType: Int {
     case credit
     /// Prepaid card funding
     case prepaid
-    /// An other or unknown type of funding source.
-    case other
+    /// An unknown type of funding source.
+    case unknown
 }
 
 /// Representation of a user's credit card details that have been tokenized with
@@ -48,7 +48,7 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// The issuer of the card.
     @objc public internal(set) var brand: STPCardBrand = .unknown
     /// The funding source for the card (credit, debit, prepaid, or other)
-    @objc public internal(set) var funding: STPCardFundingType = .other
+    @objc public internal(set) var funding: STPCardFundingType = .unknown
     /// Two-letter ISO code representing the issuing country of the card.
     @objc public internal(set) var country: String?
     /// This is only applicable when tokenizing debit cards to issue payouts to managed
@@ -152,7 +152,7 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             return (STPCardFundingType(rawValue: fundingNumber.intValue))!
         }
 
-        return .other
+        return .unknown
     }
 
     @objc public var stripeID: String

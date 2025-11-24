@@ -44,6 +44,7 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
+    let cardFundingFilter: CardFundingFilter
     private let opensCardScannerAutomatically: Bool
 
     private let linkAppearance: LinkAppearance?
@@ -81,6 +82,7 @@ final class CardSectionElement: ContainerElement {
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         cardBrandFilter: CardBrandFilter = .default,
+        cardFundingFilter: CardFundingFilter = .default,
         opensCardScannerAutomatically: Bool = false,
         linkAppearance: LinkAppearance? = nil
     ) {
@@ -88,6 +90,7 @@ final class CardSectionElement: ContainerElement {
         self.theme = theme
         self.analyticsHelper = analyticsHelper
         self.cardBrandFilter = cardBrandFilter
+        self.cardFundingFilter = cardFundingFilter
         self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
@@ -114,7 +117,7 @@ final class CardSectionElement: ContainerElement {
             }
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDown: cardBrandDropDown?.element, cardFilter: cardBrandFilter), theme: theme) { field, params in
+                                                                                       cardBrandDropDown: cardBrandDropDown?.element, cardFilter: cardBrandFilter, cardFundingFilter: cardFundingFilter), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -190,6 +193,7 @@ final class CardSectionElement: ContainerElement {
         }
 
         fetchAndUpdateCardBrands()
+        checkAndValidateFundingType()
 
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
@@ -279,6 +283,44 @@ final class CardSectionElement: ContainerElement {
 
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
+        }
+    }
+
+    // MARK: Card funding validation
+    private var lastFundingCheckPrefix: String?
+    func checkAndValidateFundingType() {
+        // Only check funding type if we have at least 6 digits (minimum for BIN metadata fetch)
+        guard panElement.text.count >= 6 else {
+            lastFundingCheckPrefix = nil
+            return
+        }
+
+        let binController = STPBINController.shared
+        let prefix = panElement.text
+
+        // Don't fetch if we already have BIN ranges or if we've already fetched for this prefix
+//        guard !binController.hasBINRanges(forPrefix: prefix),
+//              lastFundingCheckPrefix != prefix else {
+//            return
+//        }
+
+        // Mark this prefix as checked to avoid duplicate fetches
+        lastFundingCheckPrefix = prefix
+
+        // Fetch BIN ranges with a completion handler to trigger re-validation
+        binController.retrieveBINRanges(forPrefix: prefix, recordErrorsAsSuccess: false, onlyFetchForVariableLengthBINs: false) { result in
+//            guard let self = self else { return }
+            // When fetch completes, trigger re-validation by setting the text again
+            // This will cause validate() to be called, which will now have BIN range data
+            switch result {
+            case .success(let result):
+                for res in result {
+                    print("Funding type \(res.funding)")
+                }
+            case .failure(_):
+                break
+            }
+            self.panElement.setText(self.panElement.text)
         }
     }
 

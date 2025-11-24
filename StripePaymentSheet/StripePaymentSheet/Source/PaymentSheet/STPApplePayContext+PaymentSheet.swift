@@ -26,9 +26,11 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
 
     let intent: Intent
+    let cardFundingFilter: CardFundingFilter
 
     init(
         intent: Intent,
+        cardFundingFilter: CardFundingFilter,
         authorizationResultHandler: PaymentSheet.ApplePayConfiguration.Handlers.AuthorizationResultHandler?,
         shippingMethodUpdateHandler: (
             (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
@@ -43,6 +45,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
         self.shippingContactUpdateHandler = shippingContactUpdateHandler
         self.intent = intent
+        self.cardFundingFilter = cardFundingFilter
         super.init()
         self.selfRetainer = self
     }
@@ -243,6 +246,27 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 handler(PKPaymentRequestShippingContactUpdate())
             }
         }
+
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didSelect paymentMethod: PKPaymentMethod,
+        handler: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
+    ) {
+        // Validate prepaid cards based on cardFundingFilter configuration
+        if paymentMethod.type == .prepaid {
+            if !cardFundingFilter.isAccepted(fundingType: .prepaid) {
+                // Create error for prepaid rejection
+                let error = PKPaymentRequest.paymentShippingAddressUnserviceableError(
+                    withLocalizedDescription: "Prepaid cards are not accepted. Please select a different card."
+                )
+                handler(PKPaymentRequestPaymentMethodUpdate(errors: [error], paymentSummaryItems: []))
+                return
+            }
+        }
+
+        // Payment method is acceptable
+        handler(PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: []))
+    }
 }
 
 extension STPApplePayContext {
@@ -266,6 +290,7 @@ extension STPApplePayContext {
         }
         let delegate = ApplePayContextClosureDelegate(
             intent: intent,
+            cardFundingFilter: configuration.cardFundingFilter,
             authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler,
             shippingMethodUpdateHandler: configuration.applePay?.customHandlers?.shippingMethodUpdateHandler,
             shippingContactUpdateHandler: configuration.applePay?.customHandlers?.shippingContactUpdateHandler,
@@ -290,10 +315,14 @@ extension STPApplePayContext {
         configuration: PaymentElementConfiguration,
         applePay: PaymentSheet.ApplePayConfiguration
     ) -> PKPaymentRequest {
+        // Calculate merchant capabilities based on card funding filter
+        let capabilities = configuration.cardFundingFilter.merchantCapabilities()
+
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePay.merchantId,
             country: applePay.merchantCountryCode,
-            currency: intent.currency ?? "USD"
+            currency: intent.currency ?? "USD",
+            merchantCapabilities: capabilities
         )
         paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
         paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)

@@ -221,6 +221,12 @@ extension PaymentSheet {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
+        /// By default, PaymentSheet will accept all card funding types supported by Stripe.
+        /// You can specify which card funding types PaymentSheet should block or allow by providing an array of those funding types.
+        /// Note: For Apple Pay, credit/debit filtering uses PKPaymentRequest.merchantCapabilities to filter cards upfront in the payment sheet. Prepaid card filtering is validated when the user selects a card and shows an error if not allowed.
+        /// Note: This is only a client-side solution.
+        @_spi(CardFundingFilteringPrivatePreview) public var cardFundingAcceptance: PaymentSheet.CardFundingAcceptance = .all
+
         /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
         /// Valid payment method types include:
@@ -977,5 +983,30 @@ extension PaymentSheet {
         /// Accept all card brands supported by Stripe except for those specified in the associated value
         /// - Note: Any card brands that do not map to a `BrandCategory` will be accepted when using a disallow list.
         case disallowed(brands: [BrandCategory])
+    }
+}
+
+extension PaymentSheet {
+    /// Options to control which card funding types are accepted
+    @_spi(CardFundingFilteringPrivatePreview) public enum CardFundingAcceptance: Equatable {
+
+        /// Card funding types that can be allowed or disallowed
+        @_spi(CardFundingFilteringPrivatePreview) public enum CardFundingCategory: Equatable {
+            /// Credit cards
+            case credit
+            /// Debit cards
+            case debit
+            /// Prepaid cards
+            case prepaid
+        }
+
+        /// Accept all card funding types supported by Stripe
+        case all
+        /// Accept only the card funding types specified in the associated value
+        /// - Note: Any card funding types not specified will be blocked when using an allow list.
+        case allowed(fundingTypes: [CardFundingCategory])
+        /// Accept all card funding types except for those specified in the associated value
+        /// - Note: Any card funding types not specified will be accepted when using a disallow list.
+        case disallowed(fundingTypes: [CardFundingCategory])
     }
 }

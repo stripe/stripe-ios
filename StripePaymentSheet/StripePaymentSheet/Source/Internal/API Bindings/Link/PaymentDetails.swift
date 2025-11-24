@@ -69,13 +69,20 @@ extension ConsumerPaymentDetails {
     func isSupported(linkAccount: PaymentSheetLinkAccount,
                      elementsSession: STPElementsSession,
                      configuration: PaymentElementConfiguration,
-                     cardBrandFilter: CardBrandFilter) -> Bool {
+                     cardBrandFilter: CardBrandFilter,
+                     cardFundingFilter: CardFundingFilter) -> Bool {
         guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
             return false
         }
 
         if case let .card(details) = details,
            !cardBrandFilter.isAccepted(cardBrand: details.stpBrand),
+           elementsSession.linkCardBrandFilteringEnabled {
+            return false
+        }
+
+        if case let .card(details) = details,
+           !cardFundingFilter.isAccepted(fundingType: details.funding.asSTPCardFundingType),
            elementsSession.linkCardBrandFilteringEnabled {
             return false
         }
@@ -246,6 +253,15 @@ extension ConsumerPaymentDetails.Details.Card {
             case .debit: String.Localized.Funding.debit
             case .prepaid: String.Localized.Funding.prepaid
             case .unparsable: String.Localized.Funding.default
+            }
+        }
+
+        var asSTPCardFundingType: STPCardFundingType {
+            switch self {
+            case .credit: return .credit
+            case .debit: return .debit
+            case .prepaid: return .prepaid
+            case .unparsable: return .unknown
             }
         }
     }

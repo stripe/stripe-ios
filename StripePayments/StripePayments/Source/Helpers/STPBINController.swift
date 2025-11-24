@@ -15,6 +15,7 @@ import Foundation
     @_spi(STP) public let accountRangeLow: String
     @_spi(STP) public let accountRangeHigh: String
     @_spi(STP) public let country: String?
+    @_spi(STP) public let funding: STPCardFundingType
 
     private enum CodingKeys: String, CodingKey {
         case panLength = "pan_length"
@@ -22,6 +23,7 @@ import Foundation
         case accountRangeLow = "account_range_low"
         case accountRangeHigh = "account_range_high"
         case country = "country"
+        case funding = "funding"
     }
 
     @_spi(STP) public init(
@@ -34,6 +36,11 @@ import Foundation
         self.accountRangeLow = try container.decode(String.self, forKey: .accountRangeLow)
         self.accountRangeHigh = try container.decode(String.self, forKey: .accountRangeHigh)
         self.country = try? container.decode(String.self, forKey: .country)
+        if let fundingString = try? container.decode(String.self, forKey: .funding) {
+            self.funding = STPCard.funding(from: fundingString)
+        } else {
+            self.funding = .unknown
+        }
         self.isHardcoded = false
     }
 
@@ -42,13 +49,15 @@ import Foundation
         brand: STPCardBrand,
         accountRangeLow: String,
         accountRangeHigh: String,
-        country: String?
+        country: String?,
+        funding: STPCardFundingType
     ) {
         self.panLength = panLength
         self.brand = brand
         self.accountRangeLow = accountRangeLow
         self.accountRangeHigh = accountRangeHigh
         self.country = country
+        self.funding = funding
         self.isHardcoded = true
     }
 
@@ -327,52 +336,52 @@ extension STPBINRange {
     // MARK: - Class Utilities
 
     static let STPBINRangeInitialRanges: [STPBINRange] = {
-        let ranges: [(String, String, UInt, STPCardBrand)] = [
+        let ranges: [(String, String, UInt, STPCardBrand, STPCardFundingType)] = [
             // Unknown
-            ("", "", 19, .unknown),
+            ("", "", 19, .unknown, .unknown),
             // American Express
-            ("34", "34", 15, .amex),
-            ("37", "37", 15, .amex),
+            ("34", "34", 15, .amex, .unknown),
+            ("37", "37", 15, .amex, .unknown),
             // Diners Club
-            ("30", "30", 16, .dinersClub),
-            ("36", "36", 14, .dinersClub),
-            ("38", "39", 16, .dinersClub),
+            ("30", "30", 16, .dinersClub, .unknown),
+            ("36", "36", 14, .dinersClub, .unknown),
+            ("38", "39", 16, .dinersClub, .unknown),
             // Discover
-            ("60", "60", 16, .discover),
-            ("64", "65", 16, .discover),
+            ("60", "60", 16, .discover, .unknown),
+            ("64", "65", 16, .discover, .unknown),
             // JCB
-            ("35", "35", 16, .JCB),
+            ("35", "35", 16, .JCB, .unknown),
             // Mastercard
-            ("50", "59", 16, .mastercard),
-            ("22", "27", 16, .mastercard),
-            ("67", "67", 16, .mastercard),  // Maestro
+            ("50", "59", 16, .mastercard, .unknown),
+            ("22", "27", 16, .mastercard, .unknown),
+            ("67", "67", 16, .mastercard, .unknown),  // Maestro
             // UnionPay
-            ("62", "62", 16, .unionPay),
-            ("81", "81", 16, .unionPay),
+            ("62", "62", 16, .unionPay, .unknown),
+            ("81", "81", 16, .unionPay, .unknown),
             // Include at least one known 19-digit BIN for maxLength
-            ("621598", "621598", 19, .unionPay),
+            ("621598", "621598", 19, .unionPay, .unknown),
             // Visa
-            ("40", "49", 16, .visa),
-            ("413600", "413600", 13, .visa),
-            ("444509", "444509", 13, .visa),
-            ("444509", "444509", 13, .visa),
-            ("444550", "444550", 13, .visa),
-            ("450603", "450603", 13, .visa),
-            ("450617", "450617", 13, .visa),
-            ("450628", "450629", 13, .visa),
-            ("450636", "450636", 13, .visa),
-            ("450640", "450641", 13, .visa),
-            ("450662", "450662", 13, .visa),
-            ("463100", "463100", 13, .visa),
-            ("476142", "476142", 13, .visa),
-            ("476143", "476143", 13, .visa),
-            ("492901", "492902", 13, .visa),
-            ("492920", "492920", 13, .visa),
-            ("492923", "492923", 13, .visa),
-            ("492928", "492930", 13, .visa),
-            ("492937", "492937", 13, .visa),
-            ("492939", "492939", 13, .visa),
-            ("492960", "492960", 13, .visa),
+            ("40", "49", 16, .visa, .unknown),
+            ("413600", "413600", 13, .visa, .unknown),
+            ("444509", "444509", 13, .visa, .unknown),
+            ("444509", "444509", 13, .visa, .unknown),
+            ("444550", "444550", 13, .visa, .unknown),
+            ("450603", "450603", 13, .visa, .unknown),
+            ("450617", "450617", 13, .visa, .unknown),
+            ("450628", "450629", 13, .visa, .unknown),
+            ("450636", "450636", 13, .visa, .unknown),
+            ("450640", "450641", 13, .visa, .unknown),
+            ("450662", "450662", 13, .visa, .unknown),
+            ("463100", "463100", 13, .visa, .unknown),
+            ("476142", "476142", 13, .visa, .unknown),
+            ("476143", "476143", 13, .visa, .unknown),
+            ("492901", "492902", 13, .visa, .unknown),
+            ("492920", "492920", 13, .visa, .unknown),
+            ("492923", "492923", 13, .visa, .unknown),
+            ("492928", "492930", 13, .visa, .unknown),
+            ("492937", "492937", 13, .visa, .unknown),
+            ("492939", "492939", 13, .visa, .unknown),
+            ("492960", "492960", 13, .visa, .unknown),
         ]
         var binRanges: [STPBINRange] = []
         for range in ranges {
@@ -381,7 +390,8 @@ extension STPBINRange {
                 brand: range.3,
                 accountRangeLow: range.0,
                 accountRangeHigh: range.1,
-                country: nil
+                country: nil,
+                funding: range.4
             )
             binRanges.append(binRange)
         }

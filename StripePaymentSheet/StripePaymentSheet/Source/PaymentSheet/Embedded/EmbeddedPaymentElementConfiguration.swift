@@ -137,6 +137,12 @@ extension EmbeddedPaymentElement {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
+        /// By default, the embedded payment element will accept all card funding types supported by Stripe.
+        /// You can specify which card funding types the embedded payment element should block or allow by providing an array of those funding types.
+        /// Note: For Apple Pay, credit/debit filtering uses PKPaymentRequest.merchantCapabilities to filter cards upfront in the payment sheet. Prepaid card filtering is validated when the user selects a card and shows an error if not allowed.
+        /// Note: This is only a client-side solution.
+        @_spi(CardFundingFilteringPrivatePreview) public var cardFundingAcceptance: PaymentSheet.CardFundingAcceptance = .all
+
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false

@@ -70,8 +70,8 @@ extension STPCardFundingType: CustomStringConvertible {
             return "credit"
         case .debit:
             return "debit"
-        case .other:
-            return "other"
+        case .unknown:
+            return "unknown"
         case .prepaid:
             return "prepaid"
         }

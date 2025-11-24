@@ -24,12 +24,14 @@ extension TextFieldElement {
         let cardBrand: STPCardBrand?
         let cardBrandDropDown: DropdownFieldElement?
         let cardFilter: CardBrandFilter
+        let cardFundingFilter: CardFundingFilter
 
-        init(defaultValue: String? = nil, cardBrand: STPCardBrand? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default) {
+        init(defaultValue: String? = nil, cardBrand: STPCardBrand? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default, cardFundingFilter: CardFundingFilter = .default) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
             self.cardBrandDropDown = cardBrandDropDown
             self.cardFilter = cardFilter
+            self.cardFundingFilter = cardFundingFilter
         }
 
         private func cardBrand(for text: String) -> STPCardBrand {
@@ -97,6 +99,7 @@ extension TextFieldElement {
             case invalidBrand
             case invalidLuhn
             case disallowedBrand(brand: STPCardBrand)
+            case disallowedFunding(fundingType: STPCardFundingType)
 
             func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
                 switch self {
@@ -104,7 +107,7 @@ extension TextFieldElement {
                     return displayEmptyFields
                 case .incomplete, .invalidLuhn:
                     return !isUserEditing || displayEmptyFields
-                case .invalidBrand, .disallowedBrand:
+                case .invalidBrand, .disallowedBrand, .disallowedFunding:
                     return true
                 }
             }
@@ -123,6 +126,19 @@ extension TextFieldElement {
                     }
 
                     return .Localized.generic_brand_not_allowed
+                case .disallowedFunding(let fundingType):
+                    switch fundingType {
+                    case .credit:
+                        return "Credit cards are not accepted. Please use a different card."
+                    case .debit:
+                        return "Debit cards are not accepted. Please use a different card."
+                    case .prepaid:
+                        return "Prepaid cards are not accepted. Please use a different card."
+                    case .unknown:
+                        return String.Localized.your_card_number_is_invalid
+                    @unknown default:
+                        return String.Localized.your_card_number_is_invalid
+                    }
                 }
             }
         }
@@ -145,6 +161,14 @@ extension TextFieldElement {
             let shouldShowDisallowedError = cardBrandDropDown == nil || text.count > 8
             if !cardFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
+            }
+
+            // Check funding type if we have BIN range data
+            if binController.hasBINRanges(forPrefix: text) {
+                let fundingType = binRange.funding
+                if !cardFundingFilter.isAccepted(fundingType: fundingType) {
+                    return .invalid(Error.disallowedFunding(fundingType: fundingType))
+                }
             }
 
             // Is the PAN the correct length?

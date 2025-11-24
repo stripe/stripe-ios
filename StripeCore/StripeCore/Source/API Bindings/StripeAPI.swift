@@ -155,19 +155,20 @@ import PassKit
     /// payment request. Apple Pay interprets the amounts provided by the summary items
     /// attached to this request as amounts in this currency.
     /// - Returns: a `PKPaymentRequest` with proper default values.
-    @objc(paymentRequestWithMerchantIdentifier:country:currency:)
+//    @objc(paymentRequestWithMerchantIdentifier:country:currency:merchantCapabilities:)
     public class func paymentRequest(
         withMerchantIdentifier merchantIdentifier: String,
         country countryCode: String,
-        currency currencyCode: String
+        currency currencyCode: String,
+        merchantCapabilities: PKMerchantCapability? = nil
     ) -> PKPaymentRequest {
         let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = merchantIdentifier
         paymentRequest.supportedNetworks = self.supportedPKPaymentNetworks()
         #if os(visionOS)
-        paymentRequest.merchantCapabilities = .threeDSecure
+        paymentRequest.merchantCapabilities = merchantCapabilities ?? .threeDSecure
         #else
-        paymentRequest.merchantCapabilities = .capability3DS
+        paymentRequest.merchantCapabilities = merchantCapabilities ?? .capability3DS
         #endif
         paymentRequest.countryCode = countryCode.uppercased()
         paymentRequest.currencyCode = currencyCode.uppercased()

@@ -96,6 +96,15 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
+    var cardFundingFilter: CardFundingFilter {
+        switch self {
+        case .paymentElement(let config, _):
+            return config.cardFundingFilter
+        case .customerSheet(let config):
+            return config.cardFundingFilter
+        }
+    }
+
     var linkPaymentMethodsOnly: Bool {
         switch self {
         case .paymentElement(let config, _):

@@ -49,7 +49,12 @@ class CustomerSheetDataSource {
 
                 let savedPaymentMethods = elementSession.customer?.paymentMethods.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
-                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
+                    guard configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) else { return false }
+
+                    // Filter by funding type
+                    guard let fundingString = card.funding else { return true }
+                    let fundingType = STPCard.funding(from: fundingString)
+                    return configuration.cardFundingFilter.isAccepted(fundingType: fundingType)
                 }) ?? []
                 return completion(.success((savedPaymentMethods, paymentOption, elementSession)))
             } catch {
@@ -73,7 +78,12 @@ class CustomerSheetDataSource {
 
                 let (paymentMethods, selectedPaymentMethod, elementSession) = try await (paymentMethodsResult.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
-                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
+                    guard configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) else { return false }
+
+                    // Filter by funding type
+                    guard let fundingString = card.funding else { return true }
+                    let fundingType = STPCard.funding(from: fundingString)
+                    return configuration.cardFundingFilter.isAccepted(fundingType: fundingType)
                 }), selectedPaymentMethodResult, elementsSessionResult)
 
                 // Override with specs from elementSession

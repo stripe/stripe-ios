@@ -39,7 +39,7 @@ public class STPSourceCardDetails: NSObject, STPAPIResponseDecodable {
     /// The issuer of the card.
     @objc public private(set) var brand: STPCardBrand = .unknown
     /// The funding source for the card (credit, debit, prepaid, or other)
-    @objc public private(set) var funding: STPCardFundingType = .other
+    @objc public private(set) var funding: STPCardFundingType = .unknown
     /// Two-letter ISO code representing the issuing country of the card.
     @objc public private(set) var country: String?
     /// Whether 3D Secure is supported or required by the card.

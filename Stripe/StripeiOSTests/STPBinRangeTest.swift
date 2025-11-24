@@ -25,7 +25,8 @@ class STPBinRangeTest: XCTestCase {
             brand: .unknown,
             accountRangeLow: "134",
             accountRangeHigh: "167",
-            country: nil
+            country: nil,
+            funding: .unknown
         )
 
         XCTAssertFalse(binRange.matchesNumber("0"))
@@ -57,7 +58,8 @@ class STPBinRangeTest: XCTestCase {
             brand: .unknown,
             accountRangeLow: "004",
             accountRangeHigh: "017",
-            country: nil
+            country: nil,
+            funding: .unknown
         )
 
         XCTAssertTrue(binRange.matchesNumber("0"))
@@ -93,7 +95,8 @@ class STPBinRangeTest: XCTestCase {
             brand: .unknown,
             accountRangeLow: "",
             accountRangeHigh: "",
-            country: nil
+            country: nil,
+            funding: .unknown
         )
         XCTAssertTrue(binRange.matchesNumber(""))
         XCTAssertTrue(binRange.matchesNumber("1"))
@@ -164,14 +167,16 @@ class STPBinRangeTest: XCTestCase {
                 brand: .unionPay,
                 accountRangeLow: "6244780000000000",
                 accountRangeHigh: "6244789999999999",
-                country: "HK"
+                country: "HK",
+                funding: .unknown
             ),
             STPBINRange(
                 panLength: 16,
                 brand: .unknown,
                 accountRangeLow: "6244780000000000",
                 accountRangeHigh: "6244789999999999",
-                country: "CN"
+                country: "CN",
+                funding: .unknown
             ),
         ]
 
@@ -186,5 +191,64 @@ class STPBinRangeTest: XCTestCase {
         // Cleanup added values to avoid issues caused by singleton state.
         STPBINController.shared.sRetrievedRanges["624478"] = nil
         STPBINController.shared.sAllRanges = STPBINController.STPBINRangeInitialRanges
+    }
+
+    func testFundingTypeDecoding() {
+        // Test decoding all funding types from JSON
+        let testCases: [(String, STPCardFundingType)] = [
+            ("CREDIT", .credit),
+            ("DEBIT", .debit),
+            ("PREPAID", .prepaid),
+            ("UNKNOWN", .unknown),
+            ("credit", .credit),  // Lowercase should also work
+            ("debit", .debit),
+            ("prepaid", .prepaid),
+        ]
+
+        for (fundingString, expectedFunding) in testCases {
+            let json = """
+            {
+                "pan_length": 16,
+                "brand": "VISA",
+                "account_range_low": "4242424242424242",
+                "account_range_high": "4242424242424242",
+                "funding": "\(fundingString)"
+            }
+            """
+
+            let data = json.data(using: .utf8)!
+            let decoder = JSONDecoder()
+            let binRange = try? decoder.decode(STPBINRange.self, from: data)
+
+            XCTAssertNotNil(binRange, "Failed to decode BIN range with funding: \(fundingString)")
+            XCTAssertEqual(binRange?.funding, expectedFunding, "Funding type mismatch for: \(fundingString)")
+        }
+    }
+
+    func testFundingTypeFallbackToUnknown() {
+        // Test that missing funding field defaults to .unknown
+        let json = """
+        {
+            "pan_length": 16,
+            "brand": "VISA",
+            "account_range_low": "4242424242424242",
+            "account_range_high": "4242424242424242"
+        }
+        """
+
+        let data = json.data(using: .utf8)!
+        let decoder = JSONDecoder()
+        let binRange = try? decoder.decode(STPBINRange.self, from: data)
+
+        XCTAssertNotNil(binRange)
+        XCTAssertEqual(binRange?.funding, .unknown, "Missing funding should default to .unknown")
+    }
+
+    func testHardcodedRangesHaveUnknownFunding() {
+        // Test that all hardcoded ranges have .unknown funding
+        for binRange in STPBINController.STPBINRangeInitialRanges {
+            XCTAssertTrue(binRange.isHardcoded, "Range should be marked as hardcoded")
+            XCTAssertEqual(binRange.funding, .unknown, "Hardcoded ranges should have .unknown funding")
+        }
     }
 }
