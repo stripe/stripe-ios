@@ -89,7 +89,7 @@ class FCLiteContainerViewController: UIViewController {
                 do {
                     if let linkedBank = try createInstantDebitsLinkedBank(from: returnUrl) {
                         completion(.completed(.instantDebits(linkedBank)))
-                    } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
+                    } else if let linkedAccountId = returnUrl.extractQueryValue(forKey: "linked_account") {
                         completion(.completed(.linkedAccount(id: linkedAccountId)))
                     } else {
                         let error = FCLiteError.linkedBankUnavailable
@@ -231,11 +231,11 @@ class FCLiteContainerViewController: UIViewController {
 
         return InstantDebitsLinkedBank(
             paymentMethod: paymentMethod,
-            bankName: url.extractValue(forKey: "bank_name")?
+            bankName: url.extractQueryValue(forKey: "bank_name")?
                 .replacingOccurrences(of: "+", with: " "),
-            last4: url.extractValue(forKey: "last4"),
+            last4: url.extractQueryValue(forKey: "last4"),
             linkMode: nil,
-            incentiveEligible: url.extractValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false,
+            incentiveEligible: url.extractQueryValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false,
             linkAccountSessionId: manifest?.id
         )
     }
@@ -304,30 +304,3 @@ extension FCLiteContainerViewController: UIAdaptivePresentationControllerDelegat
     }
 }
 
-private extension URL {
-    /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
-    /// we can parse it back in `StripeCore`.
-    func extractLinkBankPaymentMethod() throws -> LinkBankPaymentMethod? {
-        guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
-            return nil
-        }
-
-        guard let data = Data(base64Encoded: encodedPaymentMethod) else {
-            throw FCLiteError.linkedBankUnavailable
-        }
-
-        return try StripeJSONDecoder().decode(LinkBankPaymentMethod.self, from: data)
-    }
-
-    func extractValue(forKey key: String) -> String? {
-        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
-            assertionFailure("Invalid URL")
-            return nil
-        }
-        return components
-            .queryItems?
-            .first(where: { $0.name == key })?
-            .value?
-            .removingPercentEncoding
-    }
-}
