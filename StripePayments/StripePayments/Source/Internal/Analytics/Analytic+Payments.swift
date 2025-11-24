@@ -36,7 +36,3 @@ extension GenericPaymentAnalytic {
         return params
     }
 }
-
-@_spi(STP) public protocol STPAnalyticsSerializer {
-    static func serializeConfiguration(_ configuration: NSObject) -> [String: String]
-}

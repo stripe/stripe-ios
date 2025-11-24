@@ -333,6 +333,12 @@ import Foundation
     case attestationConfirmationRequestTokenFailed = "elements.attestation.confirmation.request_token_failed"
     case attestationConfirmationError = "elements.attestation.confirmation.error"
 
+    // MARK: - Intent Confirmation Challenge
+    case intentConfirmationChallengeStart = "elements.intent_confirmation_challenge.start"
+    case intentConfirmationChallengeSuccess = "elements.intent_confirmation_challenge.success"
+    case intentConfirmationChallengeError = "elements.intent_confirmation_challenge.error"
+    case intentConfirmationChallengeWebViewLoaded = "elements.intent_confirmation_challenge.web_view_loaded"
+
     // MARK: - STPApplePayContext
     case applePayContextStarted = "stripeios.applepaycontext.confirm.started"
     case applePayContextFinished = "stripeios.applepaycontext.confirm.finished"

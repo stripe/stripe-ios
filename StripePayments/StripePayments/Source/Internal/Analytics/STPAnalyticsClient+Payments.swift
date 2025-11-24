@@ -266,15 +266,6 @@ extension STPAnalyticsClient {
             )
         )
     }
-
-    @_spi(STP) public func logCardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields() {
-        log(
-            analytic: GenericPaymentAnalytic(
-                event: .cardMetadataExpectedExtraDigitsButUserEntered16ThenSwitchedFields,
-                additionalParams: [:]
-            )
-        )
-    }
 }
 
 // MARK: - Card Scanning
