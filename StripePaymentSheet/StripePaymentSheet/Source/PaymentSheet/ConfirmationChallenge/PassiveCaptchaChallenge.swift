@@ -84,7 +84,8 @@ actor PassiveCaptchaChallenge {
     }
 
     private func isSessionExpired() -> Bool {
-        guard let sessionStartTime else { return true }
+        // The session starts when we get our first token
+        guard let sessionStartTime else { return false } // If sessionStartTime is nil, then we haven't gotten our first token back yet
         return Date().timeIntervalSince(sessionStartTime) >= Self.sessionExpiration
     }
 
@@ -100,7 +101,6 @@ actor PassiveCaptchaChallenge {
         let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, hcaptcha, weak self] () -> String in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
             let startTime = Date()
-            await self?.setSessionStartTime(startTime)
             do {
                 let result = try await withTaskCancellationHandler {
                     try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
@@ -111,6 +111,7 @@ actor PassiveCaptchaChallenge {
                             Task { @MainActor in // MainActor to prevent continuation from different threads
                                 do {
                                     let token = try result.dematerialize()
+                                    await self?.setSessionStartTime(Date())
                                     nillableContinuation?.resume(returning: token)
                                     nillableContinuation = nil
                                 } catch {
