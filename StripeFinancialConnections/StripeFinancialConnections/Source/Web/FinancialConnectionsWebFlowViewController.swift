@@ -333,13 +333,7 @@ private extension URL {
             return nil
         }
 
-        let result: Result<LinkBankPaymentMethod, Error> = STPAPIClient.decodeResponse(
-            data: data,
-            error: nil,
-            response: nil
-        )
-
-        return try? result.get()
+        return try? StripeJSONDecoder().decode(LinkBankPaymentMethod.self, from: data)
     }
 
     func extractValue(forKey key: String) -> String? {
