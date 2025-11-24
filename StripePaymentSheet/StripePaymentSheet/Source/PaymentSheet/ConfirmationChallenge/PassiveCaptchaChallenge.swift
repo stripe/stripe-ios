@@ -42,12 +42,22 @@ struct PassiveCaptchaData: Equatable, Hashable {
 
 actor PassiveCaptchaChallenge {
     let passiveCaptchaData: PassiveCaptchaData
-    var isTokenReady: Bool = false
+    var isTokenReady: Bool { // Fetched for the attach analytic. If session is expired, reset before the next fetch.
+        let isSessionExpired = isSessionExpired()
+        if isSessionExpired {
+            self.tokenTask = nil
+            self._hasToken = false
+            self.hcaptcha?.reset()
+        }
+        return _hasToken
+    }
     private let hcaptchaFactory: HCaptchaFactory
     private var hcaptcha: HCaptcha?
-    private var tokenTask: Task<HCaptchaResult, Error>?
-    private var retryCount = 0
-    private let maxRetries = 6
+    private var tokenTask: Task<String, Error>?
+    private var _hasToken: Bool = false
+    private var sessionStartTime: Date?
+
+    private static let sessionExpiration: TimeInterval = 29 * 60
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
@@ -56,37 +66,29 @@ actor PassiveCaptchaChallenge {
     init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
-        Task { // Intentionally not blocking loading/initialization!
-            try await createHCaptcha()
-            _ = try await fetchToken()
+        Task { [weak self] in // Intentionally not blocking loading/initialization!
+            try await self?.createHCaptcha()
+            _ = try await self?.fetchToken()
         }
     }
 
-    private func createHCaptcha() async throws {
+    private func createHCaptcha() throws {
         STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: passiveCaptchaData.siteKey)
         let startTime = Date()
         do {
             self.hcaptcha = try hcaptchaFactory.create(siteKey: passiveCaptchaData.siteKey, rqdata: passiveCaptchaData.rqdata)
-            self.hcaptcha?.onEvent { event, _ in
-                // if the token expires, reset and retry
-                if case .expired = event {
-                    self.tokenTask = nil
-                    self.isTokenReady = false
-                    if self.retryCount < self.maxRetries {
-                        self.retryCount += 1
-                        Task {
-                            try await self.fetchToken()
-                        }
-                    }
-                }
-            }
         } catch {
             STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
             throw error
         }
     }
 
-    public func fetchToken() async throws -> HCaptchaResult {
+    private func isSessionExpired() -> Bool {
+        guard let sessionStartTime else { return true }
+        return Date().timeIntervalSince(sessionStartTime) >= Self.sessionExpiration
+    }
+
+    public func fetchToken() async throws -> String {
         if let tokenTask {
             return try await withTaskCancellationHandler {
                 try await tokenTask.value
@@ -95,19 +97,26 @@ actor PassiveCaptchaChallenge {
             }
         }
 
-        let tokenTask = Task<HCaptchaResult, Error> { [siteKey = passiveCaptchaData.siteKey, hcaptcha, weak self] () -> HCaptchaResult in
+        let tokenTask = Task<String, Error> { [siteKey = passiveCaptchaData.siteKey, hcaptcha, weak self] () -> String in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
             let startTime = Date()
+            await self?.setSessionStartTime(startTime)
             do {
                 let result = try await withTaskCancellationHandler {
-                    try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<HCaptchaResult, Error>) in
+                    try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
                         // Prevent Swift Task continuation misuse - the validate completion block can get called multiple times
-                        var nillableContinuation: CheckedContinuation<HCaptchaResult, Error>? = continuation
+                        var nillableContinuation: CheckedContinuation<String, Error>? = continuation
 
                         hcaptcha?.validate(resetOnError: false) { result in
                             Task { @MainActor in // MainActor to prevent continuation from different threads
-                                nillableContinuation?.resume(returning: result)
-                                nillableContinuation = nil
+                                do {
+                                    let token = try result.dematerialize()
+                                    nillableContinuation?.resume(returning: token)
+                                    nillableContinuation = nil
+                                } catch {
+                                    nillableContinuation?.resume(throwing: error)
+                                    nillableContinuation = nil
+                                }
                             }
                         }
                     }
@@ -136,8 +145,12 @@ actor PassiveCaptchaChallenge {
         }
     }
 
+    private func setSessionStartTime(_ sessionStartTime: Date) {
+        self.sessionStartTime = sessionStartTime
+    }
+
     private func setValidationComplete() {
-        self.isTokenReady = true
+        self._hasToken = true
     }
 
 }

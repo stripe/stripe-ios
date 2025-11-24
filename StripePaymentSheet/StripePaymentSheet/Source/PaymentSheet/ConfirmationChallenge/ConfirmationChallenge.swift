@@ -47,7 +47,7 @@ actor ConfirmationChallenge {
             guard let passiveCaptchaChallenge = self.passiveCaptchaChallenge else {
                 return nil
             }
-            return try await passiveCaptchaChallenge.fetchToken().dematerialize()
+            return try await passiveCaptchaChallenge.fetchToken()
         }
 
         let getAttestationAssertion: () async throws -> StripeAttest.Assertion? = {
