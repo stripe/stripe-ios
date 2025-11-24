@@ -14,6 +14,8 @@ import UIKit
 
 final class DocumentCaptureViewController: IdentityFlowViewController {
 
+    private let bestFramePicker = BestFramePicker(window: 1.0)
+
     typealias DocumentImageScanningSession = ImageScanningSession<
         DocumentSide,
         DocumentScannerOutput?,
@@ -519,6 +521,8 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         _ scanningSession: DocumentImageScanningSession,
         willStartScanningForClassification documentSide: DocumentSide
     ) {
+        // Reset best-frame window when a new side starts
+        bestFramePicker.reset()
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
 
@@ -579,21 +583,40 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             return
         }
 
-        switch scannerOutput {
-        case .legacy(_, _, _, _, let blurResult):
-            documentUploader.uploadImages(
-                for: documentSide,
-                originalImage: image,
-                documentScannerOutput: scannerOutput,
-                exifMetadata: exifMetadata,
-                method: .autoCapture
-            )
-            sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
+        let allScores = scannerOutput.getAllClassificationScores()
+        let frameScore: Float = {
+            switch documentSide {
+            case .front:
+                return max(allScores[.idCardFront] ?? 0, allScores[.passport] ?? 0)
+            case .back:
+                return allScores[.idCardBack] ?? 0
+            }
+        }()
 
-            imageScanningSession.setStateScanned(
-                expectedClassification: documentSide,
-                capturedData: UIImage(cgImage: image)
-            )
+        switch bestFramePicker.consider(cgImage: image,
+                                        output: scannerOutput,
+                                        exif: exifMetadata,
+                                        score: frameScore) {
+        case .idle, .holding:
+            imageScanningSession.updateScanningState(scannerOutputOptional)
+            return
+        case .picked(let best):
+            switch best.output {
+            case .legacy(_, _, _, _, let blurResult):
+                documentUploader.uploadImages(
+                    for: documentSide,
+                    originalImage: best.cgImage,
+                    documentScannerOutput: best.output,
+                    exifMetadata: best.exif,
+                    method: .autoCapture
+                )
+                sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
+
+                imageScanningSession.setStateScanned(
+                    expectedClassification: documentSide,
+                    capturedData: UIImage(cgImage: best.cgImage)
+                )
+            }
         }
     }
 }
