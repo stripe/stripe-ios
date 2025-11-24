@@ -93,8 +93,7 @@ class FCLiteContainerViewController: UIViewController {
                         completion(.completed(.linkedAccount(id: linkedAccountId)))
                     } else {
                         let error = FCLiteError.linkedBankUnavailable
-                        logInstantDebitsCompletionFailure(error: error)
-                        completion(.failed(error: error))
+                        throw error
                     }
                 } catch {
                     logInstantDebitsCompletionFailure(error: error)
@@ -303,4 +302,3 @@ extension FCLiteContainerViewController: UIAdaptivePresentationControllerDelegat
         viewController.present(alertController, animated: true)
     }
 }
-

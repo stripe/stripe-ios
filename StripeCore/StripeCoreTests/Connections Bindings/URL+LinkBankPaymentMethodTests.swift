@@ -77,7 +77,7 @@ class URLLinkBankPaymentMethodTests: XCTestCase {
             )
         }
     }
-    
+
     // MARK: URL.extractQueryValue(forKey:)
 
     func testExtractQueryValue_SuccessAndFailureCases() throws {
@@ -89,4 +89,3 @@ class URLLinkBankPaymentMethodTests: XCTestCase {
         XCTAssertNil(url.extractQueryValue(forKey: "payment_method_id"))
     }
 }
-

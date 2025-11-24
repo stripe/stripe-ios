@@ -192,18 +192,13 @@ extension FinancialConnectionsWebFlowViewController {
                                 self.notifyDelegateOfSuccess(result: .linkedAccount(id: linkedAccountId))
                             } else {
                                 let error = FinancialConnectionsSheetError.unknown(
-                                    debugDescription: "Invalid payment_method returned"
+                                    debugDescription: "Missing payment_method or linked_account in return URL"
                                 )
-                                self.logInstantDebitsCompletionFailure(error: error)
-                                self.notifyDelegateOfFailure(error: error)
+                                throw error
                             }
                         } catch {
                             self.logInstantDebitsCompletionFailure(error: error)
-                            self.notifyDelegateOfFailure(
-                                error: FinancialConnectionsSheetError.unknown(
-                                    debugDescription: "Invalid payment_method returned"
-                                )
-                            )
+                            self.notifyDelegateOfFailure(error: error)
                         }
                     } else {
                         self.fetchSession()
@@ -333,13 +328,12 @@ extension FinancialConnectionsWebFlowViewController {
             event: .instantDebitsCompletionFailed,
             error: error,
             additionalNonPIIParams: [
-                "flow": "fc_sdk",
+                "flow": "fc_sdk_web",
             ]
         )
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
     }
 }
-
 
 // MARK: - STPURLCallbackListener
 

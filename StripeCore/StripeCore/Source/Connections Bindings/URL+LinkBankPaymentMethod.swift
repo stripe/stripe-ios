@@ -46,4 +46,3 @@ import Foundation
             .removingPercentEncoding
     }
 }
-
