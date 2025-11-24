@@ -36,7 +36,7 @@ actor ConfirmationChallenge {
     }
 
     public func makeRadarOptions(for paymentMethodType: STPPaymentMethodType) async -> STPRadarOptions? {
-        guard paymentMethodType == .card else {
+        guard paymentMethodType == .card || paymentMethodType == .link else {
             return nil
         }
         let (hcaptchaToken, assertion) = await fetchTokensWithTimeout()
