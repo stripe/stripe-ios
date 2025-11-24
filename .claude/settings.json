@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$TOOL_INPUT_COMMAND\" | grep -E 'git\\s+(commit|push)' > /dev/null 2>&1; then echo '🔍 Running format and lint checks...' && cd \"$CLAUDE_PROJECT_DIR\" && ci_scripts/format_modified_files.sh && ci_scripts/lint_modified_files.sh && echo '✅ Format and lint checks passed!' || (echo '❌ Format or lint check failed. Please fix the issues before committing.' && exit 1); fi"
+            "command": "if echo \"$TOOL_INPUT_COMMAND\" | grep -E 'git\\s+commit' > /dev/null 2>&1; then echo '🔍 Running format and lint checks...' && cd \"$CLAUDE_PROJECT_DIR\" && ci_scripts/format_modified_files.sh && ci_scripts/lint_modified_files.sh && if git diff --exit-code > /dev/null 2>&1; then echo '✅ Format and lint checks passed!'; else echo '⚠️  Format made changes. Please review and stage them before committing.' && exit 2; fi || (echo '❌ Format or lint check failed. Please fix the issues before committing.' && exit 1); fi"
           }
         ]
       }
