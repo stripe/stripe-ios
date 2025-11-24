@@ -194,7 +194,7 @@ class STPBinRangeTest: XCTestCase {
     }
 
     func testFundingDecoding() throws {
-        let json = """
+        let json = Data("""
         {
             "pan_length": 16,
             "brand": "visa",
@@ -203,13 +203,13 @@ class STPBinRangeTest: XCTestCase {
             "country": "US",
             "funding": "credit"
         }
-        """.data(using: .utf8)!
+        """.utf8)
         let range = try JSONDecoder().decode(STPBINRange.self, from: json)
         XCTAssertEqual(range.funding, .credit)
     }
 
     func testFundingDecodingHandlesUnknownValues() throws {
-        let unknownFundingJSON = """
+        let unknownFundingJSON = Data("""
         {
             "pan_length": 16,
             "brand": "visa",
@@ -218,7 +218,7 @@ class STPBinRangeTest: XCTestCase {
             "country": "US",
             "funding": "mystery"
         }
-        """.data(using: .utf8)!
+        """.utf8)
 
         let decoder = JSONDecoder()
         let unknownFundingRange = try decoder.decode(STPBINRange.self, from: unknownFundingJSON)
@@ -226,7 +226,7 @@ class STPBinRangeTest: XCTestCase {
     }
 
     func testDecodingDefaultsFundingWhenMissing() throws {
-        let missingFundingJSON = """
+        let missingFundingJSON = Data("""
         {
             "pan_length": 16,
             "brand": "visa",
@@ -234,7 +234,7 @@ class STPBinRangeTest: XCTestCase {
             "account_range_high": "4111119999999999",
             "country": "US"
         }
-        """.data(using: .utf8)!
+        """.utf8)
 
         let decoder = JSONDecoder()
         let missingFundingRange = try decoder.decode(STPBINRange.self, from: missingFundingJSON)
