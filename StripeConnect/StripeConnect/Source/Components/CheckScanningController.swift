@@ -66,11 +66,7 @@ public final class CheckScanningController {
             fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
             didFailLoadWithError: { [weak self] error in
                 guard let self = self else { return }
-                guard let delegate = self.delegate else {
-                    assertionFailure("Delegate not set for CheckScanningController.")
-                    return
-                }
-                delegate.checkScanning(self, didFailLoadWithError: error)
+                self.delegate?.checkScanning(self, didFailLoadWithError: error)
             }
         )
     }
