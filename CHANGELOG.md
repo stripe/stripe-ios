@@ -1,5 +1,7 @@
 ## X.Y.Z - changes pending release 
 
+## 25.2.0 2025-11-24
+
 ### Financial Connections
 * [Fixed] Fixes Instant Bank Payments when used in a webview flow.
 
