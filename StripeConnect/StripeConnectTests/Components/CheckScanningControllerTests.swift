@@ -77,7 +77,7 @@ class CheckScanningControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testCallbackInvoked() async throws {
+    func testCallbackSuccess() async throws {
         let controller = componentManager.createCheckScanningController()
 
         let expectationCallback = XCTestExpectation(description: "handleCheckScanSubmitted called")
@@ -91,14 +91,50 @@ class CheckScanningControllerTests: XCTestCase {
             {"setHandleCheckScanSubmitted":true}
             """)
 
-        try await controller.webVC.webView.evaluateMessage(
-            name: "callSupplementalFunction",
-            json: """
-                {"functionName": "handleCheckScanSubmitted","invocationId":"0","args":[{"checkScanToken": "uspchk_123"}]}
-            """
-        )
+        try await controller.webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted,
+                                                                            invocationId: "0",
+                                                                            args: "[{\"checkScanToken\": \"uspchk_123\"}]")
 
         await fulfillment(of: [expectationCallback], timeout: TestHelpers.defaultTimeout)
         XCTAssertEqual(delegate.received, .init(checkScanToken: "uspchk_123"))
+    }
+
+    class CheckScanningControllerDelegateWithCallbackError: CheckScanningControllerDelegate {
+        enum CallbackFailure: Error {
+            case fail
+        }
+
+        func checkScanning(_ checkScanning: CheckScanningController, didSubmitCheckScan: CheckScanningController.CheckScanDetails) async throws {
+            throw CallbackFailure.fail
+        }
+    }
+
+    @MainActor
+    func testCallbackError() async throws {
+        let controller = componentManager.createCheckScanningController()
+
+        let delegate = CheckScanningControllerDelegateWithCallbackError()
+
+        controller.delegate = delegate
+
+        try await controller.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
+                                                                    json: "{}",
+                                                                    expectedResponse: """
+            {"setHandleCheckScanSubmitted":true}
+            """)
+
+        let expectation = try controller.webVC.webView.expectationForMessageReceived(
+            sender: SupplementalFunctionCompletedSender(payload: .init(
+                functionName: .handleCheckScanSubmitted,
+                invocationId: "0",
+                result: .error("Error calling supplemental function")
+            ))
+        )
+
+        try await controller.webVC.webView.evaluateCallSupplementalFunction(functionName: .handleCheckScanSubmitted,
+                                                                            invocationId: "0",
+                                                                            args: "[{\"checkScanToken\": \"uspchk_123\"}]")
+
+        await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }
 }
