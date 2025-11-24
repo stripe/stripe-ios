@@ -583,15 +583,8 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             return
         }
 
-        let allScores = scannerOutput.getAllClassificationScores()
-        let frameScore: Float = {
-            switch documentSide {
-            case .front:
-                return max(allScores[.idCardFront] ?? 0, allScores[.passport] ?? 0)
-            case .back:
-                return allScores[.idCardBack] ?? 0
-            }
-        }()
+        // Combine all detector outputs into a single quality score for ranking
+        let frameScore = scannerOutput.qualityScore(side: documentSide)
 
         switch bestFramePicker.consider(cgImage: image,
                                         output: scannerOutput,
