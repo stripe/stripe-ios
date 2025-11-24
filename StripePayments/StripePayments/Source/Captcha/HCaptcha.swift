@@ -124,7 +124,7 @@ import WebKit
        onEvent allow to subscribe to SDK's events
      */
     @objc
-    public func onEvent(_ reciever: ((HCaptchaEvent, Any?) -> Void)? = nil) {
+    func onEvent(_ reciever: ((HCaptchaEvent, Any?) -> Void)? = nil) {
         Log.debug(".onEvent")
 
         manager.onEvent = reciever
