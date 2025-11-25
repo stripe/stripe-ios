@@ -802,7 +802,8 @@ extension DocumentCaptureViewControllerTest {
             anyDocumentScanner: .init(mockDocumentScanner),
             concurrencyManager: mockConcurrencyManager,
             appSettingsHelper: mockAppSettingsHelper,
-            avaialableIDTypes: DocumentCaptureViewControllerTest.mockVerificationPage.documentSelect.idDocumentTypeAllowlistKeys
+            avaialableIDTypes: DocumentCaptureViewControllerTest.mockVerificationPage.documentSelect.idDocumentTypeAllowlistKeys,
+            bestFramePicker: .init(window: 0)
         )
     }
 

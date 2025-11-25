@@ -14,8 +14,6 @@ import UIKit
 
 final class DocumentCaptureViewController: IdentityFlowViewController {
 
-    private let bestFramePicker = BestFramePicker(window: 1.0)
-
     typealias DocumentImageScanningSession = ImageScanningSession<
         DocumentSide,
         DocumentScannerOutput?,
@@ -272,6 +270,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private var feedbackGenerator: UINotificationFeedbackGenerator?
 
     private let availableIDTypes: [String]
+    
+    private let bestFramePicker: BestFramePicker
 
     // MARK: Coordinators
     let documentUploader: DocumentUploaderProtocol
@@ -284,12 +284,14 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         documentUploader: DocumentUploaderProtocol,
         imageScanningSession: DocumentImageScanningSession,
         sheetController: VerificationSheetControllerProtocol,
-        avaialableIDTypes: [String]
+        avaialableIDTypes: [String],
+        bestFramePicker: BestFramePicker = .init(window: 1.0)
     ) {
         self.apiConfig = apiConfig
         self.documentUploader = documentUploader
         self.imageScanningSession = imageScanningSession
         self.availableIDTypes = avaialableIDTypes
+        self.bestFramePicker = bestFramePicker
         super.init(sheetController: sheetController, analyticsScreenName: .documentCapture)
         imageScanningSession.setDelegate(delegate: self)
     }
@@ -305,7 +307,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         anyDocumentScanner: AnyDocumentScanner,
         concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared,
-        avaialableIDTypes: [String]
+        avaialableIDTypes: [String],
+        bestFramePicker: BestFramePicker = .init(window: 1.0)
     ) {
         self.init(
             apiConfig: apiConfig,
@@ -324,7 +327,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 appSettingsHelper: appSettingsHelper
             ),
             sheetController: sheetController,
-            avaialableIDTypes: avaialableIDTypes
+            avaialableIDTypes: avaialableIDTypes,
+            bestFramePicker: bestFramePicker
         )
         updateUI()
     }

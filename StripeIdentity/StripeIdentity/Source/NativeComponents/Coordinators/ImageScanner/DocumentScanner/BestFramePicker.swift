@@ -40,27 +40,33 @@ final class BestFramePicker {
                   output: DocumentScannerOutput,
                   exif: CameraExifMetadata?,
                   score: Float) -> State {
+        
+        func deadlineCheck() -> State {
+            guard let deadline else { return .idle }
+            let remaining = deadline.timeIntervalSince(now)
+            if remaining <= 0 {
+                let picked = best
+                reset()
+                if let picked { return .picked(picked) }
+                return .idle
+            } else {
+                return .holding(remaining: remaining, bestScore: best?.score ?? 0)
+            }
+        }
+        
         let now = Date()
 
         if deadline == nil {
             best = Candidate(cgImage: cgImage, output: output, exif: exif, score: score)
             deadline = now.addingTimeInterval(window)
-            return .holding(remaining: window, bestScore: score)
+            
+            return deadlineCheck()
         }
 
         if let current = best, score > current.score {
             best = Candidate(cgImage: cgImage, output: output, exif: exif, score: score)
         }
 
-        guard let deadline else { return .idle }
-        let remaining = deadline.timeIntervalSince(now)
-        if remaining <= 0 {
-            let picked = best
-            reset()
-            if let picked { return .picked(picked) }
-            return .idle
-        } else {
-            return .holding(remaining: remaining, bestScore: best?.score ?? 0)
-        }
+        return deadlineCheck()
     }
 }
