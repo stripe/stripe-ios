@@ -41,6 +41,8 @@ struct LinkPaymentMethodPreview {
                 fallthrough
             }
             self.init(icon: icon, last4: last4)
+        case .unparsable:
+            return nil
         @unknown default:
             return nil
         }
