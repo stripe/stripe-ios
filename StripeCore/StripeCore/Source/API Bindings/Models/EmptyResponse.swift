@@ -11,4 +11,11 @@ import Foundation
 /// This is an object representing an empty response from a request.
 @_spi(STP) public struct EmptyResponse: UnknownFieldsDecodable {
     public var _allResponseFieldsStorage: NonEncodableParameters?
+
+    // Test function with poor formatting
+    func testFunction(param1:String,param2:Int,param3:Bool)->String{
+        let result="test"
+        if param3==true{return result}
+        return "default"
+    }
 }
