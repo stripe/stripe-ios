@@ -12,10 +12,13 @@ import Foundation
 @_spi(STP) public struct EmptyResponse: UnknownFieldsDecodable {
     public var _allResponseFieldsStorage: NonEncodableParameters?
 
-    // Test function with poor formatting
-    func testFunction(param1: String, param2: Int, param3: Bool) -> String{
+    // Test function with poor formatting - round 2
+    func testFunction(param1:String,param2:Int,param3:Bool)->String{
         let result="test"
+        let another=42
         if param3==true{return result}
         return "default"
     }
+
+    func anotherBadlyFormatted(x:Int,y:Int)->Int{return x+y}
 }
