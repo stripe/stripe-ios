@@ -23,17 +23,20 @@ import Foundation
     func anotherBadlyFormatted(x: Int, y: Int) -> Int{return x+y}
 
     // Adding more poorly formatted code to test the linter
-    func veryBadFormatting(a:String,b:Int,c:Bool)->Void{
+    func veryBadFormatting(a: String, b: Int, c: Bool){
 let x=5
         let y    =    10
-if x>y{print("test")}else{print("other")}
+if x>y{print("test")} else{print("other")}
     }
 
-    func spacingIssues( param1 : String , param2 : Int ) -> String {
+    func spacingIssues( param1: String, param2: Int ) -> String {
         var result=""
         for i in 0...10{
             result+="\(i)"
         }
         return result
     }
+
+    // Test 1: Bad formatting that can be auto-fixed
+    func needsFormatting(x:Int,y:Int)->Int{return x+y}
 }
