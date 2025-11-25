@@ -38,5 +38,5 @@ if x>y{print("test")} else{print("other")}
     }
 
     // Test 1: Bad formatting that can be auto-fixed
-    func needsFormatting(x:Int,y:Int)->Int{return x+y}
+    func needsFormatting(x: Int, y: Int) -> Int{return x+y}
 }
