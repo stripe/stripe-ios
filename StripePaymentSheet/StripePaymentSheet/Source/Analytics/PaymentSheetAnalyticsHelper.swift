@@ -194,8 +194,20 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-    func logRenderLPMs(visibleLPMs: [String], hiddenLPMs: [String]) {
-        log(event: .mcRenderLPMs, params: ["visible_lpms": visibleLPMs, "hidden_lpms": hiddenLPMs])
+    enum PaymentMethodLayout: String {
+        case horizontal
+        case vertical
+    }
+
+    func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String], paymentMethodLayout: PaymentMethodLayout) {
+        var params: [String: Any] = ["payment_method_layout": paymentMethodLayout.rawValue]
+        if !visiblePaymentMethods.isEmpty {
+            params["visible_payment_methods"] = visiblePaymentMethods
+        }
+        if !hiddenPaymentMethods.isEmpty {
+            params["hidden_payment_methods"] = hiddenPaymentMethods
+        }
+        log(event: .mcInitialDisplayedPaymentMethods, params: params)
     }
 
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {

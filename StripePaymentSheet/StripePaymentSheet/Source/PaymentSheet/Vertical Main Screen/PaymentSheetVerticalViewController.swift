@@ -577,22 +577,39 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        logRenderLPMs()
+        logInitialDisplayedPaymentMethods()
         isLinkWalletButtonSelected = false
         linkConfirmOption = nil
     }
 
-    private func logRenderLPMs() {
-        // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
-        var visibleLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }
-        // Add wallet LPMs
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
-            visibleLPMs.append(RowButtonType.applePay.analyticsIdentifier)
+    private func logInitialDisplayedPaymentMethods() {
+        var visiblePaymentMethods: [String] = []
+        var hiddenPaymentMethods: [String] = []
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowApplePayInList {
+            visiblePaymentMethods.append(RowButtonType.applePay.analyticsIdentifier)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
-            visibleLPMs.append(RowButtonType.link.analyticsIdentifier)
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
+            visiblePaymentMethods.append(RowButtonType.link.analyticsIdentifier)
         }
-        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: [])
+        // Get all row buttons and determine which ones are fully visible on screen
+        if let rowButtons = paymentMethodListViewController?.rowButtons,
+           let scrollView = bottomSheetController?.scrollView {
+            let visibleMinY = scrollView.contentOffset.y
+            let visibleMaxY = visibleMinY + scrollView.bounds.height
+
+            for rowButton in rowButtons {
+                let rowButtonFrame = rowButton.convert(rowButton.bounds, to: scrollView)
+                let isFullyVisible = rowButtonFrame.minY >= visibleMinY && rowButtonFrame.maxY <= visibleMaxY
+                let identifier = rowButton.type.analyticsIdentifier
+                if isFullyVisible {
+                    visiblePaymentMethods.append(identifier)
+                } else {
+                    hiddenPaymentMethods.append(identifier)
+                }
+            }
+        }
+
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .vertical)
     }
 
     // MARK: - PaymentSheetViewControllerProtocol
