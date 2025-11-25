@@ -642,6 +642,10 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String],
             ["afterpay_clearpay", "us_bank_account", "affirm", "alipay", "amazon_pay", "crypto"]
         )
+        XCTAssertEqual(
+            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
+            ["horizontal"]
+        )
         XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.contains("attest") ?? false || $0[string: "event"]?.starts(with: "link") ?? false) }).last?[string: "selected_lpm"], "card")
 
         try? fillCardData(app, container: nil)

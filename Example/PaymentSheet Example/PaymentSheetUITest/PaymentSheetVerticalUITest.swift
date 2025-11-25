@@ -108,6 +108,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String],
             ["us_bank_account", "amazon_pay"]
         )
+        XCTAssertEqual(
+            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
+            ["vertical"]
+        )
 
         let eventsWithSelectedLPM = ["mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped"]
         XCTAssertEqual(
