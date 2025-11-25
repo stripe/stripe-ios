@@ -13,12 +13,27 @@ import Foundation
     public var _allResponseFieldsStorage: NonEncodableParameters?
 
     // Test function with poor formatting - round 2
-    func testFunction(param1:String,param2:Int,param3:Bool)->String{
+    func testFunction(param1: String, param2: Int, param3: Bool) -> String{
         let result="test"
         let another=42
         if param3==true{return result}
         return "default"
     }
 
-    func anotherBadlyFormatted(x:Int,y:Int)->Int{return x+y}
+    func anotherBadlyFormatted(x: Int, y: Int) -> Int{return x+y}
+
+    // Adding more poorly formatted code to test the linter
+    func veryBadFormatting(a:String,b:Int,c:Bool)->Void{
+let x=5
+        let y    =    10
+if x>y{print("test")}else{print("other")}
+    }
+
+    func spacingIssues( param1 : String , param2 : Int ) -> String {
+        var result=""
+        for i in 0...10{
+            result+="\(i)"
+        }
+        return result
+    }
 }
