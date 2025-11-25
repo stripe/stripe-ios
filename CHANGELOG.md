@@ -1,5 +1,8 @@
 ## X.Y.Z - changes pending release 
 
+### Financial Connections
+* [Fixed] Fixes Instant Bank Payments when used in a webview flow.
+
 ## 25.1.0 2025-11-18
 ### PaymentSheet
 * [Added] Added `card` property to `STPPaymentMethodPreview` to expose card details (brand, country, exp_month, exp_year, funding, last4, display_brand) from ConfirmationTokens.
