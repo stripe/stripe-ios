@@ -104,7 +104,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.createCryptoCustomerAPIPath)
-            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.httpMethod, "GET")
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
                 XCTFail("Expected an httpBody data but found none.")
