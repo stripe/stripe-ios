@@ -8,32 +8,43 @@ Before running tests or builds, ensure you have the correct simulator configured
 
 ### Automatic Simulator Detection
 
-**IMPORTANT**: Always include a `source` call to the automated script at `source <(./ci_scripts/setup_simulator.sh) && [...]` to set up the simulator and use the correct device ID:
+**IMPORTANT**: Always source the setup script before running xcodebuild commands:
+
+```bash
+source ci_scripts/setup_simulator.sh
+```
 
 The script will:
 1. Check for cached simulator ID in `.stripe-ios-config`
-2. Validate the cached simulator still exists
+2. Validate the cached simulator still exists and has valid UUID format
 3. Find existing iPhone 12 mini with iOS 16.4 or create a new one
-4. Cache the result for future use
+4. Export `DEVICE_ID_FROM_USER_SETTINGS` to your environment
+5. Cache the result for future use
 
 **If simulator issues occur**: Clear the cache and retry:
 ```bash
 ./ci_scripts/setup_simulator.sh --clear-cache
-source <(./ci_scripts/setup_simulator.sh)
+source ci_scripts/setup_simulator.sh
 ```
 
 ### Using the Device ID
 
-You must ALWAYS use the device ID in build commands:
+You must ALWAYS source the setup script before xcodebuild commands:
 ```bash
-source <(./ci_scripts/setup_simulator.sh) && xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet
+source ci_scripts/setup_simulator.sh
+xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet
+```
+
+Or in a single line:
+```bash
+source ci_scripts/setup_simulator.sh && xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet
 ```
 
 ### Quick Setup Check
 
 To verify the simulator is properly configured, run:
 ```bash
-source <(./ci_scripts/setup_simulator.sh) && echo "✅ Simulator configured: $DEVICE_ID_FROM_USER_SETTINGS"
+source ci_scripts/setup_simulator.sh && echo "✅ Simulator configured: $DEVICE_ID_FROM_USER_SETTINGS"
 ```
 
 ## Build Commands
@@ -47,13 +58,14 @@ source <(./ci_scripts/setup_simulator.sh) && echo "✅ Simulator configured: $DE
 ### Standard Build Using Xcode
 For testing, use this standard command:
 ```bash
-source <(./ci_scripts/setup_simulator.sh) && xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+source ci_scripts/setup_simulator.sh && xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
 ```
 (Replacing "StripePaymentSheet" with your desired test framework, or "AllStripeFrameworks" to test all frameworks.)
 
 ### **IMPORTANT: Suppress Warnings for Test Targets**
 When building test targets, always suppress warnings to avoid distracting output. Use `SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO` in xcodebuild commands for test schemes:
 ```bash
+source ci_scripts/setup_simulator.sh
 xcodebuild test -scheme StripePaymentSheet -workspace Stripe.xcworkspace -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
 ```
 (Replace "StripePaymentSheet" with the name of your scheme as needed.)
