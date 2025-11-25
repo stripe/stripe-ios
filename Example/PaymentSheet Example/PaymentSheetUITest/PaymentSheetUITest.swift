@@ -635,11 +635,11 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         )
         let initialDisplayedPaymentMethodsEvent = analyticsLog.filter({ $0[string: "event"] == "mc_initial_displayed_payment_methods" })
         XCTAssertEqual(
-            initialDisplayedPaymentMethodsEvent.map{ $0["visible_payment_methods"] } as? [String],
+            initialDisplayedPaymentMethodsEvent.map { $0["visible_payment_methods"] } as? [String],
             ["apple_pay", "link", "card", "cashapp", "klarna"]
         )
         XCTAssertEqual(
-            initialDisplayedPaymentMethodsEvent.map{ $0["hidden_payment_methods"] } as? [String],
+            initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String],
             ["afterpay_clearpay", "us_bank_account", "affirm", "alipay", "amazon_pay", "crypto"]
         )
         XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.contains("attest") ?? false || $0[string: "event"]?.starts(with: "link") ?? false) }).last?[string: "selected_lpm"], "card")

@@ -101,14 +101,14 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         let initialDisplayedPaymentMethodsEvent = analyticsLog.filter({ $0[string: "event"] == "mc_initial_displayed_payment_methods" })
         XCTAssertEqual(
-            initialDisplayedPaymentMethodsEvent.map{ $0["visible_payment_methods"] } as? [String],
+            initialDisplayedPaymentMethodsEvent.map { $0["visible_payment_methods"] } as? [String],
             ["saved", "card", "apple_pay", "link", "sepa_debit", "cashapp", "ideal", "klarna"]
         )
         XCTAssertEqual(
-            initialDisplayedPaymentMethodsEvent.map{ $0["hidden_payment_methods"] } as? [String],
+            initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String],
             ["us_bank_account", "amazon_pay"]
         )
-    
+
         let eventsWithSelectedLPM = ["mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped"]
         XCTAssertEqual(
             analyticsLog.filter({ eventsWithSelectedLPM.contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
