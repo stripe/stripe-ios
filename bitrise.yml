@@ -324,6 +324,13 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: StripeUICore
         is_always_run: true
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeCryptoOnramp
+        is_always_run: true
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
