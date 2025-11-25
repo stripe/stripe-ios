@@ -5,8 +5,8 @@
 //  Created by Kenneth Ackerson on 8/21/24.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 @_spi(STP) import StripeCameraCore
 
 final class BestFramePicker {
@@ -40,7 +40,6 @@ final class BestFramePicker {
                   output: DocumentScannerOutput,
                   exif: CameraExifMetadata?,
                   score: Float) -> State {
-        
         func deadlineCheck() -> State {
             guard let deadline else { return .idle }
             let remaining = deadline.timeIntervalSince(now)
@@ -53,13 +52,12 @@ final class BestFramePicker {
                 return .holding(remaining: remaining, bestScore: best?.score ?? 0)
             }
         }
-        
         let now = Date()
 
         if deadline == nil {
             best = Candidate(cgImage: cgImage, output: output, exif: exif, score: score)
             deadline = now.addingTimeInterval(window)
-            
+
             return deadlineCheck()
         }
 

@@ -105,7 +105,7 @@ enum DocumentScannerOutput: Equatable {
                 }
             }()
             components.append(classificationScore)
-            
+
             if let iou = motionBlur.iou {
                 components.append(iou)
             }

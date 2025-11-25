@@ -270,7 +270,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private var feedbackGenerator: UINotificationFeedbackGenerator?
 
     private let availableIDTypes: [String]
-    
+
     private let bestFramePicker: BestFramePicker
 
     // MARK: Coordinators
