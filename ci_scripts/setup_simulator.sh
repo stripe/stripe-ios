@@ -6,23 +6,6 @@
 
 set -e
 
-# Determine if script is being sourced or executed
-# This affects whether we use return or exit
-if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-    SOURCED=1
-else
-    SOURCED=0
-fi
-
-# Exit or return based on how script was called
-exit_or_return() {
-    if [ "$SOURCED" = "1" ]; then
-        return "$1"
-    else
-        exit "$1"
-    fi
-}
-
 CONFIG_FILE=".stripe-ios-config"
 DEVICE_TYPE="iPhone 12 mini"
 IOS_VERSION="16.4"
@@ -64,7 +47,7 @@ main() {
     # Handle --clear-cache flag
     if [ "$1" = "--clear-cache" ]; then
         clear_cache
-        exit_or_return 0
+        return 0
     fi
 
     # Check if cached config exists and is valid
@@ -75,7 +58,7 @@ main() {
         if [ -n "$DEVICE_ID_FROM_USER_SETTINGS" ] && validate_uuid "$DEVICE_ID_FROM_USER_SETTINGS" && validate_simulator "$DEVICE_ID_FROM_USER_SETTINGS"; then
             # Config is valid, export it
             export DEVICE_ID_FROM_USER_SETTINGS
-            exit_or_return 0
+            return 0
         else
             # Invalid or stale cache, clear it
             clear_cache
@@ -91,14 +74,14 @@ main() {
         DEVICE_ID=$(create_simulator)
         if [ -z "$DEVICE_ID" ]; then
             echo "Error: Failed to create simulator" >&2
-            exit_or_return 1
+            return 1
         fi
     fi
 
     # Validate the device ID before caching
     if ! validate_uuid "$DEVICE_ID"; then
         echo "Error: Extracted device ID '$DEVICE_ID' is not a valid UUID" >&2
-        exit_or_return 1
+        return 1
     fi
 
     # Save to config file as a proper shell script
@@ -128,7 +111,7 @@ if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "  xcodebuild [...] -destination \"id=\$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64\" [...]"
     echo ""
     echo "The script exports DEVICE_ID_FROM_USER_SETTINGS to your environment."
-    exit_or_return 0
+    return 0
 fi
 
 main "$@"
