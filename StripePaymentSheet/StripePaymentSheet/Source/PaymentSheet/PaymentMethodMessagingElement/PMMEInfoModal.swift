@@ -14,12 +14,12 @@ final class PMMEInfoModal: UIViewController {
 
     private let infoUrl: URL
     private let style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle
-    private var webView: WKWebView!
-    private var activityIndicator: UIActivityIndicatorView!
+    private let activityIndicator: UIActivityIndicatorView
 
     init(infoUrl: URL, style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle) {
         self.infoUrl = infoUrl
         self.style = style
+        self.activityIndicator = UIActivityIndicatorView()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -66,14 +66,13 @@ final class PMMEInfoModal: UIViewController {
         view.backgroundColor = backgroundColor
 
         // setup webview
-        webView = WKWebView(frame: CGRect.zero)
+        let webView = WKWebView(frame: CGRect.zero)
         webView.navigationDelegate = self
         webView.isOpaque = false
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addAndPinSubview(webView)
 
         // setup activity indicator
-        activityIndicator = UIActivityIndicatorView()
         activityIndicator.center = self.view.center
         activityIndicator.hidesWhenStopped = true
         view.addSubview(activityIndicator)
