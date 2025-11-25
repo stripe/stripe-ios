@@ -330,7 +330,6 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCryptoOnramp
-        - test_plan: StripeCryptoOnramp
         is_always_run: true
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
