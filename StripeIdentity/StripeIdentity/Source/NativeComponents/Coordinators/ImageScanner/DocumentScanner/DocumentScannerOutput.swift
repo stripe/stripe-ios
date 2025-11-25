@@ -90,7 +90,7 @@ enum DocumentScannerOutput: Equatable {
 
     func qualityScore(side: DocumentSide) -> Float {
         switch self {
-        case let .legacy(idDetectorOutput, _, motionBlur, cameraProperties, blurResult):
+        case let .legacy(idDetectorOutput, _, motionBlur, _, _):
             var components: [Float] = []
 
             let scores = idDetectorOutput.allClassificationScores
@@ -106,14 +106,14 @@ enum DocumentScannerOutput: Equatable {
             }()
             components.append(classificationScore)
             
-            components.append(blurResult.variance)
-            
             if let iou = motionBlur.iou {
                 components.append(iou)
             }
 
             let total = components.reduce(0, +)
-            return total / Float(components.count)
+            let score: Float = components.isEmpty ? 0 : total / Float(components.count)
+
+            return score
         }
     }
 }
