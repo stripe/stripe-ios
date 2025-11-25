@@ -46,4 +46,13 @@ if x>y{print("test")} else{print("other")}
         let forcedValue = optionalValue! // Force unwrap - lint violation
         return "This is an extremely long line that will definitely exceed the maximum line length limit and trigger a line_length violation in SwiftLint which cannot be automatically fixed by the formatter"
     }
+
+    // Test 3: This line has trailing spaces
+
+    // Test 4: More formatting issues to trigger the hook
+    func missingSpaces(a: Int, b: Int) -> Int{return a+b}
+
+    // Test 5: Array with bad spacing
+    let array=[1, 2, 3, 4, 5]
+    let dict=["key": "value", "another": "test"]
 }
