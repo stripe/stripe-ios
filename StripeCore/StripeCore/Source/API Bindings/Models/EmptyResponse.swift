@@ -39,4 +39,11 @@ if x>y{print("test")} else{print("other")}
 
     // Test 1: Bad formatting that can be auto-fixed
     func needsFormatting(x: Int, y: Int) -> Int{return x+y}
+
+    // Test 2: Lint violation that can't be auto-fixed - force unwrap and extremely long line
+    func badLintViolation() -> String {
+        let optionalValue: String? = "test"
+        let forcedValue = optionalValue! // Force unwrap - lint violation
+        return "This is an extremely long line that will definitely exceed the maximum line length limit and trigger a line_length violation in SwiftLint which cannot be automatically fixed by the formatter"
+    }
 }
