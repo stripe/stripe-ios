@@ -55,4 +55,9 @@ if x>y{print("test")} else{print("other")}
     // Test 5: Array with bad spacing
     let array=[1, 2, 3, 4, 5]
     let dict=["key": "value", "another": "test"]
+
+    // Test 6: Generic type name longer than 30 characters (non-fixable lint violation)
+    protocol ThisIsAVeryLongProtocolNameThatExceedsTheThirtyCharacterLimit {
+        func someMethod()
+    }
 }
