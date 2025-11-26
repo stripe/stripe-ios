@@ -72,12 +72,14 @@ xcodebuild test -scheme StripePaymentSheet -workspace Stripe.xcworkspace -destin
 
 ## Code Quality
 
-### **IMPORTANT: Always Lint Before Committing**
-Before any commit, ALWAYS run these commands in order
+### Code Formatting and Linting
+The project has an automated hook (`.claude/settings.json`) that runs format and lint checks before every git commit or push. This ensures code quality standards are maintained automatically.
 
-1. **Check out a branch if needed**: If you are on the `master` branch, you MUST check out a new branch.
-2. **Format modified files**: `ci_scripts/format_modified_files.sh`
-3. **Lint modified files**: `ci_scripts/lint_modified_files.sh`
+If you need to run these checks manually:
+- **Format modified files**: `ci_scripts/format_modified_files.sh`
+- **Lint modified files**: `ci_scripts/lint_modified_files.sh`
+
+**Branch Requirements**: If you are on the `master` branch, you MUST check out a new branch before making commits.
 
 ### Filing PRs
 When using the GitHub `gh` command, ALWAYS set `GH_HOST=github.com`. For example: `GH_HOST=github.com gh pr create --title [...]`
