@@ -166,6 +166,7 @@ final class PaymentSheetAnalyticsHelper {
 
         params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
         params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
+        params["link_native_available"] = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
 
         log(
             event: .paymentSheetLoadSucceeded,
