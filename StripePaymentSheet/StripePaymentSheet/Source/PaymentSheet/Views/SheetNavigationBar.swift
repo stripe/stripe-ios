@@ -199,9 +199,10 @@ class SheetNavigationBar: UIView {
     }
     func createGlassBackButton() -> UIButton {
         let button = UIButton(type: .system)
-        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        let size = UIButton.glassButtonSize
+        button.frame = CGRect(x: 0, y: 0, width: size, height: size)
+        button.widthAnchor.constraint(equalToConstant: size).isActive = true
+        button.heightAnchor.constraint(equalToConstant: size).isActive = true
 
         let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
         let image = UIImage(systemName: "chevron.left", withConfiguration: config)
@@ -217,36 +218,13 @@ class SheetNavigationBar: UIView {
     }
 
     func createCloseButton() -> UIButton {
-        return appearance.navigationBarStyle.isGlass ? createGlassCloseButton() : createPlainCloseButton()
-    }
-    func createPlainCloseButton() -> UIButton {
-        let button = SheetNavigationButton(type: .custom)
-        let image = Image.icon_x_standalone.makeImage(template: true)
-        button.setImage(image, for: .normal)
-        button.tintColor = appearance.colors.icon
-
-        button.accessibilityLabel = String.Localized.close
-        button.accessibilityIdentifier = "UIButton.Close"
-
-        return button
-    }
-    func createGlassCloseButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-
-        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
-        let image = UIImage(systemName: "xmark", withConfiguration: config)
-
-        button.setImage(image, for: .normal)
-        button.tintColor = appearance.colors.icon
-
-        button.accessibilityLabel = String.Localized.close
-        button.accessibilityIdentifier = "UIButton.Close"
-        button.ios26_applyGlassConfiguration()
-
-        return button
+        let closeButton = if appearance.navigationBarStyle.isGlass {
+            UIButton.createGlassCloseButton()
+        } else {
+            UIButton.createPlainCloseButton()
+        }
+        closeButton.tintColor = appearance.colors.icon
+        return closeButton
     }
 }
 
