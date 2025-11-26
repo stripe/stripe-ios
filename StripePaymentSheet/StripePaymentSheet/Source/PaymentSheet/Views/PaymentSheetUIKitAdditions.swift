@@ -25,7 +25,7 @@ enum PaymentSheetUI {
     }
 #else
     static func navBarPadding(appearance: PaymentSheet.Appearance) -> CGFloat {
-        return appearance.navigationBarStyle.isGlass ? 16 : defaultPadding
+        return appearance.navigationBarStyle.isGlass ? glassPadding : defaultPadding
     }
 #endif
 
@@ -36,6 +36,7 @@ enum PaymentSheetUI {
     static let minimumFlightTime: TimeInterval = 1
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
     static let minimumHitArea = CGSize(width: 44, height: 44)
+    static let glassPadding: CGFloat = 16
 
     static func makeHeaderLabel(title: String? = nil, appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()
