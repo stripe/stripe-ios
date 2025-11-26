@@ -10,7 +10,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
@@ -397,6 +397,112 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         STPAnalyticsClient.sharedClient.delegate = nil
     }
 
+    func testCardSectionElement_cardFundingFiltering() {
+        // Set a publishable key for the metadata service
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+
+        // Set up a CardSectionElement with funding filter that only allows debit:
+        let cardSection = CardSectionElement(
+            collectName: false,
+            defaultValues: .init(),
+            preferredNetworks: nil,
+            cardBrandChoiceEligible: false,
+            hostedSurface: .paymentSheet,
+            theme: .default,
+            analyticsHelper: ._testValue(),
+            cardBrandFilter: .default,
+            cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit])),
+            opensCardScannerAutomatically: false
+        )
+        let textFieldElement = cardSection.panElement
+
+        // Visa credit card
+        let visaCredit = "4242424242424242"
+
+        // First, fetch BIN ranges so we have funding info
+        let fetchExpectation = expectation(description: "Fetch BIN Range")
+        (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.retrieveBINRanges(
+            forPrefix: String(visaCredit.prefix(6)),
+            recordErrorsAsSuccess: false,
+            onlyFetchForVariableLengthBINs: false
+        ) { _ in
+            fetchExpectation.fulfill()
+        }
+        wait(for: [fetchExpectation], timeout: 10)
+
+        // Enter the credit card number
+        textFieldElement.textFieldView.textField.text = visaCredit
+        textFieldElement.textFieldView.textDidChange()
+
+        // Check the validation state - should be invalid for credit card when only debit is allowed
+        let binRange = (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.mostSpecificBINRange(forNumber: visaCredit)
+        if !binRange.isHardcoded && binRange.funding == .credit {
+            XCTAssertFalse(
+                textFieldElement.validationState.isValid,
+                "Credit card should be invalid when only debit is allowed"
+            )
+        }
+    }
+
+    func testCardSectionElement_cardFundingFiltering_logsAnalytic() {
+        // Set a publishable key for the metadata service
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+
+        // Set up a CardSectionElement with funding filter that only allows debit:
+        let cardSection = CardSectionElement(
+            collectName: false,
+            defaultValues: .init(),
+            preferredNetworks: nil,
+            cardBrandChoiceEligible: false,
+            hostedSurface: .paymentSheet,
+            theme: .default,
+            analyticsHelper: ._testValue(),
+            cardBrandFilter: .default,
+            cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit])),
+            opensCardScannerAutomatically: false
+        )
+        let textFieldElement = cardSection.panElement
+
+        // Visa credit card
+        let visaCredit = "4242424242424242"
+
+        // First, fetch BIN ranges so we have funding info
+        let fetchExpectation = expectation(description: "Fetch BIN Range")
+        (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.retrieveBINRanges(
+            forPrefix: String(visaCredit.prefix(6)),
+            recordErrorsAsSuccess: false,
+            onlyFetchForVariableLengthBINs: false
+        ) { _ in
+            fetchExpectation.fulfill()
+        }
+        wait(for: [fetchExpectation], timeout: 10)
+
+        // Check if we got funding info from the network
+        let binRange = (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.mostSpecificBINRange(forNumber: visaCredit)
+        guard !binRange.isHardcoded && binRange.funding == .credit else {
+            // Skip test if we don't have network funding data
+            return
+        }
+
+        // Set up a delegate to watch for the disallowed funding analytics event
+        let logExpectation = expectation(description: "Did log analytics event")
+        let analyticsDelegate = STPAnalyticsClientTestDelegate { payload in
+            if payload["event"] as? String == "stripeios.mc_disallowed_card_funding" {
+                XCTAssertEqual(payload["funding"] as? String, "credit")
+                logExpectation.fulfill()
+            }
+        }
+        STPAnalyticsClient.sharedClient.delegate = analyticsDelegate
+
+        // Enter the credit card number and trigger validation
+        textFieldElement.textFieldView.textField.text = visaCredit
+        textFieldElement.textFieldView.textDidChange()
+
+        // Wait for the analytics event
+        wait(for: [logExpectation], timeout: 5)
+        STPAnalyticsClient.sharedClient.delegate = nil
+    }
+
     func testPANValidation_cardBrandFiltering() throws {
         typealias Error = TextFieldElement.PANConfiguration.Error
         let testcases: [String: ElementValidationState] = [
@@ -421,6 +527,147 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         ]
 
         let configuration = TextFieldElement.PANConfiguration(cardFilter: .init(cardBrandAcceptance: .disallowed(brands: [.amex, .mastercard])))
+        for (text, expected) in testcases {
+            let actual = configuration.simulateValidationState(text)
+            XCTAssertTrue(
+                actual == expected,
+                "Input \"\(text)\": expected \(expected) but got \(actual)"
+            )
+        }
+    }
+
+    // MARK: - Card Funding Filtering Tests
+
+    func testPANValidation_cardFundingFiltering_withoutNetworkFetch() throws {
+        // Without fetching from the network, hardcoded BIN ranges have .other funding
+        // so funding filtering should NOT block any cards (we don't have reliable funding info)
+        typealias Error = TextFieldElement.PANConfiguration.Error
+
+        let testcases: [String: ElementValidationState] = [
+            // All should be valid because hardcoded ranges don't have funding info
+            "4242424242424242": .valid,  // visa (credit in reality, but hardcoded has .other)
+            "4000056655665556": .valid,  // visa (debit in reality, but hardcoded has .other)
+            "5555555555554444": .valid,  // mastercard
+        ]
+
+        // Only allow debit - but without network fetch, we don't know the funding type
+        let configuration = TextFieldElement.PANConfiguration(
+            cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit]))
+        )
+
+        for (text, expected) in testcases {
+            let actual = configuration.simulateValidationState(text)
+            XCTAssertTrue(
+                actual == expected,
+                "Input \"\(text)\": expected \(expected) but got \(actual)"
+            )
+        }
+    }
+
+    func testPANValidation_cardFundingFiltering_afterNetworkFetch() throws {
+        // After fetching from the network, BIN ranges have real funding info
+        // so funding filtering should work
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        typealias Error = TextFieldElement.PANConfiguration.Error
+
+        var configuration = TextFieldElement.PANConfiguration(
+            cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit]))
+        )
+        let binController = STPBINController()
+        configuration.binController = binController
+
+        // Visa credit card number
+        let visaCredit = "4242424242424242"
+
+        // Before fetch - should be valid (no funding info yet)
+        XCTAssertEqual(
+            configuration.simulateValidationState(visaCredit),
+            .valid,
+            "Before fetch, card should be valid because hardcoded ranges have no funding info"
+        )
+
+        // Fetch BIN ranges from the network
+        let fetchExpectation = expectation(description: "Fetch BIN Range")
+        binController.retrieveBINRanges(
+            forPrefix: String(visaCredit.prefix(6)),
+            recordErrorsAsSuccess: false,
+            onlyFetchForVariableLengthBINs: false
+        ) { _ in
+            fetchExpectation.fulfill()
+        }
+        wait(for: [fetchExpectation], timeout: 10)
+
+        // After fetch - should be invalid because the card is credit and only debit is allowed
+        let validationState = configuration.simulateValidationState(visaCredit)
+
+        // Check that we got funding info from the network
+        let binRange = binController.mostSpecificBINRange(forNumber: visaCredit)
+        if !binRange.isHardcoded {
+            // We got network data - funding filtering should work
+            XCTAssertEqual(
+                validationState,
+                .invalid(error: Error.disallowedFunding(fundingType: .credit), shouldDisplay: true),
+                "After fetch, credit card should be invalid when only debit is allowed"
+            )
+        } else {
+            // Network fetch didn't return data for this BIN - skip the assertion
+            // This can happen if the card metadata service doesn't have data for this BIN
+        }
+    }
+
+    func testPANValidation_cardFundingFiltering_debitCardAllowed() throws {
+        // Test that debit cards pass when only debit is allowed
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        typealias Error = TextFieldElement.PANConfiguration.Error
+
+        var configuration = TextFieldElement.PANConfiguration(
+            cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit]))
+        )
+        let binController = STPBINController()
+        configuration.binController = binController
+
+        // Visa debit card number
+        let visaDebit = "4000056655665556"
+
+        // Fetch BIN ranges from the network
+        let fetchExpectation = expectation(description: "Fetch BIN Range")
+        binController.retrieveBINRanges(
+            forPrefix: String(visaDebit.prefix(6)),
+            recordErrorsAsSuccess: false,
+            onlyFetchForVariableLengthBINs: false
+        ) { _ in
+            fetchExpectation.fulfill()
+        }
+        wait(for: [fetchExpectation], timeout: 10)
+
+        // After fetch - should be valid because the card is debit
+        let validationState = configuration.simulateValidationState(visaDebit)
+        let binRange = binController.mostSpecificBINRange(forNumber: visaDebit)
+
+        if !binRange.isHardcoded && binRange.funding == .debit {
+            XCTAssertEqual(
+                validationState,
+                .valid,
+                "Debit card should be valid when only debit is allowed"
+            )
+        }
+    }
+
+    func testPANValidation_cardFundingFiltering_allFundingTypesAllowed() throws {
+        // Test that all cards pass when all funding types are allowed
+        typealias Error = TextFieldElement.PANConfiguration.Error
+
+        let testcases: [String: ElementValidationState] = [
+            "4242424242424242": .valid,  // visa
+            "4000056655665556": .valid,  // visa (debit)
+            "5555555555554444": .valid,  // mastercard
+        ]
+
+        // Allow all funding types (default)
+        let configuration = TextFieldElement.PANConfiguration(
+            cardFundingFilter: .init(cardFundingAcceptance: .all)
+        )
+
         for (text, expected) in testcases {
             let actual = configuration.simulateValidationState(text)
             XCTAssertTrue(

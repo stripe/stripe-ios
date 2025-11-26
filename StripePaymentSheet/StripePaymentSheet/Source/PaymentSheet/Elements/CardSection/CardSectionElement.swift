@@ -44,6 +44,7 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
+    let cardFundingFilter: CardFundingFilter
     private let opensCardScannerAutomatically: Bool
 
     private let linkAppearance: LinkAppearance?
@@ -81,6 +82,7 @@ final class CardSectionElement: ContainerElement {
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         cardBrandFilter: CardBrandFilter = .default,
+        cardFundingFilter: CardFundingFilter = .default,
         opensCardScannerAutomatically: Bool = false,
         linkAppearance: LinkAppearance? = nil
     ) {
@@ -88,6 +90,7 @@ final class CardSectionElement: ContainerElement {
         self.theme = theme
         self.analyticsHelper = analyticsHelper
         self.cardBrandFilter = cardBrandFilter
+        self.cardFundingFilter = cardFundingFilter
         self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
@@ -113,8 +116,12 @@ final class CardSectionElement: ContainerElement {
                 return params
             }
         }
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDown: cardBrandDropDown?.element, cardFilter: cardBrandFilter), theme: theme) { field, params in
+        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(
+            defaultValue: defaultValues.pan,
+            cardBrandDropDown: cardBrandDropDown?.element,
+            cardFilter: cardBrandFilter,
+            cardFundingFilter: cardFundingFilter
+        ), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -180,7 +187,11 @@ final class CardSectionElement: ContainerElement {
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
     var lastPanElementValidationState: ElementValidationState
     var lastDisallowedCardBrandLogged: STPCardBrand?
+    var lastDisallowedFundingLogged: STPCardFundingType?
     var hasLoggedExpectedExtraDigitsButUserEntered16: Bool = false
+    /// Tracks the last BIN prefix we fetched funding info for
+    private var lastFetchedFundingPrefix: String?
+
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
         let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
@@ -190,6 +201,7 @@ final class CardSectionElement: ContainerElement {
         }
 
         fetchAndUpdateCardBrands()
+        fetchAndCheckCardFunding()
 
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
@@ -226,7 +238,48 @@ final class CardSectionElement: ContainerElement {
             lastDisallowedCardBrandLogged = brand
         }
 
+        // Send an analytic if we are disallowing a card funding type
+        if case .invalid(let error, _) = panElement.validationState,
+           let specificError = error as? TextFieldElement.PANConfiguration.Error,
+           case .disallowedFunding(let fundingType) = specificError,
+           lastDisallowedFundingLogged != fundingType {
+
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                event: .paymentSheetDisallowedCardFunding,
+                params: ["funding": fundingType.description]
+            )
+            lastDisallowedFundingLogged = fundingType
+        }
+
         delegate?.didUpdate(element: self)
+    }
+
+    // MARK: - Card funding check
+    /// Fetches BIN range information for funding type validation when the user enters 6+ digits.
+    /// This enables real-time validation of card funding types against the merchant's acceptance rules.
+    func fetchAndCheckCardFunding() {
+        let binPrefix = String(panElement.text.prefix(6))
+
+        // Only fetch if we have 6+ digits and haven't already fetched for this prefix
+        guard panElement.text.count >= 6,
+              binPrefix != lastFetchedFundingPrefix else {
+            return
+        }
+
+        // Mark this prefix as fetched to avoid duplicate requests
+        lastFetchedFundingPrefix = binPrefix
+
+        // Fetch BIN ranges from the card metadata service (always fetch, not just for variable-length cards)
+        STPBINController.shared.retrieveBINRanges(
+            forPrefix: binPrefix,
+            recordErrorsAsSuccess: false,
+            onlyFetchForVariableLengthBINs: false
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            // Re-trigger validation by "setting" the text again - this causes the text field to re-validate
+            // The BIN range data is now cached in STPBINController, so validate() will have access to it
+            self.panElement.setText(self.panElement.text)
+        }
     }
 
     // MARK: Card brand choice

@@ -8,6 +8,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 
 struct CardFundingFilter: Equatable {
 
@@ -65,6 +66,22 @@ extension STPCardFundingType {
             return .unknown
         @unknown default:
             return .unknown
+        }
+    }
+
+    /// Returns a user-friendly display name for the card funding type.
+    var displayName: String {
+        switch self {
+        case .credit:
+            return String.Localized.credit
+        case .debit:
+            return String.Localized.debit
+        case .prepaid:
+            return String.Localized.prepaid
+        case .other:
+            return ""
+        @unknown default:
+            return ""
         }
     }
 }

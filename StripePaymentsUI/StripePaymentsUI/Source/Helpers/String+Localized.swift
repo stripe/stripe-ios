@@ -145,6 +145,41 @@ extension String.Localized {
         )
     }
 
+    @_spi(STP) public static var funding_not_allowed: String {
+        STPLocalizedString(
+            "%1$@ cards are not accepted",
+            "String to inform a user that specific card funding types are not accepted. E.g. Credit cards are not accepted"
+        )
+    }
+
+    @_spi(STP) public static var generic_funding_not_allowed: String {
+        STPLocalizedString(
+            "This card type is not accepted",
+            "String to inform a user that specific card funding types are not accepted."
+        )
+    }
+
+    @_spi(STP) public static var credit: String {
+        STPLocalizedString(
+            "Credit",
+            "Label for credit card funding type"
+        )
+    }
+
+    @_spi(STP) public static var debit: String {
+        STPLocalizedString(
+            "Debit",
+            "Label for debit card funding type"
+        )
+    }
+
+    @_spi(STP) public static var prepaid: String {
+        STPLocalizedString(
+            "Prepaid",
+            "Label for prepaid card funding type"
+        )
+    }
+
     @_spi(STP) public enum Funding {
         @_spi(STP) public static var credit: String {
             STPLocalizedString(
