@@ -163,14 +163,7 @@ class AddPaymentMethodViewController: UIViewController {
         let walletLPMs: [String] = delegate?.getWalletHeaders() ?? []
         visiblePaymentMethods.append(contentsOf: walletLPMs)
         // Filter cells that are fully visible (not partially) in the horizontal carousel
-        let fullyVisibleCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { cell in
-            guard let cell = cell as? PaymentMethodTypeCollectionView.PaymentTypeCell else { return nil }
-            let cellFrame = cell.convert(cell.bounds, to: paymentMethodTypesView)
-            let visibleMinX = paymentMethodTypesView.contentOffset.x
-            let visibleMaxX = visibleMinX + paymentMethodTypesView.bounds.width
-            let isFullyVisible = cellFrame.minX >= visibleMinX && cellFrame.maxX <= visibleMaxX
-            return isFullyVisible ? cell : nil
-        }
+        let fullyVisibleCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.filter { cell in cell.isFullyVisibleOnScreen }.compactMap{ cell in cell as? PaymentMethodTypeCollectionView.PaymentTypeCell}
         visiblePaymentMethods.append(contentsOf: fullyVisibleCells.compactMap { $0.paymentMethodType.identifier })
         // If there are no cells in the carousel and one payment method type, it's because the form is expanded
         if fullyVisibleCells.isEmpty, paymentMethodTypes.count == 1, let paymentMethodType = paymentMethodTypes.first {

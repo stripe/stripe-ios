@@ -585,27 +585,21 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private func logInitialDisplayedPaymentMethods() {
         var visiblePaymentMethods: [String] = []
         var hiddenPaymentMethods: [String] = []
+        // if ApplePay is showing as an express button
         if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowApplePayInList {
             visiblePaymentMethods.append(RowButtonType.applePay.analyticsIdentifier)
         }
+        // if Link is showing as an express button
         if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
             visiblePaymentMethods.append(RowButtonType.link.analyticsIdentifier)
         }
-        // Get all row buttons and determine which ones are fully visible on screen
-        if let rowButtons = paymentMethodListViewController?.rowButtons,
-           let scrollView = bottomSheetController?.scrollView {
-            let visibleMinY = scrollView.contentOffset.y
-            let visibleMaxY = visibleMinY + scrollView.bounds.height
-
-            for rowButton in rowButtons {
-                let rowButtonFrame = rowButton.convert(rowButton.bounds, to: scrollView)
-                let isFullyVisible = rowButtonFrame.minY >= visibleMinY && rowButtonFrame.maxY <= visibleMaxY
-                let identifier = rowButton.type.analyticsIdentifier
-                if isFullyVisible {
-                    visiblePaymentMethods.append(identifier)
-                } else {
-                    hiddenPaymentMethods.append(identifier)
-                }
+        paymentMethodListViewController?.rowButtons.forEach { rowButton in
+            let identifier = rowButton.type.analyticsIdentifier
+            if rowButton.isFullyVisibleOnScreen {
+                visiblePaymentMethods.append(identifier)
+            }
+            else {
+                hiddenPaymentMethods.append(identifier)
             }
         }
 
