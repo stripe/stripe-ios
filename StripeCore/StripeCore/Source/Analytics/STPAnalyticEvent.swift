@@ -66,6 +66,7 @@ import Foundation
     case financialConnectionsSheetFlowDetermined = "stripeios.financialconnections.sheet.flow_determined"
     case financialConnectionsSheetInitialSynchronizeStarted = "stripeios.financialconnections.sheet.initial_synchronize.started"
     case financialConnectionsSheetInitialSynchronizeCompleted = "stripeios.financialconnections.sheet.initial_synchronize.completed"
+    case instantDebitsCompletionFailed = "stripeios.financialconnections.instant_debits_completion.failed"
 
     // MARK: - PaymentSheet Init
     case mcInitCustomCustomer = "mc_custom_init_customer"
@@ -332,6 +333,12 @@ import Foundation
     case attestationConfirmationRequestTokenSucceeded = "elements.attestation.confirmation.request_token_succeeded"
     case attestationConfirmationRequestTokenFailed = "elements.attestation.confirmation.request_token_failed"
     case attestationConfirmationError = "elements.attestation.confirmation.error"
+
+    // MARK: - Intent Confirmation Challenge
+    case intentConfirmationChallengeStart = "elements.intent_confirmation_challenge.start"
+    case intentConfirmationChallengeSuccess = "elements.intent_confirmation_challenge.success"
+    case intentConfirmationChallengeError = "elements.intent_confirmation_challenge.error"
+    case intentConfirmationChallengeWebViewLoaded = "elements.intent_confirmation_challenge.web_view_loaded"
 
     // MARK: - STPApplePayContext
     case applePayContextStarted = "stripeios.applepaycontext.confirm.started"
