@@ -633,18 +633,18 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
             ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_form_shown", "link.inline_signup.shown"]
         )
-        let initialDisplayedPaymentMethodsEvent = analyticsLog.filter({ $0[string: "event"] == "mc_initial_displayed_payment_methods" })
+        let initialDisplayedPaymentMethodsEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_initial_displayed_payment_methods" })
         XCTAssertEqual(
             initialDisplayedPaymentMethodsEvent.map { $0["visible_payment_methods"] } as? [String],
-            ["apple_pay", "link", "card", "cashapp", "klarna"]
+            ["apple_pay", "link", "card", "cashapp", "alipay"]
         )
         XCTAssertEqual(
             initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String],
-            ["afterpay_clearpay", "us_bank_account", "affirm", "alipay", "amazon_pay", "crypto"]
+            ["klarna", "us_bank_account", "affirm", "afterpay_clearpay", "amazon_pay", "crypto"]
         )
         XCTAssertEqual(
             initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
-            ["horizontal"]
+            "horizontal"
         )
         XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.contains("attest") ?? false || $0[string: "event"]?.starts(with: "link") ?? false) }).last?[string: "selected_lpm"], "card")
 
