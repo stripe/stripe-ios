@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_TUoXQHhKmYxRGCMxa4vzCy1CRuXkoIaDLPGE15KzFWMZgWi&deferred_intent%5Bamount%5D=1099&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_types%5D%5B0%5D=sepa_debit&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_TUoXQHhKmYxRGCMxa4vzCy1CRuXkoIaDLPGE15KzFWMZgWi&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=sepa_debit&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=NbGAEBtQgAlOvzsZ0twoPM8hin5oUOWbiKKMtxv2DGL_ieg11fwX4W7hUDuuuCAuaXJVW2pHKpJFdkB8
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Dq_nI5W0HA7rUKEqs3kL2G_zMWpSIgElj1mVuwwb6rzl5spCnKU298s9yWXq9qmABJfvVwtIopE6NNxd
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Wed, 26 Nov 2025 20:01:38 GMT
+Date: Wed, 26 Nov 2025 20:02:01 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 18423
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_kqtpBi5jEICh9z
+request-id: req_AWv2qAzQTQh02e
 
 {
   "payment_method_preference" : {
@@ -170,10 +170,10 @@ request-id: req_kqtpBi5jEICh9z
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1KHOqbF4nfL",
+  "session_id" : "elements_session_13s4DI1PQKL",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "4051cdbb-d558-41c1-9707-01e43f0b92a2",
+  "config_id" : "680431f1-6338-48f0-bd7e-090ac2627214",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "sepa_debit_info" : {
@@ -205,7 +205,7 @@ request-id: req_kqtpBi5jEICh9z
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "b1fa16c4-cc61-498e-8036-e897665e23bd",
+    "arb_id" : "03d25ac7-84c3-44a2-9d84-f92631c054ce",
     "experiment_metadata" : {
       "seed" : "2fffaa847164c6fcf934bc7b4b986076454d518740ad10509707171e2e13c9b0",
       "semi_dominant_payment_methods" : [
