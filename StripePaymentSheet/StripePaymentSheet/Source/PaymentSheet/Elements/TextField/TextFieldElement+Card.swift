@@ -162,13 +162,9 @@ extension TextFieldElement {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 
-            // Is the card funding type allowed?
-            // Only check at 6+ digits and only when we have BIN data from the service (not hardcoded)
-            if text.count >= 6 && !binRange.isHardcoded {
-                if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
-                    return .invalid(Error.disallowedFunding(fundingType: binRange.funding))
-                }
-            }
+            // Note: Card funding filtering is handled via subLabel (warning) rather than blocking validation.
+            // This allows the user to proceed even if the funding type appears blocked, since
+            // the funding data from the backend may not be 100% accurate.
 
             // Is the PAN the correct length?
             // First, get the minimum valid length
@@ -213,6 +209,27 @@ extension TextFieldElement {
                 }
             }
             return attributed
+        }
+
+        func subLabel(text: String) -> String? {
+            // Show a funding warning if we have BIN data and the funding type might not be accepted
+            guard text.count >= 6 else { return nil }
+
+            let binRange = binController.mostSpecificBINRange(forNumber: text)
+
+            // Only show warning if we have real funding data from the service (not hardcoded)
+            guard !binRange.isHardcoded else { return nil }
+
+            // Check if the funding type is not accepted
+            if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
+                let fundingTypeName = binRange.funding.displayName
+                if !fundingTypeName.isEmpty {
+                    return String.Localized.funding_warning(fundingTypeName: fundingTypeName)
+                }
+                return String.Localized.generic_funding_warning
+            }
+
+            return nil
         }
     }
 }

@@ -159,6 +159,23 @@ extension String.Localized {
         )
     }
 
+    @_spi(STP) public static func funding_warning(fundingTypeName: String) -> String {
+        String.localizedStringWithFormat(
+            STPLocalizedString(
+                "%1$@ cards may not be accepted",
+                "Warning shown when a card's funding type (e.g. credit, debit) may not be accepted. E.g. 'Credit cards may not be accepted'"
+            ),
+            fundingTypeName
+        )
+    }
+
+    @_spi(STP) public static var generic_funding_warning: String {
+        STPLocalizedString(
+            "This card may not be accepted",
+            "Warning shown when a card's funding type may not be accepted."
+        )
+    }
+
     @_spi(STP) public static var credit: String {
         STPLocalizedString(
             "Credit",
