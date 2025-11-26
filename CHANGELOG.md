@@ -1,5 +1,10 @@
 ## X.Y.Z - changes pending release 
 
+## XX.XX.XX
+
+### Identity
+* [Added] Added a best frame detector to document capture.
+
 ## 25.1.1 2025-11-24
 
 ### Financial Connections
