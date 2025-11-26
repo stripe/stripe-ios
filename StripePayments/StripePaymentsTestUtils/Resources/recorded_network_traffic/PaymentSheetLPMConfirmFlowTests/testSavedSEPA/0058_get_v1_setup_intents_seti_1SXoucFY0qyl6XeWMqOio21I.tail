@@ -1,0 +1,76 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SXoucFY0qyl6XeWMqOio21I\?client_secret=seti_1SXoucFY0qyl6XeWMqOio21I_secret_TUoXhguNmD6lmhPP6kV2icujdTbBRlw&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=kNmbHeVGVTmjEzGd5EEY-L7AHzvXtUjXz27wOlgBFsEtv5Ri_7E-sfVmz5ltLF91yeBILAQmuNU9-WAL
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 26 Nov 2025 20:02:03 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1365
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_CrvKGfoIP3kBMt
+
+{
+  "id" : "seti_1SXoucFY0qyl6XeWMqOio21I",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "sepa_debit" : {
+      "fingerprint" : "vifs0Ho7vwRn1Miu",
+      "country" : "DE",
+      "last4" : "3000",
+      "bank_code" : "37040044",
+      "generated_from" : {
+        "setup_attempt" : null,
+        "charge" : null
+      },
+      "branch_code" : ""
+    },
+    "id" : "pm_1SXosgFY0qyl6XeWkScLWnUN",
+    "billing_details" : {
+      "email" : "customer@example.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Test Customer",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1764187202,
+    "allow_redisplay" : "unspecified",
+    "type" : "sepa_debit",
+    "customer" : "cus_TUoUvtvPJvpHPA"
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "sepa_debit"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1764187322,
+  "client_secret" : "seti_1SXoucFY0qyl6XeWMqOio21I_secret_TUoXhguNmD6lmhPP6kV2icujdTbBRlw",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}

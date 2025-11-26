@@ -418,9 +418,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSavedSEPA() async throws {
-        let customer = "cus_TUmAv7yoNeSpAQ"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        let customer = "cus_TUoUvtvPJvpHPA"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
         let savedSepaPM = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_1SXmqiFY0qyl6XeWRmWoTh2G", // A hardcoded SEPA PM for the ^ customer
+            "id": "pm_1SXosgFY0qyl6XeWkScLWnUN", // A hardcoded SEPA PM for the ^ customer
             "created": "12345",
             "type": "sepa_debit",
         ])!
@@ -564,14 +564,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testCardConfirmFlowsSetAsDefault() async throws {
-        // Create a real customer with customer session
-        let customer = "cus_TUmAv7yoNeSpAQ"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        // Create a new customer with customer session
         let merchantCountry = MerchantCountry.US
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
 
         // Create customer session for confirmation token support
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
-            customerID: customer,
+            customerID: nil,
             merchantCountry: merchantCountry.rawValue,
             paymentMethodSave: true
         )
