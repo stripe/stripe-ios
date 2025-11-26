@@ -222,7 +222,7 @@ extension PayWithLinkViewController {
             #if !os(visionOS)
             feedbackGenerator.prepare()
             #endif
-            confirmButton.update(state: .processing)
+            confirmButton.update(status: .processing)
             coordinator?.allowSheetDismissal(false)
 
             confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
@@ -272,7 +272,7 @@ extension PayWithLinkViewController {
                         #if !os(visionOS)
                         self?.feedbackGenerator.notificationOccurred(.success)
                         #endif
-                        self?.confirmButton.update(state: state, animated: true) {
+                        self?.confirmButton.update(status: state, animated: true) {
                             self?.coordinator?.allowSheetDismissal(true)
                             if state == .succeeded {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
@@ -283,7 +283,7 @@ extension PayWithLinkViewController {
                     #if !os(visionOS)
                     self.feedbackGenerator.notificationOccurred(.error)
                     #endif
-                    self.confirmButton.update(state: .enabled, animated: true)
+                    self.confirmButton.update(status: .enabled, animated: true)
                     self.updateErrorLabel(for: error)
                     self.coordinator?.allowSheetDismissal(true)
                 }
@@ -291,7 +291,7 @@ extension PayWithLinkViewController {
         }
 
         func didSelectAddBankAccount() {
-            confirmButton.update(state: .processing)
+            confirmButton.update(status: .processing)
 
             coordinator?.startInstantDebits { [weak self] result in
                 guard let self = self else { return }
@@ -302,10 +302,10 @@ extension PayWithLinkViewController {
                 case .failure(let error):
                     switch error {
                     case InstantDebitsOnlyAuthenticationSessionManager.Error.canceled:
-                        self.confirmButton.update(state: .enabled)
+                        self.confirmButton.update(status: .enabled)
                     default:
                         self.updateErrorLabel(for: error)
-                        self.confirmButton.update(state: .enabled)
+                        self.confirmButton.update(status: .enabled)
                     }
                 }
             }
@@ -337,7 +337,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         if viewController.selectedPaymentMethodType == .instantDebits {
-            confirmButton.update(state: .enabled, callToAction: .add(paymentMethodType: .instantDebits))
+            confirmButton.update(status: .enabled, callToAction: .add(paymentMethodType: .instantDebits))
         } else {
             confirmButton.update(
                 state: viewController.paymentOption != nil ? .enabled : .disabled,
