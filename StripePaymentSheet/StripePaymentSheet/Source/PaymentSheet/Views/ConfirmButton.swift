@@ -18,7 +18,7 @@ private let spinnerMoveToCenterAnimationDuration = 0.35
 private let checkmarkStrokeDuration = 0.2
 
 /// Buy or Continue button
-class ConfirmButton: UIView {
+class ConfirmButton: UIControl {
     // MARK: Internal Properties
     enum Status {
         case enabled
@@ -84,7 +84,6 @@ class ConfirmButton: UIView {
     // MARK: Private Properties
     private lazy var buyButton: BuyButton = {
         let buyButton = BuyButton(showProcessingLabel: showProcessingLabel, appearance: appearance)
-        buyButton.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         return buyButton
     }()
     private let didTap: () -> Void
@@ -109,6 +108,8 @@ class ConfirmButton: UIView {
         self.didTap = didTap
         self.didTapWhenDisabled = didTapWhenDisabled
         super.init(frame: .zero)
+
+        addTarget(self, action: #selector(handleTap), for: .touchUpInside)
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
         // primaryButton.backgroundColor takes priority over appearance.colors.primary
