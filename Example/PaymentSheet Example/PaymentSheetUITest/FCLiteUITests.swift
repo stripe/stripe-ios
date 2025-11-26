@@ -80,10 +80,11 @@ class FCLiteUITests: XCTestCase {
         let autofillButton = app.webViews.firstMatch.buttons.containing(autofillButtonPredicate).firstMatch
         XCTAssertTrue(autofillButton.waitForExistenceAndTap(timeout: 5.0))
 
-        // Tap "Not now" button
-        let notNowButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Save with Link'")
-        let notNowButton = app.webViews.firstMatch.buttons.containing(notNowButtonPredicate).firstMatch
-        XCTAssertTrue(notNowButton.waitForExistenceAndTap(timeout: 5.0))
+        // Tap "Save with Link" button (tapPrimaryButton handles keyboard dismissal if needed)
+        let saveWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Save with Link'")
+        let saveWithLinkButton = app.webViews.firstMatch.buttons.containing(saveWithLinkButtonPredicate).firstMatch
+        XCTAssertTrue(saveWithLinkButton.waitForExistence(timeout: 5.0))
+        tapPrimaryButton()
 
         // Tap "Done" button
         let doneButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Done'")
@@ -156,7 +157,16 @@ class FCLiteUITests: XCTestCase {
 
     /// Taps the primary CTA button at the bottom of the FC webview.
     /// Webview accessibility frames are unreliable, so we tap at a fixed coordinate.
+    /// If the keyboard is open, it dismisses it first.
     private func tapPrimaryButton() {
+        // Dismiss keyboard if open - check for "Done" (iOS 18) or checkmark button (iOS 26)
+        let keyboardDoneButton = app.toolbars.buttons["Done"]
+
+        if keyboardDoneButton.waitForExistence(timeout: 1.0) {
+            keyboardDoneButton.tap()
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+
         // Primary button is at the bottom center of the webview (roughly 90% down, centered)
         app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)).tap()
     }
