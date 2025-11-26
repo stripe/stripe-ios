@@ -15,7 +15,6 @@ import PassKit
 import UIKit
 
 private let spinnerMoveToCenterAnimationDuration = 0.35
-private let checkmarkStrokeDuration = 0.2
 
 /// Buy or Continue button
 class ConfirmButton: UIView {
