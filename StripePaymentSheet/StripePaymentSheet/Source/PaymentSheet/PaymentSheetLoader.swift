@@ -438,10 +438,11 @@ final class PaymentSheetLoader {
             }
         }
 
-        // Hide any saved cards whose brands are not allowed
+        // Hide any saved cards whose brands or funding types are not allowed
         return savedPaymentMethods.filter {
-            guard let cardBrand = $0.card?.preferredDisplayBrand else { return true }
-            return configuration.cardBrandFilter.isAccepted(cardBrand: cardBrand)
+            guard let card = $0.card else { return true }
+            return card.isAccepted(cardBrandFilter: configuration.cardBrandFilter,
+                                   cardFundingFilter: configuration.cardFundingFilter)
         }
     }
 
