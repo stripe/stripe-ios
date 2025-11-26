@@ -597,8 +597,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             let identifier = rowButton.type.analyticsIdentifier
             if rowButton.isFullyVisibleOnScreen {
                 visiblePaymentMethods.append(identifier)
-            }
-            else {
+            } else {
                 hiddenPaymentMethods.append(identifier)
             }
         }
