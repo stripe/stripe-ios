@@ -32,6 +32,11 @@ class FCLiteContainerViewController: UIViewController {
         )
     }
 
+    private var shouldUseSecureWebview: Bool {
+        guard let manifest else { return true }
+        return manifest.isInstantDebits && !canUseNativeLink
+    }
+
     init(
         clientSecret: String,
         returnUrl: URL?,
@@ -163,7 +168,22 @@ class FCLiteContainerViewController: UIViewController {
     private func showWebView(for manifest: LinkAccountSessionManifest) {
         let authFlowVC: UIViewController
 
-        if canUseNativeLink {
+        if shouldUseSecureWebview {
+            authFlowVC = FCLiteSecureAuthFlowViewController(
+                manifest: manifest,
+                elementsSessionContext: elementsSessionContext,
+                returnUrl: returnUrl,
+                completion: { [weak self] result in
+                    guard let self else { return }
+                    DispatchQueue.main.async {
+                        self.spinner.stopAnimating()
+                    }
+                    Task {
+                        await self.completeFlow(result: result)
+                    }
+                }
+            )
+        } else {
             authFlowVC = FCLiteAuthFlowViewController(
                 manifest: manifest,
                 elementsSessionContext: elementsSessionContext,
@@ -175,21 +195,6 @@ class FCLiteContainerViewController: UIViewController {
                 },
                 completion: { [weak self] result in
                     guard let self else { return }
-                    Task {
-                        await self.completeFlow(result: result)
-                    }
-                }
-            )
-        } else {
-            authFlowVC = FCLiteSecureAuthFlowViewController(
-                manifest: manifest,
-                elementsSessionContext: elementsSessionContext,
-                returnUrl: returnUrl,
-                completion: { [weak self] result in
-                    guard let self else { return }
-                    DispatchQueue.main.async {
-                        self.spinner.stopAnimating()
-                    }
                     Task {
                         await self.completeFlow(result: result)
                     }
