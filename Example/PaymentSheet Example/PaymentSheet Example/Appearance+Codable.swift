@@ -9,6 +9,7 @@
 
 import Foundation
 @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import UIKit
 
 // Helper for encoding/decoding UIColor
@@ -18,17 +19,48 @@ private struct CodableUIColor: Codable {
     let blue: CGFloat
     let alpha: CGFloat
 
+    // Optional dark mode variant
+    let darkRed: CGFloat?
+    let darkGreen: CGFloat?
+    let darkBlue: CGFloat?
+    let darkAlpha: CGFloat?
+
     init(color: UIColor) {
+        // Extract light mode color
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        color.getRed(&r, green: &g, blue: &b, alpha: &a)
+        color.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)).getRed(&r, green: &g, blue: &b, alpha: &a)
         self.red = r
         self.green = g
         self.blue = b
         self.alpha = a
+
+        // Extract dark mode color if different
+        var darkR: CGFloat = 0, darkG: CGFloat = 0, darkB: CGFloat = 0, darkA: CGFloat = 0
+        color.resolvedColor(with: UITraitCollection(userInterfaceStyle: .dark)).getRed(&darkR, green: &darkG, blue: &darkB, alpha: &darkA)
+
+        // Only store dark mode values if they're different from light mode
+        if darkR != r || darkG != g || darkB != b || darkA != a {
+            self.darkRed = darkR
+            self.darkGreen = darkG
+            self.darkBlue = darkB
+            self.darkAlpha = darkA
+        } else {
+            self.darkRed = nil
+            self.darkGreen = nil
+            self.darkBlue = nil
+            self.darkAlpha = nil
+        }
     }
 
     var uiColor: UIColor {
-        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        let lightColor = UIColor(red: red, green: green, blue: blue, alpha: alpha)
+
+        if let darkRed, let darkGreen, let darkBlue, let darkAlpha {
+            let darkColor = UIColor(red: darkRed, green: darkGreen, blue: darkBlue, alpha: darkAlpha)
+            return .dynamic(light: lightColor, dark: darkColor)
+        } else {
+            return lightColor
+        }
     }
 }
 private struct CodableNavigationBarStyle: Codable {
@@ -64,7 +96,7 @@ private struct CodableNavigationBarStyle: Codable {
 
 }
 
-extension PaymentSheet.Appearance: Codable {
+extension PaymentSheet.Appearance: @retroactive Codable {
     private enum CodingKeys: String, CodingKey {
         // Top-level properties
         case cornerRadius, borderWidth, selectedBorderWidth, sheetCornerRadius

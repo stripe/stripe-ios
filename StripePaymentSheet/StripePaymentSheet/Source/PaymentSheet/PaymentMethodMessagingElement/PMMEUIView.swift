@@ -7,7 +7,6 @@
 
 import Foundation
 import SafariServices
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -41,10 +40,13 @@ class PMMEUIView: UIView {
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
 
         // set interface style
-        if case .alwaysDark = appearance.style {
+        switch appearance.style {
+        case .alwaysDark:
             overrideUserInterfaceStyle = .dark
-        } else if case .alwaysLight = appearance.style {
+        case .alwaysLight, .flat:
             overrideUserInterfaceStyle = .light
+        case .automatic:
+            break
         }
 
         // choose which style to initialize
@@ -83,31 +85,8 @@ class PMMEUIView: UIView {
     @objc private func didTap() {
         analyticsHelper.logTapped()
 
-        // Construct themed info url
-        let themeParam = switch (appearance.style, traitCollection.isDarkMode) {
-        case (.alwaysLight, _), (.automatic, false): "stripe"
-        case (.alwaysDark, _), (.automatic, true): "night"
-        case (.flat, _): "flat"
-        }
-
-        let queryParam = URLQueryItem(name: "theme", value: themeParam)
-        guard var urlComponents = URLComponents(url: infoUrl, resolvingAgainstBaseURL: false) else {
-            stpAssertionFailure("Unable to generate URL components")
-            return
-        }
-        if urlComponents.queryItems == nil {
-            urlComponents.queryItems = [queryParam]
-        } else {
-            urlComponents.queryItems?.append(queryParam)
-        }
-        guard let themedUrl = urlComponents.url else {
-            stpAssertionFailure("Unable to generate themed URL")
-            return
-        }
-
-        // Launch themed info url
-        let safariController = SFSafariViewController(url: themedUrl)
-        safariController.modalPresentationStyle = .formSheet
-        window?.findTopMostPresentedViewController()?.present(safariController, animated: true)
+        let infoController = PMMEInfoModal(infoUrl: infoUrl, style: appearance.style)
+        infoController.modalPresentationStyle = .formSheet
+        window?.findTopMostPresentedViewController()?.present(infoController, animated: true)
     }
 }
