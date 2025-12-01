@@ -6,7 +6,7 @@
 * [Added] `StripeFinancialConnections` SDK is now localized!
 
 ### Payment Method Messaging Element
-* [Added] `PaymentMethodMessagingElement` is now in GA
+* [Added] `PaymentMethodMessagingElement` is now in public preview
 
 ## 25.0.1 2025-11-10
 ### PaymentSheet
