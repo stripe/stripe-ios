@@ -5,7 +5,7 @@
 //  Created by George Birch on 10/15/25.
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentMethodMessagingElementPreview) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit

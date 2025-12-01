@@ -12,6 +12,9 @@
 ### Financial Connections
 * [Added] `StripeFinancialConnections` SDK is now localized!
 
+### Payment Method Messaging Element
+* [Added] `PaymentMethodMessagingElement` is now in public preview
+
 ## 25.0.1 2025-11-10
 ### PaymentSheet
 * [Fixed] Fixed an issue where async APIs did not run on the main thread.
