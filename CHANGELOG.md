@@ -1,5 +1,7 @@
 ## X.Y.Z - changes pending release 
 
+## 25.2.0 2025-12-01
+
 ### Payment Method Messaging Element
 * [Added] `PaymentMethodMessagingElement` is now in public preview
 
