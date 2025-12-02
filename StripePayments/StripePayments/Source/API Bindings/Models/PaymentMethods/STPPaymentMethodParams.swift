@@ -109,6 +109,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var multibanco: STPPaymentMethodMultibancoParams?
     /// If this is a ShopPay PaymentMethod, this contains additional details.
     @objc @_spi(STP) public var shopPay: STPPaymentMethodShopPayParams?
+    /// If this is a PayPay PaymentMethod, this contains additional details.
+    @objc @_spi(STP) public var payPay: STPPaymentMethodPayPayParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -729,6 +731,21 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a PayPay PaymentMethod. :nodoc:
+    /// - Parameters:
+    ///   - payPay:   An object containing additional PayPay details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    @_spi(STP) public convenience init(
+        payPay: STPPaymentMethodPayPayParams,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .payPay
+        self.payPay = payPay
+        self.metadata = metadata
+    }
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -772,6 +789,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: satispay)): "satispay",
             NSStringFromSelector(#selector(getter: crypto)): "crypto",
             NSStringFromSelector(#selector(getter: multibanco)): "multibanco",
+            NSStringFromSelector(#selector(getter: payPay)): "paypay",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1215,6 +1233,8 @@ extension STPPaymentMethodParams {
             multibanco = STPPaymentMethodMultibancoParams()
         case .shopPay:
             shopPay = STPPaymentMethodShopPayParams()
+        case .payPay:
+            payPay = STPPaymentMethodPayPayParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint:
             // These payment methods don't have any params
             break
