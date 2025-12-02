@@ -76,27 +76,3 @@ extension PaymentElementConfiguration {
         .init(cardFundingAcceptance: allowedCardFundingTypes)
     }
 }
-
-// MARK: - STPPaymentMethodCard filtering
-
-extension STPPaymentMethodCard {
-    /// Determines if this card is accepted based on card brand and funding type filters.
-    /// - Parameters:
-    ///   - cardBrandFilter: The filter for allowed/disallowed card brands
-    ///   - cardFundingFilter: The filter for allowed card funding types
-    /// - Returns: `true` if the card passes both brand and funding filters, `false` otherwise
-    func isAccepted(cardBrandFilter: CardBrandFilter, cardFundingFilter: CardFundingFilter) -> Bool {
-        // Filter by card brand
-        if !cardBrandFilter.isAccepted(cardBrand: preferredDisplayBrand) {
-            return false
-        }
-        // Filter by card funding type
-        if let fundingString = funding {
-            let fundingType = STPCard.funding(from: fundingString)
-            if !cardFundingFilter.isAccepted(cardFundingType: fundingType) {
-                return false
-            }
-        }
-        return true
-    }
-}
