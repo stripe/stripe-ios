@@ -985,7 +985,7 @@ extension PaymentSheet {
 }
 
 extension PaymentSheet {
-    /// Card funding categories that can be filtered
+    /// Card funding types that can be filtered
     @_spi(CardFundingFilteringPrivatePreview) public enum CardFundingType: Equatable {
         /// Debit cards
         case debit
@@ -993,7 +993,8 @@ extension PaymentSheet {
         case credit
         /// Prepaid cards
         case prepaid
-        /// Unknown funding type
+        /// Unknown or undetermined funding type.
+        /// Include this if you want to accept cards where the funding type cannot be determined from card metadata.
         case unknown
     }
 
