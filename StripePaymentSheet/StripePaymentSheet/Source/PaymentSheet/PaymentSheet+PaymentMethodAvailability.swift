@@ -40,7 +40,7 @@ extension PaymentSheet {
         .swish,
         .twint,
         .multibanco,
-        .payPay
+        .payPay,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
