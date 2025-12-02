@@ -176,7 +176,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_fundingAcceptance_all() {
         var configuration = configuration
-        configuration.cardFundingAcceptance = .all
+        configuration.allowedCardFundingTypes = .all
         let intent = Intent._testValue()
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertEqual(sut.merchantCapabilities, .capability3DS)
@@ -184,7 +184,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_fundingAcceptance_debitOnly() {
         var configuration = configuration
-        configuration.cardFundingAcceptance = .allowed(fundingTypes: [.debit])
+        configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.debit])
         let intent = Intent._testValue()
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertTrue(sut.merchantCapabilities.contains(.capability3DS))
@@ -194,7 +194,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_fundingAcceptance_creditOnly() {
         var configuration = configuration
-        configuration.cardFundingAcceptance = .allowed(fundingTypes: [.credit])
+        configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.credit])
         let intent = Intent._testValue()
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertTrue(sut.merchantCapabilities.contains(.capability3DS))
@@ -204,7 +204,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_fundingAcceptance_debitAndCredit() {
         var configuration = configuration
-        configuration.cardFundingAcceptance = .allowed(fundingTypes: [.debit, .credit])
+        configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.debit, .credit])
         let intent = Intent._testValue()
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertTrue(sut.merchantCapabilities.contains(.capability3DS))

@@ -22,7 +22,7 @@ class CardFundingFilterTests: XCTestCase {
     }
 
     func testIsAccepted_allowedFundingTypes_debitOnly() {
-        let allowedFundingTypes: [PaymentSheet.CardFundingCategory] = [.debit]
+        let allowedFundingTypes: [PaymentSheet.CardFundingType] = [.debit]
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: allowedFundingTypes))
 
         XCTAssertTrue(filter.isAccepted(cardFundingType: .debit), "Debit should be accepted when only debit is allowed.")
@@ -32,7 +32,7 @@ class CardFundingFilterTests: XCTestCase {
     }
 
     func testIsAccepted_allowedFundingTypes_creditOnly() {
-        let allowedFundingTypes: [PaymentSheet.CardFundingCategory] = [.credit]
+        let allowedFundingTypes: [PaymentSheet.CardFundingType] = [.credit]
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: allowedFundingTypes))
 
         XCTAssertFalse(filter.isAccepted(cardFundingType: .debit), "Debit should not be accepted when only credit is allowed.")
@@ -42,7 +42,7 @@ class CardFundingFilterTests: XCTestCase {
     }
 
     func testIsAccepted_allowedFundingTypes_prepaidOnly() {
-        let allowedFundingTypes: [PaymentSheet.CardFundingCategory] = [.prepaid]
+        let allowedFundingTypes: [PaymentSheet.CardFundingType] = [.prepaid]
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: allowedFundingTypes))
 
         XCTAssertFalse(filter.isAccepted(cardFundingType: .debit), "Debit should not be accepted when only prepaid is allowed.")
@@ -52,7 +52,7 @@ class CardFundingFilterTests: XCTestCase {
     }
 
     func testIsAccepted_allowedFundingTypes_unknownOnly() {
-        let allowedFundingTypes: [PaymentSheet.CardFundingCategory] = [.unknown]
+        let allowedFundingTypes: [PaymentSheet.CardFundingType] = [.unknown]
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: allowedFundingTypes))
 
         XCTAssertFalse(filter.isAccepted(cardFundingType: .debit), "Debit should not be accepted when only unknown is allowed.")
@@ -62,7 +62,7 @@ class CardFundingFilterTests: XCTestCase {
     }
 
     func testIsAccepted_allowedFundingTypes_debitAndCredit() {
-        let allowedFundingTypes: [PaymentSheet.CardFundingCategory] = [.debit, .credit]
+        let allowedFundingTypes: [PaymentSheet.CardFundingType] = [.debit, .credit]
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: allowedFundingTypes))
 
         XCTAssertTrue(filter.isAccepted(cardFundingType: .debit), "Debit should be accepted when debit and credit are allowed.")
@@ -72,7 +72,7 @@ class CardFundingFilterTests: XCTestCase {
     }
 
     func testIsAccepted_allFundingTypesAllowed() {
-        let allowedFundingTypes: [PaymentSheet.CardFundingCategory] = [.debit, .credit, .prepaid, .unknown]
+        let allowedFundingTypes: [PaymentSheet.CardFundingType] = [.debit, .credit, .prepaid, .unknown]
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: allowedFundingTypes))
 
         for fundingType in STPCardFundingType.allCases {

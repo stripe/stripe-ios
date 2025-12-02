@@ -461,7 +461,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = apiClient
         // Only allow debit cards - this should filter out credit cards
-        configuration.cardFundingAcceptance = .allowed(fundingTypes: [.debit])
+        configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.debit])
 
         // A hardcoded test Customer
         let testCustomerID = "cus_OtOGvD0ZVacBoj"
