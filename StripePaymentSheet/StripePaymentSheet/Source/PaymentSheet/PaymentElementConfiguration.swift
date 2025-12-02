@@ -39,7 +39,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var paymentMethodOrder: [String]? { get set }
     var allowsRemovalOfLastSavedPaymentMethod: Bool { get set }
     var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance { get set }
-    var cardFundingAcceptance: PaymentSheet.CardFundingAcceptance { get set }
+    var allowedCardFundingTypes: PaymentSheet.CardFundingAcceptance { get set }
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }

@@ -49,8 +49,7 @@ class CustomerSheetDataSource {
 
                 let savedPaymentMethods = elementSession.customer?.paymentMethods.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
-                    return card.isAccepted(cardBrandFilter: self.configuration.cardBrandFilter,
-                                           cardFundingFilter: self.configuration.cardFundingFilter)
+                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
                 }) ?? []
                 return completion(.success((savedPaymentMethods, paymentOption, elementSession)))
             } catch {
@@ -74,8 +73,7 @@ class CustomerSheetDataSource {
 
                 let (paymentMethods, selectedPaymentMethod, elementSession) = try await (paymentMethodsResult.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
-                    return card.isAccepted(cardBrandFilter: self.configuration.cardBrandFilter,
-                                           cardFundingFilter: self.configuration.cardFundingFilter)
+                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
                 }), selectedPaymentMethodResult, elementsSessionResult)
 
                 // Override with specs from elementSession

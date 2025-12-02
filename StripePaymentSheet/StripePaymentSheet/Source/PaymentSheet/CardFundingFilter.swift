@@ -54,7 +54,7 @@ public struct CardFundingFilter: Equatable {
 
 extension STPCardFundingType {
     @_spi(CardFundingFilteringPrivatePreview)
-    public var asFundingCategory: PaymentSheet.CardFundingCategory {
+    public var asFundingCategory: PaymentSheet.CardFundingType {
         switch self {
         case .debit:
             return .debit
@@ -73,14 +73,7 @@ extension STPCardFundingType {
 @_spi(CardFundingFilteringPrivatePreview)
 extension PaymentElementConfiguration {
     var cardFundingFilter: CardFundingFilter {
-        .init(cardFundingAcceptance: cardFundingAcceptance)
-    }
-}
-
-@_spi(CardFundingFilteringPrivatePreview)
-extension CustomerSheet.Configuration {
-    var cardFundingFilter: CardFundingFilter {
-        .init(cardFundingAcceptance: cardFundingAcceptance)
+        .init(cardFundingAcceptance: allowedCardFundingTypes)
     }
 }
 
