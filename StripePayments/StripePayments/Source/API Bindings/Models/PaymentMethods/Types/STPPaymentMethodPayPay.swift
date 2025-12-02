@@ -9,7 +9,7 @@ import Foundation
 
 /// A PayPal Payment Method. :nodoc:
 /// - seealso: https://stripe.com/docs/payments/paypay
-public class STPPaymentMethodPayPay: NSObject, STPAPIResponseDecodable {
+@_spi(STP) public class STPPaymentMethodPayPay: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
