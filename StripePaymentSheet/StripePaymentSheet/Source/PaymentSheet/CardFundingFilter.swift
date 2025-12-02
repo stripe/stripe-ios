@@ -12,8 +12,6 @@ import PassKit
 @_spi(CardFundingFilteringPrivatePreview)
 public struct CardFundingFilter: Equatable {
 
-    static let `default`: CardFundingFilter = .init(cardFundingAcceptance: .all)
-
     private let cardFundingAcceptance: PaymentSheet.CardFundingAcceptance
 
     init(cardFundingAcceptance: PaymentSheet.CardFundingAcceptance) {
