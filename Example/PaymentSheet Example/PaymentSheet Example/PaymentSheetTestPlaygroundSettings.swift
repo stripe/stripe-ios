@@ -155,6 +155,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case DE
         case IT
         case stripeShop = "stripe_shop_test"
+        case jpLiveTest = "jp_live_test"
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -748,16 +749,16 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             integrationType: .normal,
             confirmationMode: .confirmationToken,
             customerMode: .guest,
-            currency: .usd,
+            currency: .jpy,
             amount: ._5099,
-            merchantCountryCode: .US,
+            merchantCountryCode: .jpLiveTest,
             apmsEnabled: .on,
             paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
-            enablePayPay: .off,
+            enablePayPay: .on,
             enablePassiveCaptcha: .on,
             enableAttestationOnConfirmation: .on,
             paymentMethodSave: .enabled,
@@ -804,7 +805,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static let nsUserDefaultsCustomerIDKey = "PaymentSheetTestPlaygroundCustomerId"
     static let nsUserDefaultsAppearanceKey = "PaymentSheetTestPlaygroundAppearance"
 
-    static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+    static let baseEndpoint = "https://paypay-penny-test.stripedemos.com"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"
     }

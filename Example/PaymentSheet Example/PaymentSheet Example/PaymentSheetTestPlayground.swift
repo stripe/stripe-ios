@@ -135,9 +135,6 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: customerKeyTypeBinding)
                         SettingView(setting: customerModeBinding)
                         HStack {
-                            SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
-                                return amount.customDisplayName(currency: playgroundController.settings.currency)
-                            })
                             SettingPickerView(setting: $playgroundController.settings.currency)
                         }
                         SettingPickerView(setting: merchantCountryBinding)
