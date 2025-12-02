@@ -308,6 +308,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum EnablePayPay: String, PickerEnum {
+        static var enumName: String { "Enable PayPay" }
+
+        case on
+        case off
+    }
+
     enum EnablePassiveCaptcha: String, PickerEnum {
         static var enumName: String { "Enable passive captcha" }
 
@@ -689,6 +696,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
+    var enablePayPay: EnablePayPay
     var enablePassiveCaptcha: EnablePassiveCaptcha
     var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var paymentMethodSave: PaymentMethodSave
@@ -749,6 +757,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
+            enablePayPay: .off,
             enablePassiveCaptcha: .on,
             enableAttestationOnConfirmation: .on,
             paymentMethodSave: .enabled,

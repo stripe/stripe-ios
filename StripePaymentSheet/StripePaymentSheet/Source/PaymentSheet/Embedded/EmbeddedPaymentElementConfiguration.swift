@@ -30,6 +30,9 @@ extension EmbeddedPaymentElement {
         /// Configuration related to Link
         public var link: LinkConfiguration = LinkConfiguration()
 
+        /// If `true`, allows PayPay as a payment method. Defaults to `false`.
+        @_spi(STP) public var enablePayPay: Bool = false
+
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
             get {

@@ -509,6 +509,10 @@ extension PaymentSheet {
                 return .notSupported
             }
 
+            if paymentMethod == .payPay, !configuration.enablePayPay {
+                return .notSupported
+            }
+
             // Hide a payment method type if we are in live mode and it is unactivated
             if !configuration.apiClient.isTestmode && elementsSession.unactivatedPaymentMethodTypes.contains(paymentMethod) {
                 return .unactivated
