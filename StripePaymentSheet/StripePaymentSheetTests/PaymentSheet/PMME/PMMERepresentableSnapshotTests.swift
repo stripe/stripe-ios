@@ -7,7 +7,7 @@
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 import SwiftUI
 import XCTest

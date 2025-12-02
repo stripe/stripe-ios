@@ -250,6 +250,6 @@ extension PaymentMethodMessagingElement.Appearance {
     }
 }
 
-extension PaymentMethodMessagingElement: STPAnalyticsProtocol {
+@_spi(STP) extension PaymentMethodMessagingElement: STPAnalyticsProtocol {
     @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "PaymentMethodMessagingElement"
 }
