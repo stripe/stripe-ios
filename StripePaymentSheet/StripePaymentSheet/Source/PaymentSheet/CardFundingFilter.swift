@@ -9,8 +9,7 @@ import Foundation
 import PassKit
 @_spi(STP) import StripePayments
 
-@_spi(CardFundingFilteringPrivatePreview)
-public struct CardFundingFilter: Equatable {
+struct CardFundingFilter: Equatable {
 
     private let cardFundingAcceptance: PaymentSheet.CardFundingAcceptance
 
@@ -51,8 +50,7 @@ public struct CardFundingFilter: Equatable {
 }
 
 extension STPCardFundingType {
-    @_spi(CardFundingFilteringPrivatePreview)
-    public var asFundingCategory: PaymentSheet.CardFundingType {
+    var asFundingCategory: PaymentSheet.CardFundingType {
         switch self {
         case .debit:
             return .debit
@@ -68,7 +66,6 @@ extension STPCardFundingType {
     }
 }
 
-@_spi(CardFundingFilteringPrivatePreview)
 extension PaymentElementConfiguration {
     var cardFundingFilter: CardFundingFilter {
         .init(cardFundingAcceptance: allowedCardFundingTypes)
