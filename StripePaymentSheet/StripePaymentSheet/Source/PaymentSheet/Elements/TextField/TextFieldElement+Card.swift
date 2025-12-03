@@ -162,10 +162,6 @@ extension TextFieldElement {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 
-            // Note: Card funding filtering is handled via warningLabel rather than blocking validation.
-            // This allows the user to proceed even if the funding type appears blocked, since
-            // the funding data from the backend may not be 100% accurate.
-
             // Is the PAN the correct length?
             // First, get the minimum valid length
             let minimumValidLength: Int = {

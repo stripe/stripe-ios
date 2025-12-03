@@ -239,25 +239,14 @@ final class CardSectionElement: ContainerElement {
         }
 
         // Send an analytic if we are showing a card funding warning
-        if panElement.warningLabelText != nil {
-            let binRange = STPBINController.shared.mostSpecificBINRange(forNumber: panElement.text)
-            if !binRange.isHardcoded && lastDisallowedFundingLogged != binRange.funding {
-                // Map funding type to analytics value per spec: credit, debit, prepaid, unknown
-                let fundingValue: String = {
-                    switch binRange.funding {
-                    case .credit: return "credit"
-                    case .debit: return "debit"
-                    case .prepaid: return "prepaid"
-                    case .other: return "unknown"
-                    @unknown default: return "unknown"
-                    }
-                }()
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
-                    event: .paymentSheetDisallowedCardFunding,
-                    params: ["funding": fundingValue]
-                )
-                lastDisallowedFundingLogged = binRange.funding
-            }
+        if let panConfiguration = panElement.configuration as? TextFieldElement.PANConfiguration,
+           let disallowedFunding = panConfiguration.disallowedFundingType(text: panElement.text),
+           lastDisallowedFundingLogged != disallowedFunding {
+            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
+                event: .paymentSheetDisallowedCardFunding,
+                params: ["funding": disallowedFunding.analyticsValue]
+            )
+            lastDisallowedFundingLogged = disallowedFunding
         }
 
         delegate?.didUpdate(element: self)

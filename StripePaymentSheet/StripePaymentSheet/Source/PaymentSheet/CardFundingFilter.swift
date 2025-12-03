@@ -68,13 +68,13 @@ struct CardFundingFilter: Equatable {
 
             // Join with localized "and" for the last element
             if displayNames.count == 1 {
-                return displayNames[0]
+                return displayNames.first
             } else if displayNames.count == 2 {
                 return String.Localized.x_and_y(displayNames[0], displayNames[1])
             } else {
-                // For 3+ items: "a, b, and c"
+                // For 3+ items: "credit, debit, and pre-paid"
                 let allButLast = displayNames.dropLast().joined(separator: ", ")
-                return String.Localized.x_and_y(allButLast, displayNames.last!)
+                return String.Localized.x_and_y(allButLast, displayNames.last ?? "")
             }
         }
     }
@@ -99,6 +99,17 @@ extension STPCardFundingType {
     /// Returns a user-friendly display name for the card funding type.
     var displayName: String {
         return asFundingCategory.displayName
+    }
+
+    /// Returns the analytics value for this funding type per spec: credit, debit, prepaid, unknown
+    var analyticsValue: String {
+        switch self {
+        case .credit: return "credit"
+        case .debit: return "debit"
+        case .prepaid: return "prepaid"
+        case .other: return "unknown"
+        @unknown default: return "unknown"
+        }
     }
 }
 
