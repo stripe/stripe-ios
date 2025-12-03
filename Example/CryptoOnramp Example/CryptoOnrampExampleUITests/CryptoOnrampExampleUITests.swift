@@ -23,7 +23,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
     @MainActor
     func testCryptoOnrampEndToEnd() throws {
         // Step 1: Enter email and password
-        let emailField = app.textFields["Enter email address"].firstMatch
+        let emailField = app.textFields["Enter email addresses"].firstMatch
         XCTAssertTrue(emailField.waitForExistence(timeout: .networkTimeout), "Email field should exist")
         emailField.tap()
         emailField.typeText("onramptest@stripe.com")
