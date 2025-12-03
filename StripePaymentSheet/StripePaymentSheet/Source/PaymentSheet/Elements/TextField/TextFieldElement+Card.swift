@@ -105,7 +105,6 @@ extension TextFieldElement {
             case invalidBrand
             case invalidLuhn
             case disallowedBrand(brand: STPCardBrand)
-            case disallowedFunding(fundingType: STPCardFundingType)
 
             func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
                 switch self {
@@ -113,7 +112,7 @@ extension TextFieldElement {
                     return displayEmptyFields
                 case .incomplete, .invalidLuhn:
                     return !isUserEditing || displayEmptyFields
-                case .invalidBrand, .disallowedBrand, .disallowedFunding:
+                case .invalidBrand, .disallowedBrand:
                     return true
                 }
             }
@@ -132,10 +131,6 @@ extension TextFieldElement {
                     }
 
                     return .Localized.generic_brand_not_allowed
-                case .disallowedFunding:
-                    // This error case is not currently used - funding filtering uses warnings instead
-                    stpAssertionFailure("disallowedFunding error should not be used")
-                    return ""
                 }
             }
         }
