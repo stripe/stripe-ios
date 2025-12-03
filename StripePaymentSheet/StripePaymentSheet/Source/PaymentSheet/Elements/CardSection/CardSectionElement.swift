@@ -44,7 +44,6 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
-    let cardFundingFilter: CardFundingFilter
     private let opensCardScannerAutomatically: Bool
 
     private let linkAppearance: LinkAppearance?
@@ -90,7 +89,6 @@ final class CardSectionElement: ContainerElement {
         self.theme = theme
         self.analyticsHelper = analyticsHelper
         self.cardBrandFilter = cardBrandFilter
-        self.cardFundingFilter = cardFundingFilter
         self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
             ? PaymentMethodElementWrapper(

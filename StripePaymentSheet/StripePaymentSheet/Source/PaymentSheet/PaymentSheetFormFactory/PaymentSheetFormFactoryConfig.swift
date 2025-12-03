@@ -101,6 +101,8 @@ enum PaymentSheetFormFactoryConfig {
         case .paymentElement(let config, _):
             return config.cardFundingFilter
         case .customerSheet:
+            // CustomerSheet does not yet support card funding filtering
+            // Just return the default filter (none)
             return .default
         }
     }
