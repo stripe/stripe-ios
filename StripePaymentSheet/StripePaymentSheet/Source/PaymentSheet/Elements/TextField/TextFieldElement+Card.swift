@@ -162,7 +162,7 @@ extension TextFieldElement {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 
-            // Note: Card funding filtering is handled via subLabel (warning) rather than blocking validation.
+            // Note: Card funding filtering is handled via warningLabel rather than blocking validation.
             // This allows the user to proceed even if the funding type appears blocked, since
             // the funding data from the backend may not be 100% accurate.
 
@@ -211,7 +211,7 @@ extension TextFieldElement {
             return attributed
         }
 
-        func subLabel(text: String) -> String? {
+        func warningLabel(text: String) -> String? {
             // Show a funding warning if we have BIN data and the funding type might not be accepted
             guard text.count >= 6 else { return nil }
 
@@ -222,9 +222,9 @@ extension TextFieldElement {
 
             // Check if the funding type is not accepted
             if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
-                let fundingTypeName = binRange.funding.displayName
-                if !fundingTypeName.isEmpty {
-                    return String.Localized.funding_warning(fundingTypeName: fundingTypeName)
+                // Show what IS accepted (e.g. "Only debit cards are accepted")
+                if let allowedTypes = cardFundingFilter.allowedFundingTypesDisplayString() {
+                    return String.Localized.only_funding_types_accepted(fundingTypes: allowedTypes)
                 }
                 return String.Localized.generic_funding_warning
             }

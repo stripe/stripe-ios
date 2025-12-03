@@ -443,9 +443,9 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
                 "Credit card should remain valid (warning-only, not blocking)"
             )
 
-            // But should show a warning via subLabelText
+            // But should show a warning via warningLabelText
             XCTAssertNotNil(
-                textFieldElement.subLabelText,
+                textFieldElement.warningLabelText,
                 "A funding warning should be shown"
             )
         }
@@ -566,7 +566,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(validationState, .valid, "Card should be valid even with funding filter before network fetch")
 
             // No warning should be shown (hardcoded ranges don't have funding info)
-            let warningText = configuration.subLabel(text: text)
+            let warningText = configuration.warningLabel(text: text)
             XCTAssertNil(warningText, "No warning should be shown for hardcoded BIN ranges")
         }
     }
@@ -587,7 +587,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
         // Before fetch - should be valid with no warning
         XCTAssertEqual(configuration.simulateValidationState(visaCredit), .valid)
-        XCTAssertNil(configuration.subLabel(text: visaCredit))
+        XCTAssertNil(configuration.warningLabel(text: visaCredit))
 
         // Fetch BIN ranges from the network
         let fetchExpectation = expectation(description: "Fetch BIN Range")
@@ -609,11 +609,11 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
                 "Card should remain valid even when funding warning is shown"
             )
 
-            // But should show a warning
-            let warningText = configuration.subLabel(text: visaCredit)
+            // But should show a warning about what IS accepted
+            let warningText = configuration.warningLabel(text: visaCredit)
             XCTAssertNotNil(warningText, "Warning should be shown for credit card when only debit is allowed")
-            XCTAssertTrue(warningText?.contains("Credit") == true || warningText?.contains("credit") == true,
-                         "Warning should mention the funding type")
+            XCTAssertTrue(warningText?.lowercased().contains("debit") == true,
+                         "Warning should mention the allowed funding type (debit)")
         }
     }
 
@@ -645,7 +645,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         if !binRange.isHardcoded && binRange.funding == .debit {
             // Should be valid with no warning for debit card when debit is allowed
             XCTAssertEqual(configuration.simulateValidationState(visaDebit), .valid)
-            XCTAssertNil(configuration.subLabel(text: visaDebit), "No warning should be shown for allowed funding type")
+            XCTAssertNil(configuration.warningLabel(text: visaDebit), "No warning should be shown for allowed funding type")
         }
     }
 
@@ -664,7 +664,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
         for text in testcases {
             XCTAssertEqual(configuration.simulateValidationState(text), .valid)
-            XCTAssertNil(configuration.subLabel(text: text), "No warning should be shown when all funding types are allowed")
+            XCTAssertNil(configuration.warningLabel(text: text), "No warning should be shown when all funding types are allowed")
         }
     }
 }

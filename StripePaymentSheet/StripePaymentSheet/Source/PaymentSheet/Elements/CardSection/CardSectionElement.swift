@@ -239,7 +239,7 @@ final class CardSectionElement: ContainerElement {
         }
 
         // Send an analytic if we are showing a card funding warning
-        if panElement.subLabelText != nil {
+        if panElement.warningLabelText != nil {
             let binRange = STPBINController.shared.mostSpecificBINRange(forNumber: panElement.text)
             if !binRange.isHardcoded && lastDisallowedFundingLogged != binRange.funding {
                 // Map funding type to analytics value per spec: credit, debit, prepaid, unknown

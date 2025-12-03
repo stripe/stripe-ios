@@ -51,6 +51,33 @@ struct CardFundingFilter: Equatable {
             return capabilities
         }
     }
+
+    /// Returns a user-friendly display string of the allowed funding types (e.g. "debit", "debit and credit")
+    /// - Returns: A localized string listing the allowed funding types, or nil if all types are allowed
+    func allowedFundingTypesDisplayString() -> String? {
+        switch cardFundingAcceptance {
+        case .all:
+            return nil
+        case .allowed(let allowedFundingTypes):
+            // Filter to only user-visible funding types (exclude unknown)
+            let displayableTypes = allowedFundingTypes.filter { $0 != .unknown }
+            guard !displayableTypes.isEmpty else { return nil }
+
+            let displayNames = displayableTypes.compactMap { $0.displayName }
+            guard !displayNames.isEmpty else { return nil }
+
+            // Join with localized "and" for the last element
+            if displayNames.count == 1 {
+                return displayNames[0]
+            } else if displayNames.count == 2 {
+                return String.Localized.x_and_y(displayNames[0], displayNames[1])
+            } else {
+                // For 3+ items: "a, b, and c"
+                let allButLast = displayNames.dropLast().joined(separator: ", ")
+                return String.Localized.x_and_y(allButLast, displayNames.last!)
+            }
+        }
+    }
 }
 
 extension STPCardFundingType {
@@ -71,16 +98,21 @@ extension STPCardFundingType {
 
     /// Returns a user-friendly display name for the card funding type.
     var displayName: String {
+        return asFundingCategory.displayName
+    }
+}
+
+extension PaymentSheet.CardFundingCategory {
+    /// Returns a user-friendly display name for the card funding category.
+    var displayName: String {
         switch self {
         case .credit:
-            return String.Localized.credit
+            return String.Localized.credit.lowercased()
         case .debit:
-            return String.Localized.debit
+            return String.Localized.debit.lowercased()
         case .prepaid:
-            return String.Localized.prepaid
-        case .other:
-            return ""
-        @unknown default:
+            return String.Localized.prepaid.lowercased()
+        case .unknown:
             return ""
         }
     }

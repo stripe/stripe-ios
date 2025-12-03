@@ -92,6 +92,10 @@ final class SectionView: UIView {
             errorOrSubLabel.text = viewModel.errorText
             errorOrSubLabel.isHidden = false
             errorOrSubLabel.textColor = viewModel.theme.colors.danger
+        } else if let warningLabel = viewModel.warningLabel {
+            errorOrSubLabel.text = warningLabel
+            errorOrSubLabel.isHidden = false
+            errorOrSubLabel.textColor = viewModel.theme.colors.danger
         } else if let subLabel = viewModel.subLabel {
             errorOrSubLabel.text = subLabel
             errorOrSubLabel.isHidden = false
