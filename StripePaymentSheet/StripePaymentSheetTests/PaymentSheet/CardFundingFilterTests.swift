@@ -101,34 +101,37 @@ class CardFundingFilterTests: XCTestCase {
         let filter = CardFundingFilter(cardFundingAcceptance: .all)
         let capabilities = filter.applePayMerchantCapabilities()
 
-        XCTAssertEqual(capabilities, .capability3DS, "When all funding types are accepted, only 3DS capability should be set.")
+        XCTAssertNil(capabilities, "When all funding types are accepted, nil should be returned to use the default capabilities on the payment request.")
     }
 
     func testApplePayMerchantCapabilities_debitOnly() {
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: [.debit]))
         let capabilities = filter.applePayMerchantCapabilities()
 
-        XCTAssertTrue(capabilities.contains(.capability3DS), "3DS capability should always be included.")
-        XCTAssertTrue(capabilities.contains(.capabilityDebit), "Debit capability should be included when debit is allowed.")
-        XCTAssertFalse(capabilities.contains(.capabilityCredit), "Credit capability should not be included when only debit is allowed.")
+        XCTAssertNotNil(capabilities)
+        XCTAssertTrue(capabilities!.contains(.capability3DS), "3DS capability should always be included.")
+        XCTAssertTrue(capabilities!.contains(.capabilityDebit), "Debit capability should be included when debit is allowed.")
+        XCTAssertFalse(capabilities!.contains(.capabilityCredit), "Credit capability should not be included when only debit is allowed.")
     }
 
     func testApplePayMerchantCapabilities_creditOnly() {
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: [.credit]))
         let capabilities = filter.applePayMerchantCapabilities()
 
-        XCTAssertTrue(capabilities.contains(.capability3DS), "3DS capability should always be included.")
-        XCTAssertFalse(capabilities.contains(.capabilityDebit), "Debit capability should not be included when only credit is allowed.")
-        XCTAssertTrue(capabilities.contains(.capabilityCredit), "Credit capability should be included when credit is allowed.")
+        XCTAssertNotNil(capabilities)
+        XCTAssertTrue(capabilities!.contains(.capability3DS), "3DS capability should always be included.")
+        XCTAssertFalse(capabilities!.contains(.capabilityDebit), "Debit capability should not be included when only credit is allowed.")
+        XCTAssertTrue(capabilities!.contains(.capabilityCredit), "Credit capability should be included when credit is allowed.")
     }
 
     func testApplePayMerchantCapabilities_debitAndCredit() {
         let filter = CardFundingFilter(cardFundingAcceptance: .allowed(fundingTypes: [.debit, .credit]))
         let capabilities = filter.applePayMerchantCapabilities()
 
-        XCTAssertTrue(capabilities.contains(.capability3DS), "3DS capability should always be included.")
-        XCTAssertTrue(capabilities.contains(.capabilityDebit), "Debit capability should be included when debit is allowed.")
-        XCTAssertTrue(capabilities.contains(.capabilityCredit), "Credit capability should be included when credit is allowed.")
+        XCTAssertNotNil(capabilities)
+        XCTAssertTrue(capabilities!.contains(.capability3DS), "3DS capability should always be included.")
+        XCTAssertTrue(capabilities!.contains(.capabilityDebit), "Debit capability should be included when debit is allowed.")
+        XCTAssertTrue(capabilities!.contains(.capabilityCredit), "Credit capability should be included when credit is allowed.")
     }
 
     func testApplePayMerchantCapabilities_prepaidOnly() {

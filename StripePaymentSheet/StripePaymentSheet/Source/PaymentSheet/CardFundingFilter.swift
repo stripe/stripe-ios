@@ -31,11 +31,14 @@ struct CardFundingFilter: Equatable {
     }
 
     /// Returns the `PKMerchantCapability` to use for Apple Pay based on the card funding acceptance configuration.
-    /// - Returns: A `PKMerchantCapability` option set that includes 3DS and any funding type restrictions
-    func applePayMerchantCapabilities() -> PKMerchantCapability {
+    /// - Returns: A `PKMerchantCapability` option set that includes 3DS and any funding type restrictions,
+    ///            or `nil` if no override is needed (use the default capabilities provided on the payment request).
+    func applePayMerchantCapabilities() -> PKMerchantCapability? {
         switch cardFundingAcceptance {
         case .all:
-            return .capability3DS
+            // When all funding types are accepted, don't override the merchant capabilities.
+            // The default capabilities on the payment request will be used.
+            return nil
         case .allowed(let allowedFundingTypes):
             var capabilities: PKMerchantCapability = .capability3DS
             if allowedFundingTypes.contains(.debit) {
