@@ -33,6 +33,16 @@
 		0BA5FE472E32AD5100D44BFE /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE452E32AD5100D44BFE /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0BD66FD12EDE0E800044DB52 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0BA5FE2A2E32A11600D44BFE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0BA5FE312E32A11600D44BFE;
+			remoteInfo = "CryptoOnramp Example";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		0BA5FE442E32AB9E00D44BFE /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -72,10 +82,12 @@
 		0BA5FE322E32A11600D44BFE /* CryptoOnramp Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CryptoOnramp Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE452E32AD5100D44BFE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BD66FCB2EDE0E800044DB52 /* CryptoOnrampExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CryptoOnrampExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "CryptoOnramp Example"; sourceTree = "<group>"; };
+		0BD66FCC2EDE0E800044DB52 /* CryptoOnrampExampleUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CryptoOnrampExampleUITests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +110,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0BD66FC82EDE0E800044DB52 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -105,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */,
+				0BD66FCC2EDE0E800044DB52 /* CryptoOnrampExampleUITests */,
 				0BA5FE402E32AB9E00D44BFE /* Frameworks */,
 				0BA5FE332E32A11600D44BFE /* Products */,
 			);
@@ -114,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				0BA5FE322E32A11600D44BFE /* CryptoOnramp Example.app */,
+				0BD66FCB2EDE0E800044DB52 /* CryptoOnrampExampleUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -163,6 +184,29 @@
 			productReference = 0BA5FE322E32A11600D44BFE /* CryptoOnramp Example.app */;
 			productType = "com.apple.product-type.application";
 		};
+		0BD66FCA2EDE0E800044DB52 /* CryptoOnrampExampleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0BD66FD52EDE0E800044DB52 /* Build configuration list for PBXNativeTarget "CryptoOnrampExampleUITests" */;
+			buildPhases = (
+				0BD66FC72EDE0E800044DB52 /* Sources */,
+				0BD66FC82EDE0E800044DB52 /* Frameworks */,
+				0BD66FC92EDE0E800044DB52 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0BD66FD22EDE0E800044DB52 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0BD66FCC2EDE0E800044DB52 /* CryptoOnrampExampleUITests */,
+			);
+			name = CryptoOnrampExampleUITests;
+			packageProductDependencies = (
+			);
+			productName = CryptoOnrampExampleUITests;
+			productReference = 0BD66FCB2EDE0E800044DB52 /* CryptoOnrampExampleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -170,11 +214,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1640;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					0BA5FE312E32A11600D44BFE = {
 						CreatedOnToolsVersion = 16.4;
+					};
+					0BD66FCA2EDE0E800044DB52 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 0BA5FE312E32A11600D44BFE;
 					};
 				};
 			};
@@ -193,12 +241,20 @@
 			projectRoot = "";
 			targets = (
 				0BA5FE312E32A11600D44BFE /* CryptoOnramp Example */,
+				0BD66FCA2EDE0E800044DB52 /* CryptoOnrampExampleUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0BA5FE302E32A11600D44BFE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0BD66FC92EDE0E800044DB52 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -215,7 +271,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0BD66FC72EDE0E800044DB52 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0BD66FD22EDE0E800044DB52 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0BA5FE312E32A11600D44BFE /* CryptoOnramp Example */;
+			targetProxy = 0BD66FD12EDE0E800044DB52 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0BA5FE3B2E32A11600D44BFE /* Debug */ = {
@@ -399,6 +470,50 @@
 			};
 			name = Release;
 		};
+		0BD66FD32EDE0E800044DB52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CryptoOnrampExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "CryptoOnramp Example";
+			};
+			name = Debug;
+		};
+		0BD66FD42EDE0E800044DB52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CryptoOnrampExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "CryptoOnramp Example";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -416,6 +531,15 @@
 			buildConfigurations = (
 				0BA5FE3E2E32A11600D44BFE /* Debug */,
 				0BA5FE3F2E32A11600D44BFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0BD66FD52EDE0E800044DB52 /* Build configuration list for PBXNativeTarget "CryptoOnrampExampleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BD66FD32EDE0E800044DB52 /* Debug */,
+				0BD66FD42EDE0E800044DB52 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
