@@ -88,7 +88,7 @@ class CardFundingFilterTests: XCTestCase {
     }
 
     func testDefaultFilter() {
-        let filter = CardFundingFilter(cardFundingAcceptance: .all)
+        let filter = CardFundingFilter.default
 
         for fundingType in STPCardFundingType.allCases {
             XCTAssertTrue(filter.isAccepted(cardFundingType: fundingType), "Default filter should accept all funding types.")

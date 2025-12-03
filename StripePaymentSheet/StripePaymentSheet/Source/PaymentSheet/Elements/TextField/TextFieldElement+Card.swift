@@ -31,7 +31,7 @@ extension TextFieldElement {
             cardBrand: STPCardBrand? = nil,
             cardBrandDropDown: DropdownFieldElement? = nil,
             cardFilter: CardBrandFilter = .default,
-            cardFundingFilter: CardFundingFilter = .init(cardFundingAcceptance: .all)
+            cardFundingFilter: CardFundingFilter = .default
         ) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
@@ -214,7 +214,7 @@ extension TextFieldElement {
                 // Show what IS accepted (e.g. "Only debit cards are accepted")
                 guard let allowedTypes = cardFundingFilter.allowedFundingTypesDisplayString() else {
                     stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
-                    return String.Localized.only_funding_types_accepted(fundingTypes: "")
+                    return nil
                 }
                 return String.Localized.only_funding_types_accepted(fundingTypes: allowedTypes)
             }

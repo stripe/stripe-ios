@@ -600,7 +600,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
         // Allow all funding types (default)
         let configuration = TextFieldElement.PANConfiguration(
-            cardFundingFilter: .init(cardFundingAcceptance: .all)
+            cardFundingFilter: .default
         )
 
         for text in testcases {
