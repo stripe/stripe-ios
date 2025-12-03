@@ -97,11 +97,6 @@ extension STPCardFundingType {
             return .unknown
         }
     }
-
-    /// Returns a user-friendly display name for the card funding type.
-    var displayName: String {
-        return asFundingCategory.displayName
-    }
 }
 
 extension PaymentSheet.CardFundingType {
