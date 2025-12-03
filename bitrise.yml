@@ -773,7 +773,7 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: CryptoOnrampExample Example
+        - scheme: CryptoOnramp Example
         - test_plan: CryptoOnrampExampleUITests
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
