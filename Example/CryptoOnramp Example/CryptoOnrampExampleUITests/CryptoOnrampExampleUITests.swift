@@ -27,23 +27,23 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(emailField.waitForExistence(timeout: .networkTimeout), "Email field should exist")
         emailField.tap()
         emailField.typeText("onramptest@stripe.com")
-        
+
         let passwordField = app.secureTextFields["Enter password"].firstMatch
         XCTAssertTrue(passwordField.exists, "Password field should exist")
         passwordField.tap()
         passwordField.typeText("testing1234")
-        
+
         // Step 2: Tap Log In button
         let logInButton = app.buttons["Log In"].firstMatch
         XCTAssertTrue(logInButton.exists)
         logInButton.tap()
-        
+
         // Step 3: Wait for OTP field and enter 000000. It will auto-submit.
         let otpField = app.textViews["Code field"].firstMatch
         XCTAssertTrue(otpField.waitForExistence(timeout: .networkTimeout), "OTP screen should appear")
         otpField.tap()
         otpField.typeText("000000")
-        
+
         // Step 4: Wait for wallet selection screen and tap the Next button.
         // The Next button will be enabled once the user's wallets load and we auto-select the first wallet.
         let walletsLabel = app.staticTexts["Wallets"].firstMatch
