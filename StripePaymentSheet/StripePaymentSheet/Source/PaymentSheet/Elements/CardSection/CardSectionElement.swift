@@ -187,7 +187,6 @@ final class CardSectionElement: ContainerElement {
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
     var lastPanElementValidationState: ElementValidationState
     var lastDisallowedCardBrandLogged: STPCardBrand?
-    var lastDisallowedFundingLogged: STPCardFundingType?
     var hasLoggedExpectedExtraDigitsButUserEntered16: Bool = false
     /// Tracks the last BIN prefix we fetched funding info for
     private var lastFetchedFundingPrefix: String?
@@ -236,17 +235,6 @@ final class CardSectionElement: ContainerElement {
                 params: ["brand": STPCardBrandUtilities.apiValue(from: brand)]
             )
             lastDisallowedCardBrandLogged = brand
-        }
-
-        // Send an analytic if we are showing a card funding warning
-        if let panConfiguration = panElement.configuration as? TextFieldElement.PANConfiguration,
-           let disallowedFunding = panConfiguration.disallowedFundingType(text: panElement.text),
-           lastDisallowedFundingLogged != disallowedFunding {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(
-                event: .paymentSheetDisallowedCardFunding,
-                params: ["funding": disallowedFunding.analyticsValue]
-            )
-            lastDisallowedFundingLogged = disallowedFunding
         }
 
         delegate?.didUpdate(element: self)

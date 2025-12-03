@@ -451,65 +451,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testCardSectionElement_cardFundingFiltering_logsAnalytic() {
-        // Set a publishable key for the metadata service
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-
-        // Set up a CardSectionElement with funding filter that only allows debit:
-        let cardSection = CardSectionElement(
-            collectName: false,
-            defaultValues: .init(),
-            preferredNetworks: nil,
-            cardBrandChoiceEligible: false,
-            hostedSurface: .paymentSheet,
-            theme: .default,
-            analyticsHelper: ._testValue(),
-            cardBrandFilter: .default,
-            cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit])),
-            opensCardScannerAutomatically: false
-        )
-        let textFieldElement = cardSection.panElement
-
-        // Visa credit card
-        let visaCredit = "4242424242424242"
-
-        // First, fetch BIN ranges so we have funding info
-        let fetchExpectation = expectation(description: "Fetch BIN Range")
-        (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.retrieveBINRanges(
-            forPrefix: String(visaCredit.prefix(6)),
-            recordErrorsAsSuccess: false,
-            onlyFetchForVariableLengthBINs: false
-        ) { _ in
-            fetchExpectation.fulfill()
-        }
-        wait(for: [fetchExpectation], timeout: 10)
-
-        // Check if we got funding info from the network
-        let binRange = (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.mostSpecificBINRange(forNumber: visaCredit)
-        guard !binRange.isHardcoded && binRange.funding == .credit else {
-            // Skip test if we don't have network funding data
-            return
-        }
-
-        // Set up a delegate to watch for the disallowed funding analytics event
-        let logExpectation = expectation(description: "Did log analytics event")
-        let analyticsDelegate = STPAnalyticsClientTestDelegate { payload in
-            if payload["event"] as? String == "stripeios.mc_disallowed_card_funding_type" {
-                XCTAssertEqual(payload["funding"] as? String, "credit")
-                logExpectation.fulfill()
-            }
-        }
-        STPAnalyticsClient.sharedClient.delegate = analyticsDelegate
-
-        // Enter the credit card number and trigger validation
-        textFieldElement.textFieldView.textField.text = visaCredit
-        textFieldElement.textFieldView.textDidChange()
-
-        // Wait for the analytics event
-        wait(for: [logExpectation], timeout: 5)
-        STPAnalyticsClient.sharedClient.delegate = nil
-    }
-
     func testPANValidation_cardBrandFiltering() throws {
         typealias Error = TextFieldElement.PANConfiguration.Error
         let testcases: [String: ElementValidationState] = [

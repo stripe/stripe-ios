@@ -100,17 +100,6 @@ extension STPCardFundingType {
     var displayName: String {
         return asFundingCategory.displayName
     }
-
-    /// Returns the analytics value for this funding type per spec: credit, debit, prepaid, unknown
-    var analyticsValue: String {
-        switch self {
-        case .credit: return "credit"
-        case .debit: return "debit"
-        case .prepaid: return "prepaid"
-        case .other: return "unknown"
-        @unknown default: return "unknown"
-        }
-    }
 }
 
 extension PaymentSheet.CardFundingType {
