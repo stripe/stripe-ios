@@ -88,7 +88,7 @@ extension FCLiteAPIClient {
 
         if !canUseNativeLink {
             mobileParameters["hide_close_button"] = true
-//            mobileParameters["use_native_redirect_url"] = true
+            mobileParameters["use_native_redirect_url"] = true
         }
 
         let parameters: [String: Any] = [
