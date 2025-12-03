@@ -132,12 +132,10 @@ extension TextFieldElement {
                     }
 
                     return .Localized.generic_brand_not_allowed
-                case .disallowedFunding(let fundingType):
-                    let fundingTypeName = fundingType.displayName
-                    if !fundingTypeName.isEmpty {
-                        return .localizedStringWithFormat(.Localized.funding_not_allowed, fundingTypeName)
-                    }
-                    return .Localized.generic_funding_not_allowed
+                case .disallowedFunding:
+                    // This error case is not currently used - funding filtering uses warnings instead
+                    stpAssertionFailure("disallowedFunding error should not be used")
+                    return ""
                 }
             }
         }
@@ -219,10 +217,11 @@ extension TextFieldElement {
             // Check if the funding type is not accepted
             if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
                 // Show what IS accepted (e.g. "Only debit cards are accepted")
-                if let allowedTypes = cardFundingFilter.allowedFundingTypesDisplayString() {
-                    return String.Localized.only_funding_types_accepted(fundingTypes: allowedTypes)
+                guard let allowedTypes = cardFundingFilter.allowedFundingTypesDisplayString() else {
+                    stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
+                    return String.Localized.only_funding_types_accepted(fundingTypes: "")
                 }
-                return String.Localized.generic_funding_warning
+                return String.Localized.only_funding_types_accepted(fundingTypes: allowedTypes)
             }
 
             return nil
