@@ -82,7 +82,7 @@ final class CardSectionElement: ContainerElement {
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         cardBrandFilter: CardBrandFilter = .default,
-        cardFundingFilter: CardFundingFilter = .default,
+        cardFundingFilter: CardFundingFilter = .init(cardFundingAcceptance: .all),
         opensCardScannerAutomatically: Bool = false,
         linkAppearance: LinkAppearance? = nil
     ) {

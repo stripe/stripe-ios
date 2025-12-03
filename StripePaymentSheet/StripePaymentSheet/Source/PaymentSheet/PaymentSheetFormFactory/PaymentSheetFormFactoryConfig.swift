@@ -100,8 +100,8 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .paymentElement(let config, _):
             return config.cardFundingFilter
-        case .customerSheet(let config):
-            return config.cardFundingFilter
+        case .customerSheet:
+            return .init(cardFundingAcceptance: .all)
         }
     }
 

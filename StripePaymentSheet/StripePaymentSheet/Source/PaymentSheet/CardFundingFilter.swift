@@ -102,7 +102,7 @@ extension STPCardFundingType {
     }
 }
 
-extension PaymentSheet.CardFundingCategory {
+extension PaymentSheet.CardFundingType {
     /// Returns a user-friendly display name for the card funding category.
     var displayName: String {
         switch self {

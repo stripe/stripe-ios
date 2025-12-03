@@ -31,7 +31,7 @@ extension TextFieldElement {
             cardBrand: STPCardBrand? = nil,
             cardBrandDropDown: DropdownFieldElement? = nil,
             cardFilter: CardBrandFilter = .default,
-            cardFundingFilter: CardFundingFilter = .default
+            cardFundingFilter: CardFundingFilter = .init(cardFundingAcceptance: .all)
         ) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
