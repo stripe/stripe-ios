@@ -49,6 +49,7 @@ stages:
     - ui-tests-3: {}
     - ui-tests-4: {}
     - ui-tests-5: {}
+    - ui-tests-6: {}
     - integration-all: {}
     - lokalise-upload: {}
   stage-releases-run-all:
@@ -68,6 +69,7 @@ stages:
     - ui-tests-3: {}
     - ui-tests-4: {}
     - ui-tests-5: {}
+    - ui-tests-6: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - pod-lint-tests: {}
