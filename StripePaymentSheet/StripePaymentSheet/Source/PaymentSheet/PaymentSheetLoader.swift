@@ -446,11 +446,10 @@ final class PaymentSheetLoader {
                 return false
             }
             // Filter by card funding type
-            if let fundingString = card.funding {
-                let fundingType = STPCard.funding(from: fundingString)
-                if !configuration.cardFundingFilter.isAccepted(cardFundingType: fundingType) {
-                    return false
-                }
+            // If funding is nil, treat it as .other (unknown) and check if that's accepted
+            let fundingType: STPCardFundingType = card.funding.map { STPCard.funding(from: $0) } ?? .other
+            if !configuration.cardFundingFilter.isAccepted(cardFundingType: fundingType) {
+                return false
             }
             return true
         }
