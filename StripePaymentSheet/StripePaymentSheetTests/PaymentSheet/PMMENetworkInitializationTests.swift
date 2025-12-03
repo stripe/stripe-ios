@@ -9,7 +9,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(STP)@testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(STP)@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 
