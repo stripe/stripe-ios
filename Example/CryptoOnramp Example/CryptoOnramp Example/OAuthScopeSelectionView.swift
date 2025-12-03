@@ -72,11 +72,15 @@ struct OAuthScopeSelectionView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
+                    #if compiler(>=6.2)
                     if #available(iOS 26.0, *) {
                         Button(role: .confirm) { dismiss() }
                     } else {
                         Button("Done") { dismiss() }
                     }
+                    #else
+                    Button("Done") { dismiss() }
+                    #endif
                 }
             }
         }
