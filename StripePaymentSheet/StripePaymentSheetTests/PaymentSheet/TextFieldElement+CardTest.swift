@@ -554,7 +554,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testPANValidation_cardFundingFiltering_noWarningForAllowedFunding() throws {
-        // Test that no warning is shown when the funding type is allowed
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
 
         var configuration = TextFieldElement.PANConfiguration(
