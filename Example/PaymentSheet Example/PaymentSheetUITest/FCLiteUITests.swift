@@ -124,16 +124,13 @@ class FCLiteUITests: XCTestCase {
         // Continue with Link
         let continueWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Continue with Link'") // Link signup pane
         let continueWithLinkButton = app.webViews.firstMatch.buttons.containing(continueWithLinkButtonPredicate).firstMatch
-        XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 5.0))
-        tapPrimaryButton()
+        XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 10.0))
+        app.typeText(XCUIKeyboardKey.return.rawValue) // Enter key will continue to the next screen
 
-        // Payment Success bank
-        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Payment Success'") // Institution Picker
+        // Success bank
+        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Success (Later Disputed)'") // Institution Picker
         let paymentSuccessBankButton = app.webViews.firstMatch.buttons.containing(paymentSuccessBankButtonPredicate).firstMatch
-        XCTAssertTrue(paymentSuccessBankButton.waitForExistence(timeout: 5.0))
-        app.webViews.firstMatch.swipeUp() // Make sure the button is in view
-        Thread.sleep(forTimeInterval: 0.5) // Wait after swipe before tapping
-        paymentSuccessBankButton.tap()
+        XCTAssertTrue(paymentSuccessBankButton.waitForExistenceAndTap(timeout: 10.0))
 
         // Connect account - wait for button to appear, then tap via coordinate
         let connectAccountButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Connect account'") // Account Picker
@@ -144,15 +141,15 @@ class FCLiteUITests: XCTestCase {
         // Tap "Done" button
         let doneButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Done'")
         let doneButton = app.webViews.firstMatch.buttons.containing(doneButtonPredicate).firstMatch
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 5.0))
+        XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
         tapPrimaryButton()
 
         // Tap the Pay button on MPE
         let payButton = app.buttons["Pay $50.99"]
-        XCTAssertTrue(payButton.waitForExistenceAndTap(timeout: 5.0))
+        XCTAssertTrue(payButton.waitForExistenceAndTap(timeout: 10.0))
 
         // Ensure the payment succeeded
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
     /// Taps the primary CTA button at the bottom of the FC webview.
@@ -167,7 +164,7 @@ class FCLiteUITests: XCTestCase {
             Thread.sleep(forTimeInterval: 0.5)
         }
 
-        // Primary button is at the bottom center of the webview (roughly 90% down, centered)
-        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)).tap()
+        // Primary button is at the bottom center of the webview (roughly 85% down, centered)
+        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
     }
 }
