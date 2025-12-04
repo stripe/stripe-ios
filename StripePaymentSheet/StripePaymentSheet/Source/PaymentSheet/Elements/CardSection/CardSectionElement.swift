@@ -44,6 +44,7 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
+    let cardFundingFilter: CardFundingFilter
     private let opensCardScannerAutomatically: Bool
 
     private let linkAppearance: LinkAppearance?
@@ -89,6 +90,7 @@ final class CardSectionElement: ContainerElement {
         self.theme = theme
         self.analyticsHelper = analyticsHelper
         self.cardBrandFilter = cardBrandFilter
+        self.cardFundingFilter = cardFundingFilter
         self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
@@ -242,6 +244,11 @@ final class CardSectionElement: ContainerElement {
     /// Fetches BIN range information for funding type validation when the user enters 6+ digits.
     /// This enables real-time validation of card funding types against the merchant's acceptance rules.
     func fetchAndCheckCardFunding() {
+        // Only fetch if filtering is enabled - no need to fetch metadata if we accept all funding types
+        guard cardFundingFilter != .default else {
+            return
+        }
+
         let binPrefix = String(panElement.text.prefix(6))
 
         // Only fetch if we have 6+ digits and haven't already fetched for this prefix
