@@ -241,34 +241,28 @@ final class CardSectionElement: ContainerElement {
     }
 
     // MARK: - Card funding check
-    /// Fetches BIN range information for funding type validation when the user enters 6+ digits.
-    /// This enables real-time validation of card funding types against the merchant's acceptance rules.
+    /// Fetches BIN metadata to validate card funding type against merchant rules.
     func fetchAndCheckCardFunding() {
-        // Only fetch if filtering is enabled - no need to fetch metadata if we accept all funding types
         guard cardFundingFilter != .default else {
             return
         }
 
+        // The metadata service only uses the first 6 digits
         let binPrefix = String(panElement.text.prefix(6))
-
-        // Only fetch if we have 6+ digits and haven't already fetched for this prefix
         guard panElement.text.count >= 6,
               binPrefix != lastFetchedFundingPrefix else {
             return
         }
-
-        // Mark this prefix as fetched to avoid duplicate requests
+        // Avoid duplicate requests for the same prefix
         lastFetchedFundingPrefix = binPrefix
 
-        // Fetch BIN ranges from the card metadata service (always fetch, not just for variable-length cards)
         STPBINController.shared.retrieveBINRanges(
             forPrefix: binPrefix,
             recordErrorsAsSuccess: false,
             onlyFetchForVariableLengthBINs: false
         ) { [weak self] _ in
             guard let self = self else { return }
-            // Re-trigger validation by "setting" the text again - this causes the text field to re-validate
-            // The BIN range data is now cached in STPBINController, so validate() will have access to it
+            // Re-validate now that BIN data is cached
             self.panElement.setText(self.panElement.text)
         }
     }

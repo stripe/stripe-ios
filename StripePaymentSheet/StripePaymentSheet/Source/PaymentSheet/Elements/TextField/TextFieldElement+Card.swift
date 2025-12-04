@@ -201,17 +201,16 @@ extension TextFieldElement {
         }
 
         func warningLabel(text: String) -> String? {
-            // Show a funding warning if we have BIN data and the funding type might not be accepted
+            guard cardFundingFilter != .default else { return nil }
+            // Only check funding source if we have at least six PAN digits
             guard text.count >= 6 else { return nil }
 
             let binRange = binController.mostSpecificBINRange(forNumber: text)
 
-            // Only show warning if we have real funding data from the service (not hardcoded)
+            // Only warn if we have real funding data from the metadata service
             guard !binRange.isHardcoded else { return nil }
 
-            // Check if the funding type is not accepted
             if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
-                // Show what IS accepted (e.g. "Only debit cards are accepted")
                 guard let allowedTypes = cardFundingFilter.allowedFundingTypesDisplayString() else {
                     stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
                     return nil
