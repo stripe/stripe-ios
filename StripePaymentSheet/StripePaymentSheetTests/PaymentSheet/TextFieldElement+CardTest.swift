@@ -398,8 +398,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testCardSectionElement_cardFundingFiltering_showsWarningButRemainsValid() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-
         // Set up a CardSectionElement with funding filter that only allows debit:
         let cardSection = CardSectionElement(
             collectName: false,
@@ -509,8 +507,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testPANValidation_cardFundingFiltering_noWarningForAllowedFunding() throws {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-
         var configuration = TextFieldElement.PANConfiguration(
             cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit]))
         )
