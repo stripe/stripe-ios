@@ -492,9 +492,10 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         ]
 
         // Only allow debit - but without network fetch, we don't know the funding type
-        let configuration = TextFieldElement.PANConfiguration(
+        var configuration = TextFieldElement.PANConfiguration(
             cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit]))
         )
+        configuration.binController = STPBINController()
 
         for text in testcases {
             // Card should be valid (not blocked)
