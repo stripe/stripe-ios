@@ -467,7 +467,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             "6200000000000005": .valid,  // cup
         ]
 
-        let configuration = TextFieldElement.PANConfiguration(cardFilter: .init(cardBrandAcceptance: .disallowed(brands: [.amex, .mastercard])))
+        let configuration = TextFieldElement.PANConfiguration(cardBrandFilter: .init(cardBrandAcceptance: .disallowed(brands: [.amex, .mastercard])))
         for (text, expected) in testcases {
             let actual = configuration.simulateValidationState(text)
             XCTAssertTrue(

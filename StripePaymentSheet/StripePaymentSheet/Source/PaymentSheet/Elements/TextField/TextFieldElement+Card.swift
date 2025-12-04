@@ -23,20 +23,20 @@ extension TextFieldElement {
         let defaultValue: String?
         let cardBrand: STPCardBrand?
         let cardBrandDropDown: DropdownFieldElement?
-        let cardFilter: CardBrandFilter
+        let cardBrandFilter: CardBrandFilter
         let cardFundingFilter: CardFundingFilter
 
         init(
             defaultValue: String? = nil,
             cardBrand: STPCardBrand? = nil,
             cardBrandDropDown: DropdownFieldElement? = nil,
-            cardFilter: CardBrandFilter = .default,
+            cardBrandFilter: CardBrandFilter = .default,
             cardFundingFilter: CardFundingFilter = .default
         ) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
             self.cardBrandDropDown = cardBrandDropDown
-            self.cardFilter = cardFilter
+            self.cardBrandFilter = cardBrandFilter
             self.cardFundingFilter = cardFundingFilter
         }
 
@@ -78,7 +78,7 @@ extension TextFieldElement {
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
-                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter { cardFilter.isAccepted(cardBrand: $0) })
+                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter { cardBrandFilter.isAccepted(cardBrand: $0) })
                     return rotatingCardBrandsView
                 }
             } else {
@@ -151,7 +151,7 @@ extension TextFieldElement {
             let cardBrand = cardBrand(for: text)
             // If the merchant is CBC eligible, don't show the disallowed error until we have time to hit the card metadata service to determine brands (at 8 digits)
             let shouldShowDisallowedError = cardBrandDropDown == nil || text.count > 8
-            if !cardFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
+            if !cardBrandFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 

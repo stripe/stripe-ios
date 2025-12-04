@@ -119,7 +119,7 @@ final class CardSectionElement: ContainerElement {
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(
             defaultValue: defaultValues.pan,
             cardBrandDropDown: cardBrandDropDown?.element,
-            cardFilter: cardBrandFilter,
+            cardBrandFilter: cardBrandFilter,
             cardFundingFilter: cardFundingFilter
         ), theme: theme) { field, params in
             cardParams(for: params).number = field.text
@@ -251,7 +251,6 @@ final class CardSectionElement: ContainerElement {
               binPrefix != lastFetchedFundingPrefix else {
             return
         }
-        lastFetchedFundingPrefix = binPrefix
 
         STPBINController.shared.retrieveBINRanges(
             forPrefix: binPrefix,
@@ -259,6 +258,7 @@ final class CardSectionElement: ContainerElement {
             onlyFetchForVariableLengthBINs: false
         ) { [weak self] _ in
             guard let self = self else { return }
+            self.lastFetchedFundingPrefix = binPrefix
             // Trigger re-validation so warningLabel can read the now-cached funding data
             self.panElement.setText(self.panElement.text)
         }
