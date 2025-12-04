@@ -651,3 +651,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 }
+
+extension STPPaymentMethodType {
+    var supportsSetupFutureUsageParam: Bool {
+        if case .payPay = self { return false }
+        return true
+    }
+}

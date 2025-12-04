@@ -311,9 +311,4 @@ extension STPPaymentMethodType {
             return false
         }
     }
-
-    var supportsSetupFutureUsageParam: Bool {
-        if case .payPay = self { return false }
-        return true
-    }
 }
