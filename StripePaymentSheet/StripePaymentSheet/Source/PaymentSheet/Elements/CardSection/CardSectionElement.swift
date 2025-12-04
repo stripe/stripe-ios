@@ -188,6 +188,8 @@ final class CardSectionElement: ContainerElement {
     var lastPanElementValidationState: ElementValidationState
     var lastDisallowedCardBrandLogged: STPCardBrand?
     var hasLoggedExpectedExtraDigitsButUserEntered16: Bool = false
+    /// Tracks the last BIN prefix we fetched funding info for to avoid redundant calls
+    private var lastFetchedFundingPrefix: String?
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
         let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
@@ -244,13 +246,15 @@ final class CardSectionElement: ContainerElement {
         guard cardFundingFilter != .default else {
             return
         }
-        guard panElement.text.count >= 6 else {
+        let binPrefix = String(panElement.text.prefix(6))
+        guard panElement.text.count >= 6,
+              binPrefix != lastFetchedFundingPrefix else {
             return
         }
+        lastFetchedFundingPrefix = binPrefix
 
-        // STPBINController caches responses internally and deduplicates in-flight requests
         STPBINController.shared.retrieveBINRanges(
-            forPrefix: String(panElement.text.prefix(6)),
+            forPrefix: binPrefix,
             recordErrorsAsSuccess: false,
             onlyFetchForVariableLengthBINs: false
         ) { [weak self] _ in
