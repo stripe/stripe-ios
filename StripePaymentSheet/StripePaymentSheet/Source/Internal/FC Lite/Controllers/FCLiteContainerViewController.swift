@@ -172,7 +172,6 @@ class FCLiteContainerViewController: UIViewController {
             authFlowVC = FCLiteSecureAuthFlowViewController(
                 manifest: manifest,
                 elementsSessionContext: elementsSessionContext,
-                returnUrl: returnUrl,
                 completion: { [weak self] result in
                     guard let self else { return }
                     DispatchQueue.main.async {

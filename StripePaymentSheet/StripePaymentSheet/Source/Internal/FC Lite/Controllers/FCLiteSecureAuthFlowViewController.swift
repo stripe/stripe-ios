@@ -12,9 +12,9 @@ import UIKit
 class FCLiteSecureAuthFlowViewController: UIViewController {
     private let manifest: LinkAccountSessionManifest
     private let elementsSessionContext: ElementsSessionContext?
-    private let returnUrl: URL?
     private let completion: ((FCLiteWebFlowResult) -> Void)
 
+    /// Stored to maintain a strong reference and prevent deallocation.
     private var authSession: ASWebAuthenticationSession?
 
     private var hostedAuthUrl: URL {
@@ -29,12 +29,10 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
     init(
         manifest: LinkAccountSessionManifest,
         elementsSessionContext: ElementsSessionContext?,
-        returnUrl: URL?,
         completion: @escaping ((FCLiteWebFlowResult) -> Void)
     ) {
         self.manifest = manifest
         self.elementsSessionContext = elementsSessionContext
-        self.returnUrl = returnUrl
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
     }
@@ -52,10 +50,10 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
     private func startAuthenticationSession() {
         let callbackScheme = manifest.successURL.scheme
 
-        let authSession = ASWebAuthenticationSession(
+        authSession = ASWebAuthenticationSession(
             url: hostedAuthUrl,
             callbackURLScheme: callbackScheme,
-            completionHandler: { [weak self] returnUrl, error in
+            completionHandler: { [weak self] callbackUrl, error in
                 guard let self else {
                     return
                 }
@@ -75,16 +73,16 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
                         return
                     }
 
-                    guard let returnUrl = returnUrl else {
+                    guard let callbackUrl = callbackUrl else {
                         self.completion(.failure(FCLiteError.missingReturnURL))
                         return
                     }
 
                     // `matchesSchemeHostAndPath` is necessary for instant debits which
                     // contains additional query parameters at the end of the `successUrl`.
-                    if returnUrl.matchesSchemeHostAndPath(of: self.manifest.successURL) {
-                        self.completion(.success(returnUrl: returnUrl))
-                    } else if returnUrl.matchesSchemeHostAndPath(of: self.manifest.cancelURL) {
+                    if callbackUrl.matchesSchemeHostAndPath(of: self.manifest.successURL) {
+                        self.completion(.success(returnUrl: callbackUrl))
+                    } else if callbackUrl.matchesSchemeHostAndPath(of: self.manifest.cancelURL) {
                         self.completion(.cancelled(.cancelledWithinWebview))
                     } else {
                         self.completion(.failure(FCLiteError.invalidReturnURL))
@@ -93,13 +91,11 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
             }
         )
 
-        authSession.presentationContextProvider = self
-        authSession.prefersEphemeralWebBrowserSession = true
-
-        self.authSession = authSession
+        authSession?.presentationContextProvider = self
+        authSession?.prefersEphemeralWebBrowserSession = true
 
         if #available(iOS 13.4, *) {
-            if !authSession.canStart {
+            if authSession?.canStart == false {
                 completion(.failure(FCLiteError.authSessionCannotStart))
                 return
             }
@@ -110,7 +106,7 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
         let animationsEnabledOriginalValue = UIView.areAnimationsEnabled
         UIView.setAnimationsEnabled(false)
 
-        let started = authSession.start()
+        let started = authSession?.start() ?? false
 
         if !started {
             UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
