@@ -398,7 +398,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testCardSectionElement_cardFundingFiltering_showsWarningButRemainsValid() {
-        // Set a publishable key for the metadata service
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
 
         // Set up a CardSectionElement with funding filter that only allows debit:
@@ -435,20 +434,16 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         textFieldElement.textFieldView.textDidChange()
 
         // Check - card should still be VALID (not blocking)
-        let binRange = (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.mostSpecificBINRange(forNumber: visaCredit)
-        if !binRange.isHardcoded && binRange.funding == .credit {
-            // Card should remain valid so user can submit
-            XCTAssertTrue(
-                textFieldElement.validationState.isValid,
-                "Credit card should remain valid (warning-only, not blocking)"
-            )
+        XCTAssertTrue(
+            textFieldElement.validationState.isValid,
+            "Credit card should remain valid (warning-only, not blocking)"
+        )
 
-            // But should show a warning via warningLabelText
-            XCTAssertNotNil(
-                textFieldElement.warningLabelText,
-                "A funding warning should be shown"
-            )
-        }
+        // But should show a warning via warningLabelText
+        XCTAssertEqual(
+            textFieldElement.warningLabelText,
+            "Only debit cards are accepted"
+        )
     }
 
     func testPANValidation_cardBrandFiltering() throws {
