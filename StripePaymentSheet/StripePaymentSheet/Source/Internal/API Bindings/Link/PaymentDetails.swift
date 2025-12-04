@@ -248,6 +248,15 @@ extension ConsumerPaymentDetails.Details.Card {
             case .unparsable: String.Localized.Funding.default
             }
         }
+
+        var stpFundingType: STPCardFundingType {
+            switch self {
+            case .credit: return .credit
+            case .debit: return .debit
+            case .prepaid: return .prepaid
+            case .unparsable: return .other
+            }
+        }
     }
 
     var shouldRecollectCardCVC: Bool {
