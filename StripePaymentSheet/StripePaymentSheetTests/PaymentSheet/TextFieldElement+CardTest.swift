@@ -477,8 +477,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         }
     }
 
-    // MARK: - Card Funding Filtering Tests (Warning-based, not blocking)
-
     func testPANValidation_cardFundingFiltering_noWarningWithoutNetworkFetch() throws {
         // Without fetching from the network, hardcoded BIN ranges have .other funding
         // so no funding warning should be shown (we don't have reliable funding info)
