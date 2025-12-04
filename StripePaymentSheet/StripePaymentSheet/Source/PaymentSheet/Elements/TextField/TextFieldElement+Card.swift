@@ -202,12 +202,12 @@ extension TextFieldElement {
 
         func warningLabel(text: String) -> String? {
             guard cardFundingFilter != .default else { return nil }
-            // Only check funding source if we have at least six PAN digits
             guard text.count >= 6 else { return nil }
 
+            // Read funding data from STPBINController's cache
             let binRange = binController.mostSpecificBINRange(forNumber: text)
 
-            // Only warn if we have real funding data from the metadata service
+            // Only warn if we have real funding data from the metadata service (not hardcoded fallback data)
             guard !binRange.isHardcoded else { return nil }
 
             if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {

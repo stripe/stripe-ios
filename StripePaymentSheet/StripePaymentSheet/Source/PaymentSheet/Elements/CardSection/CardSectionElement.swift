@@ -188,7 +188,6 @@ final class CardSectionElement: ContainerElement {
     var lastPanElementValidationState: ElementValidationState
     var lastDisallowedCardBrandLogged: STPCardBrand?
     var hasLoggedExpectedExtraDigitsButUserEntered16: Bool = false
-
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
         let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
@@ -198,7 +197,7 @@ final class CardSectionElement: ContainerElement {
         }
 
         fetchAndUpdateCardBrands()
-        fetchAndCheckCardFunding()
+        fetchAndCacheCardFunding()
 
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
@@ -239,8 +238,9 @@ final class CardSectionElement: ContainerElement {
     }
 
     // MARK: - Card funding check
-    /// Fetches BIN metadata to validate card funding type against merchant rules.
-    func fetchAndCheckCardFunding() {
+
+    /// Fetches BIN metadata from the card metadata service and caches it in `STPBINController`.
+    func fetchAndCacheCardFunding() {
         guard cardFundingFilter != .default else {
             return
         }
@@ -248,15 +248,14 @@ final class CardSectionElement: ContainerElement {
             return
         }
 
-        // The BIN controller caches responses and batches in-flight requests,
-        // so we don't need to track duplicates ourselves
+        // STPBINController caches responses internally and deduplicates in-flight requests
         STPBINController.shared.retrieveBINRanges(
             forPrefix: String(panElement.text.prefix(6)),
             recordErrorsAsSuccess: false,
             onlyFetchForVariableLengthBINs: false
         ) { [weak self] _ in
             guard let self = self else { return }
-            // Re-validate now that BIN data is cached
+            // Trigger re-validation so warningLabel can read the now-cached funding data
             self.panElement.setText(self.panElement.text)
         }
     }
