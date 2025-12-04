@@ -593,7 +593,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
 
         do {
-            let response = try await apiClient.createPaymentToken(for: Constant.validPaymentId, cryptoCustomerId: Constant.validCustomerId)
+            let response = try await apiClient.createPaymentToken(
+                for: Constant.validPaymentId,
+                cryptoCustomerId: Constant.validCustomerId
+            )
             XCTAssertEqual(response.id, Constant.validPaymentTokenId)
         } catch {
             XCTFail("Expected a success response but got an error: \(error).")
