@@ -197,7 +197,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 14)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -258,7 +258,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 14)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -329,7 +329,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 1)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -388,7 +388,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 2)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -436,7 +436,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 3)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -520,7 +520,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = queryParametersString.parsedHTTPBodyDictionary
+            let parameters = queryParametersString.parsedHTTPParametersDictionary
             XCTAssertEqual(parameters.count, 2)
             XCTAssertEqual(parameters["crypto_onramp_session"], Constant.validOnrampSessionId)
             XCTAssertEqual(parameters["client_secret"], Constant.validOnrampSessionClientSecret)
@@ -579,7 +579,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 2)
             XCTAssertEqual(parameters["payment_method"], Constant.validPaymentId)
@@ -633,7 +633,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = queryParametersString.parsedHTTPBodyDictionary
+            let parameters = queryParametersString.parsedHTTPParametersDictionary
 
             XCTAssertEqual(parameters.count, 1)
             XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
@@ -673,7 +673,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 }
 
 private extension String {
-    var parsedHTTPBodyDictionary: [String: String] {
+    var parsedHTTPParametersDictionary: [String: String] {
         let pairs = components(separatedBy: "&")
         return pairs.reduce(into: [:]) { result, pair in
             let splitPair = pair.components(separatedBy: "=")
