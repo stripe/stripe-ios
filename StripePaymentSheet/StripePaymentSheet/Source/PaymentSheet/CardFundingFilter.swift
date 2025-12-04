@@ -61,17 +61,15 @@ struct CardFundingFilter: Equatable {
         case .all:
             return nil
         case .allowed(let allowedFundingTypes):
-            // Filter to only user-visible funding types (exclude unknown)
-            let displayableTypes = allowedFundingTypes.filter { $0 != .unknown }
-            guard !displayableTypes.isEmpty else { return nil }
-
-            let displayNames = displayableTypes.compactMap { $0.displayName }
+            let displayNames = allowedFundingTypes.compactMap { $0.displayName }
             guard !displayNames.isEmpty else { return nil }
 
             // Join with localized "and" for the last element
             if displayNames.count == 1 {
+                // E.g. "debit"
                 return displayNames.first
             } else if displayNames.count == 2 {
+                // E.g. "debit and pre-paid"
                 return String.Localized.x_and_y(displayNames[0], displayNames[1])
             } else {
                 // For 3+ items: "credit, debit, and pre-paid"
@@ -101,7 +99,7 @@ extension STPCardFundingType {
 
 extension PaymentSheet.CardFundingType {
     /// Returns a user-friendly display name for the card funding category.
-    var displayName: String {
+    var displayName: String? {
         switch self {
         case .credit:
             return String.Localized.credit.lowercased()
@@ -110,7 +108,8 @@ extension PaymentSheet.CardFundingType {
         case .prepaid:
             return String.Localized.prepaid.lowercased()
         case .unknown:
-            return ""
+            // We never show the user the "unknown" filtering type in the UI
+            return nil
         }
     }
 }
