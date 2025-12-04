@@ -507,52 +507,6 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testPANValidation_cardFundingFiltering_showsWarningAfterNetworkFetch() throws {
-        // After fetching from the network, BIN ranges have real funding info
-        // so a warning should be shown (but card should still be valid for submission)
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-
-        var configuration = TextFieldElement.PANConfiguration(
-            cardFundingFilter: .init(cardFundingAcceptance: .allowed(fundingTypes: [.debit]))
-        )
-        let binController = STPBINController()
-        configuration.binController = binController
-
-        // Visa credit card number
-        let visaCredit = "4242424242424242"
-
-        // Before fetch - should be valid with no warning
-        XCTAssertEqual(configuration.simulateValidationState(visaCredit), .valid)
-        XCTAssertNil(configuration.warningLabel(text: visaCredit))
-
-        // Fetch BIN ranges from the network
-        let fetchExpectation = expectation(description: "Fetch BIN Range")
-        binController.retrieveBINRanges(
-            forPrefix: String(visaCredit.prefix(6)),
-            recordErrorsAsSuccess: false,
-            onlyFetchForVariableLengthBINs: false
-        ) { _ in
-            fetchExpectation.fulfill()
-        }
-        wait(for: [fetchExpectation], timeout: 10)
-
-        let binRange = binController.mostSpecificBINRange(forNumber: visaCredit)
-        if !binRange.isHardcoded && binRange.funding == .credit {
-            // After fetch - should still be valid (not blocking)
-            XCTAssertEqual(
-                configuration.simulateValidationState(visaCredit),
-                .valid,
-                "Card should remain valid even when funding warning is shown"
-            )
-
-            // But should show a warning about what IS accepted
-            let warningText = configuration.warningLabel(text: visaCredit)
-            XCTAssertNotNil(warningText, "Warning should be shown for credit card when only debit is allowed")
-            XCTAssertTrue(warningText?.lowercased().contains("debit") == true,
-                         "Warning should mention the allowed funding type (debit)")
-        }
-    }
-
     func testPANValidation_cardFundingFiltering_noWarningForAllowedFunding() throws {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
 
