@@ -88,6 +88,8 @@ final class SectionView: UIView {
         containerView.updateUI(newViews: viewModel.views)
         titleLabel.text = viewModel.title
         titleLabel.isHidden = viewModel.title == nil
+
+        // Priority: error > warning > subLabel. Only one is shown at a time.
         if let errorText = viewModel.errorText, !errorText.isEmpty {
             errorOrSubLabel.text = viewModel.errorText
             errorOrSubLabel.isHidden = false
