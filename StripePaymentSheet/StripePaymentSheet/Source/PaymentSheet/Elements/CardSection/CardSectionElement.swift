@@ -188,8 +188,6 @@ final class CardSectionElement: ContainerElement {
     var lastPanElementValidationState: ElementValidationState
     var lastDisallowedCardBrandLogged: STPCardBrand?
     var hasLoggedExpectedExtraDigitsButUserEntered16: Bool = false
-    /// Prevents infinite loop since the completion calls `setText` which triggers `didUpdate`.
-    private var lastFetchedFundingPrefix: String?
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
         let cardBrand = selectedBrand ?? STPCardValidator.brand(forNumber: panElement.text)
@@ -247,8 +245,7 @@ final class CardSectionElement: ContainerElement {
             return
         }
         let binPrefix = String(panElement.text.prefix(6))
-        guard panElement.text.count >= 6,
-              binPrefix != lastFetchedFundingPrefix else {
+        guard panElement.text.count >= 6 else {
             return
         }
 
@@ -258,9 +255,8 @@ final class CardSectionElement: ContainerElement {
             onlyFetchForVariableLengthBINs: false
         ) { [weak self] _ in
             guard let self = self else { return }
-            self.lastFetchedFundingPrefix = binPrefix
             // Trigger re-validation so warningLabel can read the now-cached funding data
-            self.panElement.setText(self.panElement.text)
+            delegate?.didUpdate(element: self)
         }
     }
 
