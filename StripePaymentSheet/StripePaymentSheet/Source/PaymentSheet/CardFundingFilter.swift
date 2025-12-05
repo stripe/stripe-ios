@@ -62,19 +62,21 @@ struct CardFundingFilter: Equatable {
             return nil
         case .allowed(let allowedFundingTypes):
             let displayNames = allowedFundingTypes.compactMap { $0.displayName }
-            guard !displayNames.isEmpty else { return nil }
+            guard !displayNames.isEmpty,
+                  let displayNamesFirst = displayNames.first,
+                  let displayNamesLast = displayNames.last else { return nil }
 
             // Join with localized "and" for the last element
             if displayNames.count == 1 {
                 // E.g. "debit"
-                return displayNames.first
+                return displayNamesFirst
             } else if displayNames.count == 2 {
-                // E.g. "debit and pre-paid"
-                return String.Localized.x_and_y(displayNames[0], displayNames[1])
+                // E.g. "debit and prepaid"
+                return String.Localized.x_and_y(displayNamesFirst, displayNamesLast)
             } else {
-                // For 3+ items: "credit, debit, and pre-paid"
+                // For 3+ items: "credit, debit, and prepaid"
                 let allButLast = displayNames.dropLast().joined(separator: ", ")
-                return String.Localized.x_and_y(allButLast, displayNames.last ?? "")
+                return String.Localized.x_and_y(allButLast, displayNamesLast)
             }
         }
     }
