@@ -231,7 +231,13 @@ extension FinancialConnectionsAsyncAPIClient {
         mobileParameters["app_return_url"] = returnURL
 
         if initialSynchronize {
-            let attestationIsSupported = backingAPIClient.stripeAttest.isSupported
+            let attestationIsSupported: Bool = {
+                if backingAPIClient.isTestmode {
+                    return true
+                } else {
+                    return backingAPIClient.stripeAttest.isSupported
+                }
+            }()
             mobileParameters["supports_app_verification"] = attestationIsSupported
             mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
             if !attestationIsSupported {
