@@ -188,7 +188,7 @@ final class CardSectionElement: ContainerElement {
     var lastPanElementValidationState: ElementValidationState
     var lastDisallowedCardBrandLogged: STPCardBrand?
     var hasLoggedExpectedExtraDigitsButUserEntered16: Bool = false
-    /// Tracks the last BIN prefix we fetched funding info for to avoid redundant calls
+    /// Prevents infinite loop since the completion calls `setText` which triggers `didUpdate`.
     private var lastFetchedFundingPrefix: String?
     func didUpdate(element: Element) {
         // Update the CVC field if the card brand changes
