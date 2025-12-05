@@ -8,8 +8,11 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 
 struct CardFundingFilter: Equatable {
+
+    static let `default`: CardFundingFilter = .init(cardFundingAcceptance: .all)
 
     private let cardFundingAcceptance: PaymentSheet.CardFundingAcceptance
 
@@ -50,6 +53,33 @@ struct CardFundingFilter: Equatable {
             return capabilities
         }
     }
+
+    /// Returns a user-friendly display string of the allowed funding types (e.g. "debit", "debit and credit")
+    /// - Returns: A localized string listing the allowed funding types, or nil if all types are allowed
+    func allowedFundingTypesDisplayString() -> String? {
+        switch cardFundingAcceptance {
+        case .all:
+            return nil
+        case .allowed(let allowedFundingTypes):
+            let displayNames = allowedFundingTypes.compactMap { $0.displayName }
+            guard !displayNames.isEmpty,
+                  let displayNamesFirst = displayNames.first,
+                  let displayNamesLast = displayNames.last else { return nil }
+
+            // Join with localized "and" for the last element
+            if displayNames.count == 1 {
+                // E.g. "debit"
+                return displayNamesFirst
+            } else if displayNames.count == 2 {
+                // E.g. "debit and prepaid"
+                return String.Localized.x_and_y(displayNamesFirst, displayNamesLast)
+            } else {
+                // For 3+ items: "credit, debit, and prepaid"
+                let allButLast = displayNames.dropLast().joined(separator: ", ")
+                return String.Localized.x_and_y(allButLast, displayNamesLast)
+            }
+        }
+    }
 }
 
 extension STPCardFundingType {
@@ -65,6 +95,23 @@ extension STPCardFundingType {
             return .unknown
         @unknown default:
             return .unknown
+        }
+    }
+}
+
+extension PaymentSheet.CardFundingType {
+    /// Returns a user-friendly display name for the card funding category.
+    var displayName: String? {
+        switch self {
+        case .credit:
+            return String.Localized.credit.lowercased()
+        case .debit:
+            return String.Localized.debit.lowercased()
+        case .prepaid:
+            return String.Localized.prepaid.lowercased()
+        case .unknown:
+            // We never show the user the "unknown" filtering type in the UI
+            return nil
         }
     }
 }

@@ -145,6 +145,48 @@ extension String.Localized {
         )
     }
 
+    @_spi(STP) public static func only_funding_types_accepted(fundingTypes: String) -> String {
+        String.localizedStringWithFormat(
+            STPLocalizedString(
+                "Only %1$@ cards are accepted",
+                "Warning shown when only specific card funding types are accepted. E.g. 'Only debit cards are accepted' or 'Only debit and credit cards are accepted'"
+            ),
+            fundingTypes
+        )
+    }
+
+    @_spi(STP) public static func x_and_y(_ x: String, _ y: String) -> String {
+        String.localizedStringWithFormat(
+            STPLocalizedString(
+                "%1$@ and %2$@",
+                "A format string for joining two items with 'and'. E.g. 'debit and credit'"
+            ),
+            x,
+            y
+        )
+    }
+
+    @_spi(STP) public static var credit: String {
+        STPLocalizedString(
+            "Credit",
+            "Label for credit card funding type"
+        )
+    }
+
+    @_spi(STP) public static var debit: String {
+        STPLocalizedString(
+            "Debit",
+            "Label for debit card funding type"
+        )
+    }
+
+    @_spi(STP) public static var prepaid: String {
+        STPLocalizedString(
+            "Prepaid",
+            "Label for prepaid card funding type"
+        )
+    }
+
     @_spi(STP) public enum Funding {
         @_spi(STP) public static var credit: String {
             STPLocalizedString(
