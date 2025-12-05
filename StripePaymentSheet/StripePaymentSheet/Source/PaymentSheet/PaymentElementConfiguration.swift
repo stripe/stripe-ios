@@ -46,7 +46,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
-    var enablePayPay: Bool { get }
 }
 
 extension PaymentElementConfiguration {

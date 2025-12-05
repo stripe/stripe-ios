@@ -293,10 +293,6 @@ extension PaymentSheet {
         ) -> PaymentMethodAvailabilityStatus {
             let requirements: [PaymentMethodTypeRequirement]
 
-            if paymentMethod == .payPay, !configuration.enablePayPay {
-                return .notSupported
-            }
-
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
             if intent.isSetupFutureUsageSet(for: paymentMethod) {
                 requirements = {

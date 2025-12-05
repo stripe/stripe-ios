@@ -35,9 +35,6 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.applePayButtonType)
         SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
         SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
-        if playgroundController.settings.merchantCountryCode == .JP, playgroundController.settings.currency == .jpy {
-            SettingView(setting: $playgroundController.settings.enablePayPay)
-        }
         if playgroundController.settings.defaultBillingAddress == .customEmail {
             TextField("Default email", text: customEmailBinding)
                 .keyboardType(.emailAddress)
