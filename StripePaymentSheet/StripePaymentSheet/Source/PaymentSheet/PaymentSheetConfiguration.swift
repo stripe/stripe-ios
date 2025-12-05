@@ -223,7 +223,10 @@ extension PaymentSheet {
 
         /// By default, PaymentSheet will accept cards of all funding types (credit, debit, prepaid, unknown).
         /// You can specify which card funding types to allow.
-        @_spi(CardFundingFilteringPrivatePreview) public var allowedCardFundingTypes: PaymentSheet.CardFundingAcceptance = .all
+        /// When a customer enters a card that isn't allowed, a warning will be displayed, but they can still complete the payment.
+        ///
+        /// This is a client-side UX feature only. You must validate the funding type on your server using the confirmation token or radar rules before confirming the payment to ensure only allowed funding types are accepted.
+        @_spi(CardFundingFilteringPrivatePreview) public var allowedCardFundingTypes: PaymentSheet.CardFundingType = .all
 
         /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
@@ -986,23 +989,24 @@ extension PaymentSheet {
 
 extension PaymentSheet {
     /// Card funding types that can be filtered
-    @_spi(CardFundingFilteringPrivatePreview) public enum CardFundingType: Equatable {
+    @_spi(CardFundingFilteringPrivatePreview) public struct CardFundingType: OptionSet, Equatable {
+        public let rawValue: Int
+
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+
         /// Debit cards
-        case debit
+        public static let debit = CardFundingType(rawValue: 1 << 0)
         /// Credit cards
-        case credit
+        public static let credit = CardFundingType(rawValue: 1 << 1)
         /// Prepaid cards
-        case prepaid
+        public static let prepaid = CardFundingType(rawValue: 1 << 2)
         /// Unknown or undetermined funding type.
         /// Include this if you want to accept cards where the funding type cannot be determined from card metadata.
-        case unknown
-    }
+        public static let unknown = CardFundingType(rawValue: 1 << 3)
 
-    /// Options to filter cards by funding type
-    @_spi(CardFundingFilteringPrivatePreview) public enum CardFundingAcceptance: Equatable {
         /// Accept all card funding types
-        case all
-        /// Accept only the card funding types specified in the associated value
-        case allowed(fundingTypes: [CardFundingType])
+        public static let all: CardFundingType = [.debit, .credit, .prepaid, .unknown]
     }
 }
