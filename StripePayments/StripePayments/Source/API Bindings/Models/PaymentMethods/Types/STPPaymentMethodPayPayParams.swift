@@ -8,7 +8,7 @@
 import Foundation
 
 /// An object representing parameters used to create a PayPal Payment Method :nodoc:
-@_spi(STP) public class STPPaymentMethodPayPayParams: NSObject, STPFormEncodable {
+public class STPPaymentMethodPayPayParams: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     @objc

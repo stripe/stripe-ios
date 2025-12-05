@@ -110,7 +110,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     /// If this is a ShopPay PaymentMethod, this contains additional details.
     @objc @_spi(STP) public var shopPay: STPPaymentMethodShopPayParams?
     /// If this is a PayPay PaymentMethod, this contains additional details.
-    @objc @_spi(STP) public var payPay: STPPaymentMethodPayPayParams?
+    @objc public var payPay: STPPaymentMethodPayPayParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -736,7 +736,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     ///   - payPay:   An object containing additional PayPay details.
     ///   - metadata:            Additional information to attach to the PaymentMethod.
     @objc
-    @_spi(STP) public convenience init(
+    public convenience init(
         payPay: STPPaymentMethodPayPayParams,
         metadata: [String: String]?
     ) {
