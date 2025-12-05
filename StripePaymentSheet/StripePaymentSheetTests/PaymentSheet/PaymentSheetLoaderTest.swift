@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -447,6 +447,54 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let loadResult):
                 // ...check that it filters out the saved Visa card
+                XCTAssertTrue(loadResult.savedPaymentMethods.isEmpty)
+
+            case .failure:
+                XCTFail()
+            }
+        }
+        await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testPaymentSheetLoadFiltersCardFundingAcceptance() async throws {
+        let apiClient = STPAPIClient(publishableKey: STPTestingJPPublishableKey)
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = apiClient
+        // Only allow debit cards - this should filter out credit cards
+        configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.debit])
+
+        // A hardcoded test Customer
+        let testCustomerID = "cus_OtOGvD0ZVacBoj"
+
+        // Create a new EK for the Customer
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "jp")
+        configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+        // This is a credit Visa saved card:
+        let savedCard = "card_1O5upWIq2LmpyICo9tQmU9xY"
+
+        // Check that the test Customer has the expected card
+        let checkCustomerExpectation = expectation(description: "Check test customer")
+        apiClient.listPaymentMethods(forCustomer: testCustomerID, using: customerAndEphemeralKey.ephemeralKeySecret) { paymentMethods, _ in
+            XCTAssertEqual(paymentMethods?.first?.stripeId, savedCard)
+            // Verify the card has credit funding type
+            XCTAssertEqual(paymentMethods?.first?.card?.funding, "credit")
+            checkCustomerExpectation.fulfill()
+        }
+        await fulfillment(of: [checkCustomerExpectation])
+
+        // Load PaymentSheet...
+        let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
+        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
+            XCTFail("Confirm handler shouldn't be called.")
+            return ""
+        }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "JPY"), confirmHandler: confirmHandler)
+        PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { result in
+            loadExpectation.fulfill()
+            switch result {
+            case .success(let loadResult):
+                // ...check that it filters out the saved credit card when only debit is allowed
                 XCTAssertTrue(loadResult.savedPaymentMethods.isEmpty)
 
             case .failure:

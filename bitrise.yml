@@ -49,6 +49,7 @@ stages:
     - ui-tests-3: {}
     - ui-tests-4: {}
     - ui-tests-5: {}
+    - ui-tests-6: {}
     - integration-all: {}
     - lokalise-upload: {}
   stage-releases-run-all:
@@ -68,6 +69,7 @@ stages:
     - ui-tests-3: {}
     - ui-tests-4: {}
     - ui-tests-5: {}
+    - ui-tests-6: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
     - pod-lint-tests: {}
@@ -323,6 +325,13 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeUICore
+        is_always_run: true
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeCryptoOnramp
         is_always_run: true
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
@@ -744,6 +753,28 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: StripeConnect Example
         - test_plan: StripeConnectExample
+        - log_formatter: xcbeautify
+        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-16.0.x
+        machine_type_id: g2.mac.large
+  ui-tests-6:
+    steps:
+    - script@1:
+        inputs:
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        title: Warm up emulator (iPhone 12 mini, OS=16.4)
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: CryptoOnramp Example
+        - test_plan: CryptoOnrampExampleUITests
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}

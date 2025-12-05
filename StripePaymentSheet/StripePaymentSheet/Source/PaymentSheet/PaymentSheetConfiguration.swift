@@ -221,6 +221,10 @@ extension PaymentSheet {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
+        /// By default, PaymentSheet will accept cards of all funding types (credit, debit, prepaid, unknown).
+        /// You can specify which card funding types to allow.
+        @_spi(CardFundingFilteringPrivatePreview) public var allowedCardFundingTypes: PaymentSheet.CardFundingAcceptance = .all
+
         /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
         /// Valid payment method types include:
@@ -977,5 +981,28 @@ extension PaymentSheet {
         /// Accept all card brands supported by Stripe except for those specified in the associated value
         /// - Note: Any card brands that do not map to a `BrandCategory` will be accepted when using a disallow list.
         case disallowed(brands: [BrandCategory])
+    }
+}
+
+extension PaymentSheet {
+    /// Card funding types that can be filtered
+    @_spi(CardFundingFilteringPrivatePreview) public enum CardFundingType: Equatable {
+        /// Debit cards
+        case debit
+        /// Credit cards
+        case credit
+        /// Prepaid cards
+        case prepaid
+        /// Unknown or undetermined funding type.
+        /// Include this if you want to accept cards where the funding type cannot be determined from card metadata.
+        case unknown
+    }
+
+    /// Options to filter cards by funding type
+    @_spi(CardFundingFilteringPrivatePreview) public enum CardFundingAcceptance: Equatable {
+        /// Accept all card funding types
+        case all
+        /// Accept only the card funding types specified in the associated value
+        case allowed(fundingTypes: [CardFundingType])
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-@_spi(PreviewConnect) import StripeConnect
+@_spi(PrivatePreviewConnect) @_spi(PreviewConnect) import StripeConnect
 import SwiftUI
 import UIKit
 
@@ -29,8 +29,7 @@ class MainViewController: UITableViewController {
         case onboarding = "Account onboarding"
         case payouts = "Payouts"
         case payments = "Payments"
-        // TODO: add this once in preview
-        // case checkScanning = "Check scanning"
+        case checkScanning = "Check scanning"
 
         var label: String { rawValue }
 
@@ -41,9 +40,9 @@ class MainViewController: UITableViewController {
                     .font: UIFont.boldSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize),
                 ]
             )
-            if isBeta {
+            if let sq = stageQualifier {
                 attributeString.append(NSAttributedString(
-                    string: " Beta",
+                    string: " \(sq)",
                     attributes: [
                         .font: UIFont.preferredFont(forTextStyle: .footnote),
                         .foregroundColor: UIColor.secondaryLabel,
@@ -53,14 +52,16 @@ class MainViewController: UITableViewController {
             return attributeString
         }
 
-        var isBeta: Bool {
+        var stageQualifier: String? {
             switch self {
             case .onboarding:
-                return false  // GA
+                return nil  // GA
             case .payouts:
-                return true   // Experimental
+                return "Beta"
             case .payments:
-                return true   // Experimental
+                return "Beta"
+            case .checkScanning:
+                return "Private Preview"
             }
         }
 
@@ -72,6 +73,8 @@ class MainViewController: UITableViewController {
                 return "Show payouts and allow your users to perform payouts."
             case .payments:
                 return "Show payments and allow your users to view payment details and manage disputes."
+            case .checkScanning:
+                return "Show a form to allow users to scan paper checks."
             }
         }
     }
@@ -153,6 +156,13 @@ class MainViewController: UITableViewController {
             )
             paymentsVC.delegate = self
             viewControllerToPresent = paymentsVC
+        case .checkScanning:
+            let checkScanning = embeddedComponentManager.createCheckScanningController()
+
+            checkScanning.delegate = self
+            checkScanning.title = row.label
+            checkScanning.present(from: self, animated: true)
+            return
         }
 
         // Fetch ViewController presentation settings
@@ -305,6 +315,30 @@ extension MainViewController: PayoutsViewControllerDelegate {
 extension MainViewController: PaymentsViewControllerDelegate {
     func payments(_ payments: PaymentsViewController, didFailLoadWithError error: any Error) {
         presentAlert(title: "Error loading payments", message: (error as NSError).debugDescription)
+    }
+}
+
+// MARK: - CheckScanningControllerDelegate
+
+extension MainViewController: CheckScanningControllerDelegate {
+    func checkScanning(_ checkScanning: CheckScanningController, didFailLoadWithError error: Error) {
+        presentAlert(title: "Error loading check scanning", message: (error as NSError).debugDescription)
+    }
+
+    func checkScanning(_ checkScanning: CheckScanningController, didSubmitCheckScan: CheckScanningController.CheckScanDetails) async throws {
+        await MainActor.run {
+            checkScanning.dismiss(animated: false)
+
+            let alertController = UIAlertController(
+                title: "didSubmitCheckScan",
+                message: "payload \(didSubmitCheckScan)",
+                preferredStyle: .alert
+            )
+
+            let doneAction = UIAlertAction(title: "Done", style: .default)
+            alertController.addAction(doneAction)
+            self.present(alertController, animated: true)
+        }
     }
 }
 
