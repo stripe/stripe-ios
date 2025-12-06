@@ -7,7 +7,7 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-@testable @_spi(STP) @_spi(v25) import StripeFinancialConnections
+@testable @_spi(STP) import StripeFinancialConnections
 import XCTest
 
 class EmptySessionFetcher: FinancialConnectionsSessionFetcher {
