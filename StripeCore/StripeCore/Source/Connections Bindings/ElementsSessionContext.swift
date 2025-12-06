@@ -22,6 +22,14 @@ import Foundation
         }
     }
 
+    @_spi(STP) public struct LinkSettings {
+        @_spi(STP) public let useAttestationEndpoints: Bool?
+
+        @_spi(STP) public init(useAttestationEndpoints: Bool?) {
+            self.useAttestationEndpoints = useAttestationEndpoints
+        }
+    }
+
     /// These fields will be used to prefill the Financial Connections Link Login pane.
     /// An unformatted phone number + country code will be passed to the web flow,
     /// and a formatted phone number will be passed to the native flow.
@@ -52,6 +60,7 @@ import Foundation
     @_spi(STP) public let billingDetails: BillingDetails?
     @_spi(STP) public let eligibleForIncentive: Bool
     @_spi(STP) public let allowRedisplay: String?
+    @_spi(STP) public let linkSettings: LinkSettings?
     @_spi(STP) public let clientAttributionMetadata: STPClientAttributionMetadata?
 
     @_spi(STP) public var billingAddress: BillingAddress? {
@@ -74,6 +83,7 @@ import Foundation
         billingDetails: BillingDetails? = nil,
         eligibleForIncentive: Bool = false,
         allowRedisplay: String? = nil,
+        linkSettings: LinkSettings? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil
     ) {
         self.amount = amount
@@ -84,6 +94,7 @@ import Foundation
         self.billingDetails = billingDetails
         self.eligibleForIncentive = eligibleForIncentive
         self.allowRedisplay = allowRedisplay
+        self.linkSettings = linkSettings
         self.clientAttributionMetadata = clientAttributionMetadata
     }
 }

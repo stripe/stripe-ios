@@ -673,7 +673,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
             style: .automatic,
-            elementsSessionContext: ElementsSessionContext(clientAttributionMetadata: clientAttributionMetadata),
+            elementsSessionContext: ElementsSessionContext(
+                linkSettings: context.elementsSession.linkSettings.map {
+                    ElementsSessionContext.LinkSettings(useAttestationEndpoints: $0.useAttestationEndpoints)
+                },
+                clientAttributionMetadata: clientAttributionMetadata
+            ),
             onEvent: nil,
             from: self,
             completion: { result in
