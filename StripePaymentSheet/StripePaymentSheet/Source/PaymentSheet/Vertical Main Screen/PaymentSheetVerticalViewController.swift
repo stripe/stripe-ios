@@ -577,22 +577,32 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        logRenderLPMs()
+        logInitialDisplayedPaymentMethods()
         isLinkWalletButtonSelected = false
         linkConfirmOption = nil
     }
 
-    private func logRenderLPMs() {
-        // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
-        var visibleLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }
-        // Add wallet LPMs
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
-            visibleLPMs.append(RowButtonType.applePay.analyticsIdentifier)
+    private func logInitialDisplayedPaymentMethods() {
+        var visiblePaymentMethods: [String] = []
+        var hiddenPaymentMethods: [String] = []
+        // if ApplePay is showing as an express button
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowApplePayInList {
+            visiblePaymentMethods.append(RowButtonType.applePay.analyticsIdentifier)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
-            visibleLPMs.append(RowButtonType.link.analyticsIdentifier)
+        // if Link is showing as an express button
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
+            visiblePaymentMethods.append(RowButtonType.link.analyticsIdentifier)
         }
-        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: [])
+        paymentMethodListViewController?.rowButtons.forEach { rowButton in
+            let identifier = rowButton.type.analyticsIdentifier
+            if rowButton.isFullyVisibleOnScreen {
+                visiblePaymentMethods.append(identifier)
+            } else {
+                hiddenPaymentMethods.append(identifier)
+            }
+        }
+
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .vertical)
     }
 
     // MARK: - PaymentSheetViewControllerProtocol
