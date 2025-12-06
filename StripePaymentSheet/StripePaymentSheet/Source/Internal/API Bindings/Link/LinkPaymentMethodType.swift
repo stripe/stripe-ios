@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public enum LinkPaymentMethodType: String, CaseIterable {
+@_spi(STP) @frozen public enum LinkPaymentMethodType: String, CaseIterable {
     case card = "CARD"
     case bankAccount = "BANK_ACCOUNT"
 }

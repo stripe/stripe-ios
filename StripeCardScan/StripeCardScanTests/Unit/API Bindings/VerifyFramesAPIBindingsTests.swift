@@ -26,7 +26,7 @@ class VerifyFramesAPIBindingsTests: XCTestCase {
         )
 
         /// encodeJSONDictionary used when forming the request body
-        let jsonDictionary = try verifyFrames.encodeJSONDictionary()
+        let jsonDictionary = try StripeJSONEncoder().encodeJSONDictionary(verifyFrames)
 
         XCTAssertEqual(jsonDictionary["client_secret"] as! String, CIVIntentMockData.clientSecret)
         XCTAssertEqual(
@@ -59,7 +59,7 @@ class VerifyFramesAPIBindingsTests: XCTestCase {
         )
 
         /// encodeJSONDictionary used when forming the request body
-        let jsonDictionary = try verificationFramesData.encodeJSONDictionary()
+        let jsonDictionary = try StripeJSONEncoder().encodeJSONDictionary(verificationFramesData)
         let jsonDictionaryViewfinderMargins = jsonDictionary["viewfinder_margins"] as! [String: Any]
 
         XCTAssertEqual(jsonDictionary["image_data"] as! String, "aW1hZ2VfZGF0YQ==")

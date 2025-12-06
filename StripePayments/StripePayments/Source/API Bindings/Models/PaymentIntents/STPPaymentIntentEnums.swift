@@ -9,7 +9,7 @@
 import Foundation
 
 /// Status types for an STPPaymentIntent
-@objc public enum STPPaymentIntentStatus: Int {
+@objc @frozen public enum STPPaymentIntentStatus: Int {
     /// Unknown status
     case unknown
     /// This PaymentIntent requires a PaymentMethod or Source
@@ -32,7 +32,7 @@ import Foundation
 /// Indicates how you intend to use the payment method that your customer provides after the current payment completes.
 /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
 /// - seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-setup_future_usage
-@objc public enum STPPaymentIntentSetupFutureUsage: Int {
+@objc @frozen public enum STPPaymentIntentSetupFutureUsage: Int {
     /// Unknown value.  Update your SDK, or use `allResponseFields` for custom handling.
     case unknown
     /// No value was provided.
@@ -72,7 +72,7 @@ import Foundation
 // MARK: - Deprecated
 /// Types of Actions from a `STPPaymentIntent`, when the payment intent
 /// status is `STPPaymentIntentStatusRequiresAction`.
-@objc public enum STPPaymentIntentActionType: Int {
+@objc @frozen public enum STPPaymentIntentActionType: Int {
     /// This is an unknown action, that's been added since the SDK
     /// was last updated.
     /// Update your SDK, or use the `nextAction.allResponseFields`
