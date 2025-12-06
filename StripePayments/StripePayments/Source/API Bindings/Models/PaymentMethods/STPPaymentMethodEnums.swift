@@ -94,6 +94,8 @@ import Foundation
     case multibanco
     /// A ShopPay payment method
     @_spi(STP) case shopPay
+    /// A PayPay payment method
+    @_spi(STP) case payPay
     /// An unknown type.
     case unknown
 
@@ -186,6 +188,8 @@ import Foundation
             return "Multibanco"
         case .shopPay:
             return "ShopPay"
+        case .payPay:
+            return "PayPay"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -281,6 +285,8 @@ import Foundation
             return "multibanco"
         case .shopPay:
             return "shop_pay"
+        case .payPay:
+            return "paypay"
         }
     }
 

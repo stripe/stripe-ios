@@ -210,6 +210,10 @@ class PlaygroundController: ObservableObject {
             configuration.allowsDelayedPaymentMethods = true
         }
 
+        if settings.enablePayPay == .on {
+            configuration.enablePayPay = true
+        }
+
         if settings.enablePassiveCaptcha == .on {
             configuration.enablePassiveCaptcha = true
         }
@@ -341,6 +345,10 @@ class PlaygroundController: ObservableObject {
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
+        }
+
+        if settings.enablePayPay == .on {
+            configuration.enablePayPay = true
         }
 
         if settings.enablePassiveCaptcha == .on {
