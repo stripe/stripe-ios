@@ -20,10 +20,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         // Common
         static let requestSecret = "cscs_12345"
         static let errorDomain = "STPAPIClientCryptoOnrampTests.Error"
+        static let validCustomerId = "crc_12345"
 
         // /v1/crypto/internal/customers
         static let createCryptoCustomerAPIPath = "/v1/crypto/internal/customers"
-        static let responseID = "crc_12345"
         static let validLinkAccountInfo = LinkAccountInfo(
             email: "test@example.com",
             redactedPhoneNumber: nil,
@@ -89,6 +89,28 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         static let registerWalletMockResponseObject = RegisterWalletResponse(
             id: "ccw_12345"
         )
+
+        // /v1/crypto/internal/onramp_session
+        static let getOnrampSessionAPIPath = "/v1/crypto/internal/onramp_session"
+        static let validOnrampSessionId = "cos_12345"
+        static let validOnrampSessionClientSecret = "cos_12345_secret_12345"
+        static let validPaymentIntentClientSecret = "pi_12345_secret_12345"
+        static let validOnrampSessionResponseObject = OnrampSessionResponse(
+            id: validOnrampSessionId,
+            clientSecret: validOnrampSessionClientSecret,
+            paymentIntentClientSecret: validPaymentIntentClientSecret
+        )
+
+        // /v1/crypto/internal/payment_token
+        static let createPaymentTokenAPIPath = "/v1/crypto/internal/payment_token"
+        static let validPaymentId = "pm_12345"
+        static let validPaymentTokenId = "cpt_12345"
+        static let validCreatePaymentTokenResponseObject = CreatePaymentTokenResponse(id: validPaymentTokenId)
+
+        // /v1/crypto/internal/platform_settings
+        static let getPlatformSettingsAPIPath = "/v1/crypto/internal/platform_settings"
+        static let validPublishableKey = "pk_test_12345"
+        static let validPlatformSettingsResponseObject = PlatformSettingsResponse(publishableKey: validPublishableKey)
     }
 
     private struct LinkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
@@ -99,8 +121,14 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var consumerSessionClientSecret: String?
     }
 
+    private let jsonEncoder: JSONEncoder = {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+        return jsonEncoder
+    }()
+
     func testcreateCryptoCustomerSuccess() async throws {
-        let mockResponseData = try JSONEncoder().encode(CustomerResponse(id: Constant.responseID))
+        let mockResponseData = try jsonEncoder.encode(CustomerResponse(id: Constant.validCustomerId))
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.createCryptoCustomerAPIPath)
@@ -121,7 +149,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         do {
             let response = try await apiClient.createCryptoCustomer(with: Constant.validLinkAccountInfo)
-            XCTAssertEqual(response.id, Constant.responseID)
+            XCTAssertEqual(response.id, Constant.validCustomerId)
         } catch {
             XCTFail("Expected a success response but got an error: \(error).")
         }
@@ -158,7 +186,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     }
 
     func testCollectKycInfoSuccess() async throws {
-        let mockResponseData = try JSONEncoder().encode(Constant.kycMockResponseObject)
+        let mockResponseData = try jsonEncoder.encode(Constant.kycMockResponseObject)
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.collectKycInfoAPIPath)
@@ -169,7 +197,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 14)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -230,7 +258,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 14)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -301,7 +329,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 1)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -349,7 +377,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     }
 
     func testStartIdentityVerificationSuccess() async throws {
-        let mockResponseData = try JSONEncoder().encode(Constant.startIdentityVerificationMockResponseObject)
+        let mockResponseData = try jsonEncoder.encode(Constant.startIdentityVerificationMockResponseObject)
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.startIdentityVerificationAPIPath)
@@ -360,7 +388,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 2)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -397,7 +425,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     }
 
     func testCollectWalletAddressSuccess() async throws {
-        let mockResponseData = try JSONEncoder().encode(Constant.registerWalletMockResponseObject)
+        let mockResponseData = try jsonEncoder.encode(Constant.registerWalletMockResponseObject)
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.collectWalletAddressAPIPath)
@@ -408,7 +436,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
             XCTAssertEqual(parameters.count, 3)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
@@ -479,10 +507,176 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             )
         )
     }
+
+    func testGetOnrampSessionSuccess() async throws {
+        let mockResponseData = try jsonEncoder.encode(Constant.validOnrampSessionResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getOnrampSessionAPIPath)
+            XCTAssertEqual(request.httpMethod, "GET")
+
+            guard let queryParametersString = request.url?.query else {
+                XCTFail("Expected query parameters but found none.")
+                return false
+            }
+
+            let parameters = queryParametersString.parsedHTTPParametersDictionary
+            XCTAssertEqual(parameters.count, 2)
+            XCTAssertEqual(parameters["crypto_onramp_session"], Constant.validOnrampSessionId)
+            XCTAssertEqual(parameters["client_secret"], Constant.validOnrampSessionClientSecret)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.getOnrampSession(
+                sessionId: Constant.validOnrampSessionId,
+                sessionClientSecret: Constant.validOnrampSessionClientSecret
+            )
+            XCTAssertEqual(response.id, Constant.validOnrampSessionId)
+            XCTAssertEqual(response.clientSecret, Constant.validOnrampSessionClientSecret)
+            XCTAssertEqual(response.paymentIntentClientSecret, Constant.validPaymentIntentClientSecret)
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+
+    }
+
+    func testGetOnrampSessionFailure() async throws {
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getOnrampSessionAPIPath)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            _ = try await apiClient.getOnrampSession(
+                sessionId: Constant.validOnrampSessionId,
+                sessionClientSecret: Constant.validOnrampSessionClientSecret
+            )
+            XCTFail("Expected failure but got success.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
+        }
+    }
+
+    func testCreatePaymentTokenSuccess() async throws {
+        let mockResponseData = try jsonEncoder.encode(Constant.validCreatePaymentTokenResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.createPaymentTokenAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 2)
+            XCTAssertEqual(parameters["payment_method"], Constant.validPaymentId)
+            XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.createPaymentToken(
+                for: Constant.validPaymentId,
+                cryptoCustomerId: Constant.validCustomerId
+            )
+            XCTAssertEqual(response.id, Constant.validPaymentTokenId)
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+    }
+
+    func testCreatePaymentTokenFailure() async throws {
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.createPaymentTokenAPIPath)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            _ = try await apiClient.createPaymentToken(
+                for: Constant.validPaymentId,
+                cryptoCustomerId: Constant.validCustomerId
+            )
+            XCTFail("Expected failure but got success.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
+        }
+    }
+
+    func testGetPlatformSettingsSuccess() async throws {
+        let mockResponseData = try jsonEncoder.encode(Constant.validPlatformSettingsResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
+            XCTAssertEqual(request.httpMethod, "GET")
+
+            guard let queryParametersString = request.url?.query else {
+                XCTFail("Expected query parameters but found none.")
+                return false
+            }
+
+            let parameters = queryParametersString.parsedHTTPParametersDictionary
+
+            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.getPlatformSettings(cryptoCustomerId: Constant.validCustomerId)
+            XCTAssertEqual(response.publishableKey, Constant.validPublishableKey)
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+    }
+
+    func testGetPlatformSettingsFailure() async throws {
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.getPlatformSettingsAPIPath)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            _ = try await apiClient.getPlatformSettings(cryptoCustomerId: Constant.validCustomerId)
+            XCTFail("Expected failure but got success.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
+        }
+    }
 }
 
 private extension String {
-    var parsedHTTPBodyDictionary: [String: String] {
+    var parsedHTTPParametersDictionary: [String: String] {
         let pairs = components(separatedBy: "&")
         return pairs.reduce(into: [:]) { result, pair in
             let splitPair = pair.components(separatedBy: "=")
