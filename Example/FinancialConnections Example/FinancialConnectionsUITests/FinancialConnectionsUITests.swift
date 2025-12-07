@@ -28,7 +28,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test (OAuth)"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -56,7 +56,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -427,7 +427,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.tap()
 
@@ -482,7 +482,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 
@@ -513,7 +513,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.tap()
 
@@ -543,7 +543,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.tap()
 
@@ -599,7 +599,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.tap()
 
@@ -634,12 +634,12 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_scrollDown()
 
-        app.fc_nativeFeaturedInstitution(name: "Down Bank (Unscheduled)").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Down (Unscheduled)").waitForExistenceAndTap()
 
         // selecting another bank will activate "reset flow"
         app.buttons["select_another_bank_button"].waitForExistenceAndTap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 

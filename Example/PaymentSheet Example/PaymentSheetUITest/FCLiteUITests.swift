@@ -127,8 +127,8 @@ class FCLiteUITests: XCTestCase {
         XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 5.0))
         tapPrimaryButton()
 
-        // Payment Success bank
-        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Payment Success'") // Institution Picker
+        // Success bank
+        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Success'") // Institution Picker
         let paymentSuccessBankButton = app.webViews.firstMatch.buttons.containing(paymentSuccessBankButtonPredicate).firstMatch
         XCTAssertTrue(paymentSuccessBankButton.waitForExistence(timeout: 5.0))
         app.webViews.firstMatch.swipeUp() // Make sure the button is in view
