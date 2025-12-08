@@ -51,9 +51,10 @@ struct PaymentSummaryView: View {
                     .fill(.tint)
                     .frame(width: 44, height: 44)
 
-                Image(systemName: "wallet.bifold.fill")
+                Image(systemName: "cart.fill")
                     .font(.system(size: 20, weight: .semibold))
-                    .offset(x: 1, y: -1)
+                    .offset(x: -0.5, y: 1)
+                    .foregroundStyle(.white)
             }
 
             VStack(alignment: .leading, spacing: 2) {

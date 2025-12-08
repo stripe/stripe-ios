@@ -332,6 +332,12 @@ extension STPApplePayContext {
         // Update list of `supportedNetworks` based on the merchant's configuration of cardBrandAcceptance
         paymentRequest.supportedNetworks = paymentRequest.supportedNetworks.filter { configuration.cardBrandFilter.isAccepted(cardBrand: $0.asCardBrand) }
 
+        // Update merchantCapabilities based on the merchant's configuration of allowedCardFundingTypes
+        // Only override if a specific funding type filter is configured
+        if let merchantCapabilities = configuration.cardFundingFilter.applePayMerchantCapabilities() {
+            paymentRequest.merchantCapabilities = merchantCapabilities
+        }
+
         return paymentRequest
     }
 }

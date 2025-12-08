@@ -47,7 +47,10 @@ final class APIClient {
         encoder.dateEncodingStrategy = .secondsSince1970
         self.jsonEncoder = encoder
 
-        if let seamlessSignInDetails = persistedSeamlessSignInDetails {
+        if ProcessInfo.processInfo.environment["UITesting"] != nil {
+            // When UI testing, start with a clean auth state.
+            clearAuthState()
+        } else if let seamlessSignInDetails = persistedSeamlessSignInDetails {
             self.authTokenWithLAI = seamlessSignInDetails.token
             self.email = seamlessSignInDetails.email
         }

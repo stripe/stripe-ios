@@ -12,7 +12,7 @@ import SwiftUI
 import UIKit
 
 /// An element that provides a view with information about how a purchase could be paid for using Buy Now, Pay Later payment methods.
-@_spi(STP)
+@_spi(PaymentMethodMessagingElementPreview)
 public class PaymentMethodMessagingElement {
 
     /// A UIKit view of the element.

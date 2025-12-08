@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -253,6 +253,15 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
+        switch settings.cardFundingAcceptance {
+        case .all:
+            break // Default accepts all funding types
+        case .creditOnly:
+            configuration.allowedCardFundingTypes = .credit
+        case .debitOnly:
+            configuration.allowedCardFundingTypes = .debit
+        }
+
         switch settings.style {
         case .automatic:
             configuration.style = .automatic
@@ -366,6 +375,15 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
+
+        switch settings.cardFundingAcceptance {
+        case .all:
+            break // Default accepts all funding types
+        case .creditOnly:
+            configuration.allowedCardFundingTypes = .credit
+        case .debitOnly:
+            configuration.allowedCardFundingTypes = .debit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on

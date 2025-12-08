@@ -36,6 +36,7 @@ import UIKit
             title: title,
             errorText: errorText,
             subLabel: subLabel,
+            warningLabel: warningLabel,
             selectionBehavior: selectionBehavior,
             theme: theme
         )
@@ -57,6 +58,10 @@ import UIKit
         elements.compactMap({ $0.subLabelText }).first
     }
 
+    var warningLabel: String? {
+        elements.compactMap({ $0.warningLabelText }).first
+    }
+
     let theme: ElementsAppearance
 
     // MARK: - ViewModel
@@ -66,6 +71,7 @@ import UIKit
         let title: String?
         let errorText: String?
         var subLabel: String?
+        var warningLabel: String?
         let selectionBehavior: SelectionBehavior
         let theme: ElementsAppearance
     }

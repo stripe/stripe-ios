@@ -24,6 +24,19 @@ class FCLiteContainerViewController: UIViewController {
         manifest?.isInstantDebits == true
     }
 
+    private var canUseNativeLink: Bool {
+        let useAttestationEndpoints = elementsSessionContext?.linkSettings?.useAttestationEndpoints
+        return deviceCanUseNativeLink(
+            useAttestationEndpoints: useAttestationEndpoints,
+            apiClient: apiClient.backingAPIClient
+        )
+    }
+
+    private var shouldUseSecureWebview: Bool {
+        guard let manifest else { return true }
+        return manifest.isInstantDebits && !canUseNativeLink
+    }
+
     init(
         clientSecret: String,
         returnUrl: URL?,
@@ -73,7 +86,8 @@ class FCLiteContainerViewController: UIViewController {
         do {
             let synchronize = try await apiClient.synchronize(
                 clientSecret: clientSecret,
-                returnUrl: returnUrl
+                returnUrl: returnUrl,
+                canUseNativeLink: canUseNativeLink
             )
             self.manifest = synchronize.manifest
             showWebView(for: synchronize.manifest)
@@ -82,15 +96,21 @@ class FCLiteContainerViewController: UIViewController {
         }
     }
 
-    private func completeFlow(result: FCLiteAuthFlowViewController.WebFlowResult) async {
+    private func completeFlow(result: FCLiteWebFlowResult) async {
         switch result {
         case .success(let returnUrl):
             if isInstantDebits {
-                if let linkedBank = createInstantDebitsLinkedBank(from: returnUrl) {
-                    completion(.completed(.instantDebits(linkedBank)))
-                } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
-                    completion(.completed(.linkedAccount(id: linkedAccountId)))
-                } else {
+                do {
+                    if let linkedBank = try createInstantDebitsLinkedBank(from: returnUrl) {
+                        completion(.completed(.instantDebits(linkedBank)))
+                    } else if let linkedAccountId = returnUrl.extractQueryValue(forKey: "linked_account") {
+                        completion(.completed(.linkedAccount(id: linkedAccountId)))
+                    } else {
+                        let error = FCLiteError.linkedBankUnavailable
+                        throw error
+                    }
+                } catch {
+                    logInstantDebitsCompletionFailure(error: error)
                     completion(.failed(error: FCLiteError.linkedBankUnavailable))
                 }
             } else {
@@ -105,11 +125,13 @@ class FCLiteContainerViewController: UIViewController {
             }
         case .failure(let error):
             completion(.failed(error: error))
+        case .redirect:
+            break
         }
     }
 
     private func fetchSessionAndComplete(
-        cancellationType: FCLiteAuthFlowViewController.WebFlowResult.CancellationType? = nil
+        cancellationType: FCLiteWebFlowResult.CancellationType? = nil
     ) async {
         DispatchQueue.main.async {
             // Pop back to root to show a loading spinner.
@@ -144,26 +166,46 @@ class FCLiteContainerViewController: UIViewController {
     }
 
     private func showWebView(for manifest: LinkAccountSessionManifest) {
-        let authFlowVC = FCLiteAuthFlowViewController(
-            manifest: manifest,
-            elementsSessionContext: elementsSessionContext,
-            returnUrl: returnUrl,
-            onLoad: {
-                DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
+        let authFlowVC: UIViewController
+
+        if shouldUseSecureWebview {
+            authFlowVC = FCLiteSecureAuthFlowViewController(
+                manifest: manifest,
+                elementsSessionContext: elementsSessionContext,
+                completion: { [weak self] result in
+                    guard let self else { return }
+                    DispatchQueue.main.async {
+                        self.spinner.stopAnimating()
+                    }
+                    Task {
+                        await self.completeFlow(result: result)
+                    }
                 }
-            },
-            completion: { [weak self] result in
-                guard let self else { return }
-                Task {
-                    await self.completeFlow(result: result)
+            )
+        } else {
+            authFlowVC = FCLiteAuthFlowViewController(
+                manifest: manifest,
+                elementsSessionContext: elementsSessionContext,
+                returnUrl: returnUrl,
+                onLoad: {
+                    DispatchQueue.main.async {
+                        self.spinner.stopAnimating()
+                    }
+                },
+                completion: { [weak self] result in
+                    guard let self else { return }
+                    Task {
+                        await self.completeFlow(result: result)
+                    }
                 }
-            }
-        )
+            )
+        }
+
         navigationController?.pushViewController(authFlowVC, animated: false)
     }
 
     private func showError() {
+        spinner.stopAnimating()
         setNavigationBar(isHidden: false)
 
         let errorView = ErrorView()
@@ -217,18 +259,18 @@ class FCLiteContainerViewController: UIViewController {
         }
     }
 
-    private func createInstantDebitsLinkedBank(from url: URL) -> InstantDebitsLinkedBank? {
-        guard let paymentMethod = url.extractLinkBankPaymentMethod() else {
+    private func createInstantDebitsLinkedBank(from url: URL) throws -> InstantDebitsLinkedBank? {
+        guard let paymentMethod = try url.extractLinkBankPaymentMethod() else {
             return nil
         }
 
         return InstantDebitsLinkedBank(
             paymentMethod: paymentMethod,
-            bankName: url.extractValue(forKey: "bank_name")?
+            bankName: url.extractQueryValue(forKey: "bank_name")?
                 .replacingOccurrences(of: "+", with: " "),
-            last4: url.extractValue(forKey: "last4"),
+            last4: url.extractQueryValue(forKey: "last4"),
             linkMode: nil,
-            incentiveEligible: url.extractValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false,
+            incentiveEligible: url.extractQueryValue(forKey: "incentive_eligible").flatMap { Bool($0) } ?? false,
             linkAccountSessionId: manifest?.id
         )
     }
@@ -246,6 +288,17 @@ class FCLiteContainerViewController: UIViewController {
         Task {
             await self.completeFlow(result: .cancelled(.cancelledOutsideWebView))
         }
+    }
+
+    private func logInstantDebitsCompletionFailure(error: Error) {
+        let errorAnalytic = ErrorAnalytic(
+            event: .instantDebitsCompletionFailed,
+            error: error,
+            additionalNonPIIParams: [
+                "flow": "fc_lite",
+            ]
+        )
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
     }
 }
 
@@ -283,39 +336,5 @@ extension FCLiteContainerViewController: UIAdaptivePresentationControllerDelegat
         ))
 
         viewController.present(alertController, animated: true)
-    }
-}
-
-private extension URL {
-    /// The URL contains a base64-encoded payment method. We store its values in `LinkBankPaymentMethod` so that
-    /// we can parse it back in `StripeCore`.
-    func extractLinkBankPaymentMethod() -> LinkBankPaymentMethod? {
-        guard let encodedPaymentMethod = extractValue(forKey: "payment_method") else {
-            return nil
-        }
-
-        guard let data = Data(base64Encoded: encodedPaymentMethod) else {
-            return nil
-        }
-
-        let result: Result<LinkBankPaymentMethod, Error> = STPAPIClient.decodeResponse(
-            data: data,
-            error: nil,
-            response: nil
-        )
-
-        return try? result.get()
-    }
-
-    func extractValue(forKey key: String) -> String? {
-        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
-            assertionFailure("Invalid URL")
-            return nil
-        }
-        return components
-            .queryItems?
-            .first(where: { $0.name == key })?
-            .value?
-            .removingPercentEncoding
     }
 }
