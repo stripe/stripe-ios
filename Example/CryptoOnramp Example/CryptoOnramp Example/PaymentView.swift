@@ -48,6 +48,24 @@ struct PaymentView: View {
         case applePay
         case existingPaymentToken(PaymentTokensResponse.PaymentToken)
         case newPaymentMethod(tokenId: String, type: PaymentMethodType, displayData: PaymentMethodDisplayData)
+
+        var isBankAccount: Bool {
+            switch self {
+            case let .existingPaymentToken(token):
+                token.usBankAccount != nil
+            case let .newPaymentMethod(_, type, _):
+                switch type {
+                case .bankAccount:
+                    true
+                case .card, .applePay:
+                    false
+                @unknown default:
+                    false
+                }
+            case .applePay:
+                false
+            }
+        }
     }
 
     private enum PaymentMethodIcon {
@@ -65,8 +83,12 @@ struct PaymentView: View {
     /// The wallet being funded.
     let wallet: CustomerWalletsResponse.Wallet
 
-    /// Upon success, this closure is called delivering the created onramp session and a description of the selected payment method, ready for checkout.
-    let onContinue: (CreateOnrampSessionResponse, _ selectedPaymentMethodDescription: String) -> Void
+    /// Upon success, this closure is called delivering the created onramp session, a description of the selected payment method, and the payment settlement speed, ready for checkout.
+    let onContinue: (
+        CreateOnrampSessionResponse,
+        _ selectedPaymentMethodDescription: String,
+        _ settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed
+    ) -> Void
 
     @Environment(\.isLoading) private var isLoading
     @Environment(\.locale) private var locale
@@ -79,6 +101,7 @@ struct PaymentView: View {
     @State private var destinationCurrency: String = "usdc"
     @State private var editCurrencyAlert: EditCurrencyAlert?
     @State private var editingCurrencyText: String = ""
+    @State private var achSettlementSpeed: CreateOnrampSessionRequest.SettlementSpeed = .instant
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
@@ -204,6 +227,21 @@ struct PaymentView: View {
             Spacer()
 
             makeSelectPaymentMethodButton()
+
+            if let selectedPaymentMethod, selectedPaymentMethod.isBankAccount {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("ACH Settlement Speed")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Picker("ACH Settlement Speed", selection: $achSettlementSpeed) {
+                        Text("Instant").tag(CreateOnrampSessionRequest.SettlementSpeed.instant)
+                        Text("Standard").tag(CreateOnrampSessionRequest.SettlementSpeed.standard)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                .padding(.bottom, 16)
+            }
 
             HStack(spacing: 12) {
                 makePresetAmountButton(3)
@@ -678,6 +716,8 @@ struct PaymentView: View {
     private func createOnrampSession(withCryptoPaymentTokenId cryptoPaymentTokenId: String) {
         isLoading.wrappedValue = true
 
+        let settlementSpeed = selectedPaymentMethod?.isBankAccount == true ? achSettlementSpeed : .instant
+
         let request = CreateOnrampSessionRequest(
             paymentToken: cryptoPaymentTokenId,
             sourceAmount: Decimal(string: amountText) ?? 0,
@@ -687,7 +727,8 @@ struct PaymentView: View {
             destinationCurrencies: [destinationCurrency],
             destinationNetworks: [wallet.network],
             walletAddress: wallet.walletAddress,
-            customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
+            customerIpAddress: "39.131.174.122", // <--- hardcoded for demo
+            settlementSpeed: settlementSpeed
         )
 
         Task {
@@ -695,7 +736,7 @@ struct PaymentView: View {
                 let response = try await APIClient.shared.createOnrampSession(requestObject: request)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onContinue(response, selectPaymentMethodButtonTitle)
+                    onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
                 }
             } catch {
                 await MainActor.run {
@@ -757,7 +798,7 @@ private extension PaymentTokensResponse.PaymentToken {
                 network: "solana",
                 walletAddress: ""
             ),
-            onContinue: { _, _ in }
+            onContinue: { _, _, _ in }
         )
     }
 }
