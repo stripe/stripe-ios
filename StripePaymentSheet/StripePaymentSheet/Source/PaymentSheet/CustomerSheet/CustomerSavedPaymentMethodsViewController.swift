@@ -316,7 +316,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
 
         self.actionButton.update(
-            state: actionButtonStatus,
+            status: actionButtonStatus,
             callToAction: callToAction,
             animated: animated,
             completion: nil
