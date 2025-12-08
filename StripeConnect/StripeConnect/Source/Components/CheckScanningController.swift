@@ -125,7 +125,7 @@ public final class CheckScanningController {
 
 @_spi(PrivatePreviewConnect)
 @available(iOS 15, *)
-@MainActor
+@preconcurrency @MainActor
 public protocol CheckScanningControllerDelegate: AnyObject {
     /// Called when the component fails to load (e.g., network issue during initial fetch). To try again, initialize a new CheckScanningController.
     func checkScanning(_ checkScanning: CheckScanningController,
