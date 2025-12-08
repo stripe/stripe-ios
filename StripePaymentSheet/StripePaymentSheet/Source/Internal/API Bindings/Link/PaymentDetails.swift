@@ -69,7 +69,8 @@ extension ConsumerPaymentDetails {
     func isSupported(linkAccount: PaymentSheetLinkAccount,
                      elementsSession: STPElementsSession,
                      configuration: PaymentElementConfiguration,
-                     cardBrandFilter: CardBrandFilter) -> Bool {
+                     cardBrandFilter: CardBrandFilter,
+                     cardFundingFilter: CardFundingFilter) -> Bool {
         guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
             return false
         }
@@ -77,6 +78,12 @@ extension ConsumerPaymentDetails {
         if case let .card(details) = details,
            !cardBrandFilter.isAccepted(cardBrand: details.stpBrand),
            elementsSession.linkCardBrandFilteringEnabled {
+            return false
+        }
+
+        // Check if card funding type is accepted
+        if case let .card(details) = details,
+           !cardFundingFilter.isAccepted(cardFundingType: details.funding.stpFundingType) {
             return false
         }
 
