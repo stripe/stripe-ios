@@ -223,11 +223,11 @@ class EmbeddedPaymentMethodsView: UIView {
         LinkAccountContext.shared.removeObserver(self)
     }
 
-    private func logRenderLPMs() {
+    private func logInitialDisplayedPaymentMethods() {
         // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
-        let visibleLPMs: [String] = rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }
-        let hiddenLPMs: [String] = []
-        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
+        let visiblePaymentMethods: [String] = rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }
+        let hiddenPaymentMethods: [String] = []
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .vertical)
     }
 
     private var previousHeight: CGFloat?
@@ -237,7 +237,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // Only log this once
         if !didLogRenderLPMs {
-            logRenderLPMs()
+            logInitialDisplayedPaymentMethods()
             didLogRenderLPMs = true
         }
 

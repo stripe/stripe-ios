@@ -255,11 +255,11 @@ class PlaygroundController: ObservableObject {
 
         switch settings.cardFundingAcceptance {
         case .all:
-            configuration.allowedCardFundingTypes = .all
+            break // Default accepts all funding types
         case .creditOnly:
-            configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.credit])
+            configuration.allowedCardFundingTypes = .credit
         case .debitOnly:
-            configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.debit])
+            configuration.allowedCardFundingTypes = .debit
         }
 
         switch settings.style {
@@ -379,11 +379,11 @@ class PlaygroundController: ObservableObject {
 
         switch settings.cardFundingAcceptance {
         case .all:
-            configuration.allowedCardFundingTypes = .all
+            break // Default accepts all funding types
         case .creditOnly:
-            configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.credit])
+            configuration.allowedCardFundingTypes = .credit
         case .debitOnly:
-            configuration.allowedCardFundingTypes = .allowed(fundingTypes: [.debit])
+            configuration.allowedCardFundingTypes = .debit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
