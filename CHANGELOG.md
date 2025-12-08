@@ -1,5 +1,8 @@
 ## X.Y.Z - changes pending release 
 
+### PaymentSheet
+* [Added] Support for PayPay with PaymentIntents.
+
 ## 25.2.0 2025-12-01
 
 ### Payment Method Messaging Element
