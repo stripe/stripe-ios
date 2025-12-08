@@ -302,7 +302,7 @@ private extension CreateOnrampSessionResponse {
                     transactionId: nil,
                     transactionLimit: 74517,
                     walletAddress: "0123451234512345123545",
-                    walletAddresses: nil,
+                    walletAddresses: nil
                 ),
                 uiMode: "headless"
             ),
