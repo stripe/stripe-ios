@@ -90,24 +90,28 @@ import UIKit
     }
 
     private func handleFlowCompletion(result: FinancialConnectionsSDKResult) {
-        // First dismiss the navigation controller
-        self.navigationController?.dismiss(animated: true) { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             guard let self else { return }
 
-            // Dismiss the wrapper if it exists
-            if let wrapper = self.wrapperViewController {
-                wrapper.dismiss(animated: false) { [weak self] in
-                    guard let self, let completion = self.completionHandler else { return }
+            // First dismiss the navigation controller
+            self.navigationController?.dismiss(animated: true) { [weak self] in
+                guard let self else { return }
 
-                    // Clear references and call the completion handler
+                // Dismiss the wrapper if it exists
+                if let wrapper = self.wrapperViewController {
+                    wrapper.dismiss(animated: false) { [weak self] in
+                        guard let self, let completion = self.completionHandler else { return }
+
+                        // Clear references and call the completion handler
+                        self.cleanupReferences()
+                        completion(result)
+                    }
+                } else {
+                    // No wrapper, just clean up and call completion directly
+                    guard let completion = self.completionHandler else { return }
                     self.cleanupReferences()
                     completion(result)
                 }
-            } else {
-                // No wrapper, just clean up and call completion directly
-                guard let completion = self.completionHandler else { return }
-                self.cleanupReferences()
-                completion(result)
             }
         }
     }
