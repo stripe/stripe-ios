@@ -326,9 +326,7 @@ extension MainViewController: CheckScanningControllerDelegate {
     }
 
     func checkScanning(_ checkScanning: CheckScanningController, didSubmitCheckScan: CheckScanningController.CheckScanDetails) async throws {
-        await MainActor.run {
-            checkScanning.dismiss(animated: false)
-
+        checkScanning.dismiss(animated: true) {
             let alertController = UIAlertController(
                 title: "didSubmitCheckScan",
                 message: "payload \(didSubmitCheckScan)",
