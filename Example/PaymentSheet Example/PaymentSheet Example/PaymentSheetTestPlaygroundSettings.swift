@@ -765,7 +765,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
-            enablePayPay: .off,
+            enablePayPay: .on,
             enablePassiveCaptcha: .on,
             enableAttestationOnConfirmation: .on,
             paymentMethodSave: .enabled,
