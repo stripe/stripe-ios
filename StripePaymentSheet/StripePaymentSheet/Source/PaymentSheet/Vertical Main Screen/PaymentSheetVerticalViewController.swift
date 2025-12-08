@@ -294,7 +294,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
             return .makeDefaultTypeForPaymentSheet(intent: intent)
         }()
-        let state: ConfirmButton.Status = {
+        let status: ConfirmButton.Status = {
             if isPaymentInFlight {
                 return .processing
             }
@@ -310,7 +310,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stpAssertionFailure("Apple Pay should be handled by the wallet button, not the primary button")
         }
         primaryButton.update(
-            state: state,
+            status: status,
             callToAction: callToAction,
             animated: true
         )
@@ -682,7 +682,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 #if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
-                        self.primaryButton.update(state: .succeeded, animated: true) {
+                        self.primaryButton.update(status: .succeeded, animated: true) {
                             self.isPaymentInFlight = false
                             self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
