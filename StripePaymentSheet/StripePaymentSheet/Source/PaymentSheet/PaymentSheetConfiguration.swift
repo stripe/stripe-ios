@@ -1006,7 +1006,7 @@ extension PaymentSheet {
         /// Include this if you want to accept cards where the funding type cannot be determined from card metadata.
         public static let unknown = CardFundingType(rawValue: 1 << 3)
 
-        /// Accept all card funding types
-        public static let all: CardFundingType = [.debit, .credit, .prepaid, .unknown]
+        /// Accept all card funding types (internal - users should simply not set allowedCardFundingTypes to accept all)
+        static let all: CardFundingType = [.debit, .credit, .prepaid, .unknown]
     }
 }

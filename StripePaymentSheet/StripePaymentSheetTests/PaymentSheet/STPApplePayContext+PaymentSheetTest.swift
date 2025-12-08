@@ -175,8 +175,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     // MARK: - Card Funding Acceptance Tests
 
     func testCreatePaymentRequest_fundingAcceptance_all() {
-        var configuration = configuration
-        configuration.allowedCardFundingTypes = .all
+        // Don't set allowedCardFundingTypes - default accepts all funding types
         let intent = Intent._testValue()
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         // When all funding types are accepted, the default merchant capabilities from StripeAPI.paymentRequest are preserved (.capability3DS)

@@ -255,7 +255,7 @@ class PlaygroundController: ObservableObject {
 
         switch settings.cardFundingAcceptance {
         case .all:
-            configuration.allowedCardFundingTypes = .all
+            break // Default accepts all funding types
         case .creditOnly:
             configuration.allowedCardFundingTypes = .credit
         case .debitOnly:
@@ -379,7 +379,7 @@ class PlaygroundController: ObservableObject {
 
         switch settings.cardFundingAcceptance {
         case .all:
-            configuration.allowedCardFundingTypes = .all
+            break // Default accepts all funding types
         case .creditOnly:
             configuration.allowedCardFundingTypes = .credit
         case .debitOnly:

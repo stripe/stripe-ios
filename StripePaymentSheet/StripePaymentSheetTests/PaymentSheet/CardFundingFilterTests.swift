@@ -14,7 +14,8 @@ import XCTest
 class CardFundingFilterTests: XCTestCase {
 
     func testIsAccepted_allFundingTypesAccepted() {
-        let filter = CardFundingFilter(allowedFundingTypes: .all)
+        // Use the default filter which accepts all funding types
+        let filter = CardFundingFilter.default
 
         for fundingType in STPCardFundingType.allCases {
             XCTAssertTrue(filter.isAccepted(cardFundingType: fundingType), "Funding type \(fundingType) should be accepted when all funding types are accepted.")
@@ -92,7 +93,8 @@ class CardFundingFilterTests: XCTestCase {
     // MARK: - Apple Pay Merchant Capabilities Tests
 
     func testApplePayMerchantCapabilities_all() {
-        let filter = CardFundingFilter(allowedFundingTypes: .all)
+        // Use the default filter which accepts all funding types
+        let filter = CardFundingFilter.default
         let capabilities = filter.applePayMerchantCapabilities()
 
         XCTAssertNil(capabilities, "When all funding types are accepted, nil should be returned to use the default capabilities on the payment request.")
@@ -145,7 +147,8 @@ class CardFundingFilterTests: XCTestCase {
     // MARK: - Allowed Funding Types Display String Tests
 
     func testAllowedFundingTypesDisplayString_all() {
-        let filter = CardFundingFilter(allowedFundingTypes: .all)
+        // Use the default filter which accepts all funding types
+        let filter = CardFundingFilter.default
         XCTAssertNil(filter.allowedFundingTypesDisplayString())
     }
 
