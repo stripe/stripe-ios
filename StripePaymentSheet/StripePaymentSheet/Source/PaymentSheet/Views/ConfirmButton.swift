@@ -136,7 +136,7 @@ class ConfirmButton: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        self.buyButton.update(status: state, callToAction: callToAction, animated: false)
+        self.buyButton.update(status: status, callToAction: callToAction, animated: false)
     }
 #endif
 
@@ -184,7 +184,7 @@ class ConfirmButton: UIView {
                     return 0
                 }
 
-                return state == .succeeded
+                return status == .succeeded
                 ? PaymentSheetUI.delayBetweenSuccessAndDismissal
                 : PaymentSheetUI.defaultAnimationDuration
             }()

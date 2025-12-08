@@ -114,7 +114,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: configuration.appearance, didTap: {  [weak self] in
+        let button = ConfirmButton(status: .disabled, callToAction: .custom(title: .Localized.save), appearance: configuration.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
             let updatePaymentMethodOptions = updateParams
             if updatePaymentMethodOptions != nil || hasChangedDefaultPaymentMethodCheckbox {
