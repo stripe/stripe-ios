@@ -92,7 +92,7 @@ class CardFundingFilterTests: XCTestCase {
         }
     }
 
-    // MARK: - Filtering Disabled (No-Op) Tests
+    // MARK: - Filtering feature flag tests
 
     func testIsAccepted_filteringDisabled_acceptsAll() {
         // Even with restrictive allowed types, filtering disabled should accept all
