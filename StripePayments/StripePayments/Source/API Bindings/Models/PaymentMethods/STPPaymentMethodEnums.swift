@@ -95,7 +95,7 @@ import Foundation
     /// A ShopPay payment method
     @_spi(STP) case shopPay
     /// A PayPay payment method
-    @_spi(STP) case payPay
+    case payPay
     /// An unknown type.
     case unknown
 

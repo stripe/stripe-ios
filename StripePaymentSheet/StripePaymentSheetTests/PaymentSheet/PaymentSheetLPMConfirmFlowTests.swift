@@ -639,7 +639,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
     func testPayPayConfirmFlows() async throws {
         var configuration = PaymentSheet.Configuration()
-        configuration.returnURL = "https://foo.com"
+        configuration.returnURL = "example-app-scheme://unused"
         try await _testConfirm(
             intentKinds: [.paymentIntent],
             currency: "JPY",

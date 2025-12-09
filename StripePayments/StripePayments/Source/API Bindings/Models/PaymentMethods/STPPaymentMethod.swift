@@ -97,7 +97,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// If this is a ShopPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeShopPay`), this contains additional details.
     @_spi(STP) @objc private(set) public var shopPay: STPPaymentMethodShopPay?
     /// If this is a PayPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPay`), this contains additional details.
-    @_spi(STP) @objc private(set) public var payPay: STPPaymentMethodPayPay?
+    @objc private(set) public var payPay: STPPaymentMethodPayPay?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay

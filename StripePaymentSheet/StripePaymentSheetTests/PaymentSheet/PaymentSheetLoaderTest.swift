@@ -618,7 +618,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Test successful load with valid payment method options
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
-            guard type != .unknown, type.supportsSetupFutureUsageParam else { return partialResult }
+            guard type != .unknown else { return partialResult }
             return partialResult.merging([type: .offSession]) { a, _ in a }
         }
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -649,12 +649,5 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             }
         }
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
-    }
-}
-
-extension STPPaymentMethodType {
-    var supportsSetupFutureUsageParam: Bool {
-        if case .payPay = self { return false }
-        return true
     }
 }
