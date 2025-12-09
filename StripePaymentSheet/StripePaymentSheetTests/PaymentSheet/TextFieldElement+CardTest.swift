@@ -408,7 +408,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             theme: .default,
             analyticsHelper: ._testValue(),
             cardBrandFilter: .default,
-            cardFundingFilter: .init(allowedFundingTypes: .debit),
+            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true),
             opensCardScannerAutomatically: false
         )
         let textFieldElement = cardSection.panElement
@@ -489,14 +489,14 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
         // Only allow debit - but without network fetch, we don't know the funding type
         var configuration = TextFieldElement.PANConfiguration(
-            cardFundingFilter: .init(allowedFundingTypes: .debit)
+            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true)
         )
         configuration.binController = STPBINController()
 
         for text in testcases {
             // Card should be valid (not blocked)
             let validationState = configuration.simulateValidationState(text)
-            XCTAssertEqual(validationState, .valid, "Card should be valid even with funding filter before network fetch")
+            XCTAssertTrue(validationState.isValid, "Card should be valid even with funding filter before network fetch")
 
             // No warning should be shown (hardcoded ranges don't have funding info)
             let warningText = configuration.warningLabel(text: text)
@@ -506,7 +506,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
     func testPANValidation_cardFundingFiltering_noWarningForAllowedFunding() throws {
         var configuration = TextFieldElement.PANConfiguration(
-            cardFundingFilter: .init(allowedFundingTypes: .debit)
+            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true)
         )
         let binController = STPBINController()
         configuration.binController = binController
@@ -528,7 +528,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         let binRange = binController.mostSpecificBINRange(forNumber: visaDebit)
         if !binRange.isHardcoded && binRange.funding == .debit {
             // Should be valid with no warning for debit card when debit is allowed
-            XCTAssertEqual(configuration.simulateValidationState(visaDebit), .valid)
+            XCTAssertTrue(configuration.simulateValidationState(visaDebit).isValid)
             XCTAssertNil(configuration.warningLabel(text: visaDebit), "No warning should be shown for allowed funding type")
         }
     }
