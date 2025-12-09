@@ -95,7 +95,7 @@ import Foundation
     case mcShowCompleteSavedPM = "mc_complete_sheet_savedpm_show"
 
     // MARK: - PaymentSheet Render
-    case mcRenderLPMs = "mc_lpms_render"
+    case mcInitialDisplayedPaymentMethods = "mc_initial_displayed_payment_methods"
 
     // MARK: - PaymentSheet Payment
     case mcPaymentCustomNewPMSuccess = "mc_custom_payment_newpm_success"

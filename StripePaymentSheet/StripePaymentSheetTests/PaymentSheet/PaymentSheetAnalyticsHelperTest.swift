@@ -356,12 +356,12 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_custom_sheet_newpm_show")
     }
 
-    func testLogRenderLPMs() {
+    func testLogInitialDisplayedPaymentMethods() {
         let paymentSheetHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        paymentSheetHelper.logRenderLPMs(visibleLPMs: ["card", "paypal", "alma", "p24"], hiddenLPMs: ["eps"])
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_lpms_render")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["visible_lpms"] as? [String], ["card", "paypal", "alma", "p24"])
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["hidden_lpms"] as? [String], ["eps"])
+        paymentSheetHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: ["card", "paypal", "alma", "p24"], hiddenPaymentMethods: ["eps"], paymentMethodLayout: .vertical)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_initial_displayed_payment_methods")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["visible_payment_methods"] as? [String], ["card", "paypal", "alma", "p24"])
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["hidden_payment_methods"] as? [String], ["eps"])
     }
 
     func testLogSavedPMScreenOptionSelected() {

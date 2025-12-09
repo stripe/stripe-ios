@@ -32,6 +32,9 @@ import UIKit
     /// Text to display to the user under the item, if any.
     var subLabelText: String? { get }
 
+    /// Warning text to display to the user under the item, if any. Displayed in danger color.
+    var warningLabelText: String? { get }
+
     /// Whether or not this Element collects user input (e.g. a text field, dropdown, picker, checkbox).
     var collectsUserInput: Bool { get }
 }
@@ -46,6 +49,10 @@ public extension Element {
     }
 
     var subLabelText: String? {
+        return nil
+    }
+
+    var warningLabelText: String? {
         return nil
     }
 }

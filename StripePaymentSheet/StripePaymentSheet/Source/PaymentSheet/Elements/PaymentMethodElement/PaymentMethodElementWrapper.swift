@@ -105,6 +105,10 @@ extension PaymentMethodElementWrapper: Element {
     var subLabelText: String? {
         return element.subLabelText
     }
+
+    var warningLabelText: String? {
+        return element.warningLabelText
+    }
 }
 
 // MARK: - ElementDelegate
