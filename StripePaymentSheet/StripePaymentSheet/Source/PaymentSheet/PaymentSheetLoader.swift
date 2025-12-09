@@ -465,7 +465,6 @@ final class PaymentSheetLoader {
 
         // We don't support Link payment methods with customer ephemeral keys
         let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && orderdPaymentMethodTypes.contains($0)}
-        print("calling list with types: \(types)")
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
