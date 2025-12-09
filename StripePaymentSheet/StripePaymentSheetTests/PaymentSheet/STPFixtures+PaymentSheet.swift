@@ -105,8 +105,8 @@ extension STPElementsSession {
         )
     }
 
-    static func _testCardValue() -> STPElementsSession {
-        return _testValue(paymentMethodTypes: ["card"])
+    static func _testCardValue(flags: [String: Bool] = [:]) -> STPElementsSession {
+        return _testValue(orderedPaymentMethodTypes: [.card], flags: flags)
     }
 
     static func _testDefaultCardValue(defaultPaymentMethod: String?, paymentMethods: [[AnyHashable: Any]]? = nil) -> STPElementsSession {
