@@ -105,6 +105,7 @@ class LinkPaymentControllerUITest: XCTestCase {
     }
 
     func testNativeInstantDebitsOnlyLinkPaymentController() {
+        app.launchArguments += ["-FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE", "YES"]
         app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "true"
         app.launch()
 

@@ -23,13 +23,21 @@ extension TextFieldElement {
         let defaultValue: String?
         let cardBrand: STPCardBrand?
         let cardBrandDropDown: DropdownFieldElement?
-        let cardFilter: CardBrandFilter
+        let cardBrandFilter: CardBrandFilter
+        let cardFundingFilter: CardFundingFilter
 
-        init(defaultValue: String? = nil, cardBrand: STPCardBrand? = nil, cardBrandDropDown: DropdownFieldElement? = nil, cardFilter: CardBrandFilter = .default) {
+        init(
+            defaultValue: String? = nil,
+            cardBrand: STPCardBrand? = nil,
+            cardBrandDropDown: DropdownFieldElement? = nil,
+            cardBrandFilter: CardBrandFilter = .default,
+            cardFundingFilter: CardFundingFilter = .default
+        ) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
             self.cardBrandDropDown = cardBrandDropDown
-            self.cardFilter = cardFilter
+            self.cardBrandFilter = cardBrandFilter
+            self.cardFundingFilter = cardFundingFilter
         }
 
         private func cardBrand(for text: String) -> STPCardBrand {
@@ -70,7 +78,7 @@ extension TextFieldElement {
                 } else {
                     // display all available card brands
                     rotatingCardBrandsView.cardBrands =
-                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter { cardFilter.isAccepted(cardBrand: $0) })
+                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter { cardBrandFilter.isAccepted(cardBrand: $0) })
                     return rotatingCardBrandsView
                 }
             } else {
@@ -143,7 +151,7 @@ extension TextFieldElement {
             let cardBrand = cardBrand(for: text)
             // If the merchant is CBC eligible, don't show the disallowed error until we have time to hit the card metadata service to determine brands (at 8 digits)
             let shouldShowDisallowedError = cardBrandDropDown == nil || text.count > 8
-            if !cardFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
+            if !cardBrandFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
 
@@ -190,6 +198,27 @@ extension TextFieldElement {
                 }
             }
             return attributed
+        }
+
+        func warningLabel(text: String) -> String? {
+            guard cardFundingFilter != .default else { return nil }
+            guard text.count >= 6 else { return nil }
+
+            // Read funding data from STPBINController's cache
+            let binRange = binController.mostSpecificBINRange(forNumber: text)
+
+            // Only warn if we have real funding data from the metadata service (not hardcoded fallback data)
+            guard !binRange.isHardcoded else { return nil }
+
+            if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
+                guard let allowedTypes = cardFundingFilter.allowedFundingTypesDisplayString() else {
+                    stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
+                    return nil
+                }
+                return String.Localized.only_funding_types_accepted(fundingTypes: allowedTypes)
+            }
+
+            return nil
         }
     }
 }

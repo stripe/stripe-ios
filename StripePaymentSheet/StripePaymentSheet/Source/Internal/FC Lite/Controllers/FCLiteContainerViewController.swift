@@ -24,6 +24,19 @@ class FCLiteContainerViewController: UIViewController {
         manifest?.isInstantDebits == true
     }
 
+    private var canUseNativeLink: Bool {
+        let useAttestationEndpoints = elementsSessionContext?.linkSettings?.useAttestationEndpoints
+        return deviceCanUseNativeLink(
+            useAttestationEndpoints: useAttestationEndpoints,
+            apiClient: apiClient.backingAPIClient
+        )
+    }
+
+    private var shouldUseSecureWebview: Bool {
+        guard let manifest else { return true }
+        return manifest.isInstantDebits && !canUseNativeLink
+    }
+
     init(
         clientSecret: String,
         returnUrl: URL?,
@@ -73,7 +86,8 @@ class FCLiteContainerViewController: UIViewController {
         do {
             let synchronize = try await apiClient.synchronize(
                 clientSecret: clientSecret,
-                returnUrl: returnUrl
+                returnUrl: returnUrl,
+                canUseNativeLink: canUseNativeLink
             )
             self.manifest = synchronize.manifest
             showWebView(for: synchronize.manifest)
@@ -82,7 +96,7 @@ class FCLiteContainerViewController: UIViewController {
         }
     }
 
-    private func completeFlow(result: FCLiteAuthFlowViewController.WebFlowResult) async {
+    private func completeFlow(result: FCLiteWebFlowResult) async {
         switch result {
         case .success(let returnUrl):
             if isInstantDebits {
@@ -111,11 +125,13 @@ class FCLiteContainerViewController: UIViewController {
             }
         case .failure(let error):
             completion(.failed(error: error))
+        case .redirect:
+            break
         }
     }
 
     private func fetchSessionAndComplete(
-        cancellationType: FCLiteAuthFlowViewController.WebFlowResult.CancellationType? = nil
+        cancellationType: FCLiteWebFlowResult.CancellationType? = nil
     ) async {
         DispatchQueue.main.async {
             // Pop back to root to show a loading spinner.
@@ -150,26 +166,46 @@ class FCLiteContainerViewController: UIViewController {
     }
 
     private func showWebView(for manifest: LinkAccountSessionManifest) {
-        let authFlowVC = FCLiteAuthFlowViewController(
-            manifest: manifest,
-            elementsSessionContext: elementsSessionContext,
-            returnUrl: returnUrl,
-            onLoad: {
-                DispatchQueue.main.async {
-                    self.spinner.stopAnimating()
+        let authFlowVC: UIViewController
+
+        if shouldUseSecureWebview {
+            authFlowVC = FCLiteSecureAuthFlowViewController(
+                manifest: manifest,
+                elementsSessionContext: elementsSessionContext,
+                completion: { [weak self] result in
+                    guard let self else { return }
+                    DispatchQueue.main.async {
+                        self.spinner.stopAnimating()
+                    }
+                    Task {
+                        await self.completeFlow(result: result)
+                    }
                 }
-            },
-            completion: { [weak self] result in
-                guard let self else { return }
-                Task {
-                    await self.completeFlow(result: result)
+            )
+        } else {
+            authFlowVC = FCLiteAuthFlowViewController(
+                manifest: manifest,
+                elementsSessionContext: elementsSessionContext,
+                returnUrl: returnUrl,
+                onLoad: {
+                    DispatchQueue.main.async {
+                        self.spinner.stopAnimating()
+                    }
+                },
+                completion: { [weak self] result in
+                    guard let self else { return }
+                    Task {
+                        await self.completeFlow(result: result)
+                    }
                 }
-            }
-        )
+            )
+        }
+
         navigationController?.pushViewController(authFlowVC, animated: false)
     }
 
     private func showError() {
+        spinner.stopAnimating()
         setNavigationBar(isHidden: false)
 
         let errorView = ErrorView()

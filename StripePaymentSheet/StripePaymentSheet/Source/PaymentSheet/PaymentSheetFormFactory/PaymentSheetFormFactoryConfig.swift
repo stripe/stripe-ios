@@ -96,6 +96,17 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
+    var cardFundingFilter: CardFundingFilter {
+        switch self {
+        case .paymentElement(let config, _):
+            return config.cardFundingFilter
+        case .customerSheet:
+            // CustomerSheet does not yet support card funding filtering
+            // Just return the default filter (none)
+            return .default
+        }
+    }
+
     var linkPaymentMethodsOnly: Bool {
         switch self {
         case .paymentElement(let config, _):
