@@ -6,9 +6,9 @@
 //
 
 import AuthenticationServices
-import UIKit
 // `@preconcurrency` suppresses Sendable-related warnings from WebKit.
 @_spi(STP) import StripeCore
+import UIKit
 @preconcurrency import WebKit
 
 class FCLiteAuthFlowViewController: UIViewController {
