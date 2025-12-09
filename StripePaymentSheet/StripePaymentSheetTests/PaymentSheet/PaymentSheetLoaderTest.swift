@@ -305,7 +305,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         let savedPms = ["pm_1Sc4CpFY0qyl6XeWThu3QpWE", // card
-                        "pm_1ScZifFY0qyl6XeWYG9pWAE3"] // bank account
+                        "pm_1ScZifFY0qyl6XeWYG9pWAE3", // bank account
+        ]
 
         // Check that the test Customer has both a US Bank Account and a card saved PM
         let checkCustomerExpectation = expectation(description: "Check test customer")
@@ -327,7 +328,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             XCTFail("Confirm handler shouldn't be called.")
             return ""
         }
-        
         // Set intent config to ONLY support cards, so we only fetch saved cards.
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
@@ -357,7 +357,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         let savedPms = ["pm_1Sc4CpFY0qyl6XeWThu3QpWE", // card
-                        "pm_1ScZifFY0qyl6XeWYG9pWAE3"] // bank account
+                        "pm_1ScZifFY0qyl6XeWYG9pWAE3", // bank account
+        ]
 
         // Check that the test Customer has both a US Bank Account and a card saved PM
         let checkCustomerExpectation = expectation(description: "Check test customer")
@@ -378,9 +379,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = {_, _ in
             XCTFail("Confirm handler shouldn't be called.")
             return ""
-        }
-        
-        // Set intent config to have no restrictions w/ payment methods
+        }        // Set intent config to have no restrictions w/ payment methods
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
             switch result {

@@ -464,7 +464,7 @@ final class PaymentSheetLoader {
         let orderdPaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
 
         // We don't support Link payment methods with customer ephemeral keys
-        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && orderdPaymentMethodTypes.contains($0)}
+        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && orderdPaymentMethodTypes.contains($0) }
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
