@@ -424,7 +424,7 @@ final class PaymentSheetLoader {
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             savedPaymentMethods = elementsSessionPaymentMethods
         } else {
-            savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration)
+            savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration, elementsSession: elementsSession)
         }
 
         // Move default PM to front
@@ -455,15 +455,17 @@ final class PaymentSheetLoader {
         }
     }
 
-    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) async throws -> [STPPaymentMethod] {
         guard let customerID = configuration.customer?.id,
               case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider else {
             return []
         }
 
-        // We don't support Link payment methods with customer ephemeral keys
-        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link }
+        let orderdPaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
 
+        // We don't support Link payment methods with customer ephemeral keys
+        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && orderdPaymentMethodTypes.contains($0)}
+        print("calling list with types: \(types)")
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
