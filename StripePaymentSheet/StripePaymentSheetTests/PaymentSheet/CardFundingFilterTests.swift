@@ -8,7 +8,7 @@
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CardFundingFilteringPrivatePreview) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CardFundingFilteringPrivatePreview) @testable import StripePaymentSheet
 import XCTest
 
 class CardFundingFilterTests: XCTestCase {
