@@ -398,9 +398,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testCardSectionElement_cardFundingFiltering_showsWarningButRemainsValid() {
-        let originalPublishableKey = STPAPIClient.shared.publishableKey
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-        defer { STPAPIClient.shared.publishableKey = originalPublishableKey }
 
         // Set up a CardSectionElement with funding filter that only allows debit:
         let cardSection = CardSectionElement(
