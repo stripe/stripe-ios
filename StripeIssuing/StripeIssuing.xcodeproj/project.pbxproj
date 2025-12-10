@@ -31,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		315E63692EE8F1C70003E9D1 /* StripeIssuingTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StripeIssuingTests.xctestplan; sourceTree = "<group>"; };
 		3D136BBA2EB4493500186DA1 /* StripeIssuing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIssuing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D136BC52EB4493500186DA1 /* StripeIssuingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeIssuingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -93,6 +94,7 @@
 		3D136BB02EB4493500186DA1 = {
 			isa = PBXGroup;
 			children = (
+				315E63692EE8F1C70003E9D1 /* StripeIssuingTests.xctestplan */,
 				3D136BE12EB4494900186DA1 /* BuildConfigurations */,
 				3D136BBC2EB4493500186DA1 /* StripeIssuing */,
 				3D136BC92EB4493500186DA1 /* StripeIssuingTests */,
@@ -210,6 +212,46 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				"lt-LT",
+				"zh-Hans",
+				ja,
+				"el-GR",
+				"ms-MY",
+				"zh-HK",
+				mt,
+				nb,
+				"ca-ES",
+				"en-GB",
+				es,
+				da,
+				"es-419",
+				it,
+				"fr-CA",
+				"bg-BG",
+				sv,
+				ko,
+				fil,
+				"zh-Hant",
+				"ro-RO",
+				hu,
+				tr,
+				"et-EE",
+				"pt-BR",
+				"lv-LV",
+				vi,
+				ru,
+				"cs-CZ",
+				"sk-SK",
+				"sl-SI",
+				fr,
+				fi,
+				id,
+				nl,
+				th,
+				"pl-PL",
+				"pt-PT",
+				hr,
 			);
 			mainGroup = 3D136BB02EB4493500186DA1;
 			minimizedProjectReferenceProxies = 1;
