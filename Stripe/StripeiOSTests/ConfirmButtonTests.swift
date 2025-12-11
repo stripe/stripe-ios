@@ -65,7 +65,7 @@ class ConfirmButtonTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "Should call the completion block")
 
-        sut.update(state: .disabled, animated: false) {
+        sut.update(status: .disabled, animated: false) {
             expectation.fulfill()
         }
 
@@ -80,7 +80,7 @@ class ConfirmButtonTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "Should call the completion block")
 
-        sut.update(state: .disabled, animated: true) {
+        sut.update(status: .disabled, animated: true) {
             expectation.fulfill()
         }
 

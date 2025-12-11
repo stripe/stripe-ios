@@ -77,7 +77,7 @@ class ConfirmButton: UIView {
         }
     }
 
-    private(set) var state: Status = .enabled
+    private(set) var status: Status = .enabled
     private(set) var callToAction: CallToActionType
 
     // MARK: Private Properties
@@ -94,14 +94,14 @@ class ConfirmButton: UIView {
     // MARK: Init
 
     init(
-        state: Status = .enabled,
+        status: Status = .enabled,
         callToAction: CallToActionType,
         showProcessingLabel: Bool = true,
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
         didTap: @escaping () -> Void,
         didTapWhenDisabled: @escaping () -> Void = {}
     ) {
-        self.state = state
+        self.status = status
         self.callToAction = callToAction
         self.showProcessingLabel = showProcessingLabel
         self.appearance = appearance
@@ -135,12 +135,12 @@ class ConfirmButton: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        self.buyButton.update(status: state, callToAction: callToAction, animated: false)
+        self.buyButton.update(status: status, callToAction: callToAction, animated: false)
     }
 #endif
 
     @objc private func didBecomeActive() {
-        self.buyButton.update(status: self.state, callToAction: self.callToAction, animated: false)
+        self.buyButton.update(status: self.status, callToAction: self.callToAction, animated: false)
     }
 
     deinit {
@@ -150,32 +150,32 @@ class ConfirmButton: UIView {
     // MARK: - Internal Methods
 
     func update(
-        state: Status? = nil,
+        status: Status? = nil,
         callToAction: CallToActionType? = nil,
         animated: Bool = false,
         completion: (() -> Void)? = nil
     ) {
         update(
-            state: state ?? self.state,
+            status: status ?? self.status,
             callToAction: callToAction ?? self.callToAction,
             animated: animated,
             completion: completion)
     }
 
     func update(
-        state: Status,
+        status: Status,
         callToAction: CallToActionType,
         animated: Bool = false,
         completion: (() -> Void)? = nil
     ) {
-        self.state = state
+        self.status = status
         self.callToAction = callToAction
 
         // Enable/disable
-        isUserInteractionEnabled = (state == .enabled || state == .disabled)
+        isUserInteractionEnabled = (status == .enabled || status == .disabled)
 
         // Update the buy button; it has its own presentation logic
-        self.buyButton.update(status: state, callToAction: callToAction, animated: animated)
+        self.buyButton.update(status: status, callToAction: callToAction, animated: animated)
 
         if let completion = completion {
             let delay: TimeInterval = {
@@ -183,7 +183,7 @@ class ConfirmButton: UIView {
                     return 0
                 }
 
-                return state == .succeeded
+                return status == .succeeded
                 ? PaymentSheetUI.delayBetweenSuccessAndDismissal
                 : PaymentSheetUI.defaultAnimationDuration
             }()
@@ -196,9 +196,9 @@ class ConfirmButton: UIView {
 
     @objc
     private func handleTap() {
-        if case .enabled = state {
+        if case .enabled = status {
             didTap()
-        } else if case .disabled = state {
+        } else if case .disabled = status {
             // When the disabled button is tapped, trigger validation error display
             didTapWhenDisabled()
             // Resign first responder (as we would if the button was disabled)
