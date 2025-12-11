@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=JPY&deferred_intent%5Bmode%5D=payment&key=pk_test_51NpIYRIq2LmpyICoBLPaTxfWFW4I34pnWuBjKXf8CgOlVih7Ni6oDfPRHGTzBEnpsrHiPvqP2UyydilqY66BWp8N00mQCJ1PU5&legacy_customer_ephemeral_key=ek_test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLEw3YWZlcWFrOFRQSktDVWNobnJBcFpIenJHNk5aUHk_00TY3CnSzo&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=JPY&deferred_intent%5Bmode%5D=payment&key=pk_test_51NpIYRIq2LmpyICoBLPaTxfWFW4I34pnWuBjKXf8CgOlVih7Ni6oDfPRHGTzBEnpsrHiPvqP2UyydilqY66BWp8N00mQCJ1PU5&legacy_customer_ephemeral_key=ek_test_YWNjdF8xTnBJWVJJcTJMbXB5SUNvLGlsMFB1RkprenRVNU5RQVk0MTRkZXlTdmRFMjQ5YWg_00T3w3vG4V&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=lPJPPmIg-YZ20yAewCHSgBwFJKmkFkkNDxScQR84TGu3os_NyAIcPM0J757w0hD0uOyNGmtzsGJFA5_L
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=AYH0mbWIiygdGtBpa5AJBCjhhCi8fbIjf2j2KnA6rzwf1E12GlQY6FgbM35cUVLqRqy2IB7OTSrVi0vA
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Tue, 02 Dec 2025 22:30:31 GMT
+Date: Thu, 11 Dec 2025 18:46:16 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 14105
+Content-Length: 14464
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_dY0v10vhjWhets
+request-id: req_460O3K2GBvo1KP
 
 {
   "payment_method_preference" : {
@@ -60,7 +60,7 @@ request-id: req_dY0v10vhjWhets
     "elements_enable_billing_details_in_pe_change_event" : true,
     "link_disable_auth_partner_ua_check" : false,
     "distinctly_link_pe_purchase_protection" : true,
-    "elements_enable_payment_method_options_setup_future_usage" : false,
+    "elements_enable_payment_method_options_setup_future_usage" : true,
     "show_swish_factoring_notice" : true,
     "elements_disable_payment_element_card_country_zip_validations" : false,
     "elements_enable_nz_bank_account_spm" : false,
@@ -86,10 +86,13 @@ request-id: req_dY0v10vhjWhets
     "elements_easel_disable_health_check" : false,
     "elements_enable_bacs_debit_spm" : false,
     "link_modal_enable_ui_revamp" : true,
+    "elements_disable_sepa_debit_eea_address_requirement" : false,
+    "elements_mobile_card_funding_filtering" : true,
     "elements_enable_ephemeral_key_for_confirmation_token_creation" : true,
     "elements_show_expanded_spm" : false,
     "elements_enable_19_digit_pans" : false,
     "link_auth_partner_delay_recognition" : true,
+    "bank_connections_enable_us_bank_account_in_universal_link_modal" : true,
     "elements_easel_disable_optimizations_check" : false,
     "elements_enable_new_google_places_api" : true,
     "elements_spm_messages" : false,
@@ -130,6 +133,7 @@ request-id: req_dY0v10vhjWhets
     "elements_enable_jp_card_installments" : true,
     "elements_prefer_fc_lite" : false,
     "link_enable_address_country_restrictions" : false,
+    "upi_qrcode_for_mandate_setup" : false,
     "elements_enable_easel_for_pi" : true,
     "elements_does_not_collect_postal_code_for_non_us_card_transactions_killswitch" : false,
     "link_auth_partner_consume_link_auth_intent" : true,
@@ -154,13 +158,13 @@ request-id: req_dY0v10vhjWhets
     "link_enable_auth_partner_sizing_logging" : true,
     "elements_enable_link_spm" : true,
     "elements_spm_max_visible_payment_methods" : false,
-    "enable_merchant_instructed_orchestration_on_checkout" : false,
     "elements_disable_link_email_otp" : false,
     "elements_enable_passive_captcha" : false,
     "elements_disable_progressive_cursor" : false,
+    "elements_allow_custom_payment_method_creation" : false,
     "elements_enable_appearance_recompute" : false,
-    "link_user_action_attempt_login_using_stored_credentials" : true,
     "distinctly_link_payment_element_ramp" : true,
+    "link_user_action_attempt_login_using_stored_credentials" : true,
     "elements_enable_interac_apple_pay" : false,
     "elements_disable_paypal_express" : false,
     "elements_disable_recurring_express_checkout_button_amazon_pay" : false,
@@ -170,13 +174,14 @@ request-id: req_dY0v10vhjWhets
     "elements_stop_move_focus_to_first_errored_field" : true,
     "link_in_accordion_layout_available_in_stripejs" : false,
     "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : true,
+    "legacy_customer_session_payment_element_features" : false,
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1gA4C66SSl5",
+  "session_id" : "elements_session_1jWaN69N8Hw",
   "card_installments_enabled" : true,
   "account_id" : "acct_1NpIYRIq2LmpyICo",
-  "config_id" : "2492dca2-10aa-4794-835b-300014ac27a1",
+  "config_id" : "831dede9-ae11-448f-b8a7-a058ec0c9a17",
   "merchant_currency" : "jpy",
   "merchant_id" : "acct_1NpIYRIq2LmpyICo",
   "card_brand_choice" : {
@@ -204,9 +209,9 @@ request-id: req_dY0v10vhjWhets
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "f96fe449-99b3-45ba-919d-8466e0ea5d85",
+    "arb_id" : "c3d01c68-907a-490d-9c0d-7994143e4e5c",
     "experiment_metadata" : {
-      "seed" : "cb55364820e3b427033652e38e304e66b019bac8fe1f564448c1a1a17ce410be",
+      "seed" : "79543344a8b6c00dad07b0ec788a907634cd61d9a826ac309cc29f21d6f4188b",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -288,8 +293,11 @@ request-id: req_dY0v10vhjWhets
       "bank_account_permissions" : [
 
       ],
+      "link_payment_method_bank_account_permissions" : null,
       "bank_account_verification_method" : null,
-      "link_payment_method_bank_account_permissions" : null
+      "link_supported_payment_methods" : [
+        "CARD"
+      ]
     },
     "link_session_storage_login_enabled" : true,
     "link_disable_in_safari_private_browsing" : false,

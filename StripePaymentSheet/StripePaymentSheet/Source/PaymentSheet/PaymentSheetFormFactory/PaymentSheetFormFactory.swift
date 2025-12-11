@@ -48,6 +48,7 @@ class PaymentSheetFormFactory {
     let paymentMethodIncentive: PaymentMethodIncentive?
     let sellerName: String?
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
+    let cardFundingFilter: CardFundingFilter
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
@@ -138,7 +139,8 @@ class PaymentSheetFormFactory {
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
                   sellerName: intent.sellerDetails?.businessName,
-                  previousLinkInlineSignupAction: previousLinkInlineSignupAction
+                  previousLinkInlineSignupAction: previousLinkInlineSignupAction,
+                  cardFundingFilter: configuration.cardFundingFilter(for: elementsSession)
         )
     }
 
@@ -166,7 +168,8 @@ class PaymentSheetFormFactory {
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
         sellerName: String? = nil,
-        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil,
+        cardFundingFilter: CardFundingFilter = .default
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -197,6 +200,7 @@ class PaymentSheetFormFactory {
         self.linkAppearance = linkAppearance
         self.sellerName = sellerName
         self.previousLinkInlineSignupAction = previousLinkInlineSignupAction
+        self.cardFundingFilter = cardFundingFilter
     }
 
     func make() -> PaymentMethodElement {
