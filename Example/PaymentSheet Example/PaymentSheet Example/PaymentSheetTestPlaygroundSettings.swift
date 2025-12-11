@@ -72,7 +72,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred multiprocessor flow"
             }
         }
-        
+
         var isIntentFirst: Bool {
             switch self {
             case .normal:
