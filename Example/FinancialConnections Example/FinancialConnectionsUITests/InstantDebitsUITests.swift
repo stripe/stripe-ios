@@ -109,7 +109,7 @@ final class InstantDebitsUITests: XCTestCase {
         app.fc_nativeConnectAccountsButton.tap()
         app.fc_nativeSuccessDoneButton.tap()
     }
-    
+
     func test_connect() {
         let app = XCUIApplication.fc_launch(playgroundConfigurationString:
             """
