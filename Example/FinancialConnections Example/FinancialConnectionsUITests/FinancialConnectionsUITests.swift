@@ -15,8 +15,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testDataTestModeOAuthNativeAuthFlow() throws {
+    func testDataTestModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -44,8 +43,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testPaymentTestModeLegacyNativeAuthFlow() throws {
+    func testPaymentTestModeLegacyNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -412,8 +410,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeOnEventClosureEvents() throws {
+    func testNativeOnEventClosureEvents() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -472,8 +469,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeSkipSuccessPane() {
+    func testNativeSkipSuccessPane() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -504,8 +500,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeConnectMerchantForDataUseCase() {
+    func testNativeConnectMerchantForDataUseCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -535,8 +530,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeConnectMerchantForPaymentUseCase() {
+    func testNativeConnectMerchantForPaymentUseCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """

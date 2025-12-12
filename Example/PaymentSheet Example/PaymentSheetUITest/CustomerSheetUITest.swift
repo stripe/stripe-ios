@@ -322,8 +322,7 @@ class CustomerSheetUITest: XCTestCase {
         dismissAlertView(alertBody: "Success: •••• 4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testCustomerSheet_addUSBankAccount() throws {
+    func testCustomerSheet_addUSBankAccount() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .off

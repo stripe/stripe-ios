@@ -25,8 +25,7 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.launchEnvironment = [:]
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testWebInstantDebitsOnlyLinkPaymentController() {
+    func testWebInstantDebitsOnlyLinkPaymentController() {
         app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "false"
         app.launch()
 
@@ -105,8 +104,7 @@ class LinkPaymentControllerUITest: XCTestCase {
         XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeInstantDebitsOnlyLinkPaymentController() {
+    func testNativeInstantDebitsOnlyLinkPaymentController() {
         app.launchArguments += ["-FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE", "YES"]
         app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "true"
         app.launch()
