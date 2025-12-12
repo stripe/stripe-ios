@@ -165,6 +165,6 @@ class FCLiteUITests: XCTestCase {
         }
 
         // Primary button is at the bottom center of the webview (roughly 85% down, centered)
-        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
+        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)).tap()
     }
 }
