@@ -689,7 +689,10 @@ final class PlaygroundConfigurationStore {
         set {
             do {
                 let configurationData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                let configurationString = String(decoding: configurationData, as: UTF8.self)
+                guard let configurationString = String(data: configurationData, encoding: .utf8) else {
+                    assertionFailure("unable to convert configuration data to string")
+                    return
+                }
                 Self.configurationString = configurationString
             } catch {
                 assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
