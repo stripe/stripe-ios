@@ -865,23 +865,19 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 }
 
 class PaymentSheetDeferredUIBankAccountTests: PaymentSheetUITestCase {
-    func testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() {
         _testUSBankAccount(mode: .payment, integrationType: .deferred_csc)
     }
 
-    func testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() {
         _testUSBankAccount(mode: .payment, integrationType: .deferred_ssc)
     }
 
-    func testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() {
         _testUSBankAccount(mode: .setup, integrationType: .deferred_csc)
     }
 
-    func testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() {
         _testUSBankAccount(mode: .setup, integrationType: .deferred_ssc)
     }
 
@@ -2931,13 +2927,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     // MARK: Link bank payments
 
-    func testLinkCardBrand() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
 
-    func testLinkCardBrand_flowController() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
 

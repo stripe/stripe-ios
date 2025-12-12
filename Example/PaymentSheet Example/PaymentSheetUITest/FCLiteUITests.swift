@@ -99,8 +99,7 @@ class FCLiteUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
 
-    func testFCLiteInstantDebitsFlow() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testFCLiteInstantDebitsFlow() throws {
         // Setup playground
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.fcLiteEnabled = .on

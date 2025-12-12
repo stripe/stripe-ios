@@ -15,8 +15,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testDataTestModeOAuthNativeAuthFlow() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testDataTestModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -44,8 +43,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func testPaymentTestModeLegacyNativeAuthFlow() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testPaymentTestModeLegacyNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -412,8 +410,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
 
-    func testNativeOnEventClosureEvents() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testNativeOnEventClosureEvents() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -472,8 +469,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func testNativeSkipSuccessPane() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testNativeSkipSuccessPane() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -504,8 +500,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func testNativeConnectMerchantForDataUseCase() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testNativeConnectMerchantForDataUseCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -535,8 +530,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func testNativeConnectMerchantForPaymentUseCase() throws {
-        throw XCTSkip("Temporarily disabled while changing test institution names.")
+    func DISABLED_testNativeConnectMerchantForPaymentUseCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
