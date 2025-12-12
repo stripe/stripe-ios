@@ -99,7 +99,8 @@ class FCLiteUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
 
-    func testFCLiteInstantDebitsFlow() throws {
+    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
+    func DISABLED_testFCLiteInstantDebitsFlow() throws {
         // Setup playground
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.fcLiteEnabled = .on
@@ -165,6 +166,6 @@ class FCLiteUITests: XCTestCase {
         }
 
         // Primary button is at the bottom center of the webview (roughly 85% down, centered)
-        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
+        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)).tap()
     }
 }

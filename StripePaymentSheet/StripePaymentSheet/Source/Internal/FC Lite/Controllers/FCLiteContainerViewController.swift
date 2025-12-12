@@ -33,8 +33,14 @@ class FCLiteContainerViewController: UIViewController {
     }
 
     private var shouldUseSecureWebview: Bool {
+        guard secureWebviewFeatureFlagEnabled else { return false }
         guard let manifest else { return true }
         return manifest.isInstantDebits && !canUseNativeLink
+    }
+
+    private var secureWebviewFeatureFlagEnabled: Bool {
+        let key = "FC_LITE_ENABLE_SECURE_WEBVIEW"
+        return UserDefaults.standard.bool(forKey: key)
     }
 
     init(
@@ -87,7 +93,8 @@ class FCLiteContainerViewController: UIViewController {
             let synchronize = try await apiClient.synchronize(
                 clientSecret: clientSecret,
                 returnUrl: returnUrl,
-                canUseNativeLink: canUseNativeLink
+                canUseNativeLink: canUseNativeLink,
+                secureWebviewFeatureFlagEnabled: secureWebviewFeatureFlagEnabled
             )
             self.manifest = synchronize.manifest
             showWebView(for: synchronize.manifest)

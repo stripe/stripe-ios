@@ -13,7 +13,8 @@ final class InstantDebitsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func test_nux() {
+    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
+    func DISABLED_test_nux() {
         let app = XCUIApplication.fc_launch(playgroundConfigurationString:
             """
             {"use_case":"payment_intent","experience":"instant_debits","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
@@ -108,7 +109,7 @@ final class InstantDebitsUITests: XCTestCase {
         app.fc_nativeConnectAccountsButton.tap()
         app.fc_nativeSuccessDoneButton.tap()
     }
-    
+
     func test_connect() {
         let app = XCUIApplication.fc_launch(playgroundConfigurationString:
             """

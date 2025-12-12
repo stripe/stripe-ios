@@ -78,7 +78,8 @@ extension FCLiteAPIClient {
     func synchronize(
         clientSecret: String,
         returnUrl: URL?,
-        canUseNativeLink: Bool
+        canUseNativeLink: Bool,
+        secureWebviewFeatureFlagEnabled: Bool
     ) async throws -> SynchronizePayload {
         var mobileParameters: [String: Any] = [
             "fullscreen": true,
@@ -86,7 +87,7 @@ extension FCLiteAPIClient {
         ]
         mobileParameters["app_return_url"] = returnUrl
 
-        if !canUseNativeLink {
+        if secureWebviewFeatureFlagEnabled, !canUseNativeLink {
             mobileParameters["use_secure_webview_if_necessary"] = true
         }
 
