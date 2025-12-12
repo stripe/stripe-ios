@@ -147,11 +147,13 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
     }
 
-    func testUSBankAccount_verticalmode() {
+    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
+    func DISABLED_testUSBankAccount_verticalmode() {
         _testUSBankAccount(mode: .payment, integrationType: .normal, vertical: true)
     }
 
-    func testInstantDebits_verticalmode() {
+    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
+    func DISABLED_testInstantDebits_verticalmode() {
         _testInstantDebits(mode: .payment, vertical: true)
     }
 
