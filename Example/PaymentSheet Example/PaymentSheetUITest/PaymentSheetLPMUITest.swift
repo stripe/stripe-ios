@@ -133,23 +133,19 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         // no pay button tap because linked account is stubbed/fake in UI test
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testPaymentIntent_USBankAccount() {
+    func testPaymentIntent_USBankAccount() {
         _testUSBankAccount(mode: .payment, integrationType: .normal)
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testSetupIntent_USBankAccount() {
+    func testSetupIntent_USBankAccount() {
         _testUSBankAccount(mode: .setup, integrationType: .normal)
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testPaymentIntent_instantDebits() {
+    func testPaymentIntent_instantDebits() {
         _testInstantDebits(mode: .payment)
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testSetupIntent_instantDebits() {
+    func testSetupIntent_instantDebits() {
         _testInstantDebits(mode: .setup)
     }
 

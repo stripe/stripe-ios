@@ -865,23 +865,19 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 }
 
 class PaymentSheetDeferredUIBankAccountTests: PaymentSheetUITestCase {
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() {
+    func testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() {
         _testUSBankAccount(mode: .payment, integrationType: .deferred_csc)
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() {
+    func testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() {
         _testUSBankAccount(mode: .payment, integrationType: .deferred_ssc)
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() {
+    func testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() {
         _testUSBankAccount(mode: .setup, integrationType: .deferred_csc)
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() {
+    func testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() {
         _testUSBankAccount(mode: .setup, integrationType: .deferred_ssc)
     }
 
@@ -2931,13 +2927,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     // MARK: Link bank payments
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testLinkCardBrand() {
+    func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testLinkCardBrand_flowController() {
+    func testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
 
@@ -3443,7 +3437,7 @@ extension PaymentSheetUITestCase {
 
         // Go through connections flow
         app.buttons["Agree and continue"].tap()
-        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Test (Non-OAuth)"].forceTapElement()
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
@@ -3707,7 +3701,7 @@ extension PaymentSheetUITestCase {
         linkLoginCtaButton.tap()
 
         // "Institution picker" pane
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Success"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 

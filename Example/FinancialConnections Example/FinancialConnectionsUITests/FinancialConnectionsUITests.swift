@@ -15,8 +15,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testDataTestModeOAuthNativeAuthFlow() throws {
+    func testDataTestModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -29,7 +28,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test (OAuth)"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -44,8 +43,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testPaymentTestModeLegacyNativeAuthFlow() throws {
+    func testPaymentTestModeLegacyNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -58,7 +56,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test (Non-OAuth)"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -412,8 +410,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeOnEventClosureEvents() throws {
+    func testNativeOnEventClosureEvents() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -430,7 +427,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test (Non-OAuth)").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.tap()
 
@@ -472,8 +469,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeSkipSuccessPane() {
+    func testNativeSkipSuccessPane() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -486,7 +482,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.waitForExistenceAndTap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test (Non-OAuth)").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 
@@ -504,8 +500,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeConnectMerchantForDataUseCase() {
+    func testNativeConnectMerchantForDataUseCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -518,7 +513,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test (Non-OAuth)").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.tap()
 
@@ -535,8 +530,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testNativeConnectMerchantForPaymentUseCase() {
+    func testNativeConnectMerchantForPaymentUseCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -549,7 +543,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test (Non-OAuth)").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.tap()
 
@@ -605,7 +599,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test (Non-OAuth)").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.tap()
 
@@ -640,12 +634,12 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_scrollDown()
 
-        app.fc_nativeFeaturedInstitution(name: "Down Bank (Unscheduled)").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Down (Unscheduled)").waitForExistenceAndTap()
 
         // selecting another bank will activate "reset flow"
         app.buttons["select_another_bank_button"].waitForExistenceAndTap()
 
-        app.fc_nativeFeaturedInstitution(name: "Test Institution").waitForExistenceAndTap()
+        app.fc_nativeFeaturedInstitution(name: "Test (Non-OAuth)").waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 

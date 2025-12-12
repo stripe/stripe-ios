@@ -99,8 +99,7 @@ class FCLiteUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testFCLiteInstantDebitsFlow() throws {
+    func testFCLiteInstantDebitsFlow() throws {
         // Setup playground
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.fcLiteEnabled = .on
@@ -129,7 +128,7 @@ class FCLiteUITests: XCTestCase {
         app.typeText(XCUIKeyboardKey.return.rawValue) // Enter key will continue to the next screen
 
         // Success bank
-        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Success (Later Disputed)'") // Institution Picker
+        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Disputed'") // Institution Picker
         let paymentSuccessBankButton = app.webViews.firstMatch.buttons.containing(paymentSuccessBankButtonPredicate).firstMatch
         XCTAssertTrue(paymentSuccessBankButton.waitForExistenceAndTap(timeout: 10.0))
 

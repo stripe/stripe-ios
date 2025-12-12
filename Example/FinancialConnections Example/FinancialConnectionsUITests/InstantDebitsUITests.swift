@@ -13,8 +13,7 @@ final class InstantDebitsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_test_nux() {
+    func test_nux() {
         let app = XCUIApplication.fc_launch(playgroundConfigurationString:
             """
             {"use_case":"payment_intent","experience":"instant_debits","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}
@@ -46,7 +45,7 @@ final class InstantDebitsUITests: XCTestCase {
         XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
         linkLoginCtaButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Success"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 

@@ -916,8 +916,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
-    // TODO(alexzhu): Enable after institutions are renamed (ir-rider-prefix)
-    func DISABLED_testUSBankAccount() {
+    func testUSBankAccount() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.mode = .payment
@@ -940,7 +939,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Go through connections flow
         app.buttons["Agree and continue"].tap()
-        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Test (Non-OAuth)"].forceTapElement()
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
