@@ -303,6 +303,13 @@ workflows:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
+        - scheme: StripeIssuing
+        is_always_run: true
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
         - scheme: StripeFinancialConnections
         is_always_run: true
     - xcode-test@4:

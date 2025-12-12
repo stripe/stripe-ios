@@ -12,18 +12,44 @@ import PassKit
 
 struct CardFundingFilter: Equatable {
 
-    static let `default`: CardFundingFilter = .init(allowedFundingTypes: .all)
+    /// A default filter that accepts all card funding types (no filtering applied).
+    static let `default`: CardFundingFilter = .init(allowedFundingTypes: .all, filteringEnabled: false)
 
     private let allowedFundingTypes: PaymentSheet.CardFundingType
 
-    init(allowedFundingTypes: PaymentSheet.CardFundingType) {
+    /// When `false`, the filter acts as a no-op and accepts all card funding types.
+    /// This is controlled by the `elements_mobile_card_funding_filtering` flag from the server.
+    private let filteringEnabled: Bool
+
+    init(allowedFundingTypes: PaymentSheet.CardFundingType, filteringEnabled: Bool) {
         self.allowedFundingTypes = allowedFundingTypes
+        self.filteringEnabled = filteringEnabled
+    }
+
+    /// Creates a `CardFundingFilter` using the configuration's allowed funding types and
+    /// the server's filtering enabled flag from the elements session.
+    /// - Parameters:
+    ///   - allowedFundingTypes: The funding types allowed by the merchant configuration.
+    ///   - elementsSession: The elements session containing the server-side flag.
+    /// - Returns: A properly configured `CardFundingFilter`.
+    static func from(
+        allowedFundingTypes: PaymentSheet.CardFundingType,
+        elementsSession: STPElementsSession
+    ) -> CardFundingFilter {
+        return CardFundingFilter(
+            allowedFundingTypes: allowedFundingTypes,
+            filteringEnabled: elementsSession.isCardFundingFilteringEnabled
+        )
     }
 
     /// Determines if a merchant can accept a card based on its funding type
     /// - Parameter cardFundingType: The `STPCardFundingType` to determine acceptance
-    /// - Returns: Returns true if this merchant can accept this card funding type, false otherwise
+    /// - Returns: Returns true if this merchant can accept this card funding type, false otherwise.
+    ///            Always returns true when filtering is disabled.
     public func isAccepted(cardFundingType: STPCardFundingType) -> Bool {
+        guard filteringEnabled else {
+            return true
+        }
         if allowedFundingTypes == .all {
             return true
         }
@@ -34,7 +60,11 @@ struct CardFundingFilter: Equatable {
     /// Returns the `PKMerchantCapability` to use for Apple Pay based on the allowed funding types.
     /// - Returns: A `PKMerchantCapability` option set that includes 3DS and any funding type restrictions,
     ///            or `nil` if no override is needed (use the default capabilities provided on the payment request).
+    ///            Always returns `nil` when filtering is disabled.
     func applePayMerchantCapabilities() -> PKMerchantCapability? {
+        guard filteringEnabled else {
+            return nil
+        }
         if allowedFundingTypes == .all {
             // When all funding types are accepted, don't override the merchant capabilities.
             // The default capabilities on the payment request will be used.
@@ -52,8 +82,12 @@ struct CardFundingFilter: Equatable {
     }
 
     /// Returns a user-friendly display string of the allowed funding types (e.g. "debit", "debit and credit")
-    /// - Returns: A localized string listing the allowed funding types, or nil if all types are allowed
+    /// - Returns: A localized string listing the allowed funding types, or nil if all types are allowed.
+    ///            Always returns `nil` when filtering is disabled.
     func allowedFundingTypesDisplayString() -> String? {
+        guard filteringEnabled else {
+            return nil
+        }
         if allowedFundingTypes == .all {
             return nil
         }
@@ -107,7 +141,11 @@ extension STPCardFundingType {
 }
 
 extension PaymentElementConfiguration {
-    var cardFundingFilter: CardFundingFilter {
-        .init(allowedFundingTypes: allowedCardFundingTypes)
+    /// Creates a `CardFundingFilter` using the configuration's allowed funding types and
+    /// the filtering enabled flag from the elements session.
+    /// - Parameter elementsSession: The elements session containing the server-side flag.
+    /// - Returns: A properly configured `CardFundingFilter`.
+    func cardFundingFilter(for elementsSession: STPElementsSession) -> CardFundingFilter {
+        CardFundingFilter.from(allowedFundingTypes: allowedCardFundingTypes, elementsSession: elementsSession)
     }
 }

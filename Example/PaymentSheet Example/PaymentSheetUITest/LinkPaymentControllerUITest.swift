@@ -107,6 +107,7 @@ class LinkPaymentControllerUITest: XCTestCase {
 
     func testNativeInstantDebitsOnlyLinkPaymentController() throws {
         throw XCTSkip("Temporarily disabled while changing test institution names.")
+        app.launchArguments += ["-FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE", "YES"]
         app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "true"
         app.launch()
 

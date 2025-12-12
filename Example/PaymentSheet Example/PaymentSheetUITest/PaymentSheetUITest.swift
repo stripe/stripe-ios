@@ -3698,6 +3698,7 @@ extension PaymentSheetUITestCase {
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
         app.toolbars.buttons["Done"].tap()
 
+        sleep(1) // Wait for keyboard to dismiss
         phoneTextField.tap()
         phoneTextField.typeText("4015006000")
 

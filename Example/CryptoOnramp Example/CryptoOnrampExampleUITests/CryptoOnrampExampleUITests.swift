@@ -25,6 +25,10 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         // Step 1: Enter email and password
         let emailField = app.textFields["Enter email address"].firstMatch
         XCTAssertTrue(emailField.waitForExistence(timeout: .networkTimeout), "Email field should exist")
+
+        let logInLoadingLabel = app.staticTexts["Loading…"].firstMatch
+        XCTAssertTrue(logInLoadingLabel.waitForNonExistence(timeout: .networkTimeout), "Loading indicator should disappear")
+
         emailField.tap()
         emailField.typeText("onramptest@stripe.com")
 
@@ -49,6 +53,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let walletsLabel = app.staticTexts["Wallets"].firstMatch
         XCTAssertTrue(walletsLabel.waitForExistence(timeout: .networkTimeout), "Wallet selection screen should appear")
 
+        let walletsLoadingLabel = app.staticTexts["Loading…"].firstMatch
+        XCTAssertTrue(walletsLoadingLabel.waitForNonExistence(timeout: .networkTimeout), "Loading indicator should disappear")
+
         let nextButton = app.buttons["Next"].firstMatch
         XCTAssertTrue(nextButton.wait(for: \.isEnabled, toEqual: true, timeout: .networkTimeout), "Next button should become enabled.")
         nextButton.tap()
@@ -56,6 +63,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         // Step 5: Wait for the payment screen, select the $3 button, and the most recent payment method, then tap Next.
         let paymentLabel = app.staticTexts["Payment"].firstMatch
         XCTAssertTrue(paymentLabel.waitForExistence(timeout: .networkTimeout), "Payment screen should appear")
+
+        let paymentLoadingLabel = app.staticTexts["Loading…"].firstMatch
+        XCTAssertTrue(paymentLoadingLabel.waitForNonExistence(timeout: .networkTimeout), "Loading indicator should disappear")
 
         let threeButton = app.buttons["$3"].firstMatch
         XCTAssertTrue(threeButton.exists, "$3 button should exist")
@@ -77,6 +87,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         let reviewLabel = app.staticTexts["Review"].firstMatch
         XCTAssertTrue(reviewLabel.waitForExistence(timeout: .networkTimeout), "Review screen should appear")
 
+        let reviewLoadingLabel = app.staticTexts["Loading…"].firstMatch
+        XCTAssertTrue(reviewLoadingLabel.waitForNonExistence(timeout: .networkTimeout), "Loading indicator should disappear")
+
         let confirmButton = app.buttons["Confirm"].firstMatch
         XCTAssertTrue(confirmButton.exists, "Confirm button should exist")
         confirmButton.tap()
@@ -84,6 +97,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         // Step 7: Wait for the Success screen, then log out.
         let successLabel = app.staticTexts["Purchase successful"].firstMatch
         XCTAssertTrue(successLabel.waitForExistence(timeout: .networkTimeout), "Success screen should appear")
+
+        let successLoadingLabel = app.staticTexts["Loading…"].firstMatch
+        XCTAssertTrue(successLoadingLabel.waitForNonExistence(timeout: .networkTimeout), "Loading indicator should disappear")
 
         let userButton = app.images["person.fill"].firstMatch
         XCTAssertTrue(userButton.exists, "User toolbar button should exist")
@@ -96,6 +112,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         // Step 8: Authenticate again using seamless sign-in (no OTP, stored auth token from prior login).
         let seamlessSignInLabel = app.staticTexts["Continue as onramptest@stripe.com?"]
         XCTAssertTrue(seamlessSignInLabel.waitForExistence(timeout: .networkTimeout), "Seamless sign-in label should exist")
+
+        let seamlessSignInLoadingLabel = app.staticTexts["Loading…"].firstMatch
+        XCTAssertTrue(seamlessSignInLoadingLabel.waitForNonExistence(timeout: .networkTimeout), "Loading indicator should disappear")
 
         let seamlessSignInButton = app.buttons["Continue"].firstMatch
         XCTAssertTrue(seamlessSignInButton.exists, "Seamless sign-in (Continue) button should exist")
