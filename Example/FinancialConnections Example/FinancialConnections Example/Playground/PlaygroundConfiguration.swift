@@ -481,6 +481,21 @@ final class PlaygroundConfiguration {
         }
     }
 
+    private static let fcLiteSecureWebviewKey = "fc_lite_secure_webview"
+    var fcLiteSecureWebview: Bool {
+        get {
+            if let fcLiteSecureWebview = configurationStore[Self.fcLiteSecureWebviewKey] as? Bool {
+                return fcLiteSecureWebview
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationStore[Self.fcLiteSecureWebviewKey] = newValue
+            PlaygroundUserDefaults.enableFCLiteSecureWebview = newValue
+        }
+    }
+
     // MARK: - Experimental
 
     enum Style: String, CaseIterable, Identifiable, Hashable {
