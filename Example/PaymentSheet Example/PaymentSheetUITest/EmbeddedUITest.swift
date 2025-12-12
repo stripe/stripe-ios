@@ -916,7 +916,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
-    func testUSBankAccount() {
+    func testUSBankAccount() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.mode = .payment

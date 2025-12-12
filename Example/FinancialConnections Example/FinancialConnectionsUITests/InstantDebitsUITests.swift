@@ -13,7 +13,8 @@ final class InstantDebitsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func test_nux() {
+    func test_nux() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         let app = XCUIApplication.fc_launch(playgroundConfigurationString:
             """
             {"use_case":"payment_intent","experience":"instant_debits","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true}

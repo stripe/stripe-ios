@@ -11,6 +11,7 @@ import XCTest
 final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
     func testNativeNetworkingTestMode() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeAutofillSignInFlowTest(emailAddress: emailAddresss)
@@ -236,7 +237,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         )
     }
 
-    func testNativeNetworkingTestModeSignUpWithMultiSelectAndPrefilledEmail() {
+    func testNativeNetworkingTestModeSignUpWithMultiSelectAndPrefilledEmail() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         let emailAddress = "\(UUID().uuidString)@UITestForIOS.com"
 
         let app = XCUIApplication.fc_launch(
@@ -301,7 +303,8 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         )
     }
 
-    func testNativeNetworkingTestModeSignUpWithPrefilledEmailAndPhone() {
+    func testNativeNetworkingTestModeSignUpWithPrefilledEmailAndPhone() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         let emailAddress = "\(UUID().uuidString)@UITestForIOS.com"
 
         let app = XCUIApplication.fc_launch(

@@ -323,6 +323,7 @@ class CustomerSheetUITest: XCTestCase {
     }
 
     func testCustomerSheet_addUSBankAccount() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .off

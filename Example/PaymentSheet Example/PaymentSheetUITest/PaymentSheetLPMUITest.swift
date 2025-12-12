@@ -133,19 +133,23 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         // no pay button tap because linked account is stubbed/fake in UI test
     }
 
-    func testPaymentIntent_USBankAccount() {
+    func testPaymentIntent_USBankAccount() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         _testUSBankAccount(mode: .payment, integrationType: .normal)
     }
 
-    func testSetupIntent_USBankAccount() {
+    func testSetupIntent_USBankAccount() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         _testUSBankAccount(mode: .setup, integrationType: .normal)
     }
 
-    func testPaymentIntent_instantDebits() {
+    func testPaymentIntent_instantDebits() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         _testInstantDebits(mode: .payment)
     }
 
-    func testSetupIntent_instantDebits() {
+    func testSetupIntent_instantDebits() throws {
+        throw XCTSkip("Temporarily disabled while changing test institution names.")
         _testInstantDebits(mode: .setup)
     }
 

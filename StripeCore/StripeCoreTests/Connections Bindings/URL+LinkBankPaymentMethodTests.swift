@@ -84,7 +84,7 @@ class URLLinkBankPaymentMethodTests: XCTestCase {
         let urlString = "stripe-auth://link-accounts/success?bank_name=Payment%20Success&last4=6789"
         let url = try XCTUnwrap(URL(string: urlString))
 
-        XCTAssertEqual(url.extractQueryValue(forKey: "bank_name"), "Success")
+        XCTAssertEqual(url.extractQueryValue(forKey: "bank_name"), "Payment Success")
         XCTAssertEqual(url.extractQueryValue(forKey: "last4"), "6789")
         XCTAssertNil(url.extractQueryValue(forKey: "payment_method_id"))
     }
