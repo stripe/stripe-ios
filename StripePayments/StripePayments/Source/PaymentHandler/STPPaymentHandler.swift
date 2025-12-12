@@ -1751,6 +1751,11 @@ public class STPPaymentHandler: NSObject {
             object: nil
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
+        let context = currentAction?.authenticationContext
+        safariViewController?.dismiss(animated: true) {
+            self.callContextDidDismissIfNeeded(context, self.safariViewController)
+            self.safariViewController = nil
+        }
         logURLRedirectNextActionFinished(returnType: .appForegrounded)
         _retrieveAndCheckIntentForCurrentAction()
     }
