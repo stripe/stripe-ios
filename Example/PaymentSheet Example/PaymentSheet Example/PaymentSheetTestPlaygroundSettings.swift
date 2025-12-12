@@ -72,6 +72,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred multiprocessor flow"
             }
         }
+
+        var isIntentFirst: Bool {
+            switch self {
+            case .normal:
+                return true
+            case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
+                return false
+            }
+        }
     }
 
     enum ConfirmationMode: String, PickerEnum {

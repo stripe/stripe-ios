@@ -637,6 +637,21 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testPayPayConfirmFlows() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "example-app-scheme://unused"
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "JPY",
+            paymentMethodType: .payPay,
+            merchantCountry: .JP,
+            configuration: configuration
+        ) { form in
+            // PayPay has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
     // MARK: Add tests above this line
     // MARK: - 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
     func testiDEALConfirmFlows() async throws {

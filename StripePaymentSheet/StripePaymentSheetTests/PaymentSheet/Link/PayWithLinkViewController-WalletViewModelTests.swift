@@ -11,7 +11,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
@@ -224,6 +224,134 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         )
     }
 
+    // MARK: - Card Funding Filtering Tests
+
+    func test_cardFundingFiltering_debitOnly() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            linkFundingSources: ["CARD", "BANK_ACCOUNT"],
+            allowedCardFundingTypes: .debit
+        )
+
+        // Debit card should be supported
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.card]),
+            "Debit card should be supported when only debit is allowed"
+        )
+
+        // Credit card should NOT be supported
+        XCTAssertFalse(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks]),
+            "Credit card should not be supported when only debit is allowed"
+        )
+
+        // Prepaid card (expired card index) should NOT be supported
+        XCTAssertFalse(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.expiredCard]),
+            "Prepaid card should not be supported when only debit is allowed"
+        )
+
+        // Bank account should still be supported (not affected by card funding filter)
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.bankAccount]),
+            "Bank account should be supported regardless of card funding filter"
+        )
+    }
+
+    func test_cardFundingFiltering_creditOnly() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            linkFundingSources: ["CARD", "BANK_ACCOUNT"],
+            allowedCardFundingTypes: .credit
+        )
+
+        // Debit card should NOT be supported
+        XCTAssertFalse(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.card]),
+            "Debit card should not be supported when only credit is allowed"
+        )
+
+        // Credit card should be supported
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks]),
+            "Credit card should be supported when only credit is allowed"
+        )
+    }
+
+    func test_cardFundingFiltering_prepaidOnly() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            linkFundingSources: ["CARD", "BANK_ACCOUNT"],
+            allowedCardFundingTypes: .prepaid
+        )
+
+        // Debit card should NOT be supported
+        XCTAssertFalse(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.card]),
+            "Debit card should not be supported when only prepaid is allowed"
+        )
+
+        // Credit card should NOT be supported
+        XCTAssertFalse(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks]),
+            "Credit card should not be supported when only prepaid is allowed"
+        )
+
+        // Prepaid card should be supported
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.expiredCard]),
+            "Prepaid card should be supported when only prepaid is allowed"
+        )
+    }
+
+    func test_cardFundingFiltering_debitAndCredit() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            linkFundingSources: ["CARD", "BANK_ACCOUNT"],
+            allowedCardFundingTypes: [.debit, .credit]
+        )
+
+        // Debit card should be supported
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.card]),
+            "Debit card should be supported when debit and credit are allowed"
+        )
+
+        // Credit card should be supported
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks]),
+            "Credit card should be supported when debit and credit are allowed"
+        )
+
+        // Prepaid card should NOT be supported
+        XCTAssertFalse(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.expiredCard]),
+            "Prepaid card should not be supported when only debit and credit are allowed"
+        )
+    }
+
+    func test_cardFundingFiltering_allFundingTypes() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            linkFundingSources: ["CARD", "BANK_ACCOUNT"],
+            allowedCardFundingTypes: .all
+        )
+
+        // All cards should be supported
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.card]),
+            "All cards should be supported when all funding types are allowed"
+        )
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks]),
+            "All cards should be supported when all funding types are allowed"
+        )
+        XCTAssertTrue(
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.expiredCard]),
+            "All cards should be supported when all funding types are allowed"
+        )
+    }
+
     func testShouldShowSecondaryButtonEnabled() throws {
         let sut = try makeSUT(shouldShowSecondaryCta: true)
         XCTAssertNotNil(sut.cancelButtonConfiguration)
@@ -242,25 +370,31 @@ extension PayWithLinkViewController_WalletViewModelTests {
         supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = [.card, .bankAccount],
         linkFundingSources: [String] = ["CARD"],
         cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all,
+        allowedCardFundingTypes: PaymentSheet.CardFundingType = .all,
         linkPassthroughModeEnabled: Bool? = nil,
         isSettingUp: Bool = false,
         linkPMOSFU: Bool? = nil,
         shouldShowSecondaryCta: Bool = true
     ) throws -> PayWithLinkViewController.WalletViewModel {
+        // Enable card funding filtering when allowedCardFundingTypes is not .all
+        let cardFundingFilteringEnabled = allowedCardFundingTypes != .all
         let (intent, elementsSession) = try isSettingUp
         ? PayWithLinkTestHelpers.makeSetupIntentAndElementsSession(
             linkFundingSources: linkFundingSources,
-            linkPassthroughModeEnabled: linkPassthroughModeEnabled
+            linkPassthroughModeEnabled: linkPassthroughModeEnabled,
+            cardFundingFilteringEnabled: cardFundingFilteringEnabled
         )
         : PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(
             linkFundingSources: linkFundingSources,
             linkPassthroughModeEnabled: linkPassthroughModeEnabled,
-            linkPMOSFU: linkPMOSFU
+            linkPMOSFU: linkPMOSFU,
+            cardFundingFilteringEnabled: cardFundingFilteringEnabled
         )
 
         var paymentSheetConfiguration = PaymentSheet.Configuration()
 
         paymentSheetConfiguration.cardBrandAcceptance = cardBrandAcceptance
+        paymentSheetConfiguration.allowedCardFundingTypes = allowedCardFundingTypes
 
         return PayWithLinkViewController.WalletViewModel(
             // TODO(link): Fully mock `PaymentSheetLinkAccount and remove this.

@@ -1089,5 +1089,25 @@
           }
         }
       ]
+    },
+    {
+        "type": "paypay",
+        "async": false,
+        "fields": [],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
     }
 ]

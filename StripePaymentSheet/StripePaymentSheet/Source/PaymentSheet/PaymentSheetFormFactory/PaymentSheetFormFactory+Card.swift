@@ -80,7 +80,7 @@ extension PaymentSheetFormFactory {
             theme: theme,
             analyticsHelper: analyticsHelper,
             cardBrandFilter: configuration.cardBrandFilter,
-            cardFundingFilter: configuration.cardFundingFilter,
+            cardFundingFilter: cardFundingFilter,
             opensCardScannerAutomatically: configuration.opensCardScannerAutomatically,
             linkAppearance: linkAppearance
         )
