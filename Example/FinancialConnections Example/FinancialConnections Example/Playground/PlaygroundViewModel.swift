@@ -239,6 +239,18 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
+    var fcLiteSecureWebview: Binding<Bool> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.fcLiteSecureWebview
+            },
+            set: {
+                self.playgroundConfiguration.fcLiteSecureWebview = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     var style: Binding<PlaygroundConfiguration.Style> {
         Binding(
             get: {
