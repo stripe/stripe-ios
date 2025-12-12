@@ -1745,13 +1745,21 @@ public class STPPaymentHandler: NSObject {
     }
 
     @objc func _handleWillForegroundNotification() {
+        let context = currentAction?.authenticationContext
+        if context?.responds(
+            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
+        ) ?? false,
+            let safariViewController = safariViewController
+        {
+            context?.authenticationContextWillDismiss?(safariViewController)
+        }
+
         NotificationCenter.default.removeObserver(
             self,
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
         STPURLCallbackHandler.shared().unregisterListener(self)
-        let context = currentAction?.authenticationContext
         safariViewController?.dismiss(animated: true) {
             self.callContextDidDismissIfNeeded(context, self.safariViewController)
             self.safariViewController = nil
