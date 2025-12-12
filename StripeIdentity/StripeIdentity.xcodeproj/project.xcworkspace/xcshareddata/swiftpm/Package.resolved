@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "capture-core-sp",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/BlinkID/capture-core-sp",
-      "state" : {
-        "branch" : "main",
-        "revision" : "9045eab5c75384292666f4aca2e3318d17466f67"
-      }
-    },
-    {
       "identity" : "ios-snapshot-test-case",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/uber/ios-snapshot-test-case",

@@ -300,7 +300,6 @@
 			packageReferences = (
 				98906E4295D5EDD251F81145 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
 				1034C700B96E0B79C2107621 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
-				D44AE4E72B9A66ED00446682 /* XCRemoteSwiftPackageReference "capture-core-sp" */,
 			);
 			productRefGroup = DA1A05D0BE4F60655BC0E2CD /* Products */;
 			projectDirPath = "";
@@ -469,14 +468,6 @@
 			requirement = {
 				branch = "stripe-mock";
 				kind = branch;
-			};
-		};
-		D44AE4E72B9A66ED00446682 /* XCRemoteSwiftPackageReference "capture-core-sp" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/BlinkID/capture-core-sp";
-			requirement = {
-				kind = exactVersion;
-				version = 1.2.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

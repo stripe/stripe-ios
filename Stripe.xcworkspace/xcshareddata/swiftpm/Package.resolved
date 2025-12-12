@@ -1,15 +1,6 @@
 {
-  "originHash" : "f16dd06a8f672ea0982887741f3e9e8b32d2e926529cffefd0ba4f377c7018ab",
+  "originHash" : "0e9f9808e3877fc1b1da4cdeb25afc5f9e441d2f43613d0d63757da5d6d181d1",
   "pins" : [
-    {
-      "identity" : "capture-core-sp",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/BlinkID/capture-core-sp",
-      "state" : {
-        "revision" : "5d0ae57d265cb5d7dcf255d93dd3421b5c825e46",
-        "version" : "1.2.3"
-      }
-    },
     {
       "identity" : "ios-snapshot-test-case",
       "kind" : "remoteSourceControl",
