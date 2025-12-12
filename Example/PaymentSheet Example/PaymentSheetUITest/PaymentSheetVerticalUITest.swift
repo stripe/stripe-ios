@@ -147,11 +147,11 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
     }
 
-    func DISABLED_testUSBankAccount_verticalmode() {
+    func testUSBankAccount_verticalmode() {
         _testUSBankAccount(mode: .payment, integrationType: .normal, vertical: true)
     }
 
-    func DISABLED_testInstantDebits_verticalmode() {
+    func testInstantDebits_verticalmode() {
         _testInstantDebits(mode: .payment, vertical: true)
     }
 

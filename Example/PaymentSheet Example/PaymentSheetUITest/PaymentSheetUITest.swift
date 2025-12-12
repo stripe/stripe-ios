@@ -865,19 +865,19 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 }
 
 class PaymentSheetDeferredUIBankAccountTests: PaymentSheetUITestCase {
-    func DISABLED_testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() {
+    func testDeferredIntentPaymentIntent_USBankAccount_ClientSideConfirmation() {
         _testUSBankAccount(mode: .payment, integrationType: .deferred_csc)
     }
 
-    func DISABLED_testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() {
+    func testDeferredIntentPaymentIntent_USBankAccount_ServerSideConfirmation() {
         _testUSBankAccount(mode: .payment, integrationType: .deferred_ssc)
     }
 
-    func DISABLED_testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() {
+    func testDeferredIntentSetupIntent_USBankAccount_ClientSideConfirmation() {
         _testUSBankAccount(mode: .setup, integrationType: .deferred_csc)
     }
 
-    func DISABLED_testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() {
+    func testDeferredIntentSetupIntent_USBankAccount_ServerSideConfirmation() {
         _testUSBankAccount(mode: .setup, integrationType: .deferred_ssc)
     }
 
@@ -2927,11 +2927,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     // MARK: Link bank payments
 
-    func DISABLED_testLinkCardBrand() {
+    func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
 
-    func DISABLED_testLinkCardBrand_flowController() {
+    func testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
 

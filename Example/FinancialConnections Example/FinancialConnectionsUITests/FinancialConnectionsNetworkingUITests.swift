@@ -10,7 +10,7 @@ import XCTest
 
 final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
-    func DISABLED_testNativeNetworkingTestMode() throws {
+    func testNativeNetworkingTestMode() throws {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeAutofillSignInFlowTest(emailAddress: emailAddresss)
@@ -236,7 +236,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         )
     }
 
-    func DISABLED_testNativeNetworkingTestModeSignUpWithMultiSelectAndPrefilledEmail() {
+    func testNativeNetworkingTestModeSignUpWithMultiSelectAndPrefilledEmail() {
         let emailAddress = "\(UUID().uuidString)@UITestForIOS.com"
 
         let app = XCUIApplication.fc_launch(
@@ -301,7 +301,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         )
     }
 
-    func DISABLED_testNativeNetworkingTestModeSignUpWithPrefilledEmailAndPhone() {
+    func testNativeNetworkingTestModeSignUpWithPrefilledEmailAndPhone() {
         let emailAddress = "\(UUID().uuidString)@UITestForIOS.com"
 
         let app = XCUIApplication.fc_launch(

@@ -25,7 +25,7 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.launchEnvironment = [:]
     }
 
-    func DISABLED_testWebInstantDebitsOnlyLinkPaymentController() {
+    func testWebInstantDebitsOnlyLinkPaymentController() {
         app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "false"
         app.launch()
 
@@ -104,7 +104,7 @@ class LinkPaymentControllerUITest: XCTestCase {
         XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
     }
 
-    func DISABLED_testNativeInstantDebitsOnlyLinkPaymentController() {
+    func testNativeInstantDebitsOnlyLinkPaymentController() {
         app.launchArguments += ["-FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE", "YES"]
         app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "true"
         app.launch()

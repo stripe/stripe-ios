@@ -322,7 +322,7 @@ class CustomerSheetUITest: XCTestCase {
         dismissAlertView(alertBody: "Success: •••• 4242, canceled", alertTitle: "Complete", buttonToTap: "OK")
     }
 
-    func DISABLED_testCustomerSheet_addUSBankAccount() throws {
+    func testCustomerSheet_addUSBankAccount() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .off

@@ -15,7 +15,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func DISABLED_testDataTestModeOAuthNativeAuthFlow() throws {
+    func testDataTestModeOAuthNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -43,7 +43,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func DISABLED_testPaymentTestModeLegacyNativeAuthFlow() throws {
+    func testPaymentTestModeLegacyNativeAuthFlow() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -410,7 +410,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         XCTAssertTrue(playgroundCancelAlert.waitForExistence(timeout: 10.0))
     }
 
-    func DISABLED_testNativeOnEventClosureEvents() throws {
+    func testNativeOnEventClosureEvents() throws {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -469,7 +469,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func DISABLED_testNativeSkipSuccessPane() {
+    func testNativeSkipSuccessPane() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -500,7 +500,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func DISABLED_testNativeConnectMerchantForDataUseCase() {
+    func testNativeConnectMerchantForDataUseCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -530,7 +530,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func DISABLED_testNativeConnectMerchantForPaymentUseCase() {
+    func testNativeConnectMerchantForPaymentUseCase() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
