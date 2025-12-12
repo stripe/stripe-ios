@@ -481,6 +481,21 @@ final class PlaygroundConfiguration {
         }
     }
 
+    private static let fcLiteSecureWebviewKey = "fc_lite_secure_webview"
+    var fcLiteSecureWebview: Bool {
+        get {
+            if let fcLiteSecureWebview = configurationStore[Self.fcLiteSecureWebviewKey] as? Bool {
+                return fcLiteSecureWebview
+            } else {
+                return false
+            }
+        }
+        set {
+            configurationStore[Self.fcLiteSecureWebviewKey] = newValue
+            PlaygroundUserDefaults.enableFCLiteSecureWebview = newValue
+        }
+    }
+
     // MARK: - Experimental
 
     enum Style: String, CaseIterable, Identifiable, Hashable {
@@ -674,7 +689,10 @@ final class PlaygroundConfigurationStore {
         set {
             do {
                 let configurationData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                let configurationString = String(decoding: configurationData, as: UTF8.self)
+                guard let configurationString = String(data: configurationData, encoding: .utf8) else {
+                    assertionFailure("unable to convert configuration data to string")
+                    return
+                }
                 Self.configurationString = configurationString
             } catch {
                 assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")

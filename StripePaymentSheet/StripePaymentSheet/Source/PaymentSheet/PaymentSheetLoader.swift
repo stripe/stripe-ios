@@ -439,6 +439,7 @@ final class PaymentSheetLoader {
         }
 
         // Hide any saved cards whose brands or funding types are not allowed
+        let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
         return savedPaymentMethods.filter {
             guard let card = $0.card else { return true }
             // Filter by card brand
@@ -448,7 +449,7 @@ final class PaymentSheetLoader {
             // Filter by card funding type
             // If funding is nil, treat it as .other (unknown) and check if that's accepted
             let fundingType: STPCardFundingType = card.funding.map { STPCard.funding(from: $0) } ?? .other
-            if !configuration.cardFundingFilter.isAccepted(cardFundingType: fundingType) {
+            if !cardFundingFilter.isAccepted(cardFundingType: fundingType) {
                 return false
             }
             return true
