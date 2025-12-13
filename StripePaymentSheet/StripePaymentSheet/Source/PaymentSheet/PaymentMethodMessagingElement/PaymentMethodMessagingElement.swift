@@ -107,13 +107,15 @@ public class PaymentMethodMessagingElement {
 
     let mode: Mode
     let infoUrl: URL
+    let legalDisclosure: String?
     let promotion: String
     let appearance: Appearance
     let analyticsHelper: PMMEAnalyticsHelper
 
-    init(mode: Mode, infoUrl: URL, promotion: String, appearance: PaymentMethodMessagingElement.Appearance, analyticsHelper: PMMEAnalyticsHelper) {
+    init(mode: Mode, infoUrl: URL, legalDisclosure: String?, promotion: String, appearance: PaymentMethodMessagingElement.Appearance, analyticsHelper: PMMEAnalyticsHelper) {
         self.mode = mode
         self.infoUrl = infoUrl
+        self.legalDisclosure = legalDisclosure
         self.promotion = promotion
         self.appearance = appearance
         self.analyticsHelper = analyticsHelper

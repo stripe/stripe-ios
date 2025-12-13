@@ -214,10 +214,35 @@ class PMMESnapshotTests: STPSnapshotTestCase {
         verify(view, width: 200)
     }
 
+    // MARK: - Legal Disclosure Tests
+
+    func testSinglePartnerMode_WithLegalDisclosure() {
+        let viewData = makeViewData(
+            mode: .singlePartner(logo: makeLogoSet()),
+            legalDisclosure: "18+, T&C apply. Credit subject to status.",
+            promotion: "Buy now or pay later with {partner}",
+            style: .automatic
+        )
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
+        verify(view)
+    }
+
+    func testMultiPartnerMode_WithLegalDisclosure() {
+        let viewData = makeViewData(
+            mode: .multiPartner(logos: [makeLogoSet(), makeLogoSet(color: .systemGreen)]),
+            legalDisclosure: "18+, T&C apply. Credit subject to status.",
+            promotion: "Buy now or pay later",
+            style: .automatic
+        )
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
+        verify(view)
+    }
+
     // MARK: - Helper Methods
 
     private func makeViewData(
         mode: PaymentMethodMessagingElement.Mode,
+        legalDisclosure: String? = nil,
         promotion: String,
         style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle = .automatic,
         appearance: PaymentMethodMessagingElement.Appearance? = nil
@@ -240,6 +265,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
         return PaymentMethodMessagingElement.ViewData(
             mode: mode,
             infoUrl: URL(string: "https://stripe.com")!,
+            legalDisclosure: legalDisclosure,
             promotion: promotion,
             appearance: finalAppearance,
             analyticsHelper: analyticsHelper

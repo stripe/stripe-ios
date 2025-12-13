@@ -21,6 +21,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
     func testPMMERepresentable_SinglePartner() async {
         let viewData = makeViewData(
             mode: .singlePartner(logo: makeLogoSet()),
+            legalDisclosure: nil,
             promotion: "Buy now or pay later with {partner}",
             style: .automatic
         )
@@ -45,6 +46,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
     func testPMMERepresentable_MultiPartner() async {
         let viewData = makeViewData(
             mode: .multiPartner(logos: [makeLogoSet(), makeLogoSet(color: .systemGreen)]),
+            legalDisclosure: nil,
             promotion: "Buy now or pay later",
             style: .automatic
         )
@@ -70,6 +72,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
 
         let viewData = makeViewData(
             mode: .singlePartner(logo: makeLogoSet()),
+            legalDisclosure: nil,
             promotion: "4 interest-free payments with {partner}",
             appearance: appearance
         )
@@ -95,6 +98,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
 
         let viewData = makeViewData(
             mode: .multiPartner(logos: [makeLogoSet(), makeLogoSet(color: .systemGreen)]),
+            legalDisclosure: nil,
             promotion: "Buy now or pay later",
             appearance: appearance
         )
@@ -108,6 +112,50 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         hostingVC.view.layoutIfNeeded()
 
         XCTAssertFalse(hostingVC.view.subviews.isEmpty)
+    }
+
+    func testPMMERepresentable_SinglePartner_WithLegalDisclosure() async {
+        let viewData = makeViewData(
+            mode: .singlePartner(logo: makeLogoSet()),
+            legalDisclosure: "18+, T&C apply. Credit subject to status.",
+            promotion: "Buy now or pay later with {partner}",
+            style: .automatic
+        )
+
+        let swiftUIView = PMMELoadedViewWrapper(viewData: viewData)
+            .animation(nil)
+
+        let hostingVC = makeWindowWithView(swiftUIView)
+
+        hostingVC.view.setNeedsLayout()
+        hostingVC.view.layoutIfNeeded()
+
+        XCTAssertFalse(hostingVC.view.subviews.isEmpty)
+        let subview = hostingVC.view.subviews[0]
+
+        verify(subview, identifier: "pmme_representable_single_partner_legal_disclosure")
+    }
+
+    func testPMMERepresentable_MultiPartner_WithLegalDisclosure() async {
+        let viewData = makeViewData(
+            mode: .multiPartner(logos: [makeLogoSet(), makeLogoSet(color: .systemGreen)]),
+            legalDisclosure: "18+, T&C apply. Credit subject to status.",
+            promotion: "Buy now or pay later",
+            style: .automatic
+        )
+
+        let swiftUIView = PMMELoadedViewWrapper(viewData: viewData)
+            .animation(nil)
+
+        let hostingVC = makeWindowWithView(swiftUIView)
+
+        hostingVC.view.setNeedsLayout()
+        hostingVC.view.layoutIfNeeded()
+
+        XCTAssertFalse(hostingVC.view.subviews.isEmpty)
+        let subview = hostingVC.view.subviews[0]
+
+        verify(subview, identifier: "pmme_representable_multi_partner_legal_disclosure")
     }
 
     // MARK: - Helpers
@@ -147,6 +195,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
 
     private func makeViewData(
         mode: PaymentMethodMessagingElement.Mode,
+        legalDisclosure: String?,
         promotion: String,
         style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle = .automatic,
         appearance: PaymentMethodMessagingElement.Appearance? = nil
@@ -169,6 +218,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         return PaymentMethodMessagingElement.ViewData(
             mode: mode,
             infoUrl: URL(string: "https://stripe.com")!,
+            legalDisclosure: legalDisclosure,
             promotion: promotion,
             appearance: finalAppearance,
             analyticsHelper: analyticsHelper
