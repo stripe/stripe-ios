@@ -29,4 +29,8 @@ extension Bundle {
         return self.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? self.main
             .object(forInfoDictionaryKey: "CFBundleName") as? String
     }
+
+    @_spi(STP) public class func stp_minimumOSVersion() -> String? {
+        return self.main.infoDictionary?["MinimumOSVersion"] as? String
+    }
 }
