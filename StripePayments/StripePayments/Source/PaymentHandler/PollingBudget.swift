@@ -43,7 +43,7 @@ final class PollingBudget {
     init?(startDate: Date, paymentMethodType: STPPaymentMethodType) {
         self.startDate = startDate
         switch paymentMethodType {
-        case .amazonPay, .revolutPay, .swish, .twint, .przelewy24:
+        case .amazonPay, .revolutPay, .swish, .twint, .przelewy24, .payPay:
             self.duration = 5.0
         case .card:
             self.duration = 15.0
