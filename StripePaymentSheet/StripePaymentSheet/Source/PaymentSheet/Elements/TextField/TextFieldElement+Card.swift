@@ -211,11 +211,11 @@ extension TextFieldElement {
             guard !binRange.isHardcoded else { return nil }
 
             if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
-                guard let allowedTypes = cardFundingFilter.allowedFundingTypesDisplayString() else {
+                guard let warningMessage = cardFundingFilter.allowedFundingTypesDisplayString() else {
                     stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
                     return nil
                 }
-                return String.Localized.only_funding_types_accepted(fundingTypes: allowedTypes)
+                return warningMessage
             }
 
             return nil
