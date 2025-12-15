@@ -107,7 +107,7 @@ struct CardFundingFilter: Equatable {
             return String.Localized.only_debit_and_prepaid_cards_accepted
         case (false, true, true):
             return String.Localized.only_credit_and_prepaid_cards_accepted
-        // All three types or no types - no warning needed
+        // All three types or no types (should never happen)
         case (true, true, true), (false, false, false):
             return nil
         }
