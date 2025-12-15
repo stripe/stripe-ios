@@ -354,6 +354,13 @@ class IntegrationTesterUITests: XCTestCase {
         enterCodeText.tap()
         enterCodeText.typeText("555555")
 
+        // Fix flakey test - Presenting keyboard may show tip regarding:
+        // "Speed up your typing by sliding your finger across the letters to compose a word" / Continue
+        let continueButton = app.buttons["Continue"]
+        if continueButton.waitForExistence(timeout: 3.0) {
+            continueButton.forceTapElement()
+        }
+
         let doneButton = app.buttons["Done"]
         XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
         doneButton.forceTapElement()
