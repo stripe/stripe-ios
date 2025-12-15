@@ -8,6 +8,8 @@
 
 "%1$@ account ending in %2$@" = "尾号为 %2$@ 的 %1$@ 账户";
 
+"%1$@ and %2$@" = "%1$@ 和 %2$@";
+
 "%1$@ ending in %2$@" = "%1$@ - 尾号：%2$@";
 
 "%1$@ is not accepted" = "不接受 %1$@";
@@ -30,13 +32,21 @@
 
 "Confirm your %@" = "确认您的 %@";
 
+"Credit" = "信用卡";
+
+"Debit" = "借记卡";
+
 "Invalid data." = "数据无效。";
 
 "MM / YY" = "月份/年份";
 
 "MM/YY" = "月份/年份";
 
+"Only %1$@ cards are accepted" = "仅接受 %1$@ 卡";
+
 "Postal Code" = "邮编";
+
+"Prepaid" = "预付卡";
 
 "Shipping Address" = "收货地址";
 
