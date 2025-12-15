@@ -64,20 +64,20 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
 
-/* Warning shown when only credit cards are accepted */
-"Only credit cards are accepted" = "Only credit cards are accepted";
-
 /* Warning shown when only credit and prepaid cards are accepted */
 "Only credit and prepaid cards are accepted" = "Only credit and prepaid cards are accepted";
 
-/* Warning shown when only debit cards are accepted */
-"Only debit cards are accepted" = "Only debit cards are accepted";
+/* Warning shown when only credit cards are accepted */
+"Only credit cards are accepted" = "Only credit cards are accepted";
 
 /* Warning shown when only debit and credit cards are accepted */
 "Only debit and credit cards are accepted" = "Only debit and credit cards are accepted";
 
 /* Warning shown when only debit and prepaid cards are accepted */
 "Only debit and prepaid cards are accepted" = "Only debit and prepaid cards are accepted";
+
+/* Warning shown when only debit cards are accepted */
+"Only debit cards are accepted" = "Only debit cards are accepted";
 
 /* Warning shown when only prepaid cards are accepted */
 "Only prepaid cards are accepted" = "Only prepaid cards are accepted";
