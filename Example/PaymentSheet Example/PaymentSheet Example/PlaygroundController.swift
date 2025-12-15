@@ -1051,6 +1051,180 @@ extension PlaygroundController {
         }
     }
 
+    func createIntent() {
+        func fail(error: Error) {
+            self.lastPaymentResult = .failed(error: error)
+            self.isLoading = false
+            self.currentlyRenderedSettings = self.settings
+        }
+        let onlyDifferenceBetweenSettingsIsMode: Bool = {
+            var oldModifiedWithNewMode = currentlyRenderedSettings
+            oldModifiedWithNewMode.mode = settings.mode
+            return oldModifiedWithNewMode == settings
+        }()
+        let isDeferred = settings.integrationType != .normal
+        let shouldUpdateEmbeddedInsteadOfRecreating = !reinitializeControllers && onlyDifferenceBetweenSettingsIsMode && isDeferred && embeddedPlaygroundViewController != nil
+        if !shouldUpdateEmbeddedInsteadOfRecreating {
+            embeddedPlaygroundViewController = nil
+        }
+        let shouldUpdateFlowControllerInsteadOfRecreating = !reinitializeControllers && onlyDifferenceBetweenSettingsIsMode && isDeferred && paymentSheetFlowController != nil
+        if !shouldUpdateFlowControllerInsteadOfRecreating {
+            paymentSheetFlowController = nil
+        }
+        addressViewController = nil
+        paymentSheet = nil
+        lastPaymentResult = nil
+        embeddedPlaygroundViewController?.isLoading = true
+        isLoading = true
+        let settingsToLoad = self.settings
+
+        var body = [
+            "customer": customerIdOrType,
+            "currency": settings.currency.rawValue,
+            "amount": settings.amount.rawValue,
+            "merchant_country_code": settings.merchantCountryCode.rawValue,
+            "mode": settings.mode.rawValue,
+            "automatic_payment_methods": settings.apmsEnabled == .on,
+            "use_link": settings.linkPassthroughMode == .pm,
+            "link_mode": settings.linkEnabledMode.rawValue,
+            "use_manual_confirmation": settings.integrationType == .deferred_mc,
+            "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
+            "customer_session_component_name": "mobile_payment_element",
+            "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
+            "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
+            "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
+            "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
+            "customer_session_payment_method_set_as_default": settings.paymentMethodSetAsDefault.rawValue,
+            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
+            //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
+        ] as [String: Any]
+        if settingsToLoad.apmsEnabled == .off, let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
+            body["supported_payment_methods"] = supportedPaymentMethods
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .split(separator: ",")
+                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+        }
+        if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
+            body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
+        }
+        if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
+            body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
+        }
+        makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
+            // If the completed load state doesn't represent the current state, discard this result
+            if settingsToLoad != self.settings {
+                return
+            }
+            if let nserror = error as? NSError, nserror.code == NSURLErrorCancelled {
+                // Ignore, we canceled and following up with another request
+                return
+            }
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONDecoder().decode([String: String].self, from: data),
+                (response as? HTTPURLResponse)?.statusCode != 400
+            else {
+                print(error as Any)
+                DispatchQueue.main.async {
+                    var errorMessage = "An error occurred communicating with the example backend."
+                    if let data = data,
+                       let json = try? JSONDecoder().decode([String: String].self, from: data),
+                       let jsonError = json["error"] {
+                        errorMessage = jsonError
+                    }
+                    fail(error: PlaygroundError(errorDescription: errorMessage))
+                }
+                return
+            }
+
+            DispatchQueue.main.async {
+                AnalyticsLogObserver.shared.analyticsLog.removeAll()
+                self.lastPaymentResult = nil
+                self.clientSecret = json["intentClientSecret"]
+                self.ephemeralKey = json["customerEphemeralKeySecret"]
+                self.customerId = json["customerId"]
+                self.customerSessionClientSecret = json["customerSessionClientSecret"]
+                self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
+                STPAPIClient.shared.publishableKey = json["publishableKey"]
+
+                self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
+                self.addressDetails = nil
+                // Persist customerId / customerMode
+                self.serializeSettingsToNSUserDefaults()
+                let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")// Avoid logging client secrets as a matter of best practice even though this is testmode
+                print("✅ Test playground finished loading with intent id: \(intentID ?? "")) and customer id: \(self.customerId ?? "") ")
+
+                switch self.settings.uiStyle {
+                case .paymentSheet:
+                    self.buildPaymentSheet()
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
+                case .flowController:
+                    guard !shouldUpdateFlowControllerInsteadOfRecreating else {
+                        // Update FC rather than re-creating it
+                        self.updateFlowController()
+                        self.currentlyRenderedSettings = self.settings
+                        return
+                    }
+
+                    let completion: (Result<PaymentSheet.FlowController, Error>) -> Void = { result in
+                        self.currentlyRenderedSettings = self.settings
+                        switch result {
+                        case .failure(let error):
+                            print(error as Any)
+                        case .success(let manualFlow):
+                            self.paymentSheetFlowController = manualFlow
+                        }
+                        // If the completed load state doesn't represent the current state, reload again
+                        if settingsToLoad != self.settings {
+                            DispatchQueue.main.async {
+                                self.load()
+                            }
+                            return
+                        } else {
+                            self.isLoading = false
+                        }
+                    }
+                    switch self.settings.integrationType {
+                    case .normal:
+                        switch self.settings.mode {
+                        case .payment, .paymentWithSetup:
+                            PaymentSheet.FlowController.create(
+                                paymentIntentClientSecret: self.clientSecret!,
+                                configuration: self.configuration,
+                                completion: completion
+                            )
+                        case .setup:
+                            PaymentSheet.FlowController.create(
+                                setupIntentClientSecret: self.clientSecret!,
+                                configuration: self.configuration,
+                                completion: completion
+                            )
+                        }
+
+                    case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
+                        PaymentSheet.FlowController.create(
+                            intentConfiguration: self.intentConfig,
+                            configuration: self.configuration,
+                            completion: completion
+                        )
+                    }
+                case .embedded:
+                    guard !shouldUpdateEmbeddedInsteadOfRecreating else {
+                        // Update embedded rather than re-creating it
+                        self.updateEmbedded()
+                        self.currentlyRenderedSettings = self.settings
+                        return
+                    }
+                    self.makeEmbeddedPaymentElement()
+                    self.isLoading = false
+                    self.currentlyRenderedSettings = self.settings
+                }
+            }
+        }
+    }
     // Deferred confirmation handler
     func confirmHandler(_ paymentMethod: STPPaymentMethod,
                         _ shouldSavePaymentMethod: Bool,
@@ -1059,6 +1233,9 @@ extension PlaygroundController {
         if paymentMethod.type == .card {
             assert(paymentMethod.card != nil)
         }
+
+        // Create a new intent
+        loadBackend(reinitializeControllers: false)
 
         switch settings.integrationType {
         case .deferred_mp:
@@ -1087,11 +1264,14 @@ extension PlaygroundController {
     }
 
     func confirmationTokenConfirmHandler(_ confirmationToken: STPConfirmationToken) async throws -> String {
+        // Create a new intent
+        loadBackend(reinitializeControllers: false)
+        try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second to finish creating an intent
+
         switch settings.integrationType {
         case .deferred_mp:
             return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
         case .deferred_csc:
-            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second simulate creating an intent
             return self.clientSecret!
         case .deferred_mc, .deferred_ssc:
             break
