@@ -7,6 +7,7 @@
 
 import Foundation
 import SafariServices
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -22,6 +23,11 @@ class PMMEUIView: UIView {
 
     // What UI context the view is shown from, for analytics purposes
     private let integrationType: PMMEAnalyticsHelper.IntegrationType
+
+    // With the default font, padding between the content and legal disclosure is 4
+    private var verticalPadding: CGFloat {
+        appearance.fontScaled(4)
+    }
 
     // TODO(gbirch) add accessibilityHint property with instructions about opening info url
     init(
@@ -49,14 +55,29 @@ class PMMEUIView: UIView {
             break
         }
 
+        // create wrapper view that will hold the main PMME view and the legal disclosure if needed
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = verticalPadding
+        addAndPinSubview(stackView)
+
         // choose which style to initialize
-        switch viewData.mode {
+        let pmmeView = switch viewData.mode {
         case .singlePartner(let logo):
-            let view = PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
-            addAndPinSubview(view)
+            PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
         case .multiPartner(let logos):
-            let view = PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
-            addAndPinSubview(view)
+            PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
+        }
+        stackView.addArrangedSubview(pmmeView)
+
+        // add legal disclosure if needed
+        if let legalText = viewData.legalDisclosure {
+            // TODO(gbirch): add appearance customization for legal text
+            let legalLabel = UILabel()
+            legalLabel.text = legalText
+            legalLabel.font = UIFont.preferredFont(forTextStyle: .caption1, weight: .regular, maximumPointSize: 20)
+            legalLabel.textColor = .secondaryLabel
+            stackView.addArrangedSubview(legalLabel)
         }
     }
 
