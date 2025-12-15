@@ -1,9 +1,6 @@
 /* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
 "%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
 
-/* A format string for joining two items with 'and'. E.g. 'debit and credit' */
-"%1$@ and %2$@" = "%1$@ and %2$@";
-
 /* Label a default funding source, which we treat as a generic card. E.g. 'Visa Card' */
 "%1$@ Card" = "%1$@ Card";
 
@@ -49,14 +46,8 @@
 /* Section title for entering your CVC. e.g. 'Confirm your CVC' */
 "Confirm your %@" = "Confirm your %@";
 
-/* Label for credit card funding type */
-"Credit" = "Credit";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
-
-/* Label for debit card funding type */
-"Debit" = "Debit";
 
 /* Placeholder string for email entry field. */
 "example@example.com" = "example@example.com";
@@ -73,14 +64,26 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
 
-/* Warning shown when only specific card funding types are accepted. E.g. 'Only debit cards are accepted' or 'Only debit and credit cards are accepted' */
-"Only %1$@ cards are accepted" = "Only %1$@ cards are accepted";
+/* Warning shown when only credit cards are accepted */
+"Only credit cards are accepted" = "Only credit cards are accepted";
+
+/* Warning shown when only credit and prepaid cards are accepted */
+"Only credit and prepaid cards are accepted" = "Only credit and prepaid cards are accepted";
+
+/* Warning shown when only debit cards are accepted */
+"Only debit cards are accepted" = "Only debit cards are accepted";
+
+/* Warning shown when only debit and credit cards are accepted */
+"Only debit and credit cards are accepted" = "Only debit and credit cards are accepted";
+
+/* Warning shown when only debit and prepaid cards are accepted */
+"Only debit and prepaid cards are accepted" = "Only debit and prepaid cards are accepted";
+
+/* Warning shown when only prepaid cards are accepted */
+"Only prepaid cards are accepted" = "Only prepaid cards are accepted";
 
 /* Postal code placeholder */
 "Postal Code" = "Postal Code";
-
-/* Label for prepaid card funding type */
-"Prepaid" = "Prepaid";
 
 /* Title for shipping address entry section */
 "Shipping Address" = "Shipping Address";

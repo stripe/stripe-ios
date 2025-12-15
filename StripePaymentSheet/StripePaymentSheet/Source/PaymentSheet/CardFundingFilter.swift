@@ -81,44 +81,35 @@ struct CardFundingFilter: Equatable {
         return capabilities
     }
 
-    /// Returns a user-friendly display string of the allowed funding types (e.g. "debit", "debit and credit")
-    /// - Returns: A localized string listing the allowed funding types, or nil if all types are allowed.
+    /// Returns a user-friendly display string indicating which funding types are accepted.
+    /// - Returns: A complete localized message (e.g. "Only debit cards are accepted"), or nil if all types are allowed.
     ///            Always returns `nil` when filtering is disabled.
     func allowedFundingTypesDisplayString() -> String? {
-        guard filteringEnabled else {
+        guard filteringEnabled else { return nil }
+        if allowedFundingTypes == .all { return nil }
+
+        let hasDebit = allowedFundingTypes.contains(.debit)
+        let hasCredit = allowedFundingTypes.contains(.credit)
+        let hasPrepaid = allowedFundingTypes.contains(.prepaid)
+
+        switch (hasDebit, hasCredit, hasPrepaid) {
+        // Single types
+        case (true, false, false):
+            return String.Localized.only_debit_cards_accepted
+        case (false, true, false):
+            return String.Localized.only_credit_cards_accepted
+        case (false, false, true):
+            return String.Localized.only_prepaid_cards_accepted
+        // Two types
+        case (true, true, false):
+            return String.Localized.only_debit_and_credit_cards_accepted
+        case (true, false, true):
+            return String.Localized.only_debit_and_prepaid_cards_accepted
+        case (false, true, true):
+            return String.Localized.only_credit_and_prepaid_cards_accepted
+        // All three types or no types - no warning needed
+        case (true, true, true), (false, false, false):
             return nil
-        }
-        if allowedFundingTypes == .all {
-            return nil
-        }
-
-        var displayNames: [String] = []
-        if allowedFundingTypes.contains(.debit) {
-            displayNames.append(String.Localized.debit.lowercased())
-        }
-        if allowedFundingTypes.contains(.credit) {
-            displayNames.append(String.Localized.credit.lowercased())
-        }
-        if allowedFundingTypes.contains(.prepaid) {
-            displayNames.append(String.Localized.prepaid.lowercased())
-        }
-        // Note: .unknown has no display name - we don't show it to users
-
-        guard !displayNames.isEmpty,
-              let displayNamesFirst = displayNames.first,
-              let displayNamesLast = displayNames.last else { return nil }
-
-        // Join with localized "and" for the last element
-        if displayNames.count == 1 {
-            // E.g. "debit"
-            return displayNamesFirst
-        } else if displayNames.count == 2 {
-            // E.g. "debit and prepaid"
-            return String.Localized.x_and_y(displayNamesFirst, displayNamesLast)
-        } else {
-            // For 3+ items: "credit, debit, and prepaid"
-            let allButLast = displayNames.dropLast().joined(separator: ", ")
-            return String.Localized.x_and_y(allButLast, displayNamesLast)
         }
     }
 }
