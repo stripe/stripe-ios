@@ -6,19 +6,19 @@
 ////  Copyright © 2022 Stripe, Inc. All rights reserved.
 ////
 //
-//import Foundation
-//import iOSSnapshotTestCase
-//import StripeCoreTestUtils
+// import Foundation
+// import iOSSnapshotTestCase
+// import StripeCoreTestUtils
 //
-//@testable@_spi(STP) import Stripe
-//@testable@_spi(STP) import StripeCore
-//@testable@_spi(STP) import StripePayments
-//@testable@_spi(STP) import StripePaymentSheet
-//@testable@_spi(STP) import StripePaymentsUI
-//@testable@_spi(STP) import StripeUICore
+// @testable@_spi(STP) import Stripe
+// @testable@_spi(STP) import StripeCore
+// @testable@_spi(STP) import StripePayments
+// @testable@_spi(STP) import StripePaymentSheet
+// @testable@_spi(STP) import StripePaymentsUI
+// @testable@_spi(STP) import StripeUICore
 //
 //// @iOS26
-//class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
+// class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
 //
 //    private var configuration: AddressViewController.Configuration {
 //        var configuration = AddressViewController.Configuration()
@@ -133,9 +133,9 @@
 //            line: line
 //        )
 //    }
-//}
+// }
 //
-//private struct MockAddressSearchResult: AddressSearchResult {
+// private struct MockAddressSearchResult: AddressSearchResult {
 //    let title: String
 //    let subtitle: String
 //    let titleHighlightRanges: [NSValue]
@@ -144,4 +144,4 @@
 //    func asAddress(completion: @escaping (PaymentSheet.Address?) -> Void) {
 //        completion(nil)
 //    }
-//}
+// }
