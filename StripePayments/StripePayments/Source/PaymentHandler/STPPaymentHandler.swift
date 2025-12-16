@@ -205,7 +205,7 @@ public class STPPaymentHandler: NSObject {
             return
         }
         Self.inProgress = true
-        weak var weakSelf = self
+        weak let weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
             status,
@@ -449,7 +449,7 @@ public class STPPaymentHandler: NSObject {
         }
         Self.inProgress = true
 
-        weak var weakSelf = self
+        weak let weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
             status,
@@ -548,7 +548,7 @@ public class STPPaymentHandler: NSObject {
         }
 
         Self.inProgress = true
-        weak var weakSelf = self
+        weak let weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = {
             status,
@@ -742,7 +742,7 @@ public class STPPaymentHandler: NSObject {
         }
 
         Self.inProgress = true
-        weak var weakSelf = self
+        weak let weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = {
             status,
@@ -878,7 +878,7 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        weak var weakSelf = self
+        weak let weakSelf = self
         let action = STPPaymentHandlerPaymentIntentActionParams(
             apiClient: apiClient,
             authenticationContext: authenticationContext,
@@ -915,7 +915,7 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        weak var weakSelf = self
+        weak let weakSelf = self
         let action = STPPaymentHandlerSetupIntentActionParams(
             apiClient: apiClient,
             authenticationContext: authenticationContext,

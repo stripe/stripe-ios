@@ -122,7 +122,7 @@ import UIKit
                     return attributedString
                 }
             case .phoneNumbers:
-                weak var weakSelf = self
+                weak let weakSelf = self
                 textFormattingBlock = { inputString in
                     if !STPCardValidator.stringIsNumeric(inputString?.string ?? "") {
                         return inputString!
@@ -140,7 +140,7 @@ import UIKit
                     )
                 }
             case .bsbNumber:
-                weak var weakSelf = self
+                weak let weakSelf = self
                 textFormattingBlock = { inputString in
                     guard let inputString = inputString else {
                         return NSAttributedString()

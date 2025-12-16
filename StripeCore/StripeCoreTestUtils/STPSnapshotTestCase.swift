@@ -9,8 +9,8 @@
 import Foundation
 import iOSSnapshotTestCase
 
-let TEST_DEVICE_MODEL = "iPhone13,1" // iPhone 12 mini
-let TEST_DEVICE_OS_VERSION = "16.4"
+let TEST_DEVICE_MODEL = "iPhone17,1" // iPhone 16 Pro
+let TEST_DEVICE_OS_VERSION = "26.2"
 let TEST_DEVICE_OS_VERSION_26_1 = "26.1"
 
 open class STPSnapshotTestCase: FBSnapshotTestCase {
