@@ -37,6 +37,8 @@ class STPTelemetryClientFunctionalTest: XCTestCase {
         XCTAssertNotNil(sid)
         XCTAssertNotNil(muid)
         XCTAssertNotNil(guid)
+        // ...and updates UserDefaults
+        XCTAssertEqual(UserDefaults.standard.fraudDetectionData, FraudDetectionData.shared)
 
         let sendTelemetry2 = expectation(description: "")
         // Sending telemetry again...
@@ -47,6 +49,7 @@ class STPTelemetryClientFunctionalTest: XCTestCase {
         XCTAssertEqual(FraudDetectionData.shared.sid, sid)
         XCTAssertEqual(FraudDetectionData.shared.muid, muid)
         XCTAssertEqual(FraudDetectionData.shared.guid, guid)
+        XCTAssertEqual(UserDefaults.standard.fraudDetectionData, FraudDetectionData.shared) // make sure user defaults is set too
         guard let sidCreationDate = FraudDetectionData.shared.sidCreationDate else {
             XCTFail()
             return
@@ -67,5 +70,6 @@ class STPTelemetryClientFunctionalTest: XCTestCase {
         XCTAssertEqual(FraudDetectionData.shared.muid, muid)
         XCTAssertEqual(FraudDetectionData.shared.guid, guid)
         XCTAssertNotEqual(FraudDetectionData.shared.sid, sid)
+        XCTAssertEqual(UserDefaults.standard.fraudDetectionData, FraudDetectionData.shared) // make sure user defaults is set too
     }
 }
