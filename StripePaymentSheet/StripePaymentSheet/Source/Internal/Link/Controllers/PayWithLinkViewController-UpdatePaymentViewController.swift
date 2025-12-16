@@ -129,7 +129,7 @@ extension PayWithLinkViewController {
                 thisIsYourDefaultView.isHidden = true
             }
 
-            updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
+            updateButton.update(status: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
 
         }
 
@@ -148,7 +148,7 @@ extension PayWithLinkViewController {
 
             paymentMethodEditElement.view.endEditing(true)
             paymentMethodEditElement.view.isUserInteractionEnabled = false
-            updateButton.update(state: .processing)
+            updateButton.update(status: .processing)
 
             // When updating a payment method that is not the default and you send isDefault=false to the server you get
             // "Can't unset payment details when it's not the default", so send nil instead of false
@@ -180,7 +180,7 @@ extension PayWithLinkViewController {
                         confirmationExtras = .init(billingPhoneNumber: self.isBillingDetailsUpdateFlow ? params.billingDetails.phone : nil)
                     }
 
-                    self.updateButton.update(state: .succeeded, callToAction: nil, animated: true) {
+                    self.updateButton.update(status: .succeeded, callToAction: nil, animated: true) {
                         self.coordinator?.allowSheetDismissal(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
@@ -191,7 +191,7 @@ extension PayWithLinkViewController {
                 case .failure(let error):
                     self.updateErrorLabel(for: error)
                     self.paymentMethodEditElement.view.isUserInteractionEnabled = true
-                    self.updateButton.update(state: .enabled)
+                    self.updateButton.update(status: .enabled)
                     coordinator?.allowSheetDismissal(true)
                 }
             }
@@ -224,11 +224,11 @@ extension PayWithLinkViewController.UpdatePaymentViewController: ElementDelegate
 
     func didUpdate(element: Element) {
         updateErrorLabel(for: nil)
-        updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
+        updateButton.update(status: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
     }
 
     func continueToNextField(element: Element) {
-        updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
+        updateButton.update(status: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
     }
 
 }

@@ -214,19 +214,40 @@ class CardFundingFilterTests: XCTestCase {
         XCTAssertNil(filter.allowedFundingTypesDisplayString())
     }
 
-    func testAllowedFundingTypesDisplayString_singleType() {
+    func testAllowedFundingTypesDisplayString_debitOnly() {
         let filter = CardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true)
-        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "debit")
+        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "Only debit cards are accepted")
     }
 
-    func testAllowedFundingTypesDisplayString_twoTypes() {
+    func testAllowedFundingTypesDisplayString_creditOnly() {
+        let filter = CardFundingFilter(allowedFundingTypes: .credit, filteringEnabled: true)
+        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "Only credit cards are accepted")
+    }
+
+    func testAllowedFundingTypesDisplayString_prepaidOnly() {
+        let filter = CardFundingFilter(allowedFundingTypes: .prepaid, filteringEnabled: true)
+        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "Only prepaid cards are accepted")
+    }
+
+    func testAllowedFundingTypesDisplayString_debitAndCredit() {
         let filter = CardFundingFilter(allowedFundingTypes: [.debit, .credit], filteringEnabled: true)
-        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "debit and credit")
+        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "Only debit and credit cards are accepted")
     }
 
-    func testAllowedFundingTypesDisplayString_threeTypes() {
+    func testAllowedFundingTypesDisplayString_debitAndPrepaid() {
+        let filter = CardFundingFilter(allowedFundingTypes: [.debit, .prepaid], filteringEnabled: true)
+        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "Only debit and prepaid cards are accepted")
+    }
+
+    func testAllowedFundingTypesDisplayString_creditAndPrepaid() {
+        let filter = CardFundingFilter(allowedFundingTypes: [.credit, .prepaid], filteringEnabled: true)
+        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "Only credit and prepaid cards are accepted")
+    }
+
+    func testAllowedFundingTypesDisplayString_allThreeTypes() {
+        // When all three types are allowed, no warning is needed
         let filter = CardFundingFilter(allowedFundingTypes: [.debit, .credit, .prepaid], filteringEnabled: true)
-        XCTAssertEqual(filter.allowedFundingTypesDisplayString(), "debit, credit and prepaid")
+        XCTAssertNil(filter.allowedFundingTypesDisplayString())
     }
 
     func testAllowedFundingTypesDisplayString_unknownOnly() {
