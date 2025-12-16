@@ -215,10 +215,24 @@ extension XCUIApplication {
         autocompleteTextField.waitForExistenceAndTap()
         typeText(searchTerm)
 
+        handleiOSKeyboardTipIfNeeded()
+
         // Wait for and tap the matching autocomplete result
         let searchedCell = tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
         XCTAssertTrue(searchedCell.waitForExistence(timeout: 5), "Autocomplete result '\(expectedResult)' should appear")
         searchedCell.tap()
+    }
+
+    // In CI, we often have fresh emulators that encounter this "Tip" that prevents our tests from moving forward:
+    // "Speed up your typing by sliding your finger across the letters to compose a word" / Continue
+    func handleiOSKeyboardTipIfNeeded() {
+        let optionalTipLabel = staticTexts["Speed up your typing by sliding your finger across the letters to compose a word."].firstMatch
+        if optionalTipLabel.waitForExistence(timeout: 2.0) {
+            let continueButton = buttons["Continue"]
+            if continueButton.waitForExistence(timeout: 2.0) {
+                continueButton.forceTapElement()
+            }
+        }
     }
 }
 
