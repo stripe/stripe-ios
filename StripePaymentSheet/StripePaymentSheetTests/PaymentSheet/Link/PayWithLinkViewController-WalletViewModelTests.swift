@@ -376,15 +376,19 @@ extension PayWithLinkViewController_WalletViewModelTests {
         linkPMOSFU: Bool? = nil,
         shouldShowSecondaryCta: Bool = true
     ) throws -> PayWithLinkViewController.WalletViewModel {
+        // Enable card funding filtering when allowedCardFundingTypes is not .all
+        let cardFundingFilteringEnabled = allowedCardFundingTypes != .all
         let (intent, elementsSession) = try isSettingUp
         ? PayWithLinkTestHelpers.makeSetupIntentAndElementsSession(
             linkFundingSources: linkFundingSources,
-            linkPassthroughModeEnabled: linkPassthroughModeEnabled
+            linkPassthroughModeEnabled: linkPassthroughModeEnabled,
+            cardFundingFilteringEnabled: cardFundingFilteringEnabled
         )
         : PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(
             linkFundingSources: linkFundingSources,
             linkPassthroughModeEnabled: linkPassthroughModeEnabled,
-            linkPMOSFU: linkPMOSFU
+            linkPMOSFU: linkPMOSFU,
+            cardFundingFilteringEnabled: cardFundingFilteringEnabled
         )
 
         var paymentSheetConfiguration = PaymentSheet.Configuration()

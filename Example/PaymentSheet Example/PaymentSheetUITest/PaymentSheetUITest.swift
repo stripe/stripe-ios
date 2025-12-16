@@ -3437,7 +3437,7 @@ extension PaymentSheetUITestCase {
 
         // Go through connections flow
         app.buttons["Agree and continue"].tap()
-        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Test (Non-OAuth)"].forceTapElement()
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
@@ -3701,7 +3701,7 @@ extension PaymentSheetUITestCase {
         linkLoginCtaButton.tap()
 
         // "Institution picker" pane
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Success"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 

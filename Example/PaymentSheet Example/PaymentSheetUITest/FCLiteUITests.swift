@@ -128,7 +128,7 @@ class FCLiteUITests: XCTestCase {
         app.typeText(XCUIKeyboardKey.return.rawValue) // Enter key will continue to the next screen
 
         // Success bank
-        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Success (Later Disputed)'") // Institution Picker
+        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Disputed'") // Institution Picker
         let paymentSuccessBankButton = app.webViews.firstMatch.buttons.containing(paymentSuccessBankButtonPredicate).firstMatch
         XCTAssertTrue(paymentSuccessBankButton.waitForExistenceAndTap(timeout: 10.0))
 
@@ -165,6 +165,6 @@ class FCLiteUITests: XCTestCase {
         }
 
         // Primary button is at the bottom center of the webview (roughly 85% down, centered)
-        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
+        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)).tap()
     }
 }

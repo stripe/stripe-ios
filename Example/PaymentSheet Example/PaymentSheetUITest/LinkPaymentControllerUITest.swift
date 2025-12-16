@@ -62,7 +62,7 @@ class LinkPaymentControllerUITest: XCTestCase {
             .matching(NSPredicate(format: "label CONTAINS 'Search'"))
             .firstMatch
         searchTextField.waitForExistenceAndTap(timeout: 10)
-        app.typeText("Test Institution" + XCUIKeyboardKey.return.rawValue)
+        app.typeText("Test (Non-OAuth)" + XCUIKeyboardKey.return.rawValue)
         searchTextField
             .coordinate(
                 withNormalizedOffset: CGVector(
@@ -71,10 +71,10 @@ class LinkPaymentControllerUITest: XCTestCase {
                     dy: 1.0
                 )
             )
-        // at this point, we searched "Test Institution"
-        // and the only search result is "Test Institution,"
+        // at this point, we searched "Test (Non-OAuth)"
+        // and the first search result is "Test (Non-OAuth),"
         // so here we guess that 80 pixels below search bar
-        // there will be a "Test Institution"
+        // there will be a "Test (Non-OAuth)"
         //
         // we do this "guess" because every other method of
         // selecting the institution did not work on iOS 17
