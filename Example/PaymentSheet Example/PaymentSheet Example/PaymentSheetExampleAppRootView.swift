@@ -12,25 +12,64 @@ struct PaymentSheetExampleAppRootView: View {
         NavigationDestination.destinationsBySection
     }
 
+    // Tracks which destination is currently active/open
+    @State private var activeDestination: NavigationDestination?
+
+    // Tracks the currently pinned destination
+    @State private var pinnedDestination: NavigationDestination?
+
     var body: some View {
         NavigationView {
             Form {
                 ForEach(Section.allCases, id: \.self) { section in
                     SwiftUI.Section(section.rawValue) {
                         ForEach(destinationsBySection[section] ?? [], id: \.self) { destination in
-                            NavigationLink(
-                                destination: destinationView(for: destination)
-                            ) {
-                                Text(destination.displayTitle)
-                            }
-                            .accessibility(identifier: destination.displayTitle)
+                            navigationLink(for: destination)
                         }
                     }
                 }
             }
+            .navigationTitle("Examples")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle("Examples")
-        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            // Load pinned destination from UserDefaults and auto-open it
+            if let rawValue = UserDefaults.standard.string(forKey: "pinnedDestination"),
+               let destination = NavigationDestination(rawValue: rawValue) {
+                pinnedDestination = destination
+                // Delay slightly to ensure view is ready
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    activeDestination = destination
+                }
+            }
+        }
+    }
+
+    // Helper to create a Binding for a specific destination's open state
+    private func binding(for destination: NavigationDestination) -> Binding<Bool> {
+        Binding(
+            get: { self.activeDestination == destination },
+            set: { isActive in
+                if isActive {
+                    self.activeDestination = destination
+                } else if self.activeDestination == destination {
+                    self.activeDestination = nil
+                }
+            }
+        )
+    }
+
+    // Toggles the pin state for a destination
+    private func togglePin(for destination: NavigationDestination) {
+        if pinnedDestination == destination {
+            // Unpin the current destination
+            pinnedDestination = nil
+            UserDefaults.standard.removeObject(forKey: "pinnedDestination")
+        } else {
+            // Pin this destination (unpinning any other)
+            pinnedDestination = destination
+            UserDefaults.standard.set(destination.rawValue, forKey: "pinnedDestination")
+        }
     }
 
     enum Section: String, CaseIterable {
@@ -38,7 +77,7 @@ struct PaymentSheetExampleAppRootView: View {
         case examples = "Examples"
     }
 
-    enum NavigationDestination: Hashable, CaseIterable {
+    enum NavigationDestination: String, Hashable, CaseIterable {
         case paymentSheet
         case paymentSheet_deferred
         case paymentSheet_flowController
@@ -136,7 +175,32 @@ struct PaymentSheetExampleAppRootView: View {
     }
 
     @ViewBuilder
-    func destinationView(for destination: NavigationDestination?) -> some View {
+    func navigationLink(for destination: NavigationDestination) -> some View {
+        NavigationLink(
+            destination: destinationView(for: destination),
+            isActive: binding(for: destination)
+        ) {
+            Text(destination.displayTitle)
+        }
+        .accessibility(identifier: destination.displayTitle)
+    }
+
+    @ViewBuilder
+    func destinationView(for destination: NavigationDestination) -> some View {
+        destinationContent(for: destination)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        togglePin(for: destination)
+                    } label: {
+                        Image(systemName: pinnedDestination == destination ? "pin.fill" : "pin")
+                    }
+                }
+            }
+    }
+
+    @ViewBuilder
+    private func destinationContent(for destination: NavigationDestination) -> some View {
         switch destination {
         // Examples
         case .paymentSheet:
@@ -188,8 +252,6 @@ struct PaymentSheetExampleAppRootView: View {
             PaymentSheetTestPlayground()
         case .pmme_playground:
             PMMETestPlayground()
-        case .none:
-            EmptyView()
         }
     }
 }
