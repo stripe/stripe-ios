@@ -237,7 +237,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            weak let weakSelf = self
+            weak var weakSelf = self
             let (data, _) = try await URLSession.shared.data(for: request)
             guard
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],

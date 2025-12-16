@@ -160,13 +160,13 @@ class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
             } as STPJSONResponseCompletionBlock
 
         if keyProvider is STPCustomerEphemeralKeyProvider {
-            weak let provider = keyProvider as? STPCustomerEphemeralKeyProvider
+            weak var provider = keyProvider as? STPCustomerEphemeralKeyProvider
             provider?.createCustomerKey(
                 withAPIVersion: apiVersion ?? "",
                 completion: jsonCompletion
             )
         } else if keyProvider is STPIssuingCardEphemeralKeyProvider {
-            weak let provider = keyProvider as? STPIssuingCardEphemeralKeyProvider
+            weak var provider = keyProvider as? STPIssuingCardEphemeralKeyProvider
             provider?.createIssuingCardKey(
                 withAPIVersion: apiVersion ?? "",
                 completion: jsonCompletion
