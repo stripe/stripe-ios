@@ -50,7 +50,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         }
 
         guard STPTelemetryClient.shouldSendTelemetry() else {
-            wrappedCompletion(.failure(NSError.stp_genericConnectionError()))
+            completion?(.failure(NSError.stp_genericConnectionError()))
             return
         }
         sendTelemetryRequest(jsonPayload: payload, completion: wrappedCompletion)
