@@ -205,13 +205,12 @@ public class STPPaymentHandler: NSObject {
             return
         }
         Self.inProgress = true
-        weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
-        let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
+        let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
             status,
             paymentIntent,
             error in
-            guard let strongSelf = weakSelf else {
+            guard let strongSelf = self else {
                 return
             }
             // Reset our internal state
@@ -253,8 +252,9 @@ public class STPPaymentHandler: NSObject {
             completion(status, paymentIntent, error)
         }
 
-        let confirmCompletionBlock: STPPaymentIntentCompletionBlock = { paymentIntent, error in
-            guard let strongSelf = weakSelf else {
+        let confirmCompletionBlock: STPPaymentIntentCompletionBlock = { [weak self]
+            paymentIntent, error in
+            guard let strongSelf = self else {
                 assertionFailure("STPPaymentHandler became nil during `confirmPayment`!")
                 wrappedCompletion(.failed, nil, nil)
                 return
@@ -449,13 +449,12 @@ public class STPPaymentHandler: NSObject {
         }
         Self.inProgress = true
 
-        weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
-        let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
+        let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
             status,
             paymentIntent,
             error in
-            guard let strongSelf = weakSelf else {
+            guard let strongSelf = self else {
                 return
             }
             // Reset our internal state
@@ -548,13 +547,12 @@ public class STPPaymentHandler: NSObject {
         }
 
         Self.inProgress = true
-        weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
-        let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = {
+        let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
             setupIntent,
             error in
-            guard let strongSelf = weakSelf else {
+            guard let self else {
                 return
             }
             // Reset our internal state
@@ -578,11 +576,11 @@ public class STPPaymentHandler: NSObject {
                         "setup_intent_status": setupIntent?.status.rawValue ?? "nil",
                         "error_details": error?.serializeForV1Analytics() ?? [:],
                     ])
-                    strongSelf.analyticsClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
+                    self.analyticsClient.log(analytic: errorAnalytic, apiClient: self.apiClient)
                     completion(
                         .failed,
                         setupIntent,
-                        error ?? strongSelf._error(for: .intentStatusErrorCode)
+                        error ?? self._error(for: .intentStatusErrorCode)
                     )
                 }
 
@@ -591,8 +589,8 @@ public class STPPaymentHandler: NSObject {
             }
         }
 
-        let confirmCompletionBlock: STPSetupIntentCompletionBlock = { setupIntent, error in
-            guard let strongSelf = weakSelf else {
+        let confirmCompletionBlock: STPSetupIntentCompletionBlock = { [weak self] setupIntent, error in
+            guard let self else {
                 return
             }
 
@@ -605,18 +603,18 @@ public class STPPaymentHandler: NSObject {
                     threeDSCustomizationSettings: self.threeDSCustomizationSettings,
                     setupIntent: setupIntent,
                     returnURL: setupIntentConfirmParams.returnURL
-                ) { status, resultSetupIntent, resultError in
-                    guard let strongSelf2 = weakSelf else {
+                ) {  [weak self] status, resultSetupIntent, resultError in
+                    guard let self else {
                         return
                     }
-                    strongSelf2.currentAction = nil
+                    self.currentAction = nil
 
                     wrappedCompletion(status, resultSetupIntent, resultError)
                 }
-                strongSelf.currentAction = action
-                let requiresAction = strongSelf._handleSetupIntentStatus(forAction: action)
+                self.currentAction = action
+                let requiresAction = self._handleSetupIntentStatus(forAction: action)
                 if requiresAction {
-                    strongSelf._handleAuthenticationForCurrentAction()
+                    self._handleAuthenticationForCurrentAction()
                 }
             } else {
                 wrappedCompletion(.failed, setupIntent, error as NSError?)
@@ -742,13 +740,12 @@ public class STPPaymentHandler: NSObject {
         }
 
         Self.inProgress = true
-        weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
-        let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = {
+        let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
             setupIntent,
             error in
-            guard let strongSelf = weakSelf else {
+            guard let strongSelf = self else {
                 return
             }
             // Reset our internal state
@@ -878,18 +875,17 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        weak var weakSelf = self
         let action = STPPaymentHandlerPaymentIntentActionParams(
             apiClient: apiClient,
             authenticationContext: authenticationContext,
             threeDSCustomizationSettings: threeDSCustomizationSettings,
             paymentIntent: paymentIntent,
             returnURL: returnURLString
-        ) { status, resultPaymentIntent, error in
-            guard let strongSelf = weakSelf else {
+        ) {  [weak self] status, resultPaymentIntent, error in
+            guard let self else {
                 return
             }
-            strongSelf.currentAction = nil
+            self.currentAction = nil
             completion(status, resultPaymentIntent, error)
         }
         currentAction = action
@@ -915,18 +911,17 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        weak var weakSelf = self
         let action = STPPaymentHandlerSetupIntentActionParams(
             apiClient: apiClient,
             authenticationContext: authenticationContext,
             threeDSCustomizationSettings: threeDSCustomizationSettings,
             setupIntent: setupIntent,
             returnURL: returnURLString
-        ) { status, resultSetupIntent, resultError in
-            guard let strongSelf = weakSelf else {
+        ) { [weak self] status, resultSetupIntent, resultError in
+            guard let self else {
                 return
             }
-            strongSelf.currentAction = nil
+            self.currentAction = nil
             completion(status, resultSetupIntent, resultError)
         }
         currentAction = action
