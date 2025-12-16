@@ -8,6 +8,8 @@
 
 "%1$@ account ending in %2$@" = "尾號為 %2$@ 的 %1$@ 賬戶";
 
+"%1$@ and %2$@" = "%1$@ 和 %2$@";
+
 "%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
 
 "%1$@ is not accepted" = "不接受 %1$@";
@@ -30,13 +32,21 @@
 
 "Confirm your %@" = "確認您的 %@";
 
+"Credit" = "信用卡";
+
+"Debit" = "扣賬卡";
+
 "Invalid data." = "數據無效。";
 
 "MM / YY" = "月份/年份";
 
 "MM/YY" = "月份/年份";
 
+"Only %1$@ cards are accepted" = "僅接受 %1$@ 銀行卡";
+
 "Postal Code" = "郵區編號";
+
+"Prepaid" = "預付卡";
 
 "Shipping Address" = "收貨地址";
 

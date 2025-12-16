@@ -1,5 +1,7 @@
 ## X.Y.Z - changes pending release 
 
+## 25.3.0 2025-12-15
+
 ### PaymentSheet
 * [Added] Support for PayPay with PaymentIntents.
 

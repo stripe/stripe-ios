@@ -271,7 +271,7 @@ extension PayWithLinkViewController {
             }
 
             confirmButton.update(
-                state: viewModel.confirmButtonStatus,
+                status: viewModel.confirmButtonStatus,
                 callToAction: viewModel.confirmButtonCallToAction
             )
         }
@@ -330,7 +330,7 @@ extension PayWithLinkViewController {
             }
 
             if viewModel.shouldRecollectCardExpiryDate {
-                confirmButton.update(state: .processing)
+                confirmButton.update(status: .processing)
 
                 viewModel.updateExpiryDate { [weak self] result in
                     switch result {
@@ -338,7 +338,7 @@ extension PayWithLinkViewController {
                         confirmWithPaymentDetails(paymentDetails)
                     case .failure(let error):
                         self?.updateErrorLabel(for: error)
-                        self?.confirmButton.update(state: .enabled)
+                        self?.confirmButton.update(status: .enabled)
                     }
                 }
             } else {
@@ -362,7 +362,7 @@ extension PayWithLinkViewController {
             feedbackGenerator.prepare()
             #endif
             updateErrorLabel(for: nil)
-            confirmButton.update(state: .processing)
+            confirmButton.update(status: .processing)
 
             coordinator?.confirm(
                 with: linkAccount,
@@ -374,19 +374,19 @@ extension PayWithLinkViewController {
                     #if !os(visionOS)
                     self?.feedbackGenerator.notificationOccurred(.success)
                     #endif
-                    self?.confirmButton.update(state: .succeeded, animated: true) {
+                    self?.confirmButton.update(status: .succeeded, animated: true) {
                         self?.coordinator?.allowSheetDismissal(true)
                         self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                     }
                 case .canceled:
-                    self?.confirmButton.update(state: .enabled)
+                    self?.confirmButton.update(status: .enabled)
                     self?.coordinator?.allowSheetDismissal(true)
                 case .failed(let error):
                     #if !os(visionOS)
                     self?.feedbackGenerator.notificationOccurred(.error)
                     #endif
                     self?.updateErrorLabel(for: error)
-                    self?.confirmButton.update(state: .enabled)
+                    self?.confirmButton.update(status: .enabled)
                     self?.coordinator?.allowSheetDismissal(true)
                 }
             }
@@ -719,11 +719,11 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 
     private func addBankAccount() {
-        confirmButton.update(state: .disabled)
+        confirmButton.update(status: .disabled)
         paymentPicker.setAddButtonIsLoading(true)
         coordinator?.startFinancialConnections { [weak self] result in
             let completion = {
-                self?.confirmButton.update(state: .enabled)
+                self?.confirmButton.update(status: .enabled)
                 self?.paymentPicker.setAddButtonIsLoading(false)
             }
 
