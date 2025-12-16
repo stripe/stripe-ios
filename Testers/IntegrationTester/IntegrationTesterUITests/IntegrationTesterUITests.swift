@@ -354,6 +354,8 @@ class IntegrationTesterUITests: XCTestCase {
         enterCodeText.tap()
         enterCodeText.typeText("555555")
 
+        app.handleiOSKeyboardTipIfNeeded()
+
         let doneButton = app.buttons["Done"]
         XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
         doneButton.forceTapElement()
