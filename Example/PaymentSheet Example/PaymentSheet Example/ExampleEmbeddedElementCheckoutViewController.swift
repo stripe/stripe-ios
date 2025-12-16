@@ -237,7 +237,6 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            weak let weakSelf = self
             let (data, _) = try await URLSession.shared.data(for: request)
             guard
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
@@ -246,10 +245,9 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                 let publishableKey = json["publishableKey"] as? String,
                 let subtotal = json["subtotal"] as? Double,
                 let tax = json["tax"] as? Double,
-                let total = json["total"] as? Double,
-                let self = weakSelf
+                let total = json["total"] as? Double
             else {
-                weakSelf?.displayAlert("Bad network response", shouldDismiss: true)
+                self.displayAlert("Bad network response", shouldDismiss: true)
                 return
             }
             self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
