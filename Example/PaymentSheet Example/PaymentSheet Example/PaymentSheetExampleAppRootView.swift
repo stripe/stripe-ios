@@ -29,8 +29,6 @@ struct PaymentSheetExampleAppRootView: View {
                     }
                 }
             }
-            .navigationTitle("Examples")
-            .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
             // Load pinned destination from UserDefaults and auto-open it
