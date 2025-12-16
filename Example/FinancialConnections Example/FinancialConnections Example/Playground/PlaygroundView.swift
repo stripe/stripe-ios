@@ -157,6 +157,10 @@ struct PlaygroundView: View {
                     Section(header: Text("Other")) {
                         Toggle("Show Live Events", isOn: viewModel.liveEvents)
 
+                        if viewModel.sdkType.wrappedValue == .fcLite {
+                            Toggle("FC Lite Secure Webview", isOn: viewModel.fcLiteSecureWebview)
+                        }
+
                         Button(action: viewModel.didSelectClearCaches) {
                             Text("Clear Cache (requests, images etc.)")
                         }

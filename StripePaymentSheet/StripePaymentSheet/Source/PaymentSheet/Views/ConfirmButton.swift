@@ -72,11 +72,11 @@ class ConfirmButton: UIControl {
     var succeededBackgroundColor: UIColor {
         return appearance.primaryButton.successBackgroundColor
     }
+    private(set) var status: Status = .enabled
+    private(set) var callToAction: CallToActionType
 
     private static let spinnerMoveToCenterAnimationDuration = 0.35
 
-    private var status: Status
-    private var callToAction: CallToActionType
     private let didTap: () -> Void
     private let didTapWhenDisabled: () -> Void
     private let appearance: PaymentSheet.Appearance

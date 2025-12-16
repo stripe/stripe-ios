@@ -5,7 +5,7 @@
 //  Created by George Birch on 10/27/25.
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(PaymentMethodMessagingElementPreview) import StripePaymentSheet
 import UIKit
 
 class PMMEPlaygroundUIViewController: UIViewController {

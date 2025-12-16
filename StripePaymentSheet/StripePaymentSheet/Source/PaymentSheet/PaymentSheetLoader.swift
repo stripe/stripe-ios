@@ -438,10 +438,21 @@ final class PaymentSheetLoader {
             }
         }
 
-        // Hide any saved cards whose brands are not allowed
+        // Hide any saved cards whose brands or funding types are not allowed
+        let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
         return savedPaymentMethods.filter {
-            guard let cardBrand = $0.card?.preferredDisplayBrand else { return true }
-            return configuration.cardBrandFilter.isAccepted(cardBrand: cardBrand)
+            guard let card = $0.card else { return true }
+            // Filter by card brand
+            if !configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) {
+                return false
+            }
+            // Filter by card funding type
+            // If funding is nil, treat it as .other (unknown) and check if that's accepted
+            let fundingType: STPCardFundingType = card.funding.map { STPCard.funding(from: $0) } ?? .other
+            if !cardFundingFilter.isAccepted(cardFundingType: fundingType) {
+                return false
+            }
+            return true
         }
     }
 

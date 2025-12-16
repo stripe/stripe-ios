@@ -271,7 +271,7 @@ extension PayWithLinkViewController {
             }
 
             confirmButton.update(
-                state: viewModel.confirmButtonStatus,
+                status: viewModel.confirmButtonStatus,
                 callToAction: viewModel.confirmButtonCallToAction
             )
         }

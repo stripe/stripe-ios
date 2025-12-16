@@ -1,0 +1,30 @@
+GET
+https:\/\/api\.stripe\.com\/edge-internal\/card-metadata\?bin_prefix=424242$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-wc: ABCEFGHIJ
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ksT8onlMCkkXXoP0zk41pvCFxb173aTfAzY2OTC-FTsy3uitfcLK5fZXkkupJ2zOnCucj_E%3D
+Content-Encoding: gzip
+access-control-allow-methods: DELETE, GET, HEAD, PATCH, POST, PUT
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Date: Thu, 04 Dec 2025 17:24:40 GMT
+access-control-allow-credentials: true
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+
+{
+  "data" : [
+    {
+      "pan_length" : 16,
+      "brand" : "VISA",
+      "country" : "GB",
+      "account_range_high" : "4242429999999999",
+      "account_range_low" : "4242420000000000",
+      "funding" : "CREDIT"
+    }
+  ]
+}

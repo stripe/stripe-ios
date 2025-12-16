@@ -65,12 +65,14 @@ class FlowRouter {
 
     /// Returns `.native` if the FC example app has the native SDK selected, `.web` if the web SDK is selected, and `.none` otherwise.
     private var exampleAppSdkOverride: ExampleAppOverride {
-        if let nativeOverride = UserDefaults.standard.value(
-            forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE"
-        ) as? Bool {
-            return nativeOverride ? .native : .web
+        let key = "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE"
+        guard let value = UserDefaults.standard.object(forKey: key) else {
+            return .none
         }
-        return .none
+
+        // Launch arguments pass values as strings; direct sets use Bool
+        let isNative = (value as? Bool) ?? (value as? NSString)?.boolValue ?? false
+        return isNative ? .native : .web
     }
 
     private var shouldUseNativeFinancialConnections: Bool {
@@ -94,7 +96,7 @@ class FlowRouter {
             return exampleAppSdkOverride.shouldUseNativeFlow
         }
 
-        return !killswitchActive
+        return !killswitchActive && synchronizePayload.manifest.verified
     }
 
     private var experimentVariant: String? {

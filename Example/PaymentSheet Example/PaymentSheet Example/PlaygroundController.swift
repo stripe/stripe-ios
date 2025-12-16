@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -253,6 +253,15 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
+        switch settings.cardFundingAcceptance {
+        case .all:
+            break // Default accepts all funding types
+        case .creditOnly:
+            configuration.allowedCardFundingTypes = .credit
+        case .debitOnly:
+            configuration.allowedCardFundingTypes = .debit
+        }
+
         switch settings.style {
         case .automatic:
             configuration.style = .automatic
@@ -366,6 +375,15 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
+
+        switch settings.cardFundingAcceptance {
+        case .all:
+            break // Default accepts all funding types
+        case .creditOnly:
+            configuration.allowedCardFundingTypes = .credit
+        case .debitOnly:
+            configuration.allowedCardFundingTypes = .debit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
@@ -855,7 +873,7 @@ extension PlaygroundController {
             "link_mode": settings.linkEnabledMode.rawValue,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
-            "is_confirmation_token": settings.confirmationMode == .confirmationToken,
+            "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
             "customer_session_component_name": "mobile_payment_element",
             "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
             "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,

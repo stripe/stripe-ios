@@ -418,9 +418,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSavedSEPA() async throws {
-        let customer = "cus_OaMPphpKbeixCz"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        let customer = "cus_TUoUvtvPJvpHPA"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
         let savedSepaPM = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_1NnBnhFY0qyl6XeW9ThDjAvw", // A hardcoded SEPA PM for the ^ customer
+            "id": "pm_1SXosgFY0qyl6XeWkScLWnUN", // A hardcoded SEPA PM for the ^ customer
             "created": "12345",
             "type": "sepa_debit",
         ])!
@@ -564,14 +564,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testCardConfirmFlowsSetAsDefault() async throws {
-        // Create a real customer with customer session
-        let customer = "cus_OaMPphpKbeixCz"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        // Create a new customer with customer session
         let merchantCountry = MerchantCountry.US
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
 
         // Create customer session for confirmation token support
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
-            customerID: customer,
+            customerID: nil,
             merchantCountry: merchantCountry.rawValue,
             paymentMethodSave: true
         )
@@ -634,6 +633,21 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testZipConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "AUD", paymentMethodType: .zip, merchantCountry: .AU) { form in
             // Zip has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
+    func testPayPayConfirmFlows() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "example-app-scheme://unused"
+        try await _testConfirm(
+            intentKinds: [.paymentIntent],
+            currency: "JPY",
+            paymentMethodType: .payPay,
+            merchantCountry: .JP,
+            configuration: configuration
+        ) { form in
+            // PayPay has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
     }

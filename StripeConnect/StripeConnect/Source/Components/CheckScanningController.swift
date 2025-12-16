@@ -1,8 +1,22 @@
 import UIKit
 
-@_spi(DashboardOnly)
+/// A view controller representing a check-scanning component
+/// - Seealso: [Check scanning component documentation](https://docs.stripe.com/connect/supported-embedded-components/check-scanning?platform=ios)
+@_spi(PrivatePreviewConnect)
 @available(iOS 15, *)
 public final class CheckScanningController {
+    typealias HandleCheckScanSubmittedFn = (CheckScanDetails) async throws -> Void
+
+    /// Contains details about a check scan
+    public struct CheckScanDetails: Decodable, Equatable {
+        /// Token identifying the check scan, see [UsPaperCheck](https://docs.stripe.com/api/us-paper-check)
+        public let checkScanToken: String
+
+        public init(checkScanToken: String) {
+            self.checkScanToken = checkScanToken
+        }
+    }
+
     struct Props: HasSupplementalFunctions {
         enum CodingKeys: CodingKey {}
 
@@ -13,8 +27,9 @@ public final class CheckScanningController {
 
     var retainedSelf: CheckScanningController?
 
-    public weak var delegate: CheckScanningControllerDelegate?
+    public var delegate: CheckScanningControllerDelegate?
 
+    /// Sets the title for the check scanning experience
     public var title: String? {
         get {
             webVC.title
@@ -24,11 +39,24 @@ public final class CheckScanningController {
         }
     }
 
+    enum CallbackError: Error {
+       case controllerDisappeared
+    }
+
     init(componentManager: EmbeddedComponentManager,
          loadContent: Bool,
-         analyticsClientFactory: ComponentAnalyticsClientFactory,
-         handleCheckScanSubmitted: @escaping HandleCheckScanSubmittedFn) {
-        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: handleCheckScanSubmitted)
+         analyticsClientFactory: ComponentAnalyticsClientFactory) {
+        let supplementalFunctions = SupplementalFunctions(handleCheckScanSubmitted: { [weak self] details in
+            guard let self = self else {
+                assertionFailure("CheckScanningController deallocated before callback.")
+                throw CallbackError.controllerDisappeared
+            }
+            guard let delegate = self.delegate else {
+                assertionFailure("Delegate not set for CheckScanningController.")
+                return
+            }
+            try await delegate.checkScanning(self, didSubmitCheckScan: details)
+        })
 
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
@@ -37,13 +65,21 @@ public final class CheckScanningController {
             analyticsClientFactory: analyticsClientFactory,
             fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
             didFailLoadWithError: { [weak self] error in
-                guard let self else { return }
-                delegate?.checkScanning(self, didFailLoadWithError: error)
+                guard let self = self else { return }
+                Task { @MainActor in
+                    self.delegate?.checkScanning(self, didFailLoadWithError: error)
+                }
             }
         )
     }
 
+    /// Presents the check scanning experience
     public func present(from viewController: UIViewController, animated: Bool = true) {
+        if self.delegate == nil {
+            assertionFailure("Delegate must be set before presenting")
+            return
+        }
+
         let navController = UINavigationController(rootViewController: webVC)
         navController.navigationBar.prefersLargeTitles = false
         navController.modalPresentationStyle = .fullScreen
@@ -69,8 +105,10 @@ public final class CheckScanningController {
         }
     }
 
-    public func dismiss(animated: Bool = true) {
-        webVC.dismiss(animated: animated)
+    /// Dismisses the currently presented check scanning experience.
+    /// No-ops if not presented.
+    public func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+        webVC.dismiss(animated: animated, completion: completion)
     }
 
     @objc
@@ -85,11 +123,21 @@ public final class CheckScanningController {
     }
 }
 
-@_spi(DashboardOnly)
+@_spi(PrivatePreviewConnect)
 @available(iOS 15, *)
+@preconcurrency @MainActor
 public protocol CheckScanningControllerDelegate: AnyObject {
+    /// Called when the component fails to load (e.g., network issue during initial fetch). To try again, initialize a new CheckScanningController.
     func checkScanning(_ checkScanning: CheckScanningController,
                        didFailLoadWithError error: Error)
+
+    /// Called when the check scanning process is complete with a check in the `verified` or `manual_review` states.
+    /// If this function throws an Error, then the user will be given an opportunity to submit the check again, effectively resulting in a retry of this function.
+    /// When this function is complete, a default success screen will be displayed and the modal will remain presented to the user.
+    /// You should dismiss the modal explicitly and present your own custom success screen before returning.
+    /// See [Check scanning component documentation](https://docs.stripe.com/connect/supported-embedded-components/check-scanning?platform=ios) for further discussion.
+    func checkScanning(_ checkScanning: CheckScanningController,
+                       didSubmitCheckScan: CheckScanningController.CheckScanDetails) async throws
 }
 
 @available(iOS 15, *)

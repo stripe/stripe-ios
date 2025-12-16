@@ -418,7 +418,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                     self.view.layoutIfNeeded()
                 }
             }
-            var confirmButtonState: ConfirmButton.Status = {
+            var confirmButtonStatus: ConfirmButton.Status = {
                 if addPaymentMethodViewController.paymentOption == nil {
                     // We don't have valid payment method params yet
                     return .disabled
@@ -430,11 +430,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             var callToAction: ConfirmButton.CallToActionType = callToAction
             if let overridePrimaryButtonState = addPaymentMethodViewController.overridePrimaryButtonState {
                 callToAction = overridePrimaryButtonState.ctaType
-                confirmButtonState = overridePrimaryButtonState.enabled ? .enabled : .disabled
+                confirmButtonStatus = overridePrimaryButtonState.enabled ? .enabled : .disabled
             }
 
             confirmButton.update(
-                state: confirmButtonState,
+                status: confirmButtonStatus,
                 callToAction: callToAction,
                 animated: true
             )

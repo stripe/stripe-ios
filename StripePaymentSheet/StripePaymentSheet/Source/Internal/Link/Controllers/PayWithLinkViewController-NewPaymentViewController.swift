@@ -257,24 +257,24 @@ extension PayWithLinkViewController {
                         paymentDetails: paymentDetails,
                         confirmationExtras: confirmationExtras
                     ) { [weak self] result, deferredIntentConfirmationType in
-                        let state: ConfirmButton.Status
+                        let status: ConfirmButton.Status
 
                         switch result {
                         case .completed:
-                            state = .succeeded
+                            status = .succeeded
                         case .canceled:
-                            state = .enabled
+                            status = .enabled
                         case .failed(let error):
-                            state = .enabled
+                            status = .enabled
                             self?.updateErrorLabel(for: error)
                         }
 
                         #if !os(visionOS)
                         self?.feedbackGenerator.notificationOccurred(.success)
                         #endif
-                        self?.confirmButton.update(status: state, animated: true) {
+                        self?.confirmButton.update(status: status, animated: true) {
                             self?.coordinator?.allowSheetDismissal(true)
-                            if state == .succeeded {
+                            if status == .succeeded {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                             }
                         }
@@ -340,7 +340,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
             confirmButton.update(status: .enabled, callToAction: .add(paymentMethodType: .instantDebits))
         } else {
             confirmButton.update(
-                state: viewController.paymentOption != nil ? .enabled : .disabled,
+                status: viewController.paymentOption != nil ? .enabled : .disabled,
                 callToAction: context.callToAction
             )
         }

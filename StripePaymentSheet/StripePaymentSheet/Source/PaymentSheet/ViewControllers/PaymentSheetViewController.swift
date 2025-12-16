@@ -362,7 +362,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             stpAssertionFailure("Apple Pay should be handled directly by the Apple Pay button in the wallet header")
         }
         self.buyButton.update(
-            state: buyButtonStatus,
+            status: buyButtonStatus,
             callToAction: callToAction,
             animated: animated,
             completion: nil
