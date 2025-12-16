@@ -176,6 +176,7 @@ extension PaymentSheet {
             guard
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
+                    elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
                     completion: completion

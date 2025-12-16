@@ -3,7 +3,7 @@ https:\/\/ppm\.stripe\.com\/config\?amount=5000&country=FR&currency=eur&key=pk_t
 200
 application/json
 access-control-allow-methods: DELETE, GET, HEAD, PATCH, POST, PUT
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=hXoAtruroz1oaH3NJ72J3_pzc5qLJVZgRI8jB650VFmq2a4eM5GWpuuMBgDD-aaCy-MQC5cRZnFHv3v0LpBaJWdmq1A%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2FC8PSUWt6k3v8KuC1Q5jnBCX1JPh2Q3UeTngPRAVhEYRu05ry_-3xczdUUJNWUA8asL_g_14msQQsHlpJggpO09SVU%3D
 Server: nginx
 Cache-Control: max-age=300, public
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -16,18 +16,109 @@ x-stripe-proxy-response: upstream
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 6289
+Content-Length: 6385
 Vary: Origin
-Date: Tue, 11 Nov 2025 22:31:51 GMT
+Date: Sat, 13 Dec 2025 01:26:18 GMT
 Expires: 0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-stripe-server-rpc-duration-micros: 740656
+x-stripe-server-rpc-duration-micros: 776287
 x-content-type-options: nosniff
 
 {
+  "content" : {
+    "learn_more" : {
+      "message" : "Learn more",
+      "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/learn-more\/index.html?amount=5000&country=FR&currency=EUR&key=pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more"
+    },
+    "promotion" : {
+      "message" : "3 interest-free payments of €16.67",
+      "url" : null
+    },
+    "legal_disclosure" : null,
+    "images" : [
+      {
+        "flat_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-flat.svg",
+          "width" : 78,
+          "height" : 40
+        },
+        "dark_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-dark.svg",
+          "width" : 78,
+          "height" : 40
+        },
+        "light_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo.png",
+          "width" : 98,
+          "height" : 40
+        },
+        "light_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo.svg",
+          "width" : 98,
+          "height" : 40
+        },
+        "role" : "logo",
+        "payment_method_type" : "klarna",
+        "text" : "Klarna",
+        "flat_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-flat.png",
+          "width" : 78,
+          "height" : 40
+        },
+        "dark_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-dark.png",
+          "width" : 78,
+          "height" : 40
+        }
+      },
+      {
+        "flat_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon-flat.svg",
+          "width" : 16,
+          "height" : 16
+        },
+        "dark_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.svg",
+          "width" : 16,
+          "height" : 16
+        },
+        "light_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.png",
+          "width" : 16,
+          "height" : 16
+        },
+        "light_theme_svg" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.svg",
+          "width" : 16,
+          "height" : 16
+        },
+        "role" : "icon",
+        "payment_method_type" : "klarna",
+        "text" : "Klarna",
+        "flat_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon-flat.png",
+          "width" : 16,
+          "height" : 16
+        },
+        "dark_theme_png" : {
+          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.png",
+          "width" : 16,
+          "height" : 16
+        }
+      }
+    ],
+    "summary" : {
+      "message" : "Pay now, in 30 days, or 3 interest-free payments of €16.67.",
+      "url" : null
+    }
+  },
+  "country" : "FR",
+  "payment_methods" : [
+    "klarna"
+  ],
   "payment_plan_groups" : [
     {
       "content" : {
@@ -43,6 +134,7 @@ x-content-type-options: nosniff
           "message" : "3 interest-free payments of €16.67",
           "url" : null
         },
+        "legal_disclosure" : null,
         "images" : [
           {
             "flat_theme_svg" : {
@@ -124,7 +216,7 @@ x-content-type-options: nosniff
       "payment_plans" : [
         {
           "installment_amount" : null,
-          "id" : "1ffbb803-3ed6-4945-8b1c-d97cd1c411b4",
+          "id" : "c098dceb-53e7-4653-bfa0-da5528b66988",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
@@ -135,7 +227,7 @@ x-content-type-options: nosniff
         },
         {
           "installment_amount" : null,
-          "id" : "b7a520b6-3e08-41fa-88f1-506d6e54832f",
+          "id" : "6e0039b2-7745-428d-902d-926dab7d75f7",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : 30,
@@ -146,7 +238,7 @@ x-content-type-options: nosniff
         },
         {
           "installment_amount" : 1667,
-          "id" : "5f8cb967-cd24-4411-b9f4-51b6f0be7926",
+          "id" : "4b3ef1f1-7edb-458d-9d67-c7edc852b112",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
@@ -161,106 +253,20 @@ x-content-type-options: nosniff
       ]
     }
   ],
-  "country" : "FR",
-  "payment_methods" : [
-    "klarna"
-  ],
-  "content" : {
-    "learn_more" : {
-      "message" : "Learn more",
-      "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/learn-more\/index.html?amount=5000&country=FR&currency=EUR&key=pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more"
-    },
-    "promotion" : {
-      "message" : "3 interest-free payments of €16.67",
-      "url" : null
-    },
-    "images" : [
-      {
-        "flat_theme_svg" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-flat.svg",
-          "width" : 78,
-          "height" : 40
-        },
-        "dark_theme_svg" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-dark.svg",
-          "width" : 78,
-          "height" : 40
-        },
-        "light_theme_png" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo.png",
-          "width" : 98,
-          "height" : 40
-        },
-        "light_theme_svg" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo.svg",
-          "width" : 98,
-          "height" : 40
-        },
-        "role" : "logo",
-        "payment_method_type" : "klarna",
-        "text" : "Klarna",
-        "flat_theme_png" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-flat.png",
-          "width" : 78,
-          "height" : 40
-        },
-        "dark_theme_png" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-logo-dark.png",
-          "width" : 78,
-          "height" : 40
-        }
-      },
-      {
-        "flat_theme_svg" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon-flat.svg",
-          "width" : 16,
-          "height" : 16
-        },
-        "dark_theme_svg" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.svg",
-          "width" : 16,
-          "height" : 16
-        },
-        "light_theme_png" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.png",
-          "width" : 16,
-          "height" : 16
-        },
-        "light_theme_svg" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.svg",
-          "width" : 16,
-          "height" : 16
-        },
-        "role" : "icon",
-        "payment_method_type" : "klarna",
-        "text" : "Klarna",
-        "flat_theme_png" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon-flat.png",
-          "width" : 16,
-          "height" : 16
-        },
-        "dark_theme_png" : {
-          "url" : "https:\/\/b.stripecdn.com\/payment-method-messaging-statics-srv\/assets\/images\/klarna-icon.png",
-          "width" : 16,
-          "height" : 16
-        }
-      }
-    ],
-    "summary" : {
-      "message" : "Pay now, in 30 days, or 3 interest-free payments of €16.67.",
-      "url" : null
-    }
-  },
-  "partner_configs" : {
-
-  },
-  "merchant_id" : "acct_1JtgfQKG6vc7r7YC",
   "api_feature_flags" : [
     {
       "key" : "affirm_enable_ca_shell_url",
+      "result" : true
+    },
+    {
+      "key" : "pmme_backend_powered_ui",
       "result" : false
     }
   ],
+  "merchant_id" : "acct_1JtgfQKG6vc7r7YC",
+  "partner_configs" : {
+
+  },
   "experiments" : {
     "event_id" : "",
     "experiment_assignments" : {
