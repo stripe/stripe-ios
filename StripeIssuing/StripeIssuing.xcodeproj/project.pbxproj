@@ -31,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		315E63692EE8F1C70003E9D1 /* StripeIssuingTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StripeIssuingTests.xctestplan; sourceTree = "<group>"; };
 		3D136BBA2EB4493500186DA1 /* StripeIssuing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIssuing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D136BC52EB4493500186DA1 /* StripeIssuingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeIssuingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D136BD72EB4494900186DA1 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -93,6 +94,7 @@
 		3D136BB02EB4493500186DA1 = {
 			isa = PBXGroup;
 			children = (
+				315E63692EE8F1C70003E9D1 /* StripeIssuingTests.xctestplan */,
 				3D136BE12EB4494900186DA1 /* BuildConfigurations */,
 				3D136BBC2EB4493500186DA1 /* StripeIssuing */,
 				3D136BC92EB4493500186DA1 /* StripeIssuingTests */,
@@ -210,6 +212,46 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				"lt-LT",
+				"zh-Hans",
+				ja,
+				"el-GR",
+				"ms-MY",
+				"zh-HK",
+				mt,
+				nb,
+				"ca-ES",
+				"en-GB",
+				es,
+				da,
+				"es-419",
+				it,
+				"fr-CA",
+				"bg-BG",
+				sv,
+				ko,
+				fil,
+				"zh-Hant",
+				"ro-RO",
+				hu,
+				tr,
+				"et-EE",
+				"pt-BR",
+				"lv-LV",
+				vi,
+				ru,
+				"cs-CZ",
+				"sk-SK",
+				"sl-SI",
+				fr,
+				fi,
+				id,
+				nl,
+				th,
+				"pl-PL",
+				"pt-PT",
+				hr,
 			);
 			mainGroup = 3D136BB02EB4493500186DA1;
 			minimizedProjectReferenceProxies = 1;
@@ -305,8 +347,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3D136BDD2EB4494900186DA1 /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -320,6 +365,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-issuing-push-provision";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -333,8 +379,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3D136BDE2EB4494900186DA1 /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -348,6 +397,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-issuing-push-provision";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -361,11 +411,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3D136BDA2EB4494900186DA1 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIssuingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -377,11 +430,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3D136BDB2EB4494900186DA1 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeIssuingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;

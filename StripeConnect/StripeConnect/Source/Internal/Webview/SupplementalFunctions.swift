@@ -1,7 +1,8 @@
+@available(iOS 15, *)
 class SupplementalFunctions {
-    private let handleCheckScanSubmitted: HandleCheckScanSubmittedFn?
+    private let handleCheckScanSubmitted: CheckScanningController.HandleCheckScanSubmittedFn?
 
-    init(handleCheckScanSubmitted: HandleCheckScanSubmittedFn? = nil) {
+    init(handleCheckScanSubmitted: CheckScanningController.HandleCheckScanSubmittedFn? = nil) {
         self.handleCheckScanSubmitted = handleCheckScanSubmitted
     }
 
@@ -28,6 +29,7 @@ class SupplementalFunctions {
     }
 }
 
+@available(iOS 15, *)
 protocol HasSupplementalFunctions: Encodable {
     var supplementalFunctions: SupplementalFunctions { get }
 
@@ -35,6 +37,7 @@ protocol HasSupplementalFunctions: Encodable {
     func encodeFields(to container: inout KeyedEncodingContainer<CodingKeys>) throws
 }
 
+@available(iOS 15, *)
 extension HasSupplementalFunctions {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -54,8 +57,9 @@ enum SupplementalFunctionName: String, Codable {
     case handleCheckScanSubmitted
 }
 
+@available(iOS 15, *)
 enum SupplementalFunctionArgs: Equatable {
-    case handleCheckScanSubmitted(HandleCheckScanSubmittedArgs)
+    case handleCheckScanSubmitted(CheckScanningController.CheckScanDetails)
 
     static func decode(from decoder: Decoder, functionName: SupplementalFunctionName) throws -> SupplementalFunctionArgs {
         var container = try decoder.unkeyedContainer()
@@ -65,7 +69,7 @@ enum SupplementalFunctionArgs: Equatable {
             if container.count != 1 {
                 throw DecodingError.dataCorruptedError(in: container, debugDescription: "Expected a singleton array for handleCheckScanSubmitted, but got length \(String(describing: container.count))")
             }
-            let args = try container.decode(HandleCheckScanSubmittedArgs.self)
+            let args = try container.decode(CheckScanningController.CheckScanDetails.self)
             return .handleCheckScanSubmitted(args)
         }
     }
@@ -82,17 +86,5 @@ enum SupplementalFunctionReturnValue: Encodable {
             // No data
             break
         }
-    }
-}
-
-@_spi(DashboardOnly)
-public typealias HandleCheckScanSubmittedFn = (HandleCheckScanSubmittedArgs) async throws -> Void
-
-@_spi(DashboardOnly)
-public struct HandleCheckScanSubmittedArgs: Decodable, Equatable {
-    public var checkScanToken: String
-
-    public init(checkScanToken: String) {
-        self.checkScanToken = checkScanToken
     }
 }

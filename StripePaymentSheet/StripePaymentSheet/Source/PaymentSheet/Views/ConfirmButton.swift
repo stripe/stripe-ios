@@ -15,7 +15,6 @@ import PassKit
 import UIKit
 
 private let spinnerMoveToCenterAnimationDuration = 0.35
-private let checkmarkStrokeDuration = 0.2
 
 /// Buy or Continue button
 class ConfirmButton: UIControl {
@@ -137,7 +136,7 @@ class ConfirmButton: UIControl {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        self.buyButton.update(status: state, callToAction: callToAction, animated: false)
+        self.buyButton.update(status: status, callToAction: callToAction, animated: false)
     }
 #endif
 
@@ -185,7 +184,7 @@ class ConfirmButton: UIControl {
                     return 0
                 }
 
-                return state == .succeeded
+                return status == .succeeded
                 ? PaymentSheetUI.delayBetweenSuccessAndDismissal
                 : PaymentSheetUI.defaultAnimationDuration
             }()

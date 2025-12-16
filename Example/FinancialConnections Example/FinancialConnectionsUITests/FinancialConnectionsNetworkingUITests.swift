@@ -38,7 +38,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test (OAuth)"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -251,7 +251,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test (OAuth)"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -316,7 +316,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         app.fc_nativeConsentAgreeButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test (OAuth)"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 

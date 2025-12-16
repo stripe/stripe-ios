@@ -71,7 +71,7 @@ public class AddressViewController: UIViewController {
     // MARK: - Views
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
-            state: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
+            status: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
             callToAction: .custom(title: configuration.buttonTitle),
             appearance: configuration.appearance
         ) { [weak self] in

@@ -210,7 +210,7 @@ class EmbeddedFormViewController: UIViewController {
             }
             return .makeDefaultTypeForPaymentSheet(intent: intent)
         }()
-        let state: ConfirmButton.Status = {
+        let status: ConfirmButton.Status = {
             if isPaymentInFlight {
                 return .processing
             }
@@ -220,7 +220,7 @@ class EmbeddedFormViewController: UIViewController {
             return selectedPaymentOption == nil ? .disabled : .enabled
         }()
         primaryButton.update(
-            state: state,
+            status: status,
             callToAction: callToAction,
             animated: true
         )

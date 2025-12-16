@@ -249,6 +249,7 @@ extension STPApplePayContext {
 
     static func create(
         intent: Intent,
+        elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping PaymentSheetResultCompletionBlock
@@ -257,9 +258,11 @@ extension STPApplePayContext {
             return nil
         }
 
+        let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
         var paymentRequest = createPaymentRequest(intent: intent,
                                                   configuration: configuration,
-                                                  applePay: applePay)
+                                                  applePay: applePay,
+                                                  cardFundingFilter: cardFundingFilter)
 
         if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
             paymentRequest = paymentRequestHandler(paymentRequest)
@@ -288,7 +291,8 @@ extension STPApplePayContext {
     static func createPaymentRequest(
         intent: Intent,
         configuration: PaymentElementConfiguration,
-        applePay: PaymentSheet.ApplePayConfiguration
+        applePay: PaymentSheet.ApplePayConfiguration,
+        cardFundingFilter: CardFundingFilter = .default
     ) -> PKPaymentRequest {
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePay.merchantId,
@@ -331,6 +335,12 @@ extension STPApplePayContext {
 
         // Update list of `supportedNetworks` based on the merchant's configuration of cardBrandAcceptance
         paymentRequest.supportedNetworks = paymentRequest.supportedNetworks.filter { configuration.cardBrandFilter.isAccepted(cardBrand: $0.asCardBrand) }
+
+        // Update merchantCapabilities based on the merchant's configuration of allowedCardFundingTypes
+        // Only override if a specific funding type filter is configured
+        if let merchantCapabilities = cardFundingFilter.applePayMerchantCapabilities() {
+            paymentRequest.merchantCapabilities = merchantCapabilities
+        }
 
         return paymentRequest
     }

@@ -45,7 +45,7 @@ final class InstantDebitsUITests: XCTestCase {
         XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
         linkLoginCtaButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Success"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
@@ -108,7 +108,7 @@ final class InstantDebitsUITests: XCTestCase {
         app.fc_nativeConnectAccountsButton.tap()
         app.fc_nativeSuccessDoneButton.tap()
     }
-    
+
     func test_connect() {
         let app = XCUIApplication.fc_launch(playgroundConfigurationString:
             """

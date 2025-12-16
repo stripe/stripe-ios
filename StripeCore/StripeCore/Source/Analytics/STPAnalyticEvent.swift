@@ -66,6 +66,7 @@ import Foundation
     case financialConnectionsSheetFlowDetermined = "stripeios.financialconnections.sheet.flow_determined"
     case financialConnectionsSheetInitialSynchronizeStarted = "stripeios.financialconnections.sheet.initial_synchronize.started"
     case financialConnectionsSheetInitialSynchronizeCompleted = "stripeios.financialconnections.sheet.initial_synchronize.completed"
+    case instantDebitsCompletionFailed = "stripeios.financialconnections.instant_debits_completion.failed"
 
     // MARK: - PaymentSheet Init
     case mcInitCustomCustomer = "mc_custom_init_customer"
@@ -94,7 +95,7 @@ import Foundation
     case mcShowCompleteSavedPM = "mc_complete_sheet_savedpm_show"
 
     // MARK: - PaymentSheet Render
-    case mcRenderLPMs = "mc_lpms_render"
+    case mcInitialDisplayedPaymentMethods = "mc_initial_displayed_payment_methods"
 
     // MARK: - PaymentSheet Payment
     case mcPaymentCustomNewPMSuccess = "mc_custom_payment_newpm_success"
