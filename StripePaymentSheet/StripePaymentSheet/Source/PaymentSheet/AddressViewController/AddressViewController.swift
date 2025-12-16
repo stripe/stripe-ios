@@ -71,7 +71,7 @@ public class AddressViewController: UIViewController {
     // MARK: - Views
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
-            state: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
+            status: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
             callToAction: .custom(title: configuration.buttonTitle),
             appearance: configuration.appearance
         ) { [weak self] in
@@ -506,7 +506,7 @@ extension AddressViewController {
          guard let addressSection = addressSection else { assertionFailure(); return }
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
-         button.update(state: enabled ? .enabled : .disabled, animated: true)
+         button.update(status: enabled ? .enabled : .disabled, animated: true)
          expandAddressSectionIfNeeded()
 
          // Automatically update the "shipping equals billing" checkbox based on current form state
