@@ -148,6 +148,7 @@ extension TextFieldElement: Element {
 
     @discardableResult
     public func beginEditing() -> Bool {
+        UIAccessibility.post(notification: .announcement, argument: viewModel.accessibilityLabel)
         return textFieldView.textField.becomeFirstResponder()
     }
 
