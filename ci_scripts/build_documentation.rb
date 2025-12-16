@@ -183,13 +183,9 @@ def build_index_page(modules, release_version, docs_root_directory)
   temp_docc_dir = Dir.mktmpdir('stripe-docs-index-build')
   `rsync -av "#{$SCRIPT_DIR}/docs/Stripe.docc" "#{temp_docc_dir}/"`
   index_path = "#{temp_docc_dir}/Stripe.docc/Stripe.md"
-  # Add the `@TechnologyRoot` attribute, which instructs docc to make this the landing page.
+  index_2_path = "#{temp_docc_dir}/Stripe.docc/Stripe-module-index.md" # Need a second index, or DocC will show a sidebar that says "No content found".
   index_content = ''"
   # Stripe iOS SDKs
-
-  @Metadata {
-    @TechnologyRoot
-  }
 
   Version #{release_version}
 
@@ -206,6 +202,7 @@ def build_index_page(modules, release_version, docs_root_directory)
   end
 
   File.write(index_path, index_content)
+  File.write(index_2_path, index_content)
   # Build it
   `$(xcrun --find docc) \
    convert "#{temp_docc_dir}/Stripe.docc" \
