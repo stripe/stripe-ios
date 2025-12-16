@@ -376,7 +376,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.1.1
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_0
