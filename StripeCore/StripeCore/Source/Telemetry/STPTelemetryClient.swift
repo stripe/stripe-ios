@@ -217,6 +217,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
                 self.fraudDetectionData.sid = sid
                 self.fraudDetectionData.sidCreationDate = Date()
             }
+            UserDefaults.standard.fraudDetectionData = self.fraudDetectionData
             completion?(.success(responseDict))
         }
         task.resume()
