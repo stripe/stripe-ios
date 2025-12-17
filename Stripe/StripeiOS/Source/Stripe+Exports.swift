@@ -9,6 +9,7 @@
 import Foundation
 @_exported import StripeApplePay
 @_exported import StripeCore
+@_exported import StripeIssuing
 @_exported import StripePayments
 @_exported import StripePaymentsUI
-@_exported import StripeIssuing
+
