@@ -378,6 +378,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
+        stack_rollback_version: 2-121-4
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_0
   framework-tests-no-mocks:
