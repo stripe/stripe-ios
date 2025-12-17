@@ -29,10 +29,6 @@ extension AppDelegate {
     }
 
     @objc func didReceiveBrokenConstraintNotification(notification: NSNotification) {
-        // Ignore during UI tests
-        guard ProcessInfo.processInfo.environment["UITesting"] == nil else {
-            return
-        }
         guard let constraint = notification.object as? NSLayoutConstraint else {
             return
         }
