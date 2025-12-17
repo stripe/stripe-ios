@@ -202,7 +202,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
     }
 
     private func confirmButtonTapped() {
-       confirmButton.update(state: .spinnerWithInteractionDisabled)
+       confirmButton.update(status: .spinnerWithInteractionDisabled)
        onResult?(.confirmed)
     }
 

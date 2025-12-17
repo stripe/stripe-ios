@@ -114,7 +114,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }()
 
     private lazy var updateButton: ConfirmButton = {
-        let button = ConfirmButton(state: .disabled, callToAction: .custom(title: .Localized.save), appearance: configuration.appearance, didTap: {  [weak self] in
+        let button = ConfirmButton(status: .disabled, callToAction: .custom(title: .Localized.save), appearance: configuration.appearance, didTap: {  [weak self] in
             guard let self = self else { return }
             let updatePaymentMethodOptions = updateParams
             if updatePaymentMethodOptions != nil || hasChangedDefaultPaymentMethodCheckbox {
@@ -240,7 +240,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         // Ensure endEditing(true) is called prior to setting isUserInteractionEnabled
         view.endEditing(true)
         view.isUserInteractionEnabled = false
-        updateButton.update(state: .spinnerWithInteractionDisabled)
+        updateButton.update(status: .spinnerWithInteractionDisabled)
 
         let updatePaymentMethodResult = await delegate.didUpdate(viewController: self, paymentMethod: configuration.paymentMethod)
         switch updatePaymentMethodResult {
@@ -258,7 +258,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
                                                                      params: ["payment_method_type": configuration.paymentMethod.type.identifier])
             }
         case .failure(let errors):
-            updateButton.update(state: .enabled)
+            updateButton.update(status: .enabled)
             latestError = errors.count == 1 ? errors[0] : NSError.stp_genericErrorOccurredError()
             if errors.contains(where: { ($0 as NSError) == NSError.stp_cardBrandNotUpdatedError() }) {
                 if case .card(let paymentMethodCardParams, _) = updatePaymentMethodOptions {
@@ -281,7 +281,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     private func updateButtonState() {
-        updateButton.update(state: updateParams != nil || hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
+        updateButton.update(status: updateParams != nil || hasChangedDefaultPaymentMethodCheckbox ? .enabled : .disabled)
     }
 
     func hasChangedCard(originalPaymentMethod: STPPaymentMethod, updatedPaymentMethodParams: STPPaymentMethodParams) -> Bool {

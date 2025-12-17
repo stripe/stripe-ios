@@ -94,6 +94,9 @@ workflows:
     - prep_all
     after_run:
     - notify_ci
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.1.x
   deploy-docs:
     steps:
     - activate-ssh-key@4: {}
@@ -123,6 +126,9 @@ workflows:
         inputs:
         - content: bundle exec ./ci_scripts/build_documentation.rb --publish
         title: Build documentation
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.1.x
   deploy-dry-run:
     steps:
     - script@1:
