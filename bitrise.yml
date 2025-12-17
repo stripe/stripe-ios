@@ -131,6 +131,8 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.1.x
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_0
   deploy-dry-run:
     steps:
     - script@1:
