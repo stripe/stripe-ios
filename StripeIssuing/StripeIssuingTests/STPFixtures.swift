@@ -1,20 +1,15 @@
 //
-//  STPSwiftFixtures.swift
-//  StripeiOS Tests
+//  STPFixtures.swift
+//  StripeIssuing
 //
-//  Created by David Estes on 10/2/20.
-//  Copyright © 2020 Stripe, Inc. All rights reserved.
+//  Created by Shubham Agarwal on 12/17/25.
 //
 
 import Foundation
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
-@testable@_spi(STP) import StripeIssuing
-
+@testable import StripeIssuing
 @_exported @testable import StripePaymentsObjcTestUtils
+
 
 extension STPFixtures {
     /// A customer-scoped ephemeral key that expires in 100 seconds.

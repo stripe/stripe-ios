@@ -24,6 +24,13 @@
 		A2C357142EF33DEA00BE7824 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570E2EF33DEA00BE7824 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2C357152EF33DEA00BE7824 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570F2EF33DEA00BE7824 /* StripePaymentsUI.framework */; };
 		A2C357162EF33DEA00BE7824 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570F2EF33DEA00BE7824 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2C357292EF35CE700BE7824 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357282EF35CE700BE7824 /* StripeCoreTestUtils.framework */; };
+		A2C3572D2EF35D7500BE7824 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3572C2EF35D7500BE7824 /* XCTest.framework */; platformFilter = ios; };
+		A2C3572E2EF35D7500BE7824 /* XCTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3572C2EF35D7500BE7824 /* XCTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2C357312EF35FEC00BE7824 /* StripePaymentsObjcTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357302EF35FEC00BE7824 /* StripePaymentsObjcTestUtils.framework */; };
+		A2C357322EF35FEC00BE7824 /* StripePaymentsObjcTestUtils.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357302EF35FEC00BE7824 /* StripePaymentsObjcTestUtils.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2C357382EF3616600BE7824 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357372EF3616600BE7824 /* StripeCore.framework */; };
+		A2C357392EF3616600BE7824 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357372EF3616600BE7824 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +57,19 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A2C3572F2EF35D7500BE7824 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A2C357322EF35FEC00BE7824 /* StripePaymentsObjcTestUtils.framework in Embed Frameworks */,
+				A2C357392EF3616600BE7824 /* StripeCore.framework in Embed Frameworks */,
+				A2C3572E2EF35D7500BE7824 /* XCTest.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +90,10 @@
 		A2C3570E2EF33DEA00BE7824 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2C3570F2EF33DEA00BE7824 /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2C357102EF33DEA00BE7824 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2C357282EF35CE700BE7824 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2C3572C2EF35D7500BE7824 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		A2C357302EF35FEC00BE7824 /* StripePaymentsObjcTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentsObjcTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2C357372EF3616600BE7824 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -113,6 +137,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2C357312EF35FEC00BE7824 /* StripePaymentsObjcTestUtils.framework in Frameworks */,
+				A2C357382EF3616600BE7824 /* StripeCore.framework in Frameworks */,
+				A2C357292EF35CE700BE7824 /* StripeCoreTestUtils.framework in Frameworks */,
+				A2C3572D2EF35D7500BE7824 /* XCTest.framework in Frameworks */,
 				3D136BC62EB4493500186DA1 /* StripeIssuing.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,6 +190,10 @@
 		A2C3570C2EF33DEA00BE7824 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A2C357372EF3616600BE7824 /* StripeCore.framework */,
+				A2C357302EF35FEC00BE7824 /* StripePaymentsObjcTestUtils.framework */,
+				A2C3572C2EF35D7500BE7824 /* XCTest.framework */,
+				A2C357282EF35CE700BE7824 /* StripeCoreTestUtils.framework */,
 				A2C3570D2EF33DEA00BE7824 /* StripeCore.framework */,
 				A2C3570E2EF33DEA00BE7824 /* StripePayments.framework */,
 				A2C3570F2EF33DEA00BE7824 /* StripePaymentsUI.framework */,
@@ -214,6 +246,7 @@
 				3D136BC12EB4493500186DA1 /* Sources */,
 				3D136BC22EB4493500186DA1 /* Frameworks */,
 				3D136BC32EB4493500186DA1 /* Resources */,
+				A2C3572F2EF35D7500BE7824 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

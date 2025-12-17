@@ -16,7 +16,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
+@testable import StripeIssuing
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripePaymentsObjcTestUtils
 
 class STPPushProvisioningDetailsFunctionalTest: APIStubbedTestCase {
 

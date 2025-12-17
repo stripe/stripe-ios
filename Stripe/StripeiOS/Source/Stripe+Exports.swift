@@ -11,4 +11,4 @@ import Foundation
 @_exported import StripeCore
 @_exported import StripePayments
 @_exported import StripePaymentsUI
-@_exported import StringIssuing
+@_exported import StripeIssuing
