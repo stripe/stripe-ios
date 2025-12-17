@@ -6,11 +6,8 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-@testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
+@testable import StripeIssuing
+@testable@_spi(STP) import StripePaymentsObjcTestUtils
 
 class STPEphemeralKeyTest: XCTestCase {
     func testDecoding() {

@@ -41,7 +41,7 @@ class ViewController: UIViewController {
             configuration: PaymentSheet.Configuration()
         )
         
-        let _ = STPIssuingPlaceholder.self
+        let _ = STPFakeAddPaymentPassViewController()
 
         if #available(iOS 15.0, *) {
             let _ = EmbeddedComponentManager {
