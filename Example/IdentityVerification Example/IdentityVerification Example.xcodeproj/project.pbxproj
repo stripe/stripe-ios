@@ -214,7 +214,6 @@
 			);
 			mainGroup = 35836DA0844EF12C1E67C993;
 			packageReferences = (
-				D44AE4EA2B9A670700446682 /* XCRemoteSwiftPackageReference "capture-core-sp" */,
 			);
 			productRefGroup = EFBE3BC5674253803108D51C /* Products */;
 			projectDirPath = "";
@@ -307,15 +306,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		D44AE4EA2B9A670700446682 /* XCRemoteSwiftPackageReference "capture-core-sp" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/BlinkID/capture-core-sp";
-			requirement = {
-				kind = exactVersion;
-				version = 1.2.3;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 4D2B674F033CFBC8B744669E /* Project object */;

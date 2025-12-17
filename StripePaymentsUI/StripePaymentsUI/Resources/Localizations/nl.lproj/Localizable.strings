@@ -8,6 +8,8 @@
 
 "%1$@ account ending in %2$@" = "%1$@-rekening die eindigt op %2$@";
 
+"%1$@ and %2$@" = "%1$@ en %2$@";
+
 "%1$@ ending in %2$@" = "%1$@ eindigend op %2$@";
 
 "%1$@ is not accepted" = "%1$@ wordt niet geaccepteerd";
@@ -30,13 +32,21 @@
 
 "Confirm your %@" = "Je %@ bevestigen";
 
+"Credit" = "Creditcard";
+
+"Debit" = "Debitcard";
+
 "Invalid data." = "Ongeldige gegevens.";
 
 "MM / YY" = "MM / JJ";
 
 "MM/YY" = "MM/JJ";
 
+"Only %1$@ cards are accepted" = "Alleen %1$@-betaalkaarten worden geaccepteerd";
+
 "Postal Code" = "Postcode";
+
+"Prepaid" = "Prepaid";
 
 "Shipping Address" = "Verzendadres";
 

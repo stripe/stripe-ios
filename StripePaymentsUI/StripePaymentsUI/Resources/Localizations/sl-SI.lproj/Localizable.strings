@@ -8,6 +8,8 @@
 
 "%1$@ account ending in %2$@" = "Račun za %1$@, ki se konča s števkami %2$@";
 
+"%1$@ and %2$@" = "%1$@ in %2$@";
+
 "%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
 
 "%1$@ is not accepted" = "Kartica %1$@ ni sprejeta";
@@ -30,13 +32,21 @@
 
 "Confirm your %@" = "Potrdite svojo kodo %@";
 
+"Credit" = "Kreditna";
+
+"Debit" = "Debetna";
+
 "Invalid data." = "Neveljavni podatki.";
 
 "MM / YY" = "MM/LL";
 
 "MM/YY" = "MM/LL";
 
+"Only %1$@ cards are accepted" = "Sprejemajo se le kartice %1$@";
+
 "Postal Code" = "Poštna številka";
+
+"Prepaid" = "Predplačniška";
 
 "Shipping Address" = "Dostavni naslov";
 

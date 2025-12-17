@@ -8,6 +8,8 @@
 
 "%1$@ account ending in %2$@" = "%1$@ sąskaita, kurios paskutiniai skaičiai %2$@";
 
+"%1$@ and %2$@" = "%1$@ ir %2$@";
+
 "%1$@ ending in %2$@" = "%1$@, kuri baigiasi %2$@";
 
 "%1$@ is not accepted" = "\"%1$@\" nepriimamas";
@@ -30,13 +32,21 @@
 
 "Confirm your %@" = "Patvirtinkite savo %@";
 
+"Credit" = "Kredito";
+
+"Debit" = "Debeto";
+
 "Invalid data." = "Netinkami duomenys.";
 
 "MM / YY" = "mm / MM";
 
 "MM/YY" = "mm / MM";
 
+"Only %1$@ cards are accepted" = "Priimamos tik %1$@ kortelės";
+
 "Postal Code" = "Pašto kodas";
+
+"Prepaid" = "Išankstinio mokėjimo";
 
 "Shipping Address" = "Siuntimo adresas";
 

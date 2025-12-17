@@ -8,6 +8,8 @@
 
 "%1$@ account ending in %2$@" = "compte %1$@ se terminant par %2$@";
 
+"%1$@ and %2$@" = "%1$@ et %2$@";
+
 "%1$@ ending in %2$@" = "%1$@ se terminant par %2$@";
 
 "%1$@ is not accepted" = "%1$@ n'est pas accepté";
@@ -30,13 +32,21 @@
 
 "Confirm your %@" = "Confirmez votre %@";
 
+"Credit" = "crédit";
+
+"Debit" = "débit";
+
 "Invalid data." = "Donnée non valide.";
 
 "MM / YY" = "MM / AA";
 
 "MM/YY" = "MM/AA";
 
+"Only %1$@ cards are accepted" = "Seules les cartes bancaires %1$@ sont acceptées";
+
 "Postal Code" = "Code postal";
+
+"Prepaid" = "prépayée";
 
 "Shipping Address" = "Adresse de livraison";
 

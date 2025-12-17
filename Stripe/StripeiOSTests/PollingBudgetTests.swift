@@ -20,7 +20,7 @@ final class PollingBudgetTests: XCTestCase {
     }
 
     func testPollingBudget_initializationLPMs() {
-        let paymentMethodTypes: [STPPaymentMethodType] = [.amazonPay, .revolutPay, .swish, .twint, .przelewy24]
+        let paymentMethodTypes: [STPPaymentMethodType] = [.amazonPay, .revolutPay, .swish, .twint, .przelewy24, .payPay]
 
         for type in paymentMethodTypes {
             let budget = PollingBudget(startDate: Date(), paymentMethodType: type)
