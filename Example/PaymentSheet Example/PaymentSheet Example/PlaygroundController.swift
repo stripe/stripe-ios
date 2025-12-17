@@ -436,8 +436,9 @@ class PlaygroundController: ObservableObject {
                 guard let self = self else {
                     throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
                 }
-                // Create a new intent
-                self.loadBackend(reinitializeControllers: false)
+                // Create a new intent and wait for it
+                _ = try await self.createIntent()
+                // Now confirm with the new intent
                 return try await self.confirmationTokenConfirmHandler(confirmationToken)
             }
 
@@ -469,10 +470,14 @@ class PlaygroundController: ObservableObject {
         } else {
             // Use payment method confirmation handler for non-CT integration types
             let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] pm, billingDetails in
-                try await withCheckedThrowingContinuation { continuation in
-                    self?.confirmHandler(pm, billingDetails) { result in
-                        // Create a new intent
-                        self?.loadBackend(reinitializeControllers: false)
+                guard let self = self else {
+                    throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
+                }
+                // Create a new intent first
+                _ = try await self.createIntent()
+                // Now confirm with the new intent
+                return try await withCheckedThrowingContinuation { continuation in
+                    self.confirmHandler(pm, billingDetails) { result in
                         continuation.resume(with: result)
                     }
                 }
@@ -1010,6 +1015,57 @@ extension PlaygroundController {
                     self.isLoading = false
                     self.currentlyRenderedSettings = self.settings
                 }
+            }
+        }
+    }
+
+    func createIntent() async throws -> String {
+        return try await withCheckedThrowingContinuation { continuation in
+            var body = [
+                "currency": settings.currency.rawValue,
+                "amount": settings.amount.rawValue,
+                "merchant_country_code": settings.merchantCountryCode.rawValue,
+                "mode": settings.mode.rawValue,
+                "automatic_payment_methods": settings.apmsEnabled == .on,
+                "use_link": settings.linkPassthroughMode == .pm,
+                "link_mode": settings.linkEnabledMode.rawValue,
+                "use_manual_confirmation": settings.integrationType == .deferred_mc,
+                "require_cvc_recollection": settings.requireCVCRecollection == .on,
+                "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
+                "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
+            ] as [String: Any]
+            if let customerId {
+                body["customer"] = customerId
+            }
+            if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
+                body["supported_payment_methods"] = supportedPaymentMethods
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .split(separator: ",")
+                    .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+            }
+            makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
+                guard
+                    error == nil,
+                    let data = data,
+                    let json = try? JSONDecoder().decode([String: String].self, from: data),
+                    (response as? HTTPURLResponse)?.statusCode != 400,
+                    let clientSecret = json["intentClientSecret"]
+                else {
+                    print(error as Any)
+                    var errorMessage = "An error occurred communicating with the example backend."
+                    if let data = data,
+                       let json = try? JSONDecoder().decode([String: String].self, from: data),
+                       let jsonError = json["error"] {
+                        errorMessage = jsonError
+                    }
+                    continuation.resume(throwing: PlaygroundError(errorDescription: errorMessage))
+                    return
+                }
+
+                self.clientSecret = clientSecret
+                let intentID = STPPaymentIntent.id(fromClientSecret: clientSecret) ?? STPSetupIntent.id(fromClientSecret: clientSecret)
+                print("Created new stripe intent with id: \(intentID ?? "")")
+                continuation.resume(returning: clientSecret)
             }
         }
     }
