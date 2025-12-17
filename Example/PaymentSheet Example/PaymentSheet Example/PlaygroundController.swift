@@ -1095,7 +1095,7 @@ extension PlaygroundController {
         case .deferred_mp:
             return PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT
         case .deferred_csc:
-            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second to simulate creating an intent
+            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second simulate creating an intent
             return self.clientSecret!
         case .deferred_mc, .deferred_ssc:
             break
