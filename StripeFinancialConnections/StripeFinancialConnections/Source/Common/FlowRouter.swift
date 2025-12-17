@@ -96,7 +96,7 @@ class FlowRouter {
             return exampleAppSdkOverride.shouldUseNativeFlow
         }
 
-        return !killswitchActive && synchronizePayload.manifest.verified
+        return !killswitchActive
     }
 
     private var experimentVariant: String? {
