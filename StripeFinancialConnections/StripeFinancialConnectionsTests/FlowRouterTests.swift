@@ -112,27 +112,12 @@ class FlowRouterTests: XCTestCase {
         XCTAssertEqual(flowRouter.flow, .webInstantDebits)
     }
 
-    func testInstantDebitsKillswitchNotActiveNotVerified() {
+    func testInstantDebitsKillswitchNotActive() {
         flowRouter = FlowRouter(
             synchronizePayload: synchronizePayload(
                 experience: .instantDebits,
                 killswitchActive: false,
-                nativeExperimentEnabled: true,
-                verified: false
-            ),
-            analyticsClient: mockAnalyticsClient
-        )
-
-        XCTAssertEqual(flowRouter.flow, .webInstantDebits)
-    }
-
-    func testInstantDebitsKillswitchNotActiveVerified() {
-        flowRouter = FlowRouter(
-            synchronizePayload: synchronizePayload(
-                experience: .instantDebits,
-                killswitchActive: false,
-                nativeExperimentEnabled: true,
-                verified: true
+                nativeExperimentEnabled: true
             ),
             analyticsClient: mockAnalyticsClient
         )
@@ -172,11 +157,10 @@ class FlowRouterTests: XCTestCase {
 
     // MARK: Helpers
 
-    private func synchronizePayload(experience: Experience, killswitchActive: Bool, nativeExperimentEnabled: Bool, verified: Bool = false) -> FinancialConnectionsSynchronize {
+    private func synchronizePayload(experience: Experience, killswitchActive: Bool, nativeExperimentEnabled: Bool) -> FinancialConnectionsSynchronize {
         FinancialConnectionsSynchronize(
             manifest: FinancialConnectionsSessionManifest(
                 allowManualEntry: false,
-                appVerificationEnabled: verified,
                 consentRequired: false,
                 customManualEntryHandling: false,
                 disableLinkMoreAccounts: false,
