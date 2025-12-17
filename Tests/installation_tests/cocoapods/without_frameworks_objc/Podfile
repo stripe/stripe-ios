@@ -8,7 +8,7 @@ target 'CocoapodsTest' do
   pod 'StripePayments', path: '../../../..'
   pod 'StripePaymentsUI', path: '../../../..'
   pod 'StripePaymentSheet', path: '../../../..'
-  pod 'StringIssuing', path: '../../../..'
+  pod 'StripeIssuing', path: '../../../..'
 
   post_install do |installer|
     installer.pods_project.build_configurations.each do |config|
