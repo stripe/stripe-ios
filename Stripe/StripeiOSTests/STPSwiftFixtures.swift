@@ -24,12 +24,4 @@ extension STPFixtures {
         response!["expires"] = NSNumber(value: Date(timeIntervalSinceNow: interval).timeIntervalSince1970)
         return .decodedObject(fromAPIResponse: response)!
     }
-
-    /// A customer-scoped ephemeral key that expires in 10 seconds.
-    class func expiringEphemeralKey() -> STPEphemeralKey {
-        var response = STPTestUtils.jsonNamed("EphemeralKey")
-        let interval: TimeInterval = 10
-        response!["expires"] = NSNumber(value: Date(timeIntervalSinceNow: interval).timeIntervalSince1970)
-        return .decodedObject(fromAPIResponse: response)!
-    }
 }
