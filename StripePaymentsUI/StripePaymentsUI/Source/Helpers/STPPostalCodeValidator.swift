@@ -17,11 +17,6 @@ import Foundation
     case cardField
 }
 
-@objc @_spi(STP) public enum STPPostalCodeRequirement: Int {
-    case standard
-    case upe
-}
-
 @_spi(STP) public class STPPostalCodeValidator: NSObject {
     @_spi(STP) public class func postalCodeIsRequired(forCountryCode countryCode: String?) -> Bool {
         if countryCode == nil {
@@ -33,30 +28,12 @@ import Foundation
         }
     }
 
-    class func postalCodeIsRequiredForUPE(forCountryCode countryCode: String?) -> Bool {
-        guard let countryCode = countryCode else { return false }
-        return self.countriesWithPostalRequiredForUPE().contains(countryCode.uppercased())
-    }
-
-    class func postalCodeIsRequired(
-        forCountryCode countryCode: String?,
-        with postalRequirement: STPPostalCodeRequirement
-    ) -> Bool {
-        switch postalRequirement {
-        case .standard:
-            return postalCodeIsRequired(forCountryCode: countryCode)
-        case .upe:
-            return postalCodeIsRequiredForUPE(forCountryCode: countryCode)
-        }
-    }
-
     @_spi(STP) public class func validationState(
         forPostalCode postalCode: String?,
-        countryCode: String?,
-        with postalRequirement: STPPostalCodeRequirement = .standard
+        countryCode: String?
     ) -> STPCardValidationState {
         let sanitizedCountryCode = countryCode?.uppercased()
-        if self.postalCodeIsRequired(forCountryCode: countryCode, with: postalRequirement) {
+        if self.postalCodeIsRequired(forCountryCode: countryCode) {
             if sanitizedCountryCode == STPCountryCodeUnitedStates {
                 return self.validationState(forUSPostalCode: postalCode)
             } else {
@@ -213,10 +190,6 @@ import Foundation
         }
 
         return formattedString
-    }
-
-    class func countriesWithPostalRequiredForUPE() -> [AnyHashable] {
-        return ["CA", "GB", "US"]
     }
 
     class func countriesWithNoPostalCodes() -> [AnyHashable]? {
