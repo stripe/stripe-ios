@@ -45,6 +45,14 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
         // Somewhere we're setting LinkAccountContext and it's causing this test to be flakey, so lets try this
         LinkAccountContext.shared.account = nil
+
+        // Clear any persisted attestation state in UserDefaults that might trigger unexpected network calls
+        // StripeAttest stores state keyed by publishable key - this stale state from previous test runs
+        // can cause unexpected /v1/consumers/sessions/start_verification calls
+        for key in [Self.usPublishableKey, Self.frenchPublishableKey, Self.britishPublishableKey, "pk_test_123"] {
+            let keysToRemove = ["keyID", "successfullyAttested", "dailyAttemptCount", "firstAttemptToday"].map { "\($0):\(key)" }
+            keysToRemove.forEach { UserDefaults.standard.removeObject(forKey: $0) }
+        }
     }
 
     // MARK: - Tests
