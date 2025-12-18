@@ -24,8 +24,9 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private var dimmedBackgroundView: UIView!
 
     // Hard-coded challenge URL
-    private static let challengeHost = "mobile-active-challenge-764603794666.us-central1.run.app"
-    private let challengeURL = URL(string: "https://\(challengeHost)/")!
+    private static let challengeHost = "b.stripecdn.com"
+    private static let challengeVersion = 1
+    private static let challengeURL = URL(string: "https://\(challengeHost)/mobile-confirmation-challenge/assets/index.html?v=\(challengeVersion)")!
 
     private let startTime: Date
 
@@ -116,7 +117,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     private func loadChallenge() {
-        let request = URLRequest(url: challengeURL)
+        let request = URLRequest(url: Self.challengeURL)
         webView.load(request)
     }
 

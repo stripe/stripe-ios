@@ -25,6 +25,10 @@ struct PaymentSummaryView: View {
     /// A description of the payment method selected in a prior step.
     let selectedPaymentMethodDescription: String
 
+    /// When a bank account was used, this specifies the speed at which funds will be delivered.
+    /// If a bank account was not used, the value should always be `.instant`.
+    let settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed
+
     /// Called upon completing checkout successfully.
     let onCheckoutSuccess: (_ successMessage: String) -> Void
 
@@ -43,6 +47,15 @@ struct PaymentSummaryView: View {
         })
     }
 
+    private var processingTimeText: String {
+        switch settlementSpeed {
+        case .instant:
+            "Instant"
+        case .standard:
+            "2–3 business days, up to 5"
+        }
+    }
+
     @ViewBuilder
     private var header: some View {
         HStack(spacing: 12) {
@@ -51,9 +64,10 @@ struct PaymentSummaryView: View {
                     .fill(.tint)
                     .frame(width: 44, height: 44)
 
-                Image(systemName: "wallet.bifold.fill")
+                Image(systemName: "cart.fill")
                     .font(.system(size: 20, weight: .semibold))
-                    .offset(x: 1, y: -1)
+                    .offset(x: -0.5, y: 1)
+                    .foregroundStyle(.white)
             }
 
             VStack(alignment: .leading, spacing: 2) {
@@ -94,7 +108,7 @@ struct PaymentSummaryView: View {
                     )
                     makeSummaryRow(
                         title: "Processing Time",
-                        value: onrampSessionResponse.processingTimeText
+                        value: processingTimeText
                     )
                     makeSummaryRow(
                         title: "Deposit To",
@@ -239,14 +253,6 @@ private extension CreateOnrampSessionResponse {
         return Self.currencyFormatter.string(from: NSNumber(value: total)) ?? "$0"
     }
 
-    var processingTimeText: String {
-        if paymentMethod.lowercased().contains("card") {
-            "Instant"
-        } else {
-            "1–3 days"
-        }
-    }
-
     var depositToText: String {
         let network = transactionDetails.destinationNetwork.localizedCapitalized
         let address = transactionDetails.walletAddress
@@ -301,6 +307,7 @@ private extension CreateOnrampSessionResponse {
                 uiMode: "headless"
             ),
             selectedPaymentMethodDescription: "Apple Pay",
+            settlementSpeed: .instant,
             onCheckoutSuccess: { _ in }
         )
     }

@@ -384,6 +384,12 @@ extension STPElementsSession {
     var shouldAttestOnConfirmation: Bool {
         flags["elements_mobile_attest_on_intent_confirmation"] == true
     }
+
+    /// Whether card funding filtering is enabled for this session.
+    /// When `false`, `CardFundingFilter` should act as a no-op and accept all card funding types.
+    var isCardFundingFilteringEnabled: Bool {
+        flags["elements_mobile_card_funding_filtering"] == true
+    }
 }
 
 extension STPElementsSession {

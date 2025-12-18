@@ -145,6 +145,53 @@ extension String.Localized {
         )
     }
 
+    // MARK: - Card Funding Filter Messages
+    // Complete strings for each funding type combination to ensure proper localization context
+
+    // Single funding types
+    @_spi(STP) public static var only_debit_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit cards are accepted",
+            "Warning shown when only debit cards are accepted"
+        )
+    }
+
+    @_spi(STP) public static var only_credit_cards_accepted: String {
+        STPLocalizedString(
+            "Only credit cards are accepted",
+            "Warning shown when only credit cards are accepted"
+        )
+    }
+
+    @_spi(STP) public static var only_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only prepaid cards are accepted",
+            "Warning shown when only prepaid cards are accepted"
+        )
+    }
+
+    // Two funding types
+    @_spi(STP) public static var only_debit_and_credit_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit and credit cards are accepted",
+            "Warning shown when only debit and credit cards are accepted"
+        )
+    }
+
+    @_spi(STP) public static var only_debit_and_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit and prepaid cards are accepted",
+            "Warning shown when only debit and prepaid cards are accepted"
+        )
+    }
+
+    @_spi(STP) public static var only_credit_and_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only credit and prepaid cards are accepted",
+            "Warning shown when only credit and prepaid cards are accepted"
+        )
+    }
+
     @_spi(STP) public enum Funding {
         @_spi(STP) public static var credit: String {
             STPLocalizedString(

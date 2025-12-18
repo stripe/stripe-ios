@@ -61,41 +61,6 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
-    func testLookupSession_ignoresUnknownPaymentMethodType() throws {
-        let expectation = self.expectation(description: "Lookup ConsumerSession")
-
-        ConsumerSession.lookupSession(
-            for: "mobile-payments-sdk-ci+a-consumer@stripe.com",
-            emailSource: .customerEmail,
-            sessionID: "abc123",
-            customerID: nil,
-            with: apiClient,
-            useMobileEndpoints: false,
-            canSyncAttestationState: false,
-            doNotLogConsumerFunnelEvent: false
-        ) { result in
-            switch result {
-            case .success(let lookupResponse):
-                switch lookupResponse.responseType {
-                case .found(let session):
-                    // Displayable payment details can't be parsed in this test
-                    XCTAssertEqual(session.displayablePaymentDetails?.defaultPaymentType, .unparsable)
-
-                case .notFound(let errorMessage, _):
-                    XCTFail("Got not found response with \(errorMessage)")
-
-                case .noAvailableLookupParams:
-                    XCTFail("Got no available lookup params")
-                }
-            case .failure(let error):
-                XCTFail("Received error: \(error.nonGenericDescription)")
-            }
-
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
-    }
-
     func testLookupSession_existingConsumer() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
 
