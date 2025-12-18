@@ -436,8 +436,8 @@ class PlaygroundController: ObservableObject {
                 guard let self = self else {
                     throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
                 }
-                // Create a new intent and wait for it
-                try await self.createIntent()
+                // Create a new intent
+                self.createIntent()
                 // Now confirm with the new intent
                 return try await self.confirmationTokenConfirmHandler(confirmationToken)
             }
@@ -474,7 +474,7 @@ class PlaygroundController: ObservableObject {
                     throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
                 }
                 // Create a new intent first
-                try await self.createIntent()
+                self.createIntent()
                 // Now confirm with the new intent
                 return try await withCheckedThrowingContinuation { continuation in
                     self.confirmHandler(pm, billingDetails) { result in
@@ -1022,7 +1022,6 @@ extension PlaygroundController {
                     self.currentlyRenderedSettings = self.settings
                 }
             }
-            
         }
     }
 
