@@ -135,6 +135,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
 
         STPAPIClient.shared.publishableKey = originalPublishableKey
         XCTAssertTrue(isLinkSignupEnabled, "Link inline signup should be enabled for linkSignupOptInFeatureEnabled even if general signup disabled")
+        LinkAccountContext.shared.account = nil
     }
 
     func testIsLinkSignupEnabled_enabled_for_linkSignupOptInFeatureEnabled_if_email_provided() {
@@ -153,6 +154,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
 
         STPAPIClient.shared.publishableKey = originalPublishableKey
         XCTAssertTrue(isLinkSignupEnabled, "Link inline signup should be enabled for linkSignupOptInFeatureEnabled if an email was provided")
+        LinkAccountContext.shared.account = nil
     }
 
     func testIsLinkSignupEnabled_disabled_for_linkSignupOptInFeatureEnabled_if_no_email_provided() {
