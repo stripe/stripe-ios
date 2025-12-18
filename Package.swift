@@ -105,7 +105,6 @@ let package = Package(
             name: "StripeIssuing",
             dependencies: ["StripeCore", "StripePayments", "StripePaymentsUI"],
             path: "StripeIssuing/StripeIssuing",
-            exclude: ["Info.plist"],
             resources: [
                 .process("Resources")
             ]
