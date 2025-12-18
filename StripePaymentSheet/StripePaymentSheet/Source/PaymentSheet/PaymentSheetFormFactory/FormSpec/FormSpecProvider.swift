@@ -9,12 +9,12 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-// Intentionally force-unwrap since PaymentSheet requires this file to exist
-private let formSpecsURL = StripePaymentSheetBundleLocator.resourcesBundle.url(forResource: "form_specs", withExtension: ".json")!
+// Note: Local form specs file has been removed. All form specs now come from the server via loadFrom().
+private let formSpecsURL = StripePaymentSheetBundleLocator.resourcesBundle.url(forResource: "form_specs", withExtension: ".json")
 
 /// Provides FormSpecs for a given a payment method type.
-/// - Note: You must `load(completion:)` to load the specs json file into memory before calling `formSpec(for:)`
-/// - To overwrite any of these specs use load(from:)
+/// - Note: Form specs are now loaded from the server via `loadFrom()` which is called during PaymentSheet initialization.
+/// - Form specs are no longer used for form generation, only for metadata like selector icons.
 class FormSpecProvider {
     enum Error: Swift.Error {
         case failedToLoadSpecs
@@ -33,27 +33,31 @@ class FormSpecProvider {
     var hasLoadedFromDisk: Bool = false
 
     /// Loads the JSON form spec from disk into memory
+    /// - Note: This is now a no-op as local form specs have been removed. All specs come from the server.
     func load(completion: ((Bool) -> Void)? = nil) {
         formSpecsUpdateQueue.async { [weak self] in
             if self?.hasLoadedFromDisk == true {
                 completion?(true)
                 return
             }
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            do {
-                let data = try Data(contentsOf: formSpecsURL)
-                let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
-                self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
-                self?.hasLoadedFromDisk = true
-                completion?(true)
-            } catch {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                                  error: Error.failedToLoadSpecs)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                completion?(false)
-                return
+
+            // Local form specs file has been removed. Mark as loaded to prevent repeated attempts.
+            self?.hasLoadedFromDisk = true
+
+            // If there's a local file (for backwards compatibility), try to load it
+            if let formSpecsURL = formSpecsURL {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                do {
+                    let data = try Data(contentsOf: formSpecsURL)
+                    let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
+                    self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
+                } catch {
+                    // Local file not found or invalid - this is expected. Server specs will be loaded via loadFrom().
+                }
             }
+
+            completion?(true)
         }
     }
     
