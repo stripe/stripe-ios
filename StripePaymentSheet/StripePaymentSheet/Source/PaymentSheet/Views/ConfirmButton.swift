@@ -72,8 +72,6 @@ class ConfirmButton: UIView {
     private let buyButton: BuyButton
     private let didTap: () -> Void
     private let didTapWhenDisabled: () -> Void
-    private let appearance: PaymentSheet.Appearance
-    private let showProcessingLabel: Bool
 
     // MARK: Init
 
@@ -86,8 +84,6 @@ class ConfirmButton: UIView {
         didTapWhenDisabled: @escaping () -> Void = {}
     ) {
         self.buyButton = BuyButton(status: status, callToAction: callToAction, showProcessingLabel: showProcessingLabel, appearance: appearance)
-        self.showProcessingLabel = showProcessingLabel
-        self.appearance = appearance
         self.didTap = didTap
         self.didTapWhenDisabled = didTapWhenDisabled
         super.init(frame: .zero)
