@@ -162,6 +162,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case IT
         case stripeShop = "stripe_shop_test"
         case usLive = "us_live_test"
+        case frLive = "fr_live_test"
     }
 
     enum APMSEnabled: String, PickerEnum {

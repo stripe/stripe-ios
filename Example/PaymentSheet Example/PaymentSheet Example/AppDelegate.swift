@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        StripeAPI.additionalEnabledApplePayNetworks = [.JCB, .chinaUnionPay]
         // Override point for customization after application launch.
 #if targetEnvironment(simulator)
         if ProcessInfo.processInfo.environment["UITesting"] != nil {
