@@ -42,6 +42,9 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         //      because PMME fetches the images concurrently/in arbitrary order, so the ordered tail
         //      file approach doesn't work for this purpose.
         setupImageStubs()
+
+        // Somewhere we're setting LinkAccountContext and it's causing this test to be flakey, so lets try this
+        LinkAccountContext.shared.account = nil
     }
 
     // MARK: - Tests
