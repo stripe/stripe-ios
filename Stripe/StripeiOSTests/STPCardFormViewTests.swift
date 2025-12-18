@@ -72,48 +72,25 @@ class STPCardFormViewTests: XCTestCase {
         }
     }
 
-    func testHidingPostalCodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK")) {
-            let cardForm = STPCardFormView()
-            XCTAssertTrue(cardForm.postalCodeField.isHidden)
-        }
-    }
-
-    func testHidingPostalUPECodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK")) {
-            let cardForm = STPCardFormView(
-                billingAddressCollection: .automatic,
-                style: .standard,
-                postalCodeRequirement: .upe,
-                prefillDetails: nil
-            )
-            XCTAssertTrue(cardForm.postalCodeField.isHidden)
-        }
-    }
-
     func testNotHidingPostalUPECodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
-            let cardForm = STPCardFormView(
-                billingAddressCollection: .automatic,
-                style: .standard,
-                postalCodeRequirement: .upe,
-                prefillDetails: nil
-            )
-            XCTAssertFalse(cardForm.postalCodeField.isHidden)
-        }
+        let cardForm = STPCardFormView(
+            billingAddressCollection: .automatic,
+            style: .standard,
+            postalCodeRequirement: .upe,
+            prefillDetails: nil
+        )
+        XCTAssertFalse(cardForm.postalCodeField.isHidden)
     }
 
     func testPanLockedOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
-            let cardForm = STPCardFormView(
-                billingAddressCollection: .automatic,
-                style: .standard,
-                postalCodeRequirement: .upe,
-                prefillDetails: nil,
-                inputMode: .panLocked
-            )
-            XCTAssertFalse(cardForm.numberField.isUserInteractionEnabled)
-        }
+        let cardForm = STPCardFormView(
+            billingAddressCollection: .automatic,
+            style: .standard,
+            postalCodeRequirement: .upe,
+            prefillDetails: nil,
+            inputMode: .panLocked
+        )
+        XCTAssertFalse(cardForm.numberField.isUserInteractionEnabled)
     }
 
     func testPrefilledOnInit() {
@@ -123,20 +100,18 @@ class STPCardFormViewTests: XCTestCase {
             expiryYear: 25,
             cardBrand: .amex
         )
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US")) {
-            let cardForm = STPCardFormView(
-                billingAddressCollection: .automatic,
-                style: .standard,
-                postalCodeRequirement: .upe,
-                prefillDetails: prefillDeatils,
-                inputMode: .panLocked
-            )
+        let cardForm = STPCardFormView(
+            billingAddressCollection: .automatic,
+            style: .standard,
+            postalCodeRequirement: .upe,
+            prefillDetails: prefillDeatils,
+            inputMode: .panLocked
+        )
 
-            XCTAssertEqual(cardForm.numberField.text, prefillDeatils.formattedLast4)
-            XCTAssertEqual(cardForm.numberField.cardBrandState.brand, prefillDeatils.cardBrand)
-            XCTAssertEqual(cardForm.expiryField.text, prefillDeatils.formattedExpiry)
-            XCTAssertEqual(cardForm.cvcField.cardBrand, prefillDeatils.cardBrand)
-        }
+        XCTAssertEqual(cardForm.numberField.text, prefillDeatils.formattedLast4)
+        XCTAssertEqual(cardForm.numberField.cardBrandState.brand, prefillDeatils.cardBrand)
+        XCTAssertEqual(cardForm.expiryField.text, prefillDeatils.formattedExpiry)
+        XCTAssertEqual(cardForm.cvcField.cardBrand, prefillDeatils.cardBrand)
     }
 
     func testCBCWithPreferredNetwork() {

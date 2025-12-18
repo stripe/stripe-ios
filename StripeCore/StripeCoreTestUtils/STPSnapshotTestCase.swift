@@ -11,7 +11,7 @@ import iOSSnapshotTestCase
 
 let TEST_DEVICE_MODEL = "iPhone13,1" // iPhone 12 mini
 let TEST_DEVICE_OS_VERSION = "16.4"
-let TEST_DEVICE_OS_VERSION_26_1 = "26.1"
+let TEST_DEVICE_OS_VERSION_26_2 = "26.2"
 
 open class STPSnapshotTestCase: FBSnapshotTestCase {
 
@@ -20,16 +20,16 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         let deviceModel = ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"]!
         recordMode = ProcessInfo.processInfo.environment["STP_RECORD_SNAPSHOTS"] != nil
         guard deviceModel == TEST_DEVICE_MODEL,
-              [TEST_DEVICE_OS_VERSION, TEST_DEVICE_OS_VERSION_26_1].contains(UIDevice.current.systemVersion)
+              [TEST_DEVICE_OS_VERSION, TEST_DEVICE_OS_VERSION_26_2].contains(UIDevice.current.systemVersion)
         else {
             continueAfterFailure = false
-            XCTFail("You must run snapshot tests on \(TEST_DEVICE_MODEL) running \(TEST_DEVICE_OS_VERSION) or \(TEST_DEVICE_OS_VERSION_26_1). You are running these tests on a \(deviceModel) on \(UIDevice.current.systemVersion).")
+            XCTFail("You must run snapshot tests on \(TEST_DEVICE_MODEL) running \(TEST_DEVICE_OS_VERSION) or \(TEST_DEVICE_OS_VERSION_26_2). You are running these tests on a \(deviceModel) on \(UIDevice.current.systemVersion).")
             return
         }
     }
 
     var isIOS26_1: Bool {
-        let isiOS26_1 = UIDevice.current.systemVersion == TEST_DEVICE_OS_VERSION_26_1
+        let isiOS26_1 = UIDevice.current.systemVersion == TEST_DEVICE_OS_VERSION_26_2
         #if compiler(>=6.2.1)
         let isXcode26_1 = true
         #else
