@@ -103,7 +103,9 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_2
   deploy-docs:
     steps:
     - activate-ssh-key@4: {}
@@ -135,7 +137,9 @@ workflows:
         title: Build documentation
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_2
   deploy-dry-run:
     steps:
     - script@1:
@@ -541,12 +545,12 @@ workflows:
         - destination: generic/platform=iOS Simulator
     - deploy-to-bitrise-io@2: {}
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.2
     before_run:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
   test-builds-xcode-26-release:
     steps:
     - script@1:
@@ -554,12 +558,12 @@ workflows:
         - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
         title: Build release builds
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.2
     before_run:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
   install-tests:
     steps:
     - fastlane@3:
