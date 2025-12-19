@@ -47,7 +47,12 @@ class ViewController: UIViewController {
             configuration: PaymentSheet.Configuration()
         )
         
-        let _ = STPFakeAddPaymentPassViewController()
+        let _ = STPPushProvisioningDetailsParams.init(
+            cardId: "test",
+            certificates: [],
+            nonce: Data(),
+            nonceSignature: Data()
+        )
 
         if #available(iOS 15.0, *) {
             let _ = EmbeddedComponentManager {
