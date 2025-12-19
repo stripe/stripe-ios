@@ -40,6 +40,7 @@
 		8520A27C204A068C43592024 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F8AEC50D4623F80F04A533 /* StripeApplePay.framework */; };
 		9291A08CCB34504FCA4B7481 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005650A59D692F820EF20F5F /* XCTest.framework */; };
 		9363F8F389C04C19B37D0F0A /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E136A967522048B313E3C62F /* StripePaymentsUI.framework */; };
+		A2C3570A2EF33DCE00BE7824 /* StripeIssuing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357092EF33DCE00BE7824 /* StripeIssuing.framework */; };
 		AC7C127B11A60222465F4696 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 005650A59D692F820EF20F5F /* XCTest.framework */; };
 		B795A5EB8FDECA1060A9655C /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = C55551F29B99CF6D6DD9EE2F /* iOSSnapshotTestCase */; };
 		BF4A92064926FD7B0E3E92F7 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22D1C6EB5826E2D7C80B6CF3 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -117,16 +118,6 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CAAA5D4C8E87896995960E8C /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -145,6 +136,7 @@
 		5E4EA6394497D1BD57ED0032 /* Stripe Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		77247622AB08FEF48CA0DC26 /* StripePaymentsTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		969E196AB597EEF68C38103E /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		A2C357092EF33DCE00BE7824 /* StripeIssuing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeIssuing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6FA7C402E6266A300010F58 /* AllStripeFrameworks-iOS26.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "AllStripeFrameworks-iOS26.xctestplan"; sourceTree = "<group>"; };
 		CD5AC2BFBC8141F98C00CF9F /* StripeiOS_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeiOS_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D609FFD051FC01BF566665A0 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -199,6 +191,7 @@
 				32874C6147344A9CB2EF4DAD /* Stripe3DS2.framework in Frameworks */,
 				8520A27C204A068C43592024 /* StripeApplePay.framework in Frameworks */,
 				E97168F37D769524B58461B6 /* StripeCore.framework in Frameworks */,
+				A2C3570A2EF33DCE00BE7824 /* StripeIssuing.framework in Frameworks */,
 				360EEE8B706D2A4A49666F7A /* StripePayments.framework in Frameworks */,
 				9363F8F389C04C19B37D0F0A /* StripePaymentsUI.framework in Frameworks */,
 				EA34719659CB9F1A269FECC7 /* StripeUICore.framework in Frameworks */,
@@ -295,6 +288,7 @@
 		B7A38600F42999DA8F83AD27 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A2C357092EF33DCE00BE7824 /* StripeIssuing.framework */,
 				005650A59D692F820EF20F5F /* XCTest.framework */,
 			);
 			name = Frameworks;
@@ -409,7 +403,6 @@
 				8D1F9C232F0DF9D129FE872E /* Headers */,
 				24CDC502E3D468F309116FE1 /* Sources */,
 				0F32E5D5E633BAB349B6EB50 /* Resources */,
-				CAAA5D4C8E87896995960E8C /* Embed Frameworks */,
 				1587AD7E52759FBC80315765 /* Frameworks */,
 			);
 			buildRules = (

@@ -7,7 +7,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
+@testable@_spi(STP) import StripeIssuing
 
 class FakeEphemeralKeyProvider: NSObject, STPCustomerEphemeralKeyProvider {
     var response: [AnyHashable: Any]?
