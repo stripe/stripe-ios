@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "Bankkonto %1$@ endend auf %2$@";
 
-"%1$@ and %2$@" = "%1$@ und %2$@";
-
 "%1$@ ending in %2$@" = "%1$@, endend auf %2$@";
 
 "%1$@ is not accepted" = "%1$@ wird nicht akzeptiert";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "%@ bestätigen";
 
-"Credit" = "Kreditkarte";
-
-"Debit" = "Debitkarte";
-
 "Invalid data." = "Ungültige Daten.";
 
 "MM / YY" = "MM/JJ";
 
 "MM/YY" = "MM/JJ";
 
-"Only %1$@ cards are accepted" = "Nur %1$@ Karten werden akzeptiert";
+"Only credit and prepaid cards are accepted" = "Nur Kredit- und Prepaid-Karten werden akzeptiert";
+
+"Only credit cards are accepted" = "Nur Kreditkarten werden akzeptiert";
+
+"Only debit and credit cards are accepted" = "Nur Debit- und Kreditkarten werden akzeptiert";
+
+"Only debit and prepaid cards are accepted" = "Nur Debit- und Prepaid-Karten werden akzeptiert";
+
+"Only debit cards are accepted" = "Nur Debitkarten werden akzeptiert";
+
+"Only prepaid cards are accepted" = "Nur Prepaid-Karten werden akzeptiert";
 
 "Postal Code" = "Postleitzahl";
-
-"Prepaid" = "Prepaidkarte";
 
 "Shipping Address" = "Versandadresse";
 
