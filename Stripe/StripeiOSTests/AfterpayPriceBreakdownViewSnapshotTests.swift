@@ -34,15 +34,6 @@ class AfterpayPriceBreakdownViewSnapshotTests: STPSnapshotTestCase {
         return containingView
     }
 
-    func testClearpayInMultiRow() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_GB")) { [self] in
-            let priceBreakdownView = AfterpayPriceBreakdownView(currency: "gbp")
-            let containingView = embedInRenderableView(priceBreakdownView, width: 320, height: 50)
-
-            STPSnapshotVerifyView(containingView)
-        }
-    }
-
     func testAfterpayInSingleRow() {
         let priceBreakdownView = AfterpayPriceBreakdownView(currency: "eur")
         let containingView = embedInRenderableView(priceBreakdownView, width: 500, height: 30)

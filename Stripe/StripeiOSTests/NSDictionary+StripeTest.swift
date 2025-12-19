@@ -248,7 +248,11 @@ class Dictionary_StripeTest: XCTestCase {
                 "b": "not a url",
             ] as [AnyHashable: Any]
         XCTAssertEqual(dict.stp_url(forKey: "a"), URL(string: "https://example.com"))
-        XCTAssertNil(dict.stp_url(forKey: "b"))
+        if #available(iOS 17.0, *) { // In iOS 17 or later, instead of returning `nil` this will be a valid but escaped URL.
+            XCTAssertEqual(dict.stp_url(forKey: "b"), URL(string: "not%20a%20url"))
+        } else {
+            XCTAssertNil(dict.stp_url(forKey: "b"))
+        }
         XCTAssertNil(dict.stp_url(forKey: "c"))
     }
 }
