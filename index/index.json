@@ -1,1 +1,1 @@
-{"includedArchiveIdentifiers":["com.stripe.ios-docs"],"interfaceLanguages":{"swift":[{"path":"\/documentation\/stripe","title":"Stripe iOS SDKs","type":"module"}]},"schemaVersion":{"major":0,"minor":1,"patch":2}}
+{"includedArchiveIdentifiers":["com.stripe.ios-docs"],"interfaceLanguages":{"swift":[{"children":[{"title":"Articles","type":"groupMarker"},{"path":"\/documentation\/stripe\/stripe-module-index","title":"Stripe iOS SDKs","type":"article"}],"path":"\/documentation\/stripe","title":"Stripe iOS SDKs","type":"module"}]},"schemaVersion":{"major":0,"minor":1,"patch":2}}
