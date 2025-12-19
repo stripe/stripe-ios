@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%1$@ счет, номер которого оканчивается на %2$@";
 
-"%1$@ and %2$@" = "%1$@ и %2$@";
-
 "%1$@ ending in %2$@" = "%1$@, оканч. на %2$@";
 
 "%1$@ is not accepted" = "%1$@ не принимается";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Подтвердите %@";
 
-"Credit" = "Кредитная";
-
-"Debit" = "Дебетовая";
-
 "Invalid data." = "Недопустимые данные.";
 
 "MM / YY" = "ММ / ГГ";
 
 "MM/YY" = "ММ/ГГ";
 
-"Only %1$@ cards are accepted" = "Принимаются только карты %1$@";
+"Only credit and prepaid cards are accepted" = "Принимаются только кредитные и предоплаченные карты";
+
+"Only credit cards are accepted" = "Принимаются только кредитные карты";
+
+"Only debit and credit cards are accepted" = "Принимаются только дебетовые и кредитные карты";
+
+"Only debit and prepaid cards are accepted" = "Принимаются только дебетовые и предоплаченные карты";
+
+"Only debit cards are accepted" = "Принимаются только дебетовые карты";
+
+"Only prepaid cards are accepted" = "Принимаются только предоплаченные карты";
 
 "Postal Code" = "Почтовый индекс";
-
-"Prepaid" = "Предоплаченная";
 
 "Shipping Address" = "Адрес доставки";
 

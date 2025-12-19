@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "akaun %1$@ yang berakhir dengan %2$@";
 
-"%1$@ and %2$@" = "%1$@ dan %2$@";
-
 "%1$@ ending in %2$@" = "%1$@ – berakhiran %2$@";
 
 "%1$@ is not accepted" = "%1$@ tidak diterima";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Sahkan %@ anda";
 
-"Credit" = "Kredit";
-
-"Debit" = "Debit";
-
 "Invalid data." = "Data tidak sah.";
 
 "MM / YY" = "BB / TT";
 
 "MM/YY" = "BB/TT";
 
-"Only %1$@ cards are accepted" = "Hanya kad %1$@ diterima";
+"Only credit and prepaid cards are accepted" = "Hanya kad kredit dan prabayar diterima";
+
+"Only credit cards are accepted" = "Hanya kad kredit yang diterima";
+
+"Only debit and credit cards are accepted" = "Hanya kad debit dan kredit diterima";
+
+"Only debit and prepaid cards are accepted" = "Hanya kad debit dan prabayar diterima";
+
+"Only debit cards are accepted" = "Hanya kad debit yang diterima";
+
+"Only prepaid cards are accepted" = "Hanya kad prabayar diterima";
 
 "Postal Code" = "Poskod";
-
-"Prepaid" = "Prabayar";
 
 "Shipping Address" = "Alamat Pengiriman";
 

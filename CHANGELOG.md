@@ -1,5 +1,7 @@
 ## X.Y.Z - changes pending release 
 
+## 25.3.1 2025-12-19
+
 ## 25.3.0 2025-12-15
 
 ### PaymentSheet
