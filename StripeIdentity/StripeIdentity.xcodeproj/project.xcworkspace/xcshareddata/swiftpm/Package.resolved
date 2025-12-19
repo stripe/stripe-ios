@@ -1,5 +1,4 @@
 {
-  "originHash" : "14ba76520219c4ed17dfa08efef9be4a83105425d9f35f64a15b8af35fb25e50",
   "pins" : [
     {
       "identity" : "ios-snapshot-test-case",
@@ -15,10 +14,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davidme-stripe/OHHTTPStubs",
       "state" : {
-        "branch" : "stripe-mock",
-        "revision" : "5e90dfd42873ab8de026735d0725ad618b8ca7dd"
+        "branch" : "master",
+        "revision" : "94cf8e1d9e38b0edd580ddc699dda23a7bf66515"
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }
