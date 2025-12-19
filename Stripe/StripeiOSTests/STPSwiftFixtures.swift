@@ -9,6 +9,7 @@
 import Foundation
 
 @testable@_spi(STP) import Stripe
+@testable@_spi(STP) import StripeIssuing
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
@@ -20,14 +21,6 @@ extension STPFixtures {
     class func ephemeralKey() -> STPEphemeralKey {
         var response = STPTestUtils.jsonNamed("EphemeralKey")
         let interval: TimeInterval = 100
-        response!["expires"] = NSNumber(value: Date(timeIntervalSinceNow: interval).timeIntervalSince1970)
-        return .decodedObject(fromAPIResponse: response)!
-    }
-
-    /// A customer-scoped ephemeral key that expires in 10 seconds.
-    class func expiringEphemeralKey() -> STPEphemeralKey {
-        var response = STPTestUtils.jsonNamed("EphemeralKey")
-        let interval: TimeInterval = 10
         response!["expires"] = NSNumber(value: Date(timeIntervalSinceNow: interval).timeIntervalSince1970)
         return .decodedObject(fromAPIResponse: response)!
     }
