@@ -629,7 +629,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButton.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.appearance.formInsets.leading),
             primaryButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
             primaryButtonFloatingBottomConstraint,
-            stackViewBottomConstraint
+            stackViewBottomConstraint,
         ])
 
         // Get new position
@@ -668,7 +668,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: configuration.appearance.formInsets.leading),
             primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
             primaryButtonTopAnchorConstraint,
-            primaryButtonBottomConstraint
+            primaryButtonBottomConstraint,
         ])
 
         // Remove bottom spacer when not floating
