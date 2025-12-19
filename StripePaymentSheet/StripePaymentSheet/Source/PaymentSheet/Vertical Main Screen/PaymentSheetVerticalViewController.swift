@@ -501,7 +501,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private var primaryButtonTopAnchorConstraint: NSLayoutConstraint!
     private var primaryButtonBottomConstraint: NSLayoutConstraint!
     private var primaryButtonFloatingBottomConstraint: NSLayoutConstraint!
-    private var isButtonFloating = false
+    private var isButtonFloating: Bool = false
     private let extraScrollPadding: CGFloat = 20 // Extra padding at bottom for scrolling
 
     // MARK: - UIViewController Methods
@@ -568,68 +568,68 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private func updateFloatingButtonVisibility() {
-        guard let scrollView = bottomSheetController?.scrollView,
-              let container = floatingButtonContainer else {
+        guard let scrollView = bottomSheetController?.scrollView else {
             return
         }
 
-        // Calculate where the button's natural position would be (at bottom of this view)
-        // We need to check if that position would be visible in the scroll view
-        let buttonNaturalFrame = CGRect(
-            x: configuration.appearance.formInsets.leading,
-            y: view.bounds.height - primaryButton.intrinsicContentSize.height - configuration.appearance.formInsets.bottom,
-            width: view.bounds.width - configuration.appearance.formInsets.leading - configuration.appearance.formInsets.trailing,
-            height: primaryButton.intrinsicContentSize.height
-        )
+        // Check if the button's natural bottom position is below the visible area
+        let buttonBottomY = view.bounds.height - configuration.appearance.formInsets.bottom
+        let buttonBottomInScrollView = view.convert(CGPoint(x: 0, y: buttonBottomY), to: scrollView).y
+        let scrollViewVisibleBottom = scrollView.bounds.maxY
 
-        // Convert to scroll view coordinate space
-        let buttonNaturalFrameInScrollView = view.convert(buttonNaturalFrame, to: scrollView)
-
-        // Check if this natural position would be fully visible in the scroll view's bounds
-        let scrollViewVisibleBounds = scrollView.bounds
-        let wouldBeFullyVisible = scrollViewVisibleBounds.contains(buttonNaturalFrameInScrollView)
-
-        let shouldFloat = !wouldBeFullyVisible
+        let shouldFloat = buttonBottomInScrollView > scrollViewVisibleBottom
 
         // Only update if state changed
         guard shouldFloat != isButtonFloating else { return }
-        isButtonFloating = shouldFloat
 
         if shouldFloat {
-            // Add bottom spacer to allow scrolling past content
-            if let bottomSpacer {
-                if !stackView.arrangedSubviews.contains(bottomSpacer) {
-                    stackView.addArrangedSubview(bottomSpacer)
-                }
-            } else {
-                // Create and add bottom spacer to allow scrolling past content
-                let spacer = UIView()
-                spacer.translatesAutoresizingMaskIntoConstraints = false
-                let buttonHeight = primaryButton.intrinsicContentSize.height
-                let totalBottomPadding = buttonHeight + configuration.appearance.formInsets.bottom + extraScrollPadding
-                spacer.heightAnchor.constraint(equalToConstant: totalBottomPadding).isActive = true
-                self.bottomSpacer = spacer
-                stackView.addArrangedSubview(spacer)
-            }
-            // Move button to floating container with smooth animation
-            NSLayoutConstraint.deactivate([primaryButtonTopAnchorConstraint, primaryButtonBottomConstraint])
-            NSLayoutConstraint.activate([primaryButtonFloatingBottomConstraint, stackViewBottomConstraint])
-            UIView.animate(withDuration: 0.3) {
-                container.superview?.layoutIfNeeded()
+            activateFloatingButton()
+        } else {
+            deactivateFloatingButton()
+        }
+    }
+
+    private func activateFloatingButton() {
+        guard let container = floatingButtonContainer else {
+            return
+        }
+        // Add bottom spacer to allow scrolling past content
+        if let bottomSpacer {
+            if !stackView.arrangedSubviews.contains(bottomSpacer) {
+                stackView.addArrangedSubview(bottomSpacer)
             }
         } else {
-            // Move button back to normal position with smooth animation
-            NSLayoutConstraint.deactivate([primaryButtonFloatingBottomConstraint, stackViewBottomConstraint])
-            NSLayoutConstraint.activate([primaryButtonTopAnchorConstraint, primaryButtonBottomConstraint])
-            // Remove bottom spacer when not floating
-            if let bottomSpacer, stackView.arrangedSubviews.contains(bottomSpacer) {
-                stackView.removeArrangedSubview(bottomSpacer)
-                bottomSpacer.removeFromSuperview()
-            }
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
+            // Create and add bottom spacer to allow scrolling past content
+            let spacer = UIView()
+            spacer.translatesAutoresizingMaskIntoConstraints = false
+            let buttonHeight = primaryButton.intrinsicContentSize.height
+            let totalBottomPadding = buttonHeight + configuration.appearance.formInsets.bottom + extraScrollPadding
+            spacer.heightAnchor.constraint(equalToConstant: totalBottomPadding).isActive = true
+            self.bottomSpacer = spacer
+            stackView.addArrangedSubview(spacer)
         }
+        // Move button to floating container with smooth animation
+        NSLayoutConstraint.deactivate([primaryButtonTopAnchorConstraint, primaryButtonBottomConstraint])
+        NSLayoutConstraint.activate([primaryButtonFloatingBottomConstraint, stackViewBottomConstraint])
+        UIView.animate(withDuration: 0.3) {
+            container.superview?.layoutIfNeeded()
+        }
+        isButtonFloating = true
+    }
+
+    private func deactivateFloatingButton() {
+        // Move button back to normal position with smooth animation
+        NSLayoutConstraint.deactivate([primaryButtonFloatingBottomConstraint, stackViewBottomConstraint])
+        NSLayoutConstraint.activate([primaryButtonTopAnchorConstraint, primaryButtonBottomConstraint])
+        // Remove bottom spacer when not floating
+        if let bottomSpacer, stackView.arrangedSubviews.contains(bottomSpacer) {
+            stackView.removeArrangedSubview(bottomSpacer)
+            bottomSpacer.removeFromSuperview()
+        }
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+        isButtonFloating = false
     }
 
     private var canPresentLinkOnPrimaryButton: Bool {
@@ -828,6 +828,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // If FlowController, simply close the sheet
         if isFlowController {
+            deactivateFloatingButton()
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             return
         }
@@ -1096,6 +1097,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 
     func didCancel() {
         if isFlowController {
+            deactivateFloatingButton()
             flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: true)
         } else {
             paymentSheetDelegate?.paymentSheetViewControllerDidCancel(self)

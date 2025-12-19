@@ -773,6 +773,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
+            
         }
     }
 }
