@@ -68,15 +68,6 @@ class ConfirmButton: UIView {
         }
     }
 
-    var font: UIFont? {
-        get {
-            return buyButton.font
-        }
-        set {
-            buyButton.font = newValue
-        }
-    }
-
     private(set) var status: Status = .enabled
     private(set) var callToAction: CallToActionType
 
@@ -108,17 +99,8 @@ class ConfirmButton: UIView {
         self.didTap = didTap
         self.didTapWhenDisabled = didTapWhenDisabled
         super.init(frame: .zero)
-
-        directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-        // primaryButton.backgroundColor takes priority over appearance.colors.primary
-        tintColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
-        layer.applyShadow(shadow: appearance.primaryButton.shadow?.asElementThemeShadow ?? appearance.shadow.asElementThemeShadow)
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
-        font = appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
-        buyButton.titleLabel.sizeToFit()
         addAndPinSubview(buyButton)
 
-        applyCornerRadius()
         update()
 
         NotificationCenter.default.addObserver(self,
@@ -206,23 +188,9 @@ class ConfirmButton: UIView {
         }
     }
 
-    private func applyCornerRadius() {
-        if let cornerRadius = appearance.primaryButton.cornerRadius {
-            // Use primary button corner radius
-            buyButton.layer.cornerRadius = cornerRadius
-        } else {
-            buyButton.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
-        }
-    }
-
     // MARK: - BuyButton
 
     class BuyButton: UIControl {
-        var font: UIFont? {
-            didSet {
-                titleLabel.font = font
-            }
-        }
 
         /// Background color for the `.disabled` state.
         var disabledBackgroundColor: UIColor {
@@ -273,9 +241,14 @@ class ConfirmButton: UIView {
         lazy var titleLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
-            label.font = .preferredFont(forTextStyle: .callout, weight: .medium, maximumPointSize: 25)
+            label.font = appearance.primaryButton.font ?? appearance.scaledFont(
+                for: appearance.font.base.medium,
+                style: .callout,
+                maximumPointSize: 25
+            )
             label.textColor = .white
             label.adjustsFontForContentSizeCategory = true
+            label.sizeToFit()
             return label
         }()
         lazy var lockIcon: UIImageView = {
@@ -322,9 +295,18 @@ class ConfirmButton: UIView {
             self.showProcessingLabel = showProcessingLabel
             self.appearance = appearance
             super.init(frame: .zero)
+
+            directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
+            // primaryButton.backgroundColor takes priority over appearance.colors.primary
+            tintColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
+            layer.applyShadow(shadow: appearance.primaryButton.shadow?.asElementThemeShadow ?? appearance.shadow.asElementThemeShadow)
+            layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
+
             preservesSuperviewLayoutMargins = true
             layer.masksToBounds = true
             layer.borderWidth = appearance.primaryButton.borderWidth
+
+            applyCornerRadius()
 
             isAccessibilityElement = true
 
@@ -521,6 +503,15 @@ class ConfirmButton: UIView {
                     // Assumes this is only true once in ConfirmButton's lifetime
                     self.animateSuccess()
                 }
+            }
+        }
+
+        private func applyCornerRadius() {
+            if let cornerRadius = appearance.primaryButton.cornerRadius {
+                // Use primary button corner radius
+                layer.cornerRadius = cornerRadius
+            } else {
+                applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
             }
         }
 
