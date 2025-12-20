@@ -331,8 +331,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
             if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
                 self.primaryButtonTopAnchorConstraint.isActive = false
-                self.primaryButtonTopAnchorConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hasLabelInStackView ? -20 : -32)
-                self.primaryButtonTopAnchorConstraint.isActive = true
+                if !self.isButtonFloating {
+                    self.primaryButtonTopAnchorConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: -self.buttonSpacing)
+                    self.primaryButtonTopAnchorConstraint.isActive = true
+                }
             }
         }
     }
@@ -495,14 +497,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         fatalError("init(coder:) has not been implemented")
     }
 
-    private var floatingButtonContainer: UIView?
     private var bottomSpacer: UIView?
     private var stackViewBottomConstraint: NSLayoutConstraint!
     private var primaryButtonTopAnchorConstraint: NSLayoutConstraint!
     private var primaryButtonBottomConstraint: NSLayoutConstraint!
     private var primaryButtonFloatingBottomConstraint: NSLayoutConstraint!
     private var isButtonFloating: Bool = false
-    private let stackViewSpacing: CGFloat = 20
+    private var buttonSpacing: CGFloat {
+        mandateView.attributedText == nil && errorLabel.text == nil ? 32 : 20
+    }
 
     // MARK: - UIViewController Methods
     override func viewDidLoad() {
@@ -517,7 +520,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stackView.addArrangedSubview(view)
         }
 
-        stackView.spacing = stackViewSpacing
+        stackView.spacing = 20
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
@@ -528,7 +531,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
-        primaryButtonTopAnchorConstraint = stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: mandateView.attributedText == nil && errorLabel.text == nil ? -32 : -20)
+        primaryButtonTopAnchorConstraint = stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -buttonSpacing)
         primaryButtonBottomConstraint = primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom)
 
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -546,102 +549,56 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private func updateFloatingButton() {
-        guard let scrollView = bottomSheetController?.scrollView else {
+        guard let scrollView = bottomSheetController?.scrollView, view.window != nil else {
             return
         }
 
-        // Check if the button's natural bottom position is below the visible area
-        let buttonBottomY = view.bounds.height - configuration.appearance.formInsets.bottom
-        let buttonBottomInScrollView = view.convert(CGPoint(x: 0, y: buttonBottomY), to: scrollView).y
-        let scrollViewVisibleBottom = scrollView.bounds.maxY
+        // Use scroll view's content size to determine if button needs to float
+        let contentHeight = scrollView.contentSize.height
+        let scrollViewVisibleHeight = scrollView.bounds.height
 
-        let shouldFloat = buttonBottomInScrollView > scrollViewVisibleBottom
+        let shouldFloat = contentHeight > scrollViewVisibleHeight
 
         if shouldFloat {
             activateFloatingButton()
         } else {
             deactivateFloatingButton()
         }
-
-    }
-
-    private func setupFloatingButtonContainer() {
-        guard let bottomSheet = bottomSheetController else { return }
-
-        // Create floating button container
-        let container = UIView()
-        container.translatesAutoresizingMaskIntoConstraints = false
-
-        bottomSheet.view.addSubview(container)
-
-        let containerHeight = primaryButton.intrinsicContentSize.height + configuration.appearance.formInsets.bottom
-
-        NSLayoutConstraint.activate([
-            container.leadingAnchor.constraint(equalTo: bottomSheet.view.leadingAnchor),
-            container.trailingAnchor.constraint(equalTo: bottomSheet.view.trailingAnchor),
-            container.bottomAnchor.constraint(equalTo: bottomSheet.view.safeAreaLayoutGuide.bottomAnchor),
-            container.heightAnchor.constraint(equalToConstant: containerHeight),
-        ])
-
-        self.floatingButtonContainer = container
     }
 
     private func activateFloatingButton() {
-        guard !isButtonFloating else {
+        guard !isButtonFloating, let bottomSheet = bottomSheetController else {
             return
         }
 
-        setupFloatingButtonContainer()
+        NSLayoutConstraint.deactivate([
+            primaryButtonTopAnchorConstraint,
+            primaryButtonBottomConstraint,
+        ])
 
-        // Capture current position in window coordinates
-        guard let window = primaryButton.window else { return }
-        let oldFrame = primaryButton.convert(primaryButton.bounds, to: window)
+        // Create floating constraint
+        primaryButtonFloatingBottomConstraint = primaryButton.bottomAnchor.constraint(equalTo: bottomSheet.view.safeAreaLayoutGuide.bottomAnchor)
+
+        NSLayoutConstraint.activate([
+            primaryButtonFloatingBottomConstraint,
+            stackViewBottomConstraint,
+        ])
 
         // Add bottom spacer to allow scrolling past content
         if let bottomSpacer {
-            if !stackView.arrangedSubviews.contains(bottomSpacer) {
-                stackView.addArrangedSubview(bottomSpacer)
-            }
+            stackView.addArrangedSubview(bottomSpacer)
         } else {
-            // Create and add bottom spacer to allow scrolling past content
             let spacer = UIView()
             spacer.translatesAutoresizingMaskIntoConstraints = false
             let buttonHeight = primaryButton.intrinsicContentSize.height
-            let totalBottomPadding = buttonHeight + configuration.appearance.formInsets.bottom + stackViewSpacing
+            let totalBottomPadding = buttonHeight + configuration.appearance.formInsets.bottom + buttonSpacing
             spacer.heightAnchor.constraint(equalToConstant: totalBottomPadding).isActive = true
             self.bottomSpacer = spacer
             stackView.addArrangedSubview(spacer)
         }
 
-        // Perform reparenting
-        guard let container = floatingButtonContainer else { return }
-
-        NSLayoutConstraint.deactivate([primaryButtonTopAnchorConstraint, primaryButtonBottomConstraint])
-
-        // Reparent button to floating container
-        primaryButton.removeFromSuperview()
-        container.addSubview(primaryButton)
-
-        // Create floating constraints
-        primaryButtonFloatingBottomConstraint = primaryButton.bottomAnchor.constraint(equalTo: container.bottomAnchor)
-
-        NSLayoutConstraint.activate([
-            primaryButton.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.appearance.formInsets.leading),
-            primaryButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
-            primaryButtonFloatingBottomConstraint,
-            stackViewBottomConstraint,
-        ])
-
-        // Get new position
-        container.superview?.layoutIfNeeded()
-        let newFrame = primaryButton.convert(primaryButton.bounds, to: window)
-
-        // Animate from old position to new position
-        let offset = oldFrame.origin.y - newFrame.origin.y
-        primaryButton.transform = CGAffineTransform(translationX: 0, y: offset)
-
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
-            self.primaryButton.transform = .identity
+        UIView.animate(withDuration: 0.3) {
+            bottomSheet.view.layoutIfNeeded()
         }
 
         isButtonFloating = true
@@ -652,41 +609,26 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return
         }
 
-        // Capture current position in window coordinates
-        guard let window = primaryButton.window else { return }
-        let oldFrame = primaryButton.convert(primaryButton.bounds, to: window)
+        // Remove bottom spacer when not floating
+        if let bottomSpacer, stackView.arrangedSubviews.contains(bottomSpacer) {
+            stackView.removeArrangedSubview(bottomSpacer)
+        }
 
         // Move button back to normal position
-        NSLayoutConstraint.deactivate([primaryButtonFloatingBottomConstraint, stackViewBottomConstraint])
+        NSLayoutConstraint.deactivate([
+            primaryButtonFloatingBottomConstraint,
+            stackViewBottomConstraint,
+        ])
 
-        // Reparent button back to original view
-        primaryButton.removeFromSuperview()
-        view.addSubview(primaryButton)
-        floatingButtonContainer?.removeFromSuperview()
+        primaryButtonTopAnchorConstraint = stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -buttonSpacing)
 
         NSLayoutConstraint.activate([
-            primaryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: configuration.appearance.formInsets.leading),
-            primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
             primaryButtonTopAnchorConstraint,
             primaryButtonBottomConstraint,
         ])
 
-        // Remove bottom spacer when not floating
-        if let bottomSpacer, stackView.arrangedSubviews.contains(bottomSpacer) {
-            stackView.removeArrangedSubview(bottomSpacer)
-            bottomSpacer.removeFromSuperview()
-        }
-
-        // Get new position
-        view.layoutIfNeeded()
-        let newFrame = primaryButton.convert(primaryButton.bounds, to: window)
-
-        // Animate from old position to new position
-        let offset = oldFrame.origin.y - newFrame.origin.y
-        primaryButton.transform = CGAffineTransform(translationX: 0, y: offset)
-
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
-            self.primaryButton.transform = .identity
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
         }
 
         isButtonFloating = false
@@ -742,8 +684,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         logInitialDisplayedPaymentMethods()
         isLinkWalletButtonSelected = false
         linkConfirmOption = nil
-
-        // Setup floating button after view hierarchy is established
         updateFloatingButton()
     }
 
