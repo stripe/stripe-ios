@@ -338,7 +338,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
             let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
             if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
-                self.primaryButtonTopAnchorConstraint.constant = -buttonSpacing
+                self.primaryButtonTopAnchorConstraint.constant = -self.buttonSpacing
             }
         }
     }
@@ -361,12 +361,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateFloatingButton() {
-        guard view.window != nil else {
+        guard isViewLoaded, view.window != nil else {
             return
         }
-        // Force layout to complete before measuring to avoid incorrect decisions during animations
-        view.layoutIfNeeded()
-        bottomSheetController?.scrollView.layoutIfNeeded()
+        // Skip floating button updates when the keyboard is visible
+        guard !isKeyboardVisible else {
+            return
+        }
 
         if shouldButtonFloat {
             activateFloatingButton()
@@ -580,6 +581,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private var primaryButtonBottomConstraint: NSLayoutConstraint!
     private var primaryButtonFloatingBottomConstraint: NSLayoutConstraint!
     private var isButtonFloating: Bool = false
+    private var isKeyboardVisible: Bool = false
     private var shouldButtonFloat: Bool {
         guard let scrollView = bottomSheetController?.scrollView else {
             return false
@@ -630,6 +632,18 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButtonTopAnchorConstraint,
             primaryButtonBottomConstraint,
         ])
+
+        // Observe keyboard to prevent floating state changes when the keyboard is visible
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc private func keyboardWillShow() {
+        isKeyboardVisible = true
+    }
+
+    @objc private func keyboardWillHide() {
+        isKeyboardVisible = false
     }
 
     private var canPresentLinkOnPrimaryButton: Bool {
