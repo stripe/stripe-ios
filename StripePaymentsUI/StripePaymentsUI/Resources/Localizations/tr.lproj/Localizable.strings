@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%2$@ ile biten %1$@ hesabınız";
 
-"%1$@ and %2$@" = "%1$@ ve %2$@";
-
 "%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
 
 "%1$@ is not accepted" = "%1$@ kabul edilmiyor";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "%@ kodunuzu onaylayın";
 
-"Credit" = "Kredi";
-
-"Debit" = "Borç";
-
 "Invalid data." = "Geçersiz veri.";
 
 "MM / YY" = "AA / YY";
 
 "MM/YY" = "AA/YY";
 
-"Only %1$@ cards are accepted" = "Yalnızca %1$@ kartlar kabul edilir";
+"Only credit and prepaid cards are accepted" = "Yalnızca kredi ve ön ödemeli kartlar kabul edilir";
+
+"Only credit cards are accepted" = "Yalnızca kredi kartları kabul edilir";
+
+"Only debit and credit cards are accepted" = "Yalnızca bankamatik ve kredi kartları kabul edilir";
+
+"Only debit and prepaid cards are accepted" = "Yalnızca bankamatik ve ön ödemeli kartlar kabul edilir";
+
+"Only debit cards are accepted" = "Yalnızca bankamatik kartları kabul edilir";
+
+"Only prepaid cards are accepted" = "Yalnızca ön ödemeli kartlar kabul edilir";
 
 "Postal Code" = "Posta Kodu";
-
-"Prepaid" = "Ön ödemeli";
 
 "Shipping Address" = "Gönderi Adresi";
 

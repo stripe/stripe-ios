@@ -30,10 +30,6 @@
 
 "Confirm your %@" = "確認您的 %@";
 
-"Credit" = "信用卡";
-
-"Debit" = "簽帳卡";
-
 "Invalid data." = "數據無效。";
 
 "MM / YY" = "月份/年份";
@@ -41,8 +37,6 @@
 "MM/YY" = "月份/年份";
 
 "Postal Code" = "郵遞區號";
-
-"Prepaid" = "預付卡";
 
 "Shipping Address" = "收貨地址";
 

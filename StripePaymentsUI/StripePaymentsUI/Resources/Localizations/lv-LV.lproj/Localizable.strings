@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%1$@konts, kas beidzas ar%2$@";
 
-"%1$@ and %2$@" = "%1$@ un %2$@";
-
 "%1$@ ending in %2$@" = "%1$@, kuras numura pēdējie cipari ir %2$@";
 
 "%1$@ is not accepted" = "%1$@ netiek pieņemts";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Apstipriniet savu %@";
 
-"Credit" = "Kredīta";
-
-"Debit" = "Debeta";
-
 "Invalid data." = "Nederīgi dati.";
 
 "MM / YY" = "MM/GG";
 
 "MM/YY" = "MM/GG";
 
-"Only %1$@ cards are accepted" = "Tiek pieņemtas tikai %1$@ kartes";
+"Only credit and prepaid cards are accepted" = "Tiek pieņemtas tikai kredītkartes un priekšapmaksas kartes";
+
+"Only credit cards are accepted" = "Tiek pieņemtas tikai kredītkartes";
+
+"Only debit and credit cards are accepted" = "Tiek pieņemtas tikai debetkartes un kredītkartes";
+
+"Only debit and prepaid cards are accepted" = "Tiek pieņemtas tikai debetkartes un priekšapmaksas kartes";
+
+"Only debit cards are accepted" = "Tiek pieņemtas tikai debetkartes";
+
+"Only prepaid cards are accepted" = "Tiek pieņemtas tikai priekšapmaksas kartes";
 
 "Postal Code" = "Pasta indekss";
-
-"Prepaid" = "Priekšapmaksas";
 
 "Shipping Address" = "Piegādes adrese";
 
