@@ -556,6 +556,8 @@ class ConfirmButton: UIView {
             }
 
             // if foreground is set prefer that over a dynamic contrasting color in all other states
+            // Note: With the default .systemBlue button color in dark mode, background.contrastingColor is white
+            //      in iOS <26 and black in iOS >26 due to system color changes. This is expected and intended.
             return overriddenForegroundColor ?? background.contrastingColor
         }
 
