@@ -20,7 +20,12 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Card"].waitForExistenceAndTap()
 
         try! fillCardData(app)
-        app.buttons["Pay €50.99"].tap()
+        let primaryButton = app.buttons["Pay €50.99"]
+        // Wait for animation to complete before checking isHittable
+        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(primaryButton.isHittable)
+        primaryButton.tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
@@ -38,6 +43,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
         paymentMethodButton.waitForExistenceAndTap()
         let continueButton = app.buttons["Continue"]
+        // Wait for animation to complete before checking isHittable
+        var expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: continueButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(continueButton.isHittable)
 
         // Select Cash App Pay - FC paymentOption should change to it
         app.buttons["Cash App Pay"].tap()
@@ -73,6 +82,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.textFields["Card number"].clearText()
         // Finish the card payment
         try! fillCardData(app, cardNumber: "4242424242424242", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
+        expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: continueButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(continueButton.isHittable)
         continueButton.tap()
         XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         app.buttons["Confirm"].tap()
@@ -90,6 +102,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Add a SEPA Debit PM
         app.buttons["SEPA Debit"].tap()
         try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
+        expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: continueButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(continueButton.isHittable)
         continueButton.tap()
         XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
@@ -128,7 +143,11 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Switch to the saved card...
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["•••• 4242"].waitForExistenceAndTap()
-        app.buttons["Continue"].tap() // For some reason, waitForExistenceAndTap() does not tap this!
+        let continueButton2 = app.buttons["Continue"]
+        expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: continueButton2)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(continueButton2.isHittable)
+        continueButton2.tap() // For some reason, waitForExistenceAndTap() does not tap this!
         XCTAssertEqual(
             // filter out async passive captcha and attestation logs
             analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
@@ -165,13 +184,21 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Try Alipay
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         app.buttons["Alipay"].waitForExistenceAndTap()
-        app.buttons["Pay $50.99"].tap()
+        let primaryButton = app.buttons["Pay $50.99"]
+        // Wait for animation to complete before checking isHittable
+        var expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(primaryButton.isHittable)
+        primaryButton.tap()
         // Cancel
         XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 10))
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
-        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
+        XCTAssertTrue(primaryButton.waitForExistence(timeout: 1))
         // Fail payment
-        app.buttons["Pay $50.99"].tap()
+        expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(primaryButton.isHittable)
+        primaryButton.tap()
         app.waitForButtonOrStaticText("FAIL TEST PAYMENT").tap()
         let errorMessage = app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."]
         XCTAssertTrue(errorMessage.waitForExistence(timeout: 10))
@@ -180,7 +207,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Cash App Pay"].waitForExistenceAndTap()
         // Validate error disappears
         XCTAssertFalse(errorMessage.waitForExistence(timeout: 0.1))
-        app.buttons["Pay $50.99"].tap()
+        expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(primaryButton.isHittable)
+        primaryButton.tap()
         app.waitForButtonOrStaticText("AUTHORIZE TEST PAYMENT").tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
@@ -330,7 +360,12 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.switches["Save payment details to Example, Inc. for future purchases"].waitForExistenceAndTap()
-        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        let primaryButton = app.buttons["Pay $50.99"]
+        // Wait for animation to complete before checking isHittable
+        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(primaryButton.isHittable)
+        primaryButton.waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -366,7 +401,12 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.switches["Save payment details to Example, Inc. for future purchases"].waitForExistenceAndTap()
-        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        let primaryButton = app.buttons["Pay $50.99"]
+        // Wait for animation to complete before checking isHittable
+        var expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(primaryButton.isHittable)
+        primaryButton.waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -377,7 +417,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(successText.exists)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+        expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(primaryButton.isHittable)
+        primaryButton.waitForExistenceAndTap()
 
         XCTAssertTrue(app.staticTexts["Confirm your CVC"].waitForExistence(timeout: 1))
         // CVC field should already be selected
@@ -444,7 +487,12 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
         app.buttons["Done"].tap() // Tap done on keyboard, not sure why it doesn't auto dismiss
-        app.buttons["Continue"].waitForExistenceAndTap()
+        let continueButton = app.buttons["Continue"]
+        // Wait for animation to complete before checking isHittable
+        var expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: continueButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(continueButton.isHittable)
+        continueButton.waitForExistenceAndTap()
         // ...and *updating* to a SetupIntent...
         app.buttons["Setup"].waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
@@ -454,7 +502,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // ...and tapping back into FC should show the card form with the details preserved...
         app.buttons["Payment method"].waitForExistenceAndTap()
         // ...and continuing should once again show the Card selected
-        app.buttons["Continue"].waitForExistenceAndTap() // This implicitly tests that the form is already filled out
+        expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: continueButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(continueButton.isHittable)
+        continueButton.waitForExistenceAndTap() // This implicitly tests that the form is already filled out
         XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
 
         // Going back to payment...
@@ -469,7 +520,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Back"].waitForExistenceAndTap()
         app.buttons["Alipay"].waitForExistenceAndTap()
         app.swipeUp() // scroll to see the Continue button
-        app.buttons["Continue"].waitForExistenceAndTap()
+        expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: continueButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(continueButton.isHittable)
+        continueButton.waitForExistenceAndTap()
         XCTAssertEqual(app.buttons["Payment method"].label, "Alipay, alipay")
         // ...and *updating* to a SetupIntent...
         app.buttons["Setup"].waitForExistenceAndTap()

@@ -3474,7 +3474,14 @@ extension PaymentSheetUITestCase {
         // Confirm
         let confirmButtonText = mode == .payment ? "Pay $50.99" : "Set up"
 
-        app.buttons[confirmButtonText].waitForExistenceAndTap()
+        let confirmButton = app.buttons[confirmButtonText]
+        if vertical {
+            // Wait for animation to complete before checking isHittable
+            let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: confirmButton)
+            XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+            XCTAssertTrue(confirmButton.isHittable)
+        }
+        confirmButton.waitForExistenceAndTap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
@@ -3486,7 +3493,13 @@ extension PaymentSheetUITestCase {
         // Make sure bottom notice mandate is visible
         XCTAssertTrue(app.textViews["By continuing, you agree to authorize payments pursuant to these terms."].exists)
 
-        app.buttons[confirmButtonText].tap()
+        if vertical {
+            // Wait for animation to complete before checking isHittable
+            let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: confirmButton)
+            XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+            XCTAssertTrue(confirmButton.isHittable)
+        }
+        confirmButton.tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
@@ -3536,7 +3549,14 @@ extension PaymentSheetUITestCase {
         // Back to Payment Sheet
         switch uiStyle {
         case .paymentSheet:
-            app.buttons[mode == .setup ? "Set up" : "Pay $50.99"].waitForExistenceAndTap(timeout: 10)
+            let primaryButton = app.buttons[mode == .setup ? "Set up" : "Pay $50.99"]
+            if vertical {
+                // Wait for animation to complete before checking isHittable
+                let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+                XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+                XCTAssertTrue(primaryButton.isHittable)
+            }
+            primaryButton.waitForExistenceAndTap(timeout: 10)
         case .flowController, .embedded:
             // Give time for the dismiss animation
             sleep(2)
