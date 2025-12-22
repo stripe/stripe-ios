@@ -35,9 +35,12 @@ class STPTelemetryClientTest: XCTestCase {
     }
 
     func testAdvancedFraudSignalsSwitch() {
+        STPTelemetryClient._forceShouldSendTelemetryInTests = true
+        XCTAssertTrue(STPTelemetryClient.shouldSendTelemetry())
         XCTAssertTrue(StripeAPI.advancedFraudSignalsEnabled)
         StripeAPI.advancedFraudSignalsEnabled = false
         XCTAssertFalse(StripeAPI.advancedFraudSignalsEnabled)
+        XCTAssertFalse(STPTelemetryClient.shouldSendTelemetry())
     }
 
     func testAddTelemetryFieldsWhenFraudDetectionDataEmpty() {

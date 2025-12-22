@@ -30,6 +30,10 @@ extension UserDefaults {
         }
         set {
             let key = StripePaymentsCoreKeys.fraudDetectionData.rawValue
+            guard let newValue else {
+                removeObject(forKey: key)
+                return
+            }
             do {
                 let data = try JSONEncoder().encode(newValue)
                 setValue(data, forKey: key)

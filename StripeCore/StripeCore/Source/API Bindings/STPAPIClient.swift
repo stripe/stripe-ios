@@ -90,8 +90,14 @@ import UIKit
 
     @_spi(STP) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
 
+    private static var didSendTelemetryDataOnInit: Bool = false
+
     // MARK: Initializers
     override public init() {
+        if !Self.didSendTelemetryDataOnInit {
+            STPTelemetryClient.shared.sendTelemetryData()
+            Self.didSendTelemetryDataOnInit = true
+        }
     }
 
     /// Initializes an API client with the given publishable key.
