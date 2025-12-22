@@ -338,11 +338,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
             let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
             if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
-                if !self.shouldButtonFloat {
-                    self.primaryButtonTopAnchorConstraint.isActive = false
-                    self.primaryButtonTopAnchorConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: -self.buttonSpacing)
-                    self.primaryButtonTopAnchorConstraint.isActive = true
-                }
+                self.primaryButtonTopAnchorConstraint.constant = -buttonSpacing
             }
         }
     }
@@ -368,6 +364,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         guard view.window != nil else {
             return
         }
+        // Force layout to complete before measuring to avoid incorrect decisions during animations
+        view.layoutIfNeeded()
+        bottomSheetController?.scrollView.layoutIfNeeded()
+
         if shouldButtonFloat {
             activateFloatingButton()
         } else {
@@ -612,6 +612,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.sendSubviewToBack(mandateView)
+
         for subview in [stackView, primaryButton] {
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
