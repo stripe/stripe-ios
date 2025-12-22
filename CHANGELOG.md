@@ -1,5 +1,10 @@
 ## X.Y.Z - changes pending release 
 
+## 25.3.1 2025-12-19
+
+### Financial Connections
+* [Fixed] The native Instant Bank Payments flow is now available to more merchants.
+
 ## 25.3.0 2025-12-15
 
 ### PaymentSheet

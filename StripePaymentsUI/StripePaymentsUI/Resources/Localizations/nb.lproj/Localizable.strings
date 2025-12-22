@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%1$@-konto som slutter på %2$@";
 
-"%1$@ and %2$@" = "%1$@ og %2$@";
-
 "%1$@ ending in %2$@" = "%1$@ som slutter på %2$@";
 
 "%1$@ is not accepted" = "%1$@ er ikke godkjent";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Bekreft %@";
 
-"Credit" = "Kreditt";
-
-"Debit" = "Debet";
-
 "Invalid data." = "Ugyldige data.";
 
 "MM / YY" = "MM / ÅÅ";
 
 "MM/YY" = "MM/ÅÅ";
 
-"Only %1$@ cards are accepted" = "Bare %1$@-kort godtas";
+"Only credit and prepaid cards are accepted" = "Bare kredittkort og forhåndsbetalte kort godtas";
+
+"Only credit cards are accepted" = "Bare kredittkort godtas";
+
+"Only debit and credit cards are accepted" = "Bare debet- og kredittkort godtas";
+
+"Only debit and prepaid cards are accepted" = "Bare debetkort og forhåndsbetalte kort godtas";
+
+"Only debit cards are accepted" = "Bare debetkort godtas";
+
+"Only prepaid cards are accepted" = "Bare forhåndsbetalte kort godtas";
 
 "Postal Code" = "Postnummer";
-
-"Prepaid" = "Forhåndsbetalt";
 
 "Shipping Address" = "Forsendelsesadresse";
 

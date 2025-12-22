@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%1$@ účet končiaci na %2$@";
 
-"%1$@ and %2$@" = "%1$@ a %2$@";
-
 "%1$@ ending in %2$@" = "Karta %1$@ s poslednými štyrmi číslami %2$@";
 
 "%1$@ is not accepted" = "%1$@ sa neakceptuje";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Potvrďte svoje číslo %@";
 
-"Credit" = "Kreditná";
-
-"Debit" = "Debetná";
-
 "Invalid data." = "Neplatné údaje.";
 
 "MM / YY" = "MM / RR";
 
 "MM/YY" = "MM/RR";
 
-"Only %1$@ cards are accepted" = "Akceptované sú iba karty %1$@";
+"Only credit and prepaid cards are accepted" = "Akceptujú sa len kreditné a predplatené karty";
+
+"Only credit cards are accepted" = "Akceptujú sa iba kreditné karty";
+
+"Only debit and credit cards are accepted" = "Akceptujú sa iba debetné a kreditné karty";
+
+"Only debit and prepaid cards are accepted" = "Akceptujú sa iba debetné a predplatené karty";
+
+"Only debit cards are accepted" = "Akceptujú sa iba debetné karty";
+
+"Only prepaid cards are accepted" = "Akceptujú sa iba predplatené karty";
 
 "Postal Code" = "PSČ";
-
-"Prepaid" = "Predplatená";
 
 "Shipping Address" = "Dodacia adresa";
 
