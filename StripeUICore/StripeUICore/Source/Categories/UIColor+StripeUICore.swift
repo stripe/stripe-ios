@@ -94,6 +94,8 @@ import UIKit
         // Prefer using a white foreground as long as a minimum contrast threshold is met.
         // Factor the container color to compensate for "local adaptation".
         // https://github.com/w3c/wcag/issues/695
+        // Note: Pre-iOS 26, .systemBlue has a contrastToWhite of >3.6 but after iOS 26 it is <3.6.
+        //      This means that on iOS 26 and later, .systemBlue will switch to black text in dark mode.
         let threshold: CGFloat = isDarkMode ? 3.6 : 2.2
         if contrastRatioToWhite > threshold {
             return .white
