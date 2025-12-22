@@ -330,8 +330,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
             let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
             if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
-                self.primaryButtonTopAnchorConstraint.isActive = false
-                if !self.isButtonFloating {
+                if !self.shouldButtonFloat {
+                    self.primaryButtonTopAnchorConstraint.isActive = false
                     self.primaryButtonTopAnchorConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: -self.buttonSpacing)
                     self.primaryButtonTopAnchorConstraint.isActive = true
                 }
@@ -503,6 +503,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private var primaryButtonBottomConstraint: NSLayoutConstraint!
     private var primaryButtonFloatingBottomConstraint: NSLayoutConstraint!
     private var isButtonFloating: Bool = false
+    private var shouldButtonFloat: Bool {
+        guard let scrollView = bottomSheetController?.scrollView, view.window != nil else {
+            return false
+        }
+
+        // Use scroll view's content size to determine if button needs to float
+        let contentHeight = scrollView.contentSize.height
+        let scrollViewVisibleHeight = scrollView.bounds.height
+
+        return contentHeight > scrollViewVisibleHeight
+    }
     private var buttonSpacing: CGFloat {
         mandateView.attributedText == nil && errorLabel.text == nil ? 32 : 20
     }
@@ -549,17 +560,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private func updateFloatingButton() {
-        guard let scrollView = bottomSheetController?.scrollView, view.window != nil else {
-            return
-        }
-
-        // Use scroll view's content size to determine if button needs to float
-        let contentHeight = scrollView.contentSize.height
-        let scrollViewVisibleHeight = scrollView.bounds.height
-
-        let shouldFloat = contentHeight > scrollViewVisibleHeight
-
-        if shouldFloat {
+        if shouldButtonFloat {
             activateFloatingButton()
         } else {
             deactivateFloatingButton()
@@ -620,7 +621,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stackViewBottomConstraint,
         ])
 
-        primaryButtonTopAnchorConstraint = stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -buttonSpacing)
+        // Update the existing constraint's constant instead of recreating it
+        primaryButtonTopAnchorConstraint.constant = -buttonSpacing
 
         NSLayoutConstraint.activate([
             primaryButtonTopAnchorConstraint,
