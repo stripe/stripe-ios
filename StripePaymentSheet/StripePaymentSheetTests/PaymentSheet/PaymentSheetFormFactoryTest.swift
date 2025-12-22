@@ -1719,8 +1719,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testMissingFormSpec() {
         let expectation = expectation(description: "Load specs")
-        FormSpecProvider.shared.load { _ in
-            expectation.fulfill()
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
         }
         waitForExpectations(timeout: 10)
 
@@ -3080,5 +3082,1622 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return nil
         }
         return wrapper.element
+    }
+
+    // MARK: - Form Spec Payment Method Tests
+
+    // MARK: Afterpay/Clearpay Tests
+
+    func testMakeFormElement_afterpay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+        configuration.billingDetailsCollectionConfiguration.phone = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.afterpayClearpay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["afterpay_clearpay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.afterpayClearpay)
+        )
+        let form = factory.make()
+
+        // Afterpay requires name, email, and billing address, so with .automatic they should appear
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+        let hasAddressSection = allElements.contains { $0 is AddressSectionElement }
+
+        XCTAssertTrue(hasNameField, "Afterpay with .automatic should show name field")
+        XCTAssertTrue(hasEmailField, "Afterpay with .automatic should show email field")
+        XCTAssertTrue(hasAddressSection, "Afterpay with .automatic should show address section")
+    }
+
+    func testMakeFormElement_afterpay_never() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.afterpayClearpay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["afterpay_clearpay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.afterpayClearpay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+        let hasAddressSection = allElements.contains { $0 is AddressSectionElement }
+
+        XCTAssertFalse(hasNameField, "Afterpay with .never should not show name field")
+        XCTAssertFalse(hasEmailField, "Afterpay with .never should not show email field")
+        XCTAssertFalse(hasAddressSection, "Afterpay with .never should not show address section")
+    }
+
+    // MARK: Affirm Tests
+
+    func testMakeFormElement_affirm_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.affirm]),
+            elementsSession: ._testValue(paymentMethodTypes: ["affirm"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.affirm)
+        )
+        let form = factory.make()
+
+        // Affirm has no required fields, so with .automatic nothing should appear
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+        let hasAddressSection = allElements.contains { $0 is AddressSectionElement }
+
+        XCTAssertFalse(hasNameField, "Affirm with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Affirm with .automatic should not show email field")
+        XCTAssertFalse(hasAddressSection, "Affirm with .automatic should not show address section")
+    }
+
+    func testMakeFormElement_affirm_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.affirm]),
+            elementsSession: ._testValue(paymentMethodTypes: ["affirm"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.affirm)
+        )
+        let form = factory.make()
+
+        // Affirm has no required fields, so with .always they should appear
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+        let hasAddressSection = allElements.contains { $0 is AddressSectionElement }
+
+        XCTAssertTrue(hasNameField, "Affirm with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Affirm with .always should show email field")
+        XCTAssertTrue(hasAddressSection, "Affirm with .full address should show address section")
+    }
+
+    // MARK: EPS Tests
+
+    func testMakeFormElement_eps_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.EPS]),
+            elementsSession: ._testValue(paymentMethodTypes: ["eps"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.EPS)
+        )
+        let form = factory.make()
+
+        // EPS requires name and bank selector
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasBankSelector = allElements.contains { $0 is DropdownFieldElement }
+
+        XCTAssertTrue(hasNameField, "EPS with .automatic should show name field")
+        XCTAssertTrue(hasBankSelector, "EPS should show bank selector")
+
+        // Test params update with selector
+        guard let dropdownElement = allElements.first(where: { $0 is DropdownFieldElement }) as? DropdownFieldElement else {
+            XCTFail("Bank selector not found")
+            return
+        }
+        guard let nameElement = allElements.first(where: { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }) as? TextFieldElement else {
+            XCTFail("Name element not found")
+            return
+        }
+
+        nameElement.setText("Test Name")
+        dropdownElement.select(index: 0)
+
+        let params = IntentConfirmParams(type: .stripe(.EPS))
+        let updatedParams = formElement.updateParams(params: params)
+        XCTAssertNotNil(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[name]"])
+        XCTAssertNotNil(updatedParams?.paymentMethodParams.additionalAPIParameters["eps[bank]"])
+    }
+
+    func testMakeFormElement_eps_never() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.EPS]),
+            elementsSession: ._testValue(paymentMethodTypes: ["eps"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.EPS)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasBankSelector = allElements.contains { $0 is DropdownFieldElement }
+
+        XCTAssertFalse(hasNameField, "EPS with .never should not show name field")
+        XCTAssertTrue(hasBankSelector, "EPS should still show bank selector (required by payment method)")
+    }
+
+    // MARK: P24 Tests
+
+    func testMakeFormElement_p24_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.przelewy24]),
+            elementsSession: ._testValue(paymentMethodTypes: ["p24"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.przelewy24)
+        )
+        let form = factory.make()
+
+        // P24 requires name, email, and bank selector
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+        let hasBankSelector = allElements.contains { $0 is DropdownFieldElement }
+
+        XCTAssertTrue(hasNameField, "P24 with .automatic should show name field")
+        XCTAssertTrue(hasEmailField, "P24 with .automatic should show email field")
+        XCTAssertTrue(hasBankSelector, "P24 should show bank selector")
+
+        // Test params update
+        guard let nameElement = allElements.first(where: { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }) as? TextFieldElement else {
+            XCTFail("Name element not found")
+            return
+        }
+        guard let emailElement = allElements.first(where: { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }) as? TextFieldElement else {
+            XCTFail("Email element not found")
+            return
+        }
+
+        nameElement.setText("Test Name")
+        emailElement.setText("test@example.com")
+
+        let params = IntentConfirmParams(type: .stripe(.przelewy24))
+        let updatedParams = formElement.updateParams(params: params)
+        XCTAssertNotNil(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[name]"])
+        XCTAssertNotNil(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[email]"])
+        XCTAssertNotNil(updatedParams?.paymentMethodParams.additionalAPIParameters["p24[bank]"])
+    }
+
+    func testMakeFormElement_p24_never() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.przelewy24]),
+            elementsSession: ._testValue(paymentMethodTypes: ["p24"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.przelewy24)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+        let hasBankSelector = allElements.contains { $0 is DropdownFieldElement }
+
+        XCTAssertFalse(hasNameField, "P24 with .never should not show name field")
+        XCTAssertFalse(hasEmailField, "P24 with .never should not show email field")
+        XCTAssertTrue(hasBankSelector, "P24 should still show bank selector (required by payment method)")
+    }
+
+    // MARK: FPX Tests
+
+    func testMakeFormElement_fpx_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.FPX]),
+            elementsSession: ._testValue(paymentMethodTypes: ["fpx"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.FPX)
+        )
+        let form = factory.make()
+
+        // FPX requires bank selector but address is placeholder
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasBankSelector = allElements.contains { $0 is DropdownFieldElement }
+        let hasAddressSection = allElements.contains { $0 is AddressSectionElement }
+
+        XCTAssertTrue(hasBankSelector, "FPX should show bank selector")
+        XCTAssertFalse(hasAddressSection, "FPX with .automatic should not show address section (placeholder)")
+
+        // Test params update with bank selector
+        guard let dropdownElement = allElements.first(where: { $0 is DropdownFieldElement }) as? DropdownFieldElement else {
+            XCTFail("Bank selector not found")
+            return
+        }
+
+        dropdownElement.select(index: 0)
+        let params = IntentConfirmParams(type: .stripe(.FPX))
+        let updatedParams = formElement.updateParams(params: params)
+        XCTAssertNotNil(updatedParams?.paymentMethodParams.additionalAPIParameters["fpx[bank]"])
+    }
+
+    func testMakeFormElement_fpx_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.FPX]),
+            elementsSession: ._testValue(paymentMethodTypes: ["fpx"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.FPX)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasBankSelector = allElements.contains { $0 is DropdownFieldElement }
+        let hasAddressSection = allElements.contains { $0 is AddressSectionElement }
+
+        XCTAssertTrue(hasBankSelector, "FPX should show bank selector")
+        XCTAssertTrue(hasAddressSection, "FPX with .full should show address section")
+    }
+
+    // MARK: PromptPay Tests
+
+    func testMakeFormElement_promptpay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.phone = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.promptPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["promptpay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.promptPay)
+        )
+        let form = factory.make()
+
+        // PromptPay requires email but name/phone/address are placeholders
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasAddressSection = allElements.contains { $0 is AddressSectionElement }
+
+        XCTAssertTrue(hasEmailField, "PromptPay with .automatic should show email field")
+        XCTAssertFalse(hasNameField, "PromptPay with .automatic should not show name field (placeholder)")
+        XCTAssertFalse(hasAddressSection, "PromptPay with .automatic should not show address section (placeholder)")
+
+        // Test params update
+        guard let emailElement = allElements.first(where: { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }) as? TextFieldElement else {
+            XCTFail("Email element not found")
+            return
+        }
+
+        emailElement.setText("test@example.com")
+        let params = IntentConfirmParams(type: .stripe(.promptPay))
+        let updatedParams = formElement.updateParams(params: params)
+        XCTAssertNotNil(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[email]"])
+    }
+
+    func testMakeFormElement_promptpay_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.promptPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["promptpay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.promptPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasAddressSection = allElements.contains { $0 is AddressSectionElement }
+
+        XCTAssertTrue(hasEmailField, "PromptPay with .always should show email field")
+        XCTAssertTrue(hasNameField, "PromptPay with .always should show name field")
+        XCTAssertTrue(hasAddressSection, "PromptPay with .full should show address section")
+    }
+
+    // MARK: Multibanco Tests
+
+    func testMakeFormElement_multibanco_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.multibanco]),
+            elementsSession: ._testValue(paymentMethodTypes: ["multibanco"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.multibanco)
+        )
+        let form = factory.make()
+
+        // Multibanco requires email
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasEmailField, "Multibanco with .automatic should show email field")
+
+        // Test params update
+        guard let emailElement = allElements.first(where: { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }) as? TextFieldElement else {
+            XCTFail("Email element not found")
+            return
+        }
+
+        emailElement.setText("test@example.com")
+        let params = IntentConfirmParams(type: .stripe(.multibanco))
+        let updatedParams = formElement.updateParams(params: params)
+        XCTAssertNotNil(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[email]"])
+    }
+
+    func testMakeFormElement_multibanco_never() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.email = .never
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.multibanco]),
+            elementsSession: ._testValue(paymentMethodTypes: ["multibanco"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.multibanco)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasEmailField, "Multibanco with .never should not show email field")
+    }
+
+    // MARK: Empty Form Payment Methods Tests
+    // These payment methods have no fields in their specs, so we test:
+    // - With .automatic: no billing details should appear
+    // - With .always: billing details should appear
+
+    func testMakeFormElement_alipay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.alipay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["alipay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.alipay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "Alipay with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Alipay with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_alipay_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.alipay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["alipay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.alipay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "Alipay with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Alipay with .always should show email field")
+    }
+
+    func testMakeFormElement_paynow_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.paynow]),
+            elementsSession: ._testValue(paymentMethodTypes: ["paynow"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.paynow)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "PayNow with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "PayNow with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_paynow_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.paynow]),
+            elementsSession: ._testValue(paymentMethodTypes: ["paynow"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.paynow)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "PayNow with .always should show name field")
+        XCTAssertTrue(hasEmailField, "PayNow with .always should show email field")
+    }
+
+    func testMakeFormElement_grabpay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.grabPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["grabpay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.grabPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "GrabPay with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "GrabPay with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_grabpay_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.grabPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["grabpay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.grabPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "GrabPay with .always should show name field")
+        XCTAssertTrue(hasEmailField, "GrabPay with .always should show email field")
+    }
+
+    func testMakeFormElement_paypal_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.payPal]),
+            elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.payPal)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "PayPal with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "PayPal with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_paypal_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.payPal]),
+            elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.payPal)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "PayPal with .always should show name field")
+        XCTAssertTrue(hasEmailField, "PayPal with .always should show email field")
+    }
+
+    func testMakeFormElement_revolutPay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.revolutPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["revolut_pay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.revolutPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "RevolutPay with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "RevolutPay with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_revolutPay_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.revolutPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["revolut_pay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.revolutPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "RevolutPay with .always should show name field")
+        XCTAssertTrue(hasEmailField, "RevolutPay with .always should show email field")
+    }
+
+    func testMakeFormElement_amazonPay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.amazonPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["amazon_pay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.amazonPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "AmazonPay with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "AmazonPay with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_amazonPay_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.amazonPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["amazon_pay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.amazonPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "AmazonPay with .always should show name field")
+        XCTAssertTrue(hasEmailField, "AmazonPay with .always should show email field")
+    }
+
+    func testMakeFormElement_alma_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.alma]),
+            elementsSession: ._testValue(paymentMethodTypes: ["alma"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.alma)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "Alma with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Alma with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_alma_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.alma]),
+            elementsSession: ._testValue(paymentMethodTypes: ["alma"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.alma)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "Alma with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Alma with .always should show email field")
+    }
+
+    func testMakeFormElement_sunbit_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.sunbit]),
+            elementsSession: ._testValue(paymentMethodTypes: ["sunbit"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.sunbit)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "Sunbit with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Sunbit with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_sunbit_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.sunbit]),
+            elementsSession: ._testValue(paymentMethodTypes: ["sunbit"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.sunbit)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "Sunbit with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Sunbit with .always should show email field")
+    }
+
+    func testMakeFormElement_billie_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.billie]),
+            elementsSession: ._testValue(paymentMethodTypes: ["billie"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.billie)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "Billie with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Billie with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_billie_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.billie]),
+            elementsSession: ._testValue(paymentMethodTypes: ["billie"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.billie)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "Billie with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Billie with .always should show email field")
+    }
+
+    func testMakeFormElement_satispay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.satispay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["satispay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.satispay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "Satispay with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Satispay with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_satispay_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.satispay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["satispay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.satispay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "Satispay with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Satispay with .always should show email field")
+    }
+
+    func testMakeFormElement_crypto_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.crypto]),
+            elementsSession: ._testValue(paymentMethodTypes: ["crypto"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.crypto)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "Crypto with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Crypto with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_crypto_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.crypto]),
+            elementsSession: ._testValue(paymentMethodTypes: ["crypto"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.crypto)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "Crypto with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Crypto with .always should show email field")
+    }
+
+    func testMakeFormElement_mobilepay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mobilePay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["mobilepay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.mobilePay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "MobilePay with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "MobilePay with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_mobilepay_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.mobilePay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["mobilepay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.mobilePay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "MobilePay with .always should show name field")
+        XCTAssertTrue(hasEmailField, "MobilePay with .always should show email field")
+    }
+
+    func testMakeFormElement_zip_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.zip]),
+            elementsSession: ._testValue(paymentMethodTypes: ["zip"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.zip)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "Zip with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Zip with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_zip_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.zip]),
+            elementsSession: ._testValue(paymentMethodTypes: ["zip"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.zip)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "Zip with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Zip with .always should show email field")
+    }
+
+    func testMakeFormElement_twint_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.twint]),
+            elementsSession: ._testValue(paymentMethodTypes: ["twint"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.twint)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "Twint with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "Twint with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_twint_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.twint]),
+            elementsSession: ._testValue(paymentMethodTypes: ["twint"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.twint)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "Twint with .always should show name field")
+        XCTAssertTrue(hasEmailField, "Twint with .always should show email field")
+    }
+
+    func testMakeFormElement_paypay_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.email = .automatic
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.payPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["paypay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.payPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertFalse(hasNameField, "PayPay with .automatic should not show name field")
+        XCTAssertFalse(hasEmailField, "PayPay with .automatic should not show email field")
+    }
+
+    func testMakeFormElement_paypay_always() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.payPay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["paypay"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.payPay)
+        )
+        let form = factory.make()
+
+        guard let formElement = form as? PaymentMethodElementWrapper<FormElement> else {
+            XCTFail("Expected PaymentMethodElementWrapper<FormElement>")
+            return
+        }
+
+        let allElements = formElement.element.getAllUnwrappedSubElements()
+        let hasNameField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Full name" }
+        let hasEmailField = allElements.contains { $0 is TextFieldElement && ($0 as! TextFieldElement).configuration.label == "Email" }
+
+        XCTAssertTrue(hasNameField, "PayPay with .always should show name field")
+        XCTAssertTrue(hasEmailField, "PayPay with .always should show email field")
     }
 }
