@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%1$@-konto som slutar på %2$@";
 
-"%1$@ and %2$@" = "%1$@ och %2$@";
-
 "%1$@ ending in %2$@" = "%1$@ med slutsiffrorna %2$@";
 
 "%1$@ is not accepted" = "%1$@ accepteras inte";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Bekräfta %@";
 
-"Credit" = "Kreditkort";
-
-"Debit" = "Bankkort";
-
 "Invalid data." = "Ogiltiga data.";
 
 "MM / YY" = "MM/ÅÅ";
 
 "MM/YY" = "MM/ÅÅ";
 
-"Only %1$@ cards are accepted" = "Endast %1$@-kort tas emot";
+"Only credit and prepaid cards are accepted" = "Endast kredit- och förbetalda kort godtas";
+
+"Only credit cards are accepted" = "Endast kreditkort godtas";
+
+"Only debit and credit cards are accepted" = "Endast betal- och kreditkort godtas";
+
+"Only debit and prepaid cards are accepted" = "Endast betalkort och förbetalda kort godtas";
+
+"Only debit cards are accepted" = "Endast betalkort godtas";
+
+"Only prepaid cards are accepted" = "Endast förbetalda kort godtas";
 
 "Postal Code" = "Postnummer";
-
-"Prepaid" = "Förbetalt";
 
 "Shipping Address" = "Leveransadress";
 
