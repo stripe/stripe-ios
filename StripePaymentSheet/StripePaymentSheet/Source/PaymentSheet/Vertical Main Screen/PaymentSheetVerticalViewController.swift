@@ -152,8 +152,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private lazy var bottomSpacer: UIView = {
         let spacer = UIView()
         spacer.translatesAutoresizingMaskIntoConstraints = false
-        let buttonHeight = primaryButton.intrinsicContentSize.height
-        let totalBottomPadding = buttonHeight + configuration.appearance.formInsets.bottom + buttonSpacing
+        let buttonHeight = primaryButton.bounds.height
+        let totalBottomPadding = buttonHeight + buttonSpacing - 20 // account for stackView spacing
         spacer.heightAnchor.constraint(equalToConstant: totalBottomPadding).isActive = true
         return spacer
     }()
@@ -420,7 +420,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stackViewBottomConstraint,
         ])
 
-        // Update the existing constraint's constant instead of recreating it
         primaryButtonTopAnchorConstraint.constant = -buttonSpacing
 
         NSLayoutConstraint.activate([
@@ -587,11 +586,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return false
         }
 
-        // Use scroll view's content size to determine if button needs to float
+        // Only float if the top of the button in its natural position would not be visible at all
         let contentHeight = scrollView.contentSize.height
         let scrollViewVisibleHeight = scrollView.bounds.height
 
-        return contentHeight > scrollViewVisibleHeight
+        // Calculate where the button's top would be in its natural (non-floating) position
+        let topOfButtonInNaturalPosition = isButtonFloating ?
+        contentHeight - bottomSpacer.bounds.height + buttonSpacing :
+        contentHeight - primaryButton.bounds.height - configuration.appearance.formInsets.bottom
+
+        return topOfButtonInNaturalPosition > scrollViewVisibleHeight
     }
     private var buttonSpacing: CGFloat {
         mandateView.attributedText == nil && errorLabel.text == nil ? 32 : 20
