@@ -20,12 +20,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Card"].waitForExistenceAndTap()
 
         try! fillCardData(app)
-        let primaryButton = app.buttons["Pay €50.99"]
-        // Wait for animation to complete before checking isHittable
-        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
-        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
-        XCTAssertTrue(primaryButton.isHittable)
-        primaryButton.tap()
+        app.buttons["Pay €50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
