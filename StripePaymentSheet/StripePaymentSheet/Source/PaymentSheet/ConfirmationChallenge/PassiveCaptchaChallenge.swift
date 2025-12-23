@@ -45,8 +45,7 @@ actor PassiveCaptchaChallenge {
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
     var isTokenReady: Bool { // Fetched for the attach analytic. If session is expired, reset before the next fetch.
-        let isSessionExpired = isSessionExpired()
-        if isSessionExpired {
+        if isSessionExpired() {
             self.tokenTask = nil
             self.sessionStartTime = nil
             self._hasToken = false
