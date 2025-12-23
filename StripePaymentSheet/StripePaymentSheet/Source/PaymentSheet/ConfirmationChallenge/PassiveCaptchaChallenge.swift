@@ -48,6 +48,7 @@ actor PassiveCaptchaChallenge {
         let isSessionExpired = isSessionExpired()
         if isSessionExpired {
             self.tokenTask = nil
+            self.sessionStartTime = nil
             self._hasToken = false
         }
         return _hasToken
@@ -127,8 +128,8 @@ actor PassiveCaptchaChallenge {
     }
 
     private func isSessionExpired() -> Bool {
-        // The session starts when we get our first token
-        guard let sessionStartTime else { return false } // If sessionStartTime is nil, then we haven't gotten our first token back yet
+        // The session starts when we get our token
+        guard let sessionStartTime else { return false } // If sessionStartTime is nil, then we haven't gotten our token back yet
         return Date().timeIntervalSince(sessionStartTime) >= hcaptchaFactory.sessionExpiration
     }
 
