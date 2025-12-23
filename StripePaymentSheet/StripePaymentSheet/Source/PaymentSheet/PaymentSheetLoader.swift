@@ -424,7 +424,7 @@ final class PaymentSheetLoader {
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             savedPaymentMethods = elementsSessionPaymentMethods
         } else {
-            savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration)
+            savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration, elementsSession: elementsSession)
         }
 
         // Move default PM to front
@@ -438,22 +438,34 @@ final class PaymentSheetLoader {
             }
         }
 
-        // Hide any saved cards whose brands are not allowed
+        // Hide any saved cards whose brands or funding types are not allowed
+        let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
         return savedPaymentMethods.filter {
-            guard let cardBrand = $0.card?.preferredDisplayBrand else { return true }
-            return configuration.cardBrandFilter.isAccepted(cardBrand: cardBrand)
+            guard let card = $0.card else { return true }
+            // Filter by card brand
+            if !configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) {
+                return false
+            }
+            // Filter by card funding type
+            // If funding is nil, treat it as .other (unknown) and check if that's accepted
+            let fundingType: STPCardFundingType = card.funding.map { STPCard.funding(from: $0) } ?? .other
+            if !cardFundingFilter.isAccepted(cardFundingType: fundingType) {
+                return false
+            }
+            return true
         }
     }
 
-    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) async throws -> [STPPaymentMethod] {
         guard let customerID = configuration.customer?.id,
               case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider else {
             return []
         }
 
-        // We don't support Link payment methods with customer ephemeral keys
-        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link }
+        let orderdPaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
 
+        // We don't support Link payment methods with customer ephemeral keys
+        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && orderdPaymentMethodTypes.contains($0) }
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,

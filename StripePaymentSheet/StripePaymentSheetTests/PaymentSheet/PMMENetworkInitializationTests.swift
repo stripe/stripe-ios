@@ -9,7 +9,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(STP)@testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(STP)@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 
@@ -18,6 +18,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
     // Test publishable keys
     static let usPublishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
     static let frenchPublishableKey = "pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"
+    static let britishPublishableKey = "pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"
     static let usConnectedAccountId = "acct_1SSPcCLmk7lnVRaw"
 
     var downloadManager: DownloadManager!
@@ -90,6 +91,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 ),
             ]),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
+            legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
             appearance: appearance,
             analyticsHelper: actualViewData.analyticsHelper
@@ -142,6 +144,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 altText: "Affirm", code: "affirm"
             )),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=Learn%20more")!,
+            legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50 with {partner}",
             appearance: appearance,
             analyticsHelper: actualViewData.analyticsHelper
@@ -208,6 +211,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 ),
             ]),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
+            legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
             appearance: appearance,
             analyticsHelper: actualViewData.analyticsHelper
@@ -274,6 +278,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 ),
             ]),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
+            legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
             appearance: appearance,
             analyticsHelper: actualViewData.analyticsHelper
@@ -324,6 +329,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 altText: "Klarna", code: "klarna"
             )),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more")!,
+            legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50 with {partner}",
             appearance: appearance,
             analyticsHelper: actualViewData.analyticsHelper
@@ -573,6 +579,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 altText: "Klarna", code: "klarna"
             )),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=FR&currency=EUR&key=\(Self.frenchPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more")!,
+            legalDisclosure: nil,
             promotion: "3 interest-free payments of €16.67 with {partner}",
             appearance: appearance,
             analyticsHelper: actualViewData.analyticsHelper
@@ -635,6 +642,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 ),
             ]),
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=fr&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=En%20savoir%20plus")!,
+            legalDisclosure: nil,
             promotion: "4 paiements de 12,50 $US sans intérêts",
             appearance: appearance,
             analyticsHelper: actualViewData.analyticsHelper
@@ -648,6 +656,59 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             configuration: configuration,
             paymentMethods: "afterpay_clearpay,affirm,klarna",
             contentType: "multi_partner"
+        )
+    }
+
+    func testCreate_britishAccount_klarna_withLegalDisclosure() async {
+        // Given: A configuration with British publishable key and Klarna
+        let appearance = PaymentMethodMessagingElement.Appearance()
+        let britishAPIClient = STPAPIClient(publishableKey: Self.britishPublishableKey)
+        var configuration = PaymentMethodMessagingElement.Configuration(
+            amount: 5000,
+            currency: "gbp",
+            apiClient: britishAPIClient,
+            countryCode: "GB",
+            appearance: appearance
+        )
+        configuration.paymentMethodTypes = [.klarna]
+
+        // When: Creating the element
+        mockAnalyticsClient.reset()
+        let result = await PaymentMethodMessagingElement.create(
+            configuration: configuration,
+            downloadManager: downloadManager,
+            analyticsClient: mockAnalyticsClient
+        )
+
+        // Then: Verify success with legal disclosure text
+        guard case .success(let pmme) = result else {
+            XCTFail("Expected success for British account with Klarna, got \(result)")
+            return
+        }
+
+        let actualViewData = pmme.viewData
+
+        let expectedViewData = PaymentMethodMessagingElement.ViewData(
+            mode: .singlePartner(logo: .init(
+                light: loadTestImage("klarna-logo"),
+                dark: loadTestImage("klarna-logo-dark"),
+                altText: "Klarna", code: "klarna"
+            )),
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=GB&currency=GBP&key=\(Self.britishPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more")!,
+            legalDisclosure: "18+, T&C apply. Credit subject to status.",
+            promotion: "3 interest-free payments of £16.67 with {partner}",
+            appearance: appearance,
+            analyticsHelper: actualViewData.analyticsHelper
+        )
+
+        assertViewDataEqual(actualViewData, expectedViewData)
+
+        // Verify analytics events
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
+            configuration: configuration,
+            paymentMethods: "klarna",
+            contentType: "single_partner"
         )
     }
 
@@ -724,6 +785,9 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
         // Compare info URL
         XCTAssertEqual(actual.infoUrl, expected.infoUrl, "Info URL mismatch", file: file, line: line)
+
+        // Compare legal disclosure
+        XCTAssertEqual(actual.legalDisclosure, expected.legalDisclosure, "Legal disclosure mismatch", file: file, line: line)
 
         // Compare appearance
         XCTAssertEqual(actual.appearance, expected.appearance, "Appearance mismatch", file: file, line: line)

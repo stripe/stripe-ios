@@ -58,6 +58,7 @@ struct PaymentSheetTestPlayground: View {
         }
         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
+        SettingView(setting: $playgroundController.settings.cardFundingAcceptance)
         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
         SettingView(setting: $playgroundController.settings.requireCVCRecollection)
         SettingView(setting: $playgroundController.settings.autoreload)

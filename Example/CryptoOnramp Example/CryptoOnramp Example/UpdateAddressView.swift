@@ -144,7 +144,7 @@ struct UpdateAddressView: View {
         _ titleKey: LocalizedStringKey,
         text: Binding<String>,
         field: Field,
-        autocapitalization: UITextAutocapitalizationType = .none,
+        autocapitalization: UITextAutocapitalizationType = .none
     ) -> some View {
         TextField(titleKey, text: text)
             .textFieldStyle(RoundedBorderTextFieldStyle())

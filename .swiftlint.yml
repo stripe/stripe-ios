@@ -103,3 +103,12 @@ trailing_comma:
 
 generic_type_name:
   max_length: 30          # Maybe remove after initial cleanup.
+
+custom_rules:
+  enum_safe_decodable:
+    name: "Use SafeEnumDecodable for enums"
+    message: "Enums in API Bindings should conform to SafeEnumDecodable or SafeEnumCodable instead of Decodable or Codable to handle unknown values gracefully."
+    regex: 'enum\s+(?!CodingKeys)\w+\s*(<[^>]*>)?\s*:\s*[^{]*(?<!SafeEnum)(Decodable|Codable)\b(?!Key)'
+    severity: error
+    included:
+      - "StripePaymentSheet/StripePaymentSheet/Source/Internal/API Bindings/"

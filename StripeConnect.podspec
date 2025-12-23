@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '25.1.0'
+  s.version                        = '25.3.1'
 
   s.summary                        = 'Use Connect embedded components to add connected account dashboard functionality to your app.'
   s.license                        = { type: 'MIT', file: 'LICENSE' }

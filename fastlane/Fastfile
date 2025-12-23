@@ -49,6 +49,7 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
       sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'StripeIssuing'")
     end
   end
 
@@ -64,6 +65,12 @@ platform :ios do
   lane :stripeios_tests do
     Dir.chdir('..') do
       sh("./ci_scripts/test.rb --scheme StripeiOS --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+  
+  lane :stripeissuing_tests do
+    Dir.chdir('..') do
+      sh("./ci_scripts/test.rb --scheme StripeIssuing --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
@@ -82,7 +89,7 @@ platform :ios do
   private_lane :legacy_tests do |options|
     # TODO(bmelts): would be nice to read these from modules.yaml
     schemes = %w[StripeiOS StripePayments StripePaymentsUI StripePaymentSheet StripeCameraCore StripeCore StripeUICore
-                 StripeApplePay StripeCardScan]
+                 StripeApplePay StripeCardScan StripeIssuing]
 
     schemes << 'StripeConnect' if Gem::Version.new(options[:version]) >= Gem::Version.new('15.0')
 

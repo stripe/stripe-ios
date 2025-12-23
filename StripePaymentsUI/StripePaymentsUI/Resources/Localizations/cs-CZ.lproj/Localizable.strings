@@ -36,6 +36,18 @@
 
 "MM/YY" = "MM/RR";
 
+"Only credit and prepaid cards are accepted" = "Akceptovány jsou pouze kreditní a předplacené karty";
+
+"Only credit cards are accepted" = "Akceptovány jsou pouze kreditní karty";
+
+"Only debit and credit cards are accepted" = "Akceptovány jsou pouze debetní a kreditní karty";
+
+"Only debit and prepaid cards are accepted" = "Akceptovány jsou pouze debetní a předplacené karty";
+
+"Only debit cards are accepted" = "Akceptovány jsou pouze debetní karty";
+
+"Only prepaid cards are accepted" = "Akceptovány jsou pouze předplacené karty";
+
 "Postal Code" = "Poštovní směrovací číslo";
 
 "Shipping Address" = "Dodací adresa";

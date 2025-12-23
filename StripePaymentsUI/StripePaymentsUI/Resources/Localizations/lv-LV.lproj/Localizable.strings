@@ -36,6 +36,18 @@
 
 "MM/YY" = "MM/GG";
 
+"Only credit and prepaid cards are accepted" = "Tiek pieņemtas tikai kredītkartes un priekšapmaksas kartes";
+
+"Only credit cards are accepted" = "Tiek pieņemtas tikai kredītkartes";
+
+"Only debit and credit cards are accepted" = "Tiek pieņemtas tikai debetkartes un kredītkartes";
+
+"Only debit and prepaid cards are accepted" = "Tiek pieņemtas tikai debetkartes un priekšapmaksas kartes";
+
+"Only debit cards are accepted" = "Tiek pieņemtas tikai debetkartes";
+
+"Only prepaid cards are accepted" = "Tiek pieņemtas tikai priekšapmaksas kartes";
+
 "Postal Code" = "Pasta indekss";
 
 "Shipping Address" = "Piegādes adrese";

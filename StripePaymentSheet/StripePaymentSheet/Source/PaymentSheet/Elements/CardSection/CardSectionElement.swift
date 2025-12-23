@@ -44,6 +44,7 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
+    let cardFundingFilter: CardFundingFilter
     private let opensCardScannerAutomatically: Bool
 
     private let linkAppearance: LinkAppearance?
@@ -81,6 +82,7 @@ final class CardSectionElement: ContainerElement {
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         cardBrandFilter: CardBrandFilter = .default,
+        cardFundingFilter: CardFundingFilter = .default,
         opensCardScannerAutomatically: Bool = false,
         linkAppearance: LinkAppearance? = nil
     ) {
@@ -88,6 +90,7 @@ final class CardSectionElement: ContainerElement {
         self.theme = theme
         self.analyticsHelper = analyticsHelper
         self.cardBrandFilter = cardBrandFilter
+        self.cardFundingFilter = cardFundingFilter
         self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
@@ -113,8 +116,12 @@ final class CardSectionElement: ContainerElement {
                 return params
             }
         }
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(defaultValue: defaultValues.pan,
-                                                                                       cardBrandDropDown: cardBrandDropDown?.element, cardFilter: cardBrandFilter), theme: theme) { field, params in
+        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(
+            defaultValue: defaultValues.pan,
+            cardBrandDropDown: cardBrandDropDown?.element,
+            cardBrandFilter: cardBrandFilter,
+            cardFundingFilter: cardFundingFilter
+        ), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
         }
@@ -190,6 +197,7 @@ final class CardSectionElement: ContainerElement {
         }
 
         fetchAndUpdateCardBrands()
+        fetchAndCacheCardFunding()
 
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
@@ -227,6 +235,29 @@ final class CardSectionElement: ContainerElement {
         }
 
         delegate?.didUpdate(element: self)
+    }
+
+    // MARK: - Card funding check
+
+    /// Fetches BIN metadata from the card metadata service and caches it in `STPBINController`.
+    func fetchAndCacheCardFunding() {
+        guard cardFundingFilter != .default else {
+            return
+        }
+        let binPrefix = String(panElement.text.prefix(6))
+        guard panElement.text.count >= 6 else {
+            return
+        }
+
+        STPBINController.shared.retrieveBINRanges(
+            forPrefix: binPrefix,
+            recordErrorsAsSuccess: false,
+            onlyFetchForVariableLengthBINs: false
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            // Trigger re-validation so warningLabel can read the now-cached funding data
+            delegate?.didUpdate(element: self)
+        }
     }
 
     // MARK: Card brand choice

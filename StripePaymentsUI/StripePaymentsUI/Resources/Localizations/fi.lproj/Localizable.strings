@@ -36,6 +36,18 @@
 
 "MM/YY" = "KK/VV";
 
+"Only credit and prepaid cards are accepted" = "Vain luotto- ja prepaid-kortit hyväksytään";
+
+"Only credit cards are accepted" = "Vain luottokortit hyväksytään";
+
+"Only debit and credit cards are accepted" = "Vain pankki- ja luottokortit hyväksytään";
+
+"Only debit and prepaid cards are accepted" = "Vain pankki- ja prepaid-kortit hyväksytään";
+
+"Only debit cards are accepted" = "Vain pankkikortit hyväksytään";
+
+"Only prepaid cards are accepted" = "Vain prepaid-kortit hyväksytään";
+
 "Postal Code" = "Postinumero";
 
 "Shipping Address" = "Lähetysosoite";
