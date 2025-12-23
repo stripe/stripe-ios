@@ -43,6 +43,7 @@ class CardScanningView: UIView {
         }
     }
 
+    private let theme: ElementsAppearance
     private lazy var cardScanner: STPCardScanner? = nil
 
     private static let cardSizeRatio: CGFloat = 2.125 / 3.370  // ID-1 card size (in inches)
@@ -75,7 +76,7 @@ class CardScanningView: UIView {
         let label = UILabel()
         label.text = ""
         label.textAlignment = .center
-        label.font = .preferredFont(forTextStyle: .headline)
+        label.font = theme.fonts.sectionHeader
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -85,7 +86,7 @@ class CardScanningView: UIView {
         label.text = String.Localized.allow_camera_access
         label.textAlignment = .center
         label.numberOfLines = 3
-        label.font = .preferredFont(forTextStyle: .subheadline)
+        label.font = theme.fonts.subheadline
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.isHidden = true
@@ -164,6 +165,7 @@ class CardScanningView: UIView {
     }
 
     init(theme: ElementsAppearance) {
+        self.theme = theme
         super.init(frame: .zero)
         self.setupBlurView()
 

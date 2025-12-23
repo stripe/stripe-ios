@@ -52,7 +52,7 @@ final class AUBECSLegalTermsView: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        textView.font = .preferredFont(forTextStyle: .caption1)
+        textView.font = theme.fonts.caption
     }
 #endif
 
