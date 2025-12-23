@@ -5,8 +5,8 @@
 //  Created by Joyce Qin on 8/21/25.
 //
 
-@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePayments
+@_spi(STP) @testable import StripePaymentSheet
 import XCTest
 
 class PassiveCaptchaChallengeTests: XCTestCase {
