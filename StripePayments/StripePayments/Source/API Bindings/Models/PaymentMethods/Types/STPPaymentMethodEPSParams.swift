@@ -10,13 +10,21 @@ import Foundation
 
 /// An object representing parameters used to create a EPS Payment Method
 public class STPPaymentMethodEPSParams: NSObject, STPFormEncodable {
-    public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+    /// The customer's bank.
+    @objc public var bank: String?
+
+    // MARK: - STPFormEncodable
+    @objc
     public class func rootObjectName() -> String? {
         return "eps"
     }
 
+    @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [:]
+        return [
+            NSStringFromSelector(#selector(getter: bank)): "bank"
+        ]
     }
 }

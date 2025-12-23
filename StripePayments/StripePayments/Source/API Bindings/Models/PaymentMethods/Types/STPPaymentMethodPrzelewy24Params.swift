@@ -12,6 +12,10 @@ import Foundation
 public class STPPaymentMethodPrzelewy24Params: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+    /// The customer's bank.
+    @objc public var bank: String?
+
+    // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
         return "p24"
@@ -19,6 +23,8 @@ public class STPPaymentMethodPrzelewy24Params: NSObject, STPFormEncodable {
 
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [:]
+        return [
+            NSStringFromSelector(#selector(getter: bank)): "bank"
+        ]
     }
 }

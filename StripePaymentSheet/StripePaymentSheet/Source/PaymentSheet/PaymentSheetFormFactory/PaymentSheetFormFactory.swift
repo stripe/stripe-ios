@@ -208,66 +208,102 @@ class PaymentSheetFormFactory {
         case .instantDebits, .linkCardBrand:
             return makeInstantDebits()
         case .external(let externalPaymentOption):
-            return makeExternalPaymentMethodForm(subtitle: externalPaymentOption.displaySubtext,
-                                                 disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection)
-        case .stripe(let paymentMethod):
-            var additionalElements = [Element]()
+            return makeExternalPaymentMethodForm(
+                subtitle: externalPaymentOption.displaySubtext,
+                disableBillingDetailCollection: externalPaymentOption.disableBillingDetailCollection
+            )
+        case .stripe(let stripePaymentMethod):
+            switch (stripePaymentMethod, isSettingUp) {
+            // Payment methods with special behavior based on isSettingUp
+            case (.cashApp, true):
+                return FormElement(elements: [makeCashAppMandate()], theme: theme)
+            case (.cashApp, false):
+                return FormElement(elements: [], theme: theme)
+            case (.payPal, true):
+                return FormElement(elements: [makePaypalMandate()], theme: theme)
+            case (.payPal, false):
+                return FormElement(elements: [], theme: theme)
+            case (.revolutPay, true):
+                return FormElement(elements: [makeRevolutPayMandate()], theme: theme)
+            case (.revolutPay, false):
+                return FormElement(elements: [], theme: theme)
+            case (.amazonPay, true):
+                return FormElement(elements: [makeAmazonPayMandate()], theme: theme)
+            case (.amazonPay, false):
+                return FormElement(elements: [], theme: theme)
+            case (.satispay, true):
+                return FormElement(elements: [makeSatispayMandate()], theme: theme)
+            case (.satispay, false):
+                return FormElement(elements: [], theme: theme)
 
-            // We have two ways to create the form for a payment method
-            // 1. Custom, one-off forms
-            if paymentMethod == .card {
+            // Payment methods with explicit form definitions (isSettingUp handled internally)
+            case (.card, _):
                 return makeCard(linkAppearance: linkAppearance)
-            } else if paymentMethod == .USBankAccount {
+            case (.USBankAccount, _):
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
-            } else if paymentMethod == .UPI {
+            case (.UPI, _):
                 return makeUPI()
-            } else if paymentMethod == .cashApp && isSettingUp {
-                // special case, display mandate for Cash App when setting up or pi+sfu
-                additionalElements = [makeCashAppMandate()]
-            } else if paymentMethod == .payPal && isSettingUp {
-                // Paypal requires mandate when setting up
-                additionalElements = [makePaypalMandate()]
-            } else if paymentMethod == .revolutPay && isSettingUp {
-                // special case, display mandate for revolutPay when setting up or pi+sfu
-                additionalElements = [makeRevolutPayMandate()]
-            } else if paymentMethod == .klarna && isSettingUp {
-                // special case, display mandate for Klarna when setting up or pi+sfu
-                additionalElements = [makeKlarnaMandate()]
-            } else if paymentMethod == .amazonPay && isSettingUp {
-                // special case, display mandate for Amazon Pay when setting up or pi+sfu
-                additionalElements = [makeAmazonPayMandate()]
-            } else if paymentMethod == .satispay && isSettingUp {
-                // special case, display mandate for Satispay when setting up or pi+sfu
-                additionalElements = [makeSatispayMandate()]
-            } else if paymentMethod == .bancontact {
+            case (.bancontact, _):
                 return makeBancontact()
-            } else if paymentMethod == .bacsDebit {
+            case (.bacsDebit, _):
                 return makeBacsDebit()
-            } else if paymentMethod == .blik {
+            case (.blik, _):
                 return makeBLIK()
-            } else if paymentMethod == .OXXO {
-                return  makeOXXO()
-            } else if paymentMethod == .konbini {
+            case (.OXXO, _):
+                return makeOXXO()
+            case (.konbini, _):
                 return makeKonbini()
-            } else if paymentMethod == .boleto {
+            case (.boleto, _):
                 return makeBoleto()
-            } else if paymentMethod == .swish {
+            case (.swish, _):
                 return makeSwish()
-            }
+            case (.przelewy24, _):
+                return makeP24()
+            case (.EPS, _):
+                return makeEPS()
+            case (.FPX, _):
+                return makeFPX()
+            case (.AUBECSDebit, _):
+                return makeAUBECSDebit()
+            case (.afterpayClearpay, _):
+                return makeAfterpayClearpay()
+            case (.affirm, _):
+                return makeAffirm()
+            case (.klarna, _):
+                return makeKlarnaExplicit()
+            case (.promptPay, _):
+                return makePromptPay()
+            case (.multibanco, _):
+                return makeMultibanco()
+            case (.iDEAL, _):
+                return makeiDEAL()
+            case (.SEPADebit, _):
+                return makeSepaDebit()
 
-            guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
-                let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError, error: Error.missingFormSpec, additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
+            // Payment methods with no required fields (but still respect .always config)
+            case (.alma, _),
+                 (.sunbit, _),
+                 (.billie, _),
+                 (.crypto, _),
+                 (.mobilePay, _),
+                 (.zip, _),
+                 (.grabPay, _),
+                 (.alipay, _),
+                 (.paynow, _),
+                 (.twint, _),
+                 (.payPay, _):
+                return makeFormWithOptionalBillingDetails()
+
+            // Fallback for any payment method without an explicit definition
+            default:
+                let errorAnalytic = ErrorAnalytic(
+                    event: .unexpectedPaymentSheetFormFactoryError,
+                    error: Error.missingFormSpec,
+                    additionalNonPIIParams: ["payment_method": stripePaymentMethod.identifier]
+                )
                 analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
             }
-            if paymentMethod == .iDEAL {
-                return makeiDEAL(spec: spec)
-            } else if paymentMethod == .SEPADebit {
-                return makeSepaDebit()
-            }
-
-            // 2. Element-based forms defined in JSON
-            return makeFormElementFromSpec(spec: spec, additionalElements: additionalElements)
         }
     }
 }
@@ -634,31 +670,6 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    func makeiDEAL(spec: FormSpec) -> PaymentMethodElement {
-        let contactSection: Element? = makeContactInformationSection(
-            nameRequiredByPaymentMethod: true,
-            emailRequiredByPaymentMethod: isSettingUp,
-            phoneRequiredByPaymentMethod: false
-        )
-        // Hack: Use the luxe spec to make the dropdown for convenience; it has the latest list of banks
-        let bankDropdown: Element? = spec.fields.reduce(nil) { dropdown, spec in
-            // Find the dropdown spec
-            if case .selector(let spec) = spec {
-                return makeDropdown(for: spec)
-            }
-            return dropdown
-        }
-
-        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
-        let checkboxElement = makeSepaBasedPMCheckbox()
-        let elements: [Element?] = [contactSection, bankDropdown, addressSection, checkboxElement, mandate]
-        return FormElement(
-            autoSectioningElements: elements.compactMap { $0 },
-            theme: theme
-        )
-    }
-
     func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         let isSaving = BoolReference()
         let defaultCheckbox: Element? = {
@@ -758,6 +769,18 @@ extension PaymentSheetFormFactory {
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    /// Creates a form for payment methods with no required fields, but that still respect .always billing configuration
+    func makeFormWithOptionalBillingDetails() -> PaymentMethodElement {
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingAddressElement = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        let elements = [contactInfoSection, billingAddressElement].compactMap { $0 }
+        return FormElement(elements: elements, theme: theme)
     }
 
     // Only show checkbox for PI+SFU & Setup Intent
