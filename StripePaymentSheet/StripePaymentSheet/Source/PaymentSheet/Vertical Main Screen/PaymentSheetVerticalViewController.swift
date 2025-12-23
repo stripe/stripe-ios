@@ -582,7 +582,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private var isButtonFloating: Bool = false
     private var isKeyboardVisible: Bool = false
     private var shouldButtonFloat: Bool {
-        guard let scrollView = bottomSheetController?.scrollView else {
+        // Only float when on the payment method list screen
+        guard let scrollView = bottomSheetController?.scrollView, let paymentMethodListViewController, children.contains(paymentMethodListViewController) else {
             return false
         }
 
