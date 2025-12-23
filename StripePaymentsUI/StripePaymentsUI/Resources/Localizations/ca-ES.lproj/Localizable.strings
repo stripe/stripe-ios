@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "Compte bancari de %1$@ que acaba en %2$@";
 
-"%1$@ and %2$@" = "%1$@ i %2$@";
-
 "%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
 
 "%1$@ is not accepted" = "No s'accepta %1$@";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Confirmeu el vostre %@";
 
-"Credit" = "de crèdit";
-
-"Debit" = "de dèbit";
-
 "Invalid data." = "Dades no vàlides.";
 
 "MM / YY" = "MM / AA";
 
 "MM/YY" = "MM / AA";
 
-"Only %1$@ cards are accepted" = "Només s'accepten les targetes %1$@";
+"Only credit and prepaid cards are accepted" = "Només s'accepten les targetes de crèdit i de prepagament";
+
+"Only credit cards are accepted" = "Només s'accepten les targetes de crèdit";
+
+"Only debit and credit cards are accepted" = "Només s'accepten les targetes de dèbit i de crèdit";
+
+"Only debit and prepaid cards are accepted" = "Només s'accepten les targetes de dèbit i de prepagament";
+
+"Only debit cards are accepted" = "Només s'accepten les targetes de dèbit";
+
+"Only prepaid cards are accepted" = "Només s'accepten les de prepagament";
 
 "Postal Code" = "Codi postal";
-
-"Prepaid" = "de prepagament";
 
 "Shipping Address" = "Adreça d'enviament";
 

@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%1$@ τραπεζικός λογαριασμός που λήγει σε %2$@";
 
-"%1$@ and %2$@" = "%1$@ και %2$@";
-
 "%1$@ ending in %2$@" = "%1$@ λήγει σε %2$@";
 
 "%1$@ is not accepted" = "Η επωνυμία %1$@ δεν είναι αποδεκτή";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Επιβεβαιώστε τον κωδικό %@";
 
-"Credit" = "Πιστωτική";
-
-"Debit" = "Χρεωστική";
-
 "Invalid data." = "Μη έγκυρα δεδομένα.";
 
 "MM / YY" = "ΜΜ / ΕΕ";
 
 "MM/YY" = "ΜΜ/ΕΕ";
 
-"Only %1$@ cards are accepted" = "Μόνο οι κάρτες %1$@ γίνονται αποδεκτές";
+"Only credit and prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο πιστωτικές και προπληρωμένες κάρτες";
+
+"Only credit cards are accepted" = "Γίνονται αποδεκτές μόνο πιστωτικές κάρτες";
+
+"Only debit and credit cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές και πιστωτικές κάρτες";
+
+"Only debit and prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές και προπληρωμένες κάρτες";
+
+"Only debit cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές κάρτες";
+
+"Only prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο οι προπληρωμένες κάρτες";
 
 "Postal Code" = "Ταχυδρομικός κώδικας";
-
-"Prepaid" = "Προπληρωμένη";
 
 "Shipping Address" = "Διεύθυνση αποστολής";
 
