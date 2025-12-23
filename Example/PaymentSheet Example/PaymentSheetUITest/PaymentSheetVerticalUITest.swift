@@ -478,4 +478,17 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // ...should cause Alipay to no longer be the selected payment method, since it is not valid for setup.
         XCTAssertEqual(app.buttons["Payment method"].label, "None")
     }
+
+    func testLongList_floatingButton() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .returning
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        let primaryButton = app.buttons["Pay $50.99"]
+        // Wait for animation to complete before checking isHittable
+        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: primaryButton)
+        XCTAssertEqual(XCTWaiter().wait(for: [expectation], timeout: 5), .completed)
+        XCTAssertTrue(primaryButton.isHittable)
+    }
 }
