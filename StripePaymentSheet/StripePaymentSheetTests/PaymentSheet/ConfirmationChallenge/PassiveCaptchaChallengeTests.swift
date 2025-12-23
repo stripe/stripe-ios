@@ -112,8 +112,8 @@ class PassiveCaptchaChallengeTests: XCTestCase {
         let isReadyBefore = await passiveCaptchaChallenge.isTokenReady
         XCTAssertTrue(isReadyBefore, "Token should be ready after first fetch")
 
-        // Wait for session to expire (5 seconds + small buffer)
-        try await Task.sleep(nanoseconds: 5_500_000_000)
+        // Wait for session to expire
+        try await Task.sleep(nanoseconds: 5_000_000_000)
 
         // Check that isTokenReady triggers reset
         let isReadyAfter = await passiveCaptchaChallenge.isTokenReady
