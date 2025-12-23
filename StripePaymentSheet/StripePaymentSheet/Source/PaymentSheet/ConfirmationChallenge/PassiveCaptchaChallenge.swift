@@ -152,7 +152,7 @@ struct PassiveHCaptchaFactory: HCaptchaFactory {
     // The max_age of the token set on the backend is 1800 seconds, or 30 minutes
     // As a preventative measure, we expire the token a minute early so a user won't send an expired token
     // After 29 minutes, we reset HCaptcha, and on confirmation, we fetch a new token
-    let sessionExpiration: TimeInterval = 10
+    let sessionExpiration: TimeInterval = 29 * 60
 
     func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
         return try HCaptcha(apiKey: siteKey,
