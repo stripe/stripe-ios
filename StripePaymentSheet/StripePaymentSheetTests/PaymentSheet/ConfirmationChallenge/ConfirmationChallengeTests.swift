@@ -241,8 +241,6 @@ class ConfirmationChallengeTests: XCTestCase {
     func testMakeRadarOptionsForCard() async throws {
         let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 30)
-        // wait to make sure that the tokens will be ready by the time we call makeRadarOptions
-        try await Task.sleep(nanoseconds: 6_000_000_000)
         let radarOptions = await confirmationChallenge.makeRadarOptions(for: .card)
         // Card payment methods should return radar options
         XCTAssertNotNil(radarOptions)
@@ -254,8 +252,6 @@ class ConfirmationChallengeTests: XCTestCase {
     func testMakeRadarOptionsForLink() async throws {
         let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 30)
-        // wait to make sure that the tokens will be ready by the time we call makeRadarOptions
-        try await Task.sleep(nanoseconds: 6_000_000_000)
         let radarOptions = await confirmationChallenge.makeRadarOptions(for: .link)
         // Link payment methods should return radar options
         XCTAssertNotNil(radarOptions)
@@ -267,8 +263,6 @@ class ConfirmationChallengeTests: XCTestCase {
     func testMakeRadarOptionsForUSBankAccount() async throws {
         let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 30)
-        // wait to make sure that the tokens would be ready if they were needed
-        try await Task.sleep(nanoseconds: 6_000_000_000)
         let radarOptions = await confirmationChallenge.makeRadarOptions(for: .USBankAccount)
         // US Bank Account payment methods should not return radar options
         XCTAssertNil(radarOptions)
