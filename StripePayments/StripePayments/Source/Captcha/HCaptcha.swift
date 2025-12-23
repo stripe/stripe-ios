@@ -177,7 +177,7 @@ import WebKit
      The reset is achieved by calling `hcaptcha.reset()` on the JS API.
     */
     @objc
-    public func reset() {
+    func reset() {
         Log.debug(".reset")
 
         manager.reset()
