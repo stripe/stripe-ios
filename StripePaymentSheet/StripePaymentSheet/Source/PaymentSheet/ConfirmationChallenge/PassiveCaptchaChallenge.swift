@@ -47,17 +47,21 @@ actor PassiveCaptchaChallenge {
         if isSessionExpired {
             self.tokenTask = nil
             self._hasToken = false
-            self.hcaptcha?.reset()
+            if let hcaptcha = self.hcaptcha {
+                Task { @MainActor in
+                    hcaptcha.reset()
+                }
+            }
         }
         return _hasToken
     }
     private let hcaptchaFactory: HCaptchaFactory
     private var hcaptcha: HCaptcha?
+    private var hcaptchaCreationTask: Task<Void, Error>?
     private var tokenTask: Task<String, Error>?
     private var _hasToken: Bool = false
     private var sessionStartTime: Date?
-
-    private static let sessionExpiration: TimeInterval = 29 * 60
+    private let sessionExpiration: TimeInterval
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
@@ -66,30 +70,41 @@ actor PassiveCaptchaChallenge {
     init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
+        self.sessionExpiration = hcaptchaFactory.sessionExpiration
         Task { [weak self] in // Intentionally not blocking loading/initialization!
-            try await self?.createHCaptcha()
+            _ = try await self?.ensureHCaptchaCreated()
             _ = try await self?.fetchToken()
         }
     }
 
-    private func createHCaptcha() throws {
-        STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: passiveCaptchaData.siteKey)
-        let startTime = Date()
-        do {
-            self.hcaptcha = try hcaptchaFactory.create(siteKey: passiveCaptchaData.siteKey, rqdata: passiveCaptchaData.rqdata)
-        } catch {
-            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
-            throw error
+    private func ensureHCaptchaCreated() async throws {
+        // If we already have a creation task, wait for it
+        if let hcaptchaCreationTask {
+            return try await hcaptchaCreationTask.value
         }
-    }
 
-    private func isSessionExpired() -> Bool {
-        // The session starts when we get our first token
-        guard let sessionStartTime else { return false } // If sessionStartTime is nil, then we haven't gotten our first token back yet
-        return Date().timeIntervalSince(sessionStartTime) >= Self.sessionExpiration
+        // Create the HCaptcha creation task
+        let creationTask = Task<Void, Error> { [weak self] in
+            guard let self else { return }
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: self.passiveCaptchaData.siteKey)
+            let startTime = Date()
+            do {
+                let hcaptcha = try await self.hcaptchaFactory.create(siteKey: self.passiveCaptchaData.siteKey, rqdata: self.passiveCaptchaData.rqdata)
+                await self.setHCaptcha(hcaptcha)
+            } catch {
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: self.passiveCaptchaData.siteKey, duration: Date().timeIntervalSince(startTime))
+                throw error
+            }
+        }
+
+        self.hcaptchaCreationTask = creationTask
+        try await creationTask.value
     }
 
     public func fetchToken() async throws -> String {
+        // Ensure HCaptcha is created before fetching token
+        try await ensureHCaptchaCreated()
+
         if let tokenTask {
             return try await withTaskCancellationHandler {
                 try await tokenTask.value
@@ -146,6 +161,16 @@ actor PassiveCaptchaChallenge {
         }
     }
 
+    private func setHCaptcha(_ hcaptcha: HCaptcha) {
+        self.hcaptcha = hcaptcha
+    }
+
+    private func isSessionExpired() -> Bool {
+        // The session starts when we get our first token
+        guard let sessionStartTime else { return false } // If sessionStartTime is nil, then we haven't gotten our first token back yet
+        return Date().timeIntervalSince(sessionStartTime) >= sessionExpiration
+    }
+
     private func setSessionStartTime(_ sessionStartTime: Date) {
         self.sessionStartTime = sessionStartTime
     }
@@ -159,9 +184,15 @@ actor PassiveCaptchaChallenge {
 // Protocol for creating HCaptcha instances
 protocol HCaptchaFactory {
     func create(siteKey: String, rqdata: String?) throws -> HCaptcha
+    var sessionExpiration: TimeInterval { get }
 }
 
 struct PassiveHCaptchaFactory: HCaptchaFactory {
+    // The max_age of the token set on the backend is 1800 seconds, or 30 minutes
+    // As a preventative measure, we expire the token a minute early so a user won't send an expired token
+    // After 29 minutes, we reset HCaptcha, and on confirmation, we fetch a new token
+    let sessionExpiration: TimeInterval = 29 * 60
+
     func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
         return try HCaptcha(apiKey: siteKey,
                             passiveApiKey: true,
