@@ -59,7 +59,7 @@ extension CustomerSheet {
            case .setupIntent(let setupIntent) = intent {
             Task {
                 confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
-                confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions()
+                confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
                 confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID)
                 let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
                 setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
