@@ -36,6 +36,8 @@ actor ConfirmationChallenge {
     }
 
     public func makeRadarOptions(for paymentMethodType: STPPaymentMethodType) async -> STPRadarOptions? {
+        // for card testing prevention, we only care to create and attach radar options for card payment methods
+        // Link in payment method mode has no means of distinguishing if it's a card or otherwise, so we always include it to be safe
         guard paymentMethodType == .card || paymentMethodType == .link else {
             return nil
         }
