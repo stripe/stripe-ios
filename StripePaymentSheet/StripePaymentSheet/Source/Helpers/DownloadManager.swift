@@ -15,7 +15,8 @@ import UIKit
     public typealias UpdateImageHandler = (UIImage) -> Void
 
     enum Error: Swift.Error {
-        case failedToMakeImageFromData
+        case failedToMakeImageFromData2
+        case non200ResponseCode(statusCode: Int)
     }
 
     public static let sharedManager = DownloadManager()
@@ -94,7 +95,11 @@ extension DownloadManager {
 
     private func downloadImageSkippingCacheRead(url: URL) async throws -> UIImage {
         do {
-            let (data, _) = try await session.data(from: url)
+            let (data, response) = try await session.data(from: url)
+            let httpStatusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+            guard httpStatusCode == 200 else {
+                throw Error.non200ResponseCode(statusCode: httpStatusCode)
+            }
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             Task {
                 // Cache the image in memory
