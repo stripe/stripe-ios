@@ -15,7 +15,7 @@ import UIKit
     public typealias UpdateImageHandler = (UIImage) -> Void
 
     enum Error: Swift.Error {
-        case failedToMakeImageFromData
+        case failedToMakeImageFromData2
         case non200ResponseCode(statusCode: Int)
     }
 
