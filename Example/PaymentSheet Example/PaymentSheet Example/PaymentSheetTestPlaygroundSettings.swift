@@ -108,11 +108,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Amount" }
 
         case _50 = 50
+        case _350 = 350
 
         var displayName: String {
             switch self {
             case ._50:
                 return "50"
+            case ._350:
+                return "350"
             }
         }
         func customDisplayName(currency: Currency) -> String {
@@ -130,6 +133,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case usd
         case eur
+        case cny
         case aud
         case gbp
         case inr
