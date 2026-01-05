@@ -843,47 +843,6 @@ extension PlaygroundController {
         }
     }
 
-    /// Builds the common request body parameters used for both loading backend and creating intents
-    private func buildRequestBody(createCustomerKey: Bool = true) -> [String: Any] {
-        var body = [
-            "customer": customerIdOrType,
-            "currency": settings.currency.rawValue,
-            "amount": settings.amount.rawValue,
-            "merchant_country_code": settings.merchantCountryCode.rawValue,
-            "mode": settings.mode.rawValue,
-            "automatic_payment_methods": settings.apmsEnabled == .on,
-            "use_link": settings.linkPassthroughMode == .pm,
-            "link_mode": settings.linkEnabledMode.rawValue,
-            "use_manual_confirmation": settings.integrationType == .deferred_mc,
-            "require_cvc_recollection": settings.requireCVCRecollection == .on,
-            "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
-            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
-            //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
-        ] as [String: Any]
-        if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
-            body["supported_payment_methods"] = supportedPaymentMethods
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .split(separator: ",")
-                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
-        }
-        if createCustomerKey {
-            body["customer_key_type"] = settings.customerKeyType.rawValue
-            body["customer_session_component_name"] = "mobile_payment_element"
-            body["customer_session_payment_method_save"] = settings.paymentMethodSave.rawValue
-            body["customer_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
-            body["customer_session_payment_method_remove_last"] = settings.paymentMethodRemoveLast.rawValue
-            body["customer_session_payment_method_redisplay"] = settings.paymentMethodRedisplay.rawValue
-            body["customer_session_payment_method_set_as_default"] = settings.paymentMethodSetAsDefault.rawValue
-            if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
-                body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
-            }
-            if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
-                body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
-            }
-        }
-        return body
-    }
-
     func fail(error: Error) {
         self.lastPaymentResult = .failed(error: error)
         self.isLoading = false
@@ -1028,7 +987,7 @@ extension PlaygroundController {
     }
 
     func createIntent() {
-        let body = buildRequestBody(createCustomerKey: false)
+        let body = buildRequestBody(shouldCreateCustomerKey: false)
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             guard
                 error == nil,
@@ -1053,6 +1012,47 @@ extension PlaygroundController {
             let intentID = STPPaymentIntent.id(fromClientSecret: clientSecret) ?? STPSetupIntent.id(fromClientSecret: clientSecret)
             print("Created new stripe intent with id: \(intentID ?? "")")
         }
+    }
+
+    /// Builds the common request body parameters used for both loading backend and creating intents
+    private func buildRequestBody(shouldCreateCustomerKey: Bool = true) -> [String: Any] {
+        var body = [
+            "customer": customerIdOrType,
+            "currency": settings.currency.rawValue,
+            "amount": settings.amount.rawValue,
+            "merchant_country_code": settings.merchantCountryCode.rawValue,
+            "mode": settings.mode.rawValue,
+            "automatic_payment_methods": settings.apmsEnabled == .on,
+            "use_link": settings.linkPassthroughMode == .pm,
+            "link_mode": settings.linkEnabledMode.rawValue,
+            "use_manual_confirmation": settings.integrationType == .deferred_mc,
+            "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
+            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
+            //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
+        ] as [String: Any]
+        if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
+            body["supported_payment_methods"] = supportedPaymentMethods
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .split(separator: ",")
+                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+        }
+        if shouldCreateCustomerKey {
+            body["customer_key_type"] = settings.customerKeyType.rawValue
+            body["customer_session_component_name"] = "mobile_payment_element"
+            body["customer_session_payment_method_save"] = settings.paymentMethodSave.rawValue
+            body["customer_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
+            body["customer_session_payment_method_remove_last"] = settings.paymentMethodRemoveLast.rawValue
+            body["customer_session_payment_method_redisplay"] = settings.paymentMethodRedisplay.rawValue
+            body["customer_session_payment_method_set_as_default"] = settings.paymentMethodSetAsDefault.rawValue
+            if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
+                body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
+            }
+            if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
+                body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
+            }
+        }
+        return body
     }
 }
 
