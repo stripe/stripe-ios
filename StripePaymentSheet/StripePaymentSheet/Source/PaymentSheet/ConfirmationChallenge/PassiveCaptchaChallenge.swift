@@ -44,16 +44,8 @@ actor PassiveCaptchaChallenge {
     let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
     private var tokenTask: Task<String, Error>?
-    var isTokenReady: Bool { // Fetched for the attach analytic. If session is expired, reset before the next fetch.
-        if isSessionExpired() {
-            self.tokenTask = nil
-            self.sessionStartTime = nil
-            self._hasToken = false
-        }
-        return _hasToken
-    }
-    private var _hasToken: Bool = false
-    private var sessionStartTime: Date?
+    var isTokenReady: Bool = false
+    private var expirationResetTask: Task<Void, Never>?
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
@@ -89,7 +81,7 @@ actor PassiveCaptchaChallenge {
                             Task { @MainActor in // MainActor to prevent continuation from different threads
                                 do {
                                     let token = try result.dematerialize()
-                                    await self?.setSessionStartTime(Date())
+                                    await self?.scheduleSessionExpirationReset()
                                     nillableContinuation?.resume(returning: token)
                                     nillableContinuation = nil
                                 } catch {
@@ -126,18 +118,28 @@ actor PassiveCaptchaChallenge {
         }
     }
 
-    private func isSessionExpired() -> Bool {
-        // The session starts when we get our token
-        guard let sessionStartTime else { return false } // If sessionStartTime is nil, then we haven't gotten our token back yet
-        return Date().timeIntervalSince(sessionStartTime) >= hcaptchaFactory.sessionExpiration
+    private func scheduleSessionExpirationReset() {
+        let sessionExpiration = hcaptchaFactory.sessionExpiration
+
+        // Cancel any existing expiration reset task
+        expirationResetTask?.cancel()
+
+        // Schedule a task to automatically reset the token when the session expires
+        expirationResetTask = Task { [sessionExpiration] in
+            try? await Task.sleep(nanoseconds: UInt64(sessionExpiration * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            self.resetSession()
+        }
     }
 
-    private func setSessionStartTime(_ sessionStartTime: Date) {
-        self.sessionStartTime = sessionStartTime
+    private func resetSession() {
+        self.tokenTask = nil
+        self.isTokenReady = false
+        self.expirationResetTask = nil
     }
 
     private func setValidationComplete() {
-        _hasToken = true
+        isTokenReady = true
     }
 
 }
