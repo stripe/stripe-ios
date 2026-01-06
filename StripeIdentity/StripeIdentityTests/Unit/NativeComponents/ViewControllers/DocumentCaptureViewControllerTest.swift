@@ -117,6 +117,70 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
     }
 
+    func testTransitionFromScanningCardFrontLegacyPicksBestFrameWithinBestFrameWindow() {
+        let vc = DocumentCaptureViewController(
+            apiConfig: DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture,
+            initialState: .scanning(.front, nil),
+            sheetController: mockSheetController,
+            cameraSession: mockCameraSession,
+            cameraPermissionsManager: mockCameraPermissionsManager,
+            documentUploader: mockDocumentUploader,
+            anyDocumentScanner: .init(mockDocumentScanner),
+            concurrencyManager: mockConcurrencyManager,
+            appSettingsHelper: mockAppSettingsHelper,
+            avaialableIDTypes: DocumentCaptureViewControllerTest.mockVerificationPage.documentSelect.idDocumentTypeAllowlistKeys,
+            bestFramePicker: .init(window: 1.0)
+        )
+
+        func makeOutput(frontScore: Float) -> DocumentScannerOutput {
+            return makeDocumentScannerOutputLegacyWithIddetectorOutput(
+                .init(
+                    classification: .idCardFront,
+                    documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
+                    allClassificationScores: [
+                        .idCardFront: frontScore
+                    ]
+                )
+            )
+        }
+
+        let outputs = [
+            makeOutput(frontScore: 0.3),
+            makeOutput(frontScore: 0.6),
+            makeOutput(frontScore: 0.4),
+            makeOutput(frontScore: 0.9),
+            makeOutput(frontScore: 0.5),
+        ]
+        let expectedBestOutput = outputs[3]
+
+        for output in outputs {
+            mockCameraFrameCaptured(vc)
+            mockConcurrencyManager.respondToScan(output: output)
+        }
+
+        let windowExp = expectation(description: "Best frame window expired")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+            windowExp.fulfill()
+        }
+        wait(for: [windowExp], timeout: 2)
+
+        // Next frame triggers the pick + upload. Use a lower score so it doesn't replace the best.
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: makeOutput(frontScore: 0.1))
+
+        verify(
+            vc,
+            expectedState: .scanned(.front, UIImage()),
+            expectedButtonState: .enabled
+        )
+        waitForCameraSessionToStop()
+        XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        XCTAssertEqual(mockDocumentUploader.uploadedDocumentScannerOutput, expectedBestOutput)
+    }
+
     func testTransitionFromScannedCardFront() {
         let vc = makeViewController(
             state: .scanned(.front, UIImage())
