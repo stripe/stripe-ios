@@ -38,21 +38,18 @@ class STPPaymentCardTextFieldViewModelTest: XCTestCase {
     }
 
     func testRawExpiration() {
-        // Use current year to ensure test remains valid over time
-        let currentYear = String(format: "%02d", STPCardValidator.currentYear())
-
         // swiftlint:disable:next large_tuple
         let tests: [(String, String, String, String, STPCardValidationState)] = [
             ("", "", "", "", .incomplete),
-            ("12/\(currentYear)", "12/\(currentYear)", "12", currentYear, .valid),
-            ("12\(currentYear)", "12/\(currentYear)", "12", currentYear, .valid),
+            ("12/26", "12/26", "12", "26", .valid),
+            ("1226", "12/26", "12", "26", .valid),
             ("1", "1", "1", "", .incomplete),
             ("2", "02/", "02", "", .incomplete),
             ("12", "12/", "12", "", .incomplete),
             ("12/2", "12/2", "12", "2", .incomplete),
             ("99/23", "99", "99", "23", .invalid),
             ("10/12", "10/12", "10", "12", .invalid),
-            ("12*\(currentYear)", "12/\(currentYear)", "12", currentYear, .valid),
+            ("12*26", "12/26", "12", "26", .valid),
             ("12/*", "12/", "12", "", .incomplete),
             ("*", "", "", "", .incomplete),
         ]
