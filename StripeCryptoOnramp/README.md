@@ -63,7 +63,7 @@ This SDK requires access to the device's camera to capture identity documents. T
 
 ## Manual linking
 
-If you link the Stripe Crypto Onramp library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
+If you link the StripeCryptoOnramp library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
 - `Stripe.xcframework`
 - `Stripe3DS2.xcframework`
 - `StripeApplePay.xcframework`
