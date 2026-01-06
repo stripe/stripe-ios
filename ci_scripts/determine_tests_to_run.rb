@@ -19,22 +19,22 @@ require 'set'
 # Configuration Constants
 # ============================================================================
 
-# Files/directories that when changed should trigger ALL tests
+# Files/directories that when changed should trigger ALL tests (as regexes)
 GLOBAL_TRIGGER_PATTERNS = [
-  'ci_scripts/',
-  'Package.swift',
-  'Package@swift',
-  'Gemfile',
-  'Gemfile.lock',
-  'bitrise.yml',
-  '.swiftlint.yml',
-  'BuildConfigurations/',
-  'fastlane/',
-  'Stripe.xcworkspace/',
-  'modules.yaml',
-  '.github/',
-  'Brewfile',
-  'VERSION'
+  # /^ci_scripts\//,
+  /^Package\.swift$/,
+  /^Gemfile$/,
+  /^Gemfile\.lock$/,
+  # /^bitrise\.yml$/,
+  /^\.swiftlint\.yml$/,
+  /^BuildConfigurations\//,
+  /^fastlane\//,
+  /^Stripe\.xcworkspace\//,
+  /^modules\.yaml$/,
+  /^\.github\//,
+  /^Brewfile$/,
+  /^VERSION$/,
+  /\.podspec$/
 ].freeze
 
 # Mapping from directory name to module name (for special cases)
@@ -124,7 +124,7 @@ class ChangedFileDetector
     @repo_root = repo_root
   end
 
-  # Get list of changed files compared to origin/master
+  # Get list of changed files since merge base with origin/master
   def changed_files
     Dir.chdir(@repo_root) do
       current_branch = `git rev-parse --abbrev-ref HEAD`.strip
@@ -134,21 +134,12 @@ class ChangedFileDetector
         return nil # Signal to run all tests
       end
 
-      # Try to find merge base first (works with full clones)
+      # Same approach as lint_modified_files.sh
       merge_base = `git merge-base origin/master HEAD 2>/dev/null`.strip
 
       if merge_base.empty? || !$?.success?
-        # Shallow clone - compare directly against origin/master
-        # This works because we fetch origin/master before running this script
-        puts 'Using direct comparison to origin/master (shallow clone detected)'
-        files = `git diff --diff-filter=AM --name-only origin/master HEAD 2>/dev/null`.split("\n")
-
-        if !$?.success?
-          warn 'Warning: Could not determine changed files. Running all tests.'
-          return nil
-        end
-
-        return files
+        warn 'Warning: Could not determine merge base. Running all tests.'
+        return nil # Signal to run all tests
       end
 
       files = `git diff --diff-filter=AM --name-only "#{merge_base}"`.split("\n")
@@ -232,9 +223,7 @@ class TestSelector
   private
 
   def global_trigger_file?(file_path)
-    GLOBAL_TRIGGER_PATTERNS.any? do |pattern|
-      file_path.start_with?(pattern) || file_path == pattern.chomp('/')
-    end
+    GLOBAL_TRIGGER_PATTERNS.any? { |pattern| file_path.match?(pattern) }
   end
 
   # Recursively add all modules that depend on the given module
