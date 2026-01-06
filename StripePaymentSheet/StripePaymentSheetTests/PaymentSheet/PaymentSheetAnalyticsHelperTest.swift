@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @_spi(STP)@testable import StripeCoreTestUtils
 @_spi(STP)@testable import StripePayments
-@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) @_spi(SharedPaymentToken) import StripePaymentSheet
+@testable @_spi(STP) @_spi(SharedPaymentToken) import StripePaymentSheet
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 

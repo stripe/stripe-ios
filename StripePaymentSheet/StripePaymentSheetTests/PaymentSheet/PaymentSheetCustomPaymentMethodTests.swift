@@ -8,7 +8,7 @@
 import Foundation
 import XCTest
 
-@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 
 @MainActor

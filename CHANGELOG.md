@@ -1,4 +1,7 @@
-## X.Y.Z - changes pending release 
+## X.Y.Z - changes pending release
+
+### PaymentSheet
+* [Changed] Custom Payment Methods is now generally available.
 
 ## 25.3.1 2025-12-19
 
