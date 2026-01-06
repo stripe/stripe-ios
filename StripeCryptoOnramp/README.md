@@ -2,7 +2,9 @@
 
 StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app to allow your customers to securely purchase and exchange cryptocurrencies. It provides a coordinator that manages Link authentication, know your customer (KYC) and identity verification, payment method collection, and checkout handling while leaving your app in control of most of the surrounding UI and navigation.
 
+> [!IMPORTANT]
 > This SDK is currently in *private preview*. Learn more and request access via the [Stripe docs](https://docs.stripe.com/crypto/onramp/embedded-components).
+
 
 ## Table of contents
 <!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
@@ -18,7 +20,8 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 
 ## Features
 
-**Headless coordinator**: Use `CryptoOnrampCoordinator` to orchestrate an onramp flow with minimal Stripe-provided UI.
+**Headless coordinator**: 
+- Use `CryptoOnrampCoordinator` to orchestrate an onramp flow with minimal Stripe-provided UI
 
 **Link authentication**:
 - Check if an email has a Link account with `hasLinkAccount(with:)`
@@ -39,6 +42,10 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 **Checkout handling**: 
 - Complete purchases for an onramp session with `performCheckout(onrampSessionId:authenticationContext:onrampSessionClientSecretProvider:)`.
 
+**Theming**:
+- The minimal Stripe-provided UI supports light customization via `LinkAppearance`
+- Customize component colors, button properties, and light / dark mode interface styles
+
 ## Requirements
 
 The StripeCryptoOnramp iOS SDK is compatible with apps targeting iOS 13.0 or above.
@@ -50,8 +57,6 @@ The StripeCryptoOnramp iOS SDK is compatible with apps targeting iOS 13.0 or abo
 Get started with Embedded components onramp [📚 iOS integration guide](https://docs.stripe.com/crypto/onramp/embedded-components) and [example project](../Example/CryptoOnramp%20Example), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/stripecryptoonramp/documentation/stripecryptoonramp) for fine-grained documentation of all the classes and methods in the SDK.
 
 This SDK requires access to the device's camera to capture identity documents. To enable your app to request camera permissions, set `NSCameraUsageDescription` in your app's plist and provide a reason for accessing the camera (e.g. "This app uses the camera to take a picture of your identity documents").
-
-
 
 ### Example
 
