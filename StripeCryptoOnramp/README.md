@@ -5,7 +5,6 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 > [!IMPORTANT]
 > This SDK is currently in *private preview*. Learn more and request access via the [Stripe docs](https://docs.stripe.com/crypto/onramp/embedded-components).
 
-
 ## Table of contents
 <!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
 <!--ts-->
