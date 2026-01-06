@@ -96,7 +96,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
   deploy-docs:
@@ -130,7 +130,7 @@ workflows:
         title: Build documentation
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
   deploy-dry-run:
@@ -380,7 +380,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
@@ -446,7 +446,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
   test-builds-xcode-26-release:
     steps:
     - script@1:
@@ -459,7 +459,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-26.1.x
+        stack: osx-xcode-26.2.x
   install-tests:
     steps:
     - fastlane@3:
