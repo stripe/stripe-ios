@@ -124,7 +124,7 @@ class ChangedFileDetector
     @repo_root = repo_root
   end
 
-  # Get list of changed files since merge base with origin/master
+  # Get list of changed files compared to origin/master
   def changed_files
     Dir.chdir(@repo_root) do
       current_branch = `git rev-parse --abbrev-ref HEAD`.strip
@@ -134,12 +134,21 @@ class ChangedFileDetector
         return nil # Signal to run all tests
       end
 
-      # Same approach as lint_modified_files.sh
+      # Try to find merge base first (works with full clones)
       merge_base = `git merge-base origin/master HEAD 2>/dev/null`.strip
 
       if merge_base.empty? || !$?.success?
-        warn 'Warning: Could not determine merge base. Running all tests.'
-        return nil # Signal to run all tests
+        # Shallow clone - compare directly against origin/master
+        # This works because we fetch origin/master before running this script
+        puts 'Using direct comparison to origin/master (shallow clone detected)'
+        files = `git diff --diff-filter=AM --name-only origin/master HEAD 2>/dev/null`.split("\n")
+
+        if !$?.success?
+          warn 'Warning: Could not determine changed files. Running all tests.'
+          return nil
+        end
+
+        return files
       end
 
       files = `git diff --diff-filter=AM --name-only "#{merge_base}"`.split("\n")
