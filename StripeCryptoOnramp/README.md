@@ -59,7 +59,7 @@ This SDK requires access to the device's camera to capture identity documents. T
 
 ### Example
 
-[Crypto Onramp Example](../Example/CryptoOnramp%20Example) – This example demonstrates an end-to-end headless onramp flow (Link authentication, KYC and identity verification, wallet selection, payment method collection, and checkout) using a demo backend.
+[CryptoOnramp Example](../Example/CryptoOnramp%20Example) – This example demonstrates an end-to-end headless onramp flow (Link authentication, KYC and identity verification, wallet selection, payment method collection, and checkout) using a demo backend.
 
 ## Manual linking
 
