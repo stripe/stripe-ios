@@ -3,7 +3,7 @@
 * [Fixed] Improved telemetry used for [advanced fraud signals](https://docs.stripe.com/disputes/prevention/advanced-fraud-detection).
 
 ### PaymentSheet
-* [Changed] Custom Payment Methods is now generally available.
+* [Changed] Custom Payment Methods is now generally available, learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/custom-payment-methods).
 
 ## 25.3.1 2025-12-19
 
