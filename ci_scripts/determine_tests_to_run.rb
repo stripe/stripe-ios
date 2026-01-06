@@ -223,9 +223,6 @@ class TestSelector
       add_downstream_dependents(module_name, modules_to_test)
     end
 
-    # If no modules detected from changes, run all as safety
-    return :all if modules_to_test.empty?
-
     modules_to_test
   end
 
@@ -260,8 +257,11 @@ class BitriseOutputter
   # Output environment variables using envman
   def output_env_vars(modules_to_test)
     if modules_to_test == :all
-      puts 'Running ALL tests (global changes detected or safety fallback)'
+      puts 'Running ALL tests (global changes detected)'
       set_all_modules(true)
+    elsif modules_to_test.empty?
+      puts 'No module changes detected - skipping all module tests'
+      set_all_modules(false)
     else
       puts "Selective testing: #{modules_to_test.to_a.sort.join(', ')}"
       set_selective_modules(modules_to_test)
