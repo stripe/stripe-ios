@@ -610,7 +610,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
         if case .new(let confirmParams) = paymentOption  {
             Task {
-                confirmParams.paymentMethodParams.radarOptions = await self.confirmationChallenge?.makeRadarOptions()
+                confirmParams.paymentMethodParams.radarOptions = await self.confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
                     Task { await self.confirmationChallenge?.complete() }
                     if let error = error {
