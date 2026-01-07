@@ -159,7 +159,7 @@ extension PaymentSheet {
         configuration: PaymentElementConfiguration,
         intentConfig: PaymentSheet.IntentConfiguration,
         allowsSetAsDefaultPM: Bool = false,
-        elementsSession: STPElementsSession,
+        elementsSession: STPElementsSession
     ) -> STPConfirmationTokenParams {
 
         // 1. Initialize confirmation token with basic configuration

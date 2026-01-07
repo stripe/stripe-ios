@@ -721,7 +721,7 @@ extension PaymentSheet {
     static func makePaymentIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
-        configuration: PaymentElementConfiguration,
+        configuration: PaymentElementConfiguration
     ) -> STPPaymentIntentConfirmParams {
         let params: STPPaymentIntentConfirmParams
         let shouldSave: Bool
@@ -779,7 +779,7 @@ extension PaymentSheet {
     static func makeSetupIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
-        configuration: PaymentElementConfiguration,
+        configuration: PaymentElementConfiguration
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
