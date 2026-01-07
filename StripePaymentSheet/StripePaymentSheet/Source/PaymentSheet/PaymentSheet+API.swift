@@ -722,7 +722,6 @@ extension PaymentSheet {
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
         configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil
     ) -> STPPaymentIntentConfirmParams {
         let params: STPPaymentIntentConfirmParams
         let shouldSave: Bool
@@ -767,9 +766,6 @@ extension PaymentSheet {
         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
 
-        if let mandateData = mandateData {
-            params.mandateData = mandateData
-        }
         // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
         if configuration.apiClient.publishableKeyIsUserKey {
             paymentOptions.setMoto()
@@ -784,7 +780,6 @@ extension PaymentSheet {
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
         configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
@@ -817,9 +812,6 @@ extension PaymentSheet {
             if let paymentMethodType = params.paymentMethodType, STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
                 params.mandateData = .makeWithInferredValues()
             }
-        }
-        if let mandateData = mandateData {
-            params.mandateData = mandateData
         }
         // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
         if configuration.apiClient.publishableKeyIsUserKey {
