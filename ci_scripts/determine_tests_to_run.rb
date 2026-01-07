@@ -111,3 +111,8 @@ puts "\nSetting environment variables:"
 modules.each { |m| set_env("RUN_#{m.upcase}", to_test == :all || to_test.include?(m)) }
 # If StripePayments is included, we should also run 3DS2 tests
 set_env('RUN_STRIPE3DS2', to_test == :all || to_test.include?('StripePayments'))
+# TEMPORARY: PaymentSheet tests live in StripeTests, so run Stripe module if PaymentSheet changes
+# TODO: Remove this once PaymentSheet tests are moved to their own module
+if to_test != :all && to_test.include?('StripePaymentSheet')
+  set_env('RUN_STRIPE', true)
+end
