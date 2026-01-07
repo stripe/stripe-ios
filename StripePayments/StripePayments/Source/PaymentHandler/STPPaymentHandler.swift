@@ -1062,6 +1062,13 @@ public class STPPaymentHandler: NSObject {
                 STPPaymentHandler._isProcessingIntentSuccess(for: type)
             {
                 action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
+            } else if let type = paymentIntent.paymentMethod?.type,
+                      type == .card,
+                      let pollingBudget = PollingBudget(startDate: Date(), paymentMethodType: type)
+            {
+                // For cards in processing state (e.g., Orchestration/multiprocessor),
+                // poll until status changes or timeout
+                _pollForCardProcessingStatus(action: action, pollingBudget: pollingBudget)
             } else {
                 action.complete(
                     with: STPPaymentHandlerActionStatus.failed,
@@ -1079,6 +1086,77 @@ public class STPPaymentHandler: NSObject {
             action.complete(with: STPPaymentHandlerActionStatus.canceled, error: nil)
         }
         return false
+    }
+
+    /// Polls for card payment status changes when in processing state (e.g., Orchestration/multiprocessor).
+    /// - Parameters:
+    ///   - action: The current payment intent action params
+    ///   - pollingBudget: Budget controlling polling duration and intervals
+    private func _pollForCardProcessingStatus(
+        action: STPPaymentHandlerPaymentIntentActionParams,
+        pollingBudget: PollingBudget
+    ) {
+        pollingBudget.pollAfter { [weak self] in
+            guard let self else { return }
+
+            self.retrieveOrRefreshPaymentIntent(
+                currentAction: action,
+                timeout: pollingBudget.networkTimeout
+            ) { paymentIntent, error in
+                guard let paymentIntent, error == nil else {
+                    // Network error - retry if budget allows
+                    if pollingBudget.canPoll {
+                        self._pollForCardProcessingStatus(action: action, pollingBudget: pollingBudget)
+                    } else {
+                        action.complete(
+                            with: .failed,
+                            error: error as NSError? ?? self._error(for: .timedOutErrorCode)
+                        )
+                    }
+                    return
+                }
+
+                action.paymentIntent = paymentIntent
+
+                switch paymentIntent.status {
+                case .succeeded, .requiresCapture:
+                    action.complete(with: .succeeded, error: nil)
+
+                case .processing:
+                    if pollingBudget.canPoll {
+                        self._pollForCardProcessingStatus(action: action, pollingBudget: pollingBudget)
+                    } else {
+                        // Polling timed out while still processing
+                        action.complete(
+                            with: .failed,
+                            error: self._error(for: .timedOutErrorCode)
+                        )
+                    }
+
+                case .requiresPaymentMethod:
+                    // Payment failed at the external processor
+                    let lastError = paymentIntent.lastPaymentError
+                    action.complete(
+                        with: .failed,
+                        error: self._error(
+                            for: .paymentErrorCode,
+                            apiErrorCode: lastError?.code,
+                            localizedDescription: lastError?.message
+                        )
+                    )
+
+                case .canceled:
+                    action.complete(with: .canceled, error: nil)
+
+                default:
+                    // For any other status (e.g., requiresAction), delegate to standard handler
+                    let requiresAction = self._handlePaymentIntentStatus(forAction: action)
+                    if requiresAction {
+                        self._handleAuthenticationForCurrentAction()
+                    }
+                }
+            }
+        }
     }
 
     func _handleAuthenticationForCurrentAction() {
