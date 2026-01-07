@@ -721,8 +721,7 @@ extension PaymentSheet {
     static func makePaymentIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
-        configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil
+        configuration: PaymentElementConfiguration
     ) -> STPPaymentIntentConfirmParams {
         let params: STPPaymentIntentConfirmParams
         let shouldSave: Bool
@@ -755,8 +754,9 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            let isSetupFutureUsageOffSession = paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session"
-            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) && isSetupFutureUsageOffSession
+            // Set mandate data if the PM requires it
+            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType)
+                && paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
             {
                 params.mandateData = .makeWithInferredValues()
             }
@@ -766,9 +766,6 @@ extension PaymentSheet {
         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
 
-        if let mandateData = mandateData {
-            params.mandateData = mandateData
-        }
         // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
         if configuration.apiClient.publishableKeyIsUserKey {
             paymentOptions.setMoto()
@@ -782,8 +779,7 @@ extension PaymentSheet {
     static func makeSetupIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
-        configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil
+        configuration: PaymentElementConfiguration
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
@@ -816,9 +812,6 @@ extension PaymentSheet {
             if let paymentMethodType = params.paymentMethodType, STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
                 params.mandateData = .makeWithInferredValues()
             }
-        }
-        if let mandateData = mandateData {
-            params.mandateData = mandateData
         }
         // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
         if configuration.apiClient.publishableKeyIsUserKey {

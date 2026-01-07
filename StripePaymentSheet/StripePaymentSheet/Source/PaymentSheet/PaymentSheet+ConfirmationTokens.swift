@@ -19,7 +19,6 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession,
-        mandateData: STPMandateDataParams? = nil,
         confirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
@@ -28,8 +27,7 @@ extension PaymentSheet {
                                                                         configuration: configuration,
                                                                         intentConfig: intentConfig,
                                                                         allowsSetAsDefaultPM: allowsSetAsDefaultPM,
-                                                                        elementsSession: elementsSession,
-                                                                        mandateData: mandateData)
+                                                                        elementsSession: elementsSession)
 
             let ephemeralKeySecret: String? = {
                 // Only needed when using existing saved payment methods, API will error if provided for new payment methods
@@ -161,8 +159,7 @@ extension PaymentSheet {
         configuration: PaymentElementConfiguration,
         intentConfig: PaymentSheet.IntentConfiguration,
         allowsSetAsDefaultPM: Bool = false,
-        elementsSession: STPElementsSession,
-        mandateData: STPMandateDataParams? = nil
+        elementsSession: STPElementsSession
     ) -> STPConfirmationTokenParams {
 
         // 1. Initialize confirmation token with basic configuration
@@ -216,37 +213,31 @@ extension PaymentSheet {
             }
         }
 
-        // 4. Set mandate data (explicit or auto-generated)
-        if let explicitMandateData = mandateData {
-            // Use explicitly provided mandate data
-            confirmationTokenParams.mandateData = explicitMandateData
-        } else {
-            // Auto-generate mandate data based on payment method and intent requirements
-            let paymentMethodType = Self.paymentMethodType(from: confirmType)
+        // Set mandate data based on payment method and intent requirements
+        let paymentMethodType = Self.paymentMethodType(from: confirmType)
 
-            switch intentConfig.mode {
-            case .payment:
-                // Payment methods that require mandate data when setup_future_usage is "off_session"
-                if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) {
-                    if confirmationTokenParams.setupFutureUsage == .offSession {
-                        confirmationTokenParams.mandateData = .makeWithInferredValues()
-                    }
-                }
+        switch intentConfig.mode {
+        case .payment:
+            // Payment methods that require mandate data when setup_future_usage is set
+            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType)
+                && [.offSession, .onSession].contains(confirmationTokenParams.setupFutureUsage)
+            {
+                confirmationTokenParams.mandateData = .makeWithInferredValues()
+            }
 
-                // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
-                if confirmationTokenParams.mandateData == nil {
-                    confirmationTokenParams.mandateData = STPPaymentIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
-                }
-            case .setup:
-                // Setup intents always require mandate data for certain payment methods
-                if STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
-                    confirmationTokenParams.mandateData = .makeWithInferredValues()
-                }
+            // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
+            if confirmationTokenParams.mandateData == nil {
+                confirmationTokenParams.mandateData = STPPaymentIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
+            }
+        case .setup:
+            // Setup intents always require mandate data for certain payment methods
+            if STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
+                confirmationTokenParams.mandateData = .makeWithInferredValues()
+            }
 
-                // If no mandate data, fallback to STPSetupIntentConfirmParams auto add functionality
-                if confirmationTokenParams.mandateData == nil {
-                    confirmationTokenParams.mandateData = STPSetupIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
-                }
+            // If no mandate data, fallback to STPSetupIntentConfirmParams auto add functionality
+            if confirmationTokenParams.mandateData == nil {
+                confirmationTokenParams.mandateData = STPSetupIntentConfirmParams.mandateDataIfRequired(for: paymentMethodType)
             }
         }
 
