@@ -13,7 +13,6 @@ import XCTest
 @testable@_spi(STP)@_spi(StripeApplePayTokenization) import StripeApplePay
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 

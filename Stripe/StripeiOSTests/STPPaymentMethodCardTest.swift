@@ -10,7 +10,6 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
 import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 private let kCardPaymentIntentClientSecret =

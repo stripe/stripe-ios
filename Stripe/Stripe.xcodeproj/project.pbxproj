@@ -28,11 +28,8 @@
 		162C101E57D66F0051164C4A /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4259421D2CD26E37B96F97B2 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2CD7968DA48F7129E16EA0CB /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 911CA85A1610303FA0AF0643 /* OHHTTPStubsSwift */; };
 		2EB68A59660A4D1E14799DA4 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 62887B4538E4E41E735685E1 /* OHHTTPStubs */; };
-		2F0FC4E67BE577AD66CD1475 /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDC55CC034022DFAC9366E2E /* StripePaymentSheet.framework */; };
 		32874C6147344A9CB2EF4DAD /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33FDC634FD5D79E824240DDC /* Stripe3DS2.framework */; };
 		360EEE8B706D2A4A49666F7A /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22D1C6EB5826E2D7C80B6CF3 /* StripePayments.framework */; };
-		420F8CAB4FAD6D9AF4AF25C0 /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDC55CC034022DFAC9366E2E /* StripePaymentSheet.framework */; };
-		42395EF962DB8AD6A094630B /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DDC55CC034022DFAC9366E2E /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5302F9246A4A6381CB4FB874 /* StripePaymentsTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77247622AB08FEF48CA0DC26 /* StripePaymentsTestUtils.framework */; };
 		5B6F1BF973FC2D8DD6127B7F /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E136A967522048B313E3C62F /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5C51167CC14F653E7117BA61 /* OCMock in Frameworks */ = {isa = PBXBuildFile; productRef = E804AA8C4156CC85FFD9595F /* OCMock */; };
@@ -88,7 +85,6 @@
 				CFDD431A9A8A82BAA11AE5BF /* Stripe3DS2.framework in Embed Frameworks */,
 				CB5AADE45B7B7A40514C054B /* StripeApplePay.framework in Embed Frameworks */,
 				C035D82D7096E3005858848C /* StripeCore.framework in Embed Frameworks */,
-				42395EF962DB8AD6A094630B /* StripePaymentSheet.framework in Embed Frameworks */,
 				BF4A92064926FD7B0E3E92F7 /* StripePayments.framework in Embed Frameworks */,
 				5B6F1BF973FC2D8DD6127B7F /* StripePaymentsUI.framework in Embed Frameworks */,
 				D73B7A0C24EDCA415FFBBB18 /* StripeUICore.framework in Embed Frameworks */,
@@ -185,7 +181,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		31C5F4532EB2ACE1005770FA /* StripeiOSTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F54C2EB2ACE1005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (Resources/MockFiles, ); path = StripeiOSTests; sourceTree = "<group>"; };
+		31C5F4532EB2ACE1005770FA /* StripeiOSTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F54C2EB2ACE1005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = StripeiOSTests; sourceTree = "<group>"; };
 		31C5F5562EB2ACE3005770FA /* StripeiOSTestHostApp */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F55D2EB2ACE3005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = StripeiOSTestHostApp; sourceTree = "<group>"; };
 		31C5F55F2EB2ACE5005770FA /* StripeiOSAppHostedTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = StripeiOSAppHostedTests; sourceTree = "<group>"; };
 		31C5F5792EB2AD0C005770FA /* StripeiOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F58D2EB2AD0C005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = StripeiOS; sourceTree = "<group>"; };
@@ -211,7 +207,6 @@
 			files = (
 				AC7C127B11A60222465F4696 /* XCTest.framework in Frameworks */,
 				D151C8724925DCBA4BA4F46A /* StripeCoreTestUtils.framework in Frameworks */,
-				420F8CAB4FAD6D9AF4AF25C0 /* StripePaymentSheet.framework in Frameworks */,
 				EEA502DF8809B8FD0D00785E /* StripePayments.framework in Frameworks */,
 				E9C690F3629C0AC3CD0260AF /* StripePaymentsObjcTestUtils.framework in Frameworks */,
 				5302F9246A4A6381CB4FB874 /* StripePaymentsTestUtils.framework in Frameworks */,
@@ -229,7 +224,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9291A08CCB34504FCA4B7481 /* XCTest.framework in Frameworks */,
-				2F0FC4E67BE577AD66CD1475 /* StripePaymentSheet.framework in Frameworks */,
 				78B70C2EE8334F0FA91439CA /* Stripe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
