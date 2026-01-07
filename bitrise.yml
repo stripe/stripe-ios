@@ -30,8 +30,6 @@ pipelines:
       triage: {}
       lint-tests:
         abort_on_fail: true
-        depends_on:
-        - triage
       framework-tests:
         depends_on:
         - triage
@@ -52,12 +50,8 @@ pipelines:
         - triage
         run_if:
           expression: '{{ or (enveq "RUN_STRIPE3DS2" "true") (enveq "RUN_STRIPE" "true") (enveq "RUN_STRIPEPAYMENTS" "true") (enveq "RUN_STRIPEPAYMENTSUI" "true") (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPECAMERACORE" "true") (enveq "RUN_STRIPECORE" "true") (enveq "RUN_STRIPECONNECT" "true") (enveq "RUN_STRIPEIDENTITY" "true") (enveq "RUN_STRIPEISSUING" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true") (enveq "RUN_STRIPECARDSCAN" "true") (enveq "RUN_STRIPEAPPLEPAY" "true") (enveq "RUN_STRIPEUICORE" "true") (enveq "RUN_STRIPECRYPTOONRAMP" "true") }}'
-      install-tests:
-        depends_on:
-        - triage
-      size-report:
-        depends_on:
-        - triage
+      install-tests: {}
+      size-report: {}
       ui-tests-paymentsheet:
         depends_on:
         - triage
@@ -79,44 +73,22 @@ pipelines:
         - triage
         run_if:
           expression: '{{ enveq "RUN_STRIPEPAYMENTS" "true" }}'
-      lokalise-upload:
-        depends_on:
-        - triage
+      lokalise-upload: {}
 
   releases-trigger-pipeline:
     workflows:
       triage: {}
       lint-tests:
         abort_on_fail: true
-        depends_on:
-        - triage
-      framework-tests-no-mocks:
-        depends_on:
-        - triage
-      framework-tests-ios-26:
-        depends_on:
-        - triage
-      test-builds-xcode-16:
-        depends_on:
-        - triage
-      test-builds-xcode-16-release:
-        depends_on:
-        - triage
-      test-builds-xcode-26:
-        depends_on:
-        - triage
-      test-builds-xcode-26-release:
-        depends_on:
-        - triage
-      deploy-docs:
-        depends_on:
-        - triage
-      install-tests:
-        depends_on:
-        - triage
-      size-report:
-        depends_on:
-        - triage
+      framework-tests-no-mocks: {}
+      framework-tests-ios-26: {}
+      test-builds-xcode-16: {}
+      test-builds-xcode-16-release: {}
+      test-builds-xcode-26: {}
+      test-builds-xcode-26-release: {}
+      deploy-docs: {}
+      install-tests: {}
+      size-report: {}
       ui-tests-paymentsheet:
         depends_on:
         - triage
@@ -127,15 +99,9 @@ pipelines:
       ui-tests-crypto:
         depends_on:
         - triage
-      legacy-tests-15:
-        depends_on:
-        - triage
-      legacy-tests-16:
-        depends_on:
-        - triage
-      pod-lint-tests:
-        depends_on:
-        - triage
+      legacy-tests-15: {}
+      legacy-tests-16: {}
+      pod-lint-tests: {}
       integration-all:
         depends_on:
         - triage
