@@ -46,7 +46,8 @@ end
 def changed_files
   Dir.chdir(REPO_ROOT) do
     branch = `git rev-parse --abbrev-ref HEAD`.strip
-    return nil if branch == 'master'
+    # Run all tests on master and release branches
+    return nil if branch == 'master' || branch.start_with?('releases/')
 
     merge_base = `git merge-base origin/master HEAD 2>/dev/null`.strip
     if merge_base.empty? || !$?.success?
