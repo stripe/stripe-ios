@@ -116,7 +116,7 @@ class FCLiteUITests: XCTestCase {
         XCTAssertTrue(continueButton.waitForExistenceAndTap())
 
         // Agree and continue
-        let agreeButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Agree'") // Consent pane
+        let agreeButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Agree and continue'") // Consent pane
         let agreeButton = app.webViews.firstMatch.buttons.containing(agreeButtonPredicate).firstMatch
         XCTAssertTrue(agreeButton.waitForExistence(timeout: 10.0))
         tapPrimaryButton()
@@ -164,7 +164,7 @@ class FCLiteUITests: XCTestCase {
             Thread.sleep(forTimeInterval: 0.5)
         }
 
-        // Primary button is at the bottom center of the webview (roughly 85% down, centered)
-        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)).tap()
+        // Primary button is at the bottom center of the webview (roughly 95% down, centered)
+        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95)).tap()
     }
 }

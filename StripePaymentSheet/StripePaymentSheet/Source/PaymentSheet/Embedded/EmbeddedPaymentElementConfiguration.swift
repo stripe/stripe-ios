@@ -116,7 +116,7 @@ extension EmbeddedPaymentElement {
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
 
         /// Configuration for custom payment methods.
-        @_spi(CustomPaymentMethodsBeta) public var customPaymentMethodConfiguration: CustomPaymentMethodConfiguration?
+        public var customPaymentMethodConfiguration: CustomPaymentMethodConfiguration?
 
         /// By default, PaymentSheet will use a dynamic ordering that optimizes payment method display for the customer.
         /// You can override the default order in which payment methods are displayed in PaymentSheet with a list of payment method types.
