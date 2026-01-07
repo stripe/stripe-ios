@@ -43,7 +43,7 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 
 **Theming**:
 - The minimal Stripe-provided UI supports light customization via `LinkAppearance`
-- Customize component colors, button properties, and light / dark mode interface styles
+- Customize component colors, button properties, and light / dark interface styles
 
 ## Requirements
 
