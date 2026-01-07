@@ -345,7 +345,36 @@ end
 measure_branch = ARGV[0]
 base_branch = ARGV[1]
 
-modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| m.key?('size_report') }
+all_modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| m.key?('size_report') }
+
+# Filter modules based on RUN_* environment variables from determine_tests_to_run.rb
+# These env vars are set by the triage workflow to indicate which modules have changed
+def filter_modules_by_env(modules)
+  modules.select do |m|
+    env_var_name = "RUN_#{m['framework_name'].upcase}"
+    env_value = ENV[env_var_name]
+
+    # If the env var is set to 'true', include this module
+    # If no RUN_* env vars are set at all, we'll include all modules (fallback behavior)
+    env_value == 'true'
+  end
+end
+
+# Check if any RUN_* env vars are set (indicating we're in a CI environment with triage)
+any_run_env_set = all_modules.any? { |m| ENV["RUN_#{m['framework_name'].upcase}"] }
+
+if any_run_env_set
+  modules = filter_modules_by_env(all_modules)
+  if modules.empty?
+    puts 'No modules with size_report have changes. Skipping size report.'
+    exit 0
+  end
+  puts "Running size report for changed modules: #{modules.map { |m| m['framework_name'] }.join(', ')}"
+else
+  modules = all_modules
+  puts "No RUN_* environment variables set. Running size report for all modules: #{modules.map { |m| m['framework_name'] }.join(', ')}"
+end
+
 sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, measure_branch, base_branch)
 
 # Clean up temp directory

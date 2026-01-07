@@ -27,23 +27,59 @@ trigger_map:
 pipelines:
   main-trigger-pipeline:
     workflows:
+      triage: {}
       lint-tests:
         abort_on_fail: true
-      framework-tests: {}
-      framework-tests-ios-26: {}
-      test-builds-xcode-16: {}
-      test-builds-xcode-26: {}
+      framework-tests:
+        depends_on:
+        - triage
+        run_if:
+          expression: '{{ or (enveq "RUN_STRIPE3DS2" "true") (enveq "RUN_STRIPE" "true") (enveq "RUN_STRIPEPAYMENTS" "true") (enveq "RUN_STRIPEPAYMENTSUI" "true") (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPECAMERACORE" "true") (enveq "RUN_STRIPECORE" "true") (enveq "RUN_STRIPECONNECT" "true") (enveq "RUN_STRIPEIDENTITY" "true") (enveq "RUN_STRIPEISSUING" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true") (enveq "RUN_STRIPECARDSCAN" "true") (enveq "RUN_STRIPEAPPLEPAY" "true") (enveq "RUN_STRIPEUICORE" "true") (enveq "RUN_STRIPECRYPTOONRAMP" "true") }}'
+      framework-tests-ios-26:
+        depends_on:
+        - triage
+        run_if:
+          expression: '{{ or (enveq "RUN_STRIPE3DS2" "true") (enveq "RUN_STRIPE" "true") (enveq "RUN_STRIPEPAYMENTS" "true") (enveq "RUN_STRIPEPAYMENTSUI" "true") (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPECAMERACORE" "true") (enveq "RUN_STRIPECORE" "true") (enveq "RUN_STRIPECONNECT" "true") (enveq "RUN_STRIPEIDENTITY" "true") (enveq "RUN_STRIPEISSUING" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true") (enveq "RUN_STRIPECARDSCAN" "true") (enveq "RUN_STRIPEAPPLEPAY" "true") (enveq "RUN_STRIPEUICORE" "true") (enveq "RUN_STRIPECRYPTOONRAMP" "true") }}'
+      test-builds-xcode-16:
+        depends_on:
+        - triage
+        run_if:
+          expression: '{{ or (enveq "RUN_STRIPE3DS2" "true") (enveq "RUN_STRIPE" "true") (enveq "RUN_STRIPEPAYMENTS" "true") (enveq "RUN_STRIPEPAYMENTSUI" "true") (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPECAMERACORE" "true") (enveq "RUN_STRIPECORE" "true") (enveq "RUN_STRIPECONNECT" "true") (enveq "RUN_STRIPEIDENTITY" "true") (enveq "RUN_STRIPEISSUING" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true") (enveq "RUN_STRIPECARDSCAN" "true") (enveq "RUN_STRIPEAPPLEPAY" "true") (enveq "RUN_STRIPEUICORE" "true") (enveq "RUN_STRIPECRYPTOONRAMP" "true") }}'
+      test-builds-xcode-26:
+        depends_on:
+        - triage
+        run_if:
+          expression: '{{ or (enveq "RUN_STRIPE3DS2" "true") (enveq "RUN_STRIPE" "true") (enveq "RUN_STRIPEPAYMENTS" "true") (enveq "RUN_STRIPEPAYMENTSUI" "true") (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPECAMERACORE" "true") (enveq "RUN_STRIPECORE" "true") (enveq "RUN_STRIPECONNECT" "true") (enveq "RUN_STRIPEIDENTITY" "true") (enveq "RUN_STRIPEISSUING" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true") (enveq "RUN_STRIPECARDSCAN" "true") (enveq "RUN_STRIPEAPPLEPAY" "true") (enveq "RUN_STRIPEUICORE" "true") (enveq "RUN_STRIPECRYPTOONRAMP" "true") }}'
       install-tests: {}
-      size-report: {}
+      size-report:
+        depends_on:
+        - triage
       ui-tests-paymentsheet:
+        depends_on:
+        - triage
         parallel: 4
-      ui-tests-connect: {}
-      ui-tests-crypto: {}
-      integration-all: {}
+        run_if:
+          expression: '{{ or (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true") }}'
+      ui-tests-connect:
+        depends_on:
+        - triage
+        run_if:
+          expression: '{{ enveq "RUN_STRIPECONNECT" "true" }}'
+      ui-tests-crypto:
+        depends_on:
+        - triage
+        run_if:
+          expression: '{{ enveq "RUN_STRIPECRYPTOONRAMP" "true" }}'
+      integration-all:
+        depends_on:
+        - triage
+        run_if:
+          expression: '{{ enveq "RUN_STRIPEPAYMENTS" "true" }}'
       lokalise-upload: {}
 
   releases-trigger-pipeline:
     workflows:
+      triage: {}
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
@@ -56,13 +92,21 @@ pipelines:
       install-tests: {}
       size-report: {}
       ui-tests-paymentsheet:
+        depends_on:
+        - triage
         parallel: 4
-      ui-tests-connect: {}
-      ui-tests-crypto: {}
+      ui-tests-connect:
+        depends_on:
+        - triage
+      ui-tests-crypto:
+        depends_on:
+        - triage
       legacy-tests-15: {}
       legacy-tests-16: {}
       pod-lint-tests: {}
-      integration-all: {}
+      integration-all:
+        depends_on:
+        - triage
 
   nightly-pipeline:
     workflows:
@@ -74,6 +118,39 @@ pipelines:
       deploy-dry-run: {}
       pod-lint-tests: {}
 workflows:
+  triage:
+    steps:
+    - git-clone@8.2:
+        inputs:
+        - clone_depth: "1"
+    - script@1:
+        inputs:
+        - content: |
+            git fetch origin master --depth=1
+            ruby ci_scripts/determine_tests_to_run.rb
+        title: Determine which tests to run
+    - share-pipeline-variable@1:
+        inputs:
+        - variables: |-
+            RUN_STRIPE3DS2
+            RUN_STRIPE
+            RUN_STRIPEPAYMENTS
+            RUN_STRIPEPAYMENTSUI
+            RUN_STRIPEPAYMENTSHEET
+            RUN_STRIPECAMERACORE
+            RUN_STRIPECORE
+            RUN_STRIPECONNECT
+            RUN_STRIPEIDENTITY
+            RUN_STRIPEISSUING
+            RUN_STRIPEFINANCIALCONNECTIONS
+            RUN_STRIPECARDSCAN
+            RUN_STRIPEAPPLEPAY
+            RUN_STRIPEUICORE
+            RUN_STRIPECRYPTOONRAMP
+        title: Share test variables with pipeline
+    meta:
+      bitrise.io:
+        stack: osx-xcode-16.0.x
   check-docs:
     steps:
     - script@1:
@@ -241,105 +318,120 @@ workflows:
         inputs:
         - lane: threeds2_tests
         title: fastlane threeds2_tests
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPE3DS2" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeiOS
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPE" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePayments
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPEPAYMENTS" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentsUI
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPEPAYMENTSUI" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentSheet
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPEPAYMENTSHEET" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCameraCore
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPECAMERACORE" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCore
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPECORE" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeConnect
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPECONNECT" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeIdentity
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPEIDENTITY" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeIssuing
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPEISSUING" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeFinancialConnections
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCardScan
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPECARDSCAN" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeApplePay
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPEAPPLEPAY" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeUICore
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPEUICORE" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCryptoOnramp
-        is_always_run: true
+        run_if: |-
+          {{enveq "RUN_STRIPECRYPTOONRAMP" "true"}}
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -485,6 +577,8 @@ workflows:
         - maximum_test_repetitions: "2"
         - scheme: IntegrationTester
         - log_formatter: xcbeautify
+        run_if: |-
+          {{enveq "RUN_STRIPEPAYMENTS" "true"}}
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -673,6 +767,8 @@ workflows:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        run_if: |-
+          {{or (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true")}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -682,6 +778,8 @@ workflows:
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        run_if: |-
+          {{or (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true")}}
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -695,6 +793,8 @@ workflows:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        run_if: |-
+          {{enveq "RUN_STRIPECONNECT" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -704,6 +804,8 @@ workflows:
         - test_plan: StripeConnectExample
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        run_if: |-
+          {{enveq "RUN_STRIPECONNECT" "true"}}
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
@@ -717,6 +819,8 @@ workflows:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        run_if: |-
+          {{enveq "RUN_STRIPECRYPTOONRAMP" "true"}}
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -726,6 +830,8 @@ workflows:
         - test_plan: CryptoOnrampExampleUITests
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
+        run_if: |-
+          {{enveq "RUN_STRIPECRYPTOONRAMP" "true"}}
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
