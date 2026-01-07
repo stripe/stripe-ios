@@ -755,8 +755,9 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            let isSetupFutureUsageOffSession = paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session"
-            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) && isSetupFutureUsageOffSession
+            // Set mandate data if the PM requires it
+            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType)
+                && paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
             {
                 params.mandateData = .makeWithInferredValues()
             }

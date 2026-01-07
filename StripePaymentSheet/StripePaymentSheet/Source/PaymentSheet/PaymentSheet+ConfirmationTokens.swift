@@ -226,11 +226,11 @@ extension PaymentSheet {
 
             switch intentConfig.mode {
             case .payment:
-                // Payment methods that require mandate data when setup_future_usage is "off_session"
-                if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) {
-                    if confirmationTokenParams.setupFutureUsage == .offSession {
-                        confirmationTokenParams.mandateData = .makeWithInferredValues()
-                    }
+                // Payment methods that require mandate data when setup_future_usage is set
+                if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType)
+                    && [.offSession, .onSession].contains(confirmationTokenParams.setupFutureUsage)
+                {
+                    confirmationTokenParams.mandateData = .makeWithInferredValues()
                 }
 
                 // If no mandate data, fallback to STPPaymentIntentParams auto add functionality
