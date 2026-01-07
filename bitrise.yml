@@ -51,7 +51,9 @@ pipelines:
         run_if:
           expression: '{{ or (enveq "RUN_STRIPE3DS2" "true") (enveq "RUN_STRIPE" "true") (enveq "RUN_STRIPEPAYMENTS" "true") (enveq "RUN_STRIPEPAYMENTSUI" "true") (enveq "RUN_STRIPEPAYMENTSHEET" "true") (enveq "RUN_STRIPECAMERACORE" "true") (enveq "RUN_STRIPECORE" "true") (enveq "RUN_STRIPECONNECT" "true") (enveq "RUN_STRIPEIDENTITY" "true") (enveq "RUN_STRIPEISSUING" "true") (enveq "RUN_STRIPEFINANCIALCONNECTIONS" "true") (enveq "RUN_STRIPECARDSCAN" "true") (enveq "RUN_STRIPEAPPLEPAY" "true") (enveq "RUN_STRIPEUICORE" "true") (enveq "RUN_STRIPECRYPTOONRAMP" "true") }}'
       install-tests: {}
-      size-report: {}
+      size-report:
+        depends_on:
+        - triage
       ui-tests-paymentsheet:
         depends_on:
         - triage
