@@ -26,63 +26,53 @@ trigger_map:
   pipeline: main-trigger-pipeline
 pipelines:
   main-trigger-pipeline:
-    stages:
-    - stage-trigger-run-all: {}
+    workflows:
+      lint-tests:
+        abort_on_fail: true
+      framework-tests: {}
+      framework-tests-ios-26: {}
+      test-builds-xcode-16: {}
+      test-builds-xcode-26: {}
+      install-tests: {}
+      size-report: {}
+      ui-tests-paymentsheet:
+        parallel: 4
+      ui-tests-connect: {}
+      ui-tests-crypto: {}
+      integration-all: {}
+      lokalise-upload: {}
+
   releases-trigger-pipeline:
-    stages:
-    - stage-releases-run-all: {}
+    workflows:
+      lint-tests:
+        abort_on_fail: true
+      framework-tests-no-mocks: {}
+      framework-tests-ios-26: {}
+      test-builds-xcode-16: {}
+      test-builds-xcode-16-release: {}
+      test-builds-xcode-26: {}
+      test-builds-xcode-26-release: {}
+      deploy-docs: {}
+      install-tests: {}
+      size-report: {}
+      ui-tests-paymentsheet:
+        parallel: 4
+      ui-tests-connect: {}
+      ui-tests-crypto: {}
+      legacy-tests-15: {}
+      legacy-tests-16: {}
+      pod-lint-tests: {}
+      integration-all: {}
+
   nightly-pipeline:
-    stages:
-    - stage-nightly-all: {}
-stages:
-  stage-trigger-run-all:
     workflows:
-    - framework-tests: {}
-    - framework-tests-ios-26: {}
-    - test-builds-xcode-16: {}
-    - test-builds-xcode-26: {}
-    - install-tests: {}
-    - lint-tests: {}
-    - size-report: {}
-    - ui-tests-1: {}
-    - ui-tests-2: {}
-    - ui-tests-3: {}
-    - ui-tests-4: {}
-    - ui-tests-5: {}
-    - ui-tests-6: {}
-    - integration-all: {}
-    - lokalise-upload: {}
-  stage-releases-run-all:
-    workflows:
-    - framework-tests-no-mocks: {}
-    - framework-tests-ios-26: {}
-    - test-builds-xcode-16: {}
-    - test-builds-xcode-16-release: {}
-    - test-builds-xcode-26: {}
-    - test-builds-xcode-26-release: {}
-    - deploy-docs: {}
-    - install-tests: {}
-    - lint-tests: {}
-    - size-report: {}
-    - ui-tests-1: {}
-    - ui-tests-2: {}
-    - ui-tests-3: {}
-    - ui-tests-4: {}
-    - ui-tests-5: {}
-    - ui-tests-6: {}
-    - legacy-tests-15: {}
-    - legacy-tests-16: {}
-    - pod-lint-tests: {}
-    - integration-all: {}
-  stage-nightly-all:
-    workflows:
-    - test-builds-xcode-16-release: {}
-    - framework-tests-no-mocks: {}
-    - check-docs: {}
-    - legacy-tests-15: {}
-    - legacy-tests-16: {}
-    - deploy-dry-run: {}
-    - pod-lint-tests: {}
+      test-builds-xcode-16-release: {}
+      framework-tests-no-mocks: {}
+      check-docs: {}
+      legacy-tests-15: {}
+      legacy-tests-16: {}
+      deploy-dry-run: {}
+      pod-lint-tests: {}
 workflows:
   check-docs:
     steps:
@@ -692,8 +682,16 @@ workflows:
       bitrise.io:
         stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
-  ui-tests-1:
+  ui-tests-paymentsheet:
     steps:
+    - script@1:
+        inputs:
+        - content: |
+            # Convert 0-indexed parallel index to 1-indexed shard number
+            SHARD_NUM=$((BITRISE_IO_PARALLEL_INDEX + 1))
+            envman add --key TEST_PLAN_SHARD --value "PaymentSheet Example-Shard${SHARD_NUM}"
+            echo "Running shard ${SHARD_NUM} of ${BITRISE_IO_PARALLEL_TOTAL}"
+        title: Set test plan based on parallel index
     - script@1:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
@@ -706,7 +704,7 @@ workflows:
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
-        - test_plan: PaymentSheet Example-Shard1
+        - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
         run_if: |-
@@ -718,85 +716,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
-  ui-tests-2:
-    steps:
-    - script@1:
-        inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
-        run_if: |-
-          {{enveq "RUN_STRIPEPAYMENTSHEET" "true"}}
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: PaymentSheet Example
-        - test_plan: PaymentSheet Example-Shard2
-        - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
-        run_if: |-
-          {{enveq "RUN_STRIPEPAYMENTSHEET" "true"}}
-    - deploy-to-bitrise-io@2: {}
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-16.0.x
-        machine_type_id: g2.mac.large
-  ui-tests-3:
-    steps:
-    - script@1:
-        inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
-        run_if: |-
-          {{enveq "RUN_STRIPEPAYMENTSHEET" "true"}}
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: PaymentSheet Example
-        - test_plan: PaymentSheet Example-Shard3
-        - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
-        run_if: |-
-          {{enveq "RUN_STRIPEPAYMENTSHEET" "true"}}
-    - deploy-to-bitrise-io@2: {}
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-16.0.x
-        machine_type_id: g2.mac.large
-  ui-tests-4:
-    steps:
-    - script@1:
-        inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
-        run_if: |-
-          {{enveq "RUN_STRIPEPAYMENTSHEET" "true"}}
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: PaymentSheet Example
-        - test_plan: PaymentSheet Example-Shard4
-        - log_formatter: xcbeautify
-        - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
-        run_if: |-
-          {{enveq "RUN_STRIPEPAYMENTSHEET" "true"}}
-    - deploy-to-bitrise-io@2: {}
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-16.0.x
-        machine_type_id: g2.mac.large
-  ui-tests-5:
+  ui-tests-connect:
     steps:
     - script@1:
         inputs:
@@ -822,7 +742,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
-  ui-tests-6:
+  ui-tests-crypto:
     steps:
     - script@1:
         inputs:
