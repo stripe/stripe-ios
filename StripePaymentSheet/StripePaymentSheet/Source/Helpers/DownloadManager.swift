@@ -16,6 +16,7 @@ import UIKit
 
     enum Error: Swift.Error {
         case failedToMakeImageFromData
+        case httpError
     }
 
     public static let sharedManager = DownloadManager()
@@ -93,8 +94,16 @@ extension DownloadManager {
     // Common download functions
 
     private func downloadImageSkippingCacheRead(url: URL) async throws -> UIImage {
+        var errorParams: [String: Any] = ["url": url.absoluteString]
         do {
-            let (data, _) = try await session.data(from: url)
+            let (data, response) = try await session.data(from: url)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw DownloadManager.Error.httpError
+            }
+            errorParams["httpStatus"] = httpResponse.statusCode
+            guard (200...299).contains(httpResponse.statusCode) else {
+                throw DownloadManager.Error.httpError
+            }
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             Task {
                 // Cache the image in memory
@@ -107,7 +116,7 @@ extension DownloadManager {
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .stripePaymentSheetDownloadManagerError,
                                               error: error,
-                                              additionalNonPIIParams: ["url": url.absoluteString])
+                                              additionalNonPIIParams: errorParams)
             analyticsClient.log(analytic: errorAnalytic)
             throw error
         }
