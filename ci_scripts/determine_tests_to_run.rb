@@ -10,11 +10,11 @@ require 'set'
 REPO_ROOT = File.expand_path('..', __dir__)
 
 GLOBAL_TRIGGERS = [
-  # /^ci_scripts\//,
-  # /^bitrise\.yml$/,
+  /^ci_scripts\//,
+  /^bitrise\.yml$/,
   /^Package\.swift$/,
-  /^Gemfile/, 
-  /^\.swiftlint\.yml$/, 
+  /^Gemfile/,
+  /^\.swiftlint\.yml$/,
   /^BuildConfigurations\//,
   /^fastlane\//,
   /^Stripe\.xcworkspace\//,
@@ -22,7 +22,10 @@ GLOBAL_TRIGGERS = [
   /^\.github\//,
   /^Brewfile$/,
   /^VERSION$/,
-  /\.podspec$/
+  /\.podspec$/,
+  /^Tests\//,
+  /^Testers\//,
+  /^Example\//
 ].freeze
 
 def load_modules_and_reverse_deps
