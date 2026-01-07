@@ -3,7 +3,7 @@
 //  StripePayments
 //
 //  Created by Yuki Tokuhiro on 6/28/19.
-//  Copyright © 2025 Stripe, Inc. All rights reserved.
+//  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
 import AuthenticationServices
