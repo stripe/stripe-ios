@@ -107,6 +107,6 @@ public class ClassForBundle {}
     case payment_intents_misordered_pms_200 = "MockFiles/payment_intents_misordered_pms_200"
     case payment_intents_no_card_200 = "MockFiles/payment_intents_no_card_200"
     case setup_intents_200 = "MockFiles/setup_intents_200"
-    
+
     case paymentIntentResponse = "MockFiles/paymentIntentResponse"
 }
