@@ -100,8 +100,6 @@
 
 "Confirm" = "Sahkan";
 
-"Confirm it's you" = "Sahkan andalah orangnya";
-
 "Confirm payment details" = "Sahkan butiran pembayaran";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank anda dalam %@ untuk menyelesaikan pembelian.";
 
 "Confirm your CVC" = "Sahkan CVC anda";
+
+"Confirm your information" = "Sahkan maklumat anda";
 
 "Contact information" = "Maklumat hubungan";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
-"Enter the code sent to %@." = "Masukkan kod yang dihantar ke %s.";
-
 "FPX Bank" = "Bank untuk FPX";
-
-"Failed to connect" = "Gagal disambungkan";
 
 "Fast, secure checkout" = "Proses bayar dan keluar yang pantas dan selamat";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya faham bahawa Stripe akan mengutip Debit Terus bagi pihak %@ dan mengesahkan sayalah pemegang akaun dan satu-satunya individu yang diperlukan untuk mengizinkan debit daripada akaun ini.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "4 digit terakhir SSN";
 
 "Log in or sign up" = "Log masuk atau daftar";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Alih keluar kad?";
 
 "Remove linked account" = "Alih keluar akaun yang dipautkan";
-
-"Resend code" = "Hantar semula kod";
 
 "SEPA debit details cannot be changed." = "Butiran debit SEPA tidak boleh diubah.";
 

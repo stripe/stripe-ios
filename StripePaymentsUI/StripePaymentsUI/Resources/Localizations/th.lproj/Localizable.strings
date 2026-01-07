@@ -22,8 +22,6 @@
 
 "Billing address" = "ที่อยู่ในการเรียกเก็บเงิน";
 
-"Billing details" = "รายละเอียดการเรียกเก็บเงิน";
-
 "CVC" = "CVC";
 
 "Card information" = "ข้อมูลบัตร";
@@ -37,6 +35,18 @@
 "MM / YY" = "ดด / ปป";
 
 "MM/YY" = "ดด/ปป";
+
+"Only credit and prepaid cards are accepted" = "รองรับเฉพาะบัตรเครดิตและบัตรเติมเงินเท่านั้น";
+
+"Only credit cards are accepted" = "รองรับเฉพาะบัตรเครดิตเท่านั้น";
+
+"Only debit and credit cards are accepted" = "รองรับเฉพาะบัตรเดบิตและบัตรเครดิตเท่านั้น";
+
+"Only debit and prepaid cards are accepted" = "รองรับเฉพาะบัตรเดบิตและบัตรเติมเงินเท่านั้น";
+
+"Only debit cards are accepted" = "รองรับเฉพาะบัตรเดบิตเท่านั้น";
+
+"Only prepaid cards are accepted" = "รองรับเฉพาะบัตรเติมเงินเท่านั้น";
 
 "Postal Code" = "รหัสไปรษณีย์";
 

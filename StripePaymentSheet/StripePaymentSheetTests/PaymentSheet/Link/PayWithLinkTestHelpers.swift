@@ -15,7 +15,8 @@ enum PayWithLinkTestHelpers {
     static func makePaymentIntentAndElementsSession(
         linkFundingSources: [String] = ["CARD"],
         linkPassthroughModeEnabled: Bool? = nil,
-        linkPMOSFU: Bool? = nil
+        linkPMOSFU: Bool? = nil,
+        cardFundingFilteringEnabled: Bool = false
     ) throws -> (Intent, STPElementsSession) {
         // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
@@ -35,12 +36,15 @@ enum PayWithLinkTestHelpers {
             linkSettingsJson["link_passthrough_mode_enabled"] = linkPassthroughModeEnabled
         }
 
-        let response = [
+        var response = [
             "payment_method_preference": paymentIntentResponse,
             "link_settings": linkSettingsJson,
             "session_id": "abc123",
             "config_id": "abc123",
         ] as [String: Any]
+        if cardFundingFilteringEnabled {
+            response["flags"] = ["elements_mobile_card_funding_filtering": true]
+        }
         let elementsSession = try XCTUnwrap(
             STPElementsSession.decodedObject(fromAPIResponse: response)
         )
@@ -52,7 +56,8 @@ enum PayWithLinkTestHelpers {
 
     static func makeSetupIntentAndElementsSession(
         linkFundingSources: [String] = ["CARD"],
-        linkPassthroughModeEnabled: Bool? = nil
+        linkPassthroughModeEnabled: Bool? = nil,
+        cardFundingFilteringEnabled: Bool = false
     ) throws -> (Intent, STPElementsSession) {
         // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
@@ -69,12 +74,15 @@ enum PayWithLinkTestHelpers {
             linkSettingsJson["link_passthrough_mode_enabled"] = linkPassthroughModeEnabled
         }
 
-        let response = [
+        var response = [
             "payment_method_preference": setupIntentResponse,
             "link_settings": linkSettingsJson,
             "session_id": "abc123",
             "config_id": "abc123",
         ] as [String: Any]
+        if cardFundingFilteringEnabled {
+            response["flags"] = ["elements_mobile_card_funding_filtering": true]
+        }
         let elementsSession = try XCTUnwrap(
             STPElementsSession.decodedObject(fromAPIResponse: response)
         )

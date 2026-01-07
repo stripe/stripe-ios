@@ -160,8 +160,8 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }()
 
     private let spinnerSize = CGSize(width: 48, height: 48)
-    private lazy var checkProgressView: ConfirmButton.CheckProgressView = {
-        let view = ConfirmButton.CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize),
+    private lazy var checkProgressView: CheckProgressView = {
+        let view = CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize),
                                                    baseLineWidth: 2.5)
         view.color = UIColor.dynamic(light: .black, dark: .white)
         return view
@@ -398,6 +398,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     func enableNavigationBarBlurInteraction() {
         guard let navigationBarBlur,
             navigationBarBlur.view == nil,
+            navigationController != nil,
         // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
         NSClassFromString("XCTest") == nil else {
             return

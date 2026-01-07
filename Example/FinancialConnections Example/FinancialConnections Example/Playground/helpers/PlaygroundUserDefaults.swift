@@ -15,4 +15,10 @@ final class PlaygroundUserDefaults {
         defaultValue: nil
     )
     static var enableNative: Bool?
+
+    @UserDefault(
+        key: "FC_LITE_ENABLE_SECURE_WEBVIEW",
+        defaultValue: nil
+    )
+    static var enableFCLiteSecureWebview: Bool?
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripePayments
-@_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
@@ -70,6 +70,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred server side confirmation with manual confirmation"
             case .deferred_mp:
                 return "Deferred multiprocessor flow"
+            }
+        }
+
+        var isIntentFirst: Bool {
+            switch self {
+            case .normal:
+                return true
+            case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
+                return false
             }
         }
     }
@@ -139,7 +148,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     enum MerchantCountry: String, PickerEnum {
-        static var enumName: String { "MerchantCountry" }
+        static var enumName: String { "Merchant" }
 
         case US
         case GB
@@ -154,6 +163,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
+        case stripeShop = "stripe_shop_test"
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -309,6 +319,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     enum EnablePassiveCaptcha: String, PickerEnum {
         static var enumName: String { "Enable passive captcha" }
+
+        case on
+        case off
+    }
+
+    enum EnableAttestationOnConfirmation: String, PickerEnum {
+        static var enumName: String { "Enable attestation on confirmation" }
 
         case on
         case off
@@ -643,6 +660,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
+    enum CardFundingAcceptance: String, PickerEnum {
+        static let enumName: String = "fundingAcceptance"
+        case all
+        case creditOnly
+        case debitOnly
+    }
+
     enum ConfigurationStyle: String, PickerEnum {
         static let enumName: String = "Style"
         case automatic
@@ -682,6 +706,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var enablePassiveCaptcha: EnablePassiveCaptcha
+    var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
@@ -718,6 +743,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var rowSelectionBehavior: RowSelectionBehavior
     var cardBrandAcceptance: CardBrandAcceptance
+    var cardFundingAcceptance: CardFundingAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
 
@@ -741,6 +767,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
             enablePassiveCaptcha: .on,
+            enableAttestationOnConfirmation: .on,
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,
@@ -776,6 +803,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             embeddedViewDisplaysMandateText: .on,
             rowSelectionBehavior: .default,
             cardBrandAcceptance: .all,
+            cardFundingAcceptance: .all,
             opensCardScannerAutomatically: .off,
             termsDisplay: .unset
         )

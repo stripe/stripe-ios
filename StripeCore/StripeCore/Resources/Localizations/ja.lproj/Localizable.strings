@@ -4,7 +4,15 @@
 
 "Close" = "閉じる";
 
+"Confirm it's you" = "本人であると確定";
+
 "Default payment method was not updated. Please try again." = "デフォルトの決済手段は更新されていません。もう一度お試しください。";
+
+"Enter the code sent to %@." = "%@ に送信されたコードを入力してください。";
+
+"Failed to connect" = "接続に失敗しました";
+
+"Resend code" = "コードを再送";
 
 "Scan Card" = "クレジットカードをスキャン";
 

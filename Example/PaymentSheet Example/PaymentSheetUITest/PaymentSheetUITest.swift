@@ -242,10 +242,9 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         XCTAssertEqual(
-            // filter out async passive captcha logs
-            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) }),
-            // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
+            // filter out async passive captcha and attestation logs
+            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
         )
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
         XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
@@ -628,12 +627,26 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         XCTAssertEqual(
             // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
-            // filter out async passive captcha logs
-            analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" && !($0?.starts(with: "elements.captcha.passive") ?? false) }),
-            // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown", "link.inline_signup.shown"]
+            // filter out async passive captcha and attestation logs
+            analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" && !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
+            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "mc_complete_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_form_shown", "link.inline_signup.shown"]
         )
-        XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.starts(with: "link") ?? false) }).last?[string: "selected_lpm"], "card")
+        let initialDisplayedPaymentMethodsEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_initial_displayed_payment_methods" })
+        // two wallet pms and 3 in the carousel
+        XCTAssertEqual(
+            (initialDisplayedPaymentMethodsEvent.map { $0["visible_payment_methods"] } as? [String])?.count,
+            5
+        )
+        // the rest are hidden
+        XCTAssertEqual(
+            (initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String])?.count,
+            6
+        )
+        XCTAssertEqual(
+            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
+            "horizontal"
+        )
+        XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.contains("attest") ?? false || $0[string: "event"]?.starts(with: "link") ?? false) }).last?[string: "selected_lpm"], "card")
 
         try? fillCardData(app, container: nil)
 
@@ -642,9 +655,26 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
+        // filter out async attestation logs
         XCTAssertEqual(
-            analyticsLog.suffix(10).map({ $0[string: "event"] }),
-            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "elements.captcha.passive.attach", "stripeios.confirmation_token_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }).suffix(9),
+            ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "stripeios.confirmation_token_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
+        )
+
+        XCTAssertEqual(
+            analyticsLog.map({ $0[string: "event"] }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false }),
+            ["elements.captcha.passive.init",
+             "elements.captcha.passive.execute",
+             "elements.captcha.passive.success",
+             "elements.captcha.passive.attach", ]
+        )
+
+        XCTAssertEqual(
+            analyticsLog.map({ $0[string: "event"] }).filter({ $0?.starts(with: "elements.attestation.confirmation") ?? false }),
+            ["elements.attestation.confirmation.prepare",
+             "elements.attestation.confirmation.prepare_failed",
+             "elements.attestation.confirmation.request_token",
+             "elements.attestation.confirmation.request_token_succeeded", ]
         )
 
         // Make sure they all have the same session id
@@ -3405,7 +3435,7 @@ extension PaymentSheetUITestCase {
 
         // Go through connections flow
         app.buttons["Agree and continue"].tap()
-        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Test (Non-OAuth)"].forceTapElement()
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
@@ -3660,6 +3690,7 @@ extension PaymentSheetUITestCase {
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
         app.toolbars.buttons["Done"].tap()
 
+        sleep(1) // Wait for keyboard to dismiss
         phoneTextField.tap()
         phoneTextField.typeText("4015006000")
 
@@ -3668,7 +3699,7 @@ extension PaymentSheetUITestCase {
         linkLoginCtaButton.tap()
 
         // "Institution picker" pane
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Payment Success"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Success"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 

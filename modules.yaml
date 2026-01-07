@@ -155,7 +155,7 @@ modules:
   custom_string_convertible_dir: StripeIssuing/StripeIssuing/Source
   supports_catalyst: false
   docs:
-    output: docs/StripeIssuing
+    output: docs/stripeissuing
     readme: StripeIssuing/README.md
   size_report: true
 
@@ -183,6 +183,7 @@ modules:
 - podspec: StripeFinancialConnections.podspec
   scheme: StripeFinancialConnections
   framework_name: StripeFinancialConnections
+  localization_dir: StripeFinancialConnections/StripeFinancialConnections
   docs:
     output: docs/stripefinancialconnections
     readme: StripeFinancialConnections/README.md

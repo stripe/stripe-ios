@@ -22,8 +22,6 @@
 
 "Billing address" = "Billing address";
 
-"Billing details" = "Billing details";
-
 "CVC" = "CVC";
 
 "Card information" = "Card information";
@@ -37,6 +35,18 @@
 "MM / YY" = "MM / YY";
 
 "MM/YY" = "MM/YY";
+
+"Only credit and prepaid cards are accepted" = "Only credit and prepaid cards are accepted";
+
+"Only credit cards are accepted" = "Only credit cards are accepted";
+
+"Only debit and credit cards are accepted" = "Only debit and credit cards are accepted";
+
+"Only debit and prepaid cards are accepted" = "Only debit and prepaid cards are accepted";
+
+"Only debit cards are accepted" = "Only debit cards are accepted";
+
+"Only prepaid cards are accepted" = "Only prepaid cards are accepted";
 
 "Postal Code" = "Postcode";
 

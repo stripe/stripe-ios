@@ -31,9 +31,6 @@
 /* Billing address section title for card form entry. */
 "Billing address" = "Billing address";
 
-/* Billing details section title for card form entry. */
-"Billing details" = "Billing details";
-
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
@@ -66,6 +63,24 @@
 
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
+
+/* Warning shown when only credit and prepaid cards are accepted */
+"Only credit and prepaid cards are accepted" = "Only credit and prepaid cards are accepted";
+
+/* Warning shown when only credit cards are accepted */
+"Only credit cards are accepted" = "Only credit cards are accepted";
+
+/* Warning shown when only debit and credit cards are accepted */
+"Only debit and credit cards are accepted" = "Only debit and credit cards are accepted";
+
+/* Warning shown when only debit and prepaid cards are accepted */
+"Only debit and prepaid cards are accepted" = "Only debit and prepaid cards are accepted";
+
+/* Warning shown when only debit cards are accepted */
+"Only debit cards are accepted" = "Only debit cards are accepted";
+
+/* Warning shown when only prepaid cards are accepted */
+"Only prepaid cards are accepted" = "Only prepaid cards are accepted";
 
 /* Postal code placeholder */
 "Postal Code" = "Postal Code";

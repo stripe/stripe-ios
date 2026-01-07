@@ -22,8 +22,6 @@
 
 "Billing address" = "Dirección de facturación";
 
-"Billing details" = "Datos de facturación";
-
 "CVC" = "CVC";
 
 "Card information" = "Información de la tarjeta";
@@ -37,6 +35,18 @@
 "MM / YY" = "MM/AA";
 
 "MM/YY" = "MM/AA";
+
+"Only credit and prepaid cards are accepted" = "Solo se aceptan tarjetas de crédito y prepago";
+
+"Only credit cards are accepted" = "Solo se aceptan tarjetas de crédito";
+
+"Only debit and credit cards are accepted" = "Solo se aceptan tarjetas de débito y crédito";
+
+"Only debit and prepaid cards are accepted" = "Solo se aceptan tarjetas de débito y prepago";
+
+"Only debit cards are accepted" = "Solo se aceptan tarjetas de débito";
+
+"Only prepaid cards are accepted" = "Solo se aceptan tarjetas de prepago";
 
 "Postal Code" = "Código postal";
 

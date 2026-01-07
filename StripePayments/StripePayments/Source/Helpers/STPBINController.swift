@@ -15,6 +15,7 @@ import Foundation
     @_spi(STP) public let accountRangeLow: String
     @_spi(STP) public let accountRangeHigh: String
     @_spi(STP) public let country: String?
+    @_spi(STP) public let funding: STPCardFundingType
 
     private enum CodingKeys: String, CodingKey {
         case panLength = "pan_length"
@@ -22,6 +23,7 @@ import Foundation
         case accountRangeLow = "account_range_low"
         case accountRangeHigh = "account_range_high"
         case country = "country"
+        case funding = "funding"
     }
 
     @_spi(STP) public init(
@@ -34,6 +36,12 @@ import Foundation
         self.accountRangeLow = try container.decode(String.self, forKey: .accountRangeLow)
         self.accountRangeHigh = try container.decode(String.self, forKey: .accountRangeHigh)
         self.country = try? container.decode(String.self, forKey: .country)
+        if let fundingString = try container.decodeIfPresent(String.self, forKey: .funding) {
+            self.funding = STPCard.funding(from: fundingString)
+        } else {
+            // Fallback to other for funding type if decoding fails
+            self.funding = .other
+        }
         self.isHardcoded = false
     }
 
@@ -42,13 +50,15 @@ import Foundation
         brand: STPCardBrand,
         accountRangeLow: String,
         accountRangeHigh: String,
-        country: String?
+        country: String?,
+        funding: STPCardFundingType = .other
     ) {
         self.panLength = panLength
         self.brand = brand
         self.accountRangeLow = accountRangeLow
         self.accountRangeHigh = accountRangeHigh
         self.country = country
+        self.funding = funding
         self.isHardcoded = true
     }
 
@@ -219,10 +229,6 @@ extension STPBINRange {
         case .unknown:
             return 13
         }
-    }
-
-    @_spi(STP) public func minLengthForFullBINRange() -> Int {
-        return kPrefixLengthForMetadataRequest
     }
 
     /// This is basically a wrapper around:

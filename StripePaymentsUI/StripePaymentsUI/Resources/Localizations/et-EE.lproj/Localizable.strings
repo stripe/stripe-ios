@@ -22,8 +22,6 @@
 
 "Billing address" = "Arveldusaadress";
 
-"Billing details" = "Arveldusandmed";
-
 "CVC" = "CVC";
 
 "Card information" = "Kaardi andmed";
@@ -37,6 +35,18 @@
 "MM / YY" = "KK / AA";
 
 "MM/YY" = "KK/AA";
+
+"Only credit and prepaid cards are accepted" = "Aktsepteeritakse ainult krediit- ja ettemakstud kaarte";
+
+"Only credit cards are accepted" = "Aktsepteeritakse ainult krediitkaarte";
+
+"Only debit and credit cards are accepted" = "Aktsepteeritakse ainult deebet- ja krediitkaarte";
+
+"Only debit and prepaid cards are accepted" = "Aktsepteeritakse ainult deebet- ja ettemakstud kaarte";
+
+"Only debit cards are accepted" = "Aktsepteeritakse ainult deebetkaarte";
+
+"Only prepaid cards are accepted" = "Aktsepteeritakse ainult ettemakstud kaarte";
 
 "Postal Code" = "Sihtnumber";
 

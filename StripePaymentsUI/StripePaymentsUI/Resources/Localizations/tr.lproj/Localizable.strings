@@ -22,8 +22,6 @@
 
 "Billing address" = "Fatura adresi";
 
-"Billing details" = "Faturalama ayrıntıları";
-
 "CVC" = "CVC";
 
 "Card information" = "Kart bilgileri";
@@ -37,6 +35,18 @@
 "MM / YY" = "AA / YY";
 
 "MM/YY" = "AA/YY";
+
+"Only credit and prepaid cards are accepted" = "Yalnızca kredi ve ön ödemeli kartlar kabul edilir";
+
+"Only credit cards are accepted" = "Yalnızca kredi kartları kabul edilir";
+
+"Only debit and credit cards are accepted" = "Yalnızca bankamatik ve kredi kartları kabul edilir";
+
+"Only debit and prepaid cards are accepted" = "Yalnızca bankamatik ve ön ödemeli kartlar kabul edilir";
+
+"Only debit cards are accepted" = "Yalnızca bankamatik kartları kabul edilir";
+
+"Only prepaid cards are accepted" = "Yalnızca ön ödemeli kartlar kabul edilir";
 
 "Postal Code" = "Posta Kodu";
 

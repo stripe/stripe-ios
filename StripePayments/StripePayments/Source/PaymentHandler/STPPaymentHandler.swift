@@ -205,13 +205,12 @@ public class STPPaymentHandler: NSObject {
             return
         }
         Self.inProgress = true
-        weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
-        let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
+        let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
             status,
             paymentIntent,
             error in
-            guard let strongSelf = weakSelf else {
+            guard let strongSelf = self else {
                 return
             }
             // Reset our internal state
@@ -253,8 +252,9 @@ public class STPPaymentHandler: NSObject {
             completion(status, paymentIntent, error)
         }
 
-        let confirmCompletionBlock: STPPaymentIntentCompletionBlock = { paymentIntent, error in
-            guard let strongSelf = weakSelf else {
+        let confirmCompletionBlock: STPPaymentIntentCompletionBlock = { [weak self]
+            paymentIntent, error in
+            guard let strongSelf = self else {
                 assertionFailure("STPPaymentHandler became nil during `confirmPayment`!")
                 wrappedCompletion(.failed, nil, nil)
                 return
@@ -449,13 +449,12 @@ public class STPPaymentHandler: NSObject {
         }
         Self.inProgress = true
 
-        weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
-        let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = {
+        let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
             status,
             paymentIntent,
             error in
-            guard let strongSelf = weakSelf else {
+            guard let strongSelf = self else {
                 return
             }
             // Reset our internal state
@@ -548,13 +547,12 @@ public class STPPaymentHandler: NSObject {
         }
 
         Self.inProgress = true
-        weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
-        let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = {
+        let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
             setupIntent,
             error in
-            guard let strongSelf = weakSelf else {
+            guard let self else {
                 return
             }
             // Reset our internal state
@@ -578,11 +576,11 @@ public class STPPaymentHandler: NSObject {
                         "setup_intent_status": setupIntent?.status.rawValue ?? "nil",
                         "error_details": error?.serializeForV1Analytics() ?? [:],
                     ])
-                    strongSelf.analyticsClient.log(analytic: errorAnalytic, apiClient: strongSelf.apiClient)
+                    self.analyticsClient.log(analytic: errorAnalytic, apiClient: self.apiClient)
                     completion(
                         .failed,
                         setupIntent,
-                        error ?? strongSelf._error(for: .intentStatusErrorCode)
+                        error ?? self._error(for: .intentStatusErrorCode)
                     )
                 }
 
@@ -591,8 +589,8 @@ public class STPPaymentHandler: NSObject {
             }
         }
 
-        let confirmCompletionBlock: STPSetupIntentCompletionBlock = { setupIntent, error in
-            guard let strongSelf = weakSelf else {
+        let confirmCompletionBlock: STPSetupIntentCompletionBlock = { [weak self] setupIntent, error in
+            guard let self else {
                 return
             }
 
@@ -605,18 +603,18 @@ public class STPPaymentHandler: NSObject {
                     threeDSCustomizationSettings: self.threeDSCustomizationSettings,
                     setupIntent: setupIntent,
                     returnURL: setupIntentConfirmParams.returnURL
-                ) { status, resultSetupIntent, resultError in
-                    guard let strongSelf2 = weakSelf else {
+                ) {  [weak self] status, resultSetupIntent, resultError in
+                    guard let self else {
                         return
                     }
-                    strongSelf2.currentAction = nil
+                    self.currentAction = nil
 
                     wrappedCompletion(status, resultSetupIntent, resultError)
                 }
-                strongSelf.currentAction = action
-                let requiresAction = strongSelf._handleSetupIntentStatus(forAction: action)
+                self.currentAction = action
+                let requiresAction = self._handleSetupIntentStatus(forAction: action)
                 if requiresAction {
-                    strongSelf._handleAuthenticationForCurrentAction()
+                    self._handleAuthenticationForCurrentAction()
                 }
             } else {
                 wrappedCompletion(.failed, setupIntent, error as NSError?)
@@ -742,13 +740,12 @@ public class STPPaymentHandler: NSObject {
         }
 
         Self.inProgress = true
-        weak var weakSelf = self
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
-        let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = {
+        let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
             setupIntent,
             error in
-            guard let strongSelf = weakSelf else {
+            guard let strongSelf = self else {
                 return
             }
             // Reset our internal state
@@ -850,7 +847,8 @@ public class STPPaymentHandler: NSObject {
             .swish,
             .twint,
             .multibanco,
-            .shopPay:
+            .shopPay,
+            .payPay:
             return false
 
         case .unknown:
@@ -877,18 +875,17 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        weak var weakSelf = self
         let action = STPPaymentHandlerPaymentIntentActionParams(
             apiClient: apiClient,
             authenticationContext: authenticationContext,
             threeDSCustomizationSettings: threeDSCustomizationSettings,
             paymentIntent: paymentIntent,
             returnURL: returnURLString
-        ) { status, resultPaymentIntent, error in
-            guard let strongSelf = weakSelf else {
+        ) {  [weak self] status, resultPaymentIntent, error in
+            guard let self else {
                 return
             }
-            strongSelf.currentAction = nil
+            self.currentAction = nil
             completion(status, resultPaymentIntent, error)
         }
         currentAction = action
@@ -914,18 +911,17 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        weak var weakSelf = self
         let action = STPPaymentHandlerSetupIntentActionParams(
             apiClient: apiClient,
             authenticationContext: authenticationContext,
             threeDSCustomizationSettings: threeDSCustomizationSettings,
             setupIntent: setupIntent,
             returnURL: returnURLString
-        ) { status, resultSetupIntent, resultError in
-            guard let strongSelf = weakSelf else {
+        ) { [weak self] status, resultSetupIntent, resultError in
+            guard let self else {
                 return
             }
-            strongSelf.currentAction = nil
+            self.currentAction = nil
             completion(status, resultSetupIntent, resultError)
         }
         currentAction = action
@@ -1367,6 +1363,8 @@ public class STPPaymentHandler: NSObject {
                         returnURL = nil
                     }
                     _handleRedirect(to: redirectURL, withReturn: returnURL, useWebAuthSession: false)
+                case .intentConfirmationChallenge:
+                    _handleIntentConfirmationChallenge()
                 }
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1911,6 +1909,98 @@ public class STPPaymentHandler: NSObject {
             )
         } else {
             presentSFViewControllerBlock()
+        }
+    }
+
+    /// Handles intent confirmation challenge by presenting a WebView with the Stripe-hosted challenge page
+    func _handleIntentConfirmationChallenge() {
+        guard let currentAction else {
+            stpAssertionFailure("Calling _handleIntentConfirmationChallenge without a currentAction")
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _handleIntentConfirmationChallenge without a currentAction"])
+            analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            return
+        }
+
+        if #available(iOS 14.0, *) {
+            // Extract client secret
+            let clientSecret: String
+            if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
+                clientSecret = piAction.paymentIntent.clientSecret
+            } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
+                clientSecret = siAction.setupIntent.clientSecret
+            } else {
+                currentAction.complete(
+                    with: .failed,
+                    error: _error(
+                        for: .unexpectedErrorCode,
+                        loggingSafeErrorMessage: "Unable to extract client secret for intent confirmation challenge"
+                    )
+                )
+                return
+            }
+
+            // Extract publishable key
+            guard let publishableKey = apiClient.publishableKey else {
+                currentAction.complete(
+                    with: .failed,
+                    error: _error(
+                        for: .unexpectedErrorCode,
+                        loggingSafeErrorMessage: "Unable to extract publishable key for intent confirmation challenge"
+                    )
+                )
+                return
+            }
+
+            let context = currentAction.authenticationContext
+            var presentationError: NSError?
+            guard _canPresent(with: context, error: &presentationError) else {
+                currentAction.complete(with: .failed, error: presentationError)
+                return
+            }
+
+            let presentingVC = context.authenticationPresentingViewController()
+
+                let challengeVC = IntentConfirmationChallengeViewController(
+                    publishableKey: publishableKey,
+                    clientSecret: clientSecret
+                ) { [weak self] result in
+                    guard let self = self else { return }
+
+                    // Dismiss the challenge view
+                    presentingVC.dismiss(animated: true) {
+                        switch result {
+                        case .success:
+                            // The web page handled the next action via Stripe.js
+                            // Now retrieve the updated intent to check its status
+                            self._retrieveAndCheckIntentForCurrentAction()
+
+                        case .failure(let error):
+                            currentAction.complete(with: .failed, error: error as NSError)
+                        }
+                    }
+                }
+
+            let doChallenge: STPVoidBlock = {
+                challengeVC.modalPresentationStyle = .overFullScreen
+                challengeVC.modalTransitionStyle = .crossDissolve
+                presentingVC.present(challengeVC, animated: true, completion: nil)
+            }
+
+            if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
+                context.prepare?(forPresentation: doChallenge)
+            } else {
+                doChallenge()
+            }
+        } else { // Intent confirmation challenge should be gated to iOS versions 14.0+
+            let unsupportedVersionErrorMessage = "Unable to perform intent confirmation challenge. Requires iOS version 14.0 or later."
+            stpAssertionFailure(unsupportedVersionErrorMessage)
+            currentAction.complete(
+                with: .failed,
+                error: _error(
+                    for: .unexpectedErrorCode,
+                    loggingSafeErrorMessage: unsupportedVersionErrorMessage
+                )
+            )
         }
     }
 

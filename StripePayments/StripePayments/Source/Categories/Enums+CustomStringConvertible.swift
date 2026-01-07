@@ -181,6 +181,8 @@ extension STPIntentActionUseStripeSDKType: CustomStringConvertible {
             return "threeDS2Fingerprint"
         case .threeDS2Redirect:
             return "threeDS2Redirect"
+        case .intentConfirmationChallenge:
+            return "intentConfirmationChallenge"
         case .unknown:
             return "unknown"
         }

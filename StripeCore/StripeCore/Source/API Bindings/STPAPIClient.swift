@@ -90,8 +90,14 @@ import UIKit
 
     @_spi(STP) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
 
+    private static var didSendTelemetryDataOnInit: Bool = false
+
     // MARK: Initializers
     override public init() {
+        if !Self.didSendTelemetryDataOnInit {
+            STPTelemetryClient.shared.sendTelemetryData()
+            Self.didSendTelemetryDataOnInit = true
+        }
     }
 
     /// Initializes an API client with the given publishable key.
@@ -328,24 +334,6 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             resource: resource,
-            completion: completion
-        )
-    }
-
-    /// Make a POST request using the passed parameters.
-    @_spi(STP) public func post<T: Decodable>(
-        url: URL,
-        parameters: [String: Any],
-        ephemeralKeySecret: String? = nil,
-        consumerPublishableKey: String? = nil,
-        completion: @escaping (Result<T, Error>) -> Void
-    ) {
-        request(
-            method: .post,
-            parameters: parameters,
-            ephemeralKeySecret: ephemeralKeySecret,
-            consumerPublishableKey: consumerPublishableKey,
-            url: url,
             completion: completion
         )
     }

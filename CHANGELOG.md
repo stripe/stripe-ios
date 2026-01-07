@@ -1,6 +1,44 @@
-## X.Y.Z
+## X.Y.Z - changes pending release 
+### All
+* [Fixed] Improved telemetry used for [advanced fraud signals](https://docs.stripe.com/disputes/prevention/advanced-fraud-detection).
+
+### PaymentSheet
+* [Changed] Custom Payment Methods is now generally available, learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/custom-payment-methods).
+
+## 25.3.1 2025-12-19
+
+### Financial Connections
+* [Fixed] The native Instant Bank Payments flow is now available to more merchants.
+
+## 25.3.0 2025-12-15
+
+### PaymentSheet
+* [Added] Support for PayPay with PaymentIntents.
+
+### Payments
+* [Added] Support for PayPay bindings.
+
+## 25.2.0 2025-12-01
+
+### Payment Method Messaging Element
+* [Added] `PaymentMethodMessagingElement` is now in public preview
+
+## 25.1.1 2025-11-24
+
+### Financial Connections
+* [Fixed] Fixes Instant Bank Payments when used in a webview flow.
+
+## 25.1.0 2025-11-18
+### PaymentSheet
+* [Added] Added `card` property to `STPPaymentMethodPreview` to expose card details (brand, country, exp_month, exp_year, funding, last4, display_brand) from ConfirmationTokens.
+
+### Financial Connections
+* [Added] `StripeFinancialConnections` SDK is now localized!
+
+## 25.0.1 2025-11-10
 ### PaymentSheet
 * [Fixed] Fixed an issue where async APIs did not run on the main thread.
+* [Fixed] Fixed a crash when presenting PaymentSheet with liquid glass navigation bar style from a view controller not embedded in a UINavigationController.
 
 ## 25.0.0 2025-11-03
 This major version introduces many small breaking changes. Please see [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) to help you migrate.

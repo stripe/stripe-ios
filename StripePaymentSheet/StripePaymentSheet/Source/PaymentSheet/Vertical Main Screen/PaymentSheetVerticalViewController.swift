@@ -111,7 +111,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
-    var passiveCaptchaChallenge: StripePayments.PassiveCaptchaChallenge?
+    var confirmationChallenge: ConfirmationChallenge?
 
     // MARK: - UI properties
 
@@ -294,7 +294,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
             return .makeDefaultTypeForPaymentSheet(intent: intent)
         }()
-        let state: ConfirmButton.Status = {
+        let status: ConfirmButton.Status = {
             if isPaymentInFlight {
                 return .processing
             }
@@ -310,7 +310,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stpAssertionFailure("Apple Pay should be handled by the wallet button, not the primary button")
         }
         primaryButton.update(
-            state: state,
+            status: status,
             callToAction: callToAction,
             animated: true
         )
@@ -472,10 +472,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makeWalletHeaderView() -> UIView? {
         var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList && !walletButtonsShownExternally {
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList && !walletButtonsShownExternally && !configuration.willUseWalletButtonsView {
             walletOptions.insert(.applePay)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList && !walletButtonsShownExternally {
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList && !walletButtonsShownExternally && !configuration.willUseWalletButtonsView {
             walletOptions.insert(.link)
         }
         guard !walletOptions.isEmpty else {
@@ -556,7 +556,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            confirmationChallenge: confirmationChallenge,
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
@@ -577,22 +577,32 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        logRenderLPMs()
+        logInitialDisplayedPaymentMethods()
         isLinkWalletButtonSelected = false
         linkConfirmOption = nil
     }
 
-    private func logRenderLPMs() {
-        // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
-        var visibleLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }
-        // Add wallet LPMs
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
-            visibleLPMs.append(RowButtonType.applePay.analyticsIdentifier)
+    private func logInitialDisplayedPaymentMethods() {
+        var visiblePaymentMethods: [String] = []
+        var hiddenPaymentMethods: [String] = []
+        // if ApplePay is showing as an express button
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowApplePayInList {
+            visiblePaymentMethods.append(RowButtonType.applePay.analyticsIdentifier)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
-            visibleLPMs.append(RowButtonType.link.analyticsIdentifier)
+        // if Link is showing as an express button
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
+            visiblePaymentMethods.append(RowButtonType.link.analyticsIdentifier)
         }
-        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: [])
+        paymentMethodListViewController?.rowButtons.forEach { rowButton in
+            let identifier = rowButton.type.analyticsIdentifier
+            if rowButton.isFullyVisibleOnScreen {
+                visiblePaymentMethods.append(identifier)
+            } else {
+                hiddenPaymentMethods.append(identifier)
+            }
+        }
+
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .vertical)
     }
 
     // MARK: - PaymentSheetViewControllerProtocol
@@ -637,13 +647,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     deferredIntentConfirmationType: deferredIntentConfirmationType
                 )
 
-                self.isPaymentInFlight = false
                 switch result {
                 case .canceled:
+                    self.isPaymentInFlight = false
                     // Keep customer on payment sheet
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
+                    self.isPaymentInFlight = false
 #if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
@@ -671,7 +682,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 #if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
-                        self.primaryButton.update(state: .succeeded, animated: true) {
+                        self.primaryButton.update(status: .succeeded, animated: true) {
+                            self.isPaymentInFlight = false
                             self.paymentSheetDelegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
                         }
                     }

@@ -94,6 +94,52 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(paymentMethodPreview?.customerId, "cus_1234567890")
     }
 
+    func testConfirmationTokenWithPaymentMethodPreviewCard() {
+        let json = [
+            "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
+            "object": "confirmation_token",
+            "created": 1694025025,
+            "livemode": false,
+            "payment_method_preview": [
+                "type": "card",
+                "billing_details": [
+                    "name": "John Doe",
+                    "email": "john@example.com",
+                ],
+                "card": [
+                    "brand": "visa",
+                    "country": "US",
+                    "exp_month": 12,
+                    "exp_year": 2030,
+                    "funding": "credit",
+                    "last4": "4242",
+                    "display_brand": "visa",
+                ],
+                "allow_redisplay": "always",
+            ],
+        ] as [String: Any]
+
+        let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
+
+        XCTAssertNotNil(confirmationToken)
+        XCTAssertEqual(confirmationToken?.stripeId, "ctoken_1NnQUf2eZvKYlo2CIObdtbnb")
+
+        let paymentMethodPreview = confirmationToken?.paymentMethodPreview
+        XCTAssertNotNil(paymentMethodPreview)
+        XCTAssertEqual(paymentMethodPreview?.type, .card)
+
+        // Test card fields
+        let card = paymentMethodPreview?.card
+        XCTAssertNotNil(card)
+        XCTAssertEqual(card?.brand, .visa)
+        XCTAssertEqual(card?.country, "US")
+        XCTAssertEqual(card?.expMonth, 12)
+        XCTAssertEqual(card?.expYear, 2030)
+        XCTAssertEqual(card?.funding, "credit")
+        XCTAssertEqual(card?.last4, "4242")
+        XCTAssertEqual(card?.displayBrand, "visa")
+    }
+
     func testConfirmationTokenWithShippingDetails() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",

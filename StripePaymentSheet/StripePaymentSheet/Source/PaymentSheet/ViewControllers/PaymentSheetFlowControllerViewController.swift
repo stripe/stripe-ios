@@ -22,7 +22,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
-    var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    var confirmationChallenge: ConfirmationChallenge?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -298,7 +298,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            passiveCaptchaChallenge: passiveCaptchaChallenge
+            confirmationChallenge: confirmationChallenge
         ) { [weak self] confirmOption, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption
@@ -396,7 +396,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                         self.view.layoutIfNeeded()
                     }
                 }
-                confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled, callToAction: callToAction, animated: true)
+                confirmButton.update(status: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled, callToAction: callToAction, animated: true)
             } else {
                 if !confirmButton.isHidden {
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -418,7 +418,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                     self.view.layoutIfNeeded()
                 }
             }
-            var confirmButtonState: ConfirmButton.Status = {
+            var confirmButtonStatus: ConfirmButton.Status = {
                 if addPaymentMethodViewController.paymentOption == nil {
                     // We don't have valid payment method params yet
                     return .disabled
@@ -430,11 +430,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             var callToAction: ConfirmButton.CallToActionType = callToAction
             if let overridePrimaryButtonState = addPaymentMethodViewController.overridePrimaryButtonState {
                 callToAction = overridePrimaryButtonState.ctaType
-                confirmButtonState = overridePrimaryButtonState.enabled ? .enabled : .disabled
+                confirmButtonStatus = overridePrimaryButtonState.enabled ? .enabled : .disabled
             }
 
             confirmButton.update(
-                state: confirmButtonState,
+                status: confirmButtonStatus,
                 callToAction: callToAction,
                 animated: true
             )

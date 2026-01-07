@@ -345,7 +345,7 @@ class CustomerSheetUITest: XCTestCase {
 
         // Go through connections flow
         app.buttons["consent_agree_button"].tap()
-        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Test (Non-OAuth)"].forceTapElement()
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: timeout)
 

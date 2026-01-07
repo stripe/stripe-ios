@@ -22,7 +22,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case identity
         case wallets
         case payment(wallet: CustomerWalletsResponse.Wallet)
-        case paymentSummary(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String)
+        case paymentSummary(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String, settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed)
         case checkoutSuccess(message: String)
     }
 
@@ -37,6 +37,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var isIdDocumentVerified = false
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
     private var selectedPaymentMethodDescription: String?
+    private var settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed?
     private var successfulCheckoutMessage: String?
 
     /// Creates a new `CryptoOnrampFlowCoordinator`.
@@ -91,9 +92,11 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// - Parameters:
     ///   - createOnrampSessionResponse: The onramp session that was created for checking out.
     ///   - selectedPaymentMethodDescription: A description of the selected payment used to start the onramp session.
-    func advanceAfterPayment(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String) {
+    ///   - settlementSpeed: When a bank account was used, this specifies the speed at which funds will be delivered. If a bank account was not used, the value should always be `.instant`.
+    func advanceAfterPayment(createOnrampSessionResponse: CreateOnrampSessionResponse, selectedPaymentMethodDescription: String, settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed) {
         self.createOnrampSessionResponse = createOnrampSessionResponse
         self.selectedPaymentMethodDescription = selectedPaymentMethodDescription
+        self.settlementSpeed = settlementSpeed
         advanceToNextStep()
     }
 
@@ -127,8 +130,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             path.append(.identity)
         } else if let successfulCheckoutMessage {
             path.append(.checkoutSuccess(message: successfulCheckoutMessage))
-        } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription {
-            path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription))
+        } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription, let settlementSpeed {
+            path.append(.paymentSummary(createOnrampSessionResponse: createOnrampSessionResponse, selectedPaymentMethodDescription: selectedPaymentMethodDescription, settlementSpeed: settlementSpeed))
         } else if let selectedWallet {
             path.append(.payment(wallet: selectedWallet))
         } else {
@@ -149,6 +152,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         selectedWallet = nil
         createOnrampSessionResponse = nil
         selectedPaymentMethodDescription = nil
+        settlementSpeed = nil
         successfulCheckoutMessage = nil
     }
 }

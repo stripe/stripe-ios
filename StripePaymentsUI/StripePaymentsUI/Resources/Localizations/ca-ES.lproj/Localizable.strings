@@ -22,8 +22,6 @@
 
 "Billing address" = "Adreça de facturació";
 
-"Billing details" = "Dades de facturació";
-
 "CVC" = "CVC";
 
 "Card information" = "Informació de targeta";
@@ -37,6 +35,18 @@
 "MM / YY" = "MM / AA";
 
 "MM/YY" = "MM / AA";
+
+"Only credit and prepaid cards are accepted" = "Només s'accepten les targetes de crèdit i de prepagament";
+
+"Only credit cards are accepted" = "Només s'accepten les targetes de crèdit";
+
+"Only debit and credit cards are accepted" = "Només s'accepten les targetes de dèbit i de crèdit";
+
+"Only debit and prepaid cards are accepted" = "Només s'accepten les targetes de dèbit i de prepagament";
+
+"Only debit cards are accepted" = "Només s'accepten les targetes de dèbit";
+
+"Only prepaid cards are accepted" = "Només s'accepten les de prepagament";
 
 "Postal Code" = "Codi postal";
 

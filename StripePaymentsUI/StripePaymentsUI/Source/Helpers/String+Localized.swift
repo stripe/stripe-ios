@@ -57,10 +57,6 @@ extension String.Localized {
         STPLocalizedString("Billing address", "Billing address section title for card form entry.")
     }
 
-    @_spi(STP) public static var billing_details_lowercase: String {
-        STPLocalizedString("Billing details", "Billing details section title for card form entry.")
-    }
-
     @_spi(STP) public static var your_card_number_is_incomplete: String {
         STPLocalizedString(
             "Your card number is incomplete.",
@@ -146,6 +142,53 @@ extension String.Localized {
         STPLocalizedString(
             "The selected brand is not allowed",
             "String to inform a user that specific card brands are not accepted."
+        )
+    }
+
+    // MARK: - Card Funding Filter Messages
+    // Complete strings for each funding type combination to ensure proper localization context
+
+    // Single funding types
+    @_spi(STP) public static var only_debit_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit cards are accepted",
+            "Warning shown when only debit cards are accepted"
+        )
+    }
+
+    @_spi(STP) public static var only_credit_cards_accepted: String {
+        STPLocalizedString(
+            "Only credit cards are accepted",
+            "Warning shown when only credit cards are accepted"
+        )
+    }
+
+    @_spi(STP) public static var only_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only prepaid cards are accepted",
+            "Warning shown when only prepaid cards are accepted"
+        )
+    }
+
+    // Two funding types
+    @_spi(STP) public static var only_debit_and_credit_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit and credit cards are accepted",
+            "Warning shown when only debit and credit cards are accepted"
+        )
+    }
+
+    @_spi(STP) public static var only_debit_and_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit and prepaid cards are accepted",
+            "Warning shown when only debit and prepaid cards are accepted"
+        )
+    }
+
+    @_spi(STP) public static var only_credit_and_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only credit and prepaid cards are accepted",
+            "Warning shown when only credit and prepaid cards are accepted"
         )
     }
 

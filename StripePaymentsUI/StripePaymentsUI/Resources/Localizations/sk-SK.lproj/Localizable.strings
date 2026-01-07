@@ -22,8 +22,6 @@
 
 "Billing address" = "Fakturačná adresa";
 
-"Billing details" = "Podrobnosti o fakturácii";
-
 "CVC" = "CVC";
 
 "Card information" = "Informácie o karte";
@@ -37,6 +35,18 @@
 "MM / YY" = "MM / RR";
 
 "MM/YY" = "MM/RR";
+
+"Only credit and prepaid cards are accepted" = "Akceptujú sa len kreditné a predplatené karty";
+
+"Only credit cards are accepted" = "Akceptujú sa iba kreditné karty";
+
+"Only debit and credit cards are accepted" = "Akceptujú sa iba debetné a kreditné karty";
+
+"Only debit and prepaid cards are accepted" = "Akceptujú sa iba debetné a predplatené karty";
+
+"Only debit cards are accepted" = "Akceptujú sa iba debetné karty";
+
+"Only prepaid cards are accepted" = "Akceptujú sa iba predplatené karty";
 
 "Postal Code" = "PSČ";
 

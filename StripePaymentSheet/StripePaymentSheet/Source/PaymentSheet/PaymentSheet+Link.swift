@@ -67,7 +67,7 @@ extension PaymentSheet {
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, passiveCaptchaChallenge: passiveCaptchaChallenge)
+        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
 
         payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {
@@ -101,18 +101,29 @@ extension PaymentSheet {
 // MARK: - Native Link helpers
 
 /// Check if native Link is available on this device
-func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
-    let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
+func deviceCanUseNativeLink(
+    useAttestationEndpoints: Bool?,
+    apiClient: STPAPIClient
+) -> Bool {
+    let useAttestationEndpoints = useAttestationEndpoints ?? false
     guard useAttestationEndpoints else {
         return false
     }
 
     // If we're in testmode, we don't need to attest for native Link
-    if configuration.apiClient.isTestmode {
+    if apiClient.isTestmode {
         return true
     }
 
-    return configuration.apiClient.stripeAttest.isSupported
+    return apiClient.stripeAttest.isSupported
+}
+
+/// Check if native Link is available on this device
+func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+    return deviceCanUseNativeLink(
+        useAttestationEndpoints: elementsSession.linkSettings?.useAttestationEndpoints,
+        apiClient: configuration.apiClient
+    )
 }
 
 // MARK: - Link features

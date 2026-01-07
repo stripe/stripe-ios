@@ -4,7 +4,15 @@
 
 "Close" = "Lukk";
 
+"Confirm it's you" = "Bekreft at det er deg";
+
 "Default payment method was not updated. Please try again." = "Standard betalingsmetode ble ikke oppdatert. Prøv igjen.";
+
+"Enter the code sent to %@." = "Skriv inn koden som ble sendt til %@.";
+
+"Failed to connect" = "Kan ikke koble til";
+
+"Resend code" = "Send kode på nytt";
 
 "Scan Card" = "Skann kort";
 

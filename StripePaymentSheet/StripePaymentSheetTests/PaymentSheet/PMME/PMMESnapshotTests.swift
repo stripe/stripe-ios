@@ -6,13 +6,16 @@
 //
 
 @_spi(STP)@testable import StripeCore
-import StripeCoreTestUtils
-@_spi(STP)@testable import StripePaymentSheet
+@_spi(STP) import StripeCoreTestUtils
+@_spi(PaymentMethodMessagingElementPreview)@testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 import UIKit
+import XCTest
 
 @MainActor
 class PMMESnapshotTests: STPSnapshotTestCase {
+
+    var mockAnalyticsClient = MockAnalyticsClient()
 
     // MARK: - Single Partner Mode Tests
 
@@ -22,7 +25,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .automatic
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -32,7 +35,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .alwaysLight
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -42,7 +45,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .alwaysDark
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -52,7 +55,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .flat
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -66,7 +69,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "4 interest-free payments with {partner}",
             appearance: appearance
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -80,7 +83,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Pay in 4 installments with {partner}",
             appearance: appearance
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -90,7 +93,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "{partner} lets you pay over time",
             style: .automatic
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -102,7 +105,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Flexible payment options",
             style: .automatic
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -112,7 +115,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later",
             style: .automatic
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -126,7 +129,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Flexible payment options available",
             style: .alwaysLight
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -140,7 +143,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Flexible payment options available",
             style: .alwaysDark
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -150,7 +153,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Multiple BNPL options",
             style: .flat
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -163,7 +166,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Pay over time with trusted partners",
             appearance: appearance
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -175,7 +178,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later in 4 interest-free installments with {partner} for orders over $50",
             style: .automatic
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -185,7 +188,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Choose from multiple flexible payment options and pay over time with no hidden fees or interest charges",
             style: .automatic
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view)
     }
 
@@ -197,7 +200,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Buy now or pay later with {partner}",
             style: .automatic
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view, width: 200)
     }
 
@@ -207,26 +210,65 @@ class PMMESnapshotTests: STPSnapshotTestCase {
             promotion: "Flexible payment options",
             style: .automatic
         )
-        let view = PMMEUIView(viewData: viewData)
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
         verify(view, width: 200)
+    }
+
+    // MARK: - Legal Disclosure Tests
+
+    func testSinglePartnerMode_WithLegalDisclosure() {
+        let viewData = makeViewData(
+            mode: .singlePartner(logo: makeLogoSet()),
+            legalDisclosure: "18+, T&C apply. Credit subject to status.",
+            promotion: "Buy now or pay later with {partner}",
+            style: .automatic
+        )
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
+        verify(view)
+    }
+
+    func testMultiPartnerMode_WithLegalDisclosure() {
+        let viewData = makeViewData(
+            mode: .multiPartner(logos: [makeLogoSet(), makeLogoSet(color: .systemGreen)]),
+            legalDisclosure: "18+, T&C apply. Credit subject to status.",
+            promotion: "Buy now or pay later",
+            style: .automatic
+        )
+        let view = PMMEUIView(viewData: viewData, integrationType: .uiKit)
+        verify(view)
     }
 
     // MARK: - Helper Methods
 
     private func makeViewData(
         mode: PaymentMethodMessagingElement.Mode,
+        legalDisclosure: String? = nil,
         promotion: String,
         style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle = .automatic,
         appearance: PaymentMethodMessagingElement.Appearance? = nil
     ) -> PaymentMethodMessagingElement.ViewData {
+        // Reset analytics at the start of each test
+        mockAnalyticsClient.reset()
+
         var finalAppearance = appearance ?? PaymentMethodMessagingElement.Appearance()
         finalAppearance.style = style
+
+        let configuration = PaymentMethodMessagingElement.Configuration(
+            amount: 5000,
+            currency: "usd"
+        )
+        let analyticsHelper = PMMEAnalyticsHelper(
+            configuration: configuration,
+            analyticsClient: mockAnalyticsClient
+        )
 
         return PaymentMethodMessagingElement.ViewData(
             mode: mode,
             infoUrl: URL(string: "https://stripe.com")!,
+            legalDisclosure: legalDisclosure,
             promotion: promotion,
-            appearance: finalAppearance
+            appearance: finalAppearance,
+            analyticsHelper: analyticsHelper
         )
     }
 
@@ -240,7 +282,8 @@ class PMMESnapshotTests: STPSnapshotTestCase {
         return PaymentMethodMessagingElement.LogoSet(
             light: lightImage,
             dark: darkImage,
-            altText: "Partner Logo"
+            altText: "Partner Logo",
+            code: "test_partner"
         )
     }
 
@@ -311,5 +354,17 @@ class PMMESnapshotTests: STPSnapshotTestCase {
         view.layoutIfNeeded()
 
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+
+        // Verify analytics - displayed event should be logged
+        assertDisplayedEventLogged(file: file, line: line)
+    }
+
+    private func assertDisplayedEventLogged(file: StaticString = #filePath, line: UInt = #line) {
+        let displayedEvents = mockAnalyticsClient.loggedAnalytics.filter { analytic in
+            guard let paymentSheetAnalytic = analytic as? PaymentSheetAnalytic else { return false }
+            return paymentSheetAnalytic.event == .paymentMethodMessagingElementDisplayed
+        }
+
+        XCTAssertEqual(displayedEvents.count, 1, "Expected exactly one displayed event", file: file, line: line)
     }
 }

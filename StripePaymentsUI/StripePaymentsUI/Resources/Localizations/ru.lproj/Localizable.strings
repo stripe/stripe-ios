@@ -22,8 +22,6 @@
 
 "Billing address" = "Адрес для выставления счета";
 
-"Billing details" = "Детали счета";
-
 "CVC" = "Код CVV/CVC";
 
 "Card information" = "Данные платежной карты";
@@ -37,6 +35,18 @@
 "MM / YY" = "ММ / ГГ";
 
 "MM/YY" = "ММ/ГГ";
+
+"Only credit and prepaid cards are accepted" = "Принимаются только кредитные и предоплаченные карты";
+
+"Only credit cards are accepted" = "Принимаются только кредитные карты";
+
+"Only debit and credit cards are accepted" = "Принимаются только дебетовые и кредитные карты";
+
+"Only debit and prepaid cards are accepted" = "Принимаются только дебетовые и предоплаченные карты";
+
+"Only debit cards are accepted" = "Принимаются только дебетовые карты";
+
+"Only prepaid cards are accepted" = "Принимаются только предоплаченные карты";
 
 "Postal Code" = "Почтовый индекс";
 

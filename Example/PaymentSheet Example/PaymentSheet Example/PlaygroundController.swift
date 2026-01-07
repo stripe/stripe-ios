@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -214,6 +214,10 @@ class PlaygroundController: ObservableObject {
             configuration.enablePassiveCaptcha = true
         }
 
+        if settings.enableAttestationOnConfirmation == .on {
+            configuration.enableAttestationOnConfirmation = true
+        }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -247,6 +251,15 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
+
+        switch settings.cardFundingAcceptance {
+        case .all:
+            break // Default accepts all funding types
+        case .creditOnly:
+            configuration.allowedCardFundingTypes = .credit
+        case .debitOnly:
+            configuration.allowedCardFundingTypes = .debit
         }
 
         switch settings.style {
@@ -334,6 +347,10 @@ class PlaygroundController: ObservableObject {
             configuration.enablePassiveCaptcha = true
         }
 
+        if settings.enableAttestationOnConfirmation == .on {
+            configuration.enableAttestationOnConfirmation = true
+        }
+
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -358,6 +375,15 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
+
+        switch settings.cardFundingAcceptance {
+        case .all:
+            break // Default accepts all funding types
+        case .creditOnly:
+            configuration.allowedCardFundingTypes = .credit
+        case .debitOnly:
+            configuration.allowedCardFundingTypes = .debit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
@@ -410,6 +436,9 @@ class PlaygroundController: ObservableObject {
                 guard let self = self else {
                     throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
                 }
+                // Create a new intent
+                self.createIntent()
+                // Now confirm with the new intent
                 return try await self.confirmationTokenConfirmHandler(confirmationToken)
             }
 
@@ -441,8 +470,14 @@ class PlaygroundController: ObservableObject {
         } else {
             // Use payment method confirmation handler for non-CT integration types
             let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] pm, billingDetails in
-                try await withCheckedThrowingContinuation { continuation in
-                    self?.confirmHandler(pm, billingDetails) { result in
+                guard let self = self else {
+                    throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
+                }
+                // Create a new intent first
+                self.createIntent()
+                // Now confirm with the new intent
+                return try await withCheckedThrowingContinuation { continuation in
+                    self.confirmHandler(pm, billingDetails) { result in
                         continuation.resume(with: result)
                     }
                 }
@@ -808,12 +843,13 @@ extension PlaygroundController {
         }
     }
 
+    func fail(error: Error) {
+        self.lastPaymentResult = .failed(error: error)
+        self.isLoading = false
+        self.currentlyRenderedSettings = self.settings
+    }
+
     func loadBackend(reinitializeControllers: Bool) {
-        func fail(error: Error) {
-            self.lastPaymentResult = .failed(error: error)
-            self.isLoading = false
-            self.currentlyRenderedSettings = self.settings
-        }
         let onlyDifferenceBetweenSettingsIsMode: Bool = {
             var oldModifiedWithNewMode = currentlyRenderedSettings
             oldModifiedWithNewMode.mode = settings.mode
@@ -834,41 +870,7 @@ extension PlaygroundController {
         embeddedPlaygroundViewController?.isLoading = true
         isLoading = true
         let settingsToLoad = self.settings
-
-        var body = [
-            "customer": customerIdOrType,
-            "customer_key_type": settings.customerKeyType.rawValue,
-            "currency": settings.currency.rawValue,
-            "amount": settings.amount.rawValue,
-            "merchant_country_code": settings.merchantCountryCode.rawValue,
-            "mode": settings.mode.rawValue,
-            "automatic_payment_methods": settings.apmsEnabled == .on,
-            "use_link": settings.linkPassthroughMode == .pm,
-            "link_mode": settings.linkEnabledMode.rawValue,
-            "use_manual_confirmation": settings.integrationType == .deferred_mc,
-            "require_cvc_recollection": settings.requireCVCRecollection == .on,
-            "is_confirmation_token": settings.confirmationMode == .confirmationToken,
-            "customer_session_component_name": "mobile_payment_element",
-            "customer_session_payment_method_save": settings.paymentMethodSave.rawValue,
-            "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
-            "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
-            "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
-            "customer_session_payment_method_set_as_default": settings.paymentMethodSetAsDefault.rawValue,
-            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
-            //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
-        ] as [String: Any]
-        if settingsToLoad.apmsEnabled == .off, let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
-            body["supported_payment_methods"] = supportedPaymentMethods
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .split(separator: ",")
-                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
-        }
-        if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
-            body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
-        }
-        if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
-            body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
-        }
+        let body = buildRequestBody()
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, discard this result
             if settingsToLoad != self.settings {
@@ -892,7 +894,7 @@ extension PlaygroundController {
                        let jsonError = json["error"] {
                         errorMessage = jsonError
                     }
-                    fail(error: PlaygroundError(errorDescription: errorMessage))
+                    self.fail(error: PlaygroundError(errorDescription: errorMessage))
                 }
                 return
             }
@@ -982,6 +984,75 @@ extension PlaygroundController {
                 }
             }
         }
+    }
+
+    func createIntent() {
+        let body = buildRequestBody(shouldCreateCustomerKey: false)
+        makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONDecoder().decode([String: String].self, from: data),
+                (response as? HTTPURLResponse)?.statusCode != 400,
+                let clientSecret = json["intentClientSecret"]
+            else {
+                print(error as Any)
+                DispatchQueue.main.async {
+                    var errorMessage = "An error occurred communicating with the example backend."
+                    if let data = data,
+                       let json = try? JSONDecoder().decode([String: String].self, from: data),
+                       let jsonError = json["error"] {
+                        errorMessage = jsonError
+                    }
+                    self.fail(error: PlaygroundError(errorDescription: errorMessage))
+                }
+                return
+            }
+            self.clientSecret = clientSecret
+            let intentID = STPPaymentIntent.id(fromClientSecret: clientSecret) ?? STPSetupIntent.id(fromClientSecret: clientSecret)
+            print("Created new stripe intent with id: \(intentID ?? "")")
+        }
+    }
+
+    /// Builds the common request body parameters used for both loading backend and creating intents
+    private func buildRequestBody(shouldCreateCustomerKey: Bool = true) -> [String: Any] {
+        var body = [
+            "customer": customerIdOrType,
+            "currency": settings.currency.rawValue,
+            "amount": settings.amount.rawValue,
+            "merchant_country_code": settings.merchantCountryCode.rawValue,
+            "mode": settings.mode.rawValue,
+            "automatic_payment_methods": settings.apmsEnabled == .on,
+            "use_link": settings.linkPassthroughMode == .pm,
+            "link_mode": settings.linkEnabledMode.rawValue,
+            "use_manual_confirmation": settings.integrationType == .deferred_mc,
+            "require_cvc_recollection": settings.requireCVCRecollection == .on,
+            "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
+            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
+            //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
+        ] as [String: Any]
+        if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
+            body["supported_payment_methods"] = supportedPaymentMethods
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .split(separator: ",")
+                .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+        }
+        if shouldCreateCustomerKey {
+            body["customer_key_type"] = settings.customerKeyType.rawValue
+            body["customer_session_component_name"] = "mobile_payment_element"
+            body["customer_session_payment_method_save"] = settings.paymentMethodSave.rawValue
+            body["customer_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
+            body["customer_session_payment_method_remove_last"] = settings.paymentMethodRemoveLast.rawValue
+            body["customer_session_payment_method_redisplay"] = settings.paymentMethodRedisplay.rawValue
+            body["customer_session_payment_method_set_as_default"] = settings.paymentMethodSetAsDefault.rawValue
+            if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
+                body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
+            }
+            if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
+                body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
+            }
+        }
+        return body
     }
 }
 

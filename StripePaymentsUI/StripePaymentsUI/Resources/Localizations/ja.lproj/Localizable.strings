@@ -22,8 +22,6 @@
 
 "Billing address" = "請求先住所";
 
-"Billing details" = "請求先の詳細";
-
 "CVC" = "セキュリティコード";
 
 "Card information" = "カード情報";
@@ -37,6 +35,18 @@
 "MM / YY" = "月 / 年";
 
 "MM/YY" = "MM/YY";
+
+"Only credit and prepaid cards are accepted" = "クレジットカードとプリペイドカードのみ利用できます";
+
+"Only credit cards are accepted" = "クレジットカードのみ利用できます";
+
+"Only debit and credit cards are accepted" = "デビットカードとクレジットカードのみ利用できます";
+
+"Only debit and prepaid cards are accepted" = "デビットカードとプリペイドカードのみ利用できます";
+
+"Only debit cards are accepted" = "デビットカードのみ利用できます";
+
+"Only prepaid cards are accepted" = "プリペイドカードのみ利用できます";
 
 "Postal Code" = "郵便番号";
 

@@ -22,8 +22,6 @@
 
 "Billing address" = "Adresă de facturare";
 
-"Billing details" = "Detalii de facturare";
-
 "CVC" = "Cod CVC";
 
 "Card information" = "Informații privind cardul";
@@ -37,6 +35,18 @@
 "MM / YY" = "LL/AA";
 
 "MM/YY" = "LL/AA";
+
+"Only credit and prepaid cards are accepted" = "Sunt acceptate doar cardurile de credit și cele preplătite";
+
+"Only credit cards are accepted" = "Sunt acceptate doar cardurile de credit";
+
+"Only debit and credit cards are accepted" = "Sunt acceptate doar cardurile de debit și credit";
+
+"Only debit and prepaid cards are accepted" = "Sunt acceptate doar cardurile de debit și cele preplătite";
+
+"Only debit cards are accepted" = "Sunt acceptate doar cardurile de debit";
+
+"Only prepaid cards are accepted" = "Sunt acceptate doar cardurile preplătite";
 
 "Postal Code" = "Cod poștal";
 

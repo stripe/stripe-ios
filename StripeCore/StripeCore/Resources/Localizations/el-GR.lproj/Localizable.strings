@@ -4,7 +4,15 @@
 
 "Close" = "Κλείσιμο";
 
+"Confirm it's you" = "Επιβεβαιώστε ότι είστε εσείς";
+
 "Default payment method was not updated. Please try again." = "Η προεπιλεγμένη μέθοδος πληρωμής δεν ενημερώθηκε. Δοκιμάστε ξανά.";
+
+"Enter the code sent to %@." = "Εισαγάγετε τον κωδικό που εστάλη στο %@.";
+
+"Failed to connect" = "Αποτυχία σύνδεσης";
+
+"Resend code" = "Επανάληψη αποστολής κωδικού";
 
 "Scan Card" = "Σάρωση κάρτας";
 

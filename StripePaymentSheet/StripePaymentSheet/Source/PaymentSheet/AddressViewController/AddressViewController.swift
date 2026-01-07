@@ -71,7 +71,7 @@ public class AddressViewController: UIViewController {
     // MARK: - Views
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
-            state: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
+            status: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
             callToAction: .custom(title: configuration.buttonTitle),
             appearance: configuration.appearance
         ) { [weak self] in
@@ -135,6 +135,8 @@ public class AddressViewController: UIViewController {
             if isAddressCompatible(configuration.defaultValues) {
                 return configuration.defaultValues
             }
+        } else if configuration.defaultValues.name?.isEmpty == false {
+            return configuration.defaultValues
         }
 
         // Fall back to billing address
@@ -416,12 +418,13 @@ extension AddressViewController {
         guard hasLoadedSpecs else { return nil }
 
         let defaultValues = compatibleDefaultValues ?? .init()
+        let showFullForm = compatibleDefaultValues?.address.line1?.isEmpty == false
 
         return AddressSectionElement(
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            collectionMode: compatibleDefaultValues != nil ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
+            collectionMode: showFullForm ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
@@ -503,7 +506,7 @@ extension AddressViewController {
          guard let addressSection = addressSection else { assertionFailure(); return }
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
-         button.update(state: enabled ? .enabled : .disabled, animated: true)
+         button.update(status: enabled ? .enabled : .disabled, animated: true)
          expandAddressSectionIfNeeded()
 
          // Automatically update the "shipping equals billing" checkbox based on current form state

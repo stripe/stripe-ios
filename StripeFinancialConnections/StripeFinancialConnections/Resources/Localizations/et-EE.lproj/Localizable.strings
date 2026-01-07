@@ -1,2 +1,175 @@
-/* label for iDEAL-bank selection picker */
+"%@ is currently unavailable" = "%@ pole praegu saadaval";
+
+"%@ is undergoing maintenance" = "%@ ei ole serveri hooldustööde tõttu ajutiselt kättesaadav";
+
+"Account number is required." = "Kontonumber on nõutav.";
+
+"Almost there" = "Peaaegu valmis";
+
+"Can't find your bank?" = "Kas te ei leia oma panka?";
+
+"Checking and savings accounts are supported." = "Toetatud on arveduskontod ja säästukontod.";
+
+"Choose a different bank" = "Vali teine pank";
+
+"Click “Resend code” and try again, or %@." = "Klõpsake Proovige uuesti, klõpsates Saada kood uuesti või %@.";
+
+"Confirm account number" = "Kinnitage kontonumber";
+
+"Confirm the account number." = "Kinnitage kontonumber.";
+
+"Connect account" = "Ühenda konto";
+
+"Connect accounts" = "Ühenda kontod";
+
+"Connect another account" = "Ühenda mõni muu konto";
+
+"Continue linking your account" = "Konto linkimisege jätkamine";
+
+"Continue with Link" = "Jätka Linkiga";
+
+"Email address" = "E-posti aadress";
+
+"Enter bank details" = "Sisestage pangaandmed";
+
+"Enter bank details manually" = "Sisesta pangaandmed käsitsi";
+
+"Enter the code sent to %@" = "Sisestage kood, mis saadeti telefoninumbrile %@";
+
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Sisestage kood, mis saadeti e-posti aadressile %@. Nõuame aeg-ajalt selle täiendava meetme võtmist teie konto turvalisena hoidmiseks.";
+
+"Exit without connecting?" = "Kas soovite väljuda ilma ühendamata?";
+
+"Hmm, that code didn’t work. Double check it and try again." = "Hmm, see kood ei töötanud. Kontrollige seda ja proovige uuesti.";
+
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Kehtetu pangakonto number: peab olema kõige rohkem %li-kohaline ja sisaldama ainult numbreid.";
+
+"Invalid routing number." = "Vale marsruutimisnumber.";
+
+"It looks like the verification code you provided is not valid anymore." = "Näib, et teie sisestatud kinnituskood pole enam kehtiv.";
+
+"Learn more" = "Lisateave";
+
+"Maintenance is scheduled to end at %@." = "Hoolduse kavandatud lõppaeg on %@.";
+
+"Maintenance is scheduled to end on %@ at %@." = "Hooldus on kavas lõpetada kuupäeval %1$@ kell %2$@.";
+
+"Manually enter details" = "Sisesta andmed käsitsi";
+
+"No payment accounts available" = "Sobivaid maksekontosid pole saadaval";
+
+"No results" = "Tulemusi ei leitud";
+
+"Not now" = "Mitte praegu";
+
+"Only checking accounts are supported." = "Toetatud on ainult arveduskontod.";
+
+"Please enter %d digits for your routing number." = "Palun sisestage oma marsruutimisnumbriks %li numbrit.";
+
+"Please enter your bank details manually or select another bank." = "Palun sisestage oma pangaandmed käsitsi või valige mõni muu pank.";
+
+"Please select another bank or try again later." = "Palun valige mõni muu pank või proovige hiljem uuesti.";
+
+"Please select another bank or try again." = "Palun valige mõni muu pank või proovige uuesti.";
+
+"Please select another bank." = "Palun valige mõni muu pank.";
+
+"Please try selecting another bank account." = "Palun proovige valida mõni muu pangakonto.";
+
+"Please try selecting another bank." = "Palun proovige valida mõni muu pank.";
+
+"Retrieving accounts..." = "Kontode toomine ...";
+
+"Routing number" = "Marsruutimisnumber";
+
+"Routing number is required." = "Marsruutimisnumber on nõutav.";
+
+"Search for more banks" = "Otsi veel panku";
+
+"Select account" = "Valige konto";
+
+"Select accounts" = "Valige kontod";
+
+"Select another bank" = "Vali mõni muu pank";
+
 "Select bank" = "Vali pank";
+
+"Something went wrong" = "Midagi läks valesti";
+
+"Submit" = "Esita";
+
+"Success" = "Õnnestus";
+
+"The account you selected isn't available for payments" = "Valitud konto ei sobi maksete tegemiseks";
+
+"The accounts you selected aren't available for payments" = "Valitud kontod ei sobi maksete tegemiseks";
+
+"There was a problem accessing your %@ account" = "Teie asutuse %@ kontole juurdepääsul tekkis probleem";
+
+"Try again, or %@." = "Proovige uuesti või %@.";
+
+"Try searching another bank" = "Proovige otsida mõnda muud panka";
+
+"Try searching another bank or %@" = "Proovige otsida mõnda muud panka või %@";
+
+"Use information you previously saved with your Link account." = "Kasutage teavet, mille olete varem oma Linki kontole salvestanud.";
+
+"Use test account" = "Kasuta testkontot";
+
+"Use test code" = "Kasuta testkoodi";
+
+"Verify your email" = "Kinnitage oma e-posti aadress";
+
+"We found %d %@ accounts but you can only link US checking accounts to %@." = "Leidsime %1$li %2$@ kontod, kuid USA arvelduskontosid saab siduda ainult %3$@-ga.";
+
+"We found %d %@ accounts but you can only link US checking accounts." = "Leidsime %1$li %2$@ kontod, kuid saate linkida ainult USA arvelduskontosid.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts to %@." = "Leidsime %1$li %2$@ kontod, kuid saate linkida ainult arveldus- või hoiukontosid %3$@-ga.";
+
+"We found %d %@ accounts but you can only link checking or savings accounts." = "Leidsime %1$li %2$@ kontod, kuid saate linkida ainult tšeki- või säästukontosid.";
+
+"We found 1 %@ account but you can only link US checking accounts to %@." = "Leidsime ühe %1$@ konto, kuid USA arvelduskontosid saab siduda ainult %2$@-ga.";
+
+"We found 1 %@ account but you can only link US checking accounts." = "Leidsime ühe %@ konto, kuid saate linkida ainult USA arvelduskontosid.";
+
+"We found 1 %@ account but you can only link checking or savings accounts to %@." = "Leidsime ühe %1$@ konto, kuid saate siduda ainult tšeki- või hoiukontosid %2$@-ga.";
+
+"We found 1 %@ account but you can only link checking or savings accounts." = "Leidsime ühe %@ konto, kuid saate linkida ainult arveldus- või hoiukontosid.";
+
+"Yes, exit" = "Jah, välju";
+
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Saate minikanded kontole lõpuga ••••%@ 1–2 tööpäeva jooksul ja meili täiendavate juhistega.";
+
+"You haven't finished linking your account. Press continue to finish the process." = "Te ei ole konto linkimist lõpule viinud. Protsessi lõpetamiseks vajutage Jätka.";
+
+"You haven't finished linking your bank account and all progress will be lost." = "Te ei ole pangakonto linkimist lõpule viinud ning kogu tehtud töö kaob.";
+
+"You're in test mode." = "Olete testrežiimis.";
+
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "Teie kontot ei saa praegu ühendada. Palun sisestage oma pangaandmed käsitsi või proovige hiljem uuesti.";
+
+"Your account can’t be connected at this time. Please try again later." = "Teie kontot ei saa praegu ühendada. Palun proovige hiljem uuesti.";
+
+"Your account number couldn’t be accessed at this time" = "Teie kontonumbrile ei saadud praegu juurdepääsu";
+
+"Your account numbers don't match." = "Teie kontonumbrid ei ühti.";
+
+"Your account was connected, but couldn't be saved to Link." = "Teie konto on ühendatud, kuid seda ei õnnestunud Linki salvestada.";
+
+"Your account was connected." = "Teie konto on ühendatud.";
+
+"Your accounts were connected, but couldn't be saved to Link." = "Teie kontod on ühendatud, kuid neid ei õnnestunud Linki salvestada.";
+
+"Your accounts were connected." = "Teie kontod on ühendatud.";
+
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Teie pangainfo kinnitatakse teie kontole deponeeritavate minikannetega, milleks kulub enamasti 1–2 tööpäeva. Toetatud on ainult arvelduskontod.";
+
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Teie pangainfo kinnitatakse teie kontole deponeeritavate minikannetega. Selleks kulub enamasti 1–2 tööpäeva.";
+
+"Your email address is invalid." = "Teie e-posti aadress on kehtetu.";
+
+"Your mobile phone number is incomplete." = "Teie mobiiltelefoni number on puudulik.";
+
+"contact us" = "võtke meiega ühendust";
+
+"manually enter details" = "sisesta andmed käsitsi";

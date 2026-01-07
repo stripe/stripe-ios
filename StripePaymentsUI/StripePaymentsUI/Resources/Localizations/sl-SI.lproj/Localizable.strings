@@ -22,8 +22,6 @@
 
 "Billing address" = "Naslov plačnika računa";
 
-"Billing details" = "Podrobnosti za izstavljanje računov";
-
 "CVC" = "CVC";
 
 "Card information" = "Podatki o kartici";
@@ -37,6 +35,18 @@
 "MM / YY" = "MM/LL";
 
 "MM/YY" = "MM/LL";
+
+"Only credit and prepaid cards are accepted" = "Sprejemajo se le kreditne in predplačniške kartice";
+
+"Only credit cards are accepted" = "Sprejemane so samo kreditne kartice";
+
+"Only debit and credit cards are accepted" = "Sprejemane so le debetne in kreditne kartice";
+
+"Only debit and prepaid cards are accepted" = "Sprejemajo se le debetne in predplačniške kartice";
+
+"Only debit cards are accepted" = "Sprejemane so le debetne kartice";
+
+"Only prepaid cards are accepted" = "Sprejemajo se le predplačniške kartice";
 
 "Postal Code" = "Poštna številka";
 

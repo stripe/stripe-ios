@@ -100,8 +100,6 @@
 
 "Confirm" = "Bestätigen";
 
-"Confirm it's you" = "Bestätigen Sie, dass Sie es sind";
-
 "Confirm payment details" = "Zahlungsdetails bestätigen";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bestätigen Sie die Zahlung in Ihrer Bank- oder Zahlungs-App innerhalb von %@, um den Kauf abzuschließen.";
@@ -109,6 +107,8 @@
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Bestätigen Sie die Zahlung in Ihrer Bank-App innerhalb von %@, um den Kauf abzuschließen.";
 
 "Confirm your CVC" = "Prüfziffer/CVC bestätigen";
+
+"Confirm your information" = "Bestätigen Sie Ihre Angaben";
 
 "Contact information" = "Kontaktinformationen";
 
@@ -128,11 +128,7 @@
 
 "Enter address manually" = "Adresse manuell eingeben";
 
-"Enter the code sent to %@." = "Geben Sie den Code ein, der an %s gesendet wurde.";
-
 "FPX Bank" = "FPX Bank";
-
-"Failed to connect" = "Verbindung fehlgeschlagen";
 
 "Fast, secure checkout" = "Schneller, sicherer Bezahlvorgang";
 
@@ -143,6 +139,8 @@
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Ich verstehe, dass Stripe im Namen von %@ Lastschriften einzieht und bestätige, dass ich der Kontoinhaber/die Kontoinhaberin und die einzige Person bin, die zur Autorisierung von Lastschriften von diesem Konto erforderlich ist.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Letzte 4 Ziffern der IdNr.";
 
 "Log in or sign up" = "Anmelden oder registrieren";
 
@@ -223,8 +221,6 @@
 "Remove card?" = "Karte entfernen?";
 
 "Remove linked account" = "Verknüpftes Konto entfernen";
-
-"Resend code" = "Code erneut senden";
 
 "SEPA debit details cannot be changed." = "Die SEPA-Lastschriftangaben können nicht geändert werden.";
 

@@ -22,8 +22,6 @@
 
 "Billing address" = "Adres para sa billing";
 
-"Billing details" = "Mga detalye ng singil";
-
 "CVC" = "CVC";
 
 "Card information" = "Impormasyon ng kard";
@@ -37,6 +35,18 @@
 "MM / YY" = "BB / TT";
 
 "MM/YY" = "BB / TT";
+
+"Only credit and prepaid cards are accepted" = "Mga credit at prepaid card lamang ang tinatanggap";
+
+"Only credit cards are accepted" = "Mga credit card lamang ang tinatanggap";
+
+"Only debit and credit cards are accepted" = "Mga debit at credit card lamang ang tinatanggap";
+
+"Only debit and prepaid cards are accepted" = "Mga debit at prepaid card lamang ang tinatanggap";
+
+"Only debit cards are accepted" = "Mga debit card lamang ang tinatanggap";
+
+"Only prepaid cards are accepted" = "Mga prepaid card lamang ang tinatanggap";
 
 "Postal Code" = "Postal Code";
 

@@ -356,7 +356,7 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
-    internal var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    internal var confirmationChallenge: ConfirmationChallenge?
 
     internal init(
         configuration: Configuration,
@@ -375,9 +375,7 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
-        if configuration.enablePassiveCaptcha, let passiveCaptchaData = loadResult.elementsSession.passiveCaptchaData {
-            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
-        }
+        self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: configuration.enablePassiveCaptcha, enableAttestation: configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: configuration.apiClient.stripeAttest)
     }
 }
 
@@ -464,7 +462,7 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
-    @_spi(CustomPaymentMethodsBeta) public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
+    public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
 }
 
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData

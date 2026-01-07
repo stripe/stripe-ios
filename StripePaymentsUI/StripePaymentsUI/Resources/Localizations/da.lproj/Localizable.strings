@@ -22,8 +22,6 @@
 
 "Billing address" = "Faktureringsadresse";
 
-"Billing details" = "Faktureringsoplysninger";
-
 "CVC" = "CVC";
 
 "Card information" = "Kortoplysninger";
@@ -37,6 +35,18 @@
 "MM / YY" = "MM/ÅÅ";
 
 "MM/YY" = "MM/ÅÅ";
+
+"Only credit and prepaid cards are accepted" = "Kun kredit- og forudbetalte kort accepteres";
+
+"Only credit cards are accepted" = "Kun kreditkort accepteres";
+
+"Only debit and credit cards are accepted" = "Kun debet- og kreditkort accepteres";
+
+"Only debit and prepaid cards are accepted" = "Kun debet- og forudbetalte kort accepteres";
+
+"Only debit cards are accepted" = "Kun debetkort accepteres";
+
+"Only prepaid cards are accepted" = "Kun forudbetalte kort accepteres";
 
 "Postal Code" = "Postnummer";
 

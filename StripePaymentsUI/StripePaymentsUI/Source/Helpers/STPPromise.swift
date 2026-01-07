@@ -14,10 +14,6 @@ import Foundation
 
     @_spi(STP) public typealias STPPromiseValueBlock = (T) -> Void
 
-    @_spi(STP) public typealias STPPromiseCompletionBlock = (T?, Error?) -> Void
-
-    @_spi(STP) public typealias STPPromiseFlatMapBlock = (T) -> STPPromise
-
     @_spi(STP) public var completed: Bool {
         return error != nil || value != nil
     }
@@ -68,17 +64,6 @@ import Foundation
         })
     }
 
-    @_spi(STP) public func complete(with promise: STPPromise) {
-        weak var weakSelf = self
-        promise.onSuccess({ value in
-            let strongSelf = weakSelf
-            strongSelf?.succeed(value)
-        }).onFailure({ error in
-            let strongSelf = weakSelf
-            strongSelf?.fail(error)
-        })
-    }
-
     @discardableResult @_spi(STP) public func onSuccess(_ callback: @escaping STPPromiseValueBlock) -> Self {
         if let value = value {
             stpDispatchToMainThreadIfNecessary({
@@ -99,28 +84,5 @@ import Foundation
             errorCallbacks = errorCallbacks + [callback]
         }
         return self
-    }
-
-    @discardableResult func onCompletion(_ callback: @escaping STPPromiseCompletionBlock) -> Self {
-        return onSuccess({ value in
-            callback(value, nil)
-        }).onFailure({ error in
-            callback(nil, error)
-        })
-    }
-
-    @discardableResult func flatMap(_ callback: @escaping STPPromiseFlatMapBlock) -> STPPromise {
-        let wrapper = STPPromise.init()
-        onSuccess({ value in
-            let `internal` = callback(value)
-            `internal`.onSuccess({ internalValue in
-                wrapper.succeed(internalValue)
-            }).onFailure({ internalError in
-                wrapper.fail(internalError)
-            })
-        }).onFailure({ error in
-            wrapper.fail(error)
-        })
-        return wrapper
     }
 }

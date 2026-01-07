@@ -36,7 +36,6 @@ extension AppDelegate {
         // Ignore broken constraints that existed at the time of writing this - please try to fix newly introduced ones instead of ignoring!
         // Sometimes the broken constraint references something that is unique, in which case we can ignore it easily
         let ignoredBrokenConstraints = [
-            "STP_Internal_LinkMoreInfoView", // https://jira.corp.stripe.com/browse/RUN_MOBILESDK-4562
             "verticalSeparatorWidth' separator|.width == 0.333333", // Apple broken UIAlert constraint - oddly they never log this either; maybe they also have an ignorelist!
             "UISV-spacing' H:[_UIInterfaceActionCustomViewRepresentationView:", // Same as ^
             "_UIModernBarButton:", // iOS 26+ keyboard toolbar issue
