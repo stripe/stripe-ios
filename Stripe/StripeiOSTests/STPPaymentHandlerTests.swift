@@ -402,8 +402,8 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
                     "last_payment_error": [
                         "code": "card_declined",
                         "message": "Your card was declined.",
-                        "type": "card_error"
-                    ]
+                        "type": "card_error",
+                    ],
                 ]) { _, new in new }
 
                 let updatedPI = STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)
