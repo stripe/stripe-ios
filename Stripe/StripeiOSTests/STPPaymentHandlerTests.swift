@@ -263,6 +263,241 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         XCTAssertGreaterThan(finalCallDelay, 1.1, "Final call should happen after polling budget expires")
         XCTAssertLessThan(finalCallDelay, 1.3, "Final call should happen after polling budget expires but within a reasonable time")
     }
+
+    // MARK: - Card Processing State Polling Tests (Orchestration/Multiprocessor)
+
+    /// Tests that a card payment in processing state triggers polling and succeeds when status transitions
+    func testCardProcessingStatePollingSucceeds() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Card processing polling succeeds")
+
+        var callCount = 0
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .processing,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": Date().timeIntervalSince1970]
+        )
+
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            // Return processing on first call, succeeded on second
+            let status: STPPaymentIntentStatus = callCount >= 2 ? .succeeded : .processing
+
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: status)
+            ]) { _, new in new }
+
+            let updatedPI = STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)
+            completion(updatedPI, nil)
+        }
+
+        var completionStatus: STPPaymentHandlerActionStatus?
+        var completionError: NSError?
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            completionStatus = status
+            completionError = error as NSError?
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        // This should trigger card processing polling since status is .processing and payment method is card
+        let requiresAction = paymentHandler._handlePaymentIntentStatus(forAction: currentAction)
+
+        XCTAssertFalse(requiresAction, "Should return false since polling is started")
+
+        wait(for: [expectation], timeout: 20.0)
+
+        XCTAssertEqual(completionStatus, .succeeded, "Card payment should succeed after polling")
+        XCTAssertNil(completionError, "No error expected on success")
+        XCTAssertGreaterThanOrEqual(callCount, 2, "Should have made at least 2 API calls")
+    }
+
+    /// Tests that a card payment in processing state times out when status doesn't change
+    func testCardProcessingStatePollingTimesOut() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Card processing polling times out")
+
+        var callCount = 0
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .processing,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": Date().timeIntervalSince1970]
+        )
+
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            // Always return processing to trigger timeout
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .processing)
+            ]) { _, new in new }
+
+            let updatedPI = STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)
+            completion(updatedPI, nil)
+        }
+
+        var completionStatus: STPPaymentHandlerActionStatus?
+        var completionError: NSError?
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            completionStatus = status
+            completionError = error as NSError?
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        let requiresAction = paymentHandler._handlePaymentIntentStatus(forAction: currentAction)
+
+        XCTAssertFalse(requiresAction, "Should return false since polling is started")
+
+        // Polling budget for card is 15 seconds, so wait a bit longer
+        wait(for: [expectation], timeout: 20.0)
+
+        XCTAssertEqual(completionStatus, .failed, "Card payment should fail after polling timeout")
+        XCTAssertNotNil(completionError, "Error expected on timeout")
+        XCTAssertEqual(
+            completionError?.domain,
+            STPPaymentHandler.errorDomain,
+            "Error should be from STPPaymentHandler"
+        )
+        XCTAssertGreaterThan(callCount, 1, "Should have made multiple API calls before timeout")
+    }
+
+    /// Tests that a card payment in processing state handles transition to requiresPaymentMethod (declined)
+    func testCardProcessingStatePollingDeclined() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Card processing polling handles declined")
+
+        var callCount = 0
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .processing,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": Date().timeIntervalSince1970]
+        )
+
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            // Return processing on first call, requiresPaymentMethod (declined) on second
+            if callCount >= 2 {
+                let responseDict = paymentIntent.allResponseFields.merging([
+                    "status": STPPaymentIntentStatus.string(from: .requiresPaymentMethod),
+                    "last_payment_error": [
+                        "code": "card_declined",
+                        "message": "Your card was declined.",
+                        "type": "card_error"
+                    ]
+                ]) { _, new in new }
+
+                let updatedPI = STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)
+                completion(updatedPI, nil)
+            } else {
+                let responseDict = paymentIntent.allResponseFields.merging([
+                    "status": STPPaymentIntentStatus.string(from: .processing)
+                ]) { _, new in new }
+
+                let updatedPI = STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)
+                completion(updatedPI, nil)
+            }
+        }
+
+        var completionStatus: STPPaymentHandlerActionStatus?
+        var completionError: NSError?
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            completionStatus = status
+            completionError = error as NSError?
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        let requiresAction = paymentHandler._handlePaymentIntentStatus(forAction: currentAction)
+
+        XCTAssertFalse(requiresAction, "Should return false since polling is started")
+
+        wait(for: [expectation], timeout: 20.0)
+
+        XCTAssertEqual(completionStatus, .failed, "Card payment should fail when declined")
+        XCTAssertNotNil(completionError, "Error expected on decline")
+        XCTAssertEqual(callCount, 2, "Should have made exactly 2 API calls")
+    }
+
+    /// Tests that a card payment in processing state handles requiresCapture (manual capture)
+    func testCardProcessingStatePollingRequiresCapture() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Card processing polling handles requiresCapture")
+
+        var callCount = 0
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .processing,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": Date().timeIntervalSince1970]
+        )
+
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            // Return processing on first call, requiresCapture on second
+            let status: STPPaymentIntentStatus = callCount >= 2 ? .requiresCapture : .processing
+
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: status)
+            ]) { _, new in new }
+
+            let updatedPI = STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)
+            completion(updatedPI, nil)
+        }
+
+        var completionStatus: STPPaymentHandlerActionStatus?
+        var completionError: NSError?
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            completionStatus = status
+            completionError = error as NSError?
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        let requiresAction = paymentHandler._handlePaymentIntentStatus(forAction: currentAction)
+
+        XCTAssertFalse(requiresAction, "Should return false since polling is started")
+
+        wait(for: [expectation], timeout: 20.0)
+
+        XCTAssertEqual(completionStatus, .succeeded, "Card payment with manual capture should succeed")
+        XCTAssertNil(completionError, "No error expected on success")
+        XCTAssertEqual(callCount, 2, "Should have made exactly 2 API calls")
+    }
 }
 
 class STPPaymentHandlerTests: APIStubbedTestCase {
