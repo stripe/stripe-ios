@@ -10,6 +10,8 @@ require 'set'
 REPO_ROOT = File.expand_path('..', __dir__)
 
 GLOBAL_TRIGGERS = [
+  /^ci_scripts\//,
+  /^bitrise\.yml$/,
   /^Package\.swift$/,
   /^Gemfile/, 
   /^\.swiftlint\.yml$/, 
