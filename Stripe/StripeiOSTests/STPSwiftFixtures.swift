@@ -10,7 +10,6 @@ import Foundation
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 @_exported @testable import StripePaymentsObjcTestUtils

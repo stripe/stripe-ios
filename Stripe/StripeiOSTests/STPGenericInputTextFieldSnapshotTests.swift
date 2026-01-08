@@ -12,14 +12,9 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPGenericInputTextFieldSnapshotTests: STPSnapshotTestCase {
-
-    override func setUp() {
-        super.setUp()
-    }
 
     func testEmpty() {
         let field = STPGenericInputTextField(placeholder: "Empty")

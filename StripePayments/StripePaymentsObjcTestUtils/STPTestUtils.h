@@ -23,22 +23,6 @@
 
 @end
 
-
-/**
- Custom assertion function to compare to UIImage instances.
-
- On iOS 9, `XCTAssertEqualObjects` incorrectly fails when provided with identical images.
-
- This just calls `XCTAssertEqualObjects` with the `UIImagePNGRepresentation` of each
- image. Can be removed when we drop support for iOS 9.
-
- @param image1 First UIImage to compare
- @param image2 Second UIImage to compare
- */
-NS_INLINE void STPAssertEqualImages(UIImage *image1, UIImage *image2) {
-    XCTAssertEqualObjects(UIImagePNGRepresentation(image1), UIImagePNGRepresentation(image2));
-};
-
 /**
  Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.
  @param view The view to snapshot.
