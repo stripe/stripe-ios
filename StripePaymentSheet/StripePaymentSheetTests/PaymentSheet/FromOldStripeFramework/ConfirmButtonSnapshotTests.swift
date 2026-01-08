@@ -11,7 +11,6 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 import UIKit
 
-@testable import Stripe
 @testable import StripeCore
 @testable import StripePaymentSheet
 

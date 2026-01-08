@@ -10,7 +10,6 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 
-@testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentsUI
