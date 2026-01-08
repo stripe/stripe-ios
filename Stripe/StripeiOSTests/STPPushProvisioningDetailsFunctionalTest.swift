@@ -8,12 +8,12 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
+@testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
-@testable@_spi(STP) import Stripe
 
 class STPPushProvisioningDetailsFunctionalTest: APIStubbedTestCase {
 
