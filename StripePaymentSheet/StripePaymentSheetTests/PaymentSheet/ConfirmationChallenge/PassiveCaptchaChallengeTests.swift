@@ -105,26 +105,41 @@ class PassiveCaptchaChallengeTests: XCTestCase {
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: testFactory)
 
         // Fetch first token
-        let firstToken = try await passiveCaptchaChallenge.fetchToken()
-        XCTAssertNotNil(firstToken)
+        let token = try await passiveCaptchaChallenge.fetchToken()
+        XCTAssertNotNil(token)
 
         // Verify token is ready
-        let isReadyBefore = await passiveCaptchaChallenge.isTokenReady
+        var isReadyBefore = await passiveCaptchaChallenge.isTokenReady
         XCTAssertTrue(isReadyBefore, "Token should be ready after first fetch")
 
-        // Wait for session to expire (add small buffer for scheduling overhead)
-        try await Task.sleep(nanoseconds: 5_100_000_000)
+        // Fetch a token before expiration - should succeed without fetching a new token
+        let sameToken = try await passiveCaptchaChallenge.fetchToken()
+        XCTAssertNotNil(sameToken)
+
+        // Verify token is ready
+        isReadyBefore = await passiveCaptchaChallenge.isTokenReady
+        XCTAssertTrue(isReadyBefore, "Token should be ready after first fetch")
+
+        let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
+        // We should not see these events more than once because we shouldn't need to fetch more than once
+        XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success"])
+
+        // Wait for session to expire
+        try await Task.sleep(nanoseconds: 5_000_000_000)
 
         // Check that expiration triggers reset
         let isReadyAfter = await passiveCaptchaChallenge.isTokenReady
         XCTAssertFalse(isReadyAfter, "Token should not be ready after session expiration")
 
         // Fetch a new token after expiration - should succeed with a new token
-        let secondToken = try await passiveCaptchaChallenge.fetchToken()
-        XCTAssertNotNil(secondToken)
+        let newToken = try await passiveCaptchaChallenge.fetchToken()
+        XCTAssertNotNil(newToken)
 
         // Verify token is ready again after successful refetch
         let isReadyFinal = await passiveCaptchaChallenge.isTokenReady
         XCTAssertTrue(isReadyFinal, "Token should be ready after refetch")
+
+        let passiveCaptchaExecuteEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive.execute") ?? false })
+        XCTAssertEqual(passiveCaptchaExecuteEvents.count, 2, "Should have re-fetched token after expiration")
     }
 }
