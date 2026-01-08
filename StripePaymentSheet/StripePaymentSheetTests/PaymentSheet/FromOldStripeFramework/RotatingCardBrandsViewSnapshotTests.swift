@@ -12,7 +12,6 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 import XCTest
 
-@testable 
 class RotatingCardBrandsViewSnapshotTests: STPSnapshotTestCase {
     func testAllCardBrands() {
         let rotatingCardBrandsView = RotatingCardBrandsView()
