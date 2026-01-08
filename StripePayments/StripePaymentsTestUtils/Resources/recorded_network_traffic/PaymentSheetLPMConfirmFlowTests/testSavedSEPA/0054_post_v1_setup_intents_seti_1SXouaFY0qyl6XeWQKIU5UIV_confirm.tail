@@ -1,0 +1,80 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SXouaFY0qyl6XeWQKIU5UIV\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=lJCc32uae7uiK1Juwksy_mUvJlBuygbqsXe_vQIrqNqZ8wa9QajCQyvRdi7P6FPyE_686LAV-CK028-A
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_MDMA3YkMY74ztU
+Content-Length: 1365
+Vary: Origin
+Date: Wed, 26 Nov 2025 20:02:01 GMT
+original-request: req_MDMA3YkMY74ztU
+stripe-version: 2020-08-27
+idempotency-key: 700f7abb-154b-4b6c-a9c7-97cbac1af33a
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1SXouaFY0qyl6XeWQKIU5UIV_secret_TUoXjs2fQikXu2xRMrR4AgYO2omwhSe&confirmation_token=ctoken_1SXouaFY0qyl6XeWZPlfYAkL&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1SXouaFY0qyl6XeWQKIU5UIV",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "sepa_debit" : {
+      "fingerprint" : "vifs0Ho7vwRn1Miu",
+      "country" : "DE",
+      "last4" : "3000",
+      "bank_code" : "37040044",
+      "generated_from" : {
+        "setup_attempt" : null,
+        "charge" : null
+      },
+      "branch_code" : ""
+    },
+    "id" : "pm_1SXosgFY0qyl6XeWkScLWnUN",
+    "billing_details" : {
+      "email" : "customer@example.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Test Customer",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1764187202,
+    "allow_redisplay" : "unspecified",
+    "type" : "sepa_debit",
+    "customer" : "cus_TUoUvtvPJvpHPA"
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "sepa_debit"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1764187320,
+  "client_secret" : "seti_1SXouaFY0qyl6XeWQKIU5UIV_secret_TUoXjs2fQikXu2xRMrR4AgYO2omwhSe",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}

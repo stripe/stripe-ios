@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '25.1.1'
+  s.version                        = '25.3.1'
 
   s.summary                        = 'Use to setup ios integration for Issuing Token Push Provision'
   s.license                        = { type: 'MIT', file: 'LICENSE' }

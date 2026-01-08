@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "A1AC8217-4D9A-488E-869C-4C97D572852F",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:StripeIssuing.xcodeproj",
+        "identifier" : "3D136BC42EB4493500186DA1",
+        "name" : "StripeIssuingTests"
+      }
+    }
+  ],
+  "version" : 1
+}

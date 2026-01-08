@@ -53,4 +53,118 @@ class FCLiteUITests: XCTestCase {
         XCTAssertTrue(continueButton.waitForExistence(timeout: 5.0))
         XCTAssertTrue(continueButton.isHittable)
     }
+
+    func testFCLiteUSBankAccountFlow() throws {
+        // Setup playground
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.fcLiteEnabled = .on
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "us_bank_account"
+        settings.layout = .vertical
+        settings.defaultBillingAddress = .randomEmail
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Launch into FC Lite
+        let continueButton = app.buttons["Continue"]
+        XCTAssertTrue(continueButton.waitForExistenceAndTap())
+
+        // Find and tap "Manually verify instead" button
+        let manuallyVerifyButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Manually verify instead'")
+        let manuallyVerifyButton = app.webViews.firstMatch.buttons.containing(manuallyVerifyButtonPredicate).firstMatch
+        XCTAssertTrue(manuallyVerifyButton.waitForExistenceAndTap(timeout: 10.0))
+
+        // Tap "Autofill" button
+        let autofillButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Autofill'")
+        let autofillButton = app.webViews.firstMatch.buttons.containing(autofillButtonPredicate).firstMatch
+        XCTAssertTrue(autofillButton.waitForExistenceAndTap(timeout: 5.0))
+
+        // Tap "Save with Link" button (tapPrimaryButton handles keyboard dismissal if needed)
+        let saveWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Save with Link'")
+        let saveWithLinkButton = app.webViews.firstMatch.buttons.containing(saveWithLinkButtonPredicate).firstMatch
+        XCTAssertTrue(saveWithLinkButton.waitForExistence(timeout: 5.0))
+        tapPrimaryButton()
+
+        // Tap "Done" button
+        let doneButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Done'")
+        let doneButton = app.webViews.firstMatch.buttons.containing(doneButtonPredicate).firstMatch
+        XCTAssertTrue(doneButton.waitForExistenceAndTap(timeout: 5.0))
+
+        // Tap the Pay button on MPE
+        let payButton = app.buttons["Pay $50.99"]
+        XCTAssertTrue(payButton.waitForExistenceAndTap(timeout: 5.0))
+
+        // Ensure the payment succeeded
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 5.0))
+    }
+
+    func testFCLiteInstantDebitsFlow() throws {
+        // Setup playground
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.fcLiteEnabled = .on
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "link"
+        settings.layout = .vertical
+        settings.defaultBillingAddress = .randomEmail
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].tap()
+
+        // Launch into FC Lite
+        let continueButton = app.buttons["Continue"]
+        XCTAssertTrue(continueButton.waitForExistenceAndTap())
+
+        // Agree and continue
+        let agreeButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Agree and continue'") // Consent pane
+        let agreeButton = app.webViews.firstMatch.buttons.containing(agreeButtonPredicate).firstMatch
+        XCTAssertTrue(agreeButton.waitForExistence(timeout: 10.0))
+        tapPrimaryButton()
+
+        // Continue with Link
+        let continueWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Continue with Link'") // Link signup pane
+        let continueWithLinkButton = app.webViews.firstMatch.buttons.containing(continueWithLinkButtonPredicate).firstMatch
+        XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 10.0))
+        app.typeText(XCUIKeyboardKey.return.rawValue) // Enter key will continue to the next screen
+
+        // Success bank
+        let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Disputed'") // Institution Picker
+        let paymentSuccessBankButton = app.webViews.firstMatch.buttons.containing(paymentSuccessBankButtonPredicate).firstMatch
+        XCTAssertTrue(paymentSuccessBankButton.waitForExistenceAndTap(timeout: 10.0))
+
+        // Connect account - wait for button to appear, then tap via coordinate
+        let connectAccountButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Connect account'") // Account Picker
+        let connectAccountButton = app.webViews.firstMatch.buttons.containing(connectAccountButtonPredicate).firstMatch
+        XCTAssertTrue(connectAccountButton.waitForExistence(timeout: 10.0))
+        tapPrimaryButton()
+
+        // Tap "Done" button
+        let doneButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Done'")
+        let doneButton = app.webViews.firstMatch.buttons.containing(doneButtonPredicate).firstMatch
+        XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
+        tapPrimaryButton()
+
+        // Tap the Pay button on MPE
+        let payButton = app.buttons["Pay $50.99"]
+        XCTAssertTrue(payButton.waitForExistenceAndTap(timeout: 10.0))
+
+        // Ensure the payment succeeded
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
+
+    /// Taps the primary CTA button at the bottom of the FC webview.
+    /// Webview accessibility frames are unreliable, so we tap at a fixed coordinate.
+    /// If the keyboard is open, it dismisses it first.
+    private func tapPrimaryButton() {
+        // Dismiss keyboard if open - check for "Done" (iOS 18) or checkmark button (iOS 26)
+        let keyboardDoneButton = app.toolbars.buttons["Done"]
+
+        if keyboardDoneButton.waitForExistence(timeout: 1.0) {
+            keyboardDoneButton.tap()
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+
+        // Primary button is at the bottom center of the webview (roughly 95% down, centered)
+        app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95)).tap()
+    }
 }

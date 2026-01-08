@@ -489,8 +489,7 @@ import UIKit
                             authenticationContext: authenticationContext,
                             paymentHandler: STPPaymentHandler.shared(),
                             isFlowController: true,
-                            elementsSession: nil, // Headless link does not have an elements session object
-                            mandateData: STPMandateDataParams.makeWithInferredValues()
+                            elementsSession: nil // Headless link does not have an elements session object
                         )
                     switch result.result {
                     case .canceled:

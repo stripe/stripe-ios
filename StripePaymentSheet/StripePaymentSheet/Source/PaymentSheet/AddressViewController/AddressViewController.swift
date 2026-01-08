@@ -71,7 +71,7 @@ public class AddressViewController: UIViewController {
     // MARK: - Views
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
-            state: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
+            status: (addressSection?.validationState.isValid ?? false) ? .enabled : .disabled,
             callToAction: .custom(title: configuration.buttonTitle),
             appearance: configuration.appearance
         ) { [weak self] in
@@ -506,7 +506,7 @@ extension AddressViewController {
          guard let addressSection = addressSection else { assertionFailure(); return }
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
-         button.update(state: enabled ? .enabled : .disabled, animated: true)
+         button.update(status: enabled ? .enabled : .disabled, animated: true)
          expandAddressSectionIfNeeded()
 
          // Automatically update the "shipping equals billing" checkbox based on current form state
@@ -547,13 +547,12 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         }
 
         if let autocompleteCountryIndex = autocompleteCountryIndex {
-            addressSection.country.select(index: autocompleteCountryIndex)
+            addressSection.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
         }
         addressSection.line1?.setText(address.line1 ?? "")
         addressSection.city?.setText(address.city ?? "")
         addressSection.postalCode?.setText(address.postalCode ?? "")
         addressSection.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
-        addressSection.state?.view.resignFirstResponder()
 
         self.selectedAutoCompleteResult = address
     }

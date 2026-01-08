@@ -66,7 +66,9 @@ public final class CheckScanningController {
             fetchInitProps: { Props(supplementalFunctions: supplementalFunctions) },
             didFailLoadWithError: { [weak self] error in
                 guard let self = self else { return }
-                self.delegate?.checkScanning(self, didFailLoadWithError: error)
+                Task { @MainActor in
+                    self.delegate?.checkScanning(self, didFailLoadWithError: error)
+                }
             }
         )
     }
@@ -105,8 +107,8 @@ public final class CheckScanningController {
 
     /// Dismisses the currently presented check scanning experience.
     /// No-ops if not presented.
-    public func dismiss(animated: Bool = true) {
-        webVC.dismiss(animated: animated)
+    public func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+        webVC.dismiss(animated: animated, completion: completion)
     }
 
     @objc
@@ -123,6 +125,7 @@ public final class CheckScanningController {
 
 @_spi(PrivatePreviewConnect)
 @available(iOS 15, *)
+@preconcurrency @MainActor
 public protocol CheckScanningControllerDelegate: AnyObject {
     /// Called when the component fails to load (e.g., network issue during initial fetch). To try again, initialize a new CheckScanningController.
     func checkScanning(_ checkScanning: CheckScanningController,

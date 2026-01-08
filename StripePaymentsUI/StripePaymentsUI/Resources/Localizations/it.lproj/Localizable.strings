@@ -36,6 +36,18 @@
 
 "MM/YY" = "MM/AA";
 
+"Only credit and prepaid cards are accepted" = "Sono accettate solo carte di credito e prepagate";
+
+"Only credit cards are accepted" = "Sono accettate solo carte di credito";
+
+"Only debit and credit cards are accepted" = "Sono accettate solo carte di debito e di credito";
+
+"Only debit and prepaid cards are accepted" = "Sono accettate solo carte di debito e prepagate";
+
+"Only debit cards are accepted" = "Sono accettate solo carte di debito";
+
+"Only prepaid cards are accepted" = "Sono accettate solo carte prepagate";
+
 "Postal Code" = "Codice postale";
 
 "Shipping Address" = "Indirizzo di spedizione";

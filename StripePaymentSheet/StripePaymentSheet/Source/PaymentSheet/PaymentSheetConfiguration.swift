@@ -192,7 +192,7 @@ extension PaymentSheet {
         public var externalPaymentMethodConfiguration: ExternalPaymentMethodConfiguration?
 
         /// Configuration for custom payment methods.
-        @_spi(CustomPaymentMethodsBeta) public var customPaymentMethodConfiguration: CustomPaymentMethodConfiguration?
+        public var customPaymentMethodConfiguration: CustomPaymentMethodConfiguration?
 
         /// By default, PaymentSheet will use a dynamic ordering that optimizes payment method display for the customer.
         /// You can override the default order in which payment methods are displayed in PaymentSheet with a list of payment method types.
@@ -220,6 +220,13 @@ extension PaymentSheet {
         /// Note: This is only a client-side solution.
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+
+        /// By default, PaymentSheet will accept cards of all funding types (credit, debit, prepaid, unknown).
+        /// You can specify which card funding types to allow.
+        /// When a customer enters a card that isn't allowed, a warning will be displayed, but they can still complete the payment.
+        ///
+        /// This is a client-side UX feature only. You must validate the funding type on your server using the confirmation token or radar rules before confirming the payment to ensure only allowed funding types are accepted.
+        @_spi(CardFundingFilteringPrivatePreview) public var allowedCardFundingTypes: PaymentSheet.CardFundingType = .all
 
         /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
@@ -865,7 +872,7 @@ extension PaymentSheet {
     }
 
     /// Configuration for custom payment methods
-    @_spi(CustomPaymentMethodsBeta) public struct CustomPaymentMethodConfiguration {
+    public struct CustomPaymentMethodConfiguration {
 
         /// Defines a custom payment method type that can be displayed in PaymentSheet
         public struct CustomPaymentMethod {
@@ -977,5 +984,29 @@ extension PaymentSheet {
         /// Accept all card brands supported by Stripe except for those specified in the associated value
         /// - Note: Any card brands that do not map to a `BrandCategory` will be accepted when using a disallow list.
         case disallowed(brands: [BrandCategory])
+    }
+}
+
+extension PaymentSheet {
+    /// Card funding types that can be filtered
+    @_spi(CardFundingFilteringPrivatePreview) public struct CardFundingType: OptionSet, Equatable {
+        public let rawValue: Int
+
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+
+        /// Debit cards
+        public static let debit = CardFundingType(rawValue: 1 << 0)
+        /// Credit cards
+        public static let credit = CardFundingType(rawValue: 1 << 1)
+        /// Prepaid cards
+        public static let prepaid = CardFundingType(rawValue: 1 << 2)
+        /// Unknown or undetermined funding type.
+        /// Include this if you want to accept cards where the funding type cannot be determined from card metadata.
+        public static let unknown = CardFundingType(rawValue: 1 << 3)
+
+        /// Accept all card funding types (internal - users should simply not set allowedCardFundingTypes to accept all)
+        static let all: CardFundingType = [.debit, .credit, .prepaid, .unknown]
     }
 }

@@ -176,6 +176,7 @@ extension PaymentSheet {
             guard
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
+                    elementsSession: elementsSession,
                     configuration: configuration,
                     clientAttributionMetadata: clientAttributionMetadata,
                     completion: completion
@@ -190,7 +191,7 @@ extension PaymentSheet {
         // MARK: - New Payment Method
         case let .new(confirmParams):
             Task { @MainActor in
-                let radarOptions = await confirmationChallenge?.makeRadarOptions()
+                let radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
                     case .stripe(let paymentMethodType):
@@ -339,7 +340,7 @@ extension PaymentSheet {
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task { @MainActor in
-                    let radarOptions = await confirmationChallenge?.makeRadarOptions()
+                    let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
                     paymentMethodParams.radarOptions = radarOptions
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
@@ -407,7 +408,7 @@ extension PaymentSheet {
             }
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool, STPClientAttributionMetadata?) -> Void = { paymentMethod, linkAccount, shouldSave, clientAttributionMetadata in
                 Task { @MainActor in
-                    let radarOptions = await confirmationChallenge?.makeRadarOptions()
+                    let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethod.type)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                     let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                     // Tell Stripe to infer mandate info from client
@@ -720,8 +721,7 @@ extension PaymentSheet {
     static func makePaymentIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         paymentIntent: STPPaymentIntent,
-        configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil
+        configuration: PaymentElementConfiguration
     ) -> STPPaymentIntentConfirmParams {
         let params: STPPaymentIntentConfirmParams
         let shouldSave: Bool
@@ -754,8 +754,9 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            let isSetupFutureUsageOffSession = paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session"
-            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) && isSetupFutureUsageOffSession
+            // Set mandate data if the PM requires it
+            if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType)
+                && paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
             {
                 params.mandateData = .makeWithInferredValues()
             }
@@ -765,9 +766,6 @@ extension PaymentSheet {
         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
 
-        if let mandateData = mandateData {
-            params.mandateData = mandateData
-        }
         // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
         if configuration.apiClient.publishableKeyIsUserKey {
             paymentOptions.setMoto()
@@ -781,8 +779,7 @@ extension PaymentSheet {
     static func makeSetupIntentParams(
         confirmPaymentMethodType: ConfirmPaymentMethodType,
         setupIntent: STPSetupIntent,
-        configuration: PaymentElementConfiguration,
-        mandateData: STPMandateDataParams? = nil
+        configuration: PaymentElementConfiguration
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
@@ -815,9 +812,6 @@ extension PaymentSheet {
             if let paymentMethodType = params.paymentMethodType, STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) {
                 params.mandateData = .makeWithInferredValues()
             }
-        }
-        if let mandateData = mandateData {
-            params.mandateData = mandateData
         }
         // Set moto (mail order and telephone orders) for Dashboard b/c merchants key in cards on behalf of customers
         if configuration.apiClient.publishableKeyIsUserKey {

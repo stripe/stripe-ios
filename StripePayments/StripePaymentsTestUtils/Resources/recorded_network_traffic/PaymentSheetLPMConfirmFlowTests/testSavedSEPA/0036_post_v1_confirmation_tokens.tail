@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=vETIZ2_cKPtnqjwnWsYnuSFd-bqgidF-b_oz4RROn35A5iSLm3TVdT0J3qie8FONjcoT-zoLxHDxWuHB
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=AcK2sKct9Y8HUueKUHnrypoRK35HsIJTn2cKWPb2X7DNChuTFSyuN1kz3EkFT-OC8bFMdgR4e2Pubsdr
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,21 +12,21 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_aBNRZEfs3ZqSoH
-Content-Length: 1287
+request-id: req_FttQy0pX62lleS
+Content-Length: 1307
 Vary: Origin
-Date: Thu, 13 Nov 2025 16:02:57 GMT
-original-request: req_aBNRZEfs3ZqSoH
+Date: Wed, 26 Nov 2025 20:01:40 GMT
+original-request: req_FttQy0pX62lleS
 stripe-version: 2020-08-27
-idempotency-key: 59704f72-2cb3-4c87-a486-bde815de80f8
+idempotency-key: d7939f82-14c5-4be9-a2ac-c0848756a59c
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=eur&client_context\[customer]=cus_OaMPphpKbeixCz&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=sepa_debit&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1NnBnhFY0qyl6XeW9ThDjAvw&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
+X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=eur&client_context\[customer]=cus_TUoUvtvPJvpHPA&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=sepa_debit&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1SXosgFY0qyl6XeWkScLWnUN&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1ST2z7FY0qyl6XeWEcOsf5Mk",
+  "id" : "ctoken_1SXouGFY0qyl6XeWa51LWZFM",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
@@ -34,32 +34,32 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
     "customer_acceptance" : {
       "type" : "online",
       "online" : {
-        "ip_address" : "76.149.217.10",
-        "user_agent" : "StripePaymentSheetTestHostApp\/1 CFNetwork\/3860.100.1 Darwin\/25.0.0"
+        "ip_address" : "97.98.212.253",
+        "user_agent" : "StripePaymentSheetTestHostApp\/1 CFNetwork\/3860.100.1 Darwin\/24.6.0"
       }
     }
   },
-  "expires_at" : 1763092977,
+  "expires_at" : 1764230500,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
   "payment_method_preview" : {
     "allow_redisplay" : "unspecified",
     "billing_details" : {
-      "email" : "f@z.c",
+      "email" : "customer@example.com",
       "phone" : null,
       "tax_id" : null,
-      "name" : "Foo",
+      "name" : "Test Customer",
       "address" : {
-        "state" : "AL",
-        "country" : "US",
-        "line2" : "",
-        "city" : "asdf",
-        "line1" : "asdf",
-        "postal_code" : "12345"
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
       }
     },
-    "customer" : "cus_OaMPphpKbeixCz",
+    "customer" : "cus_TUoUvtvPJvpHPA",
     "sepa_debit" : {
       "fingerprint" : "vifs0Ho7vwRn1Miu",
       "country" : "DE",
@@ -73,7 +73,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
     },
     "type" : "sepa_debit"
   },
-  "created" : 1763049777,
+  "created" : 1764187300,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

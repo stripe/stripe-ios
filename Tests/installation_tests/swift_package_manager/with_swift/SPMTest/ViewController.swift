@@ -13,6 +13,7 @@ import StripeCardScan
 import StripeFinancialConnections
 import StripeIdentity
 import StripePaymentSheet
+import StripeIssuing
 import UIKit
 
 class ViewController: UIViewController {
@@ -45,6 +46,8 @@ class ViewController: UIViewController {
             setupIntentClientSecret: "",
             configuration: PaymentSheet.Configuration()
         )
+        
+        let _ = STPIssuingPlaceholder.self
 
         if #available(iOS 15.0, *) {
             let _ = EmbeddedComponentManager {

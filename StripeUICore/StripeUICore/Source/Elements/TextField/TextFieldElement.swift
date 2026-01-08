@@ -171,6 +171,10 @@ extension TextFieldElement: Element {
     public var subLabelText: String? {
         return configuration.subLabel(text: text)
     }
+
+    public var warningLabelText: String? {
+        return configuration.warningLabel(text: text)
+    }
 }
 
 // MARK: - TextFieldViewDelegate

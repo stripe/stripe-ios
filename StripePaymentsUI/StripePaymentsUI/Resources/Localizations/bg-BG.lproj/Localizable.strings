@@ -36,6 +36,18 @@
 
 "MM/YY" = "ММ/ГГ";
 
+"Only credit and prepaid cards are accepted" = "Приемат се само кредитни и предплатени банкови карти";
+
+"Only credit cards are accepted" = "Приемат се само кредитни банкови карти";
+
+"Only debit and credit cards are accepted" = "Приемат се само дебитни и кредитни банкови карти";
+
+"Only debit and prepaid cards are accepted" = "Приемат се само дебитни и предплатени банкови карти";
+
+"Only debit cards are accepted" = "Приемат се само дебитни банкови карти";
+
+"Only prepaid cards are accepted" = "Приемат се само предплатени банкови карти";
+
 "Postal Code" = "Пощенски код";
 
 "Shipping Address" = "Адрес за доставка";

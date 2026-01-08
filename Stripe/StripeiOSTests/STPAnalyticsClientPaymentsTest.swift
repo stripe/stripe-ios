@@ -42,7 +42,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         let mockAnalytic = MockAnalytic()
         let payload = client.payload(from: mockAnalytic)
 
-        XCTAssertEqual(payload.count, 18)
+        XCTAssertEqual(payload.count, 19)
 
         // Verify event name is included
         XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)

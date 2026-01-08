@@ -1,4 +1,29 @@
 ## X.Y.Z - changes pending release 
+### All
+* [Fixed] Improved telemetry used for [advanced fraud signals](https://docs.stripe.com/disputes/prevention/advanced-fraud-detection).
+
+### PaymentSheet
+* [Fixed] Fixed an issue where confirming Cash App Pay, Satispay, or PayPal could fail when setup_future_usage = `on_session`.
+* [Changed] Custom Payment Methods is now generally available, learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/custom-payment-methods).
+
+
+## 25.3.1 2025-12-19
+
+### Financial Connections
+* [Fixed] The native Instant Bank Payments flow is now available to more merchants.
+
+## 25.3.0 2025-12-15
+
+### PaymentSheet
+* [Added] Support for PayPay with PaymentIntents.
+
+### Payments
+* [Added] Support for PayPay bindings.
+
+## 25.2.0 2025-12-01
+
+### Payment Method Messaging Element
+* [Added] `PaymentMethodMessagingElement` is now in public preview
 
 ## XX.XX.XX
 

@@ -316,7 +316,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
 
         self.actionButton.update(
-            state: actionButtonStatus,
+            status: actionButtonStatus,
             callToAction: callToAction,
             animated: animated,
             completion: nil
@@ -610,14 +610,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
         if case .new(let confirmParams) = paymentOption  {
             Task {
-                confirmParams.paymentMethodParams.radarOptions = await self.confirmationChallenge?.makeRadarOptions()
+                confirmParams.paymentMethodParams.radarOptions = await self.confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
                     Task { await self.confirmationChallenge?.complete() }
                     if let error = error {
                         self.error = error
                         self.processingInFlight = false
                         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                        self.actionButton.update(state: .enabled, animated: true) {
+                        self.actionButton.update(status: .enabled, animated: true) {
                             self.updateUI()
                         }
                         return
@@ -626,7 +626,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                         self.error = CustomerSheetError.unknown(debugDescription: "Error on payment method creation")
                         self.processingInFlight = false
                         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                        self.actionButton.update(state: .enabled, animated: true) {
+                        self.actionButton.update(status: .enabled, animated: true) {
                             self.updateUI()
                         }
                         return
@@ -638,7 +638,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                             self.error = error
                             self.processingInFlight = false
                             STPAnalyticsClient.sharedClient.logCSAddPaymentMethodViaCreateAttachFailure()
-                            self.actionButton.update(state: .enabled, animated: true) {
+                            self.actionButton.update(status: .enabled, animated: true) {
                                 self.updateUI()
                             }
                             return
@@ -738,7 +738,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             self.updateUI()
             onError(error)
         } onSuccess: {
-            self.actionButton.update(state: .disabled, animated: true) {
+            self.actionButton.update(status: .disabled, animated: true) {
                 onSuccess()
             }
         }

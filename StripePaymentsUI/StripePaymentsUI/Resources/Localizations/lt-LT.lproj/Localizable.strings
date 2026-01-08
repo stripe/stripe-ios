@@ -36,6 +36,18 @@
 
 "MM/YY" = "mm / MM";
 
+"Only credit and prepaid cards are accepted" = "Priimamos tik kredito ir išankstinio mokėjimo kortelės";
+
+"Only credit cards are accepted" = "Priimamos tik kredito kortelės";
+
+"Only debit and credit cards are accepted" = "Priimamos tik debeto ir kredito kortelės";
+
+"Only debit and prepaid cards are accepted" = "Priimamos tik debeto ir išankstinio mokėjimo kortelės";
+
+"Only debit cards are accepted" = "Priimamos tik debeto kortelės";
+
+"Only prepaid cards are accepted" = "Priimamos tik išankstinio mokėjimo kortelės";
+
 "Postal Code" = "Pašto kodas";
 
 "Shipping Address" = "Siuntimo adresas";

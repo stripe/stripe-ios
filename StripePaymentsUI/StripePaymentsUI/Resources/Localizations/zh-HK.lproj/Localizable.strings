@@ -36,6 +36,18 @@
 
 "MM/YY" = "月份/年份";
 
+"Only credit and prepaid cards are accepted" = "僅接受信用卡與儲值卡";
+
+"Only credit cards are accepted" = "僅接受信用卡";
+
+"Only debit and credit cards are accepted" = "僅接受借記卡與信用卡";
+
+"Only debit and prepaid cards are accepted" = "僅接受借記卡與儲值卡";
+
+"Only debit cards are accepted" = "僅接受借記卡";
+
+"Only prepaid cards are accepted" = "僅接受儲值卡";
+
 "Postal Code" = "郵區編號";
 
 "Shipping Address" = "收貨地址";
