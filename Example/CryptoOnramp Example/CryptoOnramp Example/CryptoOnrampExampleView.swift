@@ -99,17 +99,19 @@ struct CryptoOnrampExampleView: View {
                             PaymentView(
                                 coordinator: coordinator,
                                 wallet: wallet
-                            ) { response, selectedPaymentMethodDescription in
+                            ) { response, selectedPaymentMethodDescription, settlementSpeed in
                                 flowCoordinator.advanceAfterPayment(
                                     createOnrampSessionResponse: response,
-                                    selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                                    selectedPaymentMethodDescription: selectedPaymentMethodDescription,
+                                    settlementSpeed: settlementSpeed
                                 )
                             }
-                        case let .paymentSummary(createOnrampSessionResponse, selectedPaymentMethodDescription):
+                        case let .paymentSummary(createOnrampSessionResponse, selectedPaymentMethodDescription, settlementSpeed):
                             PaymentSummaryView(
                                 coordinator: coordinator,
                                 onrampSessionResponse: createOnrampSessionResponse,
-                                selectedPaymentMethodDescription: selectedPaymentMethodDescription
+                                selectedPaymentMethodDescription: selectedPaymentMethodDescription,
+                                settlementSpeed: settlementSpeed
                             ) { message in
                                 flowCoordinator.advanceAfterPaymentSummary(successfulCheckoutMessage: message)
                             }

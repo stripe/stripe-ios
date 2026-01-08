@@ -24,6 +24,11 @@ class PMMEUIView: UIView {
     // What UI context the view is shown from, for analytics purposes
     private let integrationType: PMMEAnalyticsHelper.IntegrationType
 
+    // With the default font, padding between the content and legal disclosure is 4
+    private var verticalPadding: CGFloat {
+        appearance.fontScaled(4)
+    }
+
     // TODO(gbirch) add accessibilityHint property with instructions about opening info url
     init(
         viewData: PaymentMethodMessagingElement.ViewData,
@@ -41,20 +46,38 @@ class PMMEUIView: UIView {
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
 
         // set interface style
-        if case .alwaysDark = appearance.style {
+        switch appearance.style {
+        case .alwaysDark:
             overrideUserInterfaceStyle = .dark
-        } else if case .alwaysLight = appearance.style {
+        case .alwaysLight, .flat:
             overrideUserInterfaceStyle = .light
+        case .automatic:
+            break
         }
 
+        // create wrapper view that will hold the main PMME view and the legal disclosure if needed
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = verticalPadding
+        addAndPinSubview(stackView)
+
         // choose which style to initialize
-        switch viewData.mode {
+        let pmmeView = switch viewData.mode {
         case .singlePartner(let logo):
-            let view = PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
-            addAndPinSubview(view)
+            PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
         case .multiPartner(let logos):
-            let view = PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
-            addAndPinSubview(view)
+            PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
+        }
+        stackView.addArrangedSubview(pmmeView)
+
+        // add legal disclosure if needed
+        if let legalText = viewData.legalDisclosure {
+            // TODO(gbirch): add appearance customization for legal text
+            let legalLabel = UILabel()
+            legalLabel.text = legalText
+            legalLabel.font = UIFont.preferredFont(forTextStyle: .caption1, weight: .regular, maximumPointSize: 20)
+            legalLabel.textColor = .secondaryLabel
+            stackView.addArrangedSubview(legalLabel)
         }
     }
 
@@ -83,31 +106,8 @@ class PMMEUIView: UIView {
     @objc private func didTap() {
         analyticsHelper.logTapped()
 
-        // Construct themed info url
-        let themeParam = switch (appearance.style, traitCollection.isDarkMode) {
-        case (.alwaysLight, _), (.automatic, false): "stripe"
-        case (.alwaysDark, _), (.automatic, true): "night"
-        case (.flat, _): "flat"
-        }
-
-        let queryParam = URLQueryItem(name: "theme", value: themeParam)
-        guard var urlComponents = URLComponents(url: infoUrl, resolvingAgainstBaseURL: false) else {
-            stpAssertionFailure("Unable to generate URL components")
-            return
-        }
-        if urlComponents.queryItems == nil {
-            urlComponents.queryItems = [queryParam]
-        } else {
-            urlComponents.queryItems?.append(queryParam)
-        }
-        guard let themedUrl = urlComponents.url else {
-            stpAssertionFailure("Unable to generate themed URL")
-            return
-        }
-
-        // Launch themed info url
-        let safariController = SFSafariViewController(url: themedUrl)
-        safariController.modalPresentationStyle = .formSheet
-        window?.findTopMostPresentedViewController()?.present(safariController, animated: true)
+        let infoController = PMMEInfoModal(infoUrl: infoUrl, style: appearance.style)
+        infoController.modalPresentationStyle = .formSheet
+        window?.findTopMostPresentedViewController()?.present(infoController, animated: true)
     }
 }

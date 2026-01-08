@@ -36,6 +36,18 @@
 
 "MM/YY" = "Tháng/Năm";
 
+"Only credit and prepaid cards are accepted" = "Chỉ chấp nhận thẻ tín dụng và thẻ trả trước";
+
+"Only credit cards are accepted" = "Chỉ chấp nhận thẻ tín dụng";
+
+"Only debit and credit cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ và thẻ tín dụng";
+
+"Only debit and prepaid cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ và thẻ trả trước";
+
+"Only debit cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ";
+
+"Only prepaid cards are accepted" = "Chỉ chấp nhận thẻ trả trước";
+
 "Postal Code" = "Mã bưu điện";
 
 "Shipping Address" = "Địa chỉ vận chuyển";

@@ -15,7 +15,6 @@ import PassKit
 import UIKit
 
 private let spinnerMoveToCenterAnimationDuration = 0.35
-private let checkmarkStrokeDuration = 0.2
 
 /// Buy or Continue button
 class ConfirmButton: UIView {
@@ -69,16 +68,7 @@ class ConfirmButton: UIView {
         }
     }
 
-    var font: UIFont? {
-        get {
-            return buyButton.font
-        }
-        set {
-            buyButton.font = newValue
-        }
-    }
-
-    private(set) var state: Status = .enabled
+    private(set) var status: Status = .enabled
     private(set) var callToAction: CallToActionType
 
     // MARK: Private Properties
@@ -95,31 +85,22 @@ class ConfirmButton: UIView {
     // MARK: Init
 
     init(
-        state: Status = .enabled,
+        status: Status = .enabled,
         callToAction: CallToActionType,
         showProcessingLabel: Bool = true,
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
         didTap: @escaping () -> Void,
         didTapWhenDisabled: @escaping () -> Void = {}
     ) {
-        self.state = state
+        self.status = status
         self.callToAction = callToAction
         self.showProcessingLabel = showProcessingLabel
         self.appearance = appearance
         self.didTap = didTap
         self.didTapWhenDisabled = didTapWhenDisabled
         super.init(frame: .zero)
-
-        directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-        // primaryButton.backgroundColor takes priority over appearance.colors.primary
-        tintColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
-        layer.applyShadow(shadow: appearance.primaryButton.shadow?.asElementThemeShadow ?? appearance.shadow.asElementThemeShadow)
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
-        font = appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
-        buyButton.titleLabel.sizeToFit()
         addAndPinSubview(buyButton)
 
-        applyCornerRadius()
         update()
 
         NotificationCenter.default.addObserver(self,
@@ -136,12 +117,12 @@ class ConfirmButton: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        self.buyButton.update(status: state, callToAction: callToAction, animated: false)
+        self.buyButton.update(status: status, callToAction: callToAction, animated: false)
     }
 #endif
 
     @objc private func didBecomeActive() {
-        self.buyButton.update(status: self.state, callToAction: self.callToAction, animated: false)
+        self.buyButton.update(status: self.status, callToAction: self.callToAction, animated: false)
     }
 
     deinit {
@@ -151,32 +132,32 @@ class ConfirmButton: UIView {
     // MARK: - Internal Methods
 
     func update(
-        state: Status? = nil,
+        status: Status? = nil,
         callToAction: CallToActionType? = nil,
         animated: Bool = false,
         completion: (() -> Void)? = nil
     ) {
         update(
-            state: state ?? self.state,
+            status: status ?? self.status,
             callToAction: callToAction ?? self.callToAction,
             animated: animated,
             completion: completion)
     }
 
     func update(
-        state: Status,
+        status: Status,
         callToAction: CallToActionType,
         animated: Bool = false,
         completion: (() -> Void)? = nil
     ) {
-        self.state = state
+        self.status = status
         self.callToAction = callToAction
 
         // Enable/disable
-        isUserInteractionEnabled = (state == .enabled || state == .disabled)
+        isUserInteractionEnabled = (status == .enabled || status == .disabled)
 
         // Update the buy button; it has its own presentation logic
-        self.buyButton.update(status: state, callToAction: callToAction, animated: animated)
+        self.buyButton.update(status: status, callToAction: callToAction, animated: animated)
 
         if let completion = completion {
             let delay: TimeInterval = {
@@ -184,7 +165,7 @@ class ConfirmButton: UIView {
                     return 0
                 }
 
-                return state == .succeeded
+                return status == .succeeded
                 ? PaymentSheetUI.delayBetweenSuccessAndDismissal
                 : PaymentSheetUI.defaultAnimationDuration
             }()
@@ -197,9 +178,9 @@ class ConfirmButton: UIView {
 
     @objc
     private func handleTap() {
-        if case .enabled = state {
+        if case .enabled = status {
             didTap()
-        } else if case .disabled = state {
+        } else if case .disabled = status {
             // When the disabled button is tapped, trigger validation error display
             didTapWhenDisabled()
             // Resign first responder (as we would if the button was disabled)
@@ -207,23 +188,9 @@ class ConfirmButton: UIView {
         }
     }
 
-    private func applyCornerRadius() {
-        if let cornerRadius = appearance.primaryButton.cornerRadius {
-            // Use primary button corner radius
-            buyButton.layer.cornerRadius = cornerRadius
-        } else {
-            buyButton.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
-        }
-    }
-
     // MARK: - BuyButton
 
     class BuyButton: UIControl {
-        var font: UIFont? {
-            didSet {
-                titleLabel.font = font
-            }
-        }
 
         /// Background color for the `.disabled` state.
         var disabledBackgroundColor: UIColor {
@@ -274,9 +241,14 @@ class ConfirmButton: UIView {
         lazy var titleLabel: UILabel = {
             let label = UILabel()
             label.textAlignment = .center
-            label.font = .preferredFont(forTextStyle: .callout, weight: .medium, maximumPointSize: 25)
+            label.font = appearance.primaryButton.font ?? appearance.scaledFont(
+                for: appearance.font.base.medium,
+                style: .callout,
+                maximumPointSize: 25
+            )
             label.textColor = .white
             label.adjustsFontForContentSizeCategory = true
+            label.sizeToFit()
             return label
         }()
         lazy var lockIcon: UIImageView = {
@@ -323,9 +295,18 @@ class ConfirmButton: UIView {
             self.showProcessingLabel = showProcessingLabel
             self.appearance = appearance
             super.init(frame: .zero)
+
+            directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
+            // primaryButton.backgroundColor takes priority over appearance.colors.primary
+            tintColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
+            layer.applyShadow(shadow: appearance.primaryButton.shadow?.asElementThemeShadow ?? appearance.shadow.asElementThemeShadow)
+            layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
+
             preservesSuperviewLayoutMargins = true
             layer.masksToBounds = true
             layer.borderWidth = appearance.primaryButton.borderWidth
+
+            applyCornerRadius()
 
             isAccessibilityElement = true
 
@@ -525,6 +506,15 @@ class ConfirmButton: UIView {
             }
         }
 
+        private func applyCornerRadius() {
+            if let cornerRadius = appearance.primaryButton.cornerRadius {
+                // Use primary button corner radius
+                layer.cornerRadius = cornerRadius
+            } else {
+                applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
+            }
+        }
+
         private func animateSuccess() {
             // Animate the spinner to the middle
             spinnerCenteredToLockConstraint.isActive = false
@@ -578,126 +568,6 @@ class ConfirmButton: UIView {
             titleLabel.textColor = foregroundColor
             lockIcon.tintColor = foregroundColor
             spinner.color = foregroundColor
-        }
-    }
-
-    // MARK: - CheckProgressView
-
-    class CheckProgressView: UIView {
-        let circleLayer = CAShapeLayer()
-        let checkmarkLayer = CAShapeLayer()
-        let baseLineWidth: CGFloat
-        var color: UIColor = .white {
-            didSet {
-                colorDidChange()
-            }
-        }
-
-        init(frame: CGRect, baseLineWidth: CGFloat = 1.0) {
-            self.baseLineWidth = baseLineWidth
-            // Circle
-            let circlePath = UIBezierPath(
-                arcCenter: CGPoint(
-                    x: frame.size.width / 2,
-                    y: frame.size.height / 2),
-                radius: (frame.size.width) / 2,
-                startAngle: 0.0,
-                endAngle: CGFloat.pi * 2,
-                clockwise: false)
-            circleLayer.bounds = CGRect(
-                x: 0, y: 0, width: frame.size.width, height: frame.size.width)
-            circleLayer.path = circlePath.cgPath
-            circleLayer.fillColor = UIColor.clear.cgColor
-            circleLayer.lineCap = .round
-            circleLayer.lineWidth = baseLineWidth
-            circleLayer.strokeEnd = 0.0
-
-            // Checkmark
-            let checkmarkPath = UIBezierPath()
-            let checkOrigin = CGPoint(x: frame.size.width * 0.33, y: frame.size.height * 0.5)
-            let checkPoint1 = CGPoint(x: frame.size.width * 0.46, y: frame.size.height * 0.635)
-            let checkPoint2 = CGPoint(x: frame.size.width * 0.70, y: frame.size.height * 0.36)
-            checkmarkPath.move(to: checkOrigin)
-            checkmarkPath.addLine(to: checkPoint1)
-            checkmarkPath.addLine(to: checkPoint2)
-
-            checkmarkLayer.bounds = CGRect(
-                x: 0, y: 0, width: frame.size.width, height: frame.size.width)
-            checkmarkLayer.path = checkmarkPath.cgPath
-            checkmarkLayer.lineCap = .round
-            checkmarkLayer.fillColor = UIColor.clear.cgColor
-            checkmarkLayer.lineWidth = baseLineWidth + 0.5
-            checkmarkLayer.strokeEnd = 0.0
-
-            checkmarkLayer.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
-            circleLayer.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
-
-            super.init(frame: frame)
-
-            self.backgroundColor = UIColor.clear
-            layer.addSublayer(circleLayer)
-            layer.addSublayer(checkmarkLayer)
-
-            colorDidChange()
-        }
-
-        required init?(coder: NSCoder) {
-            fatalError()
-        }
-
-        func beginProgress() {
-            checkmarkLayer.strokeEnd = 0.0  // Make sure checkmark is not drawn yet
-            let animation = CABasicAnimation(keyPath: "strokeEnd")
-            animation.duration = 1.0
-            animation.fromValue = 0
-            animation.toValue = 0.8
-            animation.timingFunction = CAMediaTimingFunction(
-                name: CAMediaTimingFunctionName.easeOut)
-            circleLayer.strokeEnd = 0.8
-            circleLayer.add(animation, forKey: "animateCircle")
-            let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation")
-            rotationAnimation.byValue = 2.0 * Float.pi
-            rotationAnimation.duration = 1
-            rotationAnimation.repeatCount = .infinity
-            circleLayer.add(rotationAnimation, forKey: "animateRotate")
-        }
-
-        func completeProgress(completion: (() -> Void)? = nil) {
-            CATransaction.begin()
-            // Note: Make sure the completion block is set before adding any animations
-            CATransaction.setCompletionBlock {
-                if let completion {
-                    completion()
-                }
-            }
-            circleLayer.removeAnimation(forKey: "animateCircle")
-
-            // Close the circle
-            let circleAnimation = CABasicAnimation(keyPath: "strokeEnd")
-            circleAnimation.duration = spinnerMoveToCenterAnimationDuration
-            circleAnimation.fromValue = 0.8
-            circleAnimation.toValue = 1
-            circleAnimation.timingFunction = CAMediaTimingFunction(
-                name: CAMediaTimingFunctionName.easeIn)
-            circleLayer.strokeEnd = 1.0
-            circleLayer.add(circleAnimation, forKey: "animateDone")
-
-            // Check the mark
-            let animation = CABasicAnimation(keyPath: "strokeEnd")
-            animation.beginTime = CACurrentMediaTime() + circleAnimation.duration + 0.15  // Start after the circle closes
-            animation.fillMode = .backwards
-            animation.duration = checkmarkStrokeDuration
-            animation.fromValue = 0.0
-            animation.toValue = 1
-            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
-            checkmarkLayer.strokeEnd = 1.0
-            checkmarkLayer.add(animation, forKey: "animateFinishCircle")
-            CATransaction.commit()
-        }
-
-        private func colorDidChange() {
-            circleLayer.strokeColor = color.cgColor
-            checkmarkLayer.strokeColor = color.cgColor
         }
     }
 }

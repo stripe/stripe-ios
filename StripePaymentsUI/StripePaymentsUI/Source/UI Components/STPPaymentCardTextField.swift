@@ -609,17 +609,16 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         onChange()
         updateImage(for: .number)
         updateCVCPlaceholder()
-        weak var weakSelf = self
         layoutViews(
             toFocus: NSNumber(value: STPCardFieldType.postalCode.rawValue),
             becomeFirstResponder: true,
             animated: true
-        ) { _ in
-            guard let strongSelf = weakSelf else {
+        ) { [weak self] _ in
+            guard let self else {
                 return
             }
-            if strongSelf.isFirstResponder {
-                strongSelf.numberField.becomeFirstResponder()
+            if self.isFirstResponder {
+                self.numberField.becomeFirstResponder()
             }
         }
     }

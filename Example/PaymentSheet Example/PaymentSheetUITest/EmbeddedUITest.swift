@@ -26,7 +26,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             startupLog,
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_embedded_init", "mc_lpms_render"]
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_init", "mc_initial_displayed_payment_methods"]
         )
 
         // Entering a card w/ deferred PaymentIntent...
@@ -83,8 +83,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(8)
         XCTAssertEqual(
             aliPayAnalytics,
-            // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_lpms_render", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped"]
+            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown"]
         )
 
         // ...and *updating* to a SetupIntent...
@@ -138,7 +137,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             klarnaAnalytics,
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_lpms_render", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
+            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
         // ...switching back to payment should keep Klarna selected
@@ -276,7 +275,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             .prefix(6)
         XCTAssertEqual(
             presentEmbeddedLog,
-            ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_lpms_render", "mc_carousel_payment_method_tapped", "mc_form_shown"]
+            ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_initial_displayed_payment_methods", "mc_carousel_payment_method_tapped", "mc_form_shown"]
         )
         // Complete payment
         app.buttons["Pay €50.99"].tap()
@@ -939,7 +938,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Go through connections flow
         app.buttons["Agree and continue"].tap()
-        app.staticTexts["Test Institution"].forceTapElement()
+        app.staticTexts["Test (Non-OAuth)"].forceTapElement()
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 

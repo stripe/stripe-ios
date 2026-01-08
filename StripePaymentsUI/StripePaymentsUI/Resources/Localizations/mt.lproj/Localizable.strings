@@ -36,6 +36,18 @@
 
 "MM/YY" = "XX/SS";
 
+"Only credit and prepaid cards are accepted" = "Huma aċċettati biss karti tal-kreditu u karti mħallsa minn qabel";
+
+"Only credit cards are accepted" = "Huma aċċettati biss karti ta' kreditu";
+
+"Only debit and credit cards are accepted" = "Huma aċċettati biss karti tad-debitu u tal-kreditu";
+
+"Only debit and prepaid cards are accepted" = "Huma aċċettati biss karti tad-debitu u karti mħallsa minn qabel";
+
+"Only debit cards are accepted" = "Huma aċċettati biss karti tad-debitu";
+
+"Only prepaid cards are accepted" = "Huma aċċettati biss karti mħallsa minn qabel";
+
 "Postal Code" = "Kodiċi Postali";
 
 "Shipping Address" = "L-Indirizz tat-Trasport tal-Merkanzija";

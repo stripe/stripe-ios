@@ -36,6 +36,18 @@
 
 "MM/YY" = "MM/YY";
 
+"Only credit and prepaid cards are accepted" = "クレジットカードとプリペイドカードのみ利用できます";
+
+"Only credit cards are accepted" = "クレジットカードのみ利用できます";
+
+"Only debit and credit cards are accepted" = "デビットカードとクレジットカードのみ利用できます";
+
+"Only debit and prepaid cards are accepted" = "デビットカードとプリペイドカードのみ利用できます";
+
+"Only debit cards are accepted" = "デビットカードのみ利用できます";
+
+"Only prepaid cards are accepted" = "プリペイドカードのみ利用できます";
+
 "Postal Code" = "郵便番号";
 
 "Shipping Address" = "配送先住所";

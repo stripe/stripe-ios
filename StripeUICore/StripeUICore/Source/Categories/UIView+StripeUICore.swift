@@ -113,4 +113,10 @@ import UIKit
         }
         return spacerView
     }
+
+    var isFullyVisibleOnScreen: Bool {
+        guard let window = window, !isHidden, alpha > 0 else { return false }
+        let viewFrameInWindow = convert(bounds, to: window)
+        return window.bounds.contains(viewFrameInWindow)
+    }
 }

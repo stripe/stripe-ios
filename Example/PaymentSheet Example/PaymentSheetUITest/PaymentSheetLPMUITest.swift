@@ -62,8 +62,12 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
         // Attempt payment
         payButton.waitForExistenceAndTap()
 
+        // Wait 2x 300ms for window to animate in
+        Thread.sleep(forTimeInterval: 0.60)
+
         // Close the webview, to simulate cancel
-        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 15)
+        _ = app.otherElements["TopBrowserBar"].waitForExistence(timeout: 5.0)
+        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 15.0)
 
         // Tap to attempt a payment, but fail it
         payButton.waitForExistenceAndTap()

@@ -36,6 +36,18 @@
 
 "MM/YY" = "MM/ÅÅ";
 
+"Only credit and prepaid cards are accepted" = "Bare kredittkort og forhåndsbetalte kort godtas";
+
+"Only credit cards are accepted" = "Bare kredittkort godtas";
+
+"Only debit and credit cards are accepted" = "Bare debet- og kredittkort godtas";
+
+"Only debit and prepaid cards are accepted" = "Bare debetkort og forhåndsbetalte kort godtas";
+
+"Only debit cards are accepted" = "Bare debetkort godtas";
+
+"Only prepaid cards are accepted" = "Bare forhåndsbetalte kort godtas";
+
 "Postal Code" = "Postnummer";
 
 "Shipping Address" = "Forsendelsesadresse";

@@ -96,7 +96,21 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
         XCTAssertEqual(
             analyticsLog.map({ $0[string: "event"]! }).filter({ $0.starts(with: "mc") }),
-            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_lpms_render", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"]
+            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"]
+        )
+
+        let initialDisplayedPaymentMethodsEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_initial_displayed_payment_methods" })
+        XCTAssertEqual(
+            (initialDisplayedPaymentMethodsEvent.map { $0["visible_payment_methods"] } as? [String])?.count,
+            9
+        )
+        XCTAssertEqual(
+            (initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String])?.count,
+            2
+        )
+        XCTAssertEqual(
+            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
+            "vertical"
         )
 
         let eventsWithSelectedLPM = ["mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped"]
@@ -119,7 +133,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             // filter out async passive captcha and attestation logs
             analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_lpms_render", "mc_custom_paymentoption_savedpm_select", "mc_lpms_render", "mc_confirm_button_tapped"]
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_custom_paymentoption_savedpm_select", "mc_initial_displayed_payment_methods", "mc_confirm_button_tapped"]
         )
         XCTAssertEqual(
             analyticsLog.filter({ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]

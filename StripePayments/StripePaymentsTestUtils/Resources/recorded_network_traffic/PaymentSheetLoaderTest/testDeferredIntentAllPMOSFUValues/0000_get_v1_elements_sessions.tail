@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_options%5D%5Baffirm%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bafterpay_clearpay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Balipay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Balma%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bamazon_pay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bau_becs_debit%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bbacs_debit%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bbancontact%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bbillie%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bblik%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bboleto%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bcard%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bcard_present%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bcashapp%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bcrypto%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Beps%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bfpx%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bgrabpay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bideal%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bklarna%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bkonbini%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Blink%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bmobilepay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bmultibanco%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bnetbanking%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Boxxo%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bp24%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bpaynow%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bpaypal%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bpromptpay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Brevolut_pay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bsatispay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bsepa_debit%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bshop_pay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bsunbit%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bswish%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Btwint%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bupi%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bus_bank_account%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bwechat_pay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bzip%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_options%5D%5Baffirm%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bafterpay_clearpay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Balipay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Balma%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bamazon_pay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bau_becs_debit%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bbacs_debit%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bbancontact%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bbillie%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bblik%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bboleto%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bcard%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bcard_present%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bcashapp%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bcrypto%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Beps%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bfpx%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bgrabpay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bideal%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bklarna%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bkonbini%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Blink%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bmobilepay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bmultibanco%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bnetbanking%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Boxxo%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bp24%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bpaynow%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bpaypal%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bpaypay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bpromptpay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Brevolut_pay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bsatispay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bsepa_debit%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bshop_pay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bsunbit%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bswish%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Btwint%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bupi%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bus_bank_account%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bwechat_pay%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Bzip%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=pbbYpwau6uZkUHV8QXN-4kEVIOkHSGW7GvojY3KdV3Iy1BZADPockf4QRmua6ze9Z6Img2jS98nwG8Q1
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KVin3EpDo3ubaBVrlNSG1YefBkSFng7ljOMYmppzMtElJCuGnmmPSPdpDpVAq6a85jeR53eMDrzOr1SL
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 30 Oct 2025 17:22:00 GMT
+Date: Tue, 09 Dec 2025 17:53:18 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 15042
+Content-Length: 15520
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_fmkx1m5LJQ0Mdx
+request-id: req_PEqdOvD0Xmnmgz
 
 {
   "payment_method_preference" : {
@@ -51,7 +51,6 @@ request-id: req_fmkx1m5LJQ0Mdx
     "elements_easel_disable_payment_fill" : false,
     "elements_enable_read_allow_redisplay" : false,
     "elements_enable_jp_installments_updated_ui" : true,
-    "elements_enable_ach_consumer_sign_up_incentive" : true,
     "enable_afterpay_clearpay_cbt_afterpay_rails" : false,
     "elements_enable_express_checkout_button_demo_pay" : false,
     "link_enable_auth_partner_communication" : true,
@@ -72,6 +71,7 @@ request-id: req_fmkx1m5LJQ0Mdx
     "elements_spm_set_as_default" : true,
     "payment_element_link_modal_preload_killswitch" : false,
     "elements_enable_write_allow_redisplay" : false,
+    "link_auth_partner_enable_authentication_element" : true,
     "elements_allow_manual_payment_method_creation_with_spm" : false,
     "elements_enable_cb_apple_pay_for_connect_platforms" : true,
     "elements_mobile_force_setup_future_use_behavior_and_new_mandate_text" : false,
@@ -80,15 +80,20 @@ request-id: req_fmkx1m5LJQ0Mdx
     "id_bank_transfers_v1_integration" : false,
     "networked_business_profile_demo" : false,
     "elements_disable_fc_lite" : false,
+    "elements_enable_acss_debit_spm" : false,
     "elements_enable_fraud_signal_data_transfer_to_hcaptcha" : false,
+    "ocs_buyer_xp_elements_remove_wallets_redirect_text" : false,
     "disable_cbc_in_link_popup" : false,
     "elements_easel_disable_health_check" : false,
     "elements_enable_bacs_debit_spm" : false,
-    "link_modal_enable_ui_revamp" : false,
+    "link_modal_enable_ui_revamp" : true,
+    "elements_disable_sepa_debit_eea_address_requirement" : false,
+    "elements_mobile_card_funding_filtering" : false,
     "elements_enable_ephemeral_key_for_confirmation_token_creation" : true,
     "elements_show_expanded_spm" : false,
     "elements_enable_19_digit_pans" : false,
     "link_auth_partner_delay_recognition" : true,
+    "bank_connections_enable_us_bank_account_in_universal_link_modal" : false,
     "elements_easel_disable_optimizations_check" : false,
     "elements_enable_new_google_places_api" : true,
     "elements_spm_messages" : false,
@@ -107,13 +112,13 @@ request-id: req_fmkx1m5LJQ0Mdx
     "apple_pay_pe_killswitch" : false,
     "apple_pay_prb_killswitch" : false,
     "elements_enable_payment_method_logo_position" : true,
+    "ocs_buyer_xp_elements_remove_cpm_redirect_text" : false,
     "payto_enable_modal_in_payment_element" : true,
     "apple_pay_ece_killswitch" : false,
     "link_mobile_express_checkout_element_inline_otp_killswitch" : false,
-    "elements_enable_link_spm_branding" : true,
     "elements_enable_payment_method_logo_position_killswitch" : false,
     "financial_connections_enable_deferred_intent_flow" : true,
-    "link_payment_element_steerage_enabled" : false,
+    "link_payment_element_steerage_enabled" : true,
     "paypal_phone_number_support_in_ece" : false,
     "distinctly_link_pe_backup_payment_method" : true,
     "linkglobalholdbackmanager_test_rollout" : true,
@@ -124,10 +129,12 @@ request-id: req_fmkx1m5LJQ0Mdx
     "elements_extend_hcaptcha_refresh_time" : true,
     "enable_payment_method_api_shop_pay" : true,
     "enable_custom_checkout_currency_selector_element" : false,
+    "distinctly_link_payment_element_opt_out_merchant_blocklist" : false,
     "elements_enable_instant_debits_postal_code_collection" : false,
     "elements_enable_jp_card_installments" : true,
     "elements_prefer_fc_lite" : false,
     "link_enable_address_country_restrictions" : false,
+    "upi_qrcode_for_mandate_setup" : false,
     "elements_enable_easel_for_pi" : true,
     "elements_does_not_collect_postal_code_for_non_us_card_transactions_killswitch" : false,
     "link_auth_partner_consume_link_auth_intent" : true,
@@ -146,17 +153,18 @@ request-id: req_fmkx1m5LJQ0Mdx
     "elements_enable_easel_for_pi_killswitch" : false,
     "elements_enable_pay_by_bank_multi_country_bank_selector_rollout_countries" : false,
     "elements_enable_south_korea_market_underlying_pms" : false,
-    "enable_cashapp_afterpay_logo_checkout" : true,
     "link_enable_card_brand_choice" : true,
     "link_enable_universal_ncdv_l3" : true,
-    "link_enable_auth_partner_sizing_logging" : true,
     "link_payment_element_keep_optional_doi_open_rollout" : true,
+    "link_enable_auth_partner_sizing_logging" : true,
     "elements_enable_link_spm" : true,
     "elements_spm_max_visible_payment_methods" : false,
-    "enable_merchant_instructed_orchestration_on_checkout" : false,
     "elements_disable_link_email_otp" : false,
     "elements_enable_passive_captcha" : false,
     "elements_disable_progressive_cursor" : false,
+    "elements_allow_custom_payment_method_creation" : false,
+    "elements_enable_appearance_recompute" : false,
+    "distinctly_link_payment_element_ramp" : true,
     "link_user_action_attempt_login_using_stored_credentials" : true,
     "elements_enable_interac_apple_pay" : false,
     "elements_disable_paypal_express" : false,
@@ -166,15 +174,15 @@ request-id: req_fmkx1m5LJQ0Mdx
     "disable_payment_element_if_required_billing_config" : false,
     "elements_stop_move_focus_to_first_errored_field" : true,
     "link_in_accordion_layout_available_in_stripejs" : false,
-    "link_klarna_nux_enabled_for_payment_element" : false,
     "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : true,
+    "legacy_customer_session_payment_element_features" : false,
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1ghTcm0nio1",
+  "session_id" : "elements_session_10TaaZyv0eU",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "d0dc5f61-2baf-44ff-bc11-0974daf840a6",
+  "config_id" : "42002f02-e3bc-4c3b-bf6c-6e65b009324b",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -202,9 +210,9 @@ request-id: req_fmkx1m5LJQ0Mdx
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "a25c3890-c94b-4eb0-a3bf-dda0ab5890b2",
+    "arb_id" : "5c4a00b4-745b-4cdd-a2bc-4e3effd35b5f",
     "experiment_metadata" : {
-      "seed" : "966f1390d234c05448ea75fe37b2bedb529771b6005288e96b469450e9783bcd",
+      "seed" : "69106bc3bde0aa836fd3ae0cd0a16b608b6dc63c79b3f916efab02248bda30ef",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -220,16 +228,16 @@ request-id: req_fmkx1m5LJQ0Mdx
       ]
     },
     "experiment_assignments" : {
-      "ocs_buyer_xp_elements_ece_pe_does_not_wait" : "control",
       "ocs_buyer_xp_elements_remove_postal_code_card_non_us" : "control",
       "paypal_payment_handler" : "control",
       "ocs_buyer_xp_elements_lpm_holdback" : "control",
-      "ocs_buyer_xp_redirect_simplification_v2" : "control",
+      "ocs_buyer_xp_redirect_simplification_v3" : "control",
+      "ocs_buyer_xp_redirect_simplification_v2" : "treatment_1",
       "ocs_buyer_xp_elements_ece_timeout_time" : "control",
       "link_ab_test_aa" : "control",
       "ocs_buyer_xp_elements_redirect_form_simplification" : "control",
       "ocs_buyer_xp_elements_clover_collect_postal_code" : "control",
-      "connections_elements_us_bank_account_picker_icons" : "control"
+      "ocs_buyer_xp_elements_ece_pe_does_not_wait" : "control"
     }
   },
   "legacy_customer" : null,
@@ -392,8 +400,8 @@ request-id: req_fmkx1m5LJQ0Mdx
   "ordered_payment_method_types_and_wallets" : [
     "card",
     "apple_pay",
-    "cashapp",
     "google_pay",
+    "cashapp",
     "us_bank_account",
     "amazon_pay"
   ],

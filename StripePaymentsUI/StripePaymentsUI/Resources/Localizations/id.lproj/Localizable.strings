@@ -36,6 +36,18 @@
 
 "MM/YY" = "BB/TT";
 
+"Only credit and prepaid cards are accepted" = "Hanya kartu kredit dan prabayar yang diterima";
+
+"Only credit cards are accepted" = "Hanya kartu kredit yang diterima";
+
+"Only debit and credit cards are accepted" = "Hanya kartu debit dan kredit yang diterima";
+
+"Only debit and prepaid cards are accepted" = "Hanya kartu debit dan prabayar yang diterima";
+
+"Only debit cards are accepted" = "Hanya kartu debit yang diterima";
+
+"Only prepaid cards are accepted" = "Hanya kartu prabayar yang diterima";
+
 "Postal Code" = "Kode Pos";
 
 "Shipping Address" = "Alamat Pengiriman";

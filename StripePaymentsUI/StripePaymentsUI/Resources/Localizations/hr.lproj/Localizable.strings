@@ -36,6 +36,18 @@
 
 "MM/YY" = "MM/GG";
 
+"Only credit and prepaid cards are accepted" = "Prihvaćaju se samo kreditne i prepaid kartice";
+
+"Only credit cards are accepted" = "Prihvaćaju se samo kreditne kartice";
+
+"Only debit and credit cards are accepted" = "Prihvaćaju se samo debitne i kreditne kartice";
+
+"Only debit and prepaid cards are accepted" = "Prihvaćaju se samo debitne i prepaid kartice";
+
+"Only debit cards are accepted" = "Prihvaćaju se samo debitne kartice";
+
+"Only prepaid cards are accepted" = "Prihvaćaju se samo prepaid kartice";
+
 "Postal Code" = "Poštanski broj";
 
 "Shipping Address" = "Adresa za otpremu";

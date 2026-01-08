@@ -8,6 +8,11 @@
 import Foundation
 
 struct CreateOnrampSessionRequest: Encodable {
+    enum SettlementSpeed: String, Encodable {
+        case instant
+        case standard
+    }
+
     let uiMode = "headless"
     let paymentToken: String
     let sourceAmount: Decimal
@@ -18,4 +23,5 @@ struct CreateOnrampSessionRequest: Encodable {
     let destinationNetworks: [String]
     let walletAddress: String
     let customerIpAddress: String
+    let settlementSpeed: SettlementSpeed
 }

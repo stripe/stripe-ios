@@ -36,6 +36,18 @@
 
 "MM/YY" = "MM/YY";
 
+"Only credit and prepaid cards are accepted" = "신용 카드 및 선불 카드만 허용됨";
+
+"Only credit cards are accepted" = "신용 카드만 허용됨";
+
+"Only debit and credit cards are accepted" = "직불 카드 및 신용 카드만 허용됨";
+
+"Only debit and prepaid cards are accepted" = "직불 카드 및 선불 카드만 허용됨";
+
+"Only debit cards are accepted" = "직불 카드만 허용됨";
+
+"Only prepaid cards are accepted" = "선불 카드만 허용됨";
+
 "Postal Code" = "우편번호";
 
 "Shipping Address" = "배송 주소";

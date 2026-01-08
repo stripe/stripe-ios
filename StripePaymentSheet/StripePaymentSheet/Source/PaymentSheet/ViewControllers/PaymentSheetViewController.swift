@@ -362,7 +362,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             stpAssertionFailure("Apple Pay should be handled directly by the Apple Pay button in the wallet header")
         }
         self.buyButton.update(
-            state: buyButtonStatus,
+            status: buyButtonStatus,
             callToAction: callToAction,
             animated: animated,
             completion: nil
@@ -476,7 +476,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 #if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
-                        self.buyButton.update(state: .succeeded, animated: true) {
+                        self.buyButton.update(status: .succeeded, animated: true) {
                             // Wait a bit before closing the sheet
                             self.isPaymentInFlight = false
                             self.delegate?.paymentSheetViewControllerDidFinish(self, result: .completed)
@@ -595,9 +595,9 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
-            buyButton.update(state: .disabled)
+            buyButton.update(status: .disabled)
         } else {
-            buyButton.update(state: buyButtonEnabledForSavedPayments())
+            buyButton.update(status: buyButtonEnabledForSavedPayments())
         }
         navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
         navigationBar.additionalButton.addTarget(

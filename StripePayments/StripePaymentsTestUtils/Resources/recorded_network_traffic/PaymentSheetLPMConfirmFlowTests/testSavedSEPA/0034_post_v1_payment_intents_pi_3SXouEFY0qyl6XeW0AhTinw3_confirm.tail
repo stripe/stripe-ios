@@ -1,0 +1,100 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SXouEFY0qyl6XeW0AhTinw3\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=AcK2sKct9Y8HUueKUHnrypoRK35HsIJTn2cKWPb2X7DNChuTFSyuN1kz3EkFT-OC8bFMdgR4e2Pubsdr
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_z7tFGtijRdXkRn
+Content-Length: 1755
+Vary: Origin
+Date: Wed, 26 Nov 2025 20:01:40 GMT
+original-request: req_z7tFGtijRdXkRn
+stripe-version: 2020-08-27
+idempotency-key: 8a77256d-e312-4ceb-ac86-2b416b675d76
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3SXouEFY0qyl6XeW0AhTinw3_secret_lDrYl9nuu5uOBMPcY7AsXXjAc&confirmation_token=ctoken_1SXouEFY0qyl6XeWGNBWZ4ZA&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "processing",
+  "object" : "payment_intent",
+  "currency" : "eur",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "sepa_debit" : {
+      "fingerprint" : "vifs0Ho7vwRn1Miu",
+      "country" : "DE",
+      "last4" : "3000",
+      "bank_code" : "37040044",
+      "generated_from" : {
+        "setup_attempt" : null,
+        "charge" : null
+      },
+      "branch_code" : ""
+    },
+    "id" : "pm_1SXosgFY0qyl6XeWkScLWnUN",
+    "billing_details" : {
+      "email" : "customer@example.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Test Customer",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1764187202,
+    "allow_redisplay" : "unspecified",
+    "type" : "sepa_debit",
+    "customer" : "cus_TUoUvtvPJvpHPA"
+  },
+  "client_secret" : "pi_3SXouEFY0qyl6XeW0AhTinw3_secret_lDrYl9nuu5uOBMPcY7AsXXjAc",
+  "id" : "pi_3SXouEFY0qyl6XeW0AhTinw3",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "sepa_debit"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1764187298,
+  "description" : null
+}

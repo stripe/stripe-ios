@@ -36,6 +36,18 @@
 
 "MM/YY" = "ΜΜ/ΕΕ";
 
+"Only credit and prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο πιστωτικές και προπληρωμένες κάρτες";
+
+"Only credit cards are accepted" = "Γίνονται αποδεκτές μόνο πιστωτικές κάρτες";
+
+"Only debit and credit cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές και πιστωτικές κάρτες";
+
+"Only debit and prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές και προπληρωμένες κάρτες";
+
+"Only debit cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές κάρτες";
+
+"Only prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο οι προπληρωμένες κάρτες";
+
 "Postal Code" = "Ταχυδρομικός κώδικας";
 
 "Shipping Address" = "Διεύθυνση αποστολής";
