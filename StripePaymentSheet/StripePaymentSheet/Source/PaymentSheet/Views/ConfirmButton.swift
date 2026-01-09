@@ -18,55 +18,9 @@ private let spinnerMoveToCenterAnimationDuration = 0.35
 
 /// Buy or Continue button
 class ConfirmButton: UIView {
-    // MARK: Internal Properties
-    enum Status {
-        case enabled
-        case disabled
-        case processing
-        case spinnerWithInteractionDisabled
-        case succeeded
-    }
-    enum CallToActionType {
-        case pay(amount: Int, currency: String, withLock: Bool = true)
-        case add(paymentMethodType: PaymentSheet.PaymentMethodType)
-        case `continue`
-        case continueWithLock
-        case setup
-        case custom(title: String)
-        case customWithLock(title: String)
 
-        static func makeDefaultTypeForPaymentSheet(intent: Intent) -> CallToActionType {
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
-            case .setupIntent:
-                return .setup
-            case .deferredIntent(let intentConfig):
-                switch intentConfig.mode {
-                case .payment(let amount, let currency, _, _, _):
-                    return .pay(amount: amount, currency: currency)
-                case .setup:
-                    return .setup
-                }
-            }
-        }
-
-        static func makeDefaultTypeForLink(intent: Intent) -> CallToActionType {
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency, withLock: false)
-            case .setupIntent:
-                return .continue
-            case .deferredIntent(let intentConfig):
-                switch intentConfig.mode {
-                case .payment(let amount, let currency, _, _, _):
-                    return .pay(amount: amount, currency: currency, withLock: false)
-                case .setup:
-                    return .continue
-                }
-            }
-        }
-    }
+    typealias Status = BuyButton.Status
+    typealias CallToActionType = BuyButton.CallToActionType
 
     // MARK: Private Properties
     private let buyButton: BuyButton
@@ -129,6 +83,55 @@ class ConfirmButton: UIView {
     // MARK: - BuyButton
 
     class BuyButton: UIControl {
+
+        enum Status {
+            case enabled
+            case disabled
+            case processing
+            case spinnerWithInteractionDisabled
+            case succeeded
+        }
+        enum CallToActionType {
+            case pay(amount: Int, currency: String, withLock: Bool = true)
+            case add(paymentMethodType: PaymentSheet.PaymentMethodType)
+            case `continue`
+            case continueWithLock
+            case setup
+            case custom(title: String)
+            case customWithLock(title: String)
+
+            static func makeDefaultTypeForPaymentSheet(intent: Intent) -> CallToActionType {
+                switch intent {
+                case .paymentIntent(let paymentIntent):
+                    return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
+                case .setupIntent:
+                    return .setup
+                case .deferredIntent(let intentConfig):
+                    switch intentConfig.mode {
+                    case .payment(let amount, let currency, _, _, _):
+                        return .pay(amount: amount, currency: currency)
+                    case .setup:
+                        return .setup
+                    }
+                }
+            }
+
+            static func makeDefaultTypeForLink(intent: Intent) -> CallToActionType {
+                switch intent {
+                case .paymentIntent(let paymentIntent):
+                    return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency, withLock: false)
+                case .setupIntent:
+                    return .continue
+                case .deferredIntent(let intentConfig):
+                    switch intentConfig.mode {
+                    case .payment(let amount, let currency, _, _, _):
+                        return .pay(amount: amount, currency: currency, withLock: false)
+                    case .setup:
+                        return .continue
+                    }
+                }
+            }
+        }
 
         /// Background color for the `.disabled` state.
         var disabledBackgroundColor: UIColor {
