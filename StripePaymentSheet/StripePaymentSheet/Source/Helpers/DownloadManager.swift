@@ -97,13 +97,8 @@ extension DownloadManager {
         var errorParams: [String: Any] = ["url": url.absoluteString]
         do {
             let (data, response) = try await session.data(from: url)
-            // this should never fail, but need to cast to extract http status
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw DownloadManager.Error.httpError
-            }
-            errorParams["http_status"] = httpResponse.statusCode
-            guard (200...299).contains(httpResponse.statusCode) else {
-                throw DownloadManager.Error.httpError
+            if let httpResponse = response as? HTTPURLResponse {
+                errorParams["http_status"] = httpResponse.statusCode
             }
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             Task {
@@ -111,7 +106,6 @@ extension DownloadManager {
                 self.imageCacheLock.withLock {
                     self.imageCache[url] = image
                 }
-
             }
             return image
         } catch {
