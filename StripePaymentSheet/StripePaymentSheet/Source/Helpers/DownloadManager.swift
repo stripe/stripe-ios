@@ -96,8 +96,11 @@ extension DownloadManager {
         var errorParams: [String: Any] = ["url": url.absoluteString]
         do {
             let (data, response) = try await session.data(from: url)
+            // log extra info about response for analytics in case of error
             if let httpResponse = response as? HTTPURLResponse {
                 errorParams["http_status"] = httpResponse.statusCode
+                errorParams["content_type"] = httpResponse.allHeaderFields["Content-Type"]
+                errorParams["content_length"] = httpResponse.allHeaderFields["Content-Length"]
             }
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             Task {
