@@ -20,8 +20,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
-        elementsSession: STPElementsSession?,
-        mandateData: STPMandateDataParams? = nil
+        elementsSession: STPElementsSession?
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         // Route based on which handler is available in the intent configuration
         if let confirmationTokenConfirmHandler = intentConfig.confirmationTokenConfirmHandler {
@@ -39,7 +38,6 @@ extension PaymentSheet {
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 elementsSession: elementsSession,
-                mandateData: mandateData,
                 confirmHandler: confirmationTokenConfirmHandler
             )
         } else if let confirmHandler = intentConfig.confirmHandler {
@@ -52,7 +50,6 @@ extension PaymentSheet {
                 paymentHandler: paymentHandler,
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
-                mandateData: mandateData,
                 confirmHandler: confirmHandler
             )
         } else {
@@ -70,7 +67,6 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
-        mandateData: STPMandateDataParams? = nil,
         confirmHandler: @escaping IntentConfiguration.ConfirmHandler
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
@@ -149,8 +145,7 @@ extension PaymentSheet {
                     let paymentIntentParams = makePaymentIntentParams(
                         confirmPaymentMethodType: confirmType,
                         paymentIntent: paymentIntent,
-                        configuration: configuration,
-                        mandateData: mandateData
+                        configuration: configuration
                     )
                     // Set top-level SFU and PMO SFU to match the intent config
                     setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
@@ -194,8 +189,7 @@ extension PaymentSheet {
                     let setupIntentParams = makeSetupIntentParams(
                         confirmPaymentMethodType: confirmType,
                         setupIntent: setupIntent,
-                        configuration: configuration,
-                        mandateData: mandateData
+                        configuration: configuration
                     )
                     result = await withCheckedContinuation { continuation in
                         paymentHandler.confirmSetupIntent(

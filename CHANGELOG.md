@@ -3,7 +3,9 @@
 * [Fixed] Improved telemetry used for [advanced fraud signals](https://docs.stripe.com/disputes/prevention/advanced-fraud-detection).
 
 ### PaymentSheet
+* [Fixed] Fixed an issue where confirming Cash App Pay, Satispay, or PayPal could fail when setup_future_usage = `on_session`.
 * [Changed] Custom Payment Methods is now generally available, learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/custom-payment-methods).
+
 
 ## 25.3.1 2025-12-19
 

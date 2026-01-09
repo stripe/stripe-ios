@@ -135,14 +135,14 @@ extension EmbeddedPaymentElement {
         /// Note: For Apple Pay, the list of supported card brands is determined by combining `StripeAPI.supportedPKPaymentNetworks()` with `StripeAPI.additionalEnabledApplePayNetworks` and then applying the `cardBrandAcceptance` filter. This filtered list is then assigned to `PKPaymentRequest.supportedNetworks`, ensuring that only the allowed card brands are available for Apple Pay transactions. Any `PKPaymentNetwork` that does not correspond to a `BrandCategory` will be blocked if you have specified an allow list, or will not be blocked if you have specified a disallow list.
         /// Note: This is only a client-side solution.
         /// Note: Card brand filtering is not currently supported by Link.
-        public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+        public var cardBrandAcceptance: CardBrandAcceptance = .all
 
         /// By default, the embedded payment element will accept cards of all funding types (credit, debit, prepaid, unknown).
         /// You can specify which card funding types to allow.
         /// When a customer enters a card that isn't allowed, a warning will be displayed, but they can still complete the payment.
         ///
         /// This is a client-side UX feature only. You must validate the funding type on your server using the confirmation token or radar rules before confirming the payment to ensure only allowed funding types are accepted.
-        @_spi(CardFundingFilteringPrivatePreview) public var allowedCardFundingTypes: PaymentSheet.CardFundingType = .all
+        @_spi(CardFundingFilteringPrivatePreview) public var allowedCardFundingTypes: CardFundingType = .all
 
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
