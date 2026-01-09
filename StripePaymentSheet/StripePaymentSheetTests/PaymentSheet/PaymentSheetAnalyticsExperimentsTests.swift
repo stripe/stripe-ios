@@ -234,7 +234,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             displayedPaymentMethodTypes: ["card"],
             walletPaymentMethodTypes: ["apple_pay", "link"],
             hasSPM: true,
-            integrationShape: .flowController
+            integrationShape: .complete
         )
         analyticsClient.logExposure(experiment: experiment)
 
@@ -249,44 +249,6 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? [String], ["card"])
         XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? [String], ["card", "apple_pay", "link"])
         XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? Bool, true)
-        XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "flowcontroller")
-    }
-
-    func testOCSMobileHorizontalMode() {
-        let arbId = "arb_id_123"
-        let experimentsData = ExperimentsData(
-            arbId: arbId,
-            experimentAssignments: [
-                "ocs_mobile_horizontal_mode": .treatment
-            ],
-            allResponseFields: [:]
-        )
-        let elementsSession = STPElementsSession._testValue(
-            experimentsData: experimentsData,
-            customer: nil
-        )
-        let experiment = OCSMobileHorizontalMode(
-            arbId: arbId,
-            elementsSession: elementsSession,
-            configuration: PaymentSheet.Configuration(),
-            displayedPaymentMethodTypes: ["card"],
-            walletPaymentMethodTypes: ["apple_pay", "link"],
-            hasSPM: true,
-            integrationShape: .flowController
-        )
-        analyticsClient.logExposure(experiment: experiment)
-
-        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
-            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
-        }
-
-        XCTAssertEqual(payload["arb_id"] as? String, arbId)
-        XCTAssertEqual(payload["experiment_retrieved"] as? String, "ocs_mobile_horizontal_mode")
-        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
-
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? [String], ["card"])
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? [String], ["card", "apple_pay", "link"])
-        XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? Bool, true)
-        XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "flowcontroller")
+        XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "paymentsheet")
     }
 }

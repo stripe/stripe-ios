@@ -613,7 +613,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentMethodLayoutAutomaticWithHorizontalExperiment() {
+    func testPaymentMethodLayoutAutomaticWithHorizontalExperimentAA() {
         configuration.paymentMethodLayout = .automatic
         stubNewCustomerResponseWithHorizontalExperiment()
         preparePaymentSheet()

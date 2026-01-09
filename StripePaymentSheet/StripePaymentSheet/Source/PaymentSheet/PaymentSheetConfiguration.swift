@@ -318,7 +318,7 @@ extension PaymentSheet {
                 let elementsSession = loadResult.elementsSession
                 let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
                 guard let arbId = elementsSession.experimentsData?.arbId else {
-                    // Default to vertical if no experiment assignment
+                    // Default to vertical (control) if no experiment assignment
                     return .vertical
                 }
 
@@ -330,12 +330,8 @@ extension PaymentSheet {
                 if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
                     walletTypes.append("link")
                 }
-                // ShopPay is included if it's in the server-side list
-                if elementsSession.orderedPaymentMethodTypesAndWallets.contains("shop_pay") {
-                    walletTypes.append("shop_pay")
-                }
 
-                let horizontalModeExperiment = OCSMobileHorizontalMode(
+                let horizontalModeExperiment = OCSMobileHorizontalModeAA(
                     arbId: arbId,
                     elementsSession: loadResult.elementsSession,
                     configuration: configuration,
