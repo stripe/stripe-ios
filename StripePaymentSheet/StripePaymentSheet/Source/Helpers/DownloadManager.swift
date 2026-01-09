@@ -97,6 +97,7 @@ extension DownloadManager {
         var errorParams: [String: Any] = ["url": url.absoluteString]
         do {
             let (data, response) = try await session.data(from: url)
+            // this should never fail, but need to cast to extract http status
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw DownloadManager.Error.httpError
             }
