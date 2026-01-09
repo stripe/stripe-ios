@@ -21,7 +21,7 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
 
       - name: Install Periphery
-        run: brew install periphery
+        run: brew install periphery && brew upgrade periphery
 
       - name: Build project and run Periphery scan
         id: periphery-scan
