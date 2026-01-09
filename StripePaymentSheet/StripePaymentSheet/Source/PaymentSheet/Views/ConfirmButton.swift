@@ -91,31 +91,10 @@ class ConfirmButton: UIView {
         addAndPinSubview(buyButton)
 
         update()
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didBecomeActive),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-#if !os(visionOS)
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        self.buyButton.update(status: buyButton.status, callToAction: buyButton.callToAction, animated: false)
-    }
-#endif
-
-    @objc private func didBecomeActive() {
-        self.buyButton.update(status: self.buyButton.status, callToAction: self.buyButton.callToAction, animated: false)
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Internal Methods
@@ -126,25 +105,11 @@ class ConfirmButton: UIView {
         animated: Bool = false,
         completion: (() -> Void)? = nil
     ) {
-        update(
-            status: status ?? self.buyButton.status,
-            callToAction: callToAction ?? self.buyButton.callToAction,
-            animated: animated,
-            completion: completion)
-    }
-
-    func update(
-        status: Status,
-        callToAction: CallToActionType,
-        animated: Bool = false,
-        completion: (() -> Void)? = nil
-    ) {
-        self.buyButton.update(
+        buyButton.update(
             status: status,
             callToAction: callToAction,
             animated: animated,
-            completion: completion
-        )
+            completion: completion)
     }
 
     // MARK: - Private Methods
@@ -328,12 +293,22 @@ class ConfirmButton: UIView {
             ])
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
             overriddenForegroundColor = appearance.primaryButton.textColor
+
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(didBecomeActive),
+                                                   name: UIApplication.willEnterForegroundNotification,
+                                                   object: nil)
+        }
+
+        deinit {
+            NotificationCenter.default.removeObserver(self)
         }
 
 #if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
+            update()
         }
 #endif
 
@@ -344,6 +319,23 @@ class ConfirmButton: UIView {
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        @objc private func didBecomeActive() {
+            self.update(status: self.status, callToAction: self.callToAction, animated: false)
+        }
+
+        func update(
+            status: Status? = nil,
+            callToAction: CallToActionType? = nil,
+            animated: Bool = false,
+            completion: (() -> Void)? = nil
+        ) {
+            update(
+                status: status ?? self.status,
+                callToAction: callToAction ?? self.callToAction,
+                animated: animated,
+                completion: completion)
         }
 
         func update(status: Status, callToAction: CallToActionType, animated: Bool, completion: (() -> Void)? = nil) {
