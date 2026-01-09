@@ -32,23 +32,13 @@ class PassiveCaptchaChallengeTests: XCTestCase {
         super.tearDown()
     }
 
-    struct TestHCaptchaFactory: HCaptchaFactory {
-        let shouldInjectDelay: Bool
-        let sessionExpiration: TimeInterval
-
-        init(shouldInjectDelay: Bool = false, sessionExpiration: TimeInterval = 29 * 60) {
-            self.shouldInjectDelay = shouldInjectDelay
-            self.sessionExpiration = sessionExpiration
-        }
-
+    struct TestDelayHCaptchaFactory: HCaptchaFactory {
         func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
             let hcaptcha = try HCaptcha(apiKey: siteKey,
                                         passiveApiKey: true,
                                         rqdata: rqdata,
                                         host: "stripecdn.com")
-            if shouldInjectDelay {
-                hcaptcha.manager.shouldDelayToken = true
-            }
+            hcaptcha.manager.shouldDelayToken = true
             return hcaptcha
         }
     }
@@ -73,7 +63,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
 
     func testPassiveCaptchaTimeout() async throws {
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
-        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: TestHCaptchaFactory(shouldInjectDelay: true))
+        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: TestDelayHCaptchaFactory())
         let startTime = Date()
         let hcaptchaTokenResult = await withTimeout(1) {
             try await passiveCaptchaChallenge.fetchToken()
@@ -101,8 +91,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
     func testTokenResetAndRefetchAfterExpiration() async throws {
         let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil)
         // Use a very short expiration time (5 seconds) for testing
-        let testFactory = TestHCaptchaFactory(sessionExpiration: 5.0)
-        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: testFactory)
+        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory(), sessionExpiration: 5.0)
 
         // Fetch first token
         let token = try await passiveCaptchaChallenge.fetchToken()

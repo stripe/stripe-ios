@@ -68,8 +68,6 @@ class ConfirmationChallengeTests: XCTestCase {
 
     /// A test-only HCaptcha factory that delays token responses to ensure timeout behavior
     struct TestDelayHCaptchaFactory: HCaptchaFactory {
-        let sessionExpiration: TimeInterval = 29 * 60
-
         func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
             let hcaptcha = try HCaptcha(apiKey: siteKey,
                                         passiveApiKey: true,

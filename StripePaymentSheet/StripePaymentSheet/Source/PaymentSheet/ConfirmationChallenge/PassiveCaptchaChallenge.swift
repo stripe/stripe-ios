@@ -43,6 +43,7 @@ struct PassiveCaptchaData: Equatable, Hashable {
 actor PassiveCaptchaChallenge {
     let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
+    private let sessionExpiration: TimeInterval
     private var tokenTask: Task<String, Error>?
     var isTokenReady: Bool { // used for the attach analytic to indicate whether it's blocking checkout
         return hasFetchedToken && !hasSessionExpired
@@ -58,9 +59,12 @@ actor PassiveCaptchaChallenge {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
     }
 
-    init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
+    init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory,
+         sessionExpiration: TimeInterval = 29 * 60) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
+        // The max_age of the token set on the backend is 1800 seconds, or 30 minutes. As a preventative measure, we expire the token a minute early so a user won't send an expired token
+        self.sessionExpiration = sessionExpiration
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
@@ -136,7 +140,7 @@ actor PassiveCaptchaChallenge {
     }
 
     private func setSessionExpiration() {
-        self.sessionExpirationDate = Date().addingTimeInterval(hcaptchaFactory.sessionExpiration)
+        self.sessionExpirationDate = Date().addingTimeInterval(sessionExpiration)
     }
 
     private func setValidationComplete() {
@@ -147,16 +151,10 @@ actor PassiveCaptchaChallenge {
 
 // Protocol for creating HCaptcha instances
 protocol HCaptchaFactory {
-    var sessionExpiration: TimeInterval { get }
     func create(siteKey: String, rqdata: String?) throws -> HCaptcha
 }
 
 struct PassiveHCaptchaFactory: HCaptchaFactory {
-    // The max_age of the token set on the backend is 1800 seconds, or 30 minutes
-    // As a preventative measure, we expire the token a minute early so a user won't send an expired token
-    // After 29 minutes, we reset HCaptcha, and on confirmation, we fetch a new token
-    let sessionExpiration: TimeInterval = 29 * 60
-
     func create(siteKey: String, rqdata: String?) throws -> HCaptcha {
         return try HCaptcha(apiKey: siteKey,
                             passiveApiKey: true,
