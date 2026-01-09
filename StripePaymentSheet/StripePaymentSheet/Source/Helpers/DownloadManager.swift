@@ -100,7 +100,7 @@ extension DownloadManager {
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw DownloadManager.Error.httpError
             }
-            errorParams["httpStatus"] = httpResponse.statusCode
+            errorParams["http_status"] = httpResponse.statusCode
             guard (200...299).contains(httpResponse.statusCode) else {
                 throw DownloadManager.Error.httpError
             }
