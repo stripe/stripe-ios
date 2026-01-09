@@ -58,6 +58,7 @@ struct ExampleWalletButtonsContainerView: View {
                     TextField("ShopId", text: $shopId)
                         .textContentType(.emailAddress)
                         .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
 
                     Toggle("Enable inline verification", isOn: $linkInlineVerificationEnabled)
                         .onChange(of: linkInlineVerificationEnabled) { newValue in
@@ -128,6 +129,7 @@ struct ExampleWalletButtonsContainerView: View {
 
                         TextField("Allowed Shipping Countries (comma separated)", text: $allowedShippingCountries)
                             .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
                     }
 
                     Group {
