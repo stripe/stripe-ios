@@ -122,7 +122,11 @@ enum PaymentSheetFormFactoryConfig {
             switch paymentElementConfiguration.paymentMethodLayout {
             case .horizontal:
                 return true
-            case .vertical, .automatic:
+            case .vertical:
+                return false
+            case .automatic:
+                // By the time we reach the form factory, .automatic should have been resolved
+                // at the sheet level. Default to vertical/false as a safe fallback.
                 return false
             }
         case .customerSheet:

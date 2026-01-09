@@ -613,6 +613,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentMethodLayoutAutomaticWithHorizontalExperiment() {
+        configuration.paymentMethodLayout = .automatic
+        stubNewCustomerResponseWithHorizontalExperiment()
+        preparePaymentSheet()
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     // MARK: - Special LPM tests
 
     func testPaymentSheet_LPM_InstantDebits_only_promotion() {
@@ -1203,6 +1211,13 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private func stubNewCustomerResponse() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+        stubConsumerSession()
+    }
+
+    private func stubNewCustomerResponseWithHorizontalExperiment() {
+        stubSessions(fileMock: .elements_sessions_paymentMethod_savedPM_horizontalExperiment_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
         stubConsumerSession()

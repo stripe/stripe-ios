@@ -700,7 +700,13 @@ extension PaymentSheet {
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
-            switch configuration.paymentMethodLayout {
+            // Resolve automatic layout based on experiment
+            let resolvedLayout = configuration.paymentMethodLayout.resolve(
+                loadResult: loadResult,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper
+            )
+            switch resolvedLayout {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,
@@ -708,7 +714,7 @@ extension PaymentSheet {
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
-            case .vertical, .automatic:
+            case .vertical:
                 controller = PaymentSheetVerticalViewController(
                     configuration: configuration,
                     loadResult: loadResult,

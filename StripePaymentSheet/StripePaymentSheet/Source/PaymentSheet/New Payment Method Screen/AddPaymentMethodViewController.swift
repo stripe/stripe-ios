@@ -63,6 +63,26 @@ class AddPaymentMethodViewController: UIViewController {
         paymentMethodFormViewController.form
     }
 
+    var visiblePaymentMethods: [String] {
+        var visiblePaymentMethods: [String] = []
+        // Add wallet LPMs
+        let walletLPMs: [String] = delegate?.getWalletHeaders() ?? []
+        visiblePaymentMethods.append(contentsOf: walletLPMs)
+        // Filter cells that are fully visible (not partially) in the horizontal carousel
+        let fullyVisibleLPMs = paymentMethodTypesView.visibleCells.filter { cell in cell.isFullyVisibleOnScreen }.compactMap { cell in (cell as? PaymentMethodTypeCollectionView.PaymentTypeCell)?.paymentMethodType.identifier }
+        visiblePaymentMethods.append(contentsOf: fullyVisibleLPMs)
+        // If there are no cells in the carousel and one payment method type, it's because the form is expanded
+        if fullyVisibleLPMs.isEmpty, paymentMethodTypes.count == 1, let paymentMethodType = paymentMethodTypes.first {
+            visiblePaymentMethods.append(paymentMethodType.identifier)
+        }
+        return visiblePaymentMethods
+    }
+
+    var hiddenPaymentMethods: [String] {
+        // These LPMs are not visible without without scrolling in the horizontal carousel
+        return paymentMethodTypes.compactMap { $0.identifier }.filter { !visiblePaymentMethods.contains($0) }
+    }
+
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
         let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
@@ -158,19 +178,6 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func logInitialDisplayedPaymentMethods() {
-        var visiblePaymentMethods: [String] = []
-        // Add wallet LPMs
-        let walletLPMs: [String] = delegate?.getWalletHeaders() ?? []
-        visiblePaymentMethods.append(contentsOf: walletLPMs)
-        // Filter cells that are fully visible (not partially) in the horizontal carousel
-        let fullyVisibleLPMs = paymentMethodTypesView.visibleCells.filter { cell in cell.isFullyVisibleOnScreen }.compactMap { cell in (cell as? PaymentMethodTypeCollectionView.PaymentTypeCell)?.paymentMethodType.identifier }
-        visiblePaymentMethods.append(contentsOf: fullyVisibleLPMs)
-        // If there are no cells in the carousel and one payment method type, it's because the form is expanded
-        if fullyVisibleLPMs.isEmpty, paymentMethodTypes.count == 1, let paymentMethodType = paymentMethodTypes.first {
-            visiblePaymentMethods.append(paymentMethodType.identifier)
-        }
-        // These LPMs are not visible without without scrolling in the horizontal carousel
-        let hiddenPaymentMethods: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visiblePaymentMethods.contains($0) }
         analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .horizontal)
     }
 

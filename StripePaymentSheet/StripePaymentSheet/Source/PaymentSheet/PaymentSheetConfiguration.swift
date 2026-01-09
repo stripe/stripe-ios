@@ -295,6 +295,63 @@ extension PaymentSheet {
 
         /// Stripe automatically chooses between `horizontal` and `vertical`.
         case automatic
+
+        enum ResolvedLayout {
+            case horizontal
+            case vertical
+        }
+
+        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
+        /// For non-automatic layouts, returns self.
+        func resolve(
+            loadResult: PaymentSheetLoader.LoadResult,
+            configuration: PaymentElementConfiguration,
+            analyticsHelper: PaymentSheetAnalyticsHelper
+        ) -> ResolvedLayout {
+            switch self {
+            case .horizontal:
+                return .horizontal
+            case .vertical:
+                return .vertical
+            case .automatic:
+                // Check experiment to decide layout
+                let elementsSession = loadResult.elementsSession
+                let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
+                guard let arbId = elementsSession.experimentsData?.arbId else {
+                    // Default to vertical if no experiment assignment
+                    return .vertical
+                }
+
+                // Calculate client-side filtered wallet types
+                var walletTypes: [String] = []
+                if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
+                    walletTypes.append("apple_pay")
+                }
+                if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+                    walletTypes.append("link")
+                }
+                // ShopPay is included if it's in the server-side list
+                if elementsSession.orderedPaymentMethodTypesAndWallets.contains("shop_pay") {
+                    walletTypes.append("shop_pay")
+                }
+
+                let horizontalModeExperiment = OCSMobileHorizontalMode(
+                    arbId: arbId,
+                    elementsSession: loadResult.elementsSession,
+                    configuration: configuration,
+                    displayedPaymentMethodTypes: displayedPaymentMethods,
+                    walletPaymentMethodTypes: walletTypes,
+                    hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                    integrationShape: analyticsHelper.integrationShape
+                )
+
+                // Log experiment exposure
+                analyticsHelper.logExposure(experiment: horizontalModeExperiment)
+
+                // Return horizontal for treatment, vertical for control
+                return horizontalModeExperiment.group == .treatment ? .horizontal : .vertical
+            }
+        }
     }
 
     internal enum CustomerAccessProvider {

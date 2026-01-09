@@ -89,7 +89,7 @@ class SavedPaymentOptionsViewController: UIViewController {
             case .saved:
                 return "saved"
             case .applePay:
-                return "applePay"
+                return "apple_pay"
             case .link:
                 return "link"
             }
@@ -240,7 +240,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Private Properties
     private var selectedViewModelIndex: Int?
-    private var viewModels: [Selection] = []
+    internal var viewModels: [Selection] = []
     private let cbcEligible: Bool
 
     private var selectedIndexPath: IndexPath? {
