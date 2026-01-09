@@ -16,7 +16,6 @@ import UIKit
 
     enum Error: Swift.Error {
         case failedToMakeImageFromData
-        case httpError
     }
 
     public static let sharedManager = DownloadManager()
