@@ -2,9 +2,12 @@
   "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
   "config_id": "123",
-  "experiments": {
-    "miui_payment_element_aa_experiment": "treatment",
-    "ocs_mobile_horizontal_mode": "treatment"
+  "experiments_data": {
+      "arb_id": "arb_id_123",
+      "experiment_assignments": {
+          "ocs_mobile_horizontal_mode": "treatment",
+          "ocs_mobile_horizontal_mode_aa": "control_test"
+      }
   },
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,
