@@ -59,8 +59,7 @@ actor PassiveCaptchaChallenge {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
     }
 
-    init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory,
-         sessionExpiration: TimeInterval = 29 * 60) {
+    init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory, sessionExpiration: TimeInterval = 29 * 60) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
         // The max_age of the token set on the backend is 1800 seconds, or 30 minutes. As a preventative measure, we expire the token a minute early so a user won't send an expired token
