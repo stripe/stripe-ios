@@ -81,6 +81,7 @@ final class PaymentSheetLoader {
                 case .paymentIntent:
                     if !elementsSession.isBackupInstance {
                         _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                        print("hello world")
                     }
                 case .setupIntent:
                     break // Not supported
