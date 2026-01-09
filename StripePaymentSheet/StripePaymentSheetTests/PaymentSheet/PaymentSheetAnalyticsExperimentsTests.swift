@@ -219,7 +219,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         let experimentsData = ExperimentsData(
             arbId: arbId,
             experimentAssignments: [
-                "ocs_mobile_horizontal_mode_aa": .control
+                "ocs_mobile_horizontal_mode_aa": .controlTest
             ],
             allResponseFields: [:]
         )
@@ -244,7 +244,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
 
         XCTAssertEqual(payload["arb_id"] as? String, arbId)
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "ocs_mobile_horizontal_mode_aa")
-        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.control.rawValue)
+        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.controlTest.rawValue)
 
         XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? [String], ["card"])
         XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? [String], ["card", "apple_pay", "link"])
