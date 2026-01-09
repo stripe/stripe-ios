@@ -96,7 +96,7 @@ actor PassiveCaptchaChallenge {
                             Task { @MainActor in // MainActor to prevent continuation from different threads
                                 do {
                                     let token = try result.dematerialize()
-                                    await self?.setSessionExpiration()
+                                    await self?.setSessionExpirationDate()
                                     nillableContinuation?.resume(returning: token)
                                     nillableContinuation = nil
                                 } catch {
@@ -139,7 +139,7 @@ actor PassiveCaptchaChallenge {
         self.sessionExpirationDate = nil
     }
 
-    private func setSessionExpiration() {
+    private func setSessionExpirationDate() {
         self.sessionExpirationDate = Date().addingTimeInterval(sessionExpiration)
     }
 
