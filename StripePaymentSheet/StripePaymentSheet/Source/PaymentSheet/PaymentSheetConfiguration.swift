@@ -334,7 +334,6 @@ extension PaymentSheet {
                 let horizontalModeExperiment = OCSMobileHorizontalModeAA(
                     arbId: arbId,
                     elementsSession: loadResult.elementsSession,
-                    configuration: configuration,
                     displayedPaymentMethodTypes: displayedPaymentMethods,
                     walletPaymentMethodTypes: walletTypes,
                     hasSPM: !loadResult.savedPaymentMethods.isEmpty,

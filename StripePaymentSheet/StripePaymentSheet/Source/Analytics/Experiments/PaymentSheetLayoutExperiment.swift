@@ -30,7 +30,6 @@ struct PaymentSheetLayoutExperiment {
     init(
         experimentName: String,
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
         displayedPaymentMethodTypes: [String],
         walletPaymentMethodTypes: [String],
         hasSPM: Bool,
@@ -65,7 +64,6 @@ struct OCSMobileHorizontalModeAA: LoggableExperiment {
     init(
         arbId: String,
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
         displayedPaymentMethodTypes: [String],
         walletPaymentMethodTypes: [String],
         hasSPM: Bool,
@@ -74,7 +72,6 @@ struct OCSMobileHorizontalModeAA: LoggableExperiment {
         let experiment = PaymentSheetLayoutExperiment(
             experimentName: Self.experimentName,
             elementsSession: elementsSession,
-            configuration: configuration,
             displayedPaymentMethodTypes: displayedPaymentMethodTypes,
             walletPaymentMethodTypes: walletPaymentMethodTypes,
             hasSPM: hasSPM,

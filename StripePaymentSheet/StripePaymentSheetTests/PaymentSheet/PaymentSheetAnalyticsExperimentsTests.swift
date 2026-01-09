@@ -230,7 +230,6 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         let experiment = OCSMobileHorizontalModeAA(
             arbId: arbId,
             elementsSession: elementsSession,
-            configuration: PaymentSheet.Configuration(),
             displayedPaymentMethodTypes: ["card"],
             walletPaymentMethodTypes: ["apple_pay", "link"],
             hasSPM: true,
