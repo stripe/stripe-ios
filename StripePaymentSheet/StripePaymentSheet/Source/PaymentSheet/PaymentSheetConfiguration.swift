@@ -344,8 +344,8 @@ extension PaymentSheet {
                 // Log experiment exposure
                 analyticsHelper.logExposure(experiment: horizontalModeExperiment)
 
-                // Return horizontal for treatment, vertical for control
-                return horizontalModeExperiment.group == .treatment ? .horizontal : .vertical
+                // Return vertical for now (AA)
+                return .vertical
             }
         }
     }
