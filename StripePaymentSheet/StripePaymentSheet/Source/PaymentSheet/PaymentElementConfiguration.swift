@@ -106,9 +106,6 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
         get { return nil }
         set {}
     }
-    var paymentMethodLayout: PaymentSheet.PaymentMethodLayout {
-        return .vertical
-    }
     var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout {
         get { return .vertical }
         set { /* Embedded always uses vertical, ignore sets */ }
