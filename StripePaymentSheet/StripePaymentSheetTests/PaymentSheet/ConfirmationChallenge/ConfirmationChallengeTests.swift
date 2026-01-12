@@ -23,6 +23,7 @@ class ConfirmationChallengeTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        print("Setting up \(#function) with test log \(STPAnalyticsClient.sharedClient._testLogHistory)")
         // Create a key window for HCaptcha WebView to initialize properly
         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         if let windowScene = windowScene {
@@ -49,6 +50,7 @@ class ConfirmationChallengeTests: XCTestCase {
     }
 
     override func tearDown() {
+        print("Tearing down \(#function) with test log \(STPAnalyticsClient.sharedClient._testLogHistory)")
         STPAnalyticsClient.sharedClient._testLogHistory = []
         window?.isHidden = true
         window = nil
