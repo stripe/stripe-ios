@@ -641,7 +641,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=fr&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=See%20plans")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=fr&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Consulter%20les%20offres")!,
             legalDisclosure: nil,
             promotion: "4 paiements de 12,50 $US sans intérêts",
             appearance: appearance,
