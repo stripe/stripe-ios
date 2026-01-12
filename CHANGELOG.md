@@ -1,4 +1,6 @@
 ## X.Y.Z - changes pending release 
+
+## 25.4.0 2026-01-12
 ### All
 * [Fixed] Improved telemetry used for [advanced fraud signals](https://docs.stripe.com/disputes/prevention/advanced-fraud-detection).
 
