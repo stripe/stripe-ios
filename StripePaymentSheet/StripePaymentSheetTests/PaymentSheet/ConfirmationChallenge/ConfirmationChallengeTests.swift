@@ -50,7 +50,8 @@ class ConfirmationChallengeTests: XCTestCase {
     }
 
     override func tearDown() {
-        print("Tearing down \(#function) with test log \(STPAnalyticsClient.sharedClient._testLogHistory)")
+        // Sleep to allow any background tasks to complete before clearing analytics
+        Thread.sleep(forTimeInterval: 1.0)
         STPAnalyticsClient.sharedClient._testLogHistory = []
         window?.isHidden = true
         window = nil
