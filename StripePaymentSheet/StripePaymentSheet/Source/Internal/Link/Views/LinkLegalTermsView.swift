@@ -144,7 +144,7 @@ final class LinkLegalTermsView: UIView {
             )
         }()
 
-        let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
+        let formattedString = PaymentSheetStringUtils.applyLinksToString(template: string, links: links)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(
             fromRelativeHeight: Constants.lineHeight,

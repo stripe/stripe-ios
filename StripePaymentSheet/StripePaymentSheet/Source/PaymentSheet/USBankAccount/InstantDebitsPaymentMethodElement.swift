@@ -383,7 +383,7 @@ private extension PaymentMethodIncentive {
             "terms": URL(string: "https://link.com/promotion-terms")!,
         ]
 
-        let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
+        let formattedString = PaymentSheetStringUtils.applyLinksToString(template: string, links: links)
 
         let style = NSMutableParagraphStyle()
         style.alignment = .left
