@@ -462,7 +462,10 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
-    @_spi(CustomPaymentMethodsBeta) public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
+    public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
+    @_spi(CardFundingFilteringPrivatePreview) public typealias CardFundingType = PaymentSheet.CardFundingType
+    public typealias CardBrandAcceptance = PaymentSheet.CardBrandAcceptance
+    public typealias BrandCategory = PaymentSheet.CardBrandAcceptance.BrandCategory
 }
 
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData

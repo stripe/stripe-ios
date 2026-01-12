@@ -43,20 +43,35 @@ struct PassiveCaptchaData: Equatable, Hashable {
 actor PassiveCaptchaChallenge {
     let passiveCaptchaData: PassiveCaptchaData
     private let hcaptchaFactory: HCaptchaFactory
+    private let sessionExpiration: TimeInterval
     private var tokenTask: Task<String, Error>?
-    var hasFetchedToken = false
+    var isTokenReady: Bool { // used for the attach analytic to indicate whether it's blocking checkout
+        return hasFetchedToken && !hasSessionExpired
+    }
+    private var hasFetchedToken: Bool = false
+    private var sessionExpirationDate: Date?
+    private var hasSessionExpired: Bool {
+        guard let sessionExpirationDate else { return false } // if we don't have a session expiration date, then we don't have a token yet
+        return Date() >= sessionExpirationDate
+    }
 
     public init(passiveCaptchaData: PassiveCaptchaData) {
         self.init(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
     }
 
-    init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory) {
+    init(passiveCaptchaData: PassiveCaptchaData, hcaptchaFactory: HCaptchaFactory, sessionExpiration: TimeInterval = 29 * 60) {
         self.passiveCaptchaData = passiveCaptchaData
         self.hcaptchaFactory = hcaptchaFactory
+        // The max_age of the token set on the backend is 1800 seconds, or 30 minutes. As a preventative measure, we expire the token a minute early so a user won't send an expired token
+        self.sessionExpiration = sessionExpiration
         Task { try await fetchToken() } // Intentionally not blocking loading/initialization!
     }
 
     public func fetchToken() async throws -> String {
+        if hasSessionExpired {
+            resetSession()
+        }
+
         if let tokenTask {
             return try await withTaskCancellationHandler {
                 try await tokenTask.value
@@ -80,6 +95,7 @@ actor PassiveCaptchaChallenge {
                             Task { @MainActor in // MainActor to prevent continuation from different threads
                                 do {
                                     let token = try result.dematerialize()
+                                    await self?.setSessionExpirationDate()
                                     nillableContinuation?.resume(returning: token)
                                     nillableContinuation = nil
                                 } catch {
@@ -114,6 +130,16 @@ actor PassiveCaptchaChallenge {
         } onCancel: {
             tokenTask.cancel()
         }
+    }
+
+    private func resetSession() {
+        self.tokenTask = nil
+        self.hasFetchedToken = false
+        self.sessionExpirationDate = nil
+    }
+
+    private func setSessionExpirationDate() {
+        self.sessionExpirationDate = Date().addingTimeInterval(sessionExpiration)
     }
 
     private func setValidationComplete() {

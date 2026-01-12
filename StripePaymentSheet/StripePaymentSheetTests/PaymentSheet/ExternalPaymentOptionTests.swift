@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
-@testable @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@testable import StripePaymentSheet
 import XCTest
 
 class ExternalPaymentOptionTests: XCTestCase {

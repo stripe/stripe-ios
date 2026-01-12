@@ -35,14 +35,19 @@ actor ConfirmationChallenge {
         }
     }
 
-    public func makeRadarOptions() async -> STPRadarOptions {
+    public func makeRadarOptions(for paymentMethodType: STPPaymentMethodType) async -> STPRadarOptions? {
+        // for card testing prevention, we only care to create and attach radar options for card payment methods
+        // Link in payment method mode has no means of distinguishing if it's a card or otherwise, so we always include it to be safe
+        guard paymentMethodType == .card || paymentMethodType == .link else {
+            return nil
+        }
         let (hcaptchaToken, assertion) = await fetchTokensWithTimeout()
         return STPRadarOptions(hcaptchaToken: hcaptchaToken, assertion: assertion)
     }
 
     func fetchTokensWithTimeout() async -> ChallengeTokens {
         let startTime = Date()
-        let isReady = await passiveCaptchaChallenge?.hasFetchedToken ?? false
+        let isReady = await passiveCaptchaChallenge?.isTokenReady ?? false
         let getPassiveCaptchaToken: () async throws -> String? = {
             guard let passiveCaptchaChallenge = self.passiveCaptchaChallenge else {
                 return nil
