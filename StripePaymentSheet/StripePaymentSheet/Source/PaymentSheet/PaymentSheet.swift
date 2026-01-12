@@ -163,17 +163,20 @@ public class PaymentSheet {
                             configuration: self.configuration,
                             analyticsHelper: self.analyticsHelper
                         )
+                        var configuration = self.configuration
+                        configuration.resolvedPaymentMethodLayout = resolvedLayout
                         switch resolvedLayout {
                         case .horizontal:
                             return PaymentSheetViewController(
-                                configuration: self.configuration,
+                                configuration: configuration,
                                 loadResult: loadResult,
                                 analyticsHelper: self.analyticsHelper,
                                 delegate: self
                             )
                         case .vertical:
+                            configuration.paymentMethodLayout = .vertical
                             let verticalVC = PaymentSheetVerticalViewController(
-                                configuration: self.configuration,
+                                configuration: configuration,
                                 loadResult: loadResult,
                                 isFlowController: false,
                                 analyticsHelper: self.analyticsHelper

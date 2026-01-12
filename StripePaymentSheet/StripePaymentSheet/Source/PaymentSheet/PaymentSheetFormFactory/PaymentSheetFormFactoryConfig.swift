@@ -119,14 +119,10 @@ enum PaymentSheetFormFactoryConfig {
     var isHorizontalMode: Bool {
         switch self {
         case .paymentElement(let paymentElementConfiguration, _):
-            switch paymentElementConfiguration.paymentMethodLayout {
+            switch paymentElementConfiguration.resolvedPaymentMethodLayout {
             case .horizontal:
                 return true
             case .vertical:
-                return false
-            case .automatic:
-                // By the time we reach the form factory, .automatic should have been resolved
-                // at the sheet level. Default to vertical/false as a safe fallback.
                 return false
             }
         case .customerSheet:

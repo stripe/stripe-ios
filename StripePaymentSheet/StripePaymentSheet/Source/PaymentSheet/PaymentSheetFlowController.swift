@@ -706,17 +706,19 @@ extension PaymentSheet {
                 configuration: configuration,
                 analyticsHelper: analyticsHelper
             )
+            var mutableConfiguration = configuration
+            mutableConfiguration.resolvedPaymentMethodLayout = resolvedLayout
             switch resolvedLayout {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
-                    configuration: configuration,
+                    configuration: mutableConfiguration,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical:
                 controller = PaymentSheetVerticalViewController(
-                    configuration: configuration,
+                    configuration: mutableConfiguration,
                     loadResult: loadResult,
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,
