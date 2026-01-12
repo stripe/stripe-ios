@@ -3,8 +3,8 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 import XCTest
 
