@@ -43,7 +43,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
-    var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
     var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout { get set }
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
