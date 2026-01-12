@@ -23,7 +23,6 @@ class ConfirmationChallengeTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        print("Setting up \(#function) with test log \(STPAnalyticsClient.sharedClient._testLogHistory)")
         // Create a key window for HCaptcha WebView to initialize properly
         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         if let windowScene = windowScene {
