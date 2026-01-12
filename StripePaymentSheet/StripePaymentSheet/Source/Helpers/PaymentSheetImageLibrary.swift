@@ -150,6 +150,13 @@ class PaymentSheetImageLibrary {
     class func unknownCardCardImage() -> UIImage {
         return cardBrandImage(for: .unknown)
     }
+    
+    /// This returns the icon for an unselected brand when multiple card brands are available.
+    class func cardBrandChoiceImage()
+        -> UIImage
+    {
+        return self.safeImageNamed("ps_card_cbc", templateIfAvailable: false)
+    }
 }
 
 // MARK: - v2 Images

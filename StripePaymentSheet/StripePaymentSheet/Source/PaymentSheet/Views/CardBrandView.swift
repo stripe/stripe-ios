@@ -133,7 +133,7 @@ import UIKit
     ) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     /// Card brand to display.
     var cardBrand: STPCardBrand = .unknown {
         didSet {

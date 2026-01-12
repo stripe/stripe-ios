@@ -13,7 +13,7 @@ import UIKit
 extension STPCardBrand {
     func brandIconAttributedString(theme: ElementsAppearance = .default, maxWidth: CGFloat? = nil) -> NSAttributedString {
         let brandImageAttachment = NSTextAttachment()
-        let image: UIImage = self == .unknown ? STPImageLibrary.cardBrandChoiceImage() : STPImageLibrary.cardBrandImage(for: self)
+        let image: UIImage = self == .unknown ? PaymentSheetImageLibrary.cardBrandChoiceImage() : PaymentSheetImageLibrary.cardBrandImage(for: self)
         brandImageAttachment.image = image
         // TODO: -3 is a hack for proper vertical alignment, investigate this
         let hackyVerticalInset: CGFloat = -3
