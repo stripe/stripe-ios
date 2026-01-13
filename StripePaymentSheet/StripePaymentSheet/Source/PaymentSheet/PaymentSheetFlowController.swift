@@ -701,24 +701,23 @@ extension PaymentSheet {
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
             // Resolve automatic layout based on experiment
-            let resolvedLayout = configuration.paymentMethodLayout.resolve(
+            var configuration = configuration
+            let resolvedPaymentMethodLayout = configuration.resolveLayout(
                 loadResult: loadResult,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper
             )
-            var mutableConfiguration = configuration
-            mutableConfiguration.resolvedPaymentMethodLayout = resolvedLayout
-            switch resolvedLayout {
+            switch resolvedPaymentMethodLayout {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
-                    configuration: mutableConfiguration,
+                    configuration: configuration,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical:
                 controller = PaymentSheetVerticalViewController(
-                    configuration: mutableConfiguration,
+                    configuration: configuration,
                     loadResult: loadResult,
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,

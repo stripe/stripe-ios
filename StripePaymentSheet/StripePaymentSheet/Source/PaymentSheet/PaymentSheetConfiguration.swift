@@ -214,29 +214,9 @@ extension PaymentSheet {
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic
 
-        private var _resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout?
-
         /// The resolved layout of payment methods after calling `resolve()` on `paymentMethodLayout`.
-        /// Before `resolve()` is called, defaults based on `paymentMethodLayout`:
-        /// `.horizontal` if `paymentMethodLayout` is `.horizontal`, `.vertical` otherwise.
         /// - Note: Internal code should use this property instead of `paymentMethodLayout`.
-        internal var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout {
-            get {
-                if let resolved = _resolvedPaymentMethodLayout {
-                    return resolved
-                }
-                // Default based on paymentMethodLayout
-                switch paymentMethodLayout {
-                case .horizontal:
-                    return .horizontal
-                case .vertical, .automatic:
-                    return .vertical
-                }
-            }
-            set {
-                _resolvedPaymentMethodLayout = newValue
-            }
-        }
+        internal private(set) var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout?
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
@@ -273,6 +253,58 @@ extension PaymentSheet {
 
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
+
+        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
+        /// For non-automatic layouts, returns self.
+        mutating func resolveLayout(
+            loadResult: PaymentSheetLoader.LoadResult,
+            configuration: PaymentElementConfiguration,
+            analyticsHelper: PaymentSheetAnalyticsHelper
+        ) -> PaymentMethodLayout.ResolvedLayout {
+            var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout
+            switch paymentMethodLayout {
+            case .horizontal:
+                resolvedPaymentMethodLayout = .horizontal
+            case .vertical:
+                resolvedPaymentMethodLayout = .vertical
+            case .automatic:
+                // Check experiment to decide layout
+                let elementsSession = loadResult.elementsSession
+                let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
+                guard let arbId = elementsSession.experimentsData?.arbId else {
+                    // Default to vertical (control) if no experiment assignment
+                    resolvedPaymentMethodLayout = .vertical
+                    self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
+                    return resolvedPaymentMethodLayout
+                }
+
+                // Calculate client-side filtered wallet types
+                var walletTypes: [String] = []
+                if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
+                    walletTypes.append("apple_pay")
+                }
+                if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+                    walletTypes.append("link")
+                }
+
+                let horizontalModeExperiment = OCSMobileHorizontalModeAA(
+                    arbId: arbId,
+                    elementsSession: loadResult.elementsSession,
+                    displayedPaymentMethodTypes: displayedPaymentMethods,
+                    walletPaymentMethodTypes: walletTypes,
+                    hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                    integrationShape: analyticsHelper.integrationShape
+                )
+
+                // Log experiment exposure
+                analyticsHelper.logExposure(experiment: horizontalModeExperiment)
+
+                // Return vertical for now (AA)
+                resolvedPaymentMethodLayout = .vertical
+            }
+            self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
+            return resolvedPaymentMethodLayout
+        }
     }
 
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
@@ -323,53 +355,6 @@ extension PaymentSheet {
         enum ResolvedLayout {
             case horizontal
             case vertical
-        }
-
-        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
-        /// For non-automatic layouts, returns self.
-        func resolve(
-            loadResult: PaymentSheetLoader.LoadResult,
-            configuration: PaymentElementConfiguration,
-            analyticsHelper: PaymentSheetAnalyticsHelper
-        ) -> ResolvedLayout {
-            switch self {
-            case .horizontal:
-                return .horizontal
-            case .vertical:
-                return .vertical
-            case .automatic:
-                // Check experiment to decide layout
-                let elementsSession = loadResult.elementsSession
-                let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
-                guard let arbId = elementsSession.experimentsData?.arbId else {
-                    // Default to vertical (control) if no experiment assignment
-                    return .vertical
-                }
-
-                // Calculate client-side filtered wallet types
-                var walletTypes: [String] = []
-                if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
-                    walletTypes.append("apple_pay")
-                }
-                if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
-                    walletTypes.append("link")
-                }
-
-                let horizontalModeExperiment = OCSMobileHorizontalModeAA(
-                    arbId: arbId,
-                    elementsSession: loadResult.elementsSession,
-                    displayedPaymentMethodTypes: displayedPaymentMethods,
-                    walletPaymentMethodTypes: walletTypes,
-                    hasSPM: !loadResult.savedPaymentMethods.isEmpty,
-                    integrationShape: analyticsHelper.integrationShape
-                )
-
-                // Log experiment exposure
-                analyticsHelper.logExposure(experiment: horizontalModeExperiment)
-
-                // Return vertical for now (AA)
-                return .vertical
-            }
         }
     }
 
