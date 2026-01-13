@@ -619,6 +619,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
+        XCTAssertEqual(configuration.resolvedPaymentMethodLayout, .vertical)
     }
 
     // MARK: - Special LPM tests

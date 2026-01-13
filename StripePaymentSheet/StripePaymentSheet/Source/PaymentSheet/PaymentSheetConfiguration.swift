@@ -214,10 +214,29 @@ extension PaymentSheet {
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic
 
+        private var _resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout?
+
         /// The resolved layout of payment methods after calling `resolve()` on `paymentMethodLayout`.
-        /// Defaults to `.vertical` until `resolve()` is called.
+        /// Before `resolve()` is called, defaults based on `paymentMethodLayout`:
+        /// `.horizontal` if `paymentMethodLayout` is `.horizontal`, `.vertical` otherwise.
         /// - Note: Internal code should use this property instead of `paymentMethodLayout`.
-        internal var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout = .vertical
+        internal var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout {
+            get {
+                if let resolved = _resolvedPaymentMethodLayout {
+                    return resolved
+                }
+                // Default based on paymentMethodLayout
+                switch paymentMethodLayout {
+                case .horizontal:
+                    return .horizontal
+                case .vertical, .automatic:
+                    return .vertical
+                }
+            }
+            set {
+                _resolvedPaymentMethodLayout = newValue
+            }
+        }
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
