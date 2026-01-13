@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@ 銀行卡";
-
-"%1$@ Credit" = "%1$@ 信用卡";
-
-"%1$@ Debit" = "%1$@ 扣賬卡";
-
-"%1$@ Prepaid" = "%1$@ 預付卡";
-
-"%1$@ account ending in %2$@" = "尾號為 %2$@ 的 %1$@ 賬戶";
-
-"%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
-
-"%1$@ is not accepted" = "不接受 %1$@";
-
 "Address line 2 (optional)" = "地址第 2 行（可選）";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "賬單地址";
 
-"CVC" = "安全碼";
-
-"Card information" = "銀行卡資訊";
-
-"Card number" = "卡號";
-
-"Confirm your %@" = "確認您的 %@";
-
 "Invalid data." = "數據無效。";
 
-"MM / YY" = "月份/年份";
-
 "MM/YY" = "月份/年份";
-
-"Only credit and prepaid cards are accepted" = "僅接受信用卡與儲值卡";
-
-"Only credit cards are accepted" = "僅接受信用卡";
-
-"Only debit and credit cards are accepted" = "僅接受借記卡與信用卡";
-
-"Only debit and prepaid cards are accepted" = "僅接受借記卡與儲值卡";
-
-"Only debit cards are accepted" = "僅接受借記卡";
-
-"Only prepaid cards are accepted" = "僅接受儲值卡";
 
 "Postal Code" = "郵區編號";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "您輸入的 BSB 無效。";
 
-"The selected brand is not allowed" = "不允許使用選定的品牌";
-
 "To scan your card, allow camera access in Settings." = "要掃描您的銀行卡，在「設置」中啟用照相機。";
-
-"Your card has expired." = "您的銀行卡已過期。";
-
-"Your card number is incomplete." = "您的銀行卡號不完整。";
-
-"Your card number is invalid." = "您的卡號無效。";
-
-"Your card's expiration date is incomplete." = "您的銀行卡的有效期不完整。";
-
-"Your card's expiration date is invalid." = "您的銀行卡的有效期無效。";
-
-"Your card's expiration month is invalid." = "您的銀行卡的到期月份無效。";
-
-"Your card's expiration year is invalid." = "您的銀行卡的到期年份無效。";
-
-"Your card's security code is incomplete." = "您的銀行卡的安全碼不完整。";
 
 "Your card's security code is invalid." = "您的銀行卡的安全碼無效。";
 

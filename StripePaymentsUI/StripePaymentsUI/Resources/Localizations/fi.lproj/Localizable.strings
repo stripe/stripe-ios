@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@-kortti";
-
-"%1$@ Credit" = "%1$@-luottokortti";
-
-"%1$@ Debit" = "%1$@-pankkikortti";
-
-"%1$@ Prepaid" = "%1$@ Prepaid";
-
-"%1$@ account ending in %2$@" = "%1$@ -tili päättyy numeroihin %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ päättyy numeroihin %2$@";
-
-"%1$@ is not accepted" = "%1$@ ei hyväksytä";
-
 "Address line 2 (optional)" = "Osoiterivi 2 (valinnainen)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Laskutusosoite";
 
-"CVC" = "CVC-tunnus";
-
-"Card information" = "Kortin tiedot";
-
-"Card number" = "Kortin numero";
-
-"Confirm your %@" = "Vahvista %@";
-
 "Invalid data." = "Virheelliset tiedot.";
 
-"MM / YY" = "KK/VV";
-
 "MM/YY" = "KK/VV";
-
-"Only credit and prepaid cards are accepted" = "Vain luotto- ja prepaid-kortit hyväksytään";
-
-"Only credit cards are accepted" = "Vain luottokortit hyväksytään";
-
-"Only debit and credit cards are accepted" = "Vain pankki- ja luottokortit hyväksytään";
-
-"Only debit and prepaid cards are accepted" = "Vain pankki- ja prepaid-kortit hyväksytään";
-
-"Only debit cards are accepted" = "Vain pankkikortit hyväksytään";
-
-"Only prepaid cards are accepted" = "Vain prepaid-kortit hyväksytään";
 
 "Postal Code" = "Postinumero";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Antamasi BSB-numero on virheellinen.";
 
-"The selected brand is not allowed" = "Valittu merkki ei ole sallittu";
-
 "To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
-
-"Your card has expired." = "Korttisi on vanhentunut.";
-
-"Your card number is incomplete." = "Kortin numero on puutteellinen.";
-
-"Your card number is invalid." = "Kortin numero on virheellinen.";
-
-"Your card's expiration date is incomplete." = "Kortin voimassaoloaika on puutteellinen.";
-
-"Your card's expiration date is invalid." = "Kortin voimassaoloaika on virheellinen.";
-
-"Your card's expiration month is invalid." = "Kortin erääntymiskuukausi ei kelpaa.";
-
-"Your card's expiration year is invalid." = "Kortin voimassaolovuosi ei kelpaa.";
-
-"Your card's security code is incomplete." = "Kortin turvakoodi on puutteellinen.";
 
 "Your card's security code is invalid." = "Kortin turvakoodi on virheellinen.";
 

@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@ Card";
-
-"%1$@ Credit" = "%1$@ Credit";
-
-"%1$@ Debit" = "%1$@ Debit";
-
-"%1$@ Prepaid" = "%1$@ Preplătit";
-
-"%1$@ account ending in %2$@" = "Contul la %1$@ care se termină în %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ se termină în %2$@";
-
-"%1$@ is not accepted" = "%1$@ nu este acceptat";
-
 "Address line 2 (optional)" = "Rândul 2 pentru adresă (opțional)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "Număr BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Adresă de facturare";
 
-"CVC" = "Cod CVC";
-
-"Card information" = "Informații privind cardul";
-
-"Card number" = "Număr card";
-
-"Confirm your %@" = "Confirmați-vă %@";
-
 "Invalid data." = "Datele nu sunt valide.";
 
-"MM / YY" = "LL/AA";
-
 "MM/YY" = "LL/AA";
-
-"Only credit and prepaid cards are accepted" = "Sunt acceptate doar cardurile de credit și cele preplătite";
-
-"Only credit cards are accepted" = "Sunt acceptate doar cardurile de credit";
-
-"Only debit and credit cards are accepted" = "Sunt acceptate doar cardurile de debit și credit";
-
-"Only debit and prepaid cards are accepted" = "Sunt acceptate doar cardurile de debit și cele preplătite";
-
-"Only debit cards are accepted" = "Sunt acceptate doar cardurile de debit";
-
-"Only prepaid cards are accepted" = "Sunt acceptate doar cardurile preplătite";
 
 "Postal Code" = "Cod poștal";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Numărul BSB pe care l-ați introdus nu este valid.";
 
-"The selected brand is not allowed" = "Marca selectată nu este permisă";
-
 "To scan your card, allow camera access in Settings." = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
-
-"Your card has expired." = "Cardul dvs. a expirat.";
-
-"Your card number is incomplete." = "Numărul cardului dvs. nu este complet.";
-
-"Your card number is invalid." = "Numărul cardului dvs. nu este valid.";
-
-"Your card's expiration date is incomplete." = "Data de expirare a cardului nu este completă.";
-
-"Your card's expiration date is invalid." = "Data de expirare a cardului dvs. nu este validă.";
-
-"Your card's expiration month is invalid." = "Luna de expirare a cardului nu este validă.";
-
-"Your card's expiration year is invalid." = "Anul de expirare al cardului nu este valid.";
-
-"Your card's security code is incomplete." = "Codul de securitate al cardului dvs. nu este complet.";
 
 "Your card's security code is invalid." = "Codul de securitate al cardului dvs. nu este valid.";
 

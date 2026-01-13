@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@ 카드";
-
-"%1$@ Credit" = "%1$@ 신용";
-
-"%1$@ Debit" = "%1$@ 직불";
-
-"%1$@ Prepaid" = "%1$@ 선불";
-
-"%1$@ account ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 계좌";
-
-"%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
-
-"%1$@ is not accepted" = "%1$@이(가) 허용되지 않습니다.";
-
 "Address line 2 (optional)" = "주소란 2(선택 사항)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "청구 주소";
 
-"CVC" = "CVC";
-
-"Card information" = "카드 정보";
-
-"Card number" = "카드 번호";
-
-"Confirm your %@" = "%@ 확인";
-
 "Invalid data." = "잘못된 데이터입니다.";
 
-"MM / YY" = "MM/YY";
-
 "MM/YY" = "MM/YY";
-
-"Only credit and prepaid cards are accepted" = "신용 카드 및 선불 카드만 허용됨";
-
-"Only credit cards are accepted" = "신용 카드만 허용됨";
-
-"Only debit and credit cards are accepted" = "직불 카드 및 신용 카드만 허용됨";
-
-"Only debit and prepaid cards are accepted" = "직불 카드 및 선불 카드만 허용됨";
-
-"Only debit cards are accepted" = "직불 카드만 허용됨";
-
-"Only prepaid cards are accepted" = "선불 카드만 허용됨";
 
 "Postal Code" = "우편번호";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "입력하신 BSB가 유효하지 않습니다.";
 
-"The selected brand is not allowed" = "선택한 브랜드는 허용되지 않습니다.";
-
 "To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
-
-"Your card has expired." = "카드가 만료되었습니다.";
-
-"Your card number is incomplete." = "카드 번호가 불완전합니다.";
-
-"Your card number is invalid." = "카드 번호가 유효하지 않습니다.";
-
-"Your card's expiration date is incomplete." = "카드의 만료 날짜가 불완전합니다.";
-
-"Your card's expiration date is invalid." = "카드의 만료 날짜가 유효하지 않습니다.";
-
-"Your card's expiration month is invalid." = "카드의 만료 월이 유효하지 않습니다.";
-
-"Your card's expiration year is invalid." = "카드의 만료 연도가 유효하지 않습니다.";
-
-"Your card's security code is incomplete." = "카드의 보안 코드가 불완전합니다.";
 
 "Your card's security code is invalid." = "카드의 보안 코드가 유효하지 않습니다.";
 

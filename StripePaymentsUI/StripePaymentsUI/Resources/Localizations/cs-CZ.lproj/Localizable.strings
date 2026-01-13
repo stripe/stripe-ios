@@ -1,20 +1,4 @@
-"%1$@ Card" = "Karta %1$@";
-
-"%1$@ Credit" = "Kredit %1$@";
-
-"%1$@ Debit" = "Debet %1$@";
-
-"%1$@ Prepaid" = "Předplaceno %1$@";
-
-"%1$@ account ending in %2$@" = "Účet %1$@ končící na %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ končící za %2$@";
-
-"%1$@ is not accepted" = "%1$@ se neakceptuje.";
-
 "Address line 2 (optional)" = "2. řádek adresy (volitelně)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Fakturační adresa";
 
-"CVC" = "CVC";
-
-"Card information" = "Informace o kartě";
-
-"Card number" = "Číslo karty";
-
-"Confirm your %@" = "Potvrďte svoje %@";
-
 "Invalid data." = "Neplatná data.";
 
-"MM / YY" = "MM / RR";
-
 "MM/YY" = "MM/RR";
-
-"Only credit and prepaid cards are accepted" = "Akceptovány jsou pouze kreditní a předplacené karty";
-
-"Only credit cards are accepted" = "Akceptovány jsou pouze kreditní karty";
-
-"Only debit and credit cards are accepted" = "Akceptovány jsou pouze debetní a kreditní karty";
-
-"Only debit and prepaid cards are accepted" = "Akceptovány jsou pouze debetní a předplacené karty";
-
-"Only debit cards are accepted" = "Akceptovány jsou pouze debetní karty";
-
-"Only prepaid cards are accepted" = "Akceptovány jsou pouze předplacené karty";
 
 "Postal Code" = "Poštovní směrovací číslo";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Zadaný BSB je neplatný.";
 
-"The selected brand is not allowed" = "Vybraná značka není povolena";
-
 "To scan your card, allow camera access in Settings." = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
-
-"Your card has expired." = "Platnost vaší karty vypršela.";
-
-"Your card number is incomplete." = "Číslo karty je neúplné.";
-
-"Your card number is invalid." = "Číslo karty je neplatné.";
-
-"Your card's expiration date is incomplete." = "Datum konce platnosti vaší karty je neúplné.";
-
-"Your card's expiration date is invalid." = "Datum konce platnosti karty je neplatné.";
-
-"Your card's expiration month is invalid." = "Rok konce platnosti vaší karty je neplatný.";
-
-"Your card's expiration year is invalid." = "Rok konce platnosti vaší karty je neplatný.";
-
-"Your card's security code is incomplete." = "Bezpečnostní kód karty je neúplný.";
 
 "Your card's security code is invalid." = "Bezpečnostní kód vaší karty je neplatný.";
 

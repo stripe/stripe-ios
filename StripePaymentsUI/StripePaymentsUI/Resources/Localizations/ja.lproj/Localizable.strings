@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@ カード";
-
-"%1$@ Credit" = "%1$@ クレジット";
-
-"%1$@ Debit" = "%1$@ デビット";
-
-"%1$@ Prepaid" = "%1$@ プリペイド";
-
-"%1$@ account ending in %2$@" = "末尾が %2$@ の %1$@ 口座";
-
-"%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
-
-"%1$@ is not accepted" = "%1$@ は受け付けられていません";
-
 "Address line 2 (optional)" = "住所 (2 行目、省略可)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "請求先住所";
 
-"CVC" = "セキュリティコード";
-
-"Card information" = "カード情報";
-
-"Card number" = "カード番号";
-
-"Confirm your %@" = "%@ を確認してください";
-
 "Invalid data." = "データが無効です。";
 
-"MM / YY" = "月 / 年";
-
 "MM/YY" = "MM/YY";
-
-"Only credit and prepaid cards are accepted" = "クレジットカードとプリペイドカードのみ利用できます";
-
-"Only credit cards are accepted" = "クレジットカードのみ利用できます";
-
-"Only debit and credit cards are accepted" = "デビットカードとクレジットカードのみ利用できます";
-
-"Only debit and prepaid cards are accepted" = "デビットカードとプリペイドカードのみ利用できます";
-
-"Only debit cards are accepted" = "デビットカードのみ利用できます";
-
-"Only prepaid cards are accepted" = "プリペイドカードのみ利用できます";
 
 "Postal Code" = "郵便番号";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "入力した BSB コードが無効です。";
 
-"The selected brand is not allowed" = "選択したブランドは許可されていません";
-
 "To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
-
-"Your card has expired." = "カードの有効期限が切れています。";
-
-"Your card number is incomplete." = "カード番号に不備があります。";
-
-"Your card number is invalid." = "カード番号が無効です。";
-
-"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
-
-"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
-
-"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
-
-"Your card's expiration year is invalid." = "カードの有効期限の年が無効です。";
-
-"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
 
 "Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
 

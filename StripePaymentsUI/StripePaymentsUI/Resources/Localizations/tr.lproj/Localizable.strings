@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@ Kartı";
-
-"%1$@ Credit" = "%1$@ Kredisi";
-
-"%1$@ Debit" = "%1$@ Borcu";
-
-"%1$@ Prepaid" = "%1$@ Ön Ödemeli";
-
-"%1$@ account ending in %2$@" = "%2$@ ile biten %1$@ hesabınız";
-
-"%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
-
-"%1$@ is not accepted" = "%1$@ kabul edilmiyor";
-
 "Address line 2 (optional)" = "Adres satırı 2 (isteğe bağlı)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Fatura adresi";
 
-"CVC" = "CVC";
-
-"Card information" = "Kart bilgileri";
-
-"Card number" = "Kart numarası";
-
-"Confirm your %@" = "%@ kodunuzu onaylayın";
-
 "Invalid data." = "Geçersiz veri.";
 
-"MM / YY" = "AA / YY";
-
 "MM/YY" = "AA/YY";
-
-"Only credit and prepaid cards are accepted" = "Yalnızca kredi ve ön ödemeli kartlar kabul edilir";
-
-"Only credit cards are accepted" = "Yalnızca kredi kartları kabul edilir";
-
-"Only debit and credit cards are accepted" = "Yalnızca bankamatik ve kredi kartları kabul edilir";
-
-"Only debit and prepaid cards are accepted" = "Yalnızca bankamatik ve ön ödemeli kartlar kabul edilir";
-
-"Only debit cards are accepted" = "Yalnızca bankamatik kartları kabul edilir";
-
-"Only prepaid cards are accepted" = "Yalnızca ön ödemeli kartlar kabul edilir";
 
 "Postal Code" = "Posta Kodu";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Girdiğiniz BSB geçersiz.";
 
-"The selected brand is not allowed" = "Seçilen markaya izin verilmiyor";
-
 "To scan your card, allow camera access in Settings." = "Kartınızı taramak için Ayarlar'da kamera erişimine izin verin.";
-
-"Your card has expired." = "Kartınızın süresi dolmuş.";
-
-"Your card number is incomplete." = "Kart numaranız eksik.";
-
-"Your card number is invalid." = "Kart numaranız geçersiz.";
-
-"Your card's expiration date is incomplete." = "Kartınızın son kullanma tarihi eksik.";
-
-"Your card's expiration date is invalid." = "Kartınızın son kullanma tarihi geçersiz.";
-
-"Your card's expiration month is invalid." = "Kartınızın son kullanma ayı geçersiz.";
-
-"Your card's expiration year is invalid." = "Kartınızın son kullanma yılı geçersiz.";
-
-"Your card's security code is incomplete." = "Kartınızın güvenlik kodu eksik.";
 
 "Your card's security code is invalid." = "Kartınızın güvenlik kodu geçersiz.";
 

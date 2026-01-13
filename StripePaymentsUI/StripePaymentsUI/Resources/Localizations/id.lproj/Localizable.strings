@@ -1,20 +1,4 @@
-"%1$@ Card" = "Kartu %1$@";
-
-"%1$@ Credit" = "Kredit %1$@";
-
-"%1$@ Debit" = "Debit %1$@";
-
-"%1$@ Prepaid" = "Prabayar %1$@";
-
-"%1$@ account ending in %2$@" = "Rekening %1$@ berakhiran dengan %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ berakhiran %2$@";
-
-"%1$@ is not accepted" = "%1$@ tidak diterima";
-
 "Address line 2 (optional)" = "Baris alamat ke-2 (opsional)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Alamat tagihan";
 
-"CVC" = "CVC";
-
-"Card information" = "Informasi kartu";
-
-"Card number" = "Nomor kartu";
-
-"Confirm your %@" = "Konfirmasikan %@ Anda";
-
 "Invalid data." = "Data tidak valid.";
 
-"MM / YY" = "BB / TT";
-
 "MM/YY" = "BB/TT";
-
-"Only credit and prepaid cards are accepted" = "Hanya kartu kredit dan prabayar yang diterima";
-
-"Only credit cards are accepted" = "Hanya kartu kredit yang diterima";
-
-"Only debit and credit cards are accepted" = "Hanya kartu debit dan kredit yang diterima";
-
-"Only debit and prepaid cards are accepted" = "Hanya kartu debit dan prabayar yang diterima";
-
-"Only debit cards are accepted" = "Hanya kartu debit yang diterima";
-
-"Only prepaid cards are accepted" = "Hanya kartu prabayar yang diterima";
 
 "Postal Code" = "Kode Pos";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "BSB yang Anda masukkan tidak valid.";
 
-"The selected brand is not allowed" = "Brand yang dipilih tidak diizinkan";
-
 "To scan your card, allow camera access in Settings." = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
-
-"Your card has expired." = "Kartu Anda telah kedaluwarsa.";
-
-"Your card number is incomplete." = "Nomor kartu Anda tidak lengkap.";
-
-"Your card number is invalid." = "Nomor kartu Anda tidak valid.";
-
-"Your card's expiration date is incomplete." = "Tanggal kedaluwarsa kartu Anda tidak lengkap.";
-
-"Your card's expiration date is invalid." = "Tanggal kedaluwarsa kartu Anda tidak valid.";
-
-"Your card's expiration month is invalid." = "Bulan kedaluwarsa kartu Anda tidak valid.";
-
-"Your card's expiration year is invalid." = "Tahun kedaluwarsa kartu Anda tidak valid.";
-
-"Your card's security code is incomplete." = "Kode keamanan kartu Anda tidak lengkap.";
 
 "Your card's security code is invalid." = "Kode keamanan kartu Anda tidak valid.";
 

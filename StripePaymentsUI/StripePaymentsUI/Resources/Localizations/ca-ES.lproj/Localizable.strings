@@ -1,20 +1,4 @@
-"%1$@ Card" = "Targeta %1$@";
-
-"%1$@ Credit" = "%1$@ de crèdit";
-
-"%1$@ Debit" = "%1$@ de dèbit";
-
-"%1$@ Prepaid" = "%1$@ de prepagament";
-
-"%1$@ account ending in %2$@" = "Compte bancari de %1$@ que acaba en %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
-
-"%1$@ is not accepted" = "No s'accepta %1$@";
-
 "Address line 2 (optional)" = "Línia de l'adreça 2 (opcional)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Adreça de facturació";
 
-"CVC" = "CVC";
-
-"Card information" = "Informació de targeta";
-
-"Card number" = "Número de targeta";
-
-"Confirm your %@" = "Confirmeu el vostre %@";
-
 "Invalid data." = "Dades no vàlides.";
 
-"MM / YY" = "MM / AA";
-
 "MM/YY" = "MM / AA";
-
-"Only credit and prepaid cards are accepted" = "Només s'accepten les targetes de crèdit i de prepagament";
-
-"Only credit cards are accepted" = "Només s'accepten les targetes de crèdit";
-
-"Only debit and credit cards are accepted" = "Només s'accepten les targetes de dèbit i de crèdit";
-
-"Only debit and prepaid cards are accepted" = "Només s'accepten les targetes de dèbit i de prepagament";
-
-"Only debit cards are accepted" = "Només s'accepten les targetes de dèbit";
-
-"Only prepaid cards are accepted" = "Només s'accepten les de prepagament";
 
 "Postal Code" = "Codi postal";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "El BSB que has introduït no és vàlid.";
 
-"The selected brand is not allowed" = "La marca seleccionada no està permesa";
-
 "To scan your card, allow camera access in Settings." = "Per escanejar la teva targeta, permet l'accès a la càmera a Ajusts.";
-
-"Your card has expired." = "La targeta ha caducat.";
-
-"Your card number is incomplete." = "El número de la teva targeta no està complet.";
-
-"Your card number is invalid." = "El número de la teva targeta no és vàlid.";
-
-"Your card's expiration date is incomplete." = "La data de caducitat de la teva targeta no està completa.";
-
-"Your card's expiration date is invalid." = "La data de caducitat de la teva targeta no és vàlida.";
-
-"Your card's expiration month is invalid." = "El mes de caducitat de la teva targeta no és vàlid.";
-
-"Your card's expiration year is invalid." = "L'any de caducitat de la teva targeta no és vàlid.";
-
-"Your card's security code is incomplete." = "El codi de seguretat de la teva targeta no està complet.";
 
 "Your card's security code is invalid." = "El codi de seguretat de la teva targeta no és vàlid";
 

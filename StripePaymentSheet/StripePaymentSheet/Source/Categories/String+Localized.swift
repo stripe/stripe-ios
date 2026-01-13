@@ -561,4 +561,132 @@ extension String.Localized {
     static var last_4_digits_of_ssn: String {
         STPLocalizedString("Last 4 digits of SSN", "Label for displaying the last 4 digits of the user's social security number")
     }
+
+    // MARK: - Card strings (moved from StripePaymentsUI)
+
+    static var card_information: String {
+        STPLocalizedString("Card information", "Card details entry form header title")
+    }
+
+    static var apple_pay: String {
+        STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
+    }
+
+    static var cvc_section_title: String {
+        STPLocalizedString(
+            "Confirm your %@",
+            "Section title for entering your CVC. e.g. 'Confirm your CVC'"
+        )
+    }
+
+    static var card_brand_ending_in_last_4: String {
+        STPLocalizedString(
+            "%1$@ ending in %2$@",
+            "Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242'"
+        )
+    }
+
+    static var bank_name_account_ending_in_last_4: String {
+        STPLocalizedString(
+            "%1$@ account ending in %2$@",
+            "Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242'"
+        )
+    }
+
+    static var your_card_has_expired: String {
+        STPLocalizedString(
+            "Your card has expired.",
+            "Error message for card details form when expiration date has passed"
+        )
+    }
+
+    static var brand_not_allowed: String {
+        STPLocalizedString(
+            "%1$@ is not accepted",
+            "String to inform a user that specific card brands are not accepted. E.g. American Express is not accepted"
+        )
+    }
+
+    static var generic_brand_not_allowed: String {
+        STPLocalizedString(
+            "The selected brand is not allowed",
+            "String to inform a user that specific card brands are not accepted."
+        )
+    }
+
+    // MARK: - Card Funding Filter Messages
+
+    static var only_debit_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit cards are accepted",
+            "Warning shown when only debit cards are accepted"
+        )
+    }
+
+    static var only_credit_cards_accepted: String {
+        STPLocalizedString(
+            "Only credit cards are accepted",
+            "Warning shown when only credit cards are accepted"
+        )
+    }
+
+    static var only_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only prepaid cards are accepted",
+            "Warning shown when only prepaid cards are accepted"
+        )
+    }
+
+    static var only_debit_and_credit_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit and credit cards are accepted",
+            "Warning shown when only debit and credit cards are accepted"
+        )
+    }
+
+    static var only_debit_and_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only debit and prepaid cards are accepted",
+            "Warning shown when only debit and prepaid cards are accepted"
+        )
+    }
+
+    static var only_credit_and_prepaid_cards_accepted: String {
+        STPLocalizedString(
+            "Only credit and prepaid cards are accepted",
+            "Warning shown when only credit and prepaid cards are accepted"
+        )
+    }
+
+    // MARK: - Card Funding Type Labels
+
+    enum Funding {
+        static var credit: String {
+            STPLocalizedString(
+                "%1$@ Credit",
+                "Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte'"
+            )
+        }
+
+        static var debit: String {
+            STPLocalizedString(
+                "%1$@ Debit",
+                "Label a debit funding source. E.g. 'Visa Debit'"
+            )
+        }
+
+        static var prepaid: String {
+            STPLocalizedString(
+                "%1$@ Prepaid",
+                "Label a prepaid funding source. E.g. 'Visa Prepaid'"
+            )
+        }
+
+        static var `default`: String {
+            STPLocalizedString(
+                "%1$@ Card",
+                "Label a default funding source, which we treat as a generic card. E.g. 'Visa Card'"
+            )
+        }
+    }
 }

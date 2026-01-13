@@ -1,20 +1,4 @@
-"%1$@ Card" = "Κάρτα %1$@";
-
-"%1$@ Credit" = "Πιστωτική κάρτα %1$@";
-
-"%1$@ Debit" = "Χρεωστική κάρτα %1$@";
-
-"%1$@ Prepaid" = "Προπληρωμένη κάρτα %1$@";
-
-"%1$@ account ending in %2$@" = "%1$@ τραπεζικός λογαριασμός που λήγει σε %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ λήγει σε %2$@";
-
-"%1$@ is not accepted" = "Η επωνυμία %1$@ δεν είναι αποδεκτή";
-
 "Address line 2 (optional)" = "Γραμμή διεύθυνσης 2 (προαιρετικό)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "Κωδικός BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Διεύθυνση χρέωσης";
 
-"CVC" = "CVC";
-
-"Card information" = "Στοιχεία κάρτας";
-
-"Card number" = "Αριθμός κάρτας";
-
-"Confirm your %@" = "Επιβεβαιώστε τον κωδικό %@";
-
 "Invalid data." = "Μη έγκυρα δεδομένα.";
 
-"MM / YY" = "ΜΜ / ΕΕ";
-
 "MM/YY" = "ΜΜ/ΕΕ";
-
-"Only credit and prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο πιστωτικές και προπληρωμένες κάρτες";
-
-"Only credit cards are accepted" = "Γίνονται αποδεκτές μόνο πιστωτικές κάρτες";
-
-"Only debit and credit cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές και πιστωτικές κάρτες";
-
-"Only debit and prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές και προπληρωμένες κάρτες";
-
-"Only debit cards are accepted" = "Γίνονται αποδεκτές μόνο χρεωστικές κάρτες";
-
-"Only prepaid cards are accepted" = "Γίνονται αποδεκτές μόνο οι προπληρωμένες κάρτες";
 
 "Postal Code" = "Ταχυδρομικός κώδικας";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Ο κωδικός BSB που εισάγατε δεν είναι έγκυρος.";
 
-"The selected brand is not allowed" = "Η επιλεγμένη επωνυμία δεν επιτρέπεται";
-
 "To scan your card, allow camera access in Settings." = "Για να σαρώσετε την κάρτα σας, επιτρέψτε την πρόσβαση της κάμερας από τις Ρυθμίσεις.";
-
-"Your card has expired." = "Η κάρτα σας έχει λήξει.";
-
-"Your card number is incomplete." = "Ο αριθμός της κάρτας σας είναι ελλιπής.";
-
-"Your card number is invalid." = "Ο αριθμός της κάρτας σας δεν είναι έγκυρος.";
-
-"Your card's expiration date is incomplete." = "Η ημερομηνία λήξης της κάρτας σας είναι ελλιπής.";
-
-"Your card's expiration date is invalid." = "Η ημερομηνία λήξης της κάρτας σας δεν είναι έγκυρη.";
-
-"Your card's expiration month is invalid." = "Ο μήνας λήξης της κάρτας σας δεν είναι έγκυρος.";
-
-"Your card's expiration year is invalid." = "Το έτος λήξης της κάρτας σας δεν είναι έγκυρο.";
-
-"Your card's security code is incomplete." = "Ο κωδικός ασφαλείας της κάρτας σας είναι ελλιπής.";
 
 "Your card's security code is invalid." = "Ο κωδικός ασφαλείας της κάρτας σας δεν είναι έγκυρος.";
 

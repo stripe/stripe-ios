@@ -1,20 +1,4 @@
-"%1$@ Card" = "Carte %1$@";
-
-"%1$@ Credit" = "Carte de crédit %1$@";
-
-"%1$@ Debit" = "Carte de débit %1$@";
-
-"%1$@ Prepaid" = "Carte prépayée %1$@";
-
-"%1$@ account ending in %2$@" = "compte %1$@ se terminant par %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ se terminant par %2$@";
-
-"%1$@ is not accepted" = "%1$@ n'est pas accepté";
-
 "Address line 2 (optional)" = "Ligne d'adresse 2 (facultatif)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Adresse de facturation";
 
-"CVC" = "CVC";
-
-"Card information" = "Informations de la carte";
-
-"Card number" = "Numéro de carte";
-
-"Confirm your %@" = "Confirmez votre %@";
-
 "Invalid data." = "Donnée non valide.";
 
-"MM / YY" = "MM/AA";
-
 "MM/YY" = "MM/AA";
-
-"Only credit and prepaid cards are accepted" = "Seules les cartes de crédit et prépayées sont acceptées";
-
-"Only credit cards are accepted" = "Seules les cartes de crédit sont acceptées";
-
-"Only debit and credit cards are accepted" = "Seules les cartes de débit et de crédit sont acceptées";
-
-"Only debit and prepaid cards are accepted" = "Seules les cartes de débit et prépayées sont acceptées";
-
-"Only debit cards are accepted" = "Seules les cartes de débit sont acceptées";
-
-"Only prepaid cards are accepted" = "Seules les cartes prépayées sont acceptées";
 
 "Postal Code" = "Code postal";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Le numéro BSB que vous avez saisi n'est pas valide.";
 
-"The selected brand is not allowed" = "La marque sélectionnée n'est pas autorisée";
-
 "To scan your card, allow camera access in Settings." = "Pour scanner votre carte, autorisez l'accès à l'appareil photo dans vos paramètres.";
-
-"Your card has expired." = "Votre carte a expiré.";
-
-"Your card number is incomplete." = "Votre numéro de carte est incomplet.";
-
-"Your card number is invalid." = "Votre numéro de carte n'est pas valide.";
-
-"Your card's expiration date is incomplete." = "La date d'expiration de votre carte est incomplète.";
-
-"Your card's expiration date is invalid." = "La date d'expiration de votre carte n'est pas valide.";
-
-"Your card's expiration month is invalid." = "Le mois d'expiration de votre carte n'est pas valide.";
-
-"Your card's expiration year is invalid." = "L'année d'expiration de votre carte n'est pas valide.";
-
-"Your card's security code is incomplete." = "Le code de sécurité de votre carte est incomplet.";
 
 "Your card's security code is invalid." = "Le code de sécurité de votre carte n'est pas valide.";
 

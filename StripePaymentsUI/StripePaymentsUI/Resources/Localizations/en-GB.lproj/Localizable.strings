@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@ Card";
-
-"%1$@ Credit" = "%1$@ Credit";
-
-"%1$@ Debit" = "%1$@ Debit";
-
-"%1$@ Prepaid" = "%1$@ Prepaid";
-
-"%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
-
-"%1$@ is not accepted" = "%1$@ is not accepted";
-
 "Address line 2 (optional)" = "Address line 2 (optional)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Billing address";
 
-"CVC" = "CVC";
-
-"Card information" = "Card information";
-
-"Card number" = "Card number";
-
-"Confirm your %@" = "Confirm your %@";
-
 "Invalid data." = "Invalid data.";
 
-"MM / YY" = "MM / YY";
-
 "MM/YY" = "MM/YY";
-
-"Only credit and prepaid cards are accepted" = "Only credit and prepaid cards are accepted";
-
-"Only credit cards are accepted" = "Only credit cards are accepted";
-
-"Only debit and credit cards are accepted" = "Only debit and credit cards are accepted";
-
-"Only debit and prepaid cards are accepted" = "Only debit and prepaid cards are accepted";
-
-"Only debit cards are accepted" = "Only debit cards are accepted";
-
-"Only prepaid cards are accepted" = "Only prepaid cards are accepted";
 
 "Postal Code" = "Postcode";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "The BSB you entered is invalid.";
 
-"The selected brand is not allowed" = "The selected brand is not allowed";
-
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
-
-"Your card has expired." = "Your card has expired.";
-
-"Your card number is incomplete." = "Your card number is incomplete.";
-
-"Your card number is invalid." = "Your card number is invalid.";
-
-"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
-
-"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
-
-"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
-
-"Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
-
-"Your card's security code is incomplete." = "Your card's security code is incomplete.";
 
 "Your card's security code is invalid." = "Your card's security code is invalid.";
 

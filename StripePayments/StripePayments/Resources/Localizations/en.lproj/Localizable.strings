@@ -25,11 +25,17 @@
 /* Payment Method for credit card */
 "Card" = "Card";
 
+/* Label for card number entry text field */
+"Card number" = "Card number";
+
 /* Payment Method type brand name */
 "Cash App Pay" = "Cash App Pay";
 
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
 
 /* Payment Method type brand name. */
 "EPS" = "EPS";
@@ -51,6 +57,9 @@
 
 /* Link Payment Method type brand name */
 "Link" = "Link";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "MM / YY";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
@@ -87,4 +96,25 @@
 
 /* Payment Method type brand name */
 "WeChat Pay" = "WeChat Pay";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Your card number is incomplete.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Your card number is invalid.";
+
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
+
+/* Error message for card entry form when CVC is incomplete. */
+"Your card's security code is incomplete." = "Your card's security code is incomplete.";
 

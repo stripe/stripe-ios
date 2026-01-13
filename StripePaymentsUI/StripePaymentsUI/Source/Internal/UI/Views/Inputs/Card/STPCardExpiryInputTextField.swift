@@ -7,6 +7,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 import UIKit
 
 class STPCardExpiryInputTextField: STPInputTextField {

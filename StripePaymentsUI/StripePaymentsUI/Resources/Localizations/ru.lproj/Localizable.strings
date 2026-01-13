@@ -1,20 +1,4 @@
-"%1$@ Card" = "Карта %1$@";
-
-"%1$@ Credit" = "%1$@ кредитная";
-
-"%1$@ Debit" = "%1$@ дебетовая";
-
-"%1$@ Prepaid" = "%1$@ предоплаченная";
-
-"%1$@ account ending in %2$@" = "%1$@ счет, номер которого оканчивается на %2$@";
-
-"%1$@ ending in %2$@" = "%1$@, оканч. на %2$@";
-
-"%1$@ is not accepted" = "%1$@ не принимается";
-
 "Address line 2 (optional)" = "Адрес (строка 2) (необязательно)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Адрес для выставления счета";
 
-"CVC" = "Код CVV/CVC";
-
-"Card information" = "Данные платежной карты";
-
-"Card number" = "Номер карты";
-
-"Confirm your %@" = "Подтвердите %@";
-
 "Invalid data." = "Недопустимые данные.";
 
-"MM / YY" = "ММ / ГГ";
-
 "MM/YY" = "ММ/ГГ";
-
-"Only credit and prepaid cards are accepted" = "Принимаются только кредитные и предоплаченные карты";
-
-"Only credit cards are accepted" = "Принимаются только кредитные карты";
-
-"Only debit and credit cards are accepted" = "Принимаются только дебетовые и кредитные карты";
-
-"Only debit and prepaid cards are accepted" = "Принимаются только дебетовые и предоплаченные карты";
-
-"Only debit cards are accepted" = "Принимаются только дебетовые карты";
-
-"Only prepaid cards are accepted" = "Принимаются только предоплаченные карты";
 
 "Postal Code" = "Почтовый индекс";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Введенный код BSB неверен.";
 
-"The selected brand is not allowed" = "Выбранный бренд недоступен";
-
 "To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
-
-"Your card has expired." = "Срок действия карты истек.";
-
-"Your card number is incomplete." = "Номер карты введен не полностью.";
-
-"Your card number is invalid." = "Номер карты недействителен.";
-
-"Your card's expiration date is incomplete." = "Дата истечения срока действия карты введена не полностью.";
-
-"Your card's expiration date is invalid." = "Дата истечения срока действия карты недействительна.";
-
-"Your card's expiration month is invalid." = "Недопустимый месяц окончания действия карты.";
-
-"Your card's expiration year is invalid." = "Недопустимый год окончания действия карты.";
-
-"Your card's security code is incomplete." = "Код CVV/CVC карты введен не полностью.";
 
 "Your card's security code is invalid." = "Код CVV/CVC карты недействителен.";
 

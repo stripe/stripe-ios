@@ -1,20 +1,4 @@
-"%1$@ Card" = "Karta %1$@";
-
-"%1$@ Credit" = "%1$@ Credit";
-
-"%1$@ Debit" = "%1$@ Debit";
-
-"%1$@ Prepaid" = "%1$@ Prepaid";
-
-"%1$@ account ending in %2$@" = "Kont ta' %1$@ li jintemm biċ-ċifri %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ li jispiċċa %2$@";
-
-"%1$@ is not accepted" = "%1$@ mhix aċċettata";
-
 "Address line 2 (optional)" = "Indirizz linja 2 (mhux obbligatorju)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Indirizz tal-kont";
 
-"CVC" = "CVC";
-
-"Card information" = "L-informazzjoni tal-karta";
-
-"Card number" = "In-numru tal-karta";
-
-"Confirm your %@" = "Ikkonferma l-%@ tiegħek";
-
 "Invalid data." = "Data invalida.";
 
-"MM / YY" = "XX / SS";
-
 "MM/YY" = "XX/SS";
-
-"Only credit and prepaid cards are accepted" = "Huma aċċettati biss karti tal-kreditu u karti mħallsa minn qabel";
-
-"Only credit cards are accepted" = "Huma aċċettati biss karti ta' kreditu";
-
-"Only debit and credit cards are accepted" = "Huma aċċettati biss karti tad-debitu u tal-kreditu";
-
-"Only debit and prepaid cards are accepted" = "Huma aċċettati biss karti tad-debitu u karti mħallsa minn qabel";
-
-"Only debit cards are accepted" = "Huma aċċettati biss karti tad-debitu";
-
-"Only prepaid cards are accepted" = "Huma aċċettati biss karti mħallsa minn qabel";
 
 "Postal Code" = "Kodiċi Postali";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Il-BSB li daħħalt mhux validu.";
 
-"The selected brand is not allowed" = "Ix-xorta ta' karta magħżula ma tistax tintuża";
-
 "To scan your card, allow camera access in Settings." = "Biex tiskennja l-karta tiegħek, agħti l-aċċess għall-kamera mill-Għażliet.";
-
-"Your card has expired." = "Il-karta tiegħek skadiet.";
-
-"Your card number is incomplete." = "In-numru tal-karta tiegħek mhux komplut.";
-
-"Your card number is invalid." = "In-numru tal-karta tiegħek mhux tajjeb.";
-
-"Your card's expiration date is incomplete." = "Id-data tal-iskadenza tal-karta tiegħek mhix sħiħa.";
-
-"Your card's expiration date is invalid." = "Id-data tal-iskadenza tal-karta tiegħek mhix tajba.";
-
-"Your card's expiration month is invalid." = "Ix-xahar tal-iskadenza tal-karta tiegħek mhux tajjeb.";
-
-"Your card's expiration year is invalid." = "Is-sena tal-iskadenza tal-karta tiegħek mhix tajba.";
-
-"Your card's security code is incomplete." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux komplut.";
 
 "Your card's security code is invalid." = "Il-kodiċi tas-sigurtà tal-karta tiegħek mhux tajjeb.";
 

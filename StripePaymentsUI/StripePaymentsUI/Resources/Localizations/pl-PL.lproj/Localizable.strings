@@ -1,20 +1,4 @@
-"%1$@ Card" = "Karta %1$@";
-
-"%1$@ Credit" = "Karta kredytowa %1$@";
-
-"%1$@ Debit" = "Karta debetowa %1$@";
-
-"%1$@ Prepaid" = "Karta przedpłacona %1$@";
-
-"%1$@ account ending in %2$@" = "%1$@ konto kończące się %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ kończy się %2$@";
-
-"%1$@ is not accepted" = "Marka %1$@ nie jest akceptowana";
-
 "Address line 2 (optional)" = "Linia adresu 2 (opcja)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Adres rozliczeniowy";
 
-"CVC" = "CVC";
-
-"Card information" = "Dane karty";
-
-"Card number" = "Nr karty";
-
-"Confirm your %@" = "Potwierdź swój kod %@";
-
 "Invalid data." = "Nieprawidłowe dane.";
 
-"MM / YY" = "MM / RR";
-
 "MM/YY" = "MM/RR";
-
-"Only credit and prepaid cards are accepted" = "Akceptowane są tylko karty kredytowe i przedpłacone";
-
-"Only credit cards are accepted" = "Akceptowane są tylko karty kredytowe";
-
-"Only debit and credit cards are accepted" = "Akceptowane są tylko karty debetowe i kredytowe";
-
-"Only debit and prepaid cards are accepted" = "Akceptowane są tylko karty debetowe i przedpłacone";
-
-"Only debit cards are accepted" = "Akceptowane są tylko karty debetowe";
-
-"Only prepaid cards are accepted" = "Akceptowane są tylko karty przedpłacone";
 
 "Postal Code" = "Kod pocztowy";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Wprowadzony numer BSB jest nieprawidłowy.";
 
-"The selected brand is not allowed" = "Wybrana marka jest niedozwolona";
-
 "To scan your card, allow camera access in Settings." = "Aby zeskanować kartę, zezwól na dostęp do aparatu w Ustawieniach.";
-
-"Your card has expired." = "Ważność Twojej karty wygasła.";
-
-"Your card number is incomplete." = "Numer karty jest niekompletny.";
-
-"Your card number is invalid." = "Numer karty jest nieprawidłowy.";
-
-"Your card's expiration date is incomplete." = "Data ważności karty jest niepełna.";
-
-"Your card's expiration date is invalid." = "Data ważności karty jest nieprawidłowa.";
-
-"Your card's expiration month is invalid." = "Miesiąc daty ważności karty jest nieprawidłowy.";
-
-"Your card's expiration year is invalid." = "Rok daty ważności karty jest nieprawidłowy";
-
-"Your card's security code is incomplete." = "Kod zabezpieczający karty jest niekompletny.";
 
 "Your card's security code is invalid." = "Kod bezpieczeństwa karty jest nieprawidłowy.";
 

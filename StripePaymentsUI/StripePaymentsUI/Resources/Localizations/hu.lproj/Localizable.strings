@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@Kártya";
-
-"%1$@ Credit" = "%1$@Hitel";
-
-"%1$@ Debit" = "%1$@Betéti";
-
-"%1$@ Prepaid" = "%1$@Előre fizetett";
-
-"%1$@ account ending in %2$@" = "%2$@ végződésű számla %1$@";
-
-"%1$@ ending in %2$@" = "%1$@ végződése %2$@";
-
-"%1$@ is not accepted" = "%1$@ nem elfogadott";
-
 "Address line 2 (optional)" = "Cím 2. sora (nem kötelező)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Számlázási cím";
 
-"CVC" = "CVC";
-
-"Card information" = "Kártyaadatok";
-
-"Card number" = "Kártyaszám";
-
-"Confirm your %@" = "%@ megerősítése";
-
 "Invalid data." = "Érvénytelen adat.";
 
-"MM / YY" = "HH / ÉÉ";
-
 "MM/YY" = "HH/ÉÉ";
-
-"Only credit and prepaid cards are accepted" = "Csak hitelkártyák és előre fizetett kártyák elfogadottak";
-
-"Only credit cards are accepted" = "Csak hitelkártyák elfogadottak";
-
-"Only debit and credit cards are accepted" = "Csak betéti és hitelkártyák elfogadottak";
-
-"Only debit and prepaid cards are accepted" = "Csak betéti és előre fizetett kártyák elfogadottak";
-
-"Only debit cards are accepted" = "Csak betéti kártyák elfogadottak";
-
-"Only prepaid cards are accepted" = "Csak előre fizetett kártyák elfogadottak";
 
 "Postal Code" = "Postai irányítószám";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "A beírt BSB-szám érvénytelen.";
 
-"The selected brand is not allowed" = "A kiválasztott kártyamárka nem engedélyezett";
-
 "To scan your card, allow camera access in Settings." = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
-
-"Your card has expired." = "A kártyája lejárt.";
-
-"Your card number is incomplete." = "A kártyaszám hiányos.";
-
-"Your card number is invalid." = "A kártyaszám érvénytelen.";
-
-"Your card's expiration date is incomplete." = "A kártya lejárati dátuma hiányos.";
-
-"Your card's expiration date is invalid." = "A kártya lejárati dátuma érvénytelen.";
-
-"Your card's expiration month is invalid." = "Kártyájának lejárati hónapja érvénytelen.";
-
-"Your card's expiration year is invalid." = "Kártyájának lejárati éve érvénytelen.";
-
-"Your card's security code is incomplete." = "A kártya biztonsági kódja hiányos.";
 
 "Your card's security code is invalid." = "A kártya biztonsági kódja érvénytelen.";
 

@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@ kaart";
-
-"%1$@ Credit" = "%1$@ krediit";
-
-"%1$@ Debit" = "%1$@ deebet";
-
-"%1$@ Prepaid" = "%1$@ ettemakstud";
-
-"%1$@ account ending in %2$@" = "%1$@ konto lõpuga %2$@";
-
-"%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
-
-"%1$@ is not accepted" = "%1$@ pole aktsepteeritud";
-
 "Address line 2 (optional)" = "Aadressirida 2 (valikuline)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Arveldusaadress";
 
-"CVC" = "CVC";
-
-"Card information" = "Kaardi andmed";
-
-"Card number" = "Kaardinumber";
-
-"Confirm your %@" = "Kinnitage oma %@";
-
 "Invalid data." = "Valed andmed.";
 
-"MM / YY" = "KK / AA";
-
 "MM/YY" = "KK/AA";
-
-"Only credit and prepaid cards are accepted" = "Aktsepteeritakse ainult krediit- ja ettemakstud kaarte";
-
-"Only credit cards are accepted" = "Aktsepteeritakse ainult krediitkaarte";
-
-"Only debit and credit cards are accepted" = "Aktsepteeritakse ainult deebet- ja krediitkaarte";
-
-"Only debit and prepaid cards are accepted" = "Aktsepteeritakse ainult deebet- ja ettemakstud kaarte";
-
-"Only debit cards are accepted" = "Aktsepteeritakse ainult deebetkaarte";
-
-"Only prepaid cards are accepted" = "Aktsepteeritakse ainult ettemakstud kaarte";
 
 "Postal Code" = "Sihtnumber";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Sisestatud BSB-number ei ole kehtiv.";
 
-"The selected brand is not allowed" = "Valitud tootemark pole lubatud";
-
 "To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
-
-"Your card has expired." = "Teie kaart on aegunud.";
-
-"Your card number is incomplete." = "Teie kaardinumber on puudulik.";
-
-"Your card number is invalid." = "Teie kaardinumber on kehtetu.";
-
-"Your card's expiration date is incomplete." = "Kaardi aegumiskuupäev on puudulik.";
-
-"Your card's expiration date is invalid." = "Teie kaardi aegumiskuupäev on kehtetu.";
-
-"Your card's expiration month is invalid." = "Kaardi aegumiskuu on kehtetu.";
-
-"Your card's expiration year is invalid." = "Kaardi aegumisaasta on kehtetu.";
-
-"Your card's security code is incomplete." = "Teie kaardi turvakood on puudulik.";
 
 "Your card's security code is invalid." = "Kaardi turvakood on kehtetu.";
 

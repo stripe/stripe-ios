@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@ Thẻ";
-
-"%1$@ Credit" = "%1$@ Ghi có";
-
-"%1$@ Debit" = "%1$@ Ghi nợ";
-
-"%1$@ Prepaid" = "%1$@ Trả trước";
-
-"%1$@ account ending in %2$@" = "Tài khoản %1$@ kết thúc bằng %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
-
-"%1$@ is not accepted" = "%1$@ không được chấp nhận";
-
 "Address line 2 (optional)" = "Dòng địa chỉ 2 (tùy chọn)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Địa chỉ thanh toán";
 
-"CVC" = "CVC";
-
-"Card information" = "Thông tin thẻ";
-
-"Card number" = "Số thẻ";
-
-"Confirm your %@" = "Xác nhận %@ của bạn";
-
 "Invalid data." = "Dữ liệu không hợp lệ.";
 
-"MM / YY" = "Tháng /Năm";
-
 "MM/YY" = "Tháng/Năm";
-
-"Only credit and prepaid cards are accepted" = "Chỉ chấp nhận thẻ tín dụng và thẻ trả trước";
-
-"Only credit cards are accepted" = "Chỉ chấp nhận thẻ tín dụng";
-
-"Only debit and credit cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ và thẻ tín dụng";
-
-"Only debit and prepaid cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ và thẻ trả trước";
-
-"Only debit cards are accepted" = "Chỉ chấp nhận thẻ ghi nợ";
-
-"Only prepaid cards are accepted" = "Chỉ chấp nhận thẻ trả trước";
 
 "Postal Code" = "Mã bưu điện";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "BSB mà bạn nhập không hợp lệ.";
 
-"The selected brand is not allowed" = "Thương hiệu đã chọn không được cho phép";
-
 "To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
-
-"Your card has expired." = "Thẻ đã hết hạn.";
-
-"Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
-
-"Your card number is invalid." = "Số thẻ không hợp lệ.";
-
-"Your card's expiration date is incomplete." = "Ngày hết hạn trên thẻ không hợp lệ.";
-
-"Your card's expiration date is invalid." = "Ngày hết hạn trên thẻ không hợp lệ.";
-
-"Your card's expiration month is invalid." = "Tháng hết hạn trên thẻ của bạn không hợp lệ.";
-
-"Your card's expiration year is invalid." = "Năm hết hạn trên thẻ của bạn không hợp lệ.";
-
-"Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
 
 "Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
 

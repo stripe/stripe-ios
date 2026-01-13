@@ -1,20 +1,4 @@
-"%1$@ Card" = "%1$@-kort";
-
-"%1$@ Credit" = "%1$@ -kreditt";
-
-"%1$@ Debit" = "%1$@ -debet";
-
-"%1$@ Prepaid" = "%1$@ -forhåndsbetalt";
-
-"%1$@ account ending in %2$@" = "%1$@-konto som slutter på %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ som slutter på %2$@";
-
-"%1$@ is not accepted" = "%1$@ er ikke godkjent";
-
 "Address line 2 (optional)" = "Adresselinje 2 (valgfritt)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Fakturaadresse";
 
-"CVC" = "CVC";
-
-"Card information" = "Kortinformasjon";
-
-"Card number" = "Kortnummer";
-
-"Confirm your %@" = "Bekreft %@";
-
 "Invalid data." = "Ugyldige data.";
 
-"MM / YY" = "MM / ÅÅ";
-
 "MM/YY" = "MM/ÅÅ";
-
-"Only credit and prepaid cards are accepted" = "Bare kredittkort og forhåndsbetalte kort godtas";
-
-"Only credit cards are accepted" = "Bare kredittkort godtas";
-
-"Only debit and credit cards are accepted" = "Bare debet- og kredittkort godtas";
-
-"Only debit and prepaid cards are accepted" = "Bare debetkort og forhåndsbetalte kort godtas";
-
-"Only debit cards are accepted" = "Bare debetkort godtas";
-
-"Only prepaid cards are accepted" = "Bare forhåndsbetalte kort godtas";
 
 "Postal Code" = "Postnummer";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "Du skrev inn ugyldig BSB.";
 
-"The selected brand is not allowed" = "Det valgte merket er ikke godkjent";
-
 "To scan your card, allow camera access in Settings." = "Gi tilgang til kamera i Innstillinger for å skanne kortet.";
-
-"Your card has expired." = "Kortet ditt er utløpt.";
-
-"Your card number is incomplete." = "Kortnummeret er ufullstendig.";
-
-"Your card number is invalid." = "Kortnummeret er ugyldig.";
-
-"Your card's expiration date is incomplete." = "Kortets utløpsdato er ufullstendig.";
-
-"Your card's expiration date is invalid." = "Kortets utløpsdato er ugyldig.";
-
-"Your card's expiration month is invalid." = "Kortets utløpsmåned er ugyldig.";
-
-"Your card's expiration year is invalid." = "Kortets utløpsår er ugyldig.";
-
-"Your card's security code is incomplete." = "Kortets sikkerhetskode er ufullstendig.";
 
 "Your card's security code is invalid." = "Kortets sikkerhetskode er ugyldig.";
 

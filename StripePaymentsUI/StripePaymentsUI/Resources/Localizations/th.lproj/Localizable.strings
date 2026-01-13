@@ -1,20 +1,4 @@
-"%1$@ Card" = "บัตร %1$@";
-
-"%1$@ Credit" = "บัตรเครดิต %1$@";
-
-"%1$@ Debit" = "บัตรเดบิต %1$@";
-
-"%1$@ Prepaid" = "บัตรเติมเงิน %1$@";
-
-"%1$@ account ending in %2$@" = "บัญชี %1$@ ที่ลงท้ายด้วย %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ ลงท้ายด้วย %2$@";
-
-"%1$@ is not accepted" = "ระบบไม่รองรับ %1$@";
-
 "Address line 2 (optional)" = "ที่อยู่บรรทัดที่ 2 (ระบุหรือไม่ก็ได้)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "ที่อยู่ในการเรียกเก็บเงิน";
 
-"CVC" = "CVC";
-
-"Card information" = "ข้อมูลบัตร";
-
-"Card number" = "หมายเลขบัตร";
-
-"Confirm your %@" = "ยืนยัน %@ ของคุณ";
-
 "Invalid data." = "ข้อมูลไม่ถูกต้อง";
 
-"MM / YY" = "ดด / ปป";
-
 "MM/YY" = "ดด/ปป";
-
-"Only credit and prepaid cards are accepted" = "รองรับเฉพาะบัตรเครดิตและบัตรเติมเงินเท่านั้น";
-
-"Only credit cards are accepted" = "รองรับเฉพาะบัตรเครดิตเท่านั้น";
-
-"Only debit and credit cards are accepted" = "รองรับเฉพาะบัตรเดบิตและบัตรเครดิตเท่านั้น";
-
-"Only debit and prepaid cards are accepted" = "รองรับเฉพาะบัตรเดบิตและบัตรเติมเงินเท่านั้น";
-
-"Only debit cards are accepted" = "รองรับเฉพาะบัตรเดบิตเท่านั้น";
-
-"Only prepaid cards are accepted" = "รองรับเฉพาะบัตรเติมเงินเท่านั้น";
 
 "Postal Code" = "รหัสไปรษณีย์";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "BSB ที่คุณป้อนไม่ถูกต้อง";
 
-"The selected brand is not allowed" = "ไม่อนุญาตให้ใช้แบรนด์ที่เลือก";
-
 "To scan your card, allow camera access in Settings." = "โปรดให้สิทธิ์เข้าถึงกล้องถ่ายรูปในการตั้งค่าเพื่อสแกนบัตร";
-
-"Your card has expired." = "บัตรของคุณหมดอายุแล้ว";
-
-"Your card number is incomplete." = "หมายเลขบัตรไม่ครบถ้วน";
-
-"Your card number is invalid." = "หมายเลขบัตรไม่ถูกต้อง";
-
-"Your card's expiration date is incomplete." = "วันที่หมดอายุของบัตรไม่ครบถ้วน";
-
-"Your card's expiration date is invalid." = "วันที่หมดอายุของบัตรไม่ถูกต้อง";
-
-"Your card's expiration month is invalid." = "เดือนที่หมดอายุของบัตรไม่ถูกต้อง";
-
-"Your card's expiration year is invalid." = "ปีที่หมดอายุของบัตรไม่ถูกต้อง";
-
-"Your card's security code is incomplete." = "รหัสความปลอดภัยของบัตรไม่ครบถ้วน";
 
 "Your card's security code is invalid." = "รหัสความปลอดภัยของบัตรไม่ถูกต้อง";
 

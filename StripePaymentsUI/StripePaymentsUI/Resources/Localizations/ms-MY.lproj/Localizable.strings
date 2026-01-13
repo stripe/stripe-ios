@@ -1,20 +1,4 @@
-"%1$@ Card" = "Kad %1$@";
-
-"%1$@ Credit" = "Kredit %1$@";
-
-"%1$@ Debit" = "Debit %1$@";
-
-"%1$@ Prepaid" = "Prabayar %1$@";
-
-"%1$@ account ending in %2$@" = "akaun %1$@ yang berakhir dengan %2$@";
-
-"%1$@ ending in %2$@" = "%1$@ – berakhiran %2$@";
-
-"%1$@ is not accepted" = "%1$@ tidak diterima";
-
 "Address line 2 (optional)" = "Alamat baris 2 (opsyenal)";
-
-"Apple Pay" = "Apple Pay";
 
 "BSB" = "BSB";
 
@@ -22,31 +6,9 @@
 
 "Billing address" = "Alamat pengebilan";
 
-"CVC" = "CVC";
-
-"Card information" = "Maklumat kad";
-
-"Card number" = "Nombor kad";
-
-"Confirm your %@" = "Sahkan %@ anda";
-
 "Invalid data." = "Data tidak sah.";
 
-"MM / YY" = "BB / TT";
-
 "MM/YY" = "BB/TT";
-
-"Only credit and prepaid cards are accepted" = "Hanya kad kredit dan prabayar diterima";
-
-"Only credit cards are accepted" = "Hanya kad kredit yang diterima";
-
-"Only debit and credit cards are accepted" = "Hanya kad debit dan kredit diterima";
-
-"Only debit and prepaid cards are accepted" = "Hanya kad debit dan prabayar diterima";
-
-"Only debit cards are accepted" = "Hanya kad debit yang diterima";
-
-"Only prepaid cards are accepted" = "Hanya kad prabayar diterima";
 
 "Postal Code" = "Poskod";
 
@@ -56,25 +18,7 @@
 
 "The BSB you entered is invalid." = "BSB yang anda masukkan tidak sah.";
 
-"The selected brand is not allowed" = "Jenama yang dipilih tidak dibenarkan";
-
 "To scan your card, allow camera access in Settings." = "Untuk mengimbas kad anda, benarkan akses kamera dalam Tetapan.";
-
-"Your card has expired." = "Kad anda telah tamat tempoh.";
-
-"Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
-
-"Your card number is invalid." = "Nombor kad anda tidak sah.";
-
-"Your card's expiration date is incomplete." = "Tarikh tamat tempoh kad anda tidak lengkap.";
-
-"Your card's expiration date is invalid." = "Tarikh tamat tempoh kad anda tidak sah.";
-
-"Your card's expiration month is invalid." = "Bulan tamat tempoh kad anda tidak sah.";
-
-"Your card's expiration year is invalid." = "Tahun tamat tempoh kad anda tidak sah.";
-
-"Your card's security code is incomplete." = "Kod keselamatan kad anda tidak lengkap.";
 
 "Your card's security code is invalid." = "Kod keselamatan kad anda tidak sah.";
 
