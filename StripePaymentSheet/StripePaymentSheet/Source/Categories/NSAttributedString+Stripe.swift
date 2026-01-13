@@ -108,4 +108,9 @@ extension NSMutableAttributedString {
             size: scaledSize
         )
     }
+
+    /// A range covering from the start to the end of the attributed string.
+    var extent: NSRange {
+        return NSRange(location: 0, length: self.length)
+    }
 }

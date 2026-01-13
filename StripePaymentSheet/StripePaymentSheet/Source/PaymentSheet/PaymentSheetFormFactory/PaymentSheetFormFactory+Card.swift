@@ -9,7 +9,6 @@
 import Foundation
 @_spi(STP) import StripeCore
 import StripePayments
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 

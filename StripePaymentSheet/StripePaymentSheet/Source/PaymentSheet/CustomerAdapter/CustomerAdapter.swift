@@ -10,7 +10,6 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 
 /// A "bridge" from wallet mode to your backend to fetch Customer-related information.
 /// Typically, you will not need to implement this protocol yourself. You

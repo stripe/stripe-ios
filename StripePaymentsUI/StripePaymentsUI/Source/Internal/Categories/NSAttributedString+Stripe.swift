@@ -12,7 +12,7 @@ import UIKit
 extension NSAttributedString {
 
     /// A range covering from the start to the end of the attributed string.
-    @_spi(STP) public var extent: NSRange {
+    var extent: NSRange {
         return NSRange(location: 0, length: self.length)
     }
 

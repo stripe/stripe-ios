@@ -66,7 +66,20 @@ extension String.Localized {
             "String to describe an invalid year in expiry date."
         )
     }
+
     @_spi(STP) public static var card_number: String {
         STPLocalizedString("Card number", "Label for card number entry text field")
+    }
+
+    @_spi(STP) public static var billing_address_lowercase: String {
+        STPLocalizedString("Billing address", "Billing address section title for card form entry.")
+    }
+
+    @_spi(STP) public static var expiration_date_accessibility_label: String {
+        STPLocalizedString("expiration date", "accessibility label for text field")
+    }
+
+    @_spi(STP) public static var bank_account: String {
+        STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
     }
 }

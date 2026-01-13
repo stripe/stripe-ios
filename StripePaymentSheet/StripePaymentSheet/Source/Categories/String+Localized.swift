@@ -614,6 +614,17 @@ extension String.Localized {
         )
     }
 
+    @_spi(STP) public static var shipping_address: String {
+        STPLocalizedString("Shipping Address", "Title for shipping address entry section")
+    }
+
+    @_spi(STP) public static var allow_camera_access: String {
+        STPLocalizedString(
+            "To scan your card, allow camera access in Settings.",
+            "Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app."
+        )
+    }
+
     // MARK: - Card Funding Filter Messages
 
     static var only_debit_cards_accepted: String {
