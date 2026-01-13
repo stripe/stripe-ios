@@ -74,6 +74,12 @@ extension Intent {
             case .setup:
                 return .setup
             }
+        case .checkoutSession(let response):
+            if response.mode == .payment {
+                return .pay(amount: response.amount, currency: response.currency)
+            } else {
+                return .setup
+            }
         }
     }
 }

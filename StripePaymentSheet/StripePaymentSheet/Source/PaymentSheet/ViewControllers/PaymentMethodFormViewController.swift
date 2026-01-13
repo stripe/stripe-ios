@@ -319,6 +319,8 @@ extension PaymentMethodFormViewController {
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
+            case .checkoutSession:
+                return .deferred(elementsSession.sessionID)
             }
         }()
 
@@ -507,6 +509,19 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
+        case let .checkoutSession(response):
+            client.collectBankAccountForDeferredIntent(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: response.amount,
+                currency: response.currency,
+                onBehalfOf: response.onBehalfOf,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 
@@ -558,7 +573,7 @@ extension PaymentMethodFormViewController {
         switch intent {
         case .paymentIntent, .setupIntent:
             additionalParameters["attach_required"] = true
-        case .deferredIntent:
+        case .deferredIntent, .checkoutSession:
             break
         }
 
@@ -603,6 +618,20 @@ extension PaymentMethodFormViewController {
                 amount: amount,
                 currency: currency,
                 onBehalfOf: intentConfig.onBehalfOf,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
+        case .checkoutSession(let response):
+            let amount: Int? = response.mode == .payment ? response.amount : nil
+            client.collectBankAccountForDeferredIntent(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: amount,
+                currency: response.currency,
+                onBehalfOf: response.onBehalfOf,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,

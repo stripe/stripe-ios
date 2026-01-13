@@ -107,6 +107,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 // Neither handler is available
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "No confirm handler available in IntentConfiguration")
             }
+        case .checkoutSession:
+            // TODO: Implement Apple Pay support for checkout sessions
+            throw PaymentSheetError.unknown(debugDescription: "Apple Pay not yet supported for checkout sessions")
         }
     }
 

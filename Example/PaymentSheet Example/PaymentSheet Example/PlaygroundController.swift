@@ -699,7 +699,7 @@ class PlaygroundController: ObservableObject {
         case .normal:
             switch self.settings.mode {
             case .payment, .paymentWithSetup:
-                mc = PaymentSheet(paymentIntentClientSecret: self.clientSecret!, configuration: configuration)
+                mc = PaymentSheet(checkoutSessionId: "cs_test_a1NxuuoSQOexCkKaHbFT0vA7y0X74cAmdjRTXk5qeHa9mBw4SlW9Cc1zxx", configuration: configuration)
             case .setup:
                 mc = PaymentSheet(setupIntentClientSecret: self.clientSecret!, configuration: configuration)
             }

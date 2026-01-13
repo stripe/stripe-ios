@@ -88,6 +88,10 @@ final class PaymentSheetLoader {
                     if !elementsSession.isBackupInstance {
                         _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                     }
+                case .checkoutSession:
+                    if !elementsSession.isBackupInstance {
+                        _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    }
                 }
 
                 // List the Customer's saved PaymentMethods
@@ -382,6 +386,14 @@ final class PaymentSheetLoader {
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
+        case .checkoutSession(let checkoutSessionId):
+            let response = try await configuration.apiClient.fetchPaymentPage(
+                checkoutSessionId: checkoutSessionId
+            )
+
+            // Use dedicated Intent case for checkout sessions
+            intent = .checkoutSession(response)
+            elementsSession = response.elementsSession!
         }
 
         // Warn the merchant if we see unactivated payment method types in the Intent
@@ -523,4 +535,5 @@ final class PaymentSheetLoader {
 
         return allowedCountries.contains(billingCountry)
     }
+
 }

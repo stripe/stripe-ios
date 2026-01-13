@@ -148,6 +148,8 @@ extension Intent {
             case .setup:
                 return "deferred_setup_intent"
             }
+        case .checkoutSession(let response):
+            return response.mode == .payment ? "checkout_session_payment" : "checkout_session_setup"
         }
     }
 }

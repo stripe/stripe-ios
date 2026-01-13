@@ -275,6 +275,10 @@ extension PaymentSheet {
                         await confirmationChallenge?.complete()
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
+                    // MARK: ↪ Checkout Session
+                case .checkoutSession:
+                    // TODO: Implement checkout session confirmation
+                    completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Checkout session confirmation not yet implemented")), nil)
                 }
             }
 
@@ -331,6 +335,9 @@ extension PaymentSheet {
                     )
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
+            // MARK: ↪ Checkout Session
+            case .checkoutSession:
+                completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Saved payment methods with CheckoutSession are not yet supported.")), nil)
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -403,6 +410,9 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
+                    case .checkoutSession:
+                        // TODO: Implement checkout session confirmation
+                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Checkout session confirmation not yet implemented")), nil)
                     }
                 }
             }
@@ -476,6 +486,9 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
+                    case .checkoutSession:
+                        // TODO: Implement checkout session confirmation
+                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Checkout session confirmation not yet implemented")), nil)
                     }
                 }
             }

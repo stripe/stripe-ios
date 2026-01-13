@@ -98,6 +98,10 @@ extension STPAPIClient {
             parameters["type"] = "setup_intent"
             parameters["client_secret"] = clientSecret
             parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
+        case .checkoutSession(_):
+            // TODO should never happen, ElementsSession is created when we fetch the CheckoutSession
+            stpAssert(false, "Unexpected case in makeElementsSessionsParams")
+            break
         }
         return parameters
     }
@@ -299,6 +303,36 @@ extension STPAPIClient {
             } else {
                 // If customer does not exist: backend issue or failure in deserialization, fail.
                 throw PaymentSheetError.unknown(debugDescription: "Failed to claim customerSession")
+            }
+        }
+    }
+
+    // MARK: - CheckoutSession
+
+    func fetchPaymentPage(
+        checkoutSessionId: String
+    ) async throws -> CheckoutSessionResponse {
+        let parameters: [String: Any] = [
+            "browser_locale": Locale.current.toLanguageTag(),
+            "browser_timezone": TimeZone.current.identifier,
+            "eid": UUID().uuidString,
+            "redirect_type": "embedded",
+            "elements_session_client": [
+                "is_aggregation_expected": true,
+            ],
+        ]
+
+        return try await withCheckedThrowingContinuation { continuation in
+            APIRequest<CheckoutSessionResponse>.post(
+                with: self,
+                endpoint: "payment_pages/\(checkoutSessionId)/init",
+                parameters: parameters
+            ) { response, _, error in
+                if let response = response {
+                    continuation.resume(returning: response)
+                } else {
+                    continuation.resume(throwing: error ?? PaymentSheetError.unknown(debugDescription: "Failed to fetch payment page"))
+                }
             }
         }
     }

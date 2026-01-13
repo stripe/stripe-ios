@@ -185,6 +185,9 @@ extension Intent: PaymentMethodRequirementProvider {
         case .deferredIntent:
             // Verification method is always 'automatic'
             return [.validUSBankVerificationMethod]
+        case .checkoutSession:
+            // Verification method is always 'automatic'
+            return [.validUSBankVerificationMethod]
         }
     }
 }

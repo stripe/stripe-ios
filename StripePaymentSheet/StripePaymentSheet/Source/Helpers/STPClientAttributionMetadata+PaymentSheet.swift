@@ -34,6 +34,11 @@ extension STPClientAttributionMetadata {
             return .init(elementsSessionConfigId: elementsSessionConfigId,
                          paymentIntentCreationFlow: .deferred,
                          paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
+        case .checkoutSession:
+            // Checkout sessions use automatic payment method selection
+            return .init(elementsSessionConfigId: elementsSessionConfigId,
+                         paymentIntentCreationFlow: .standard,
+                         paymentMethodSelectionFlow: .automatic)
         }
     }
 

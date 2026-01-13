@@ -16,17 +16,19 @@ import UIKit
 
 // MARK: - Intent
 
-/// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
+/// An internal type representing either a PaymentIntent, SetupIntent, "deferred Intent", or CheckoutSession
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
+    case checkoutSession(CheckoutSessionResponse)
 
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
+        case .checkoutSession(let response): response.allResponseFields["session_id"] as? String
         }
     }
 
@@ -43,6 +45,8 @@ enum Intent {
             case .setup:
                 return false
             }
+        case .checkoutSession(let response):
+            return response.mode == .payment
         }
     }
 
@@ -54,6 +58,8 @@ enum Intent {
             return false
         case .deferredIntent:
             return true
+        case .checkoutSession:
+            return false
         }
     }
 
@@ -61,7 +67,7 @@ enum Intent {
         switch self {
         case .deferredIntent(let intentConfig):
             return intentConfig
-        default:
+        case .paymentIntent, .setupIntent, .checkoutSession:
             return nil
         }
     }
@@ -73,6 +79,8 @@ enum Intent {
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
         case .setupIntent:
+            return false
+        case .checkoutSession:
             return false
         }
     }
@@ -90,6 +98,8 @@ enum Intent {
             case .setup(let currency, _):
                 return currency
             }
+        case .checkoutSession(let response):
+            return response.currency
         }
     }
 
@@ -106,6 +116,8 @@ enum Intent {
             case .setup:
                 return nil
             }
+        case .checkoutSession(let response):
+            return response.amount
         }
     }
 
@@ -118,7 +130,9 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        default:
+        case .checkoutSession(let response):
+            return response.setupFutureUsage
+        case .setupIntent:
             return nil
         }
     }
@@ -135,7 +149,7 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        default:
+        case .checkoutSession, .setupIntent:
             return nil
         }
     }
@@ -158,6 +172,8 @@ enum Intent {
             case .setup:
                 return true
             }
+        case .checkoutSession(let response):
+            return response.setupFutureUsage != nil
         }
     }
 }

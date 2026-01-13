@@ -205,6 +205,8 @@ import UIKit
                     ) { [weak self] linkAccountSession, error in
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
+            case .checkoutSession(_):
+                stpAssertionFailure("CheckoutSession not yet supported")
             }
         }
 
@@ -294,6 +296,8 @@ import UIKit
                 from: presentingViewController,
                 financialConnectionsCompletion: completionHandler
             )
+        case .checkoutSession(_):
+            stpAssertionFailure("CheckoutSession not yet supported")
         }
     }
 
@@ -500,6 +504,8 @@ import UIKit
                         continuation.resume()
                     }
                 }
+            case .checkoutSession(_):
+                stpAssertionFailure("CheckoutSession not yet supported")
             }
         }
     }
@@ -548,6 +554,9 @@ private extension PaymentSheet.InitializationMode {
             case .setup:
                 return nil
             }
+        case .checkoutSession(_):
+            // TODO
+            return nil
         }
     }
 
@@ -564,6 +573,9 @@ private extension PaymentSheet.InitializationMode {
             case .setup(let currency, _):
                 return currency
             }
+        case .checkoutSession(_):
+            // TODO
+            return nil
         }
     }
 }

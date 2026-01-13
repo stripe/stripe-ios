@@ -48,6 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
+        case checkoutSession(String)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
@@ -99,6 +100,13 @@ public class PaymentSheet {
     public convenience init(intentConfiguration: IntentConfiguration, configuration: Configuration) {
         self.init(
             mode: .deferredIntent(intentConfiguration),
+            configuration: configuration
+        )
+    }
+    
+    public convenience init(checkoutSessionId: String, configuration: Configuration) {
+        self.init(
+            mode: .checkoutSession(checkoutSessionId),
             configuration: configuration
         )
     }

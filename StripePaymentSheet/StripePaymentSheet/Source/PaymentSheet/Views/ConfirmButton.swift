@@ -48,6 +48,13 @@ class ConfirmButton: UIView {
                 case .setup:
                     return .setup
                 }
+            case .checkoutSession(let response):
+                switch response.mode {
+                case .payment:
+                    return .pay(amount: response.amount, currency: response.currency)
+                case .subscription:
+                    return .setup
+                }
             }
         }
 
@@ -62,6 +69,13 @@ class ConfirmButton: UIView {
                 case .payment(let amount, let currency, _, _, _):
                     return .pay(amount: amount, currency: currency, withLock: false)
                 case .setup:
+                    return .continue
+                }
+            case .checkoutSession(let response):
+                switch response.mode {
+                case .payment:
+                    return .pay(amount: response.amount, currency: response.currency, withLock: false)
+                case .subscription:
                     return .continue
                 }
             }
