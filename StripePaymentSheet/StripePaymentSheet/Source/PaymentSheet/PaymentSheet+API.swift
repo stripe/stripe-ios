@@ -276,9 +276,23 @@ extension PaymentSheet {
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
                     // MARK: ↪ Checkout Session
-                case .checkoutSession:
-                    // TODO: Implement checkout session confirmation
-                    completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Checkout session confirmation not yet implemented")), nil)
+                case .checkoutSession(let checkoutSession):
+                    Task { @MainActor in
+                        let result = await handleCheckoutSessionConfirmation(
+                            confirmType: .new(
+                                params: confirmParams.paymentMethodParams,
+                                paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                                shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected
+                            ),
+                            checkoutSession: checkoutSession,
+                            configuration: configuration,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            elementsSession: elementsSession,
+                            confirmationChallenge: confirmationChallenge
+                        )
+                        completion(result.result, result.deferredIntentConfirmationType)
+                    }
                 }
             }
 
@@ -336,8 +350,21 @@ extension PaymentSheet {
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
             // MARK: ↪ Checkout Session
-            case .checkoutSession:
-                completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Saved payment methods with CheckoutSession are not yet supported.")), nil)
+            case .checkoutSession(let checkoutSession):
+                let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
+                    ?? intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
+                Task { @MainActor in
+                    let result = await handleCheckoutSessionConfirmation(
+                        confirmType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata, radarOptions: nil),
+                        checkoutSession: checkoutSession,
+                        configuration: configuration,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler,
+                        elementsSession: elementsSession,
+                        confirmationChallenge: confirmationChallenge
+                    )
+                    completion(result.result, result.deferredIntentConfirmationType)
+                }
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -410,9 +437,26 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkoutSession:
-                        // TODO: Implement checkout session confirmation
-                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Checkout session confirmation not yet implemented")), nil)
+                    case .checkoutSession(let checkoutSession):
+                        Task { @MainActor in
+                            let result = await handleCheckoutSessionConfirmation(
+                                confirmType: .new(
+                                    params: paymentMethodParams,
+                                    paymentOptions: STPConfirmPaymentMethodOptions(),
+                                    shouldSave: shouldSave
+                                ),
+                                checkoutSession: checkoutSession,
+                                configuration: configuration,
+                                authenticationContext: authenticationContext,
+                                paymentHandler: paymentHandler,
+                                elementsSession: elementsSession,
+                                confirmationChallenge: confirmationChallenge
+                            )
+                            if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
+                                linkAccount?.logout()
+                            }
+                            completion(result.result, result.deferredIntentConfirmationType)
+                        }
                     }
                 }
             }
@@ -486,9 +530,22 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkoutSession:
-                        // TODO: Implement checkout session confirmation
-                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Checkout session confirmation not yet implemented")), nil)
+                    case .checkoutSession(let checkoutSession):
+                        Task { @MainActor in
+                            let result = await handleCheckoutSessionConfirmation(
+                                confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
+                                checkoutSession: checkoutSession,
+                                configuration: configuration,
+                                authenticationContext: authenticationContext,
+                                paymentHandler: paymentHandler,
+                                elementsSession: elementsSession,
+                                confirmationChallenge: confirmationChallenge
+                            )
+                            if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
+                                linkAccount?.logout()
+                            }
+                            completion(result.result, result.deferredIntentConfirmationType)
+                        }
                     }
                 }
             }

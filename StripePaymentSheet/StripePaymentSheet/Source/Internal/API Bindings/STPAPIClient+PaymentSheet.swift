@@ -336,6 +336,53 @@ extension STPAPIClient {
             }
         }
     }
+
+    func confirmCheckoutSession(
+        sessionId: String,
+        confirmationToken: String,
+        expectedAmount: Int,
+        expectedPaymentMethodType: String,
+        returnURL: String?,
+        shipping: STPPaymentIntentShippingDetailsParams?,
+        clientAttributionMetadata: STPClientAttributionMetadata?,
+        passiveCaptchaToken: String?
+    ) async throws -> CheckoutSessionConfirmResponse {
+        var parameters: [String: Any] = [
+            "confirmation_token": confirmationToken,
+            "expected_amount": expectedAmount,
+            "expected_payment_method_type": expectedPaymentMethodType,
+        ]
+
+        if let returnURL {
+            parameters["return_url"] = returnURL
+        }
+
+        if let shipping {
+            parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
+        }
+
+        if let clientAttributionMetadata {
+            parameters["client_attribution_metadata"] = try? clientAttributionMetadata.encodeJSONDictionary()
+        }
+
+        if let passiveCaptchaToken {
+            parameters["passive_captcha_token"] = passiveCaptchaToken
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            APIRequest<CheckoutSessionConfirmResponse>.post(
+                with: self,
+                endpoint: "payment_pages/\(sessionId)/confirm",
+                parameters: parameters
+            ) { response, _, error in
+                if let response = response {
+                    continuation.resume(returning: response)
+                } else {
+                    continuation.resume(throwing: error ?? PaymentSheetError.unknown(debugDescription: "Failed to confirm checkout session"))
+                }
+            }
+        }
+    }
 }
 
 private let APIEndpointElementsSessions = "elements/sessions"

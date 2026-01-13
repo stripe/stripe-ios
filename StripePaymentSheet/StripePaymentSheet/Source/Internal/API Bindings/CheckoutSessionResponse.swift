@@ -29,6 +29,11 @@ final class CheckoutSessionResponse: NSObject {
     let elementsSession: STPElementsSession?
     let allResponseFields: [AnyHashable: Any]
 
+    /// The checkout session ID (e.g., cs_test_...)
+    var sessionId: String? {
+        return allResponseFields["session_id"] as? String
+    }
+
     init(
         currency: String,
         amount: Int,
