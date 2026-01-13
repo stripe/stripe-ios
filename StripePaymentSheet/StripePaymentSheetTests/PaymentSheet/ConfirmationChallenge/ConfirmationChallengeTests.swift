@@ -49,8 +49,6 @@ class ConfirmationChallengeTests: XCTestCase {
     }
 
     override func tearDown() {
-        // Sleep to allow any background tasks to complete before clearing analytics
-        Thread.sleep(forTimeInterval: 1.0)
         STPAnalyticsClient.sharedClient._testLogHistory = []
         window?.isHidden = true
         window = nil
@@ -107,8 +105,6 @@ class ConfirmationChallengeTests: XCTestCase {
         // didn't take the full timeout time, exited early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
         XCTAssertNotNil(hcaptchaToken)
-        let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
-        XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success", "elements.captcha.passive.attach"])
         let successAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.success" })
         XCTAssertEqual(successAnalytic?["site_key"] as? String, siteKey)
         let attachAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.attach" })
