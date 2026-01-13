@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '25.3.1'
+  s.version                        = '25.4.0'
 
   s.summary                        = 'Use to setup ios integration for Issuing Token Push Provision'
   s.license                        = { type: 'MIT', file: 'LICENSE' }
@@ -17,4 +17,8 @@ Pod::Spec.new do |s|
   s.swift_version                  = '5.0'
   s.ios.deployment_target          = '13.0'
   s.source_files                   = 'StripeIssuing/StripeIssuing/**/*.swift'
+  s.dependency                       'StripeCore', "#{s.version}"
+  s.dependency                       'StripePayments', "#{s.version}"
+  s.dependency                       'StripePaymentsUI', "#{s.version}"
+
 end
