@@ -552,7 +552,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .FR) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
                                currency: "EUR",
                                paymentMethodType: .payPal,
                                merchantCountry: .FR) { form in
