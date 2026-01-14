@@ -9,7 +9,7 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import SwiftUI
@@ -241,7 +241,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             // Satispay has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "EUR",
                                paymentMethodType: .satispay,
                                merchantCountry: .IT) { form in
@@ -504,7 +504,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                 case .paymentIntent:
                     XCTAssertNil(form.getMandateElement())
                     XCTAssertEqual(form.getAllUnwrappedSubElements().count, 6)
-                case .paymentIntentWithSetupFutureUsage, .setupIntent:
+                case .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent:
                     XCTAssertNotNil(form.getMandateElement())
                     XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
                 }
@@ -751,6 +751,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     enum IntentKind: CaseIterable {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
+        case paymentIntentWithPMOSetupFutureUsage
         case setupIntent
     }
 
@@ -1077,6 +1078,95 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with payment method flow", makeDeferredIntent(deferredSSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+            ]
+        case .paymentIntentWithPMOSetupFutureUsage:
+            // This tests the scenario where IntentConfiguration has PMO setup_future_usage.
+            let paymentIntent: STPPaymentIntent = try await {
+                // Regular PI: Backend DOES have PMO SFU set
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer,
+                    otherParams: [
+                        "payment_method_options": [
+                            paymentMethod.identifier: [
+                                "setup_future_usage": "off_session"
+                            ]
+                        ]
+                    ]
+                )
+                return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+            }()
+            
+            // Backend PI does NOT have PMO SFU
+            let mode = PaymentSheet.IntentConfiguration.Mode.payment(
+                amount: amount ?? 1099,
+                currency: currency,
+                paymentMethodOptions: .init(setupFutureUsageValues: [paymentMethod: .offSession])
+            )
+
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: mode) { _, _ in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer
+                )
+            }
+
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: mode) { paymentMethod, _ in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    paymentMethodID: paymentMethod.stripeId,
+                    customerID: customer,
+                    confirm: true,
+                    otherParams: paramsForServerSideConfirmation
+                )
+            }
+
+            // Confirmation token variations
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(
+                mode: mode,
+                paymentMethodTypes: [paymentMethod.identifier], // Passing this avoids a validation error where the IntentConfig is auto PM and the PI has explicit PM types
+                confirmationTokenConfirmHandler: { _ in
+                    return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                        types: paymentMethodTypes,
+                        currency: currency,
+                        amount: amount,
+                        merchantCountry: merchantCountry.rawValue,
+                        customerID: customer
+                    )
+                }
+            )
+
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(
+                mode: mode,
+                paymentMethodTypes: [paymentMethod.identifier], // Passing this avoids a validation error where the IntentConfig is auto PM and the PI has explicit PM types
+                confirmationTokenConfirmHandler: { confirmationToken in
+                    return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                        types: paymentMethodTypes,
+                        currency: currency,
+                        amount: amount,
+                        merchantCountry: merchantCountry.rawValue,
+                        customerID: customer,
+                        confirm: true,
+                        otherParams: ["confirmation_token": confirmationToken.stripeId]
+                    )
+                }
+            )
+
+            return [
+                ("PaymentIntent", .paymentIntent(paymentIntent)),
+                ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
+                ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
+                ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
         case .setupIntent:
             let setupIntent: STPSetupIntent = try await {
