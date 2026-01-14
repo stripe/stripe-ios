@@ -14,75 +14,8 @@ import PassKit
 @_spi(STP) import StripeUICore
 import UIKit
 
-private let spinnerMoveToCenterAnimationDuration = 0.35
-
 /// Buy or Continue button
-class ConfirmButton: UIView {
-
-    typealias Status = BuyButton.Status
-    typealias CallToActionType = BuyButton.CallToActionType
-
-    // MARK: Private Properties
-    private let buyButton: BuyButton
-    private let didTap: () -> Void
-    private let didTapWhenDisabled: () -> Void
-
-    // MARK: Init
-
-    init(
-        status: Status = .enabled,
-        callToAction: CallToActionType,
-        showProcessingLabel: Bool = true,
-        appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
-        didTap: @escaping () -> Void,
-        didTapWhenDisabled: @escaping () -> Void = {}
-    ) {
-        self.buyButton = BuyButton(status: status, callToAction: callToAction, showProcessingLabel: showProcessingLabel, appearance: appearance)
-        self.didTap = didTap
-        self.didTapWhenDisabled = didTapWhenDisabled
-        super.init(frame: .zero)
-        buyButton.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
-        addAndPinSubview(buyButton)
-
-        update()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    // MARK: - Internal Methods
-
-    func update(
-        status: Status? = nil,
-        callToAction: CallToActionType? = nil,
-        animated: Bool = false,
-        completion: (() -> Void)? = nil
-    ) {
-        buyButton.update(
-            status: status,
-            callToAction: callToAction,
-            animated: animated,
-            completion: completion)
-    }
-
-    // MARK: - Private Methods
-
-    @objc
-    private func handleTap() {
-        if case .enabled = buyButton.status {
-            didTap()
-        } else if case .disabled = buyButton.status {
-            // When the disabled button is tapped, trigger validation error display
-            didTapWhenDisabled()
-            // Resign first responder (as we would if the button was disabled)
-            superview?.endEditing(true)
-        }
-    }
-
-    // MARK: - BuyButton
-
-    class BuyButton: UIControl {
+    class ConfirmButton: UIControl {
 
         enum Status {
             case enabled
@@ -133,6 +66,8 @@ class ConfirmButton: UIView {
             }
         }
 
+        private let spinnerMoveToCenterAnimationDuration = 0.35
+
         /// Background color for the `.disabled` state.
         var disabledBackgroundColor: UIColor {
             return appearance.primaryButton.disabledBackgroundColor ?? appearance.primaryButton.backgroundColor ?? appearance.colors.primary
@@ -147,6 +82,8 @@ class ConfirmButton: UIView {
         private(set) var callToAction: CallToActionType
         private let appearance: PaymentSheet.Appearance
         private let showProcessingLabel: Bool
+        private let didTap: () -> Void
+        private let didTapWhenDisabled: () -> Void
 
         override var intrinsicContentSize: CGSize {
             return CGSize(
@@ -234,13 +171,18 @@ class ConfirmButton: UIView {
             status: Status = .enabled,
             callToAction: CallToActionType,
             showProcessingLabel: Bool = true,
-            appearance: PaymentSheet.Appearance = .default
+            appearance: PaymentSheet.Appearance = .default,
+            didTap: @escaping () -> Void,
+            didTapWhenDisabled: @escaping () -> Void = {}
         ) {
             self.status = status
             self.callToAction = callToAction
             self.showProcessingLabel = showProcessingLabel
             self.appearance = appearance
+            self.didTap = didTap
+            self.didTapWhenDisabled = didTapWhenDisabled
             super.init(frame: .zero)
+            addTarget(self, action: #selector(handleTap), for: .touchUpInside)
 
             directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
             // primaryButton.backgroundColor takes priority over appearance.colors.primary
@@ -301,6 +243,8 @@ class ConfirmButton: UIView {
                                                    selector: #selector(didBecomeActive),
                                                    name: UIApplication.willEnterForegroundNotification,
                                                    object: nil)
+
+            update()
         }
 
         deinit {
@@ -322,6 +266,18 @@ class ConfirmButton: UIView {
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        @objc
+        private func handleTap() {
+            if case .enabled = status {
+                didTap()
+            } else if case .disabled = status {
+                // When the disabled button is tapped, trigger validation error display
+                didTapWhenDisabled()
+                // Resign first responder (as we would if the button was disabled)
+                superview?.endEditing(true)
+            }
         }
 
         @objc private func didBecomeActive() {
@@ -561,4 +517,3 @@ class ConfirmButton: UIView {
             spinner.color = foregroundColor
         }
     }
-}
