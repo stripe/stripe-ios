@@ -233,7 +233,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             displayedPaymentMethodTypes: ["card"],
             walletPaymentMethodTypes: ["apple_pay", "link"],
             hasSPM: true,
-            integrationShape: .complete
+            integrationShape: .flowController
         )
         analyticsClient.logExposure(experiment: experiment)
 
@@ -248,6 +248,6 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? [String], ["card"])
         XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? [String], ["card", "apple_pay", "link"])
         XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? Bool, true)
-        XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "paymentsheet")
+        XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "custom")
     }
 }

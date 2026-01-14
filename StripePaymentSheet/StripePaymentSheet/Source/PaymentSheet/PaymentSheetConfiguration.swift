@@ -271,7 +271,8 @@ extension PaymentSheet {
                 // Check experiment to decide layout
                 let elementsSession = loadResult.elementsSession
                 let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
-                guard let arbId = elementsSession.experimentsData?.arbId else {
+                guard let arbId = elementsSession.experimentsData?.arbId,
+                      elementsSession.experimentsData?.experimentAssignments[OCSMobileHorizontalModeAA.experimentName] != nil else {
                     // Default to vertical (control) if no experiment assignment
                     resolvedPaymentMethodLayout = .vertical
                     self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
