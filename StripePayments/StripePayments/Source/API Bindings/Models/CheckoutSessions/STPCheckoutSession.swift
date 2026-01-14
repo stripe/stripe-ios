@@ -13,10 +13,10 @@ import Foundation
 @_spi(STP) public class STPCheckoutSession: NSObject {
 
     /// The Stripe ID of the CheckoutSession.
-    @objc public let stripeId: String
+    public let stripeId: String
 
     /// The client secret of the CheckoutSession. Used for embedded or custom UI modes.
-    @objc public let clientSecret: String?
+    public let clientSecret: String?
 
     /// Total of all items after discounts and taxes are applied.
     public let amountTotal: Int?
@@ -25,19 +25,19 @@ import Foundation
     public let currency: String?
 
     /// The mode of the Checkout Session (payment, setup, or subscription).
-    @objc public let mode: STPCheckoutSessionMode
+    public let mode: STPCheckoutSessionMode
 
     /// The status of the Checkout Session (open, complete, or expired). Nullable per API spec.
     public let status: STPCheckoutSessionStatus?
 
     /// The payment status of the Checkout Session (paid, unpaid, or no_payment_required).
-    @objc public let paymentStatus: STPCheckoutSessionPaymentStatus
+    public let paymentStatus: STPCheckoutSessionPaymentStatus
 
     /// The ID of the PaymentIntent for Checkout Sessions in payment mode.
-    @objc public let paymentIntentId: String?
+    public let paymentIntentId: String?
 
     /// The ID of the SetupIntent for Checkout Sessions in setup mode.
-    @objc public let setupIntentId: String?
+    public let setupIntentId: String?
 
     /// The list of payment method types that this CheckoutSession is allowed to use.
     public let paymentMethodTypes: [STPPaymentMethodType]
@@ -46,34 +46,34 @@ import Foundation
     public let paymentMethodOptions: STPPaymentMethodOptions?
 
     /// Whether or not this CheckoutSession was created in livemode.
-    @objc public let livemode: Bool
+    public let livemode: Bool
 
     /// Time at which the CheckoutSession was created.
-    @objc public let created: Date
+    public let created: Date
 
     /// The timestamp at which the Checkout Session will expire.
-    @objc public let expiresAt: Date
+    public let expiresAt: Date
 
     /// The ID of the customer for this Session.
-    @objc public let customerId: String?
+    public let customerId: String?
 
     /// The customer's email address.
-    @objc public let customerEmail: String?
+    public let customerEmail: String?
 
     /// The URL to the Checkout Session (for hosted UI mode).
-    @objc public let url: URL?
+    public let url: URL?
 
     /// The URL to redirect the customer back to after authentication or payment completion.
-    @objc public let returnUrl: String?
+    public let returnUrl: String?
 
     /// The URL the customer will be directed to if they decide to cancel payment.
-    @objc public let cancelUrl: String?
+    public let cancelUrl: String?
 
     /// The raw API response used to create this object.
-    @objc public let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props: [String] = [
             String(format: "%@: %p", NSStringFromClass(STPCheckoutSession.self), self),
             "stripeId = \(stripeId)",
