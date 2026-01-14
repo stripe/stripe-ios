@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=p_UqiPpOS9dDPQs1K1ZHkzAfMq5EeaSdilY_jGTPiMrdpiaNUVC3DxLA5rbvMnyQwrSodid_0YGVty7Z
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ttxUqnNZ_X_F-C7uGolYyOvZiIpsWCdkdW3n7SpKXGeZUJO_xxxe-k0qkq2EBl_VA2fkQj52-h4cHLgU
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_OnzneWtnZkNI1b
-Content-Length: 603
+request-id: req_oxEt37hBtXvb7H
+Content-Length: 631
 Vary: Origin
-Date: Thu, 13 Nov 2025 15:35:55 GMT
-original-request: req_OnzneWtnZkNI1b
+Date: Wed, 14 Jan 2026 20:27:46 GMT
+original-request: req_oxEt37hBtXvb7H
 stripe-version: 2020-08-27
-idempotency-key: a0665d5c-4021-417f-9e96-c179ac746dbb
+idempotency-key: f1523e31-20dd-4854-b006-1ffed5ea1805
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_numbe
 
 {
   "object" : "payment_method",
-  "id" : "pm_1ST2YxF7QokQdxByRAOUf1D3",
+  "id" : "pm_1SpafNF7QokQdxByAfKl4PpT",
   "billing_details" : {
     "email" : "example@link.com",
     "phone" : null,
@@ -48,8 +48,9 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_numbe
     "last4" : "3456"
   },
   "livemode" : false,
-  "created" : 1763048155,
+  "created" : 1768422465,
   "allow_redisplay" : "unspecified",
   "type" : "au_becs_debit",
-  "customer" : null
+  "customer" : null,
+  "customer_account" : null
 }

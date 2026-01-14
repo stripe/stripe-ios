@@ -1028,7 +1028,6 @@ extension PlaygroundController {
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
             "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
-            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
@@ -1036,6 +1035,11 @@ extension PlaygroundController {
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .split(separator: ",")
                 .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+        }
+
+        // Only set PMO SFU on the Intent if we're Intent-first, never set it for deferred intents.
+        if settings.integrationType == .normal {
+            body["payment_method_options_setup_future_usage"] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
         }
         if shouldCreateCustomerKey {
             body["customer_key_type"] = settings.customerKeyType.rawValue

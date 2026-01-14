@@ -150,6 +150,10 @@ extension PaymentSheet {
                     // Set top-level SFU and PMO SFU to match the intent config
                     setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
 
+                    // Now that we've potentially set SFU/PMO SFU, set mandate data accordingly again.
+                    // This is a bit hacky, since the above `makePaymentIntentParams` call already set mandate data
+                    setMandateDataIfNecessary(for: paymentMethod.type, on: paymentIntentParams)
+
                     result = await withCheckedContinuation { continuation in
                         paymentHandler.confirmPaymentIntent(
                             params: paymentIntentParams,
@@ -276,6 +280,17 @@ extension PaymentSheet {
         if let pmoSFUValues = paymentMethodOptions?.setupFutureUsageValues, let pmoSFUValue = pmoSFUValues[paymentMethodType] {
             // e.g. payment_method_options["card"]["setup_future_usage"] = "off_session"
             paymentIntentParams.nonnil_paymentMethodOptions.additionalAPIParameters[paymentMethodType.identifier] = ["setup_future_usage": pmoSFUValue.rawValue]
+        }
+    }
+
+    /// Sets mandate data if the PI params is setting up the PM type
+    static func setMandateDataIfNecessary(for paymentMethodType: STPPaymentMethodType, on paymentIntentParams: STPPaymentIntentConfirmParams) {
+        let isTopLevelSFUSet = [.onSession, .offSession].contains(paymentIntentParams.setupFutureUsage)
+        let isPMOSFUSet = [STPPaymentIntentSetupFutureUsage.offSession, STPPaymentIntentSetupFutureUsage.onSession].map({ $0.stringValue }).contains(
+            paymentIntentParams.nonnil_paymentMethodOptions.setupFutureUsage(for: paymentMethodType)
+        )
+        if STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType) && (isTopLevelSFUSet || isPMOSFUSet) {
+            paymentIntentParams.mandateData = .makeWithInferredValues()
         }
     }
 
