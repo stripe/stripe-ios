@@ -18,55 +18,9 @@ private let spinnerMoveToCenterAnimationDuration = 0.35
 
 /// Buy or Continue button
 class ConfirmButton: UIView {
-    // MARK: Internal Properties
-    enum Status {
-        case enabled
-        case disabled
-        case processing
-        case spinnerWithInteractionDisabled
-        case succeeded
-    }
-    enum CallToActionType {
-        case pay(amount: Int, currency: String, withLock: Bool = true)
-        case add(paymentMethodType: PaymentSheet.PaymentMethodType)
-        case `continue`
-        case continueWithLock
-        case setup
-        case custom(title: String)
-        case customWithLock(title: String)
 
-        static func makeDefaultTypeForPaymentSheet(intent: Intent) -> CallToActionType {
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
-            case .setupIntent:
-                return .setup
-            case .deferredIntent(let intentConfig):
-                switch intentConfig.mode {
-                case .payment(let amount, let currency, _, _, _):
-                    return .pay(amount: amount, currency: currency)
-                case .setup:
-                    return .setup
-                }
-            }
-        }
-
-        static func makeDefaultTypeForLink(intent: Intent) -> CallToActionType {
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency, withLock: false)
-            case .setupIntent:
-                return .continue
-            case .deferredIntent(let intentConfig):
-                switch intentConfig.mode {
-                case .payment(let amount, let currency, _, _, _):
-                    return .pay(amount: amount, currency: currency, withLock: false)
-                case .setup:
-                    return .continue
-                }
-            }
-        }
-    }
+    typealias Status = BuyButton.Status
+    typealias CallToActionType = BuyButton.CallToActionType
 
     // MARK: Private Properties
     private let buyButton: BuyButton
@@ -91,31 +45,10 @@ class ConfirmButton: UIView {
         addAndPinSubview(buyButton)
 
         update()
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didBecomeActive),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-#if !os(visionOS)
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        self.buyButton.update(status: buyButton.status, callToAction: buyButton.callToAction, animated: false)
-    }
-#endif
-
-    @objc private func didBecomeActive() {
-        self.buyButton.update(status: self.buyButton.status, callToAction: self.buyButton.callToAction, animated: false)
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Internal Methods
@@ -126,25 +59,11 @@ class ConfirmButton: UIView {
         animated: Bool = false,
         completion: (() -> Void)? = nil
     ) {
-        update(
-            status: status ?? self.buyButton.status,
-            callToAction: callToAction ?? self.buyButton.callToAction,
-            animated: animated,
-            completion: completion)
-    }
-
-    func update(
-        status: Status,
-        callToAction: CallToActionType,
-        animated: Bool = false,
-        completion: (() -> Void)? = nil
-    ) {
-        self.buyButton.update(
+        buyButton.update(
             status: status,
             callToAction: callToAction,
             animated: animated,
-            completion: completion
-        )
+            completion: completion)
     }
 
     // MARK: - Private Methods
@@ -164,6 +83,55 @@ class ConfirmButton: UIView {
     // MARK: - BuyButton
 
     class BuyButton: UIControl {
+
+        enum Status {
+            case enabled
+            case disabled
+            case processing
+            case spinnerWithInteractionDisabled
+            case succeeded
+        }
+        enum CallToActionType {
+            case pay(amount: Int, currency: String, withLock: Bool = true)
+            case add(paymentMethodType: PaymentSheet.PaymentMethodType)
+            case `continue`
+            case continueWithLock
+            case setup
+            case custom(title: String)
+            case customWithLock(title: String)
+
+            static func makeDefaultTypeForPaymentSheet(intent: Intent) -> CallToActionType {
+                switch intent {
+                case .paymentIntent(let paymentIntent):
+                    return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
+                case .setupIntent:
+                    return .setup
+                case .deferredIntent(let intentConfig):
+                    switch intentConfig.mode {
+                    case .payment(let amount, let currency, _, _, _):
+                        return .pay(amount: amount, currency: currency)
+                    case .setup:
+                        return .setup
+                    }
+                }
+            }
+
+            static func makeDefaultTypeForLink(intent: Intent) -> CallToActionType {
+                switch intent {
+                case .paymentIntent(let paymentIntent):
+                    return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency, withLock: false)
+                case .setupIntent:
+                    return .continue
+                case .deferredIntent(let intentConfig):
+                    switch intentConfig.mode {
+                    case .payment(let amount, let currency, _, _, _):
+                        return .pay(amount: amount, currency: currency, withLock: false)
+                    case .setup:
+                        return .continue
+                    }
+                }
+            }
+        }
 
         /// Background color for the `.disabled` state.
         var disabledBackgroundColor: UIColor {
@@ -328,12 +296,22 @@ class ConfirmButton: UIView {
             ])
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
             overriddenForegroundColor = appearance.primaryButton.textColor
+
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(didBecomeActive),
+                                                   name: UIApplication.willEnterForegroundNotification,
+                                                   object: nil)
+        }
+
+        deinit {
+            NotificationCenter.default.removeObserver(self)
         }
 
 #if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
+            update()
         }
 #endif
 
@@ -344,6 +322,23 @@ class ConfirmButton: UIView {
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        @objc private func didBecomeActive() {
+            self.update(status: self.status, callToAction: self.callToAction, animated: false)
+        }
+
+        func update(
+            status: Status? = nil,
+            callToAction: CallToActionType? = nil,
+            animated: Bool = false,
+            completion: (() -> Void)? = nil
+        ) {
+            update(
+                status: status ?? self.status,
+                callToAction: callToAction ?? self.callToAction,
+                animated: animated,
+                completion: completion)
         }
 
         func update(status: Status, callToAction: CallToActionType, animated: Bool, completion: (() -> Void)? = nil) {

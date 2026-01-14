@@ -20,6 +20,8 @@ public struct EmbeddedComponentError: Error, CustomDebugStringConvertible {
         case invalidRequestError = "invalid_request_error"
         /// Too many requests hit the API too quickly
         case rateLimitError = "rate_limit_error"
+        /// Failure to render the component, typically caused by browser extensions or network issues
+        case renderError = "render_error"
         /// API errors covering any other type of problem (e.g., a temporary problem with Stripe's servers),
         /// and are extremely uncommon
         case apiError = "api_error"
