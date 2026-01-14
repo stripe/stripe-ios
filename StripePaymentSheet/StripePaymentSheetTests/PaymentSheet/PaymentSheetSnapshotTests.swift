@@ -1007,7 +1007,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         }
     }
 
-    func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
+    func xstubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
         guard !runAgainstLiveService else {
             return
         }

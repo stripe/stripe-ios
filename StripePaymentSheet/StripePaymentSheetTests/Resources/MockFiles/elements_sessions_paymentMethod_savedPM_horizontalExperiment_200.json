@@ -4,9 +4,7 @@
   "config_id": "123",
   "experiments_data": {
       "arb_id": "arb_id_123",
-      "experiment_assignments": {
-          "ocs_mobile_horizontal_mode": "treatment"
-      }
+      "experiment_assignments": [EXPERIMENT_ASSIGNMENTS_HERE]
   },
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,

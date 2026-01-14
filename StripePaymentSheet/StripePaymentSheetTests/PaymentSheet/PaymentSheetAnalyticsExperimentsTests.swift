@@ -227,7 +227,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             experimentsData: experimentsData,
             customer: nil
         )
-        let experiment = OCSMobileHorizontalModeAA(
+        let experiment = OCSMobileHorizontalMode(
             arbId: arbId,
             elementsSession: elementsSession,
             displayedPaymentMethodTypes: ["card"],
