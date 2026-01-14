@@ -34,7 +34,7 @@ class ConfirmButtonTests: XCTestCase {
         ]
 
         for (backgroundColor, expectedForeground) in testCases {
-            let button = ConfirmButton.BuyButton(callToAction: .pay(amount: 900, currency: "usd"))
+            let button = ConfirmButton(callToAction: .pay(amount: 900, currency: "usd"), didTap: {})
             button.tintColor = backgroundColor
             button.update(
                 status: .enabled,
