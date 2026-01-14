@@ -93,7 +93,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             )
         )
 
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit, configuration: configuration) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit, configuration: configuration) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             form.getTextFieldElement("IBAN").setText("DE89370400440532013000")
@@ -109,7 +109,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testAUBecsDebitConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "AUD", paymentMethodType: .AUBECSDebit, merchantCountry: .AU) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "AUD", paymentMethodType: .AUBECSDebit, merchantCountry: .AU) { form in
             form.getTextFieldElement("Name on account").setText("Tester McTesterface")
             form.getTextFieldElement("Email").setText("example@link.com")
             form.getTextFieldElement("BSB number").setText("000000")
@@ -127,7 +127,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
 
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .bancontact) { form in
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .bancontact) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             XCTAssertNotNil(form.getMandateElement())
@@ -177,7 +177,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             )
         )
 
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB, configuration: configuration) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB, configuration: configuration) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             form.getTextFieldElement("Sort code").setText("108800")
@@ -199,6 +199,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US) { form in
             // AmazonPay has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "USD",
+                               paymentMethodType: .amazonPay,
+                               merchantCountry: .US) { form in
+            XCTAssertNotNil(form.getMandateElement(), "AmazonPay should show mandate with PMO setup_future_usage")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
         }
     }
 
@@ -318,7 +325,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         )
 
         try await _testConfirm(
-            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
             currency: "BRL",
             paymentMethodType: .boleto,
             merchantCountry: .BR,
@@ -529,6 +536,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .GB) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "GBP",
+                               paymentMethodType: .revolutPay,
+                               merchantCountry: .GB) { form in
+            XCTAssertNotNil(form.getMandateElement(), "RevolutPay should show mandate when set up")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
+        }
     }
 
     func testPayPalConfirmFlows() async throws {
@@ -538,7 +552,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .FR) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "EUR",
                                paymentMethodType: .payPal,
                                merchantCountry: .FR) { form in
@@ -554,7 +568,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "USD",
                                paymentMethodType: .cashApp,
                                merchantCountry: .US) { form in
@@ -671,7 +685,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.
         // e.g. iDEAL should show an email field and mandate for PI+SFU and SIs, so we test those separately here:
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
@@ -1093,13 +1107,13 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                         "payment_method_options": [
                             paymentMethod.identifier: [
                                 "setup_future_usage": "off_session"
-                            ]
-                        ]
+                            ],
+                        ],
                     ]
                 )
                 return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             }()
-            
+
             // Backend PI does NOT have PMO SFU
             let mode = PaymentSheet.IntentConfiguration.Mode.payment(
                 amount: amount ?? 1099,

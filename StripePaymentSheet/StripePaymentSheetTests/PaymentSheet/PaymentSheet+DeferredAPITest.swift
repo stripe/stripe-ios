@@ -478,7 +478,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
                 currency: "EUR",
                 paymentMethodOptions: .init(setupFutureUsageValues: [.satispay: .offSession])
             )
-        ) { paymentMethod, shouldSavePaymentMethod in
+        ) { _, shouldSavePaymentMethod in
             // shouldSavePaymentMethod should be true because PMO SFU is set
             XCTAssertTrue(shouldSavePaymentMethod, "shouldSavePaymentMethod should be true with PMO SFU")
 

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=sSipHQWNcPEW5AQHl-NKh42BbKoCfscSfbIhe63jedhXavxIPUtqONxkeWDnKdzSA0zyrxIru1T7cMzC
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=AXpAceRvE1DvLd6cudo3EtHtN2r7PJIYe7LNu0TqE60vRyrovFPrqgK7kYUf9Zn18TB55ejcRZHdCid7
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_kGJdbgVsUMGI2Z
-Content-Length: 582
+request-id: req_J6aBerRD3mlaa0
+Content-Length: 610
 Vary: Origin
-Date: Thu, 13 Nov 2025 15:50:04 GMT
-original-request: req_kGJdbgVsUMGI2Z
+Date: Wed, 14 Jan 2026 20:29:13 GMT
+original-request: req_J6aBerRD3mlaa0
 stripe-version: 2020-08-27
-idempotency-key: beaca8f8-3930-435f-b851-14e86daf865c
+idempotency-key: 13b3a5e3-f625-4659-9d7c-fa941aa2024b
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -31,7 +31,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     "fingerprint" : "48wcl030Axz32v7b",
     "tax_id" : "00000000000"
   },
-  "id" : "pm_1ST2meJQVROkWvqTzPggxJaL",
+  "id" : "pm_1SpagnJQVROkWvqTerMcLO7O",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -47,8 +47,9 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     }
   },
   "livemode" : false,
-  "created" : 1763049004,
+  "created" : 1768422553,
   "allow_redisplay" : "unspecified",
   "type" : "boleto",
-  "customer" : null
+  "customer" : null,
+  "customer_account" : null
 }
