@@ -42,12 +42,23 @@ struct PaymentSheetLayoutExperiment {
         self.displayedPaymentMethodTypes = displayedPaymentMethodTypes
         self.walletPaymentMethodTypes = walletPaymentMethodTypes
         self.hasSPM = hasSPM
-        self.integrationShape = integrationShape.analyticsValue
+        self.integrationShape = {
+            switch integrationShape {
+            case .complete:
+                return "complete"
+            case .flowController:
+                return "custom"
+            case .embedded:
+                return "embedded"
+            default:
+                return integrationShape.analyticsValue
+            }
+        }()
     }
 }
 
 struct OCSMobileHorizontalMode: LoggableExperiment {
-    static let experimentName = "ocs_mobile_horizontal_mode"
+    private static let experimentName = "ocs_mobile_horizontal_mode"
     private let experiment: PaymentSheetLayoutExperiment
 
     let name: String = experimentName
@@ -84,7 +95,7 @@ struct OCSMobileHorizontalMode: LoggableExperiment {
 }
 
 struct OCSMobileHorizontalModeAA: LoggableExperiment {
-    static let experimentName = "ocs_mobile_horizontal_mode_aa"
+    private static let experimentName = "ocs_mobile_horizontal_mode_aa"
     private let experiment: PaymentSheetLayoutExperiment
 
     let name: String = experimentName

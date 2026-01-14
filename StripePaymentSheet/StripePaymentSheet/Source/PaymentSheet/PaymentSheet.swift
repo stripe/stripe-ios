@@ -173,7 +173,6 @@ public class PaymentSheet {
                                 delegate: self
                             )
                         case .vertical:
-                            configuration.paymentMethodLayout = .vertical
                             let verticalVC = PaymentSheetVerticalViewController(
                                 configuration: configuration,
                                 loadResult: loadResult,

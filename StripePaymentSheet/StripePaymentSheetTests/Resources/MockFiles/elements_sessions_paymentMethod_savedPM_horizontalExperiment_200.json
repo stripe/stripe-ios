@@ -5,7 +5,7 @@
   "experiments_data": {
       "arb_id": "arb_id_123",
       "experiment_assignments": {
-          "ocs_mobile_horizontal_mode": "treatment",
+          "ocs_mobile_horizontal_mode": "treatment"
       }
   },
   "flags": {

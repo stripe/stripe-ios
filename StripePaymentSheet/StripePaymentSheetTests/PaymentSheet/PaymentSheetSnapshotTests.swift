@@ -615,7 +615,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentMethodLayoutAutomaticWithHorizontalExperiment() {
         configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponseWithHorizontalExperiment()
+        stubNewCustomerResponseWithHorizontalExperiment(isAA: false)
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -623,7 +623,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentMethodLayoutAutomaticWithHorizontalExperimentAA() {
         configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponseWithHorizontalExperiment()
+        stubNewCustomerResponseWithHorizontalExperiment(isAA: true)
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -1224,9 +1224,9 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubConsumerSession()
     }
 
-    private func stubNewCustomerResponseWithHorizontalExperiment(isAA: Bool = false) {
+    private func stubNewCustomerResponseWithHorizontalExperiment(isAA: Bool) {
         if isAA {
-            stubSessions(fileMock: .elements_sessions_paymentMethod_savedPM_horizontalExperiment_200)
+            stubSessions(fileMock: .elements_sessions_paymentMethod_savedPM_horizontalExperimentAA_200)
         } else {
             stubSessions(fileMock: .elements_sessions_paymentMethod_savedPM_horizontalExperiment_200)
         }
