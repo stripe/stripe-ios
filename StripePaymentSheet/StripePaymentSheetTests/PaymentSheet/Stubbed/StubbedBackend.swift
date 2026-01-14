@@ -99,7 +99,6 @@ public class ClassForBundle {}
 
     case elementsSessionsPaymentMethod_savedPM_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_200"
     case elements_sessions_paymentMethod_savedPM_horizontalExperiment_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_horizontalExperiment_200"
-    case elements_sessions_paymentMethod_savedPM_horizontalExperimentAA_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_horizontalExperimentAA_200"
     case elementsSessionsPaymentMethod_link_200 = "MockFiles/elements_sessions_paymentMethod_link_200"
     case elementsSessions_link_signup_disabled_200 = "MockFiles/elements_sessions_link_signup_disabled_200"
 
