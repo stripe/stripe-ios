@@ -271,7 +271,9 @@ extension PaymentSheet {
                 // Check experiment to decide layout
                 let elementsSession = loadResult.elementsSession
                 let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
-                guard let arbId = elementsSession.experimentsData?.arbId else {
+                let isAAActive = elementsSession.experimentsData?.experimentAssignments[OCSMobileHorizontalModeAA.experimentName] != nil
+                let isABActive = elementsSession.experimentsData?.experimentAssignments[OCSMobileHorizontalMode.experimentName] != nil
+                guard let arbId = elementsSession.experimentsData?.arbId, isAAActive || isABActive else {
                     // Default to vertical (control) if no experiment assignment
                     resolvedPaymentMethodLayout = .vertical
                     self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
@@ -287,7 +289,7 @@ extension PaymentSheet {
                     walletTypes.append("link")
                 }
 
-                if elementsSession.experimentsData?.experimentAssignments[OCSMobileHorizontalModeAA.experimentName] != nil {
+                if isAAActive {
                     let horizontalModeExperimentAA = OCSMobileHorizontalModeAA(
                         arbId: arbId,
                         elementsSession: loadResult.elementsSession,
@@ -302,7 +304,7 @@ extension PaymentSheet {
                     resolvedPaymentMethodLayout = .vertical
                 }
 
-                if elementsSession.experimentsData?.experimentAssignments[OCSMobileHorizontalMode.experimentName] != nil {
+                if isABActive {
                     var horizontalModeExperiment = OCSMobileHorizontalMode(
                         arbId: arbId,
                         elementsSession: loadResult.elementsSession,
