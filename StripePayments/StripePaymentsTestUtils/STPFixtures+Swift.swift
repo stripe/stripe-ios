@@ -101,31 +101,6 @@ public extension STPFixtures {
         let json = STPTestUtils.jsonNamed("SEPADebitPaymentMethod")
         return STPPaymentMethod.decodedObject(fromAPIResponse: json)!
     }
-
-    @_spi(STP) static func checkoutSession(
-        paymentMethodTypes: [String] = ["card"],
-        mode: STPCheckoutSessionMode = .payment,
-        status: STPCheckoutSessionStatus = .open,
-        paymentStatus: STPCheckoutSessionPaymentStatus = .unpaid,
-        amountTotal: Int = 2000,
-        currency: String = "usd"
-    ) -> STPCheckoutSession {
-        let apiResponse: [AnyHashable: Any] = [
-            "id": "cs_test_123",
-            "object": "checkout.session",
-            "client_secret": "cs_test_123_secret_xyz",
-            "amount_total": amountTotal,
-            "currency": currency,
-            "mode": mode.stringValue ?? "payment",
-            "status": status.stringValue ?? "open",
-            "payment_status": paymentStatus.stringValue ?? "unpaid",
-            "livemode": false,
-            "created": 1652736692.0,
-            "expires_at": 1652823092.0,
-            "payment_method_types": paymentMethodTypes,
-        ]
-        return STPCheckoutSession.decodedObject(fromAPIResponse: apiResponse)!
-    }
 }
 
 public extension STPPaymentMethodParams {

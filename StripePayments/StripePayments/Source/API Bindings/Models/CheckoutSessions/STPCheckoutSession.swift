@@ -185,11 +185,10 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             ),
             livemode: livemode,
             created: Date(timeIntervalSince1970: createdUnixTime),
-            expiresAt: expiresAtUnixTime != nil
-                ? Date(timeIntervalSince1970: expiresAtUnixTime!) : nil,
+            expiresAt: expiresAtUnixTime.map { Date(timeIntervalSince1970: $0) },
             customerId: dict["customer"] as? String,
             customerEmail: dict["customer_email"] as? String,
-            url: urlString != nil ? URL(string: urlString!) : nil,
+            url: urlString.flatMap { URL(string: $0) },
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
             cancelUrl: dict["cancel_url"] as? String,
             allResponseFields: dict
