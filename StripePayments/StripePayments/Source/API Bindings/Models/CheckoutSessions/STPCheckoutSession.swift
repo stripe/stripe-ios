@@ -19,16 +19,16 @@ import Foundation
     @objc public let clientSecret: String?
 
     /// Total of all items after discounts and taxes are applied.
-    @objc public let amountTotal: Int
+    public let amountTotal: Int?
 
     /// Three-letter ISO currency code, in lowercase.
-    @objc public let currency: String
+    public let currency: String?
 
     /// The mode of the Checkout Session (payment, setup, or subscription).
     @objc public let mode: STPCheckoutSessionMode
 
-    /// The status of the Checkout Session (open, complete, or expired).
-    @objc public let status: STPCheckoutSessionStatus
+    /// The status of the Checkout Session (open, complete, or expired). Nullable per API spec.
+    public let status: STPCheckoutSessionStatus?
 
     /// The payment status of the Checkout Session (paid, unpaid, or no_payment_required).
     @objc public let paymentStatus: STPCheckoutSessionPaymentStatus
@@ -52,7 +52,7 @@ import Foundation
     @objc public let created: Date
 
     /// The timestamp at which the Checkout Session will expire.
-    @objc public let expiresAt: Date?
+    @objc public let expiresAt: Date
 
     /// The ID of the customer for this Session.
     @objc public let customerId: String?
@@ -77,9 +77,9 @@ import Foundation
         let props: [String] = [
             String(format: "%@: %p", NSStringFromClass(STPCheckoutSession.self), self),
             "stripeId = \(stripeId)",
-            "amountTotal = \(amountTotal)",
+            "amountTotal = \(String(describing: amountTotal))",
             "clientSecret = <redacted>",
-            "currency = \(currency)",
+            "currency = \(String(describing: currency))",
             "mode = \(String(describing: allResponseFields["mode"]))",
             "status = \(String(describing: allResponseFields["status"]))",
             "paymentStatus = \(String(describing: allResponseFields["payment_status"]))",
@@ -101,10 +101,10 @@ import Foundation
     private init(
         stripeId: String,
         clientSecret: String?,
-        amountTotal: Int,
-        currency: String,
+        amountTotal: Int?,
+        currency: String?,
         mode: STPCheckoutSessionMode,
-        status: STPCheckoutSessionStatus,
+        status: STPCheckoutSessionStatus?,
         paymentStatus: STPCheckoutSessionPaymentStatus,
         paymentIntentId: String?,
         setupIntentId: String?,
@@ -112,7 +112,7 @@ import Foundation
         paymentMethodOptions: STPPaymentMethodOptions?,
         livemode: Bool,
         created: Date,
-        expiresAt: Date?,
+        expiresAt: Date,
         customerId: String?,
         customerEmail: String?,
         url: URL?,
@@ -149,34 +149,38 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+        // Required fields per API spec (non-nullable)
         guard let dict = response,
               let stripeId = dict["id"] as? String,
-              let rawStatus = dict["status"] as? String
+              let livemode = dict["livemode"] as? Bool,
+              let created = dict.stp_date(forKey: "created"),
+              let expiresAt = dict.stp_date(forKey: "expires_at"),
+              let rawMode = dict["mode"] as? String,
+              let rawPaymentStatus = dict["payment_status"] as? String,
+              let paymentMethodTypeStrings = dict["payment_method_types"] as? [String]
         else {
             return nil
         }
 
+        // Optional fields per API spec (nullable)
         let clientSecret = dict["client_secret"] as? String
-        let amountTotal = dict["amount_total"] as? Int ?? 0
-        let currency = dict["currency"] as? String ?? ""
-        let livemode = dict["livemode"] as? Bool ?? false
-        let createdUnixTime = dict["created"] as? TimeInterval ?? Date().timeIntervalSince1970
-
-        let paymentMethodTypeStrings = dict["payment_method_types"] as? [String] ?? []
-
-        let expiresAtUnixTime = dict["expires_at"] as? TimeInterval
+        let amountTotal = dict["amount_total"] as? Int
+        let currency = dict["currency"] as? String
         let urlString = dict["url"] as? String
+
+        // status is nullable per API spec
+        let status: STPCheckoutSessionStatus? = (dict["status"] as? String).map {
+            STPCheckoutSessionStatus.status(from: $0)
+        }
 
         return STPCheckoutSession(
             stripeId: stripeId,
             clientSecret: clientSecret,
             amountTotal: amountTotal,
             currency: currency,
-            mode: STPCheckoutSessionMode.mode(from: dict["mode"] as? String ?? ""),
-            status: STPCheckoutSessionStatus.status(from: rawStatus),
-            paymentStatus: STPCheckoutSessionPaymentStatus.paymentStatus(
-                from: dict["payment_status"] as? String ?? ""
-            ),
+            mode: STPCheckoutSessionMode.mode(from: rawMode),
+            status: status,
+            paymentStatus: STPCheckoutSessionPaymentStatus.paymentStatus(from: rawPaymentStatus),
             paymentIntentId: dict["payment_intent"] as? String,
             setupIntentId: dict["setup_intent"] as? String,
             paymentMethodTypes: STPPaymentMethod.types(from: paymentMethodTypeStrings),
@@ -184,8 +188,8 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
             ),
             livemode: livemode,
-            created: Date(timeIntervalSince1970: createdUnixTime),
-            expiresAt: expiresAtUnixTime.map { Date(timeIntervalSince1970: $0) },
+            created: created,
+            expiresAt: expiresAt,
             customerId: dict["customer"] as? String,
             customerEmail: dict["customer_email"] as? String,
             url: urlString.flatMap { URL(string: $0) },

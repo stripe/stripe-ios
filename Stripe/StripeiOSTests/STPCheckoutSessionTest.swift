@@ -22,8 +22,16 @@ class STPCheckoutSessionTest: XCTestCase {
             "can decode with full json"
         )
 
-        // Only id and status are truly required fields
-        let requiredFields = ["id", "status"]
+        // Required fields per API spec (non-nullable)
+        let requiredFields = [
+            "id",
+            "livemode",
+            "created",
+            "expires_at",
+            "mode",
+            "payment_status",
+            "payment_method_types",
+        ]
 
         for field in requiredFields {
             var partialJson = fullJson
@@ -45,7 +53,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.amountTotal, 2000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.mode, .payment)
-        XCTAssertEqual(session.status, .open)
+        XCTAssertEqual(session.status, .open)  // status is nullable but present in JSON
         XCTAssertEqual(session.paymentStatus, .unpaid)
         XCTAssertEqual(session.paymentIntentId, "pi_test123456789")
         XCTAssertNil(session.setupIntentId)
@@ -71,20 +79,35 @@ class STPCheckoutSessionTest: XCTestCase {
         )
     }
 
-    func testDecodedObjectWithMinimalFields() {
+    func testDecodedObjectWithMinimalRequiredFields() {
+        // All required fields per API spec, but no optional fields
         let minimalJson: [String: Any] = [
             "id": "cs_test_minimal",
             "object": "checkout.session",
-            "status": "open",
+            "livemode": true,
+            "created": 1609459200,
+            "expires_at": 1609545600,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            // status is nullable, so we omit it to test that behavior
         ]
 
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: minimalJson)
 
-        XCTAssertNotNil(session, "Should decode with minimal fields")
+        XCTAssertNotNil(session, "Should decode with all required fields")
         XCTAssertEqual(session?.stripeId, "cs_test_minimal")
-        XCTAssertEqual(session?.status, .open)
-        XCTAssertEqual(session?.amountTotal, 0)
-        XCTAssertEqual(session?.currency, "")
+        XCTAssertNil(session?.status)  // status is nullable, should be nil when missing
+        XCTAssertEqual(session?.mode, .payment)
+        XCTAssertEqual(session?.paymentStatus, .unpaid)
+        XCTAssertTrue(session?.livemode ?? false)
+        XCTAssertEqual(session?.created, Date(timeIntervalSince1970: 1609459200))
+        XCTAssertEqual(session?.expiresAt, Date(timeIntervalSince1970: 1609545600))
+        XCTAssertEqual(session?.paymentMethodTypes, [.card])
+
+        // Optional fields should be nil
+        XCTAssertNil(session?.amountTotal)
+        XCTAssertNil(session?.currency)
         XCTAssertNil(session?.clientSecret)
         XCTAssertNil(session?.paymentIntentId)
         XCTAssertNil(session?.setupIntentId)
@@ -92,16 +115,19 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session?.customerEmail)
         XCTAssertNil(session?.url)
         XCTAssertNil(session?.returnUrl)
-        XCTAssertEqual(session?.paymentMethodTypes, [])
     }
 
     func testDecodedObjectWithSetupMode() {
         let setupModeJson: [String: Any] = [
             "id": "cs_test_setup",
             "object": "checkout.session",
+            "livemode": false,
+            "created": 1609459200,
+            "expires_at": 1609545600,
             "status": "open",
             "mode": "setup",
             "payment_status": "no_payment_required",
+            "payment_method_types": ["card"],
             "setup_intent": "seti_test123456",
         ]
 
@@ -109,6 +135,7 @@ class STPCheckoutSessionTest: XCTestCase {
 
         XCTAssertNotNil(session)
         XCTAssertEqual(session?.mode, .setup)
+        XCTAssertEqual(session?.status, .open)
         XCTAssertEqual(session?.paymentStatus, .noPaymentRequired)
         XCTAssertEqual(session?.setupIntentId, "seti_test123456")
         XCTAssertNil(session?.paymentIntentId)
