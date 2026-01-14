@@ -157,6 +157,10 @@ modules:
   docs:
     output: docs/stripeissuing
     readme: StripeIssuing/README.md
+    include:
+       - StripeCore
+       - StripePayments
+       - StripePaymentsUI
   size_report: true
 
 - podspec: StripeApplePay.podspec
@@ -236,10 +240,11 @@ pod_push_order:
 - StripePayments.podspec
 - StripePaymentsUI.podspec
 - StripePaymentSheet.podspec
+- StripeIssuing.podspec
 - Stripe.podspec
 - StripeIdentity.podspec
 - StripeCardScan.podspec
 - StripeFinancialConnections.podspec
 - StripeConnect.podspec
 - StripeCryptoOnramp.podspec
-- StripeIssuing.podspec
+

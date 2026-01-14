@@ -172,6 +172,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
+        STPTelemetryClient.shared.sendTelemetryData()
         let canMakePayments: Bool = {
             if #available(iOS 15.0, *) {
                 // On iOS 15+, Apple Pay can be displayed even though there are no cards because Apple added the ability for customers to add cards in the payment sheet (see WWDC '21 "What's new in Wallet and Apple Pay")
