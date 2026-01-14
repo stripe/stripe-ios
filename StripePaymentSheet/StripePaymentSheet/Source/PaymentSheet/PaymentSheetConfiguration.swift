@@ -303,7 +303,7 @@ extension PaymentSheet {
                         walletPaymentMethodTypes: walletTypes,
                         hasSPM: !loadResult.savedPaymentMethods.isEmpty,
                         integrationShape: analyticsHelper.integrationShape
-                    )
+                    ),
                 ]
 
                 experiments.forEach { experiment in
