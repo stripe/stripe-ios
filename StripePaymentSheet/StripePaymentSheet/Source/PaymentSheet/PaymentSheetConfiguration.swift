@@ -287,20 +287,35 @@ extension PaymentSheet {
                     walletTypes.append("link")
                 }
 
-                let horizontalModeExperiment = OCSMobileHorizontalModeAA(
-                    arbId: arbId,
-                    elementsSession: loadResult.elementsSession,
-                    displayedPaymentMethodTypes: displayedPaymentMethods,
-                    walletPaymentMethodTypes: walletTypes,
-                    hasSPM: !loadResult.savedPaymentMethods.isEmpty,
-                    integrationShape: analyticsHelper.integrationShape
-                )
+                if elementsSession.experimentsData?.experimentAssignments[OCSMobileHorizontalModeAA.experimentName] != nil {
+                    let horizontalModeExperimentAA = OCSMobileHorizontalModeAA(
+                        arbId: arbId,
+                        elementsSession: loadResult.elementsSession,
+                        displayedPaymentMethodTypes: displayedPaymentMethods,
+                        walletPaymentMethodTypes: walletTypes,
+                        hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
+                    // Log experiment exposure
+                    analyticsHelper.logExposure(experiment: horizontalModeExperimentAA)
+                    // Return vertical for now (AA)
+                    resolvedPaymentMethodLayout = .vertical
+                }
 
-                // Log experiment exposure
-                analyticsHelper.logExposure(experiment: horizontalModeExperiment)
-
-                // Return vertical for now (AA)
-                resolvedPaymentMethodLayout = .vertical
+                if elementsSession.experimentsData?.experimentAssignments[OCSMobileHorizontalMode.experimentName] != nil {
+                    var horizontalModeExperiment = OCSMobileHorizontalMode(
+                        arbId: arbId,
+                        elementsSession: loadResult.elementsSession,
+                        displayedPaymentMethodTypes: displayedPaymentMethods,
+                        walletPaymentMethodTypes: walletTypes,
+                        hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
+                    // Log experiment exposure
+                    analyticsHelper.logExposure(experiment: horizontalModeExperiment)
+                    // Return horizontal for treatment and vertical otherwise
+                    resolvedPaymentMethodLayout = horizontalModeExperiment.group == .treatment ? .horizontal : .vertical
+                }
             }
             self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
             return resolvedPaymentMethodLayout
