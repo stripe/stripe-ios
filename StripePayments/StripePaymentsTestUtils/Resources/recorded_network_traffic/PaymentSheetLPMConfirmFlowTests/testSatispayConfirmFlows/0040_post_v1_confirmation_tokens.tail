@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=vETIZ2_cKPtnqjwnWsYnuSFd-bqgidF-b_oz4RROn35A5iSLm3TVdT0J3qie8FONjcoT-zoLxHDxWuHB
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Sdh4IhipqvDdCCmgG6vGnr4dVPwz-lB4BanYIShDTJTD8MbNVzXTn98K5tm4iJuirh7oxI9fJZQagUZ3
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_XqXB0r3EMVBu7F
-Content-Length: 782
+request-id: req_yBJNknDQ8kOmLK
+Content-Length: 812
 Vary: Origin
-Date: Thu, 13 Nov 2025 16:00:43 GMT
-original-request: req_XqXB0r3EMVBu7F
+Date: Wed, 14 Jan 2026 20:18:13 GMT
+original-request: req_yBJNknDQ8kOmLK
 stripe-version: 2020-08-27
-idempotency-key: cab1e15b-f0a5-4f13-a975-27ac6e03ca89
+idempotency-key: ddce9c22-1fd8-4783-82bf-1c77ebb53e50
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +26,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=EUR&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=satispay&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=satispay&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1ST2wxIFbdis1OxTO25eGYYp",
+  "id" : "ctoken_1SpaW9IFbdis1OxTn7OUDDBr",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1763092843,
+  "expires_at" : 1768465093,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -54,9 +54,10 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "satispay" : {
 
     },
-    "type" : "satispay"
+    "type" : "satispay",
+    "customer_account" : null
   },
-  "created" : 1763049643,
+  "created" : 1768421893,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

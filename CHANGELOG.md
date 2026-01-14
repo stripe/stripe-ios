@@ -1,4 +1,6 @@
 ## X.Y.Z - changes pending release 
+### PaymentSheet
+* [Fixed] Fixed an issue where confirming fails when setting `setupFutureUsageValues` on the `IntentConfiguration.paymentMethodOptions` parameter for Cash App Pay, Satispay, PayPal, Amazon Pay, Revolut Pay, or Klarna due to missing `mandate_data`.
 
 ## 25.4.0 2026-01-12
 ### All
