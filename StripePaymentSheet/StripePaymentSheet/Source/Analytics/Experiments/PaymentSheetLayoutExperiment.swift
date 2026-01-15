@@ -57,8 +57,45 @@ struct PaymentSheetLayoutExperiment {
     }
 }
 
+struct OCSMobileHorizontalMode: LoggableExperiment {
+    private static let experimentName = "ocs_mobile_horizontal_mode"
+    private let experiment: PaymentSheetLayoutExperiment
+
+    let name: String = experimentName
+    let arbId: String
+
+    var group: ExperimentGroup {
+        experiment.group
+    }
+
+    var dimensions: [String: Any] {
+        experiment.dimensionsDictionary
+    }
+
+    init(
+        arbId: String,
+        elementsSession: STPElementsSession,
+        displayedPaymentMethodTypes: [String],
+        walletPaymentMethodTypes: [String],
+        hasSPM: Bool,
+        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
+    ) {
+        let experiment = PaymentSheetLayoutExperiment(
+            experimentName: Self.experimentName,
+            elementsSession: elementsSession,
+            displayedPaymentMethodTypes: displayedPaymentMethodTypes,
+            walletPaymentMethodTypes: walletPaymentMethodTypes,
+            hasSPM: hasSPM,
+            integrationShape: integrationShape
+        )
+
+        self.arbId = arbId
+        self.experiment = experiment
+    }
+}
+
 struct OCSMobileHorizontalModeAA: LoggableExperiment {
-    static let experimentName = "ocs_mobile_horizontal_mode_aa"
+    private static let experimentName = "ocs_mobile_horizontal_mode_aa"
     private let experiment: PaymentSheetLayoutExperiment
 
     let name: String = experimentName
