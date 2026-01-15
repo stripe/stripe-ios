@@ -30,7 +30,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(logInLoadingLabel.waitForNonExistence(timeout: .networkTimeout), "Loading indicator should disappear")
 
         emailField.tap()
-        emailField.typeText("onramptest@stripe.com")
+        emailField.typeText("onramptest2@stripe.com")
 
         let passwordField = app.secureTextFields["Enter password"].firstMatch
         XCTAssertTrue(passwordField.exists, "Password field should exist")
@@ -110,7 +110,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         logOutMenuItem.tap()
 
         // Step 8: Authenticate again using seamless sign-in (no OTP, stored auth token from prior login).
-        let seamlessSignInLabel = app.staticTexts["Continue as onramptest@stripe.com?"]
+        let seamlessSignInLabel = app.staticTexts["Continue as onramptest2@stripe.com?"]
         XCTAssertTrue(seamlessSignInLabel.waitForExistence(timeout: .networkTimeout), "Seamless sign-in label should exist")
 
         let seamlessSignInLoadingLabel = app.staticTexts["Loading…"].firstMatch
