@@ -26,8 +26,6 @@ class STPCheckoutSessionTest: XCTestCase {
         let requiredFields = [
             "id",
             "livemode",
-            "created",
-            "expires_at",
             "mode",
             "payment_status",
             "payment_method_types",
@@ -58,8 +56,6 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.paymentIntentId, "pi_test123456789")
         XCTAssertNil(session.setupIntentId)
         XCTAssertFalse(session.livemode)
-        XCTAssertEqual(session.created, Date(timeIntervalSince1970: 1609459200))
-        XCTAssertEqual(session.expiresAt, Date(timeIntervalSince1970: 1609545600))
         XCTAssertEqual(session.customerId, "cus_test123456")
         XCTAssertEqual(session.customerEmail, "test@example.com")
         XCTAssertEqual(session.url?.absoluteString, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
@@ -85,8 +81,6 @@ class STPCheckoutSessionTest: XCTestCase {
             "id": "cs_test_minimal",
             "object": "checkout.session",
             "livemode": true,
-            "created": 1609459200,
-            "expires_at": 1609545600,
             "mode": "payment",
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
@@ -101,8 +95,6 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session?.mode, .payment)
         XCTAssertEqual(session?.paymentStatus, .unpaid)
         XCTAssertTrue(session?.livemode ?? false)
-        XCTAssertEqual(session?.created, Date(timeIntervalSince1970: 1609459200))
-        XCTAssertEqual(session?.expiresAt, Date(timeIntervalSince1970: 1609545600))
         XCTAssertEqual(session?.paymentMethodTypes, [.card])
 
         // Optional fields should be nil
@@ -122,8 +114,6 @@ class STPCheckoutSessionTest: XCTestCase {
             "id": "cs_test_setup",
             "object": "checkout.session",
             "livemode": false,
-            "created": 1609459200,
-            "expires_at": 1609545600,
             "status": "open",
             "mode": "setup",
             "payment_status": "no_payment_required",

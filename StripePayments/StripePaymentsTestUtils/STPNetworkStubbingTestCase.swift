@@ -114,6 +114,7 @@ import XCTest
                         "merchant_integration_version", // Contains the SDK version number
                         "elements_session_config_id", // Random string
                         "hcaptcha_token", // Random string
+                        "eid=", // Ephemeral ID, random UUID
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
