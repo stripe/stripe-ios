@@ -115,6 +115,8 @@ import XCTest
                         "elements_session_config_id", // Random string
                         "hcaptcha_token", // Random string
                         "eid=", // Ephemeral ID, random UUID
+                        "browser_locale", // Locale varies by machine
+                        "browser_timezone", // Timezone varies by machine
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
