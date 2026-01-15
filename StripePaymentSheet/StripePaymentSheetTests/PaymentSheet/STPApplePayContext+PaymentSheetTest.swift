@@ -5,7 +5,6 @@
 //  Created by Yuki Tokuhiro on 8/2/23.
 //
 
-@testable import StripeApplePay
 @_spi(STP) import StripeCore
 @testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
