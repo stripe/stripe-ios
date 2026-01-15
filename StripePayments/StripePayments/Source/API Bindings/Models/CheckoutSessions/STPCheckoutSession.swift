@@ -138,16 +138,12 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
+              let stripeId = dict["session_id"] as? String,
               let livemode = dict["livemode"] as? Bool,
               let rawMode = dict["mode"] as? String,
               let rawPaymentStatus = dict["payment_status"] as? String,
               let paymentMethodTypeStrings = dict["payment_method_types"] as? [String]
         else {
-            return nil
-        }
-
-        // Support both standard API (uses "id") and init API (uses "session_id")
-        guard let stripeId = dict["session_id"] as? String ?? dict["id"] as? String else {
             return nil
         }
 
