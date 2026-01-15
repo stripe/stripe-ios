@@ -271,10 +271,9 @@ extension PaymentSheet {
                 // Check experiment to decide layout
                 let elementsSession = loadResult.elementsSession
                 let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
-                guard let arbId = elementsSession.experimentsData?.arbId,
-                      elementsSession.experimentsData?.experimentAssignments[OCSMobileHorizontalModeAA.experimentName] != nil else {
-                    // Default to vertical (control) if no experiment assignment
-                    resolvedPaymentMethodLayout = .vertical
+                // Default to vertical (control)
+                resolvedPaymentMethodLayout = .vertical
+                guard let arbId = elementsSession.experimentsData?.arbId else {
                     self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
                     return resolvedPaymentMethodLayout
                 }
@@ -288,20 +287,34 @@ extension PaymentSheet {
                     walletTypes.append("link")
                 }
 
-                let horizontalModeExperiment = OCSMobileHorizontalModeAA(
-                    arbId: arbId,
-                    elementsSession: loadResult.elementsSession,
-                    displayedPaymentMethodTypes: displayedPaymentMethods,
-                    walletPaymentMethodTypes: walletTypes,
-                    hasSPM: !loadResult.savedPaymentMethods.isEmpty,
-                    integrationShape: analyticsHelper.integrationShape
-                )
+                let experiments: [LoggableExperiment] = [
+                    OCSMobileHorizontalModeAA(
+                        arbId: arbId,
+                        elementsSession: loadResult.elementsSession,
+                        displayedPaymentMethodTypes: displayedPaymentMethods,
+                        walletPaymentMethodTypes: walletTypes,
+                        hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                        integrationShape: analyticsHelper.integrationShape
+                    ),
+                    OCSMobileHorizontalMode(
+                        arbId: arbId,
+                        elementsSession: loadResult.elementsSession,
+                        displayedPaymentMethodTypes: displayedPaymentMethods,
+                        walletPaymentMethodTypes: walletTypes,
+                        hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                        integrationShape: analyticsHelper.integrationShape
+                    ),
+                ]
 
-                // Log experiment exposure
-                analyticsHelper.logExposure(experiment: horizontalModeExperiment)
-
-                // Return vertical for now (AA)
-                resolvedPaymentMethodLayout = .vertical
+                experiments.forEach { experiment in
+                    let isExperimentActive = elementsSession.experimentsData?.experimentAssignments[experiment.name] != nil
+                    if isExperimentActive {
+                        // Log experiment exposure
+                        analyticsHelper.logExposure(experiment: experiment)
+                        // Return horizontal for treatment and vertical otherwise
+                        resolvedPaymentMethodLayout = experiment.group == .treatment ? .horizontal : .vertical
+                    }
+                }
             }
             self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
             return resolvedPaymentMethodLayout

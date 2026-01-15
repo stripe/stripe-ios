@@ -613,9 +613,26 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentMethodLayoutAutomaticWithHorizontalExperiment() {
+        configuration.paymentMethodLayout = .automatic
+        stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: """
+      {
+      "ocs_mobile_horizontal_mode": "treatment",
+      "ocs_mobile_horizontal_mode_aa": "control_test"
+      }
+      """)
+        preparePaymentSheet()
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentMethodLayoutAutomaticWithHorizontalExperimentAA() {
         configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponseWithHorizontalExperiment()
+        stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: """
+      {
+      "ocs_mobile_horizontal_mode_aa": "control_test"
+      }
+      """)
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -1216,8 +1233,15 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubConsumerSession()
     }
 
-    private func stubNewCustomerResponseWithHorizontalExperiment() {
-        stubSessions(fileMock: .elements_sessions_paymentMethod_savedPM_horizontalExperiment_200)
+    private func stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: String) {
+        stubSessions(
+            fileMock: .elements_sessions_paymentMethod_savedPM_horizontalExperiment_200,
+            responseCallback: { data in
+                var template = String(data: data, encoding: .utf8)!
+                template = template.replacingOccurrences(of: "[EXPERIMENT_ASSIGNMENTS_HERE]", with: experimentAssignments)
+                return template.data(using: .utf8)!
+            }
+        )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
         stubConsumerSession()
