@@ -455,7 +455,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }()
 
         // Confirm saved SEPA with every confirm variation
-        for intentKind in IntentKind.allCases {
+        for intentKind in [IntentKind.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent] {
             for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
 
                 // Create elements session with customer configuration for proper ephemeral keys
