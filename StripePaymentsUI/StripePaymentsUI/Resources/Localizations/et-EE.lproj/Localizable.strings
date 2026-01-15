@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%1$@ konto lõpuga %2$@";
 
-"%1$@ and %2$@" = "%1$@ ja %2$@";
-
 "%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
 
 "%1$@ is not accepted" = "%1$@ pole aktsepteeritud";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Kinnitage oma %@";
 
-"Credit" = "Krediit";
-
-"Debit" = "Deebet";
-
 "Invalid data." = "Valed andmed.";
 
 "MM / YY" = "KK / AA";
 
 "MM/YY" = "KK/AA";
 
-"Only %1$@ cards are accepted" = "Vastu võetakse ainult %1$@ kaarte";
+"Only credit and prepaid cards are accepted" = "Aktsepteeritakse ainult krediit- ja ettemakstud kaarte";
+
+"Only credit cards are accepted" = "Aktsepteeritakse ainult krediitkaarte";
+
+"Only debit and credit cards are accepted" = "Aktsepteeritakse ainult deebet- ja krediitkaarte";
+
+"Only debit and prepaid cards are accepted" = "Aktsepteeritakse ainult deebet- ja ettemakstud kaarte";
+
+"Only debit cards are accepted" = "Aktsepteeritakse ainult deebetkaarte";
+
+"Only prepaid cards are accepted" = "Aktsepteeritakse ainult ettemakstud kaarte";
 
 "Postal Code" = "Sihtnumber";
-
-"Prepaid" = "Ettemakstud";
 
 "Shipping Address" = "Tarneaadress";
 

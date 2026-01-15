@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '25.3.0'
+  s.version                        = '25.4.0'
 
   s.summary                        = 'Accept online payments using Stripe.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
@@ -23,4 +23,5 @@ Pod::Spec.new do |s|
   s.dependency                       'StripeApplePay', s.version.to_s
   s.dependency                       'StripePayments', s.version.to_s
   s.dependency                       'StripePaymentsUI', s.version.to_s
+  s.dependency                       'StripeIssuing', s.version.to_s
 end

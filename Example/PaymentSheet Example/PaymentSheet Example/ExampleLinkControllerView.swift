@@ -76,6 +76,7 @@ struct ExampleLinkControllerView: View {
                                 TextField("Enter country code", text: $country)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                     .autocapitalization(.allCharacters)
+                                    .autocorrectionDisabled()
                             }
                         }
                     }

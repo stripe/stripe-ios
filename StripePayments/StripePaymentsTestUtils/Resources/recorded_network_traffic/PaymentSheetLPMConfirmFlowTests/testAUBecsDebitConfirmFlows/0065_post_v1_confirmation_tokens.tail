@@ -1,0 +1,66 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=HyjMP7n8lsAK4FiOOQ5qRbqvpLzcSlSqJTJA3E5uHXrgqFCUCb5XEPtg2LAQY4PEjqeD9e6GzpRRr_41
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_VG8MOJaweMQHrH
+Content-Length: 951
+Vary: Origin
+Date: Wed, 14 Jan 2026 20:28:04 GMT
+original-request: req_VG8MOJaweMQHrH
+stripe-version: 2020-08-27
+idempotency-key: e80046f6-b56d-4194-92e3-b19d63264bcb
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[mode]=setup&client_context\[payment_method_types]\[0]=au_becs_debit&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[au_becs_debit%5Baccount_number%5D]=000123456&payment_method_data\[au_becs_debit%5Bbsb_number%5D]=000000&payment_method_data\[billing_details%5Bemail%5D]=example%40link\.com&payment_method_data\[billing_details%5Bname%5D]=Tester%20McTesterface&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=au_becs_debit&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
+
+{
+  "id" : "ctoken_1SpafgF7QokQdxBydaQV9q98",
+  "setup_intent" : null,
+  "livemode" : false,
+  "shipping" : null,
+  "expires_at" : 1768465684,
+  "return_url" : "https:\/\/foo.com",
+  "setup_future_usage" : "off_session",
+  "object" : "confirmation_token",
+  "payment_method_preview" : {
+    "allow_redisplay" : "unspecified",
+    "billing_details" : {
+      "email" : "example@link.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Tester McTesterface",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "customer" : null,
+    "au_becs_debit" : {
+      "bsb_number" : "000000",
+      "fingerprint" : "Ywo370ZoKyYRnGCA",
+      "last4" : "3456"
+    },
+    "type" : "au_becs_debit",
+    "customer_account" : null
+  },
+  "created" : 1768422484,
+  "payment_intent" : null,
+  "use_stripe_sdk" : true,
+  "payment_method_options" : null
+}

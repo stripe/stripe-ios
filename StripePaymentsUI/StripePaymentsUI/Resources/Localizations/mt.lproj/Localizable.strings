@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "Kont ta' %1$@ li jintemm biċ-ċifri %2$@";
 
-"%1$@ and %2$@" = "%1$@ u %2$@";
-
 "%1$@ ending in %2$@" = "%1$@ li jispiċċa %2$@";
 
 "%1$@ is not accepted" = "%1$@ mhix aċċettata";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Ikkonferma l-%@ tiegħek";
 
-"Credit" = "Credit";
-
-"Debit" = "Debit";
-
 "Invalid data." = "Data invalida.";
 
 "MM / YY" = "XX / SS";
 
 "MM/YY" = "XX/SS";
 
-"Only %1$@ cards are accepted" = "Il-karti %1$@ biss jiġu aċċettati";
+"Only credit and prepaid cards are accepted" = "Huma aċċettati biss karti tal-kreditu u karti mħallsa minn qabel";
+
+"Only credit cards are accepted" = "Huma aċċettati biss karti ta' kreditu";
+
+"Only debit and credit cards are accepted" = "Huma aċċettati biss karti tad-debitu u tal-kreditu";
+
+"Only debit and prepaid cards are accepted" = "Huma aċċettati biss karti tad-debitu u karti mħallsa minn qabel";
+
+"Only debit cards are accepted" = "Huma aċċettati biss karti tad-debitu";
+
+"Only prepaid cards are accepted" = "Huma aċċettati biss karti mħallsa minn qabel";
 
 "Postal Code" = "Kodiċi Postali";
-
-"Prepaid" = "Prepaid";
 
 "Shipping Address" = "L-Indirizz tat-Trasport tal-Merkanzija";
 

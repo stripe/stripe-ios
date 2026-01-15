@@ -8,8 +8,6 @@
 
 "%1$@ account ending in %2$@" = "%1$@ сметка, завършваща на %2$@";
 
-"%1$@ and %2$@" = "%1$@ и %2$@";
-
 "%1$@ ending in %2$@" = "%1$@ завършващо на %2$@";
 
 "%1$@ is not accepted" = "%1$@ не се приема";
@@ -32,21 +30,25 @@
 
 "Confirm your %@" = "Потвърдете своя %@";
 
-"Credit" = "Кредитна";
-
-"Debit" = "Дебитна";
-
 "Invalid data." = "Невалидни данни.";
 
 "MM / YY" = "ММ / ГГ";
 
 "MM/YY" = "ММ/ГГ";
 
-"Only %1$@ cards are accepted" = "Приемат се само %1$@ банкови карти";
+"Only credit and prepaid cards are accepted" = "Приемат се само кредитни и предплатени банкови карти";
+
+"Only credit cards are accepted" = "Приемат се само кредитни банкови карти";
+
+"Only debit and credit cards are accepted" = "Приемат се само дебитни и кредитни банкови карти";
+
+"Only debit and prepaid cards are accepted" = "Приемат се само дебитни и предплатени банкови карти";
+
+"Only debit cards are accepted" = "Приемат се само дебитни банкови карти";
+
+"Only prepaid cards are accepted" = "Приемат се само предплатени банкови карти";
 
 "Postal Code" = "Пощенски код";
-
-"Prepaid" = "Предплатена";
 
 "Shipping Address" = "Адрес за доставка";
 
