@@ -24,7 +24,7 @@ class STPCheckoutSessionTest: XCTestCase {
 
         // Required fields per API spec (non-nullable)
         let requiredFields = [
-            "id",
+            "session_id",
             "livemode",
             "mode",
             "payment_status",
@@ -78,7 +78,7 @@ class STPCheckoutSessionTest: XCTestCase {
     func testDecodedObjectWithMinimalRequiredFields() {
         // All required fields per API spec, but no optional fields
         let minimalJson: [String: Any] = [
-            "id": "cs_test_minimal",
+            "session_id": "cs_test_minimal",
             "object": "checkout.session",
             "livemode": true,
             "mode": "payment",
@@ -111,7 +111,7 @@ class STPCheckoutSessionTest: XCTestCase {
 
     func testDecodedObjectWithSetupMode() {
         let setupModeJson: [String: Any] = [
-            "id": "cs_test_setup",
+            "session_id": "cs_test_setup",
             "object": "checkout.session",
             "livemode": false,
             "status": "open",
