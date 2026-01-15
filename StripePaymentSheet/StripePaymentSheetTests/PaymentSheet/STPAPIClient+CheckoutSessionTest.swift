@@ -5,12 +5,12 @@
 //  Created by Nick Porter on 1/15/26.
 //
 
-import XCTest
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
+import XCTest
 
 final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
