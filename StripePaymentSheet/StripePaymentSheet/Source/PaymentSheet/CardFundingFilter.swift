@@ -53,6 +53,10 @@ struct CardFundingFilter: Equatable {
         if allowedFundingTypes == .all {
             return true
         }
+        // Be permissive, if funding type is unknown let's accept it
+        if cardFundingType == .other {
+            return true
+        }
         let fundingCategory = cardFundingType.asFundingType
         return allowedFundingTypes.contains(fundingCategory)
     }
