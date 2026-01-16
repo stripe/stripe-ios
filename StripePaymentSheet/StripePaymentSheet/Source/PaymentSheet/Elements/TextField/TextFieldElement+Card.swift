@@ -205,19 +205,20 @@ extension TextFieldElement {
             guard text.count >= 6 else { return nil }
 
             // Read funding data from STPBINController's cache
-            let binRange = binController.mostSpecificBINRange(forNumber: text)
+            let binRanges = binController.binRanges(forNumber: text)
 
+            // Smoe cards may have dual funding types, if any are disallowed block the card
             // Only warn if we have real funding data from the metadata service (not hardcoded fallback data)
-            guard !binRange.isHardcoded else { return nil }
-
-            if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
-                guard let warningMessage = cardFundingFilter.allowedFundingTypesDisplayString() else {
-                    stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
-                    return nil
+            for binRange in binRanges where !binRange.isHardcoded {
+                if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
+                    guard let warningMessage = cardFundingFilter.allowedFundingTypesDisplayString() else {
+                        stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
+                        return nil
+                    }
+                    return warningMessage
                 }
-                return warningMessage
             }
-
+            
             return nil
         }
     }
