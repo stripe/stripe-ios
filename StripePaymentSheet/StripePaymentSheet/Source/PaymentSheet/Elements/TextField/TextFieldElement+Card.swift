@@ -218,7 +218,7 @@ extension TextFieldElement {
                     return warningMessage
                 }
             }
-            
+
             return nil
         }
     }
