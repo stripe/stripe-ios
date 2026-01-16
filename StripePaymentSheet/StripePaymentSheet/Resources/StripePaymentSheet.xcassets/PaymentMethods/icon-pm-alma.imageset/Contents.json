@@ -1,22 +1,25 @@
 {
-  "images": [
+  "images" : [
     {
-      "filename": "icon-pm-alma.svg",
-      "idiom": "universal"
+      "filename" : "icon-pm-alma.svg",
+      "idiom" : "universal"
     },
     {
-      "appearances": [
+      "appearances" : [
         {
-          "appearance": "luminosity",
-          "value": "dark"
+          "appearance" : "luminosity",
+          "value" : "dark"
         }
       ],
-      "filename": "icon-pm-alma_dark.svg",
-      "idiom": "universal"
+      "filename" : "icon-pm-alma_dark.svg",
+      "idiom" : "universal"
     }
   ],
-  "info": {
-    "author": "xcode",
-    "version": 1
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
   }
 }

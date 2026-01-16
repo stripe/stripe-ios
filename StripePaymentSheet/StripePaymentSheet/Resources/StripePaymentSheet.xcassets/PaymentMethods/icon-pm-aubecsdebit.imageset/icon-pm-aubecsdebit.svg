@@ -1,1 +1,6 @@
-<svg width="13" height="13" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><path d="M4.063 6.094v5.281H5.28V6.094h2.44v5.281h1.218V6.094h2.438v5.281H12a1 1 0 011 1V13H0v-.625a1 1 0 011-1h.625V6.094h2.438zM6.5 0c3.803 2.09 5.835 3.21 6.094 3.359a.813.813 0 01-.422 1.516H.828a.812.812 0 01-.422-1.516C.666 3.209 2.696 2.089 6.5 0z" id="bank-a"/></defs><g fill="none" fill-rule="evenodd"><path fill="#FFF" d="M-653-167H627V961H-653z"/><mask id="bank-b" fill="#fff"><use xlink:href="#bank-a"/></mask><use fill="#000" xlink:href="#bank-a"/><g mask="url(#bank-b)" fill="#2B2D50"><path d="M0 0h13v13H0z"/></g></g></svg>
+<svg width="13" height="13" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <path d="M4.063 6.094v5.281H5.28V6.094h2.44v5.281h1.218V6.094h2.438v5.281H12a1 1 0 011 1V13H0v-.625a1 1 0 011-1h.625V6.094h2.438zM6.5 0c3.803 2.09 5.835 3.21 6.094 3.359a.813.813 0 01-.422 1.516H.828a.812.812 0 01-.422-1.516C.666 3.209 2.696 2.089 6.5 0z" id="bank-a"/>
+    </defs>
+    <use href="#bank-a" fill="#2B2D50"/>
+  </svg>
