@@ -2,6 +2,10 @@
     {
         "type": "afterpay_clearpay",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-afterpay@3x-6776ded2b20306c85d02639aea1e7dc5.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-afterpay-abedc6b87e4e9f917e22bbe6648ba809.svg"
+        },
         "fields": [
             {
                 "type": "afterpay_header"
@@ -46,6 +50,10 @@
     {
         "type": "affirm",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-affirm@3x-d2623d995950761883fca048ce6e0550.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-affirm-cd0d27fdc6cb5ca18c77645c577c8b9b.svg"
+        },
         "fields": [
             {
                 "type": "affirm_header"
@@ -65,11 +73,25 @@
                     "type": "canceled"
                 }
             }
+        },
+        "localization": {
+            "content": {
+                "payment_method_name": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Affirm"
+                    }
+                }
+            }
         }
     },
     {
         "type": "klarna",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-klarna@3x-cbd108f6432733bea9ef16827d10f5c5.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-klarna-4dbba76fd0f11a84add590c6169b2e80.svg"
+        },
         "fields": [
             {
                 "type": "klarna_header"
@@ -118,6 +140,10 @@
     {
         "type": "ideal",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-ideal@3x-fc5387c2139f55b84777c646208df7ee.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-ideal-608d5ba5730f82c25f122960ccaa9836.svg"
+        },
         "fields": [
             {
                 "type": "name",
@@ -138,56 +164,60 @@
                 "translation_id": "upe.labels.ideal.bank",
                 "items": [
                     {
-                      "display_text": "ABN Amro",
-                      "api_value": "abn_amro"
+                        "display_text": "ABN Amro",
+                        "api_value": "abn_amro"
                     },
                     {
-                      "display_text": "ASN Bank",
-                      "api_value": "asn_bank"
+                        "display_text": "ASN Bank",
+                        "api_value": "asn_bank"
                     },
                     {
-                      "display_text": "bunq B.V.",
-                      "api_value": "bunq"
+                        "display_text": "bunq B.V.",
+                        "api_value": "bunq"
                     },
                     {
-                      "display_text": "ING Bank",
-                      "api_value": "ing"
+                        "display_text": "ING Bank",
+                        "api_value": "ing"
                     },
                     {
-                      "display_text": "Knab",
-                      "api_value": "knab"
+                        "display_text": "Knab",
+                        "api_value": "knab"
                     },
                     {
-                      "display_text": "N26",
-                      "api_value": "n26"
+                        "display_text": "N26",
+                        "api_value": "n26"
                     },
                     {
-                      "display_text": "Rabobank",
-                      "api_value": "rabobank"
+                        "display_text": "Nationale-Nederlanden",
+                        "api_value": "nn"
                     },
                     {
-                      "display_text": "RegioBank",
-                      "api_value": "regiobank"
+                        "display_text": "Rabobank",
+                        "api_value": "rabobank"
                     },
                     {
-                      "display_text": "Revolut",
-                      "api_value": "revolut"
+                        "display_text": "RegioBank",
+                        "api_value": "regiobank"
                     },
                     {
-                      "display_text": "SNS Bank",
-                      "api_value": "sns_bank"
+                        "display_text": "Revolut",
+                        "api_value": "revolut"
                     },
                     {
-                      "display_text": "Triodos Bank",
-                      "api_value": "triodos_bank"
+                        "display_text": "SNS Bank",
+                        "api_value": "sns_bank"
                     },
                     {
-                      "display_text": "Van Lanschot",
-                      "api_value": "van_lanschot"
+                        "display_text": "Triodos Bank",
+                        "api_value": "triodos_bank"
                     },
                     {
-                      "display_text": "Yoursafe",
-                      "api_value": "yoursafe"
+                        "display_text": "Van Lanschot",
+                        "api_value": "van_lanschot"
+                    },
+                    {
+                        "display_text": "Yoursafe",
+                        "api_value": "yoursafe"
                     }
                 ],
                 "api_path": {
@@ -197,6 +227,10 @@
             {
                 "type": "placeholder",
                 "for": "billing_address"
+            },
+            {
+                "type": "placeholder",
+                "for": "sepa_mandate"
             }
         ],
         "next_action_spec": {
@@ -218,12 +252,32 @@
     {
         "type": "bancontact",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-bancontact@3x-5b31be92d86c437286200810aeaa49ce.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-bancontact-c6d62da104212dacefee6ea12a070237.svg"
+        },
         "fields": [
             {
                 "type": "name",
                 "api_path": {
                     "v1": "billing_details[name]"
                 }
+            },
+            {
+                "type": "placeholder",
+                "for": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            },
+            {
+                "type": "placeholder",
+                "for": "sepa_mandate"
             }
         ],
         "next_action_spec": {
@@ -245,6 +299,10 @@
     {
         "type": "sepa_debit",
         "async": true,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sepa@3x-2f1a402961484c52aa2880acad84afcb.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sepa-debit-e88864f53237730b8cd73f85cf8bbadf.svg"
+        },
         "fields": [
             {
                 "type": "name",
@@ -290,6 +348,10 @@
     {
         "type": "eps",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-eps@3x-a0caea1adef8d0aebc0cc61c9d5fa261.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-eps-a79e75517cae239fc4ddfa2fbdb73b46.svg"
+        },
         "fields": [
             {
                 "type": "name",
@@ -322,6 +384,10 @@
                         "api_value": "bank_austria"
                     },
                     {
+                        "display_text": "bank99 AG",
+                        "api_value": "brull_kallmus_bank_ag"
+                    },
+                    {
                         "display_text": "Bankhaus Carl Spängler & Co.AG",
                         "api_value": "bankhaus_carl_spangler"
                     },
@@ -336,10 +402,6 @@
                     {
                         "display_text": "BKS Bank AG",
                         "api_value": "bks_bank_ag"
-                    },
-                    {
-                        "display_text": "Brüll Kallmus Bank AG",
-                        "api_value": "brull_kallmus_bank_ag"
                     },
                     {
                         "display_text": "BTV VIER LÄNDER BANK",
@@ -446,6 +508,10 @@
     {
         "type": "p24",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-p24@3x-2aad3ef3d17848230d8152ecca7b46d6.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-p24-680f81150a94ae5da954d8bde657486e.svg"
+        },
         "fields": [
             {
                 "type": "name",
@@ -556,6 +622,10 @@
                         "api_value": "toyota_bank"
                     },
                     {
+                        "display_text": "VeloBank",
+                        "api_value": "velobank"
+                    },
+                    {
                         "display_text": "Volkswagen Bank",
                         "api_value": "volkswagen_bank"
                     }
@@ -588,6 +658,12 @@
     {
         "type": "paypal",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypal@3x-5227ab4fca3d36846bd6622f495cdf4b.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypal_dark@3x-26040e151c8f87187da2f997791fcc31.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypal-0383a0ae3febbf0c0d8e721737884ab0.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypal_dark-9bc6192b9cd4f215e9666611b097e460.svg"
+        },
         "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
@@ -608,6 +684,10 @@
     {
         "type": "au_becs_debit",
         "async": true,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-aubecsdebit@3x-dc2a1c094b5240028a54da6b030521ce.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/bank-22fd9f78b7aff5831cfc5d4f85bfd60f.svg"
+        },
         "fields": [
             {
                 "type": "name",
@@ -660,8 +740,13 @@
     {
         "type": "revolut_pay",
         "async": false,
-        "fields": [
-        ],
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-revolutpay_short@3x-47e4b480552b0cfd1fed66a5ba3be5d2.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-revolutpay_short_dark@3x-ec3652df1f96643bd4f79d1c2b1661c6.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-revolutpay_short-3130ba1a90028dfe92a44ecb1b206de6.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-revolutpay_short_dark-07ea2f555183c5246949d9ada8eb675a.svg"
+        },
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -682,26 +767,12 @@
         "type": "amazon_pay",
         "async": false,
         "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-5694f2030b236ad5410b5b7e52bb538c.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-f932bc37514fd6dd1f66006767287085.svg",
-            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-9e42e4498e0bee515c423ef66010852f.png",
-            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-d3ef2eeefed43cea1f969c3a2a4118d8.svg"
-            },
-        "fields": []
-    },
-    {
-        "type": "alma",
-        "async": false,
-        "selector_icon": {
-          "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-9adee7a095478e23c76054e7fcb4c275.png",
-          "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-e4cbf3b2cec6b09cb0fd10d404fbbf44.svg",
-          "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-41fe66ba84194788e98548aa6e749c79.png",
-          "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-74fb7ea51cccf2e1dd530f308bed9c60.svg"
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light@3x-46eb8b8a4a252b78d7b4c3b96d4ed7ae.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-22cdec0f5f5609554a34fa62fa583f23.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
-          "confirm_response_status_specs": {
+            "confirm_response_status_specs": {
                 "requires_action": {
                     "type": "redirect_to_url"
                 }
@@ -712,6 +783,73 @@
                 },
                 "requires_action": {
                     "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "alma",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-41fe66ba84194788e98548aa6e749c79.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-24a8e21497b8fb2257ce1aa07624b9bf.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-9adee7a095478e23c76054e7fcb4c275.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-24a8e21497b8fb2257ce1aa07624b9bf.svg"
+        },
+        "fields": [],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        },
+        "buyer_messaging": {
+            "selected_payment_custom_messaging": {
+                "enabled": true,
+                "learn_more_link": "https://almapay.com/legal/general-terms-and-conditions-of-payment-with-alma"
+            }
+        },
+        "localization": {
+            "content": {
+                "payment_method_name": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Alma"
+                    }
+                },
+                "payment_method_selected": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Alma selected."
+                    }
+                },
+                "redirect_instructions": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Choose Alma to pay in 2, 3 or 4. Once your purchase is verified, you will be redirected to a page where you'll be able to securely finalize the payment in installments."
+                    }
+                },
+                "selected_payment_custom_messaging_text": {
+                    "active_version": "v2",
+                    "versions": {
+                        "v1": "Pay later with Alma.",
+                        "v2": "Pay in installments with complete peace of mind"
+                    }
+                },
+                "selected_payment_custom_messaging_terms_text": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Learn more"
+                    }
                 }
             }
         }
@@ -720,13 +858,12 @@
         "type": "sunbit",
         "async": false,
         "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-942781207fa04c8c6244490ed648c86d.png",
-            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-5c93adf3d043d1510fcdd449afa032de.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-2ebac8e19b555f2081c16591e8fe4d4a.svg",
-            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-031a417a99538497bc892f11a15dd1cb.svg"
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-a9696ab3716536d4801155fa7cbee0de.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-8c10fb207141120b576d40156767f060.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-fdcaea94ae6a18dbf86d11ac9c21a397.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-f66855f32a39171dd749d7ffa05fe986.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -741,31 +878,113 @@
                     "type": "canceled"
                 }
             }
+        },
+        "buyer_messaging": {
+            "selected_payment_custom_messaging": {
+                "enabled": true,
+                "disable_learn_more_link": true
+            }
+        },
+        "localization": {
+            "content": {
+                "payment_method_name": {
+                    "active_version": "v2",
+                    "versions": {
+                        "v1": "Sunbit",
+                        "v2": "Sunbit Pay Over Time"
+                    }
+                },
+                "payment_method_selected": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Sunbit selected."
+                    }
+                },
+                "redirect_instructions": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "After submission, you will be redirected to securely complete next steps."
+                    }
+                },
+                "selected_payment_custom_messaging_text": {
+                    "active_version": "v2",
+                    "versions": {
+                        "v1": "Pay later with Sunbit.",
+                        "v2": "Explore payment options now."
+                    }
+                },
+                "selected_payment_custom_messaging_terms_text": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Learn more"
+                    }
+                }
+            }
         }
     },
     {
         "type": "billie",
         "async": false,
         "selector_icon": {
-            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-e8200232ef6c1a997eb8705685917dcd.png",
-            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-81eb72c63b66f9e68b15287526918836.png",
-            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-12c7376f5623c109996ff8cd2f6d7a05.svg",
-            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-6c8ac5db6e80d5c186b280da0ccd0a5b.svg"
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-806f392bb92bc620a5355c8315d668d8.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-1b4c6416a8bdcc99cc79cb03c5d06b00.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-ce797ab9d9419d7f283c2edbabc4a0b9.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-96f0fe8684ec4bb7175c217a8447cad9.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
                     "type": "redirect_to_url"
                 }
-          },
+            },
             "post_confirm_handling_pi_status_specs": {
                 "succeeded": {
                     "type": "finished"
                 },
                 "requires_action": {
                     "type": "canceled"
+                }
+            }
+        },
+        "buyer_messaging": {
+            "selected_payment_custom_messaging": {
+                "enabled": true,
+                "disable_learn_more_link": true
+            }
+        },
+        "localization": {
+            "content": {
+                "payment_method_name": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Billie"
+                    }
+                },
+                "payment_method_selected": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Billie selected."
+                    }
+                },
+                "redirect_instructions": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "After submission, you will be redirected to securely complete next steps."
+                    }
+                },
+                "selected_payment_custom_messaging_text": {
+                    "active_version": "v2",
+                    "versions": {
+                        "v1": "Pay later with Billie.",
+                        "v2": "Pay later for businesses."
+                    }
+                },
+                "selected_payment_custom_messaging_terms_text": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "Learn more"
+                    }
                 }
             }
         }
@@ -779,8 +998,7 @@
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-eca5006db20571e80caec1509c680c27.svg",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-c01fc432e3c7b334f0204d011879bb1a.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -806,14 +1024,13 @@
             "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto_dark@3x-8f7b0e91b45cb56de550af37d41aac1d.png",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto_dark-f19bb5c5400c6cde94dd53b7f1ce7217.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
                     "type": "redirect_to_url"
                 }
-          },
+            },
             "post_confirm_handling_pi_status_specs": {
                 "succeeded": {
                     "type": "finished"
@@ -827,12 +1044,16 @@
     {
         "type": "mobilepay",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-mobilepay@3x-23fda467d59a37d21796b2e4abc45c11.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-mobilepay-74c4b329147fd3eba9af5c7466b70a68.svg"
+        },
         "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
                     "type": "redirect_to_url",
-                    "native_mobile_redirect_strategy" : "follow_redirects"
+                    "native_mobile_redirect_strategy": "follow_redirects"
                 }
             },
             "post_confirm_handling_pi_status_specs": {
@@ -848,6 +1069,10 @@
     {
         "type": "zip",
         "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-zip@3x-968be44bcc368ffffc4298743bae3e2c.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-zip-2630ccbb067c387dbeaa61c3281004f2.svg"
+        },
         "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
@@ -868,8 +1093,7 @@
     {
         "type": "card",
         "async": false,
-        "fields": [
-        ]
+        "fields": []
     },
     {
         "type": "cashapp",
@@ -878,222 +1102,151 @@
         "selector_icon": {
             "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
+        },
+        "partner_product_link": "https://cash.app",
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "confirm_on_mobile_device",
+                    "match_api_next_action": "cashapp_handle_redirect_or_display_qr_code",
+                    "mobile_payment_link": {
+                        "app_url": {
+                            "intent_path": "next_action[cashapp_handle_redirect_or_display_qr_code][mobile_auth_url]",
+                            "redirect_behavior": "on_mobile_only"
+                        },
+                        "hosted_instructions_url": {
+                            "intent_path": "next_action[cashapp_handle_redirect_or_display_qr_code][hosted_instructions_url]"
+                        },
+                        "qr_image_url_png": {
+                            "intent_path": "next_action[cashapp_handle_redirect_or_display_qr_code][qr_code][image_url_png]"
+                        },
+                        "qr_image_url_svg": {
+                            "intent_path": "next_action[cashapp_handle_redirect_or_display_qr_code][qr_code][image_url_svg]"
+                        },
+                        "qr_expires_at": {
+                            "intent_path": "next_action[cashapp_handle_redirect_or_display_qr_code][qr_code][expires_at]"
+                        }
+                    },
+                    "hosted_instructions_ui": {
+                        "scan_box_icon": "https://js.stripe.com/v3/fingerprinted/img/cashappFull-27016cd96727e4caa7775a86f175935e.svg",
+                        "show_testmode_simulator_button": true,
+                        "show_mobile_instruction": false,
+                        "show_copy_page_url": false,
+                        "show_download_qr_button": false,
+                        "refresh": {
+                            "countdown_seconds": 10
+                        },
+                        "page_footer": {
+                            "terms_link": "https://stripe.com/us/legal"
+                        }
+                    }
+                }
+            }
         }
     },
     {
-      "type": "grabpay",
-      "async": false,
-      "selector_icon": {
-        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay@3x-e54da1d788668a5909e4801d5c243198.png",
-        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay-97ee78fdbbf1890bdf19986e997e685d.svg"
-      },
-      "fields": []
-    },
-    {
-      "type": "fpx",
-      "async": false,
-      "selector_icon": {
-        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx@3x-305453711338125d9cb4f86ff866ba6a.png",
-        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx.svg"
-      },
-      "fields": [
-        {
-          "type": "selector",
-          "translation_id": "upe.labels.fpx.bank",
-        "items": [
-          {
-            "display_text": "Affin Bank",
-            "api_value": "affin_bank"
-          },
-          {
-            "display_text": "Alliance Bank",
-            "api_value": "alliance_bank"
-          },
-          {
-            "display_text": "AmBank",
-            "api_value": "ambank"
-          },
-          {
-            "display_text": "Bank Islam",
-            "api_value": "bank_islam"
-          },
-          {
-            "display_text": "Bank Muamalat",
-            "api_value": "bank_muamalat"
-          },
-          {
-            "display_text": "Bank Rakyat",
-            "api_value": "bank_rakyat"
-          },
-          {
-            "display_text": "BSN",
-            "api_value": "bsn"
-          },
-          {
-            "display_text": "CIMB Clicks",
-            "api_value": "cimb"
-          },
-          {
-            "display_text": "Hong Leong Bank",
-            "api_value": "hong_leong_bank"
-          },
-          {
-            "display_text": "HSBC BANK",
-            "api_value": "hsbc"
-          },
-          {
-            "display_text": "KFH",
-            "api_value": "kfh"
-          },
-          {
-            "display_text": "Maybank2E",
-            "api_value": "maybank2e"
-          },
-          {
-            "display_text": "Maybank2U",
-            "api_value": "maybank2u"
-          },
-          {
-            "display_text": "OCBC Bank",
-            "api_value": "ocbc"
-          },
-          {
-            "display_text": "Public Bank",
-            "api_value": "public_bank"
-          },
-          {
-            "display_text": "RHB Bank",
-            "api_value": "rhb"
-          },
-          {
-            "display_text": "Standard Chartered",
-            "api_value": "standard_chartered"
-          },
-          {
-            "display_text": "UOB Bank",
-            "api_value": "uob"
-          }
-        ],
-          "api_path": {
-            "v1": "fpx[bank]"
-          }
-        },
-        {
-          "type": "placeholder",
-          "for": "billing_address"
-        }
-      ],
-      "next_action_spec": {
-        "confirm_response_status_specs": {
-          "requires_action": {
-            "type": "redirect_to_url"
-          }
-        },
-        "post_confirm_handling_pi_status_specs": {
-          "succeeded": {
-            "type": "finished"
-          },
-          "requires_action": {
-            "type": "canceled"
-          }
-        }
-      }
-    },
-    {
-      "type": "alipay",
-      "async": false,
-      "fields": []
-    },
-    {
-      "type": "paynow",
-      "async": false,
-      "selector_icon": {
-        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow@3x-06fb143923e8492b0d3fe379ad6692a9.png",
-        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow-b25acf96aac928b13e6206afb8982444.svg",
-        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark@3x-d49fe128abf7fe78fdfa939c445ca2cc.png",
-        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark-d700c844535c608fd5fd4048f6a21146.svg"
-      },
-      "fields": []
-    },
-    {
-      "type": "promptpay",
-      "async": false,
-      "selector_icon": {
-        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/promptpay.png",
-        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay-8bc83c76f38f2a4d3a5f64b6229450dd.svg",
-        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay_dark-dfd2904083152023d89a8300f04a666f.svg"
-      },
-      "fields": [
-        {
-          "type": "placeholder",
-          "for": "name"
-        },
-        {
-          "type": "email",
-          "api_path": {
-            "v1": "billing_details[email]"
-          }
-        },
-        {
-          "type": "placeholder",
-          "for": "phone"
-        },
-        {
-          "type": "placeholder",
-          "for": "billing_address"
-        }
-      ]
-    },
-    {
-      "type": "twint",
-      "async": false,
-      "selector_icon": {
-        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint@3x-0d33d2bf7c7037878c2a42232362accb.png",
-        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint-d86f6ccc22b739319ca4de7c83842de0.svg"
-      },
-      "fields": [
-      ],
-      "next_action_spec": {
-        "confirm_response_status_specs": {
-          "requires_action": {
-            "type": "redirect_to_url"
-          }
-        },
-        "post_confirm_handling_pi_status_specs": {
-          "succeeded": {
-            "type": "finished"
-          },
-          "processing": {
-            "type": "finished"
-          },
-          "requires_action": {
-            "type": "canceled"
-          }
-        }
-      }
-    },
-    {
-      "type": "multibanco",
-      "async": true,
-      "selector_icon": {
-        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco@3x-ac6cc40479db7fa84dbb390ab85789cd.png",
-        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco-5823a780cf3b97484956dbb93b9ce30e.svg",
-        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark@3x-787e2e370aeae073b45e0e02ad1a9e5c.png",
-        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark-2679e8b2bc32d66da57e66cac769d628.svg"
-      },
-      "fields": [
-        {
-          "type": "email",
-          "api_path": {
-            "v1": "billing_details[email]"
-          }
-        }
-      ]
-    },
-    {
-        "type": "paypay",
+        "type": "grabpay",
         "async": false,
-        "fields": [],
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay@3x-e54da1d788668a5909e4801d5c243198.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay-97ee78fdbbf1890bdf19986e997e685d.svg"
+        },
+        "fields": []
+    },
+    {
+        "type": "fpx",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx@3x-305453711338125d9cb4f86ff866ba6a.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx.svg"
+        },
+        "fields": [
+            {
+                "type": "selector",
+                "translation_id": "upe.labels.fpx.bank",
+                "items": [
+                    {
+                        "display_text": "Affin Bank",
+                        "api_value": "affin_bank"
+                    },
+                    {
+                        "display_text": "Alliance Bank",
+                        "api_value": "alliance_bank"
+                    },
+                    {
+                        "display_text": "AmBank",
+                        "api_value": "ambank"
+                    },
+                    {
+                        "display_text": "Bank Islam",
+                        "api_value": "bank_islam"
+                    },
+                    {
+                        "display_text": "Bank Muamalat",
+                        "api_value": "bank_muamalat"
+                    },
+                    {
+                        "display_text": "Bank Rakyat",
+                        "api_value": "bank_rakyat"
+                    },
+                    {
+                        "display_text": "BSN",
+                        "api_value": "bsn"
+                    },
+                    {
+                        "display_text": "CIMB Clicks",
+                        "api_value": "cimb"
+                    },
+                    {
+                        "display_text": "Hong Leong Bank",
+                        "api_value": "hong_leong_bank"
+                    },
+                    {
+                        "display_text": "HSBC BANK",
+                        "api_value": "hsbc"
+                    },
+                    {
+                        "display_text": "KFH",
+                        "api_value": "kfh"
+                    },
+                    {
+                        "display_text": "Maybank2E",
+                        "api_value": "maybank2e"
+                    },
+                    {
+                        "display_text": "Maybank2U",
+                        "api_value": "maybank2u"
+                    },
+                    {
+                        "display_text": "OCBC Bank",
+                        "api_value": "ocbc"
+                    },
+                    {
+                        "display_text": "Public Bank",
+                        "api_value": "public_bank"
+                    },
+                    {
+                        "display_text": "RHB Bank",
+                        "api_value": "rhb"
+                    },
+                    {
+                        "display_text": "Standard Chartered",
+                        "api_value": "standard_chartered"
+                    },
+                    {
+                        "display_text": "UOB Bank",
+                        "api_value": "uob"
+                    }
+                ],
+                "api_path": {
+                    "v1": "fpx[bank]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -1106,6 +1259,162 @@
                 },
                 "requires_action": {
                     "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "alipay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alipay@3x-d216a94882c3c5422274faaec75a3c81.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/alipay-22c167d415e209c71b2ac68b7fbc9f43.svg"
+        },
+        "fields": []
+    },
+    {
+        "type": "paynow",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow@3x-06fb143923e8492b0d3fe379ad6692a9.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow-b25acf96aac928b13e6206afb8982444.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark@3x-d49fe128abf7fe78fdfa939c445ca2cc.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark-d700c844535c608fd5fd4048f6a21146.svg"
+        },
+        "fields": [],
+        "localization": {
+            "content": {
+                "payment_method_name": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "PayNow"
+                    }
+                }
+            }
+        }
+    },
+    {
+        "type": "promptpay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay@3x-0a4aa4e294f27d753dd91b91526ada61.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay-8bc83c76f38f2a4d3a5f64b6229450dd.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay_dark@3x-2400215dce9fef04215e36678470bd60.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay_dark-dfd2904083152023d89a8300f04a666f.svg"
+        },
+        "fields": [
+            {
+                "type": "placeholder",
+                "for": "name"
+            },
+            {
+                "type": "email",
+                "api_path": {
+                    "v1": "billing_details[email]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ]
+    },
+    {
+        "type": "twint",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint@3x-0d33d2bf7c7037878c2a42232362accb.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint-mod-360acb04bcd96c476ae6002cfd1eca4b.svg"
+        },
+        "fields": [],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "processing": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "multibanco",
+        "async": true,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco@3x-45f2f83ae37b716a1e1ec8d9469a8451.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco-5c6f8655a2792b3cf5b8e4216cdebc76.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark@3x-d7e4e5d3443cb0333fa2a6f3e8b3f29f.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark-b340a5b485615e5fbf627daccd388fa2.svg"
+        },
+        "fields": [
+            {
+                "type": "email",
+                "api_path": {
+                    "v1": "billing_details[email]"
+                }
+            }
+        ]
+    },
+    {
+        "type": "paypay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypay-df0729cee353881be6a3b8f870c4f38e.svg",
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paypay-99ba82e1fd9596066217723802bbd69f.png"
+        },
+        "fields": [],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "confirm_on_mobile_device",
+                    "match_api_next_action": "redirect_to_url",
+                    "mobile_payment_link": {
+                        "app_url": {
+                            "intent_path": "next_action[redirect_to_url][mobile_auth_url]",
+                            "redirect_behavior": "redirect_to_url_on_web_and_mobile"
+                        },
+                        "hosted_instructions_url": {
+                            "intent_path": "next_action[redirect_to_url][hosted_instructions_url]"
+                        },
+                        "qr_image_url_png": {
+                            "intent_path": "next_action[redirect_to_url][qr_code][image_url_png]"
+                        },
+                        "qr_image_url_svg": {
+                            "intent_path": "next_action[redirect_to_url][qr_code][image_url_svg]"
+                        }
+                    },
+                    "hosted_instructions_ui": {
+                        "show_testmode_simulator_button": false,
+                        "show_mobile_instruction": false,
+                        "show_copy_page_url": false,
+                        "show_download_qr_button": false,
+                        "page_footer": {
+                            "terms_link": "https://stripe.com/JP/legal"
+                        }
+                    }
+                }
+            }
+        },
+        "localization": {
+            "content": {
+                "payment_method_name": {
+                    "active_version": "v1",
+                    "versions": {
+                        "v1": "PayPay"
+                    }
                 }
             }
         }
