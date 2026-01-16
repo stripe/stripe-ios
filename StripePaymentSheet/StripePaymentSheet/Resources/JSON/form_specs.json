@@ -138,56 +138,56 @@
                 "translation_id": "upe.labels.ideal.bank",
                 "items": [
                     {
-                      "display_text": "ABN Amro",
-                      "api_value": "abn_amro"
+                        "display_text": "ABN Amro",
+                        "api_value": "abn_amro"
                     },
                     {
-                      "display_text": "ASN Bank",
-                      "api_value": "asn_bank"
+                        "display_text": "ASN Bank",
+                        "api_value": "asn_bank"
                     },
                     {
-                      "display_text": "bunq B.V.",
-                      "api_value": "bunq"
+                        "display_text": "bunq B.V.",
+                        "api_value": "bunq"
                     },
                     {
-                      "display_text": "ING Bank",
-                      "api_value": "ing"
+                        "display_text": "ING Bank",
+                        "api_value": "ing"
                     },
                     {
-                      "display_text": "Knab",
-                      "api_value": "knab"
+                        "display_text": "Knab",
+                        "api_value": "knab"
                     },
                     {
-                      "display_text": "N26",
-                      "api_value": "n26"
+                        "display_text": "N26",
+                        "api_value": "n26"
                     },
                     {
                       "display_text": "Rabobank",
-                      "api_value": "rabobank"
+                        "api_value": "rabobank"
                     },
                     {
-                      "display_text": "RegioBank",
-                      "api_value": "regiobank"
+                        "display_text": "RegioBank",
+                        "api_value": "regiobank"
                     },
                     {
-                      "display_text": "Revolut",
-                      "api_value": "revolut"
+                        "display_text": "Revolut",
+                        "api_value": "revolut"
                     },
                     {
-                      "display_text": "SNS Bank",
-                      "api_value": "sns_bank"
+                        "display_text": "SNS Bank",
+                        "api_value": "sns_bank"
                     },
                     {
-                      "display_text": "Triodos Bank",
-                      "api_value": "triodos_bank"
+                        "display_text": "Triodos Bank",
+                        "api_value": "triodos_bank"
                     },
                     {
-                      "display_text": "Van Lanschot",
-                      "api_value": "van_lanschot"
+                        "display_text": "Van Lanschot",
+                        "api_value": "van_lanschot"
                     },
                     {
-                      "display_text": "Yoursafe",
-                      "api_value": "yoursafe"
+                        "display_text": "Yoursafe",
+                        "api_value": "yoursafe"
                     }
                 ],
                 "api_path": {
@@ -660,8 +660,7 @@
     {
         "type": "revolut_pay",
         "async": false,
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -698,10 +697,9 @@
           "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-41fe66ba84194788e98548aa6e749c79.png",
           "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-74fb7ea51cccf2e1dd530f308bed9c60.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
-          "confirm_response_status_specs": {
+            "confirm_response_status_specs": {
                 "requires_action": {
                     "type": "redirect_to_url"
                 }
@@ -725,8 +723,7 @@
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-2ebac8e19b555f2081c16591e8fe4d4a.svg",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-031a417a99538497bc892f11a15dd1cb.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -752,14 +749,13 @@
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-12c7376f5623c109996ff8cd2f6d7a05.svg",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-6c8ac5db6e80d5c186b280da0ccd0a5b.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
                     "type": "redirect_to_url"
                 }
-          },
+            },
             "post_confirm_handling_pi_status_specs": {
                 "succeeded": {
                     "type": "finished"
@@ -779,8 +775,7 @@
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-eca5006db20571e80caec1509c680c27.svg",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-c01fc432e3c7b334f0204d011879bb1a.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -806,14 +801,13 @@
             "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto_dark@3x-8f7b0e91b45cb56de550af37d41aac1d.png",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto_dark-f19bb5c5400c6cde94dd53b7f1ce7217.svg"
         },
-        "fields": [
-        ],
+        "fields": [],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
                     "type": "redirect_to_url"
                 }
-          },
+            },
             "post_confirm_handling_pi_status_specs": {
                 "succeeded": {
                     "type": "finished"
@@ -832,7 +826,7 @@
             "confirm_response_status_specs": {
                 "requires_action": {
                     "type": "redirect_to_url",
-                    "native_mobile_redirect_strategy" : "follow_redirects"
+                    "native_mobile_redirect_strategy": "follow_redirects"
                 }
             },
             "post_confirm_handling_pi_status_specs": {
@@ -868,8 +862,7 @@
     {
         "type": "card",
         "async": false,
-        "fields": [
-        ]
+        "fields": []
     },
     {
         "type": "cashapp",
