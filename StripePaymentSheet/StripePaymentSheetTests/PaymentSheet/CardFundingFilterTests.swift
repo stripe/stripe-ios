@@ -30,7 +30,7 @@ class CardFundingFilterTests: XCTestCase {
         XCTAssertTrue(filter.isAccepted(cardFundingType: .debit), "Debit should be accepted when only debit is allowed.")
         XCTAssertFalse(filter.isAccepted(cardFundingType: .credit), "Credit should not be accepted when only debit is allowed.")
         XCTAssertFalse(filter.isAccepted(cardFundingType: .prepaid), "Prepaid should not be accepted when only debit is allowed.")
-        XCTAssertFalse(filter.isAccepted(cardFundingType: .other), "Other should not be accepted when only debit is allowed.")
+        XCTAssertTrue(filter.isAccepted(cardFundingType: .other), "Other should be permissively accepted regardless of allowed funding types.")
     }
 
     func testIsAccepted_allowedFundingTypes_creditOnly() {
@@ -39,7 +39,7 @@ class CardFundingFilterTests: XCTestCase {
         XCTAssertFalse(filter.isAccepted(cardFundingType: .debit), "Debit should not be accepted when only credit is allowed.")
         XCTAssertTrue(filter.isAccepted(cardFundingType: .credit), "Credit should be accepted when only credit is allowed.")
         XCTAssertFalse(filter.isAccepted(cardFundingType: .prepaid), "Prepaid should not be accepted when only credit is allowed.")
-        XCTAssertFalse(filter.isAccepted(cardFundingType: .other), "Other should not be accepted when only credit is allowed.")
+        XCTAssertTrue(filter.isAccepted(cardFundingType: .other), "Other should be permissively accepted regardless of allowed funding types.")
     }
 
     func testIsAccepted_allowedFundingTypes_prepaidOnly() {
@@ -48,7 +48,7 @@ class CardFundingFilterTests: XCTestCase {
         XCTAssertFalse(filter.isAccepted(cardFundingType: .debit), "Debit should not be accepted when only prepaid is allowed.")
         XCTAssertFalse(filter.isAccepted(cardFundingType: .credit), "Credit should not be accepted when only prepaid is allowed.")
         XCTAssertTrue(filter.isAccepted(cardFundingType: .prepaid), "Prepaid should be accepted when only prepaid is allowed.")
-        XCTAssertFalse(filter.isAccepted(cardFundingType: .other), "Other should not be accepted when only prepaid is allowed.")
+        XCTAssertTrue(filter.isAccepted(cardFundingType: .other), "Other should be permissively accepted regardless of allowed funding types.")
     }
 
     func testIsAccepted_allowedFundingTypes_unknownOnly() {
@@ -66,7 +66,7 @@ class CardFundingFilterTests: XCTestCase {
         XCTAssertTrue(filter.isAccepted(cardFundingType: .debit), "Debit should be accepted when debit and credit are allowed.")
         XCTAssertTrue(filter.isAccepted(cardFundingType: .credit), "Credit should be accepted when debit and credit are allowed.")
         XCTAssertFalse(filter.isAccepted(cardFundingType: .prepaid), "Prepaid should not be accepted when debit and credit are allowed.")
-        XCTAssertFalse(filter.isAccepted(cardFundingType: .other), "Other should not be accepted when debit and credit are allowed.")
+        XCTAssertTrue(filter.isAccepted(cardFundingType: .other), "Other should be permissively accepted regardless of allowed funding types.")
     }
 
     func testIsAccepted_allFundingTypesAllowed() {
@@ -89,6 +89,21 @@ class CardFundingFilterTests: XCTestCase {
 
         for fundingType in STPCardFundingType.allCases {
             XCTAssertTrue(filter.isAccepted(cardFundingType: fundingType), "Default filter should accept all funding types.")
+        }
+    }
+
+    func testIsAccepted_otherFundingType_permissivelyAccepted() {
+        // Unknown/other funding types should be permissively accepted regardless of allowed funding types
+        // This ensures we don't reject cards with unrecognized funding types
+        let restrictiveFilters: [CardFundingFilter] = [
+            CardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true),
+            CardFundingFilter(allowedFundingTypes: .credit, filteringEnabled: true),
+            CardFundingFilter(allowedFundingTypes: .prepaid, filteringEnabled: true),
+            CardFundingFilter(allowedFundingTypes: [.debit, .credit], filteringEnabled: true),
+        ]
+
+        for filter in restrictiveFilters {
+            XCTAssertTrue(filter.isAccepted(cardFundingType: .other), "Other funding type should be permissively accepted even with restrictive filters.")
         }
     }
 
