@@ -13,7 +13,7 @@ struct LinkPayoutsDemoView: View {
     @State private var isLoading = false
 
     private let onboardingURL = URL(
-        string: "http://qa-onboarding.link.com/onboard?publishable_key=123&client_secret=1234&platform=ios&test_result=success"
+        string: "https://onboarding.link.com/onboard?publishable_key=123&client_secret=1234&redirect_url_scheme=stripe-auth&platform=ios&test_result=success"
     )!
     private let callbackScheme = "stripe-auth"
 
@@ -97,6 +97,7 @@ struct LinkPayoutsDemoView: View {
 
             if let url = url {
                 callbackURL = url
+                print("****", url)
             }
         }
 
