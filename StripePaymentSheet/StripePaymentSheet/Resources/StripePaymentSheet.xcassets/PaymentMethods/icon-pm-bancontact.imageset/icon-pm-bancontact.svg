@@ -1,0 +1,17 @@
+<svg viewBox="0 0 27 16" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" focusable="false">
+  <path
+    d="M14 9.023c-1.784 2.37-3.938 5.023-8.034 5.023H1a1 1 0 0 1-1-1V8.023a1 1 0 0 1 1-1h12C14.784 4.653 16.94 2 21.034 2H26a1 1 0 0 1 1 1v5.023a1 1 0 0 1-1 1H14Z"
+    fill="#fff" />
+  <path d="M5.966 13.046c3.767 0 5.65-2.512 7.534-5.023H1v5.023h4.966Z" fill="url(#bancontact-a)" />
+  <path d="M21.034 3c-3.767 0-5.65 2.511-7.534 5.023H26V3h-4.966Z" fill="url(#bancontact-b)" />
+  <defs>
+    <linearGradient id="bancontact-a" x1="3.528" y1="10.766" x2="12.673" y2="7.37" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#005AB9" />
+      <stop offset="1" stop-color="#1E3764" />
+    </linearGradient>
+    <linearGradient id="bancontact-b" x1="14.257" y1="8.458" x2="23.966" y2="5.146" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBA900" />
+      <stop offset="1" stop-color="#FFD800" />
+    </linearGradient>
+  </defs>
+</svg>

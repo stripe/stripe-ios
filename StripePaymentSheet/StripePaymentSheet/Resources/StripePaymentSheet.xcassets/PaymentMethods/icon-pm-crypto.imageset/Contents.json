@@ -1,7 +1,7 @@
 {
   "images": [
     {
-      "filename": "icon-pm-paypal.svg",
+      "filename": "icon-pm-crypto.svg",
       "idiom": "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value": "dark"
         }
       ],
-      "filename": "icon-pm-paypal_dark.svg",
+      "filename": "icon-pm-crypto_dark.svg",
       "idiom": "universal"
     }
   ],
