@@ -440,7 +440,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
         var initialSelection = selection ?? calculateInitialSelection()
-        // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option. Unless the saved default is Apple Pay.
+        // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then unselect any default option. The only exception is if Apple Pay was previously saved as the user's default PM -- in that case, it *is* a valid initialSelection.
         if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
                 (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always && !(CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay)) ||
