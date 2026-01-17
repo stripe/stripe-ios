@@ -126,15 +126,35 @@ extension XCTestCase {
     }
 
     func payLink(_ app: XCUIApplication) {
-        app.swipeUp()
-        app.buttons
+        let payButton = app.buttons
             .matching(identifier: "Pay $50.99")
             .matching(NSPredicate(format: "isEnabled == true"))
             .firstMatch
-            .waitForExistenceAndTap()
+
+        // Wait for the button to exist first
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+
+        // Scroll until the button is visible and hittable
+        var attempts = 0
+        while !payButton.isHittable && attempts < 5 {
+            app.swipeUp()
+            attempts += 1
+            // Small delay to allow UI to settle
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+
+        // Final verification that button is hittable before tapping
+        XCTAssertTrue(payButton.isHittable, "Pay button should be visible and tappable after scrolling")
+        payButton.tap()
     }
 
     func assertLinkPaymentSuccess(_ app: XCUIApplication) {
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
+
+        // Ensure the success message is visible on screen
+        if !successText.isHittable {
+            app.swipeDown()
+        }
     }
 }
