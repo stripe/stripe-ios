@@ -64,10 +64,6 @@ extension UnknownFieldsDecodable {
             self._allResponseFieldsStorage!.storage = newValue
         }
     }
-
-    static func decodedObject(jsonData: Data) throws -> Self {
-        return try StripeJSONDecoder.decode(jsonData: jsonData)
-    }
 }
 
 extension UnknownFieldsEncodable {
@@ -94,16 +90,6 @@ extension UnknownFieldsEncodable {
             }
             self._additionalParametersStorage!.storage = newValue
         }
-    }
-}
-
-extension Encodable {
-    @_spi(STP) public func encodeJSONDictionary(includingUnknownFields: Bool = true) throws -> [String: Any] {
-        let encoder = StripeJSONEncoder()
-        return try encoder.encodeJSONDictionary(
-            self,
-            includingUnknownFields: includingUnknownFields
-        )
     }
 }
 

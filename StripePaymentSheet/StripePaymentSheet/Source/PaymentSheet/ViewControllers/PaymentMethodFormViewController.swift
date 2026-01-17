@@ -172,7 +172,7 @@ class PaymentMethodFormViewController: UIViewController {
 
     // MARK: - Helpers
     func clearTextFields() {
-        form.clearTextFields()
+        PaymentMethodElementUtils.clearTextFields(in: form)
     }
 
     /// Sets up the autocomplete button callback for any AddressSectionElement in the form

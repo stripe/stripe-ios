@@ -894,7 +894,7 @@ extension FinancialConnectionsAsyncAPIClient {
         }
 
         if let clientAttributionMetadata {
-            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+            parameters["client_attribution_metadata"] = try StripeJSONEncoder().encodeJSONDictionary(clientAttributionMetadata)
         }
 
         return try await post(endpoint: .paymentDetails, parameters: parameters)
@@ -932,7 +932,7 @@ extension FinancialConnectionsAsyncAPIClient {
         }
 
         if let clientAttributionMetadata {
-            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+            parameters["client_attribution_metadata"] = try StripeJSONEncoder().encodeJSONDictionary(clientAttributionMetadata)
         }
 
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
@@ -966,7 +966,7 @@ extension FinancialConnectionsAsyncAPIClient {
         }
 
         if let clientAttributionMetadata {
-            parameters["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
+            parameters["client_attribution_metadata"] = try StripeJSONEncoder().encodeJSONDictionary(clientAttributionMetadata)
         }
 
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
