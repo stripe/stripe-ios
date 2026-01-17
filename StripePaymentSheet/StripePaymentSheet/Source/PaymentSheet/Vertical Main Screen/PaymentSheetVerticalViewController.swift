@@ -22,8 +22,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return .link(option: linkConfirmOption)
         } else if isLinkWalletButtonSelected {
             return .link(option: .wallet)
-        } else if isApplePayWalletButtonSelected {
-            return .applePay
         } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
             // If we're showing the list, use its selection:
             switch paymentMethodListViewController.currentSelection {
@@ -60,8 +58,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
     // Edge-case, only set to true when Link is selected via wallet in flow controller
     var isLinkWalletButtonSelected: Bool = false
-    /// True when Apple Pay is the saved default from WalletButtonsView usage
-    var isApplePayWalletButtonSelected: Bool = false
     var linkConfirmOption: PaymentSheet.LinkConfirmOption?
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
@@ -183,13 +179,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
-
-        // If Apple Pay is saved as the local default and we're using WalletButtonsView, mark it as selected
-        if configuration.willUseWalletButtonsView || walletButtonsShownExternally {
-            if CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay {
-                isApplePayWalletButtonSelected = true
-            }
-        }
 
         regenerateUI()
 
@@ -426,8 +415,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        // 2. Default to Apple Pay if WalletButtonsView is not in use
-        if shouldShowApplePayInList && !configuration.willUseWalletButtonsView {
+        // 2. Default to Apple Pay if available.
+        // If WalletButtonsView is in use, only default to Apple Pay if it's the saved PM.
+        if shouldShowApplePayInList && (!configuration.willUseWalletButtonsView || CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay) {
             return .applePay
         }
 
@@ -450,10 +440,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
         var initialSelection = selection ?? calculateInitialSelection()
-        // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option.
+        // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option. Unless the saved default is Apple Pay.
         if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
-                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always) ||
+                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always && !(CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay)) ||
                 initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {
             initialSelection = nil
         }
@@ -874,8 +864,6 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     func didTapPaymentMethod(_ selection: RowButtonType) {
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
         error = nil
-        // Clear the Apple Pay wallet button selection when user explicitly selects something in the list
-        isApplePayWalletButtonSelected = false
 #if !os(visionOS)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
