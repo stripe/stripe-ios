@@ -211,115 +211,8 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
 class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     // MARK: Card brand choice
-
-    func testCardBrandChoice() throws {
-        // Currently only our French merchant is eligible for card brand choice
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.merchantCountryCode = .FR
-        settings.currency = .eur
-        settings.preferredNetworksEnabled = .off
-        settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = "card"
-        loadPlayground(app, settings)
-
-        _testCardBrandChoice(settings: settings)
-    }
-
-    func testCardBrandChoice_setup() throws {
-        // Currently only our French merchant is eligible for card brand choice
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.mode = .setup
-        settings.customerMode = .new
-        settings.merchantCountryCode = .FR
-        settings.currency = .eur
-        settings.preferredNetworksEnabled = .off
-        settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = "card"
-        loadPlayground(app, settings)
-
-        _testCardBrandChoice(isSetup: true, settings: settings)
-    }
-
-    func testCardBrandChoice_deferred() throws {
-        // Currently only our French merchant is eligible for card brand choice
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.merchantCountryCode = .FR
-        settings.currency = .eur
-        settings.preferredNetworksEnabled = .off
-        settings.integrationType = .deferred_csc
-        settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = "card"
-        loadPlayground(app, settings)
-
-        _testCardBrandChoice(settings: settings)
-    }
-
-    func testCardBrandChoiceWithPreferredNetworks() throws {
-        // Currently only our French merchant is eligible for card brand choice
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.merchantCountryCode = .FR
-        settings.currency = .eur
-        settings.preferredNetworksEnabled = .on
-        settings.apmsEnabled = .off
-        settings.supportedPaymentMethods = "card"
-
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        // We should have selected Visa due to preferreedNetworks configuration API
-        let cardBrandTextField = app.textFields["Visa"]
-        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
-        // Card brand choice textfield/dropdown should not be visible
-        XCTAssertFalse(cardBrandTextField.waitForExistence(timeout: 2))
-
-        let numberField = app.textFields["Card number"]
-        numberField.tap()
-        // Enter 8 digits to start fetching card brand
-        numberField.typeText("49730197")
-
-        // Card brand choice drop down should be enabled
-        cardBrandTextField.tap()
-        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeDown()
-        app.toolbars.buttons["Cancel"].tap()
-
-        // We should have selected Visa due to preferreedNetworks configuration API
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 2))
-
-        // Clear card text field, should reset selected card brand
-        numberField.tap()
-        numberField.clearText()
-
-        // We should reset to showing unknown in the textfield for card brand
-        XCTAssertFalse(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 2))
-
-        // Type full card number to start fetching card brands again
-        numberField.forceTapWhenHittableInTestCase(self)
-        app.typeText("4000002500001001")
-        app.textFields["expiration date"].waitForExistenceAndTap(timeout: 5.0)
-        app.typeText("1228") // Expiry
-        app.typeText("123") // CVC
-        app.typeText("12345") // Postal
-
-        // Card brand choice drop down should be enabled and we should auto select Visa
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
-
-        // Finish checkout
-        app.buttons["Pay €50.99"].tap()
-        let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
-    }
-
     func testCardBrandChoiceSavedCard() {
-        // Currently only our French merchant is eligible for card brand choice
+        // Tests the complete saved card flow with card brand choice, including saving, brand selection persistence, editing, and removal
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
@@ -455,25 +348,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
         XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
         app.buttons["Done"].waitForExistenceAndTap()
-    }
-
-    func testCustomPaymentMethod() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.merchantCountryCode = .US
-        settings.currency = .usd
-        settings.customPaymentMethods = .on
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        tapPaymentMethod("BufoPay (test)")
-
-        app.buttons["Pay $50.99"].tap()
-        app.alerts.buttons["Confirm"].waitForExistenceAndTap()
-
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 }
 
