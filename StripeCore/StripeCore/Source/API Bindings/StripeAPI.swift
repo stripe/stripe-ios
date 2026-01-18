@@ -70,10 +70,34 @@ import PassKit
         }
     }
 
+    /// Australian users can enable EFTPOS Australia for Apple Pay by setting this to `YES`.
+    ///
+    /// The default value is NO.
+    /// @note EFTPOS Australia is only supported on iOS 12.1.1+
+    @objc public class var eftposAuPaymentNetworkSupported: Bool {
+        get {
+            return self.additionalEnabledApplePayNetworks.contains(.eftpos)
+        }
+        set(eftposAuPaymentNetworkSupported) {
+            if eftposAuPaymentNetworkSupported
+                && !self.additionalEnabledApplePayNetworks.contains(.eftpos)
+            {
+                self.additionalEnabledApplePayNetworks =
+                    self.additionalEnabledApplePayNetworks + [PKPaymentNetwork.eftpos]
+            } else if !eftposAuPaymentNetworkSupported {
+                var updatedNetworks = self.additionalEnabledApplePayNetworks
+                updatedNetworks.removeAll {
+                    $0 as AnyObject === PKPaymentNetwork.eftpos as AnyObject
+                }
+                self.additionalEnabledApplePayNetworks = updatedNetworks
+            }
+        }
+    }
+
     /// The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
     ///
-    /// Set this property to enable other card networks in addition to these, such as .JCB or .cartesBancaires.
-    /// For example, `additionalEnabledApplePayNetworks = [.JCB]` enables JCB (note this requires onboarding from JCB and Stripe).
+    /// Set this property to enable other card networks in addition to these, such as .JCB, .cartesBancaires, or .eftpos (for EFTPOS Australia).
+    /// For example, `additionalEnabledApplePayNetworks = [.eftpos]` enables EFTPOS Australia (note this requires the merchant to support EFTPOS Australia payment).
     @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = [] {
         didSet {
             // Reset deviceSupportsApplePay for the updated network list:
@@ -120,6 +144,7 @@ import PassKit
     /// after they have been approved by JCB.
     /// Users that have the Payment Method Cartes Bancaires set to Active, can enable it
     /// by adding `.cartesBancaires` to the `additionalEnabledApplePayNetworks` list.
+    /// Australian users can enable EFTPOS Australia by adding `.eftpos` to the `additionalEnabledApplePayNetworks` list.
     /// - Returns: YES if the device is currently able to make Apple Pay payments via one
     /// of the supported networks. NO if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
