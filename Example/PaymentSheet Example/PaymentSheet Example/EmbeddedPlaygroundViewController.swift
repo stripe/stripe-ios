@@ -149,7 +149,6 @@ class EmbeddedPlaygroundViewController: UIViewController {
         embeddedPaymentElement.delegate = self
         embeddedPaymentElement.presentingViewController = self
         self.embeddedPaymentElement = embeddedPaymentElement
-        self.embeddedPaymentElement?.presentingViewController = self
 
         // Scroll view contains our content
         let scrollView = UIScrollView()
@@ -274,8 +273,14 @@ class EmbeddedPlaygroundViewController: UIViewController {
     func didTapPaymentMethodButton() {
         guard let embeddedPaymentElement else { return }
         let paymentMethodsViewController = EmbeddedPaymentElementWrapperViewController(embeddedPaymentElement: embeddedPaymentElement, needsDismissal: { [weak self] in
-            self?.dismiss(animated: true)
-            self?.updatePaymentOptionView()
+            guard let self else { return }
+            self.dismiss(animated: true)
+            // Reset state - nil out the PMVC since it's dead (we'll re-create it if it's presented again)
+            self.paymentMethodsViewController = nil
+            // Reconfigure Embedded to use us as the presentingVC and delegate
+            self.embeddedPaymentElement?.presentingViewController = self
+            self.embeddedPaymentElement?.delegate = self
+            self.updatePaymentOptionView()
         })
         self.paymentMethodsViewController = paymentMethodsViewController
         let navController = UINavigationController(rootViewController: paymentMethodsViewController)

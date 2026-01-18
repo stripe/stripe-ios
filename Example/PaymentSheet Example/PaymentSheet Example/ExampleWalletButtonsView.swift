@@ -494,7 +494,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
-                configuration.appearance = self.appearance ?? PaymentSheet.Appearance()
+                configuration.appearance = self.appearance
 
                 var linkConfiguration = PaymentSheet.LinkConfiguration()
                 linkConfiguration.display = self.disableLink == true ? .never : .automatic
@@ -510,7 +510,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 self.latestIntentConfig = .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                     self?.isProcessing = true
                     self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
-                    self?.addDebugLog("Address: \(address)")
+                    self?.addDebugLog("Address: \(String(describing: address))")
                     // Create the payment intent on the rough-lying-carriage backend
                     self?.createPaymentIntentWithSPTTestBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
                 })
@@ -596,7 +596,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     }
                 } else {
                     let paymentIntentID = json["paymentIntent"] as? String
-                    self?.addDebugLog("Payment intent created: \(paymentIntentID)")
+                    self?.addDebugLog("Payment intent created: \(String(describing: paymentIntentID))")
                     DispatchQueue.main.async {
                         self?.isProcessing = false
                         self?.onCompletion(result: .completed)
