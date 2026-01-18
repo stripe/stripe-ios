@@ -8,7 +8,6 @@
 
 import Foundation
 import PassKit
-@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
@@ -49,7 +48,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
     func applePayContext(
         _ context: STPApplePayContext,
-        didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
         paymentInformation: PKPayment
     ) async throws -> String {
         switch intent {
@@ -58,11 +57,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
         case .deferredIntent(let intentConfig):
-            guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
-                assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
-                throw STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod.")
-            }
-
             // Check if this is a shared payment token session, which will have a preparePaymentMethodHandler
             if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
                 // Extract shipping address from the PKPayment
@@ -70,7 +64,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
                 // Try to create a radar session for the payment method before calling the handler
                 return try await withCheckedThrowingContinuation { continuation in
-                    context.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: stpPaymentMethod.stripeId) { _, error in
+                    context.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
                         // If radar session creation fails, just continue with the payment method directly
                         if let error {
                             // Log the error but don't fail the payment
@@ -79,7 +73,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                         }
 
                         // Call the handler regardless of radar session success/failure
-                        preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
+                        preparePaymentMethodHandler(paymentMethod, shippingAddress)
                         continuation.resume(returning: STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT)
                     }
                 }
@@ -90,7 +84,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 // Confirmation token flow
                 return try await handleConfirmationTokenFlow(
                     intentConfig: intentConfig,
-                    paymentMethod: stpPaymentMethod,
+                    paymentMethod: paymentMethod,
                     paymentInformation: paymentInformation,
                     context: context,
                     confirmationTokenConfirmHandler: confirmationTokenConfirmHandler
@@ -98,7 +92,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             } else if let confirmHandler = intentConfig.confirmHandler {
                 // PaymentMethod-based deferred intent flow
                 let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
-                let clientSecret = try await confirmHandler(stpPaymentMethod, shouldSavePaymentMethod)
+                let clientSecret = try await confirmHandler(paymentMethod, shouldSavePaymentMethod)
                 guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
                 }
@@ -346,13 +340,13 @@ extension STPApplePayContext {
     }
 }
 
-private func makeShippingDetails(from configuration: PaymentElementConfiguration) -> StripeAPI.ShippingDetails? {
+private func makeShippingDetails(from configuration: PaymentElementConfiguration) -> ShippingDetails? {
     guard let shippingDetails = configuration.shippingDetails(), let name = shippingDetails.name else {
         return nil
     }
     let address = shippingDetails.address
-    return .init(
-        address: .init(
+    return ShippingDetails(
+        address: ShippingDetails.Address(
             city: address.city,
             country: address.country,
             line1: address.line1,

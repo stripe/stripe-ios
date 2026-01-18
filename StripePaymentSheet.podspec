@@ -22,5 +22,4 @@ Pod::Spec.new do |s|
   s.dependency                       'StripeCore', s.version.to_s
   s.dependency                       'StripePayments', s.version.to_s
   s.dependency                       'StripePaymentsUI', s.version.to_s
-  s.dependency                       'StripeApplePay', s.version.to_s
 end
