@@ -28,6 +28,32 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
     override func setUp() {
         super.setUp()
 
+        // CRITICAL: Clear the global default publishable key that other tests may have set
+        // This is a static global that persists across test runs and can cause unexpected behavior
+        // when creating new STPAPIClient instances
+        StripeAPI.defaultPublishableKey = nil
+
+        // Clear Link account context that might be set by previous tests
+        LinkAccountContext.shared.account = nil
+
+        // Clear any persisted Link-related UserDefaults that might trigger unexpected behavior
+        UserDefaults.standard.clearLinkDefaults()
+        UserDefaults.standard.customerToLastSelectedPaymentMethod = nil
+
+        // Clear any persisted attestation state in UserDefaults that might trigger unexpected network calls
+        // StripeAttest stores state keyed by publishable key - this stale state from previous test runs
+        // can cause unexpected /v1/consumers/sessions/start_verification calls
+        for key in [Self.usPublishableKey, Self.frenchPublishableKey, Self.britishPublishableKey, "pk_test_123", "pk_test_123456789"] {
+            let keysToRemove = ["keyID", "successfullyAttested", "dailyAttemptCount", "firstAttemptToday"].map { "\($0):\(key)" }
+            keysToRemove.forEach { UserDefaults.standard.removeObject(forKey: $0) }
+        }
+
+        // CRITICAL: Clear HTTP cookies and cache from shared URLSession configuration
+        // These persist between test suite runs and can cause flaky tests!
+        // Specifically, Link session cookies from previous tests can trigger unexpected consumer session calls
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        URLCache.shared.removeAllCachedResponses()
+
         // Create a DownloadManager with the shared URLSession configuration
         // This allows the network stubbing recorder to intercept API requests
         let urlSessionConfig = StripeAPIConfiguration.sharedUrlSessionConfiguration
