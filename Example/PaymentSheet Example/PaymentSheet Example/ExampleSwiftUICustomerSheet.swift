@@ -112,7 +112,7 @@ class MyBackendCustomerSheetModel: ObservableObject {
         let url = URL(string: "\(backendCheckoutUrl)/create_setup_intent")!
         let session = URLSession.shared
 
-        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+        let json = try JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
@@ -152,14 +152,8 @@ class MyBackendCustomerSheetModel: ObservableObject {
         }
 
         Task {
-            do {
-                let selection = try await customerAdapter.retrievePaymentOptionSelection()
-                DispatchQueue.main.async {
-                    self.customerSheetStatusViewModel = .loaded(selection)
-                }
-            } catch {
-                throw error
-            }
+            let selection = try await customerAdapter.retrievePaymentOptionSelection()
+            self.customerSheetStatusViewModel = .loaded(selection)
         }
     }
 }
