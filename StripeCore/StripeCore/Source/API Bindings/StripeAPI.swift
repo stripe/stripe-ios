@@ -70,30 +70,6 @@ import PassKit
         }
     }
 
-    /// Australian users can enable EFTPOS Australia for Apple Pay by setting this to `YES`.
-    ///
-    /// The default value is NO.
-    /// @note EFTPOS Australia is only supported on iOS 12.1.1+
-    @objc public class var eftposAuPaymentNetworkSupported: Bool {
-        get {
-            return self.additionalEnabledApplePayNetworks.contains(.eftpos)
-        }
-        set(eftposAuPaymentNetworkSupported) {
-            if eftposAuPaymentNetworkSupported
-                && !self.additionalEnabledApplePayNetworks.contains(.eftpos)
-            {
-                self.additionalEnabledApplePayNetworks =
-                    self.additionalEnabledApplePayNetworks + [PKPaymentNetwork.eftpos]
-            } else if !eftposAuPaymentNetworkSupported {
-                var updatedNetworks = self.additionalEnabledApplePayNetworks
-                updatedNetworks.removeAll {
-                    $0 as AnyObject === PKPaymentNetwork.eftpos as AnyObject
-                }
-                self.additionalEnabledApplePayNetworks = updatedNetworks
-            }
-        }
-    }
-
     /// The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
     ///
     /// Set this property to enable other card networks in addition to these, such as .JCB, .cartesBancaires, or .eftpos (for EFTPOS Australia).
