@@ -203,7 +203,8 @@ extension STPPaymentMethodType {
             case .payPal:
                 return .pm_type_paypal
             case .AUBECSDebit:
-                return .pm_type_aubecsdebit
+                // we reuse the bank icon for AU BECS Debit
+                return .pm_type_us_bank
             case .USBankAccount:
                 switch iconStyle {
                 case .filled:
