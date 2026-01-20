@@ -320,6 +320,8 @@ extension PaymentMethodFormViewController {
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
             case .checkoutSession:
+                // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
+                // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
                 return .deferred(elementsSession.sessionID)
             }
         }()
