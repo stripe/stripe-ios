@@ -907,7 +907,9 @@ extension PlaygroundController {
                 self.customerId = json["customerId"]
                 self.customerSessionClientSecret = json["customerSessionClientSecret"]
                 self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
-                STPAPIClient.shared.publishableKey = json["publishableKey"]
+                if let publishableKey = json["publishableKey"] {
+                    STPAPIClient.shared.publishableKey = publishableKey
+                }
 
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
                 self.addressDetails = nil
