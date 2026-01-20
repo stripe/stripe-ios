@@ -1184,14 +1184,6 @@ extension PlaygroundController {
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
 
-        // Send custom keys to backend if provided
-        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
-            body["custom_secret_key"] = customSecretKey
-        }
-        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
-            body["custom_publishable_key"] = customPublishableKey
-        }
-
         // Add either payment method info or confirmation token info
         if let confirmationTokenId {
             body["confirmation_token_id"] = confirmationTokenId
