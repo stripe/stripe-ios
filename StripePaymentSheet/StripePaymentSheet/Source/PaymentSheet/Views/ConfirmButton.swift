@@ -46,6 +46,11 @@ class ConfirmButton: UIControl {
                 case .setup:
                     return .setup
                 }
+            case .checkoutSession(let checkoutSession):
+                if let amount = checkoutSession.amountTotal, let currency = checkoutSession.currency {
+                    return .pay(amount: amount, currency: currency)
+                }
+                return .setup
             }
         }
 
@@ -62,6 +67,11 @@ class ConfirmButton: UIControl {
                 case .setup:
                     return .continue
                 }
+            case .checkoutSession(let checkoutSession):
+                if let amount = checkoutSession.amountTotal, let currency = checkoutSession.currency {
+                    return .pay(amount: amount, currency: currency, withLock: false)
+                }
+                return .continue
             }
         }
     }

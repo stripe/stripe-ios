@@ -319,6 +319,8 @@ extension PaymentMethodFormViewController {
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
+            case .checkoutSession:
+                return .deferred(elementsSession.sessionID)
             }
         }()
 
@@ -507,6 +509,8 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
+        case .checkoutSession:
+            delegate?.updateErrorLabel(for: PaymentSheetError.unknown(debugDescription: "US Bank Account is not yet supported by CheckoutSession."))
         }
     }
 
@@ -558,7 +562,7 @@ extension PaymentMethodFormViewController {
         switch intent {
         case .paymentIntent, .setupIntent:
             additionalParameters["attach_required"] = true
-        case .deferredIntent:
+        case .deferredIntent, .checkoutSession:
             break
         }
 
@@ -608,6 +612,8 @@ extension PaymentMethodFormViewController {
                 from: viewController,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
+        case .checkoutSession:
+            delegate?.updateErrorLabel(for: PaymentSheetError.unknown(debugDescription: "Instant Debits is not yet supported by CheckoutSession."))
         }
     }
 }
