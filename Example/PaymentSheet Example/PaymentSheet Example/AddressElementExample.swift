@@ -49,6 +49,14 @@ public struct AddressElementExampleView: View {
         config.buttonTitle = "Save Address"
         config.separatorStyle = selectedSeparatorStyle.separatorStyle
 
+        // TODO
+        if #available(iOS 26.0, *) {
+            config.appearance.applyLiquidGlass()
+        }
+        config.appearance.colors.componentBackground = .lightGray
+        config.appearance.colors.componentBorder = .lightGray
+        config.appearance.colors.selectedComponentBorder = .black
+
         // Pre-populate with existing address if available
         if let address = collectedAddress {
             config.defaultValues.name = address.name
