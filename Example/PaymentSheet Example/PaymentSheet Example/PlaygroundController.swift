@@ -1030,6 +1030,15 @@ extension PlaygroundController {
             "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
+
+        // Send custom keys to backend if provided
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            body["custom_secret_key"] = customSecretKey
+        }
+        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            body["custom_publishable_key"] = customPublishableKey
+        }
+
         if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
             body["supported_payment_methods"] = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -1174,6 +1183,14 @@ extension PlaygroundController {
             "link_mode": settings.linkEnabledMode.rawValue,
             "return_url": configuration.returnURL ?? "",
         ] as [String: Any]
+
+        // Send custom keys to backend if provided
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            body["custom_secret_key"] = customSecretKey
+        }
+        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            body["custom_publishable_key"] = customPublishableKey
+        }
 
         // Add either payment method info or confirmation token info
         if let confirmationTokenId {

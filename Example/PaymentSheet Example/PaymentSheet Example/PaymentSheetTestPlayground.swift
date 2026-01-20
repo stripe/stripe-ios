@@ -139,6 +139,14 @@ struct PaymentSheetTestPlayground: View {
                             SettingPickerView(setting: $playgroundController.settings.currency)
                         }
                         SettingPickerView(setting: merchantCountryBinding)
+                        if playgroundController.settings.merchantCountryCode == .custom {
+                            TextField("Custom secret key", text: customSecretKeyBinding)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
+                            TextField("Custom publishable key", text: customPublishableKeyBinding)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
+                        }
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
                         if playgroundController.settings.apmsEnabled == .off {
                             TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
@@ -290,6 +298,22 @@ struct PaymentSheetTestPlayground: View {
                 playgroundController.settings.customPaymentMethods = .off
             }
             playgroundController.settings.merchantCountryCode = newCountry
+        }
+    }
+
+    var customSecretKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customSecretKey ?? ""
+        } set: { newString in
+            playgroundController.settings.customSecretKey = newString
+        }
+    }
+
+    var customPublishableKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customPublishableKey ?? ""
+        } set: { newString in
+            playgroundController.settings.customPublishableKey = newString
         }
     }
 
