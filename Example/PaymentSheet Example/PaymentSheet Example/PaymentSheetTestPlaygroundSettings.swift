@@ -107,15 +107,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum Amount: Int, PickerEnum {
         static var enumName: String { "Amount" }
 
-        case _5099 = 5099
-        case _10000 = 10000
+        case _50 = 50
 
         var displayName: String {
             switch self {
-            case ._5099:
-                return "50.99"
-            case ._10000:
-                return "100.00"
+            case ._50:
+                return "0.50"
             }
         }
         func customDisplayName(currency: Currency) -> String {
@@ -761,7 +758,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             confirmationMode: .confirmationToken,
             customerMode: .guest,
             currency: .usd,
-            amount: ._5099,
+            amount: ._50,
             merchantCountryCode: .US,
             apmsEnabled: .on,
             paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
@@ -816,7 +813,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static let nsUserDefaultsCustomerIDKey = "PaymentSheetTestPlaygroundCustomerId"
     static let nsUserDefaultsAppearanceKey = "PaymentSheetTestPlaygroundAppearance"
 
-    static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
+    static let baseEndpoint = "https://ab-test.stripedemos.com"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"
     }
