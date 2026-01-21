@@ -3,6 +3,16 @@
     {
       "filename": "icon-pm-mobilepay.svg",
       "idiom": "universal"
+    },
+    {
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "filename": "icon-pm-mobilepay_dark.svg",
+      "idiom": "universal"
     }
   ],
   "info": {
