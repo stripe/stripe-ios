@@ -48,12 +48,6 @@ import Foundation
     /// Whether or not this CheckoutSession was created in livemode.
     public let livemode: Bool
 
-    /// Time at which the CheckoutSession was created.
-    public let created: Date
-
-    /// The timestamp at which the Checkout Session will expire.
-    public let expiresAt: Date
-
     /// The ID of the customer for this Session.
     public let customerId: String?
 
@@ -87,8 +81,6 @@ import Foundation
             "setupIntentId = \(String(describing: setupIntentId))",
             "paymentMethodTypes = \(String(describing: allResponseFields["payment_method_types"]))",
             "livemode = \(livemode)",
-            "created = \(created)",
-            "expiresAt = \(String(describing: expiresAt))",
             "customerId = \(String(describing: customerId))",
             "customerEmail = \(String(describing: customerEmail))",
             "url = \(String(describing: url))",
@@ -111,8 +103,6 @@ import Foundation
         paymentMethodTypes: [STPPaymentMethodType],
         paymentMethodOptions: STPPaymentMethodOptions?,
         livemode: Bool,
-        created: Date,
-        expiresAt: Date,
         customerId: String?,
         customerEmail: String?,
         url: URL?,
@@ -132,8 +122,6 @@ import Foundation
         self.paymentMethodTypes = paymentMethodTypes
         self.paymentMethodOptions = paymentMethodOptions
         self.livemode = livemode
-        self.created = created
-        self.expiresAt = expiresAt
         self.customerId = customerId
         self.customerEmail = customerEmail
         self.url = url
@@ -149,12 +137,9 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        // Required fields per API spec (non-nullable)
         guard let dict = response,
-              let stripeId = dict["id"] as? String,
+              let stripeId = dict["session_id"] as? String,
               let livemode = dict["livemode"] as? Bool,
-              let created = dict.stp_date(forKey: "created"),
-              let expiresAt = dict.stp_date(forKey: "expires_at"),
               let rawMode = dict["mode"] as? String,
               let rawPaymentStatus = dict["payment_status"] as? String,
               let paymentMethodTypeStrings = dict["payment_method_types"] as? [String]
@@ -188,8 +173,6 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
             ),
             livemode: livemode,
-            created: created,
-            expiresAt: expiresAt,
             customerId: dict["customer"] as? String,
             customerEmail: dict["customer_email"] as? String,
             url: urlString.flatMap { URL(string: $0) },
