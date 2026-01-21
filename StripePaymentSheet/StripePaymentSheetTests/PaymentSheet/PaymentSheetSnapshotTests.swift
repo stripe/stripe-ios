@@ -658,8 +658,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubCustomers()
         stubConsumerSession()
 
+        // Instant debits includes unqiue labels. Test with custom font to ensure it renders correctly.
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.sizeScaleFactor = 1.15
+        appearance.font.base = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
+
         preparePaymentSheet(
             currency: "usd",
+            appearance: appearance,
             override_payment_methods_types: ["link"],
             automaticPaymentMethods: false,
             useLink: false
