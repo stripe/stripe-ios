@@ -2,7 +2,7 @@
 //  STPPaymentMethodTwint.swift
 //  StripePayments
 //
-//  Copyright © 2024 Stripe, Inc. All rights reserved.
+//  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
