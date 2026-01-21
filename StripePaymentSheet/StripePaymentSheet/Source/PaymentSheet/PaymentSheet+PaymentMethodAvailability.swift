@@ -186,7 +186,7 @@ extension Intent: PaymentMethodRequirementProvider {
             // Verification method is always 'automatic'
             return [.validUSBankVerificationMethod]
         case .checkoutSession:
-            // // TODO(porter) Figure out requirements for CheckoutSession for confirmation
+            // TODO(porter) Figure out requirements for CheckoutSession for confirmation
             return []
         }
     }

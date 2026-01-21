@@ -46,7 +46,6 @@ enum Intent {
                 return false
             }
         case .checkoutSession(let session):
-            // TODO(porter) Verify this is correct logic when implementing confirm
             return session.mode == .payment || session.mode == .subscription
         }
     }
@@ -131,7 +130,7 @@ enum Intent {
             }
             return nil
         case .setupIntent, .checkoutSession:
-            // TOOD(porter) Figure out SFU string during confirmation work
+            // TODO(porter) Figure out SFU string during confirmation work
             return nil
         }
     }
@@ -149,7 +148,7 @@ enum Intent {
             }
             return nil
         case .setupIntent, .checkoutSession:
-            // TOOD(porter) Figure out PMO+SFU during confirmation work
+            // TODO(porter) Figure out PMO+SFU during confirmation work
             return nil
         }
     }
