@@ -98,6 +98,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @_spi(STP) @objc private(set) public var shopPay: STPPaymentMethodShopPay?
     /// If this is a PayPay PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPay`), this contains additional details.
     @objc private(set) public var payPay: STPPaymentMethodPayPay?
+    /// If this is a TWINT PaymentMethod (i.e. `self.type == STPPaymentMethodTypeTwint`), this contains additional details.
+    @objc private(set) public var twint: STPPaymentMethodTwint?
 
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc private(set) public var allowRedisplay: STPPaymentMethodAllowRedisplay
@@ -164,6 +166,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "multibanco = \(String(describing: multibanco))",
             "mobilePay = \(String(describing: mobilePay))",
             "shopPay = \(String(describing: shopPay))",
+            "twint = \(String(describing: twint))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "allowRedisplay = \(allResponseFields["allow_redisplay"] as? String ?? "")",
             "type = \(allResponseFields["type"] as? String ?? "")",
@@ -361,6 +364,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.payPay = STPPaymentMethodPayPay.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "paypay")
+        )
+        paymentMethod.twint = STPPaymentMethodTwint.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "twint")
         )
         return paymentMethod
     }
