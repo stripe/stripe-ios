@@ -275,6 +275,9 @@ extension PaymentSheet {
                         await confirmationChallenge?.complete()
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
+                    // MARK: ↪ CheckoutSession
+                case .checkoutSession:
+                    completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
                 }
             }
 
@@ -331,6 +334,9 @@ extension PaymentSheet {
                     )
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
+                // MARK: ↪ CheckoutSession
+            case .checkoutSession:
+                completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -403,6 +409,8 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
+                    case .checkoutSession:
+                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
                     }
                 }
             }
@@ -476,6 +484,8 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
+                    case .checkoutSession:
+                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
                     }
                 }
             }
