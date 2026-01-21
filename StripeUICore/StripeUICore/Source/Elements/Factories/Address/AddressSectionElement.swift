@@ -174,6 +174,31 @@ import UIKit
     @_spi(STP) public var didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
 
+    /// The selection behavior used for individual field sections in `.spacing` mode.
+    /// Highlights the border of the focused field using the theme's selected border color.
+    private var spacingSelectionBehavior: SelectionBehavior {
+        let borderColor = theme.colors.selectedBorder ?? theme.colors.primary
+        // Determine the correct corner radius, accounting for Liquid Glass which uses 26pt corners
+        let cornerRadius: CGFloat
+        if let themeCornerRadius = theme.cornerRadius {
+            cornerRadius = themeCornerRadius
+        } else if LiquidGlassDetector.isEnabledInMerchantApp {
+            cornerRadius = 26.0
+        } else {
+            cornerRadius = ElementsUI.defaultCornerRadius
+        }
+        let params = UISpringTimingParameters(mass: 1.0, dampingRatio: 0.93, frequencyResponse: 0.22)
+        let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
+        animator.isInterruptible = true
+        let configuration = HighlightBorderConfiguration(
+            width: 2.0,
+            cornerRadius: cornerRadius,
+            color: borderColor,
+            animator: animator
+        )
+        return .highlightBorder(configuration: configuration)
+    }
+
     // MARK: - Implementation
     /**
      Creates an address section with a country dropdown populated from the given list of countryCodes.
@@ -406,7 +431,7 @@ import UIKit
         case .divider:
             [SectionElement(elements: allFields, separatorStyle: .divider, theme: theme)]
         case .spacing:
-            allFields.map { SectionElement(elements: [$0], theme: theme) }
+            allFields.map { SectionElement(elements: [$0], selectionBehavior: spacingSelectionBehavior, theme: theme) }
         }
 
         addressSections.forEach { $0.delegate = self }

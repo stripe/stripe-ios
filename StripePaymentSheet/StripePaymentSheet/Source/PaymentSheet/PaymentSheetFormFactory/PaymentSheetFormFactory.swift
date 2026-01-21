@@ -1127,6 +1127,7 @@ extension PaymentSheet.Appearance {
         colors.componentBackground = self.colors.componentBackground
         colors.bodyText = self.colors.text
         colors.border = self.colors.componentBorder
+        colors.selectedBorder = self.colors.selectedComponentBorder
         colors.divider = self.colors.componentDivider
         colors.textFieldText = self.colors.componentText
         colors.secondaryText = self.colors.textSecondary

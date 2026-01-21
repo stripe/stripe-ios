@@ -139,6 +139,7 @@ public enum SeparatorDisplayStyle {
         public var componentBackground = ElementsUI.backgroundColor
         public var disabledBackground = ElementsUI.disabledBackgroundColor
         public var border = ElementsUI.fieldBorderColor
+        public var selectedBorder: UIColor?
         public var divider = ElementsUI.fieldBorderColor
         public var textFieldText = UIColor.label
         public var bodyText = UIColor.label
