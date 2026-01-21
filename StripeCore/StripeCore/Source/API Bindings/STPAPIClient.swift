@@ -517,6 +517,9 @@ extension STPAPIClient {
             with: request,
             completionHandler: { (data, response, error) in
                 DispatchQueue.main.async {
+                    if let data {
+                        print("%@", String(data: data, encoding: .utf8)!)
+                    }
                     completion(
                         STPAPIClient.decodeResponse(data: data, error: error, response: response, request: request)
                     )
