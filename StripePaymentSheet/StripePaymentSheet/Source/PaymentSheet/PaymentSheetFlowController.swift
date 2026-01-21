@@ -708,7 +708,7 @@ extension PaymentSheet {
                 loadResult: viewController.loadResult,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
-                shouldLogExposure: true
+                shouldLogExperimentExposure: true
             )
         }
 
@@ -744,7 +744,7 @@ extension PaymentSheet {
                 loadResult: loadResult,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
-                shouldLogExposure: shouldLogExperimentExposure
+                shouldLogExperimentExposure: shouldLogExperimentExposure
             )
             switch resolvedPaymentMethodLayout {
             case .horizontal:

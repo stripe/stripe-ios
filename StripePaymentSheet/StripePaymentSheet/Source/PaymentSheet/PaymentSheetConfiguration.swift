@@ -260,7 +260,7 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             configuration: PaymentElementConfiguration,
             analyticsHelper: PaymentSheetAnalyticsHelper,
-            shouldLogExposure: Bool = true
+            shouldLogExperimentExposure: Bool = true
         ) -> PaymentMethodLayout.ResolvedLayout {
             var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout
             switch paymentMethodLayout {
@@ -311,7 +311,7 @@ extension PaymentSheet {
                     let isExperimentActive = elementsSession.experimentsData?.experimentAssignments[experiment.name] != nil
                     if isExperimentActive {
                         // Log experiment exposure (if not deferred)
-                        if shouldLogExposure {
+                        if shouldLogExperimentExposure {
                             analyticsHelper.logExposure(experiment: experiment)
                         }
                         // Return horizontal for treatment and vertical otherwise
