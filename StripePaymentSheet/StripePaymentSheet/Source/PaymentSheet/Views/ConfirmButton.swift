@@ -376,7 +376,6 @@ class ConfirmButton: UIControl {
                 duration: animationDuration,
                 options: .transitionCrossDissolve
             ) {
-              
                 // UILabel's documentation states that setting the text will override an existing attributedText, but that isn't true. We need to reset it manually.
                 self.titleLabel.attributedText = nil
                 self.titleLabel.text = text
