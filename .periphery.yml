@@ -12,8 +12,8 @@ retain_public: true
 retain_objc_accessible: false
 retain_objc_annotated: false
 exclude_tests: true
-
 verbose: true
+no_retain_spi: ["STP"]
 
 build_arguments:
   - -destination

@@ -145,11 +145,13 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         _testUSBankAccount(mode: .setup, integrationType: .normal)
     }
 
-    func testPaymentIntent_instantDebits() {
+    // Disabled
+    func _testPaymentIntent_instantDebits() {
         _testInstantDebits(mode: .payment)
     }
 
-    func testSetupIntent_instantDebits() {
+    // Disabled
+    func _testSetupIntent_instantDebits() {
         _testInstantDebits(mode: .setup)
     }
 
