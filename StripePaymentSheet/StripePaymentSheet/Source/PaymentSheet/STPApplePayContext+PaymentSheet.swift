@@ -57,6 +57,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
+        case .checkoutSession:
+            throw STPApplePayContext.makeUnknownError(message: "Apple Pay is not yet supported by CheckoutSession.")
         case .deferredIntent(let intentConfig):
             guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
                 assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
