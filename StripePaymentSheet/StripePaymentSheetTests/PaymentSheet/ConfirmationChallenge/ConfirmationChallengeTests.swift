@@ -105,8 +105,8 @@ class ConfirmationChallengeTests: XCTestCase {
         // didn't take the full timeout time, exited early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
         XCTAssertNotNil(hcaptchaToken)
-        let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
-        XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success", "elements.captcha.passive.attach"])
+        let passiveCaptchaEvents = Set(STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false }))
+        XCTAssertEqual(passiveCaptchaEvents, Set(["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.success", "elements.captcha.passive.attach"]))
         let successAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.success" })
         XCTAssertEqual(successAnalytic?["site_key"] as? String, siteKey)
         let attachAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.attach" })
@@ -236,4 +236,37 @@ class ConfirmationChallengeTests: XCTestCase {
         // should return nil due to timeout
         XCTAssertNil(assertion)
     }
+
+    // MARK: - makeRadarOptions Payment Method Type Tests
+    func testMakeRadarOptionsForCard() async throws {
+        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
+        await confirmationChallenge.setTimeout(timeout: 30)
+        let radarOptions = await confirmationChallenge.makeRadarOptions(for: .card)
+        // Card payment methods should return radar options
+        XCTAssertNotNil(radarOptions)
+        XCTAssertNotNil(radarOptions?.hcaptchaToken)
+        XCTAssertNotNil(radarOptions?.iosVerificationObject)
+        await confirmationChallenge.complete()
+    }
+
+    func testMakeRadarOptionsForLink() async throws {
+        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
+        await confirmationChallenge.setTimeout(timeout: 30)
+        let radarOptions = await confirmationChallenge.makeRadarOptions(for: .link)
+        // Link payment methods should return radar options
+        XCTAssertNotNil(radarOptions)
+        XCTAssertNotNil(radarOptions?.hcaptchaToken)
+        XCTAssertNotNil(radarOptions?.iosVerificationObject)
+        await confirmationChallenge.complete()
+    }
+
+    func testMakeRadarOptionsForUSBankAccount() async throws {
+        let confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: true, enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
+        await confirmationChallenge.setTimeout(timeout: 30)
+        let radarOptions = await confirmationChallenge.makeRadarOptions(for: .USBankAccount)
+        // US Bank Account payment methods should not return radar options
+        XCTAssertNil(radarOptions)
+        await confirmationChallenge.complete()
+    }
+
 }

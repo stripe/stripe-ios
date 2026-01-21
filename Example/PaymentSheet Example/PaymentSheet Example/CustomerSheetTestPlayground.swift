@@ -67,6 +67,7 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: customerKeyTypeBinding)
                         HStack {
                             TextField("CustomerId", text: customerIdBinding)
+                                .autocorrectionDisabled()
                             if playgroundController.settings.customerKeyType == .customerSession {
                                 Spacer()
                                 Button {

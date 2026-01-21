@@ -157,17 +157,24 @@ public class PaymentSheet {
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {
-                        switch self.configuration.paymentMethodLayout {
+                        // Resolve automatic layout based on experiment
+                        var configuration = self.configuration
+                        let resolvedPaymentMethodLayout = configuration.resolveLayout(
+                            loadResult: loadResult,
+                            configuration: self.configuration,
+                            analyticsHelper: self.analyticsHelper
+                        )
+                        switch resolvedPaymentMethodLayout {
                         case .horizontal:
                             return PaymentSheetViewController(
-                                configuration: self.configuration,
+                                configuration: configuration,
                                 loadResult: loadResult,
                                 analyticsHelper: self.analyticsHelper,
                                 delegate: self
                             )
-                        case .vertical, .automatic:
+                        case .vertical:
                             let verticalVC = PaymentSheetVerticalViewController(
-                                configuration: self.configuration,
+                                configuration: configuration,
                                 loadResult: loadResult,
                                 isFlowController: false,
                                 analyticsHelper: self.analyticsHelper

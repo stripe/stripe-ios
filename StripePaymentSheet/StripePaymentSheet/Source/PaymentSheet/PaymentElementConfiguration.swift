@@ -43,7 +43,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
-    var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
+    var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout? { get }
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
 }
@@ -106,7 +106,6 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
         get { return nil }
         set {}
     }
-    var paymentMethodLayout: PaymentSheet.PaymentMethodLayout {
-        return .vertical
-    }
+
+    var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout? { .vertical }
 }

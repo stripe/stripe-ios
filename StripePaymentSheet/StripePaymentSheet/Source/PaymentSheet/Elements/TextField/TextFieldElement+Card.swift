@@ -205,20 +205,28 @@ extension TextFieldElement {
             guard text.count >= 6 else { return nil }
 
             // Read funding data from STPBINController's cache
-            let binRange = binController.mostSpecificBINRange(forNumber: text)
+            let binRanges = binController.binRanges(forNumber: text)
 
-            // Only warn if we have real funding data from the metadata service (not hardcoded fallback data)
-            guard !binRange.isHardcoded else { return nil }
+            // Filter to only non-hardcoded BIN ranges (real data from metadata service)
+            let nonHardcodedRanges = binRanges.filter { !$0.isHardcoded }
 
-            if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
-                guard let warningMessage = cardFundingFilter.allowedFundingTypesDisplayString() else {
-                    stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
-                    return nil
+            // If there are no non-hardcoded ranges, don't warn (we don't have reliable funding info)
+            guard !nonHardcodedRanges.isEmpty else { return nil }
+
+            // Some cards may have dual funding types. Only block if ALL funding types are disallowed.
+            // If any funding type is accepted, allow the card.
+            for binRange in nonHardcodedRanges {
+                if cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
+                    return nil  // At least one funding type is allowed
                 }
-                return warningMessage
             }
 
-            return nil
+            // All funding types are disallowed, show warning
+            guard let warningMessage = cardFundingFilter.allowedFundingTypesDisplayString() else {
+                stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
+                return nil
+            }
+            return warningMessage
         }
     }
 }

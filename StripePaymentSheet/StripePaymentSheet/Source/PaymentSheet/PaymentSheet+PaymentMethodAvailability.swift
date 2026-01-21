@@ -306,7 +306,7 @@ extension PaymentSheet {
 
 @_spi(STP) extension STPPaymentMethodType {
 
-    /// Payment method types that require mandate data for PaymentIntents when setup_future_usage is off_session
+    /// Payment method types that require mandate data for PaymentIntents when `setup_future_usage` is set
     static var requiresMandateDataForPaymentIntent: Set<STPPaymentMethodType> {
         [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay]
     }

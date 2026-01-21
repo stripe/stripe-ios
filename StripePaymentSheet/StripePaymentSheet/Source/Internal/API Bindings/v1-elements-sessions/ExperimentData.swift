@@ -11,6 +11,7 @@ import Foundation
     case control
     case treatment
     case holdback
+    case controlTest = "control_test"
 }
 
 @_spi(STP) public class ExperimentsData: NSObject, STPAPIResponseDecodable {

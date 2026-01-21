@@ -93,21 +93,27 @@ extension DownloadManager {
     // Common download functions
 
     private func downloadImageSkippingCacheRead(url: URL) async throws -> UIImage {
+        var errorParams: [String: Any] = ["url": url.absoluteString]
         do {
-            let (data, _) = try await session.data(from: url)
+            let (data, response) = try await session.data(from: url)
+            // log extra info about response for analytics in case of error
+            if let httpResponse = response as? HTTPURLResponse {
+                errorParams["http_status"] = httpResponse.statusCode
+                errorParams["content_type"] = httpResponse.allHeaderFields["Content-Type"]
+                errorParams["content_length"] = httpResponse.allHeaderFields["Content-Length"]
+            }
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
             Task {
                 // Cache the image in memory
                 self.imageCacheLock.withLock {
                     self.imageCache[url] = image
                 }
-
             }
             return image
         } catch {
             let errorAnalytic = ErrorAnalytic(event: .stripePaymentSheetDownloadManagerError,
                                               error: error,
-                                              additionalNonPIIParams: ["url": url.absoluteString])
+                                              additionalNonPIIParams: errorParams)
             analyticsClient.log(analytic: errorAnalytic)
             throw error
         }

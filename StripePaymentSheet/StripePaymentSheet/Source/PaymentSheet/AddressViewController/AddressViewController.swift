@@ -547,13 +547,12 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         }
 
         if let autocompleteCountryIndex = autocompleteCountryIndex {
-            addressSection.country.select(index: autocompleteCountryIndex)
+            addressSection.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
         }
         addressSection.line1?.setText(address.line1 ?? "")
         addressSection.city?.setText(address.city ?? "")
         addressSection.postalCode?.setText(address.postalCode ?? "")
         addressSection.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
-        addressSection.state?.view.resignFirstResponder()
 
         self.selectedAutoCompleteResult = address
     }

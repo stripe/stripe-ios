@@ -143,6 +143,7 @@ struct PaymentSheetTestPlayground: View {
                         if playgroundController.settings.apmsEnabled == .off {
                             TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
                                 .autocapitalization(.none)
+                                .autocorrectionDisabled()
                         }
                     }
                     Group {
@@ -193,6 +194,7 @@ struct PaymentSheetTestPlayground: View {
                         clientSettings
                         TextField("Custom CTA", text: customCTABinding)
                         TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
+                            .autocorrectionDisabled()
                     }
                     Divider()
                     Group {

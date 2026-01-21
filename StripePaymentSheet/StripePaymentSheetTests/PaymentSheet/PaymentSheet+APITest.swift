@@ -1333,23 +1333,25 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             )
             // ...shouldn't have mandate data
             XCTAssertNil(params_for_pi_without_sfu.mandateData)
-            // Params for pi with SFU supplied...
-            let params_for_pi_with_sfu = PaymentSheet.makePaymentIntentParams(
+            // Params for pi with off_session SFU supplied...
+            let params_for_pi_with_sfu_off_session = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .offSession),
                 configuration: configuration
             )
             // ...should have mandate data
-            XCTAssertNotNil(params_for_pi_with_sfu.mandateData)
-            XCTAssert(params_for_pi_with_sfu.mandateData != nil)
-            // Params for pi with on session SFU supplied...
+            XCTAssertNotNil(params_for_pi_with_sfu_off_session.mandateData)
+            XCTAssert(params_for_pi_with_sfu_off_session.mandateData != nil)
+            // Params for pi with on_session SFU supplied...
             let params_for_pi_with_sfu_on_session = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(setupFutureUsage: .onSession),
                 configuration: configuration
             )
             // ...shouldn't have mandate data
-            XCTAssertNil(params_for_pi_with_sfu_on_session.mandateData)
+            // ...should have mandate data
+            XCTAssertNotNil(params_for_pi_with_sfu_on_session.mandateData)
+            XCTAssert(params_for_pi_with_sfu_on_session.mandateData != nil)
             // Params for si
             let params_for_si_with_sfu = PaymentSheet.makeSetupIntentParams(
                 confirmPaymentMethodType: confirmType,
@@ -1359,22 +1361,22 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             // ...should have mandate data
             XCTAssertNotNil(params_for_si_with_sfu.mandateData)
 
-            // Params for pi with PMO SFU supplied...
-            let params_for_pi_with_pmo_sfu = PaymentSheet.makePaymentIntentParams(
+            // Params for pi with off_session PMO SFU supplied...
+            let params_for_pi_with_pmo_sfu_off_session = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["paypal": ["setup_future_usage": "off_session"]])),
                 configuration: configuration
             )
             // ...should have mandate data
-            XCTAssertNotNil(params_for_pi_with_pmo_sfu.mandateData)
-            // Params for pi with on session PMO SFU supplied...
+            XCTAssertNotNil(params_for_pi_with_pmo_sfu_off_session.mandateData)
+            // Params for pi with on_session PMO SFU supplied...
             let params_for_pi_with_pmo_sfu_on_session = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
                 paymentIntent: STPFixtures.makePaymentIntent(paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["paypal": ["setup_future_usage": "on_session"]])),
                 configuration: configuration
             )
             // ...shouldn't have mandate data
-            XCTAssertNil(params_for_pi_with_pmo_sfu_on_session.mandateData)
+            XCTAssertNotNil(params_for_pi_with_pmo_sfu_on_session.mandateData)
             // Params for pi with SFU supplied and PMO SFU none...
             let params_for_pi_with_top_level_sfu_pmo_none = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
