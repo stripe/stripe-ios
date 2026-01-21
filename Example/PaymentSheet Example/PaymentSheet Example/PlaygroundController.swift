@@ -907,7 +907,9 @@ extension PlaygroundController {
                 self.customerId = json["customerId"]
                 self.customerSessionClientSecret = json["customerSessionClientSecret"]
                 self.paymentMethodTypes = json["paymentMethodTypes"]?.components(separatedBy: ",")
-                STPAPIClient.shared.publishableKey = json["publishableKey"]
+                if let publishableKey = json["publishableKey"] {
+                    STPAPIClient.shared.publishableKey = publishableKey
+                }
 
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
                 self.addressDetails = nil
@@ -1030,6 +1032,16 @@ extension PlaygroundController {
             "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
+
+        // Send custom keys to backend if provided
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            body["custom_secret_key"] = customSecretKey
+        }
+        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            body["custom_publishable_key"] = customPublishableKey
+            STPAPIClient.shared.publishableKey = customPublishableKey
+        }
+
         if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
             body["supported_payment_methods"] = supportedPaymentMethods
                 .trimmingCharacters(in: .whitespacesAndNewlines)
