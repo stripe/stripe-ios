@@ -45,6 +45,9 @@ final class CardSectionElement: ContainerElement {
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
     let cardFundingFilter: CardFundingFilter
+    /// Separate BIN controller for funding filtering to avoid polluting
+    /// See: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5052
+    private let fundingBinController: STPBINController = STPBINController()
     private let opensCardScannerAutomatically: Bool
 
     private let linkAppearance: LinkAppearance?
@@ -120,7 +123,8 @@ final class CardSectionElement: ContainerElement {
             defaultValue: defaultValues.pan,
             cardBrandDropDown: cardBrandDropDown?.element,
             cardBrandFilter: cardBrandFilter,
-            cardFundingFilter: cardFundingFilter
+            cardFundingFilter: cardFundingFilter,
+            fundingBinController: fundingBinController
         ), theme: theme) { field, params in
             cardParams(for: params).number = field.text
             return params
@@ -249,7 +253,7 @@ final class CardSectionElement: ContainerElement {
             return
         }
 
-        STPBINController.shared.retrieveBINRanges(
+        fundingBinController.retrieveBINRanges(
             forPrefix: binPrefix,
             recordErrorsAsSuccess: false,
             onlyFetchForVariableLengthBINs: false

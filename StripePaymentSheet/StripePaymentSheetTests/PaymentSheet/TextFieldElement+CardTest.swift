@@ -420,9 +420,10 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         // Visa credit card
         let visaCredit = "4242424242424242"
 
-        // First, fetch BIN ranges so we have funding info
+        // First, fetch BIN ranges via the injected fundingBinController
+        let panConfig = textFieldElement.configuration as! TextFieldElement.PANConfiguration
         let fetchExpectation = expectation(description: "Fetch BIN Range")
-        (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.retrieveBINRanges(
+        panConfig.fundingBinController!.retrieveBINRanges(
             forPrefix: String(visaCredit.prefix(6)),
             recordErrorsAsSuccess: false,
             onlyFetchForVariableLengthBINs: false
@@ -509,18 +510,19 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testPANValidation_cardFundingFiltering_noWarningForAllowedFunding() throws {
+        let fundingBinController = STPBINController()
         var configuration = TextFieldElement.PANConfiguration(
-            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true)
+            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true),
+            fundingBinController: fundingBinController
         )
-        let binController = STPBINController()
-        configuration.binController = binController
+        configuration.binController = STPBINController()
 
         // Visa debit card number
         let visaDebit = "4000056655665556"
 
-        // Fetch BIN ranges from the network
+        // Fetch BIN ranges from the network using the funding controller
         let fetchExpectation = expectation(description: "Fetch BIN Range")
-        binController.retrieveBINRanges(
+        fundingBinController.retrieveBINRanges(
             forPrefix: String(visaDebit.prefix(6)),
             recordErrorsAsSuccess: false,
             onlyFetchForVariableLengthBINs: false
@@ -529,7 +531,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         }
         wait(for: [fetchExpectation], timeout: 10)
 
-        let binRange = binController.mostSpecificBINRange(forNumber: visaDebit)
+        let binRange = fundingBinController.mostSpecificBINRange(forNumber: visaDebit)
         if !binRange.isHardcoded && binRange.funding == .debit {
             // Should be valid with no warning for debit card when debit is allowed
             XCTAssertTrue(configuration.simulateValidationState(visaDebit).isValid)
