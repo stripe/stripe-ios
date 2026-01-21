@@ -695,6 +695,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var currency: Currency
     var amount: Amount
     var merchantCountryCode: MerchantCountry
+    // For testing purposes only; keys should typically not be defined on the client
     var customSecretKey: String?
     var customPublishableKey: String?
     var apmsEnabled: APMSEnabled
@@ -759,7 +760,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             customerMode: .guest,
             currency: .usd,
             amount: ._50,
-            merchantCountryCode: .US,
+            merchantCountryCode: .custom,
             apmsEnabled: .on,
             paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,

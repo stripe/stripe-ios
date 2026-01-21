@@ -140,10 +140,10 @@ struct PaymentSheetTestPlayground: View {
                         }
                         SettingPickerView(setting: merchantCountryBinding)
                         if playgroundController.settings.merchantCountryCode == .custom {
-                            TextField("Custom secret key", text: customSecretKeyBinding)
+                            TextField("sk_(test/live)_...", text: customSecretKeyBinding)
                                 .autocapitalization(.none)
                                 .autocorrectionDisabled()
-                            TextField("Custom publishable key", text: customPublishableKeyBinding)
+                            TextField("pk_(test/live)_...", text: customPublishableKeyBinding)
                                 .autocapitalization(.none)
                                 .autocorrectionDisabled()
                         }
@@ -296,6 +296,11 @@ struct PaymentSheetTestPlayground: View {
             // Disable CPMs if we switch to non-US merchant
             if newCountry != .US {
                 playgroundController.settings.customPaymentMethods = .off
+            }
+            // Clear custom keys if we switch to non-custom merchant
+            if newCountry != .custom {
+                playgroundController.settings.customSecretKey = nil
+                playgroundController.settings.customPublishableKey = nil
             }
             playgroundController.settings.merchantCountryCode = newCountry
         }
