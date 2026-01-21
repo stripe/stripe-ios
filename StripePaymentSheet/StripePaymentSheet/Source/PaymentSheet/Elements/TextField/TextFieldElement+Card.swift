@@ -25,19 +25,24 @@ extension TextFieldElement {
         let cardBrandDropDown: DropdownFieldElement?
         let cardBrandFilter: CardBrandFilter
         let cardFundingFilter: CardFundingFilter
+        /// Separate BIN controller for funding filtering to avoid polluting
+        /// See: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5052
+        let fundingBinController: STPBINController?
 
         init(
             defaultValue: String? = nil,
             cardBrand: STPCardBrand? = nil,
             cardBrandDropDown: DropdownFieldElement? = nil,
             cardBrandFilter: CardBrandFilter = .default,
-            cardFundingFilter: CardFundingFilter = .default
+            cardFundingFilter: CardFundingFilter = .default,
+            fundingBinController: STPBINController? = nil
         ) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
             self.cardBrandDropDown = cardBrandDropDown
             self.cardBrandFilter = cardBrandFilter
             self.cardFundingFilter = cardFundingFilter
+            self.fundingBinController = fundingBinController
         }
 
         private func cardBrand(for text: String) -> STPCardBrand {
@@ -203,9 +208,11 @@ extension TextFieldElement {
         func warningLabel(text: String) -> String? {
             guard cardFundingFilter != .default else { return nil }
             guard text.count >= 6 else { return nil }
+            guard let fundingBinController else { return nil }
 
-            // Read funding data from STPBINController's cache
-            let binRanges = binController.binRanges(forNumber: text)
+            // Read funding data from isolated controller's cache
+            // (fundingBinController is injected from CardSectionElement to avoid polluting STPBINController.shared)
+            let binRanges = fundingBinController.binRanges(forNumber: text)
 
             // Filter to only non-hardcoded BIN ranges (real data from metadata service)
             let nonHardcodedRanges = binRanges.filter { !$0.isHardcoded }
