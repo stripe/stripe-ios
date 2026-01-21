@@ -716,14 +716,15 @@ extension PaymentSheet {
             guard needsToLogLayoutExperimentExposure else { return }
             needsToLogLayoutExperimentExposure = false
 
-            // Re-resolve the layout to log the exposure this time
-            var mutableConfig = configuration
-            _ = mutableConfig.resolveLayout(
+            let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
                 loadResult: viewController.loadResult,
                 configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                shouldLogExperimentExposure: true
+                analyticsHelper: analyticsHelper
             )
+
+            experiments.forEach { experiment in
+                analyticsHelper.logExposure(experiment: experiment)
+            }
         }
 
         // MARK: Internal helper methods
