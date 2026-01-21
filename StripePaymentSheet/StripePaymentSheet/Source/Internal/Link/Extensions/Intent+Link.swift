@@ -74,6 +74,11 @@ extension Intent {
             case .setup:
                 return .setup
             }
+        case .checkoutSession(let session):
+            if let amount = session.totalSummary?.total, let currency = session.currency {
+                return .pay(amount: amount, currency: currency)
+            }
+            return .setup
         }
     }
 }

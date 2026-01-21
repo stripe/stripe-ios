@@ -46,6 +46,11 @@ class ConfirmButton: UIControl {
                 case .setup:
                     return .setup
                 }
+            case .checkoutSession(let checkoutSession):
+                if let amount = checkoutSession.totalSummary?.total, let currency = checkoutSession.currency {
+                    return .pay(amount: amount, currency: currency)
+                }
+                return .setup
             }
         }
 
@@ -62,6 +67,11 @@ class ConfirmButton: UIControl {
                 case .setup:
                     return .continue
                 }
+            case .checkoutSession(let checkoutSession):
+                if let amount = checkoutSession.totalSummary?.total, let currency = checkoutSession.currency {
+                    return .pay(amount: amount, currency: currency, withLock: false)
+                }
+                return .continue
             }
         }
     }
@@ -503,6 +513,8 @@ class ConfirmButton: UIControl {
         }
 
         // if foreground is set prefer that over a dynamic contrasting color in all other states
+        // Note: With the default .systemBlue button color in dark mode, background.contrastingColor is white
+        //      in iOS <26 and black in iOS >26 due to system color changes. This is expected and intended.
         return overriddenForegroundColor ?? background.contrastingColor
     }
 
