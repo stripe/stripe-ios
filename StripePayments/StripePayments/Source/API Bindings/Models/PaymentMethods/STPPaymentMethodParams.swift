@@ -111,6 +111,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc @_spi(STP) public var shopPay: STPPaymentMethodShopPayParams?
     /// If this is a PayPay PaymentMethod, this contains additional details.
     @objc public var payPay: STPPaymentMethodPayPayParams?
+    /// If this is a TWINT PaymentMethod, this contains additional details.
+    @objc public var twint: STPPaymentMethodTwintParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -746,6 +748,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a TWINT PaymentMethod.
+    /// - Parameters:
+    ///   - twint:               An object containing additional TWINT details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        twint: STPPaymentMethodTwintParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .twint
+        self.twint = twint
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -790,6 +810,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: crypto)): "crypto",
             NSStringFromSelector(#selector(getter: multibanco)): "multibanco",
             NSStringFromSelector(#selector(getter: payPay)): "paypay",
+            NSStringFromSelector(#selector(getter: twint)): "twint",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1154,6 +1175,24 @@ extension STPPaymentMethodParams {
             metadata: metadata
         )
     }
+
+    /// Creates params for a TWINT PaymentMethod.
+    /// - Parameters:
+    ///   - twint:          An object containing additional TWINT details.
+    ///   - billingDetails: An object containing the user's billing details.
+    ///   - metadata:       Additional information to attach to the PaymentMethod.
+    @objc(paramsWithTwint:billingDetails:metadata:)
+    public class func paramsWith(
+        twint: STPPaymentMethodTwintParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) -> STPPaymentMethodParams {
+        return STPPaymentMethodParams(
+            twint: twint,
+            billingDetails: billingDetails,
+            metadata: metadata
+        )
+    }
 }
 
 extension STPPaymentMethodParams {
@@ -1235,7 +1274,9 @@ extension STPPaymentMethodParams {
             shopPay = STPPaymentMethodShopPayParams()
         case .payPay:
             payPay = STPPaymentMethodPayPayParams()
-        case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint:
+        case .twint:
+            twint = STPPaymentMethodTwintParams()
+        case .cardPresent, .paynow, .zip, .konbini, .promptPay:
             // These payment methods don't have any params
             break
         case .unknown:
