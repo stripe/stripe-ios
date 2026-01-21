@@ -279,7 +279,7 @@ extension PaymentSheet {
                 )
 
                 experiments.forEach { experiment in
-                    // Log experiment exposure (if not deferred)
+                    // Log experiment exposure if needed
                     if shouldLogExperimentExposure {
                         analyticsHelper.logExposure(experiment: experiment)
                     }
