@@ -47,7 +47,7 @@ class ConfirmButton: UIControl {
                     return .setup
                 }
             case .checkoutSession(let checkoutSession):
-                if let amount = checkoutSession.amountTotal, let currency = checkoutSession.currency {
+                if let amount = checkoutSession.totalSummary?.total, let currency = checkoutSession.currency {
                     return .pay(amount: amount, currency: currency)
                 }
                 return .setup
@@ -68,7 +68,7 @@ class ConfirmButton: UIControl {
                     return .continue
                 }
             case .checkoutSession(let checkoutSession):
-                if let amount = checkoutSession.amountTotal, let currency = checkoutSession.currency {
+                if let amount = checkoutSession.totalSummary?.total, let currency = checkoutSession.currency {
                     return .pay(amount: amount, currency: currency, withLock: false)
                 }
                 return .continue

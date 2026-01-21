@@ -663,6 +663,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
                 XCTAssertEqual(checkoutSession.mode, .payment)
                 XCTAssertEqual(checkoutSession.status, .open)
+                XCTAssertEqual(checkoutSession.totalSummary?.total, 1000)
                 // Verify elements session is loaded
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 // Verify payment methods are loaded
