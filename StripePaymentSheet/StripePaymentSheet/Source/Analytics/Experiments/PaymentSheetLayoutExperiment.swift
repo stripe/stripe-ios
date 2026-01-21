@@ -66,7 +66,7 @@ struct PaymentSheetLayoutExperiment {
         guard let arbId = elementsSession.experimentsData?.arbId else {
             return []
         }
-        
+
         // Calculate client-side filtered wallet types
         var walletTypes: [String] = []
         if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
