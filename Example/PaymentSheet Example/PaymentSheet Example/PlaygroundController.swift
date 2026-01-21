@@ -1039,6 +1039,7 @@ extension PlaygroundController {
         }
         if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
             body["custom_publishable_key"] = customPublishableKey
+            STPAPIClient.shared.publishableKey = customPublishableKey
         }
 
         if settings.apmsEnabled == .off, let supportedPaymentMethods = settings.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {

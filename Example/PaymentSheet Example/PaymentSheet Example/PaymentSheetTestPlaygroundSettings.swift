@@ -698,6 +698,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var currency: Currency
     var amount: Amount
     var merchantCountryCode: MerchantCountry
+    // For testing purposes only; keys should typically not be defined on the client
     var customSecretKey: String?
     var customPublishableKey: String?
     var apmsEnabled: APMSEnabled
