@@ -305,7 +305,7 @@ extension PaymentSheet {
             self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: self.configuration.enablePassiveCaptcha, enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
             self.viewController.confirmationChallenge = self.confirmationChallenge
             // Defer experiment exposure logging until the sheet is presented
-            self.needsToLogLayoutExperimentExposure = true
+            self.needsToLogLayoutExperimentExposure = configuration.paymentMethodLayout == .automatic
             updatePaymentOption()
         }
 
@@ -658,7 +658,7 @@ extension PaymentSheet {
                     )
                     self.viewController.flowControllerDelegate = self
                     // Defer experiment exposure logging until next presentation
-                    self.needsToLogLayoutExperimentExposure = true
+                    self.needsToLogLayoutExperimentExposure = configuration.paymentMethodLayout == .automatic
 
                     // Update the payment option and synchronously pre-load image into cache
                     self.updatePaymentOption()
@@ -692,7 +692,7 @@ extension PaymentSheet {
             )
             self.viewController.flowControllerDelegate = self
             // Defer experiment exposure logging until next presentation
-            self.needsToLogLayoutExperimentExposure = true
+            self.needsToLogLayoutExperimentExposure = configuration.paymentMethodLayout == .automatic
             updatePaymentOption()
         }
 
@@ -713,7 +713,7 @@ extension PaymentSheet {
 
         /// Logs experiment exposure if it was deferred during initialization
         private func logExperimentExposureIfNeeded() {
-            guard needsToLogLayoutExperimentExposure, configuration.paymentMethodLayout == .automatic else { return }
+            guard needsToLogLayoutExperimentExposure else { return }
             needsToLogLayoutExperimentExposure = false
 
             let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
