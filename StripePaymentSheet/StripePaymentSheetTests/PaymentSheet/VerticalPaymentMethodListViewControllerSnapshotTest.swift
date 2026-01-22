@@ -26,7 +26,28 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
     }
 
     // A list of PMs that have hardcoded image assets
-    let paymentMethods = STPPaymentMethodType.allCases.filter { ![.cardPresent, .netBanking, .weChatPay, .link, .shopPay, .unknown].contains($0) }
+    let paymentMethods: [STPPaymentMethodType] = [
+        .afterpayClearpay,
+        .alipay,
+        .AUBECSDebit,
+        .bancontact,
+        .USBankAccount,
+        .blik,
+        .boleto,
+        .cashApp,
+        .card,
+        .EPS,
+        .iDEAL,
+        .klarna,
+        .konbini,
+        .OXXO,
+        .przelewy24,
+        .payPal,
+        .revolutPay,
+        .SEPADebit,
+        .swish,
+        .UPI,
+    ]
 
     override func setUp() {
         super.setUp()
