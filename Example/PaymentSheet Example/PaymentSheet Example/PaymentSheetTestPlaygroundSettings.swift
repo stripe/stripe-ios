@@ -73,7 +73,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             case .deferred_mp:
                 return "Deferred multiprocessor flow"
             case .checkoutSession:
-                return "Checkout Session"
+                return "CheckoutSession"
             }
         }
 
