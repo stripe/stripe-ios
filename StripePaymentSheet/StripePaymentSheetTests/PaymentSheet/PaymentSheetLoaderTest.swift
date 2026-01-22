@@ -640,10 +640,11 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     @MainActor
     func testPaymentSheetLoadWithCheckoutSession() async throws {
         let expectation = XCTestExpectation(description: "Load w/ CheckoutSession")
-        // A valid test CheckoutSession ID
-        let checkoutSessionId = "cs_test_a1L7sJ2iNt90Q00lA5ehrBJFJVLMwFbRCkCKEOBvR4wl30uNqGalDt9Suf"
+        // Fetch a fresh checkout session from the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionId = checkoutSessionResponse.id
         var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = apiClient
+        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         PaymentSheetLoader.load(
             mode: .checkoutSession(checkoutSessionId),
@@ -663,7 +664,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
                 XCTAssertEqual(checkoutSession.mode, .payment)
                 XCTAssertEqual(checkoutSession.status, .open)
-                XCTAssertEqual(checkoutSession.totalSummary?.total, 1000)
+                XCTAssertEqual(checkoutSession.totalSummary?.total, 2000)
                 // Verify elements session is loaded
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 // Verify payment methods are loaded
