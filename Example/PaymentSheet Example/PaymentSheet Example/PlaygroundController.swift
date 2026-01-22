@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -593,6 +593,7 @@ class PlaygroundController: ObservableObject {
     }
 
     var clientSecret: String?
+    var checkoutSessionId: String?
     var customerId: String?
     var ephemeralKey: String?
     var customerSessionClientSecret: String?
@@ -705,6 +706,8 @@ class PlaygroundController: ObservableObject {
             }
         case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
+        case .checkoutSession:
+            mc = PaymentSheet(checkoutSessionId: self.checkoutSessionId!, configuration: configuration)
         }
 
         self.paymentSheet = mc
@@ -855,7 +858,7 @@ extension PlaygroundController {
             oldModifiedWithNewMode.mode = settings.mode
             return oldModifiedWithNewMode == settings
         }()
-        let isDeferred = settings.integrationType != .normal
+        let isDeferred = !settings.integrationType.isIntentFirst
         let shouldUpdateEmbeddedInsteadOfRecreating = !reinitializeControllers && onlyDifferenceBetweenSettingsIsMode && isDeferred && embeddedPlaygroundViewController != nil
         if !shouldUpdateEmbeddedInsteadOfRecreating {
             embeddedPlaygroundViewController = nil
@@ -911,12 +914,25 @@ extension PlaygroundController {
                     STPAPIClient.shared.publishableKey = publishableKey
                 }
 
+                // Extract checkout session ID from client secret if using CheckoutSession
+                if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
+                    self.checkoutSessionId = Self.extractCheckoutSessionId(from: checkoutSessionClientSecret)
+                } else {
+                    self.checkoutSessionId = nil
+                }
+
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
                 self.addressDetails = nil
                 // Persist customerId / customerMode
                 self.serializeSettingsToNSUserDefaults()
-                let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")// Avoid logging client secrets as a matter of best practice even though this is testmode
-                print("✅ Test playground finished loading with intent id: \(intentID ?? "")) and customer id: \(self.customerId ?? "") ")
+                let idDescription: String = {
+                    if let checkoutSessionId = self.checkoutSessionId {
+                        return "checkout session id: \(checkoutSessionId)"
+                    }
+                    let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")
+                    return "intent id: \(intentID ?? "")"
+                }()
+                print("✅ Test playground finished loading with \(idDescription) and customer id: \(self.customerId ?? "") ")
 
                 switch self.settings.uiStyle {
                 case .paymentSheet:
@@ -972,6 +988,13 @@ extension PlaygroundController {
                             configuration: self.configuration,
                             completion: completion
                         )
+
+                    case .checkoutSession:
+                        PaymentSheet.FlowController.create(
+                            checkoutSessionId: self.checkoutSessionId!,
+                            configuration: self.configuration,
+                            completion: completion
+                        )
                     }
                 case .embedded:
                     guard !shouldUpdateEmbeddedInsteadOfRecreating else {
@@ -1018,12 +1041,15 @@ extension PlaygroundController {
 
     /// Builds the common request body parameters used for both loading backend and creating intents
     private func buildRequestBody(shouldCreateCustomerKey: Bool = true) -> [String: Any] {
+        // TODO(porter) Expand to PI+SFU and SI later, we only support payment mode with CheckoutSession for now
+        let mode = settings.integrationType == .checkoutSession ? "payment" : settings.mode.rawValue
+
         var body = [
             "customer": customerIdOrType,
             "currency": settings.currency.rawValue,
             "amount": settings.amount.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
-            "mode": settings.mode.rawValue,
+            "mode": mode,
             "automatic_payment_methods": settings.apmsEnabled == .on,
             "use_link": settings.linkPassthroughMode == .pm,
             "link_mode": settings.linkEnabledMode.rawValue,
@@ -1032,6 +1058,11 @@ extension PlaygroundController {
             "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
+
+        // Add CheckoutSession flag if using CheckoutSession integration type
+        if settings.integrationType == .checkoutSession {
+            body["use_checkout_session"] = true
+        }
 
         // Send custom keys to backend if provided
         if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
@@ -1069,6 +1100,15 @@ extension PlaygroundController {
             }
         }
         return body
+    }
+
+    /// Extracts the CheckoutSession ID from a client secret
+    /// Format: cs_test_xxx_secret_yyy -> cs_test_xxx
+    static func extractCheckoutSessionId(from clientSecret: String) -> String {
+        if let range = clientSecret.range(of: "_secret_") {
+            return String(clientSecret[..<range.lowerBound])
+        }
+        return clientSecret
     }
 }
 
@@ -1135,7 +1175,7 @@ extension PlaygroundController {
             return
         case .deferred_mc, .deferred_ssc:
             break
-        case .normal:
+        case .normal, .checkoutSession:
             assertionFailure()
         }
 
@@ -1337,7 +1377,8 @@ extension PlaygroundController {
     func makeEmbeddedPaymentElement() {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
-            intentConfig: intentConfig,
+            intentConfig: settings.integrationType == .checkoutSession ? nil : intentConfig,
+            checkoutSessionId: settings.integrationType == .checkoutSession ? checkoutSessionId : nil,
             playgroundController: self
         )
     }
