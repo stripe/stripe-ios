@@ -148,6 +148,8 @@ extension Intent {
             case .setup:
                 return "deferred_setup_intent"
             }
+        case .checkoutSession:
+            return "checkout_session"
         }
     }
 }

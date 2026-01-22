@@ -63,6 +63,23 @@ extension PaymentSheet.FlowController {
         }
     }
 
+    /// An asynchronous failable initializer for PaymentSheet.FlowController
+    /// This asynchronously loads the CheckoutSession's payment methods and configuration.
+    /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+    /// - Returns: A valid PaymentSheet.FlowController instance.
+    /// - Throws: An error if loading failed.
+    @_spi(CheckoutSessionPreview) public static func create(
+        checkoutSessionId: String,
+        configuration: PaymentSheet.Configuration
+    ) async throws -> PaymentSheet.FlowController {
+        return try await withCheckedThrowingContinuation { continuation in
+            create(checkoutSessionId: checkoutSessionId, configuration: configuration) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
     /// Presents a sheet where the customer chooses how to pay, either by selecting an existing payment method or adding a new one
     /// Call this when your "Select a payment method" button is tapped
     /// This method returns after the sheet is dismissed. Use the `paymentOption` property to get the customer's desired payment option.

@@ -1,4 +1,7 @@
-## X.Y.Z - changes pending release 
+## X.Y.Z - changes pending release
+
+### Payments
+* [Added] Added API bindings support for TWINT payment methods.
 
 ## 25.5.0 2026-01-15
 ### StripeIssuing

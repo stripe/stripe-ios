@@ -63,7 +63,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         string.addAttributes(
             [
                 .paragraphStyle: style,
-                .font: UIFont.preferredFont(forTextStyle: .footnote),
+                .font: theme.fonts.footnote,
                 .foregroundColor: theme.colors.secondaryText,
             ],
             range: NSRange(location: 0, length: string.length)
@@ -390,7 +390,7 @@ private extension PaymentMethodIncentive {
         formattedString.addAttributes(
             [
                 .paragraphStyle: style,
-                .font: UIFont.preferredFont(forTextStyle: .footnote),
+                .font: appearance.fonts.footnote,
                 .foregroundColor: appearance.colors.secondaryText,
             ],
             range: NSRange(location: 0, length: formattedString.length)

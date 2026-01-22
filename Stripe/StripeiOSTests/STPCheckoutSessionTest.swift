@@ -48,7 +48,9 @@ class STPCheckoutSessionTest: XCTestCase {
 
         XCTAssertEqual(session.stripeId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
-        XCTAssertEqual(session.amountTotal, 2000)
+        XCTAssertEqual(session.totalSummary?.total, 2000)
+        XCTAssertEqual(session.totalSummary?.subtotal, 2000)
+        XCTAssertEqual(session.totalSummary?.due, 2000)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.mode, .payment)
         XCTAssertEqual(session.status, .open)  // status is nullable but present in JSON
@@ -98,7 +100,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session?.paymentMethodTypes, [.card])
 
         // Optional fields should be nil
-        XCTAssertNil(session?.amountTotal)
+        XCTAssertNil(session?.totalSummary)
         XCTAssertNil(session?.currency)
         XCTAssertNil(session?.clientSecret)
         XCTAssertNil(session?.paymentIntentId)
