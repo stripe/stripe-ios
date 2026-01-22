@@ -34,6 +34,11 @@ extension STPClientAttributionMetadata {
             return .init(elementsSessionConfigId: elementsSessionConfigId,
                          paymentIntentCreationFlow: .deferred,
                          paymentMethodSelectionFlow: isAutomaticPaymentMethodsEnabled ? .automatic : .merchantSpecified)
+        case .checkoutSession:
+            // TODO(porter) Should we use a different intent creation flow value for CheckoutSession client attribution?
+            return .init(elementsSessionConfigId: elementsSessionConfigId,
+                         paymentIntentCreationFlow: .standard,
+                         paymentMethodSelectionFlow: .automatic)
         }
     }
 

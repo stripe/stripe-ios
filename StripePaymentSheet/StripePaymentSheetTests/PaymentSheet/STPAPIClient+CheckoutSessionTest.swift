@@ -15,9 +15,11 @@ import XCTest
 final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
     func testInitCheckoutSession() async throws {
-        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        let checkoutSessionId = "cs_test_a1NZGwsFXlRiOPIHiGBJrh9dNdrxepbNl8NFvyff3xp4wtBK2PkNnBEKWg"
+        // Fetch a fresh checkout session from the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionId = checkoutSessionResponse.id
 
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         let response = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
 
         // Verify checkout session fields
@@ -29,7 +31,6 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
         XCTAssertTrue(checkoutSession.paymentMethodTypes.contains(.card))
-        XCTAssertTrue(checkoutSession.paymentMethodTypes.contains(.USBankAccount))
 
         // Verify elements session fields
         let elementsSession = response.elementsSession

@@ -471,6 +471,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                         clientDefaultPaymentMethod: nil,
                         configuration: configuration
                     )
+                case .checkoutSession:
+                    // TODO(porter) Support these tests when we implement confirmation
+                    continue
                 }
 
                 let e = expectation(description: "")

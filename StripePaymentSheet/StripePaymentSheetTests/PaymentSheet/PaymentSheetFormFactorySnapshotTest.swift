@@ -411,6 +411,20 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         XCTAssertTrue(formElement.validationState.isValid)
     }
 
+    func testLpm_AUBecs_customFont() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.appearance.font.base = UIFont(name: "Courier", size: 16)!
+        configuration.appearance.colors.textSecondary = .red
+        let factory = factory(
+            for: .AUBECSDebit,
+            configuration: configuration
+        )
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+    }
+
     func testEPM_subtitle() {
         let configuration = PaymentSheet.Configuration()
         let factory = factory(for: .card, configuration: configuration)

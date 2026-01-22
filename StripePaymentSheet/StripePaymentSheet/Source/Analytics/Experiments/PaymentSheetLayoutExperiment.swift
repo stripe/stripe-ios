@@ -55,6 +55,49 @@ struct PaymentSheetLayoutExperiment {
             }
         }()
     }
+
+    static func createExperiments(
+        loadResult: PaymentSheetLoader.LoadResult,
+        configuration: PaymentElementConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) -> [LoggableExperiment] {
+        let elementsSession = loadResult.elementsSession
+        let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
+        guard let arbId = elementsSession.experimentsData?.arbId else {
+            return []
+        }
+
+        // Calculate client-side filtered wallet types
+        var walletTypes: [String] = []
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
+            walletTypes.append("apple_pay")
+        }
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+            walletTypes.append("link")
+        }
+
+        // Return active experiments
+        return [
+            OCSMobileHorizontalModeAA(
+                arbId: arbId,
+                elementsSession: loadResult.elementsSession,
+                displayedPaymentMethodTypes: displayedPaymentMethods,
+                walletPaymentMethodTypes: walletTypes,
+                hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                integrationShape: analyticsHelper.integrationShape
+            ),
+            OCSMobileHorizontalMode(
+                arbId: arbId,
+                elementsSession: loadResult.elementsSession,
+                displayedPaymentMethodTypes: displayedPaymentMethods,
+                walletPaymentMethodTypes: walletTypes,
+                hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                integrationShape: analyticsHelper.integrationShape
+            ),
+        ].filter { experiment in
+            elementsSession.experimentsData?.experimentAssignments[experiment.name] != nil
+        }
+    }
 }
 
 struct OCSMobileHorizontalMode: LoggableExperiment {

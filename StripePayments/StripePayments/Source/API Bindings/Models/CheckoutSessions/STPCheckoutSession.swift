@@ -18,8 +18,8 @@ import Foundation
     /// The client secret of the CheckoutSession. Used for embedded or custom UI modes.
     public let clientSecret: String?
 
-    /// Total of all items after discounts and taxes are applied.
-    public let amountTotal: Int?
+    /// Summary of amounts for the CheckoutSession.
+    public let totalSummary: STPCheckoutSessionTotalSummary?
 
     /// Three-letter ISO currency code, in lowercase.
     public let currency: String?
@@ -71,7 +71,7 @@ import Foundation
         let props: [String] = [
             String(format: "%@: %p", NSStringFromClass(STPCheckoutSession.self), self),
             "stripeId = \(stripeId)",
-            "amountTotal = \(String(describing: amountTotal))",
+            "totalSummary = \(String(describing: totalSummary))",
             "clientSecret = <redacted>",
             "currency = \(String(describing: currency))",
             "mode = \(String(describing: allResponseFields["mode"]))",
@@ -93,7 +93,7 @@ import Foundation
     private init(
         stripeId: String,
         clientSecret: String?,
-        amountTotal: Int?,
+        totalSummary: STPCheckoutSessionTotalSummary?,
         currency: String?,
         mode: STPCheckoutSessionMode,
         status: STPCheckoutSessionStatus?,
@@ -112,7 +112,7 @@ import Foundation
     ) {
         self.stripeId = stripeId
         self.clientSecret = clientSecret
-        self.amountTotal = amountTotal
+        self.totalSummary = totalSummary
         self.currency = currency
         self.mode = mode
         self.status = status
@@ -149,7 +149,9 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 
         // Optional fields per API spec (nullable)
         let clientSecret = dict["client_secret"] as? String
-        let amountTotal = dict["amount_total"] as? Int
+        let totalSummary = STPCheckoutSessionTotalSummary.decodedObject(
+            from: dict["total_summary"] as? [AnyHashable: Any]
+        )
         let currency = dict["currency"] as? String
         let urlString = dict["url"] as? String
 
@@ -161,7 +163,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         return STPCheckoutSession(
             stripeId: stripeId,
             clientSecret: clientSecret,
-            amountTotal: amountTotal,
+            totalSummary: totalSummary,
             currency: currency,
             mode: STPCheckoutSessionMode.mode(from: rawMode),
             status: status,
@@ -180,5 +182,26 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             cancelUrl: dict["cancel_url"] as? String,
             allResponseFields: dict
         ) as? Self
+    }
+}
+
+/// Summary of amounts for a CheckoutSession.
+@_spi(STP) public struct STPCheckoutSessionTotalSummary {
+    /// The total amount due.
+    public let due: Int
+    /// The subtotal amount before any adjustments.
+    public let subtotal: Int
+    /// The total amount after discounts and taxes.
+    public let total: Int
+
+    static func decodedObject(from dict: [AnyHashable: Any]?) -> STPCheckoutSessionTotalSummary? {
+        guard let dict = dict,
+              let due = dict["due"] as? Int,
+              let subtotal = dict["subtotal"] as? Int,
+              let total = dict["total"] as? Int
+        else {
+            return nil
+        }
+        return STPCheckoutSessionTotalSummary(due: due, subtotal: subtotal, total: total)
     }
 }
