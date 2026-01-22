@@ -1,5 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="27" height="16" viewBox="0 0 27 16">
+  <defs>
+    <linearGradient id="bancontact-blue" x1="3.52836" y1="10.7661" x2="12.6726" y2="7.36967" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#005AB9"/>
+      <stop offset="1" stop-color="#1E3764"/>
+    </linearGradient>
+    <linearGradient id="bancontact-yellow" x1="14.2568" y1="8.45847" x2="23.9662" y2="5.14587" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FBA900"/>
+      <stop offset="1" stop-color="#FFD800"/>
+    </linearGradient>
+  </defs>
   <path d="M13.9998,9.0228C12.2165,11.3927 10.0615,14.0457 5.9658,14.0457H1C0.4477,14.0457 0,13.5979 0,13.0457V8.0228C0,7.4705 0.4477,7.0228 1,7.0228H13.0002C14.7835,4.6529 16.9385,2 21.0342,2H26C26.5523,2 27,2.4477 27,3V8.0228C27,8.5751 26.5523,9.0228 26,9.0228H13.9998Z" fill="#ffffff"/>
-  <path d="M5.9658,13.0457C9.7329,13.0457 11.6164,10.5342 13.5,8.0228H1V13.0457H5.9658Z" fill="none"/>
-  <path d="M21.0342,3C17.2671,3 15.3836,5.5114 13.5,8.0228H26V3H21.0342Z" fill="none"/>
+  <path d="M5.9658,13.0457C9.7329,13.0457 11.6164,10.5342 13.5,8.0228H1V13.0457H5.9658Z" fill="url(#bancontact-blue)"/>
+  <path d="M21.0342,3C17.2671,3 15.3836,5.5114 13.5,8.0228H26V3H21.0342Z" fill="url(#bancontact-yellow)"/>
 </svg>
