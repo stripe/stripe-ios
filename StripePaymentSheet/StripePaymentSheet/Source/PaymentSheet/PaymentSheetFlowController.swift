@@ -713,7 +713,7 @@ extension PaymentSheet {
 
         /// Logs experiment exposure if it was deferred during initialization
         private func logExperimentExposureIfNeeded() {
-            guard needsToLogLayoutExperimentExposure else { return }
+            guard needsToLogLayoutExperimentExposure, configuration.paymentMethodLayout == .automatic else { return }
             needsToLogLayoutExperimentExposure = false
 
             let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
