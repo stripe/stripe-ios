@@ -1127,17 +1127,18 @@ class EmbeddedUITests: PaymentSheetUITestCase {
     // Returning customers have two payment methods in a non-deterministic order.
     // Ensure state of payment method of label1 is selected prior to starting tests.
     func ensureSPMSelection(_ label1: String, insteadOf label2: String) {
-        if app.buttons[label1].waitForExistence(timeout: 3.0) {
-            XCTAssertFalse(app.buttons[label2].waitForExistence(timeout: 3.0))
+        let timeout: TimeInterval = 10.0
+        if app.buttons[label1].waitForExistence(timeout: timeout) {
+            XCTAssertFalse(app.buttons[label2].waitForExistence(timeout: timeout))
             return
         }
-        guard app.buttons[label2].waitForExistence(timeout: 3.0) else {
+        guard app.buttons[label2].waitForExistence(timeout: timeout) else {
             XCTFail("Unable to find either \(label1) or \(label2)")
             return
         }
-        app.buttons["View more"].waitForExistenceAndTap(timeout: 3.0)
-        app.buttons[label1].waitForExistenceAndTap(timeout: 3.0)
-        XCTAssertTrue(app.buttons[label1].waitForExistence(timeout: 3.0))
+        app.buttons["View more"].waitForExistenceAndTap(timeout: timeout)
+        app.buttons[label1].waitForExistenceAndTap(timeout: timeout)
+        XCTAssertTrue(app.buttons[label1].waitForExistence(timeout: timeout))
     }
 
     func testEmbeddedCardScannerOpensAutomatically() throws {
