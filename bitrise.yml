@@ -599,6 +599,12 @@ workflows:
     - xcode-start-simulator@0:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
+    - script@1:
+        inputs:
+        - content: |
+            xcrun simctl spawn booted defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true
+            xcrun simctl spawn booted defaults write com.apple.keyboard.preferences DidShowGestureKeyboardIntroduction -bool true
+        title: Disable keyboard introduction popups
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_BUILD_DIR
