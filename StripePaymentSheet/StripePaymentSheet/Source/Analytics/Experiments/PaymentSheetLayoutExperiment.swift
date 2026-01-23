@@ -42,18 +42,7 @@ struct PaymentSheetLayoutExperiment {
         self.displayedPaymentMethodTypes = displayedPaymentMethodTypes
         self.walletPaymentMethodTypes = walletPaymentMethodTypes
         self.hasSPM = hasSPM
-        self.integrationShape = {
-            switch integrationShape {
-            case .complete:
-                return "complete"
-            case .flowController:
-                return "custom"
-            case .embedded:
-                return "embedded"
-            default:
-                return integrationShape.analyticsValue
-            }
-        }()
+        self.integrationShape = integrationShape.analyticsValue
     }
 
     static func createExperiments(
