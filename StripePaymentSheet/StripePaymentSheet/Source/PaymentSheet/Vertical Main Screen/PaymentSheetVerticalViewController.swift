@@ -415,10 +415,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        // 2. Default to Apple Pay if available.
+        // 2. Default to Apple Pay if WalletsButtonsView is not in use
         // If WalletButtonsView is in use, only default to Apple Pay if it's the saved PM.
-        if shouldShowApplePayInList && (!configuration.willUseWalletButtonsView || CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay) {
-            return .applePay
+        if shouldShowApplePayInList {
+            if configuration.willUseWalletButtonsView {
+                if CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay {
+                    return .applePay
+                }
+            } else {
+                // Always return Apple Pay
+                return .applePay
+            }
         }
 
         // 3. Default to the saved PM
