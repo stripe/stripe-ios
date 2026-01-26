@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "stp_card_unpadded_diners_club.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
