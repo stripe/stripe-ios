@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1010"
-   version = "1.3">
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -17,7 +17,7 @@
                BlueprintIdentifier = "A74928FD0171C3213676E29C"
                BuildableName = "StripePaymentSheet.framework"
                BlueprintName = "StripePaymentSheet"
-               ReferencedContainer = "container:StripePaymentSheet.xcodeproj">
+               ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,7 +33,7 @@
             BlueprintIdentifier = "A74928FD0171C3213676E29C"
             BuildableName = "StripePaymentSheet.framework"
             BlueprintName = "StripePaymentSheet"
-            ReferencedContainer = "container:StripePaymentSheet.xcodeproj">
+            ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <EnvironmentVariables>
@@ -42,7 +42,28 @@
             value = "$(SRCROOT)/../Tests/ReferenceImages"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "RECORD_LATENCY_TESTS"
+            value = "$(RECORD_LATENCY_TESTS)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "BITRISE_GIT_COMMIT"
+            value = "$(BITRISE_GIT_COMMIT)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "BITRISE_BUILD_URL"
+            value = "$(BITRISE_BUILD_URL)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:StripePaymentSheet/StripePaymentSheetTests/StripePaymentSheet-LatencyTests.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+      </TestPlans>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -51,16 +72,8 @@
                BlueprintIdentifier = "9A93AB1D98A0A1EC6ADEA65D"
                BuildableName = "StripePaymentSheetTests.xctest"
                BlueprintName = "StripePaymentSheetTests"
-               ReferencedContainer = "container:StripePaymentSheet.xcodeproj">
+               ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "MPELatencyTest">
-               </Test>
-               <Test
-                  Identifier = "MPELatencyTest/testLoadLatency()">
-               </Test>
-            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>
@@ -80,7 +93,7 @@
             BlueprintIdentifier = "A74928FD0171C3213676E29C"
             BuildableName = "StripePaymentSheet.framework"
             BlueprintName = "StripePaymentSheet"
-            ReferencedContainer = "container:StripePaymentSheet.xcodeproj">
+            ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -96,7 +109,7 @@
             BlueprintIdentifier = "A74928FD0171C3213676E29C"
             BuildableName = "StripePaymentSheet.framework"
             BlueprintName = "StripePaymentSheet"
-            ReferencedContainer = "container:StripePaymentSheet.xcodeproj">
+            ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

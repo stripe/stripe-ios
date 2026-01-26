@@ -397,7 +397,7 @@ workflows:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE
     - RECORD_LATENCY_TESTS: "true"
     - BITRISE_GIT_COMMIT: $BITRISE_GIT_COMMIT
-    - BITRISE_BUILD_URL: $$BITRISE_BUILD_URL
+    - BITRISE_BUILD_URL: $BITRISE_BUILD_URL
   framework-tests-no-mocks:
     steps:
     - fastlane@3:

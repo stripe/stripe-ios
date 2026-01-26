@@ -4,7 +4,7 @@
 //
 //  Created by Yuki Tokuhiro on 1/8/26.
 //
-//  These tests are special; they don't fail and aren't meant to run in normal CI jobs.
+//  📣 These tests are special; they don't fail and aren't meant to run in normal CI jobs.
 //  Instead, they measure MPE load times under various configurations and report the results under the `mpe.synthetic_latency` analytic
 //  Seealso: The `StripePaymentSheet-LatencyTests` scheme.
 
@@ -68,24 +68,6 @@ struct LatencyAnalytic: Analytic {
 
         params = analyticsParams
     }
-}
-
-class AnyAPIResponse: NSObject, STPAPIResponseDecodable {
-    override required init() {
-        super.init()
-    }
-
-    static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let response = response else {
-            return nil
-        }
-        let a = Self()
-        a.allResponseFields = response
-        return a
-    }
-
-    var allResponseFields: [AnyHashable: Any] = [:]
-
 }
 
 final class MPELatencyTest: XCTestCase {
@@ -152,7 +134,6 @@ final class MPELatencyTest: XCTestCase {
 
         // Use a customer w/ an email
         // Why email? It's very specific to the current link lookup logic. The slowest codepath is when there is (1) no defaultBillingDetails.email (2) customer has email because it retrieves the Customer before doing the link lookup
-        // TODO: Should we test the stripeAttest path?
         let testCustomerID = "cus_TqanA973bOrpoP"
 
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
