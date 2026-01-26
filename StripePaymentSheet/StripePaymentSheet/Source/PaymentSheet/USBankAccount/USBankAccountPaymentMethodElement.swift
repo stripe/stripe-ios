@@ -186,14 +186,14 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
         } else if case .paymentElement = configuration, !linkedBank.instantlyVerified {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
-        let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
+        let formattedString = PaymentSheetStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, alignment: .center, theme: theme)
         return formattedString
     }
 
     static func attributedMandateTextSavedPaymentMethod(alignment: NSTextAlignment = .center, theme: ElementsAppearance) -> NSMutableAttributedString {
         let mandateText = String.Localized.bank_continue_mandate_text
-        let formattedString = STPStringUtils.applyLinksToString(template: mandateText, links: links)
+        let formattedString = PaymentSheetStringUtils.applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString, alignment: alignment, theme: theme)
         return formattedString
     }
