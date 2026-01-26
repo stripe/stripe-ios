@@ -12,7 +12,6 @@
 		395CFB782E1F93789A260434 /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E42F31D392C0AED757D6239 /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D4497A6A1CB151C4B75A68F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41AA4E90E5BB28D588FDE51 /* StripeCore.framework */; };
 		48DA2EFE0944E737B0F197B0 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = B2AFFAD776D5F21DF837F1BD /* OHHTTPStubs */; };
-		4A8C7B2AFB290567C961DAB0 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F22354BD25171B8DC2B922D2 /* StripePaymentsUI.framework */; };
 		5AD73D80CB804EC3E20AE464 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E117C348836EF631BD2DB8 /* ViewController.swift */; };
 		5C047CFEA91C1A04EAEC0CFF /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35BFC60D1945087E74B6BD89 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		61C0D3B8C63EB4558AB74A7E /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1C7CFA5C9C1A8A73CFA1C0 /* StripePayments.framework */; };
@@ -175,7 +174,6 @@
 				999D46841AFC73E411A91037 /* StripeApplePay.framework in Frameworks */,
 				3D4497A6A1CB151C4B75A68F /* StripeCore.framework in Frameworks */,
 				61C0D3B8C63EB4558AB74A7E /* StripePayments.framework in Frameworks */,
-				4A8C7B2AFB290567C961DAB0 /* StripePaymentsUI.framework in Frameworks */,
 				96B1DCBDA1923BF5E7F990B8 /* StripeUICore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
