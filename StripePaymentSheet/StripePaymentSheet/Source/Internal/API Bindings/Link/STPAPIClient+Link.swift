@@ -10,7 +10,6 @@ import Foundation
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 
 // Please do not attempt to modify the Stripe SDK or call private APIs directly.
 // See the Stripe Services Agreement (https://stripe.com/legal/ssa) for more details.
