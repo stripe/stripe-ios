@@ -112,6 +112,25 @@ extension XCUIApplication {
         let coordinate = normalized.withOffset(offset)
         coordinate.tap()
     }
+
+    /// Dismisses the keyboard by tapping the Done button on the toolbar, or tapping outside the keyboard.
+    func fc_dismissKeyboard() {
+        // Try the toolbar Done button first (iOS 18 and earlier)
+        let doneButtonByLabel = toolbars.buttons["Done"]
+        if doneButtonByLabel.waitForExistence(timeout: 1) {
+            doneButtonByLabel.tap()
+            return
+        }
+        // iOS 26 fallback: tap on the title label to dismiss the keyboard
+        // This works for FinancialConnections flows
+        let fcTitleLabel = otherElements["fc_pane_title_label"]
+        if fcTitleLabel.exists {
+            fcTitleLabel.tap()
+            return
+        }
+        // Last resort: tap near the top of the screen
+        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
+    }
 }
 
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
@@ -312,10 +331,10 @@ extension XCTestCase {
     }
 
     func skipLinkSignup(_ app: XCUIApplication) {
-        let notNowButton = app.buttons["Not now"]
+        // This handles the FinancialConnections networking Link signup screen
+        let notNowButton = app.buttons["networking_link_signup_footer_view.not_now_button"]
         if notNowButton.waitForExistence(timeout: 10.0) {
-            let keyboardCloseButton = app.toolbars.buttons["Done"]
-            keyboardCloseButton.waitForExistenceAndTap() // Dismiss keyboard
+            app.fc_dismissKeyboard()
             notNowButton.tap()
         }
     }

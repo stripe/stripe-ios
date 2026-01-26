@@ -942,7 +942,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // "Success" institution is automatically selected because its the first
         app.buttons["connect_accounts_button"].waitForExistenceAndTap(timeout: 10)
 
-        XCUIApplication().toolbars.buttons["Done"].waitForExistenceAndTap()
+        skipLinkSignup(app)
         app.buttons["Not now"].waitForExistenceAndTap()
 
         XCTAssertTrue(app.staticTexts["Success"].waitForExistence(timeout: 10))
