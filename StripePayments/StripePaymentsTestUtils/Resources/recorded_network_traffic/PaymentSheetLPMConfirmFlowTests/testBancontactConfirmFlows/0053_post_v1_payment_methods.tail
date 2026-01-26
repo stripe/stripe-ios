@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=GA4M3YQ2k4-mVYmLfbXoUbdNpakwzv9tpVXSG7H8iHY99beuzG5Jxouoh1YnhuRcSJsQAgasf5lE2cji
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=c-4y3djwqKqmwca6dnthQrAYp8srvCEButU-VdhOhkrPYKzTyUOqySgofPKPMwQCCwnJwnjOQ2z1zhJc
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_lFrjECq3LEcHHx
-Content-Length: 480
+request-id: req_gG9kf5IP8qE3yx
+Content-Length: 508
 Vary: Origin
-Date: Thu, 13 Nov 2025 15:49:13 GMT
-original-request: req_lFrjECq3LEcHHx
+Date: Wed, 14 Jan 2026 20:28:49 GMT
+original-request: req_gG9kf5IP8qE3yx
 stripe-version: 2020-08-27
-idempotency-key: a94c3425-1bc1-46b5-96c0-f82adaf94601
+idempotency-key: 892e419d-2a4b-45c7-9a87-cb5d86494fee
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,8 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=f%40z
 
 {
   "object" : "payment_method",
-  "id" : "pm_1ST2lpFY0qyl6XeW7EByjQsK",
+  "customer_account" : null,
+  "id" : "pm_1SpagPFY0qyl6XeWnSQjwtmu",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
@@ -43,7 +44,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=f%40z
     }
   },
   "livemode" : false,
-  "created" : 1763048953,
+  "created" : 1768422529,
   "allow_redisplay" : "unspecified",
   "type" : "bancontact",
   "customer" : null,

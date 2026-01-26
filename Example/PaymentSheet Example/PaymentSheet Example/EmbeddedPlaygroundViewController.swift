@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-@_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
@@ -35,7 +35,9 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     private let configuration: EmbeddedPaymentElement.Configuration
 
-    private let intentConfig: EmbeddedPaymentElement.IntentConfiguration
+    private let intentConfig: EmbeddedPaymentElement.IntentConfiguration?
+
+    private let checkoutSessionId: String?
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
     private var paymentMethodsViewController: EmbeddedPaymentElementWrapperViewController?
@@ -101,11 +103,13 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     init(
         configuration: EmbeddedPaymentElement.Configuration,
-        intentConfig: EmbeddedPaymentElement.IntentConfiguration,
+        intentConfig: EmbeddedPaymentElement.IntentConfiguration?,
+        checkoutSessionId: String?,
         playgroundController: PlaygroundController
     ) {
         self.configuration = configuration
         self.intentConfig = intentConfig
+        self.checkoutSessionId = checkoutSessionId
         self.playgroundController = playgroundController
 
         super.init(nibName: nil, bundle: nil)
@@ -142,10 +146,20 @@ class EmbeddedPlaygroundViewController: UIViewController {
     }
 
     private func setupUI() async throws {
-        let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-            intentConfiguration: intentConfig,
-            configuration: configuration
-        )
+        let embeddedPaymentElement: EmbeddedPaymentElement
+        if let checkoutSessionId = checkoutSessionId {
+            embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+                checkoutSessionId: checkoutSessionId,
+                configuration: configuration
+            )
+        } else if let intentConfig = intentConfig {
+            embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+                intentConfiguration: intentConfig,
+                configuration: configuration
+            )
+        } else {
+            throw PaymentSheetError.unknown(debugDescription: "Either checkoutSessionId or intentConfig must be provided")
+        }
         embeddedPaymentElement.delegate = self
         embeddedPaymentElement.presentingViewController = self
         self.embeddedPaymentElement = embeddedPaymentElement

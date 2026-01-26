@@ -9,7 +9,7 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import SwiftUI
@@ -93,7 +93,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             )
         )
 
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit, configuration: configuration) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit, configuration: configuration) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             form.getTextFieldElement("IBAN").setText("DE89370400440532013000")
@@ -109,7 +109,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testAUBecsDebitConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "AUD", paymentMethodType: .AUBECSDebit, merchantCountry: .AU) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "AUD", paymentMethodType: .AUBECSDebit, merchantCountry: .AU) { form in
             form.getTextFieldElement("Name on account").setText("Tester McTesterface")
             form.getTextFieldElement("Email").setText("example@link.com")
             form.getTextFieldElement("BSB number").setText("000000")
@@ -127,7 +127,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
 
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .bancontact) { form in
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .bancontact) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             XCTAssertNotNil(form.getMandateElement())
@@ -177,7 +177,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             )
         )
 
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB, configuration: configuration) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB, configuration: configuration) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             form.getTextFieldElement("Sort code").setText("108800")
@@ -199,6 +199,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US) { form in
             // AmazonPay has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "USD",
+                               paymentMethodType: .amazonPay,
+                               merchantCountry: .US) { form in
+            XCTAssertNotNil(form.getMandateElement(), "AmazonPay should show mandate with PMO setup_future_usage")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
         }
     }
 
@@ -241,7 +248,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             // Satispay has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "EUR",
                                paymentMethodType: .satispay,
                                merchantCountry: .IT) { form in
@@ -318,7 +325,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         )
 
         try await _testConfirm(
-            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
             currency: "BRL",
             paymentMethodType: .boleto,
             merchantCountry: .BR,
@@ -448,7 +455,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }()
 
         // Confirm saved SEPA with every confirm variation
-        for intentKind in IntentKind.allCases {
+        for intentKind in [IntentKind.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent] {
             for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
 
                 // Create elements session with customer configuration for proper ephemeral keys
@@ -464,6 +471,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                         clientDefaultPaymentMethod: nil,
                         configuration: configuration
                     )
+                case .checkoutSession:
+                    // TODO(porter) Support these tests when we implement confirmation
+                    continue
                 }
 
                 let e = expectation(description: "")
@@ -504,7 +514,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                 case .paymentIntent:
                     XCTAssertNil(form.getMandateElement())
                     XCTAssertEqual(form.getAllUnwrappedSubElements().count, 6)
-                case .paymentIntentWithSetupFutureUsage, .setupIntent:
+                case .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent:
                     XCTAssertNotNil(form.getMandateElement())
                     XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
                 }
@@ -528,6 +538,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .revolutPay,
                                merchantCountry: .GB) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "GBP",
+                               paymentMethodType: .revolutPay,
+                               merchantCountry: .GB) { form in
+            XCTAssertNotNil(form.getMandateElement(), "RevolutPay should show mandate when set up")
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
         }
     }
 
@@ -554,7 +571,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                merchantCountry: .US) { form in
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "USD",
                                paymentMethodType: .cashApp,
                                merchantCountry: .US) { form in
@@ -671,7 +688,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
         // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.
         // e.g. iDEAL should show an email field and mandate for PI+SFU and SIs, so we test those separately here:
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
@@ -751,6 +768,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     enum IntentKind: CaseIterable {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
+        case paymentIntentWithPMOSetupFutureUsage
         case setupIntent
     }
 
@@ -1077,6 +1095,95 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with payment method flow", makeDeferredIntent(deferredSSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+            ]
+        case .paymentIntentWithPMOSetupFutureUsage:
+            // This tests the scenario where IntentConfiguration has PMO setup_future_usage.
+            let paymentIntent: STPPaymentIntent = try await {
+                // Regular PI: Backend DOES have PMO SFU set
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer,
+                    otherParams: [
+                        "payment_method_options": [
+                            paymentMethod.identifier: [
+                                "setup_future_usage": "off_session"
+                            ],
+                        ],
+                    ]
+                )
+                return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+            }()
+
+            // Backend PI does NOT have PMO SFU
+            let mode = PaymentSheet.IntentConfiguration.Mode.payment(
+                amount: amount ?? 1099,
+                currency: currency,
+                paymentMethodOptions: .init(setupFutureUsageValues: [paymentMethod: .offSession])
+            )
+
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: mode) { _, _ in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer
+                )
+            }
+
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: mode) { paymentMethod, _ in
+                return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    paymentMethodID: paymentMethod.stripeId,
+                    customerID: customer,
+                    confirm: true,
+                    otherParams: paramsForServerSideConfirmation
+                )
+            }
+
+            // Confirmation token variations
+            let deferredCSCWithConfirmationToken = PaymentSheet.IntentConfiguration(
+                mode: mode,
+                paymentMethodTypes: [paymentMethod.identifier], // Passing this avoids a validation error where the IntentConfig is auto PM and the PI has explicit PM types
+                confirmationTokenConfirmHandler: { _ in
+                    return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                        types: paymentMethodTypes,
+                        currency: currency,
+                        amount: amount,
+                        merchantCountry: merchantCountry.rawValue,
+                        customerID: customer
+                    )
+                }
+            )
+
+            let deferredSSCWithConfirmationToken = PaymentSheet.IntentConfiguration(
+                mode: mode,
+                paymentMethodTypes: [paymentMethod.identifier], // Passing this avoids a validation error where the IntentConfig is auto PM and the PI has explicit PM types
+                confirmationTokenConfirmHandler: { confirmationToken in
+                    return try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                        types: paymentMethodTypes,
+                        currency: currency,
+                        amount: amount,
+                        merchantCountry: merchantCountry.rawValue,
+                        customerID: customer,
+                        confirm: true,
+                        otherParams: ["confirmation_token": confirmationToken.stripeId]
+                    )
+                }
+            )
+
+            return [
+                ("PaymentIntent", .paymentIntent(paymentIntent)),
+                ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
+                ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
+                ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
+                ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
         case .setupIntent:
             let setupIntent: STPSetupIntent = try await {

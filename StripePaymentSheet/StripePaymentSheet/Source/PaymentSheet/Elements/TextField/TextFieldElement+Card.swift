@@ -25,19 +25,24 @@ extension TextFieldElement {
         let cardBrandDropDown: DropdownFieldElement?
         let cardBrandFilter: CardBrandFilter
         let cardFundingFilter: CardFundingFilter
+        /// Separate BIN controller for funding filtering to avoid polluting
+        /// See: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5052
+        let fundingBinController: STPBINController?
 
         init(
             defaultValue: String? = nil,
             cardBrand: STPCardBrand? = nil,
             cardBrandDropDown: DropdownFieldElement? = nil,
             cardBrandFilter: CardBrandFilter = .default,
-            cardFundingFilter: CardFundingFilter = .default
+            cardFundingFilter: CardFundingFilter = .default,
+            fundingBinController: STPBINController? = nil
         ) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
             self.cardBrandDropDown = cardBrandDropDown
             self.cardBrandFilter = cardBrandFilter
             self.cardFundingFilter = cardFundingFilter
+            self.fundingBinController = fundingBinController
         }
 
         private func cardBrand(for text: String) -> STPCardBrand {
@@ -203,22 +208,32 @@ extension TextFieldElement {
         func warningLabel(text: String) -> String? {
             guard cardFundingFilter != .default else { return nil }
             guard text.count >= 6 else { return nil }
+            guard let fundingBinController else { return nil }
 
-            // Read funding data from STPBINController's cache
-            let binRange = binController.mostSpecificBINRange(forNumber: text)
+            // Read funding data from isolated controller's cache
+            // (fundingBinController is injected from CardSectionElement to avoid polluting STPBINController.shared)
+            let binRanges = fundingBinController.binRanges(forNumber: text)
 
-            // Only warn if we have real funding data from the metadata service (not hardcoded fallback data)
-            guard !binRange.isHardcoded else { return nil }
+            // Filter to only non-hardcoded BIN ranges (real data from metadata service)
+            let nonHardcodedRanges = binRanges.filter { !$0.isHardcoded }
 
-            if !cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
-                guard let warningMessage = cardFundingFilter.allowedFundingTypesDisplayString() else {
-                    stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
-                    return nil
+            // If there are no non-hardcoded ranges, don't warn (we don't have reliable funding info)
+            guard !nonHardcodedRanges.isEmpty else { return nil }
+
+            // Some cards may have dual funding types. Only block if ALL funding types are disallowed.
+            // If any funding type is accepted, allow the card.
+            for binRange in nonHardcodedRanges {
+                if cardFundingFilter.isAccepted(cardFundingType: binRange.funding) {
+                    return nil  // At least one funding type is allowed
                 }
-                return warningMessage
             }
 
-            return nil
+            // All funding types are disallowed, show warning
+            guard let warningMessage = cardFundingFilter.allowedFundingTypesDisplayString() else {
+                stpAssertionFailure("allowedFundingTypesDisplayString should return a value when filtering is active")
+                return nil
+            }
+            return warningMessage
         }
     }
 }

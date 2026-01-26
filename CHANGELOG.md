@@ -1,5 +1,17 @@
 ## X.Y.Z - changes pending release 
 
+## 25.6.0 2026-01-26
+
+### Payments
+* [Added] Added API bindings support for TWINT payment methods.
+
+## 25.5.0 2026-01-15
+### StripeIssuing
+* [Added] StripeIssuing is now available as a separate module, enabling support for [Apple Pay Wallet Extensions](https://developer.apple.com/documentation/PassKit/implementing-wallet-extensions). If you use the legacy Stripe framework with Carthage or by manually embedding the .xcframeworks, [you must also embed StripeIssuing.xcframework](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migrating-from-versions--2550) in your app. No action is required for Cocoapods and Swift Package Manager users, or users of the individual `StripePayments`, `StripePaymentsUI`, and `StripePaymentSheet` modules.
+
+### PaymentSheet
+* [Fixed] Fixed an issue where confirming fails when setting `setupFutureUsageValues` on the `IntentConfiguration.paymentMethodOptions` parameter for Cash App Pay, Satispay, PayPal, Amazon Pay, Revolut Pay, or Klarna due to missing `mandate_data`.
+
 ## 25.4.0 2026-01-12
 ### All
 * [Fixed] Improved telemetry used for [advanced fraud signals](https://docs.stripe.com/disputes/prevention/advanced-fraud-detection).

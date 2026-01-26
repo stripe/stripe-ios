@@ -42,23 +42,92 @@ struct PaymentSheetLayoutExperiment {
         self.displayedPaymentMethodTypes = displayedPaymentMethodTypes
         self.walletPaymentMethodTypes = walletPaymentMethodTypes
         self.hasSPM = hasSPM
-        self.integrationShape = {
-            switch integrationShape {
-            case .complete:
-                return "complete"
-            case .flowController:
-                return "custom"
-            case .embedded:
-                return "embedded"
-            default:
-                return integrationShape.analyticsValue
-            }
-        }()
+        self.integrationShape = integrationShape.analyticsValue
+    }
+
+    static func createExperiments(
+        loadResult: PaymentSheetLoader.LoadResult,
+        configuration: PaymentElementConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) -> [LoggableExperiment] {
+        let elementsSession = loadResult.elementsSession
+        let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
+        guard let arbId = elementsSession.experimentsData?.arbId else {
+            return []
+        }
+
+        // Calculate client-side filtered wallet types
+        var walletTypes: [String] = []
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) {
+            walletTypes.append("apple_pay")
+        }
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+            walletTypes.append("link")
+        }
+
+        // Return active experiments
+        return [
+            OCSMobileHorizontalModeAA(
+                arbId: arbId,
+                elementsSession: loadResult.elementsSession,
+                displayedPaymentMethodTypes: displayedPaymentMethods,
+                walletPaymentMethodTypes: walletTypes,
+                hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                integrationShape: analyticsHelper.integrationShape
+            ),
+            OCSMobileHorizontalMode(
+                arbId: arbId,
+                elementsSession: loadResult.elementsSession,
+                displayedPaymentMethodTypes: displayedPaymentMethods,
+                walletPaymentMethodTypes: walletTypes,
+                hasSPM: !loadResult.savedPaymentMethods.isEmpty,
+                integrationShape: analyticsHelper.integrationShape
+            ),
+        ].filter { experiment in
+            elementsSession.experimentsData?.experimentAssignments[experiment.name] != nil
+        }
+    }
+}
+
+struct OCSMobileHorizontalMode: LoggableExperiment {
+    private static let experimentName = "ocs_mobile_horizontal_mode"
+    private let experiment: PaymentSheetLayoutExperiment
+
+    let name: String = experimentName
+    let arbId: String
+
+    var group: ExperimentGroup {
+        experiment.group
+    }
+
+    var dimensions: [String: Any] {
+        experiment.dimensionsDictionary
+    }
+
+    init(
+        arbId: String,
+        elementsSession: STPElementsSession,
+        displayedPaymentMethodTypes: [String],
+        walletPaymentMethodTypes: [String],
+        hasSPM: Bool,
+        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
+    ) {
+        let experiment = PaymentSheetLayoutExperiment(
+            experimentName: Self.experimentName,
+            elementsSession: elementsSession,
+            displayedPaymentMethodTypes: displayedPaymentMethodTypes,
+            walletPaymentMethodTypes: walletPaymentMethodTypes,
+            hasSPM: hasSPM,
+            integrationShape: integrationShape
+        )
+
+        self.arbId = arbId
+        self.experiment = experiment
     }
 }
 
 struct OCSMobileHorizontalModeAA: LoggableExperiment {
-    static let experimentName = "ocs_mobile_horizontal_mode_aa"
+    private static let experimentName = "ocs_mobile_horizontal_mode_aa"
     private let experiment: PaymentSheetLayoutExperiment
 
     let name: String = experimentName

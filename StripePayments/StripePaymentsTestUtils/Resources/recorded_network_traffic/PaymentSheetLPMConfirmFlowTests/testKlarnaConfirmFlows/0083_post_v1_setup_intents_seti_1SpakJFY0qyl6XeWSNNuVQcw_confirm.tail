@@ -1,0 +1,79 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SpakJFY0qyl6XeWSNNuVQcw\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=pF5nUc-2gh2_9cBPTshreBlpRZulq0xBiauM3zy1V-NtiN48XUOLTob8pwOr65ZzU9Bh2iie7seufurY
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_d6At2hu9QMJyEf
+Content-Length: 1388
+Vary: Origin
+Date: Wed, 14 Jan 2026 20:32:52 GMT
+original-request: req_d6At2hu9QMJyEf
+stripe-version: 2020-08-27
+idempotency-key: dd2671c6-f40e-48e8-8706-b5d8d188e7a3
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1SpakJFY0qyl6XeWSNNuVQcw_secret_TnB6XltHp2T4NrMIp6ow6ceLjvYGkxk&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details%5Baddress%5D%5Bcountry%5D]=US&payment_method_data\[billing_details%5Bemail%5D]=foo%40bar\.com&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=standard&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=klarna&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1SpakJFY0qyl6XeWSNNuVQcw",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_TnB6uiFpp4aDio8c6MgsfvDn9Hav1gC?useWebAuthSession=true&followRedirectsInSDK=true"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "klarna" : {
+
+    },
+    "id" : "pm_1SpakKFY0qyl6XeWUvt25Nb5",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : "US",
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1768422772,
+    "allow_redisplay" : "unspecified",
+    "type" : "klarna",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "klarna"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1768422771,
+  "client_secret" : "seti_1SpakJFY0qyl6XeWSNNuVQcw_secret_TnB6XltHp2T4NrMIp6ow6ceLjvYGkxk",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}
