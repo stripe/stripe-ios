@@ -29,7 +29,6 @@ class PMMEUIView: UIView {
         appearance.fontScaled(4)
     }
 
-    // TODO(gbirch) add accessibilityHint property with instructions about opening info url
     init(
         viewData: PaymentMethodMessagingElement.ViewData,
         integrationType: PMMEAnalyticsHelper.IntegrationType,
@@ -55,6 +54,12 @@ class PMMEUIView: UIView {
             break
         }
 
+        isAccessibilityElement = true
+        accessibilityHint = STPLocalizedString(
+            "Open to see more information.",
+            "Accessibility hint to tell the user that they can open a form sheet with more information."
+        )
+
         // create wrapper view that will hold the main PMME view and the legal disclosure if needed
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -62,13 +67,16 @@ class PMMEUIView: UIView {
         addAndPinSubview(stackView)
 
         // choose which style to initialize
-        let pmmeView = switch viewData.mode {
+        switch viewData.mode {
         case .singlePartner(let logo):
-            PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
+            let view = PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
+            stackView.addArrangedSubview(view)
+            accessibilityLabel = view.customAccessibilityLabel
         case .multiPartner(let logos):
-            PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
+            let view = PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
+            stackView.addArrangedSubview(view)
+            accessibilityLabel = view.customAccessibilityLabel
         }
-        stackView.addArrangedSubview(pmmeView)
 
         // add legal disclosure if needed
         if let legalText = viewData.legalDisclosure {
