@@ -42,6 +42,16 @@
             value = "$(SRCROOT)/../Tests/ReferenceImages"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "RECORD_LATENCY_TESTS"
+            value = "$(RECORD_LATENCY_TESTS)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "BITRISE_GIT_COMMIT"
+            value = "$(BITRISE_GIT_COMMIT)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <Testables>
          <TestableReference
@@ -53,6 +63,14 @@
                BlueprintName = "StripePaymentSheetTests"
                ReferencedContainer = "container:StripePaymentSheet.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "MPELatencyTest">
+               </Test>
+               <Test
+                  Identifier = "MPELatencyTest/testLoadLatency()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

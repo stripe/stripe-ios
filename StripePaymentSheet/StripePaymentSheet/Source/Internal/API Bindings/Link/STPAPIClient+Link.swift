@@ -41,6 +41,7 @@ extension STPAPIClient {
             } else {
                 // no request to make if we don't have an email
                 DispatchQueue.main.async {
+                    // TODO: Why is this a success when we didn't look up?
                     completion(.success(
                         ConsumerSession.LookupResponse(.noAvailableLookupParams)
                     ))

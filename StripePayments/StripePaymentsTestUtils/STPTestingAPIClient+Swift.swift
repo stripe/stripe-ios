@@ -219,6 +219,12 @@ extension STPTestingAPIClient {
         let (data, _) = try await session.data(for: request)
         let jsonDecoder = JSONDecoder()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try jsonDecoder.decode(ResponseType.self, from: data)
+        do {
+            return try jsonDecoder.decode(ResponseType.self, from: data)
+        } catch {
+            let rawDataString = String(decoding: data, as: UTF8.self)
+            print("Error decoding to \(ResponseType.self). Raw data: \(rawDataString)")
+            throw error
+        }
     }
 }
