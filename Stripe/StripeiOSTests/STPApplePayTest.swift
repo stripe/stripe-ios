@@ -30,6 +30,13 @@ class STPApplePaySwiftTest: XCTestCase {
         StripeAPI.additionalEnabledApplePayNetworks = []
     }
 
+    func testAdditionalPaymentNetworkEftpos() {
+        XCTAssertFalse(StripeAPI.supportedPKPaymentNetworks().contains(.eftpos))
+        StripeAPI.additionalEnabledApplePayNetworks = [.eftpos]
+        XCTAssertTrue(StripeAPI.supportedPKPaymentNetworks().contains(.eftpos))
+        StripeAPI.additionalEnabledApplePayNetworks = []
+    }
+
     func testAdditionalPaymentNetworksGetPrepended() {
         XCTAssertFalse(StripeAPI.supportedPKPaymentNetworks().contains(.cartesBancaires))
         StripeAPI.additionalEnabledApplePayNetworks = [.cartesBancaires]
