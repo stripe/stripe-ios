@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '25.5.0'
+  s.version                        = '25.6.0'
 
   s.summary                        = "Stripe's prebuilt payment UI."
   s.license                        = { type: 'MIT', file: 'LICENSE' }
