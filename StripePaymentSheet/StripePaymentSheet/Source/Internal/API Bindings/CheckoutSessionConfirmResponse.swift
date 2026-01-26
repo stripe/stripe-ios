@@ -9,11 +9,27 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-/// Response model for the checkout session confirm endpoint (POST /v1/payment_pages/:session_id/confirm)
+/// Response model for the CheckoutSession confirm endpoint (POST /v1/payment_pages/:session_id/confirm)
 final class CheckoutSessionConfirmResponse: NSObject {
+    /// The current lifecycle state of the checkout session.
+    ///
+    /// Determines whether the session is active, completed, or expired.
+    /// Only sessions in an active state can be confirmed.
     let status: STPCheckoutSessionStatus
+    /// Indicates whether payment has been collected for this session.
+    ///
+    /// Different from `status` - this specifically tracks payment state, not overall
+    /// session lifecycle. Sessions in `setup` mode will show no payment required.
     let paymentStatus: STPCheckoutSessionPaymentStatus
+    /// The PaymentIntent for this session, if in `payment` or `subscription` mode.
+    ///
+    /// Contains payment details including amount, currency, payment method, and status.
+    /// `nil` when session is in `setup` mode.
     let paymentIntent: STPPaymentIntent?
+    /// The SetupIntent for this session, if in `setup` mode.
+    ///
+    /// Contains information about setting up a payment method for future use without
+    /// immediate charge. `nil` when session is in `payment` or `subscription` mode.
     let setupIntent: STPSetupIntent?
     let allResponseFields: [AnyHashable: Any]
 
