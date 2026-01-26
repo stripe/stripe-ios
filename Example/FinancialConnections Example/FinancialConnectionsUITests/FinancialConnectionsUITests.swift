@@ -486,7 +486,7 @@ final class FinancialConnectionsUITests: XCTestCase {
 
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 
-        let notNowButton = app.buttons["Not now"]
+        let notNowButton = app.fc_nativeNetworkingNotNowButton
         XCTAssert(notNowButton.waitForExistence(timeout: 60)) // wait for networking sign up to show
         app.fc_dismissKeyboard()
         notNowButton.waitForExistenceAndTap() // skip networking sign up
