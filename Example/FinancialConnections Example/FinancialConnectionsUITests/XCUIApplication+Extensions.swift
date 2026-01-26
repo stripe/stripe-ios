@@ -184,14 +184,13 @@ extension XCUIApplication {
     }
 
     func fc_dismissKeyboard() {
-        // iOS 26+ uses "close", iOS 18 and earlier use "Done"
-        let doneButton = toolbars.buttons["Done"]
-        let closeButton = toolbars.buttons["close"]
-
-        if closeButton.waitForExistence(timeout: 2) {
-            closeButton.tap()
-        } else if doneButton.waitForExistence(timeout: 2) {
-            doneButton.tap()
+        // Try the toolbar Done button first (iOS 18 and earlier)
+        let doneButtonByLabel = toolbars.buttons["Done"]
+        if doneButtonByLabel.waitForExistence(timeout: 1) {
+            doneButtonByLabel.tap()
+            return
         }
+        // iOS 26 fallback: tap on the title label to dismiss the keyboard
+        otherElements["fc_pane_title_label"].tap()
     }
 }

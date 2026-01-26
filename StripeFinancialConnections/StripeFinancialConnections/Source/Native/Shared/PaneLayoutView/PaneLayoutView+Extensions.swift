@@ -79,6 +79,7 @@ extension PaneLayoutView {
                 alignment: textAlignment
             )
             titleLabel.setText(title)
+            titleLabel.accessibilityIdentifier = "fc_pane_title_label"
             headerStackView.addArrangedSubview(titleLabel)
         }
 
