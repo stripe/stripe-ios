@@ -496,6 +496,14 @@ extension STPFormView {
         let rows: [[STPFormInput]]
         let title: String?
         let accessoryButton: UIButton?
+        let separatorStyle: SeparatorDisplayStyle
+
+        init(rows: [[STPFormInput]], title: String? = nil, accessoryButton: UIButton? = nil, separatorStyle: SeparatorDisplayStyle = .divider) {
+            self.rows = rows
+            self.title = title
+            self.accessoryButton = accessoryButton
+            self.separatorStyle = separatorStyle
+        }
 
         func contains(_ input: STPInputTextField) -> Bool {
             for row in rows.compactMap({ $0 as? [STPInputTextField] }) {
@@ -571,9 +579,8 @@ extension STPFormView {
                 stackView.axis = .horizontal
                 stackView.distribution = .fillEqually
                 stackView.translatesAutoresizingMaskIntoConstraints = false
-                stackView.spacing = STPFormView.borderWidth
+                stackView.applySeparatorDisplayStyle(section.separatorStyle, defaultColor: InputFormColors.outlineColor)
                 stackView.borderWidth = STPFormView.borderWidth
-                stackView.separatorColor = InputFormColors.outlineColor
                 return stackView
             }
 
@@ -584,9 +591,8 @@ extension STPFormView {
 
             stackView.axis = .vertical
             stackView.distribution = .fillEqually
-            stackView.spacing = STPFormView.borderWidth
+            stackView.applySeparatorDisplayStyle(section.separatorStyle, defaultColor: InputFormColors.outlineColor)
             stackView.borderWidth = STPFormView.borderWidth
-            stackView.separatorColor = InputFormColors.outlineColor
 
             stackView.drawBorder = true
             stackView.borderCornerRadius = STPFormView.cornerRadius
