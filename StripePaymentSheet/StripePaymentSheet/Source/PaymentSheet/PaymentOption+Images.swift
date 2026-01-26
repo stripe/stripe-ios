@@ -8,7 +8,6 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -82,7 +81,7 @@ extension STPPaymentMethod {
         case .card:
             return (isLinkPaymentMethod || isLinkPassthroughMode)
                 ? Image.link_icon.makeImage()
-                : STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
+                : PaymentSheetImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return isLinkPassthroughMode
                 ? Image.link_icon.makeImage()
@@ -131,7 +130,7 @@ extension STPPaymentMethod {
         case .card:
             return (isLinkPaymentMethod || isLinkPassthroughMode)
                 ? Image.link_icon.makeImage()
-                : STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
+                : PaymentSheetImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return isLinkPassthroughMode
                 ? Image.link_icon.makeImage()
@@ -152,7 +151,7 @@ extension STPPaymentMethod {
         switch type {
         case .card:
             let brand = STPCardValidator.brand(for: card)
-            return STPImageLibrary.cardBrandImage(for: brand)
+            return PaymentSheetImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.

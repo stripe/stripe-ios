@@ -10,7 +10,6 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
 /// A controller that presents a Link sheet to collect a customer's payment method.
@@ -158,7 +157,7 @@ import UIKit
 
         switch paymentDetails.details {
         case .card(let card):
-            return STPImageLibrary.cardBrandImage(for: card.stpBrand)
+            return PaymentSheetImageLibrary.cardBrandImage(for: card.stpBrand)
         case .bankAccount(let bankAccount):
             let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.name)
             return PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled)

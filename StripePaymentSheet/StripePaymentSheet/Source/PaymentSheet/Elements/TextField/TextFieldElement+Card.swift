@@ -255,7 +255,7 @@ extension TextFieldElement {
         }
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             return DynamicImageView(
-                dynamicImage: STPImageLibrary.cvcImage(for: cardBrandProvider()),
+                dynamicImage: PaymentSheetImageLibrary.cvcImage(for: cardBrandProvider()),
                 pairedColor: theme.colors.componentBackground
             )
         }
@@ -278,7 +278,7 @@ extension TextFieldElement {
         let disallowedCharacters: CharacterSet = CharacterSet(charactersIn: "•").inverted
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             return DynamicImageView(
-                dynamicImage: STPImageLibrary.cvcImage(for: brand),
+                dynamicImage: PaymentSheetImageLibrary.cvcImage(for: brand),
                 pairedColor: theme.colors.componentBackground
             )
         }
