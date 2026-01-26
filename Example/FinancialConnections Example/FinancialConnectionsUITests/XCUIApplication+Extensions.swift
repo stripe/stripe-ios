@@ -136,11 +136,11 @@ extension XCUIApplication {
     }
 
     var fc_nativeSaveToLinkButton: XCUIElement {
-        return buttons["Save with Link"]
+        return buttons["networking_link_signup_footer_view.save_to_link_button"]
     }
 
     var fc_nativeNetworkingNotNowButton: XCUIElement {
-        return buttons["Not now"]
+        return buttons["networking_link_signup_footer_view.not_now_button"]
     }
 
     var fc_nativeSuccessDoneButton: XCUIElement {
@@ -184,6 +184,13 @@ extension XCUIApplication {
     }
 
     func fc_dismissKeyboard() {
-        toolbars.buttons["Done"].waitForExistenceAndTap()
+        // Try the toolbar Done button first (iOS 18 and earlier)
+        let doneButtonByLabel = toolbars.buttons["Done"]
+        if doneButtonByLabel.waitForExistence(timeout: 1) {
+            doneButtonByLabel.tap()
+            return
+        }
+        // iOS 26 fallback: tap on the title label to dismiss the keyboard
+        otherElements["fc_pane_title_label"].tap()
     }
 }
