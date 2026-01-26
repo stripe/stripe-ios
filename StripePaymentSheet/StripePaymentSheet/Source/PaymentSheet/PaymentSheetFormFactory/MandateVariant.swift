@@ -35,7 +35,7 @@ enum MandateVariant {
                 "terms": URL(string: "https://link.com/terms")!,
                 "privacy": URL(string: "https://link.com/privacy")!,
             ]
-            return STPStringUtils.applyLinksToString(template: terms, links: links)
+            return PaymentSheetStringUtils.applyLinksToString(template: terms, links: links)
         } else {
             return NSAttributedString(string: terms)
         }
