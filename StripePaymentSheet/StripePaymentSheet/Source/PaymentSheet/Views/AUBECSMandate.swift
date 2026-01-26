@@ -62,7 +62,7 @@ final class AUBECSLegalTermsView: UIView {
             "Legal text shown when using AUBECS."
         )
         let string = String(format: template, configuration.merchantDisplayName)
-        return STPStringUtils.applyLinksToString(template: string, links: links)
+        return PaymentSheetStringUtils.applyLinksToString(template: string, links: links)
     }
 
 }

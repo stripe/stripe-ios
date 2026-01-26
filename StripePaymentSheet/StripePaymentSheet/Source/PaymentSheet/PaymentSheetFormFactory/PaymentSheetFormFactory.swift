@@ -571,7 +571,7 @@ extension PaymentSheetFormFactory {
             String.Localized.bank_continue_mandate_text
         }
 
-        return STPStringUtils.applyLinksToString(
+        return PaymentSheetStringUtils.applyLinksToString(
             template: string,
             links: links
         )

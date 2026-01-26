@@ -11,7 +11,6 @@ import AVFoundation
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 import UIKit
 import Vision
 
@@ -297,13 +296,13 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                     == .valid
                 {
                     addDetectedNumber(possibleNumber)
-                } else if let sanitizedExpiration = STPStringUtils.sanitizedExpirationDateFromOCRString(recognizedText.string) {
+                } else if let sanitizedExpiration = PaymentSheetStringUtils.sanitizedExpirationDateFromOCRString(recognizedText.string) {
                     handlePossibleExpirationDate(sanitizedExpiration)
                 } else if possibleNumber.count >= 4 && possibleNumber.count <= 6
-                    && STPStringUtils.stringMayContainExpirationDate(recognizedText.string)
+                    && PaymentSheetStringUtils.stringMayContainExpirationDate(recognizedText.string)
                 {
                     // Try to parse anything that looks like an expiration date.
-                    let expirationString = STPStringUtils.expirationDateString(
+                    let expirationString = PaymentSheetStringUtils.expirationDateString(
                         from: recognizedText.string)
                     let sanitizedExpiration = STPCardValidator.sanitizedNumericString(
                         for: expirationString ?? "")
