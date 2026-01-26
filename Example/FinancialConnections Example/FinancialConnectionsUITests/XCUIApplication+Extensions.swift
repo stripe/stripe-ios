@@ -136,11 +136,11 @@ extension XCUIApplication {
     }
 
     var fc_nativeSaveToLinkButton: XCUIElement {
-        return buttons["Save with Link"]
+        return buttons["networking_link_signup_footer_view.save_to_link_button"]
     }
 
     var fc_nativeNetworkingNotNowButton: XCUIElement {
-        return buttons["Not now"]
+        return buttons["networking_link_signup_footer_view.not_now_button"]
     }
 
     var fc_nativeSuccessDoneButton: XCUIElement {
@@ -184,6 +184,14 @@ extension XCUIApplication {
     }
 
     func fc_dismissKeyboard() {
-        toolbars.buttons["Done"].waitForExistenceAndTap()
+        // iOS 26+ uses "close", iOS 18 and earlier use "Done"
+        let doneButton = toolbars.buttons["Done"]
+        let closeButton = toolbars.buttons["close"]
+
+        if closeButton.waitForExistence(timeout: 2) {
+            closeButton.tap()
+        } else if doneButton.waitForExistence(timeout: 2) {
+            doneButton.tap()
+        }
     }
 }
