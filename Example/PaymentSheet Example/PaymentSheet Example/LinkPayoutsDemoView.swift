@@ -3,18 +3,20 @@
 //  PaymentSheet Example
 //
 
-import AuthenticationServices
 import SwiftUI
+@preconcurrency import WebKit
 
-@available(iOS 15.0, *)
+@available(iOS 26.0, *)
 struct LinkPayoutsDemoView: View {
     @State private var result: LinkPayoutsResult?
     @State private var errorMessage: String?
     @State private var isLoading = false
     @State private var testResult: TestResult = .none
+    @State private var webViewURL: URL?
 
-    private let callbackScheme = "stripe-auth"
-    private let callbackURL = "stripe-auth://callback"
+    private let callbackHost = "example.com"
+    private let callbackPath = "/link-onboarding"
+    private let callbackURL = "https://example.com/link-onboarding"
     private let publishableKey = "pk_test_51StuO5CqcrH2jR0P8OuJZOsflWbkXwGjlJO2T8VL2jhNwVQphlGLqn1YONtqHnNJcqNHuHCQx0IMvFyxGXYf0P2l00w8PDVPMN"
 
     var body: some View {
@@ -59,7 +61,7 @@ struct LinkPayoutsDemoView: View {
 
             if let result {
                 resultView(for: result)
-                    .padding(.horizontal, 32)
+                    .padding(.horizontal, 16)
             }
 
             if let errorMessage {
@@ -73,6 +75,23 @@ struct LinkPayoutsDemoView: View {
         }
         .navigationTitle("Link Payouts")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $webViewURL) { url in
+            LinkPayoutsWebViewSheet(
+                url: url,
+                callbackHost: callbackHost,
+                callbackPath: callbackPath,
+                onCallback: { callbackURL in
+                    webViewURL = nil
+                    isLoading = false
+                    result = LinkPayoutsResult(from: callbackURL)
+                },
+                onDismiss: {
+                    webViewURL = nil
+                    isLoading = false
+                    errorMessage = "Flow was cancelled"
+                }
+            )
+        }
     }
 
     @ViewBuilder
@@ -118,8 +137,10 @@ struct LinkPayoutsDemoView: View {
 
         Task {
             do {
-                let connectionSession = try await LinkPayoutsAPIClient.createConnectionSession()
-                presentWebAuth(clientSecret: connectionSession.clientSecret)
+                let connectionSession = try await LinkPayoutsAPIClient.getConnectionSession()
+                await MainActor.run {
+                    presentWebView(clientSecret: connectionSession.clientSecret)
+                }
             } catch {
                 await MainActor.run {
                     isLoading = false
@@ -130,7 +151,7 @@ struct LinkPayoutsDemoView: View {
     }
 
     @MainActor
-    private func presentWebAuth(clientSecret: String) {
+    private func presentWebView(clientSecret: String) {
         var components = URLComponents(string: "https://onboarding.link.com/onboard")!
         var queryItems = [
             URLQueryItem(name: "publishable_key", value: publishableKey),
@@ -150,32 +171,95 @@ struct LinkPayoutsDemoView: View {
             return
         }
 
-        let session = ASWebAuthenticationSession(
-            url: url,
-            callbackURLScheme: callbackScheme
-        ) { url, error in
-            isLoading = false
+        webViewURL = url
+    }
+}
 
-            if let error = error as? ASWebAuthenticationSessionError,
-               error.code == .canceledLogin {
-                errorMessage = "Flow was cancelled"
-                return
+// MARK: - WebView Sheet
+
+extension URL: @retroactive Identifiable {
+    public var id: String { absoluteString }
+}
+
+@available(iOS 26.0, *)
+struct LinkPayoutsWebViewSheet: View {
+    let url: URL
+    let callbackHost: String
+    let callbackPath: String
+    let onCallback: (URL) -> Void
+    let onDismiss: () -> Void
+
+    @State private var webPage: WebPage?
+    @State private var navigationDecider: LinkPayoutsNavigationDecider?
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if let webPage {
+                    WebView(webPage)
+                } else {
+                    ProgressView()
+                }
             }
-
-            if let error {
-                errorMessage = "Error: \(error.localizedDescription)"
-                return
-            }
-
-            if let url {
-                result = LinkPayoutsResult(from: url)
+            .navigationTitle("Demo Webview")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        onDismiss()
+                    }
+                }
             }
         }
+        .onAppear {
+            let decider = LinkPayoutsNavigationDecider(
+                callbackHost: callbackHost,
+                callbackPath: callbackPath,
+                onCallback: onCallback
+            )
+            navigationDecider = decider
+            let page = WebPage(configuration: .init(), navigationDecider: decider)
+            webPage = page
 
-        session.prefersEphemeralWebBrowserSession = true
-        session.presentationContextProvider = WebAuthPresentationContextProvider.shared
+            Task {
+                for try await event in page.load(URLRequest(url: url)) {
+                    print("[LinkPayoutsDemo] Navigation event: \(event)")
+                }
+            }
+        }
+    }
+}
 
-        session.start()
+// MARK: - Navigation Decider
+
+@available(iOS 26.0, *)
+@MainActor
+final class LinkPayoutsNavigationDecider: WebPage.NavigationDeciding {
+    let callbackHost: String
+    let callbackPath: String
+    let onCallback: (URL) -> Void
+
+    init(callbackHost: String, callbackPath: String, onCallback: @escaping (URL) -> Void) {
+        self.callbackHost = callbackHost
+        self.callbackPath = callbackPath
+        self.onCallback = onCallback
+    }
+
+    func decidePolicy(
+        for action: WebPage.NavigationAction,
+        preferences: inout WebPage.NavigationPreferences
+    ) async -> WKNavigationActionPolicy {
+        let url = action.request.url
+
+        print("[LinkPayoutsDemo] Navigation: \(url?.absoluteString ?? "nil")")
+
+        if let url, url.host() == callbackHost, url.path() == callbackPath {
+            print("[LinkPayoutsDemo] Callback URL detected: \(url.absoluteString)")
+            onCallback(url)
+            return .cancel
+        }
+
+        return .allow
     }
 }
 
@@ -250,7 +334,38 @@ struct LinkPayoutsResult {
 enum LinkPayoutsAPIClient {
     private static let baseURL = URL(string: "https://link-payouts-demo.stripedemos.com")!
 
-    static func createConnectionSession() async throws -> ConnectionSession {
+    /// Client secret expires after 2 minutes, use 90 seconds to be safe
+    private static let cacheValidityDuration: TimeInterval = 90
+
+    private static var cachedSession: CachedConnectionSession?
+
+    private struct CachedConnectionSession {
+        let session: ConnectionSession
+        let createdAt: Date
+
+        var isValid: Bool {
+            Date().timeIntervalSince(createdAt) < cacheValidityDuration
+        }
+    }
+
+    static func getConnectionSession() async throws -> ConnectionSession {
+        if let cached = cachedSession, cached.isValid {
+            print("[LinkPayoutsDemo] Using cached connection session (age: \(Int(Date().timeIntervalSince(cached.createdAt)))s)")
+            return cached.session
+        }
+
+        print("[LinkPayoutsDemo] Fetching new connection session...")
+        let session = try await fetchConnectionSession()
+        cachedSession = CachedConnectionSession(session: session, createdAt: Date())
+        return session
+    }
+
+    static func clearCache() {
+        cachedSession = nil
+        print("[LinkPayoutsDemo] Connection session cache cleared")
+    }
+
+    private static func fetchConnectionSession() async throws -> ConnectionSession {
         let url = baseURL.appendingPathComponent("connection_session")
 
         var request = URLRequest(url: url)
@@ -325,19 +440,7 @@ enum LinkPayoutsAPIError: LocalizedError {
     }
 }
 
-private class WebAuthPresentationContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
-    static let shared = WebAuthPresentationContextProvider()
-
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        let keyWindow = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first { $0.isKeyWindow }
-        return keyWindow ?? ASPresentationAnchor()
-    }
-}
-
-@available(iOS 15.0, *)
+@available(iOS 26.0, *)
 struct LinkPayoutsDemoView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

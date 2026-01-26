@@ -238,7 +238,12 @@ struct PaymentSheetExampleAppRootView: View {
                     .font(.title2)
             }
         case .linkPayoutsDemo:
-            LinkPayoutsDemoView()
+            if #available(iOS 26.0, *) {
+                LinkPayoutsDemoView()
+            } else {
+                Text("Sorry, only available on >= iOS 26.0")
+                    .font(.title2)
+            }
         case .embeddedPaymentElement:
             StoryboardSceneView<ExampleEmbeddedElementCheckoutViewController>(sceneIdentifier: "ExampleEmbeddedElementCheckoutViewController")
 
