@@ -94,6 +94,7 @@ For the `Stripe` module, link the following frameworks:
 - `StripeApplePay.xcframework`
 - `StripePayments.xcframework`
 - `StripePaymentsUI.xcframework`
+- `StripeIssuing.xcframework`
 - `StripeCore.xcframework`
 - `StripeUICore.xcframework`
 
@@ -102,6 +103,7 @@ For other modules, follow the instructions below:
 - [StripeConnect](StripeConnect/README.md#manual-linking)
 - [StripeFinancialConnections](StripeFinancialConnections/README.md#manual-linking)
 - [StripeIdentity](StripeIdentity/README.md#manual-linking)
+- [StripeIssuing](StripeIssuing/README.md#manual-linking)
 - [StripePaymentSheet](StripePaymentSheet/README.md#manual-linking)
 - [StripePayments](StripePayments/README.md#manual-linking)
 - [StripePaymentsUI](StripePaymentsUI/README.md#manual-linking)

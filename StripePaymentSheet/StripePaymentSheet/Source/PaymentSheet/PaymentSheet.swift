@@ -48,12 +48,13 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
+        case checkoutSession(String)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
             case .deferredIntent(let intentConfig):
                 return intentConfig
-            default:
+            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkoutSession:
                 return nil
             }
         }
@@ -99,6 +100,16 @@ public class PaymentSheet {
     public convenience init(intentConfiguration: IntentConfiguration, configuration: Configuration) {
         self.init(
             mode: .deferredIntent(intentConfiguration),
+            configuration: configuration
+        )
+    }
+
+    /// Initializes PaymentSheet with a CheckoutSession ID
+    /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+    @_spi(CheckoutSessionPreview) public convenience init(checkoutSessionId: String, configuration: Configuration) {
+        self.init(
+            mode: .checkoutSession(checkoutSessionId),
             configuration: configuration
         )
     }
@@ -157,17 +168,24 @@ public class PaymentSheet {
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {
-                        switch self.configuration.paymentMethodLayout {
+                        // Resolve automatic layout based on experiment
+                        var configuration = self.configuration
+                        let resolvedPaymentMethodLayout = configuration.resolveLayout(
+                            loadResult: loadResult,
+                            configuration: self.configuration,
+                            analyticsHelper: self.analyticsHelper
+                        )
+                        switch resolvedPaymentMethodLayout {
                         case .horizontal:
                             return PaymentSheetViewController(
-                                configuration: self.configuration,
+                                configuration: configuration,
                                 loadResult: loadResult,
                                 analyticsHelper: self.analyticsHelper,
                                 delegate: self
                             )
-                        case .vertical, .automatic:
+                        case .vertical:
                             let verticalVC = PaymentSheetVerticalViewController(
-                                configuration: self.configuration,
+                                configuration: configuration,
                                 loadResult: loadResult,
                                 isFlowController: false,
                                 analyticsHelper: self.analyticsHelper

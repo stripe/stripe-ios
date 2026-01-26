@@ -16,17 +16,19 @@ import UIKit
 
 // MARK: - Intent
 
-/// An internal type representing either a PaymentIntent, SetupIntent, or a "deferred Intent"
+/// An internal type representing either a PaymentIntent, SetupIntent, a "deferred Intent", or a CheckoutSession
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
+    case checkoutSession(STPCheckoutSession)
 
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
+        case .checkoutSession(let session): session.stripeId
         }
     }
 
@@ -43,6 +45,8 @@ enum Intent {
             case .setup:
                 return false
             }
+        case .checkoutSession(let session):
+            return session.mode == .payment || session.mode == .subscription
         }
     }
 
@@ -54,6 +58,8 @@ enum Intent {
             return false
         case .deferredIntent:
             return true
+        case .checkoutSession:
+            return false
         }
     }
 
@@ -61,7 +67,7 @@ enum Intent {
         switch self {
         case .deferredIntent(let intentConfig):
             return intentConfig
-        default:
+        case .paymentIntent, .setupIntent, .checkoutSession:
             return nil
         }
     }
@@ -72,7 +78,8 @@ enum Intent {
             return intentConfig.requireCVCRecollection
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
-        case .setupIntent:
+        case .setupIntent, .checkoutSession:
+            // TODO(porter) Figure out CVC recollection flag during confirmation work
             return false
         }
     }
@@ -90,6 +97,8 @@ enum Intent {
             case .setup(let currency, _):
                 return currency
             }
+        case .checkoutSession(let session):
+            return session.currency
         }
     }
 
@@ -106,6 +115,8 @@ enum Intent {
             case .setup:
                 return nil
             }
+        case .checkoutSession(let session):
+            return session.totalSummary?.total
         }
     }
 
@@ -118,7 +129,8 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        default:
+        case .setupIntent, .checkoutSession:
+            // TODO(porter) Figure out SFU string during confirmation work
             return nil
         }
     }
@@ -135,7 +147,8 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        default:
+        case .setupIntent, .checkoutSession:
+            // TODO(porter) Figure out PMO+SFU during confirmation work
             return nil
         }
     }
@@ -158,6 +171,9 @@ enum Intent {
             case .setup:
                 return true
             }
+        case .checkoutSession:
+            // TODO(porter) Figure out SFU during confirmation work
+            return false
         }
     }
 }

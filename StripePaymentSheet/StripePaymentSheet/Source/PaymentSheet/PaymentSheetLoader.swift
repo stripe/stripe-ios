@@ -78,16 +78,12 @@ final class PaymentSheetLoader {
                 let elementsSession = elementsSessionAndIntent.elementsSession
                 // Overwrite the form specs that were already loaded from disk
                 switch intent {
-                case .paymentIntent:
+                case .paymentIntent, .deferredIntent, .checkoutSession:
                     if !elementsSession.isBackupInstance {
                         _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
                     }
                 case .setupIntent:
                     break // Not supported
-                case .deferredIntent:
-                    if !elementsSession.isBackupInstance {
-                        _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
-                    }
                 }
 
                 // List the Customer's saved PaymentMethods
@@ -381,6 +377,15 @@ final class PaymentSheetLoader {
                 let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
+            }
+        case .checkoutSession(let checkoutSessionId):
+            do {
+                let response = try await configuration.apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+                elementsSession = response.elementsSession
+                intent = .checkoutSession(response.checkoutSession)
+            } catch {
+                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
+                throw error
             }
         }
 

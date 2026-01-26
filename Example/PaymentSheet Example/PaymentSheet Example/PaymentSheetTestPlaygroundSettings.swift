@@ -57,6 +57,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case deferred_mc
         /// Def MP: Deferred multiprocessor flow
         case deferred_mp
+        /// CheckoutSession: Uses Stripe CheckoutSession APIs
+        case checkoutSession
 
         var displayName: String {
             switch self {
@@ -70,12 +72,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "Deferred server side confirmation with manual confirmation"
             case .deferred_mp:
                 return "Deferred multiprocessor flow"
+            case .checkoutSession:
+                return "CheckoutSession"
             }
         }
 
         var isIntentFirst: Bool {
             switch self {
-            case .normal:
+            case .normal, .checkoutSession:
                 return true
             case .deferred_csc, .deferred_ssc, .deferred_mc, .deferred_mp:
                 return false
@@ -164,6 +168,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case DE
         case IT
         case stripeShop = "stripe_shop_test"
+        case custom
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -697,6 +702,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var currency: Currency
     var amount: Amount
     var merchantCountryCode: MerchantCountry
+    // For testing purposes only; keys should typically not be defined on the client
+    var customSecretKey: String?
+    var customPublishableKey: String?
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
     var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage

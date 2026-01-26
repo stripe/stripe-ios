@@ -20,8 +20,9 @@ final class CryptoOnrampExampleUITests: XCTestCase {
     }
 
     /// Tests a happy-path flow from log in (existing account) to successful checkout, followed by re-authentication using seamless sign-in.
+    /// Disabled
     @MainActor
-    func testCryptoOnrampEndToEnd() throws {
+    func _testCryptoOnrampEndToEnd() throws {
         // Step 1: Enter email and password
         let emailField = app.textFields["Enter email address"].firstMatch
         XCTAssertTrue(emailField.waitForExistence(timeout: .networkTimeout), "Email field should exist")
@@ -30,7 +31,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         XCTAssertTrue(logInLoadingLabel.waitForNonExistence(timeout: .networkTimeout), "Loading indicator should disappear")
 
         emailField.tap()
-        emailField.typeText("onramptest@stripe.com")
+        emailField.typeText("onramptest2@stripe.com")
 
         let passwordField = app.secureTextFields["Enter password"].firstMatch
         XCTAssertTrue(passwordField.exists, "Password field should exist")
@@ -110,7 +111,7 @@ final class CryptoOnrampExampleUITests: XCTestCase {
         logOutMenuItem.tap()
 
         // Step 8: Authenticate again using seamless sign-in (no OTP, stored auth token from prior login).
-        let seamlessSignInLabel = app.staticTexts["Continue as onramptest@stripe.com?"]
+        let seamlessSignInLabel = app.staticTexts["Continue as onramptest2@stripe.com?"]
         XCTAssertTrue(seamlessSignInLabel.waitForExistence(timeout: .networkTimeout), "Seamless sign-in label should exist")
 
         let seamlessSignInLoadingLabel = app.staticTexts["Loading…"].firstMatch

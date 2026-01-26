@@ -214,6 +214,10 @@ extension PaymentSheet {
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic
 
+        /// The resolved layout of payment methods after calling `resolve()` on `paymentMethodLayout`.
+        /// - Note: Internal code should use this property instead of `paymentMethodLayout`.
+        internal private(set) var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout?
+
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
         /// Note: For Apple Pay, the list of supported card brands is determined by combining `StripeAPI.supportedPKPaymentNetworks()` with `StripeAPI.additionalEnabledApplePayNetworks` and then applying the `cardBrandAcceptance` filter. This filtered list is then assigned to `PKPaymentRequest.supportedNetworks`, ensuring that only the allowed card brands are available for Apple Pay transactions. Any `PKPaymentNetwork` that does not correspond to a `BrandCategory` will be blocked if you have specified an allow list, or will not be blocked if you have specified a disallow list.
@@ -249,6 +253,43 @@ extension PaymentSheet {
 
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
+
+        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
+        /// For non-automatic layouts, returns self.
+        mutating func resolveLayout(
+            loadResult: PaymentSheetLoader.LoadResult,
+            configuration: PaymentElementConfiguration,
+            analyticsHelper: PaymentSheetAnalyticsHelper,
+            shouldLogExperimentExposure: Bool = true
+        ) -> PaymentMethodLayout.ResolvedLayout {
+            var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout
+            switch paymentMethodLayout {
+            case .horizontal:
+                resolvedPaymentMethodLayout = .horizontal
+            case .vertical:
+                resolvedPaymentMethodLayout = .vertical
+            case .automatic:
+                // Default to vertical (control)
+                resolvedPaymentMethodLayout = .vertical
+
+                let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
+                    loadResult: loadResult,
+                    configuration: configuration,
+                    analyticsHelper: analyticsHelper
+                )
+
+                experiments.forEach { experiment in
+                    // Log experiment exposure if needed
+                    if shouldLogExperimentExposure {
+                        analyticsHelper.logExposure(experiment: experiment)
+                    }
+                    // Return horizontal for treatment and vertical otherwise
+                    resolvedPaymentMethodLayout = experiment.group == .treatment ? .horizontal : .vertical
+                }
+            }
+            self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
+            return resolvedPaymentMethodLayout
+        }
     }
 
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
@@ -295,6 +336,11 @@ extension PaymentSheet {
 
         /// Stripe automatically chooses between `horizontal` and `vertical`.
         case automatic
+
+        enum ResolvedLayout {
+            case horizontal
+            case vertical
+        }
     }
 
     internal enum CustomerAccessProvider {
