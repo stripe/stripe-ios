@@ -67,6 +67,15 @@ final class AuthenticationSessionManager: NSObject {
                 }
                 let returnUrlString = returnUrl.absoluteString
 
+                // #region agent log
+                print("**** [H8] ASWebAuthenticationSession completion - returnUrl: \(returnUrlString)")
+                print("**** [H8] ASWebAuthenticationSession completion - manifest.successUrl: \(self.manifest.successUrl ?? "nil")")
+                print("**** [H8] ASWebAuthenticationSession completion - manifest.cancelUrl: \(self.manifest.cancelUrl ?? "nil")")
+                let matchesSuccess = returnUrl.matchesSchemeHostAndPath(of: URL(string: self.manifest.successUrl ?? ""))
+                let matchesCancel = returnUrl.matchesSchemeHostAndPath(of: URL(string: self.manifest.cancelUrl ?? ""))
+                print("**** [H8] ASWebAuthenticationSession completion - matchesSuccess: \(matchesSuccess), matchesCancel: \(matchesCancel)")
+                // #endregion
+
                 // `matchesSchemeHostAndPath` is necessary for instant debits which
                 // contains additional query parameters at the end of the `successUrl`
                 if returnUrl.matchesSchemeHostAndPath(of: URL(string: self.manifest.successUrl ?? ""))  {

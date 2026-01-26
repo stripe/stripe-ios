@@ -60,6 +60,9 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
      We keep the parameters as a state and pass on to resuming the authentication session and clearing this state.
      */
     private var unprocessedReturnURLParameters: String?
+    /// The hosted auth URL extracted from the callback URL, used when restarting the webview after app-to-app auth.
+    /// This URL may contain a different (consumer) publishable key than the original manifest URL.
+    private var unprocessedHostedAuthUrl: URL?
     private var subscribedToURLNotifications = false
     private var subscribedToAppActiveNotifications = false
     private var lastOpenedNativeURL: URL?
@@ -152,14 +155,25 @@ extension FinancialConnectionsWebFlowViewController {
 
     private func startAuthenticationSession(
         manifest: FinancialConnectionsSessionManifest,
-        additionalQueryParameters: String? = nil
+        additionalQueryParameters: String? = nil,
+        hostedAuthUrlOverride: URL? = nil
     ) {
         guard authSessionManager == nil else { return }
-        guard let hostedAuthUrlString = manifest.hostedAuthUrl, let hostedAuthUrl = URL(string: hostedAuthUrlString) else {
+        guard let hostedAuthUrlString = manifest.hostedAuthUrl, let manifestHostedAuthUrl = URL(string: hostedAuthUrlString) else {
             let error = FinancialConnectionsSheetError.unknown(debugDescription: "NULL or malformed `hostedAuthUrl`")
             notifyDelegateOfFailure(error: error)
             return
         }
+
+        // Use the override URL if provided (contains consumer's publishable key after Link login),
+        // otherwise fall back to the manifest's hosted auth URL (merchant's publishable key).
+        let hostedAuthUrl = hostedAuthUrlOverride ?? manifestHostedAuthUrl
+
+        // #region agent log
+        print("**** [H3] startAuthenticationSession - manifestHostedAuthUrl: \(hostedAuthUrlString)")
+        print("**** [H3] startAuthenticationSession - hostedAuthUrlOverride: \(hostedAuthUrlOverride?.absoluteString ?? "nil")")
+        print("**** [H3] startAuthenticationSession - additionalQueryParameters: \(additionalQueryParameters ?? "nil")")
+        // #endregion
 
         loadingView.showLoading(true)
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
@@ -172,6 +186,10 @@ extension FinancialConnectionsWebFlowViewController {
             prefillDetailsOverride: prefillDetailsOverride,
             additionalQueryParameters: additionalQueryParameters
         )
+        // #region agent log
+        print("**** [H4] startAuthenticationSession - baseHostedAuthUrl: \(hostedAuthUrl.absoluteString)")
+        print("**** [H4] startAuthenticationSession - updatedHostedAuthUrl: \(updatedHostedAuthUrl.absoluteString)")
+        // #endregion
         authSessionManager?
             .start(hostedAuthUrl: updatedHostedAuthUrl)
             .observe(using: { [weak self] (result) in
@@ -340,6 +358,24 @@ extension FinancialConnectionsWebFlowViewController {
 extension FinancialConnectionsWebFlowViewController: STPURLCallbackListener {
     func handleURLCallback(_ url: URL) -> Bool {
         DispatchQueue.main.async {
+            // #region agent log
+            print("**** [H1] handleURLCallback - url: \(url.absoluteString)")
+            print("**** [H1] handleURLCallback - fragment: \(url.fragment ?? "nil")")
+            // #endregion
+
+            // Extract hostedAuthUrl from the callback URL fragment if present.
+            // This URL contains the consumer's publishable key after Link login.
+            if let fragment = url.fragment {
+                let fragmentComponents = URLComponents(string: "?" + fragment)
+                if let hostedAuthUrlEncoded = fragmentComponents?.queryItems?.first(where: { $0.name == "hostedAuthUrl" })?.value,
+                   let hostedAuthUrl = URL(string: hostedAuthUrlEncoded) {
+                    self.unprocessedHostedAuthUrl = hostedAuthUrl
+                    // #region agent log
+                    print("**** [H1] handleURLCallback - extracted hostedAuthUrl: \(hostedAuthUrl.absoluteString)")
+                    // #endregion
+                }
+            }
+
             self.unprocessedReturnURLParameters = FinancialConnectionsWebFlowViewController.returnURLParameters(
                 from: url
             )
@@ -386,8 +422,24 @@ private extension FinancialConnectionsWebFlowViewController {
              */
             return
         }
-        startAuthenticationSession(manifest: manifest, additionalQueryParameters: parameters)
+
+        // When we have a hostedAuthUrl override (consumer's URL), don't pass additional parameters.
+        // The backend's hostedAuthUrl is designed to be complete and self-sufficient.
+        // Adding startPolling/authSessionId may confuse the consumer's session context.
+        let additionalParams = unprocessedHostedAuthUrl != nil ? nil : parameters
+
+        // #region agent log
+        print("**** [H10] restartAuthenticationIfNeeded - hasHostedAuthUrlOverride: \(unprocessedHostedAuthUrl != nil)")
+        print("**** [H10] restartAuthenticationIfNeeded - using additionalParams: \(additionalParams ?? "nil")")
+        // #endregion
+
+        startAuthenticationSession(
+            manifest: manifest,
+            additionalQueryParameters: additionalParams,
+            hostedAuthUrlOverride: unprocessedHostedAuthUrl
+        )
         unprocessedReturnURLParameters = nil
+        unprocessedHostedAuthUrl = nil
         lastOpenedNativeURL = nil
         continueStateView.isHidden = true
         unsubscribeFromNotifications()
@@ -447,6 +499,20 @@ private extension FinancialConnectionsWebFlowViewController {
         guard let fragment = incoming.fragment else {
             return startPollingParam
         }
-        return startPollingParam + "&\(fragment)"
+
+        // Strip certain parameters from the fragment:
+        // - hostedAuthUrl: handled separately as the base URL
+        // - code: this is the OAuth result code from the bank, not needed for the web client restart
+        var fragmentComponents = URLComponents(string: "?" + fragment)
+        fragmentComponents?.queryItems?.removeAll(where: { $0.name == "hostedAuthUrl" || $0.name == "code" })
+        let filteredFragment = fragmentComponents?.query ?? fragment
+
+        let result = startPollingParam + "&\(filteredFragment)"
+        // #region agent log
+        print("**** [H2] returnURLParameters - original fragment: \(fragment)")
+        print("**** [H2] returnURLParameters - filtered fragment: \(filteredFragment)")
+        print("**** [H2] returnURLParameters - result: \(result)")
+        // #endregion
+        return result
     }
 }
