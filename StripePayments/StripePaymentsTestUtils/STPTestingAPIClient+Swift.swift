@@ -222,8 +222,8 @@ extension STPTestingAPIClient {
         do {
             return try jsonDecoder.decode(ResponseType.self, from: data)
         } catch {
-            let rawDataString = String(decoding: data, as: UTF8.self)
-            print("Error decoding to \(ResponseType.self). Raw data: \(rawDataString)")
+            let rawDataString = String(data: data, encoding: .utf8)
+            print("Error decoding to \(ResponseType.self). Raw data: \(rawDataString ?? "nil")")
             throw error
         }
     }
