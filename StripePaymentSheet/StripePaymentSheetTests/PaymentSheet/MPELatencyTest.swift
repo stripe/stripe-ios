@@ -197,12 +197,14 @@ extension MPELatencyTest {
         if isCILatencyTestRun {
             analyticsClient.forceAlwaysSendAnalytics = true
         }
+        // `name` looks like "-[MPELatencyTest testFoo]" - grab "testFoo"
+        let testName = name.split(separator: " ").last!.dropLast()
         // 2a. This print statement is used by the `measure_latency_difference` script
-        print("SYNTHETIC_LATENCY_RESULT: \(self.name): \(duration)")
+        print("SYNTHETIC_LATENCY_RESULT: \(testName): \(duration)")
         // 2b. Log a special analytic instead of using mc_load b/c it's easier to add extra information and simpler to identify in hubble.
         analyticsClient.log(
             analytic: LatencyAnalytic(
-                test: name,
+                test: String(testName),
                 duration: duration,
                 requests: urlSessionMetricsCollector.collectedMetrics
             )
