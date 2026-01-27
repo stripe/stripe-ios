@@ -203,7 +203,8 @@ extension STPPaymentMethodType {
             case .payPal:
                 return .pm_type_paypal
             case .AUBECSDebit:
-                return .pm_type_aubecsdebit
+                // we reuse the bank icon for AU BECS Debit
+                return .pm_type_us_bank
             case .USBankAccount:
                 switch iconStyle {
                 case .filled:
@@ -228,14 +229,14 @@ extension STPPaymentMethodType {
                 }
             case .alipay:
                 return .pm_type_alipay
-            case .OXXO:
-                return .pm_type_oxxo
-            case .konbini:
-                return .pm_type_konbini
+            case .alma:
+                return .pm_type_alma
+            case .amazonPay:
+                return .pm_type_amazonpay
+            case .billie:
+                return .pm_type_billie
             case .boleto:
                 return .pm_type_boleto
-            case .swish:
-                return .pm_type_swish
             case .crypto:
                 switch iconStyle {
                 case .filled:
@@ -243,6 +244,34 @@ extension STPPaymentMethodType {
                 case .outlined:
                     return .pm_type_crypto_outlined
                 }
+            case .FPX:
+                return .pm_type_fpx
+            case .grabPay:
+                return .pm_type_grabpay
+            case .konbini:
+                return .pm_type_konbini
+            case .mobilePay:
+                return .pm_type_mobilepay
+            case .multibanco:
+                return .pm_type_multibanco
+            case .OXXO:
+                return .pm_type_oxxo
+            case .paynow:
+                return .pm_type_paynow
+            case .payPay:
+                return .pm_type_paypay
+            case .promptPay:
+                return .pm_type_promptpay
+            case .satispay:
+                return .pm_type_satispay
+            case .sunbit:
+                return .pm_type_sunbit
+            case .swish:
+                return .pm_type_swish
+            case .twint:
+                return .pm_type_twint
+            case .zip:
+                return .pm_type_zip
             default:
                 return nil
             }
