@@ -187,7 +187,7 @@ import Foundation
         case .multibanco:
             return "Multibanco"
         case .shopPay:
-            return "ShopPay"
+            return "Shop Pay"
         case .payPay:
             return "PayPay"
         case .cardPresent,

@@ -188,6 +188,26 @@ extension PaymentSheet {
             }
             applePayContext.presentApplePay()
 
+        // MARK: - Shop Pay
+        case .shopPay:
+            guard #available(iOS 16.0, *) else {
+                completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: "Shop Pay requires iOS 16 or newer")), nil)
+                return
+            }
+            guard let shopPayConfiguration = configuration.shopPay else {
+                completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: "Shop Pay configuration is missing")), nil)
+                return
+            }
+            let shopPayPresenter = ShopPayECEPresenter(
+                configuration: configuration,
+                intent: intent,
+                shopPayConfiguration: shopPayConfiguration,
+                analyticsHelper: analyticsHelper
+            )
+            shopPayPresenter.present(from: authenticationContext.authenticationPresentingViewController()) { result in
+                completion(result, .completeWithoutConfirmingIntent)
+            }
+
         // MARK: - New Payment Method
         case let .new(confirmParams):
             Task { @MainActor in

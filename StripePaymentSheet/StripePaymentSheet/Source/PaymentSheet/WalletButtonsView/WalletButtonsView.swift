@@ -113,7 +113,9 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                     appendIfAllowed(.applePay)
                 }
             case "shop_pay":
-                appendIfAllowed(.shopPay)
+                if PaymentSheet.isShopPayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+                    appendIfAllowed(.shopPay)
+                }
             default:
                 continue
             }
@@ -184,8 +186,9 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
 
             // Present Shop Pay via ECE WebView
             let shopPayPresenter = ShopPayECEPresenter(
-                flowController: flowController,
-                configuration: shopPayConfig,
+                configuration: flowController.configuration,
+                intent: flowController.intent,
+                shopPayConfiguration: shopPayConfig,
                 analyticsHelper: flowController.analyticsHelper
             )
             shopPayPresenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),

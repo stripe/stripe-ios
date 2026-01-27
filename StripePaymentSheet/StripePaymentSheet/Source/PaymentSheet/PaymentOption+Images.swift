@@ -22,6 +22,8 @@ extension PaymentOption {
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
+        case .shopPay:
+            return Image.shoppay_logo.makeImage().withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod, let paymentOption):
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName), iconStyle: iconStyle)
@@ -52,6 +54,8 @@ extension PaymentOption {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+        case .shopPay:
+            return Image.shoppay_logo.makeImage()
         case .saved(let paymentMethod, _):
             return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
         case .new:

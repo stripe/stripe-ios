@@ -31,6 +31,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 return .applePay
             case .link:
                 return .link(option: .wallet)
+            case .shopPay:
+                return .shopPay
             case .new(paymentMethodType: let paymentMethodType):
                 let params = IntentConfirmParams(type: paymentMethodType)
                 params.setDefaultBillingDetailsIfNecessary(for: configuration)
@@ -90,12 +92,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
     let shouldShowApplePayInList: Bool
     let shouldShowLinkInList: Bool
+    let shouldShowShopPayInList: Bool
     /// Whether or not we are in the special case where we don't show the list and show the form directly
     var shouldDisplayFormOnly: Bool {
         return paymentMethodTypes.count == 1
                && savedPaymentMethods.isEmpty
                && !shouldShowApplePayInList
                && !shouldShowLinkInList
+               && !shouldShowShopPayInList
                && (paymentMethodTypes.first.map { shouldDisplayForm(for: $0) } ?? false)
     }
     /// The content offset % of the payment method list before we transitioned away from it
@@ -177,6 +181,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && Self.walletButtonsViewAllowsExpressType(.applePay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
+        self.shouldShowShopPayInList = PaymentSheet.isShopPayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && Self.walletButtonsViewAllowsExpressType(.shopPay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
 
@@ -209,8 +214,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         case .link:
             return !walletButtonsViewState.showLink
         case .shopPay:
-            stpAssertionFailure()
-            return false // not yet implemented
+            return !walletButtonsViewState.showShopPay
         }
     }
 
@@ -248,7 +252,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     return confirmParams
                 case .link(let confirmOption):
                     return confirmOption.signupConfirmParams
-                case .applePay, .external:
+                case .applePay, .shopPay, .external:
                     return nil
                 }
             }()
@@ -361,6 +365,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 return .applePay
             case .link:
                 return .link
+            case .shopPay:
+                return .shopPay
             case .external(paymentMethod: let paymentMethod, billingDetails: _):
                 return .new(paymentMethodType: .external(paymentMethod))
             case .saved(paymentMethod: let paymentMethod, confirmParams: _):
@@ -425,10 +431,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return .saved(paymentMethod: savedPM)
         }
 
-        // 4. If we have only one payment method type, with no wallet options, no saved payment methods, and neither Link nor Apple Pay are in the list, auto-select the lone payment method type.
+        // 4. If we have only one payment method type, with no wallet options, no saved payment methods, and none of Link, Shop Pay, or Apple Pay are in the list, auto-select the lone payment method type.
         if loadResult.paymentMethodTypes.count == 1,
            !shouldShowLinkInList,
            !shouldShowApplePayInList,
+           !shouldShowShopPayInList,
            makeWalletHeaderView() == nil,
            let paymentMethodType = loadResult.paymentMethodTypes.first {
             return .new(paymentMethodType: paymentMethodType)
@@ -443,7 +450,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
                 (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always) ||
-                initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {
+                (initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) ||
+                (initialSelection == .shopPay && configuration.walletButtonsVisibility.paymentElement[.shopPay] != .always)) {
             initialSelection = nil
         }
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
@@ -460,6 +468,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: shouldShowApplePayInList,
             shouldShowLink: shouldShowLinkInList,
+            shouldShowShopPay: shouldShowShopPayInList,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             overrideHeaderView: makeWalletHeaderView(),
             appearance: configuration.appearance,
@@ -592,6 +601,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // if Link is showing as an express button
         if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowLinkInList {
             visiblePaymentMethods.append(RowButtonType.link.analyticsIdentifier)
+        }
+        // if Shop Pay is showing as an express button
+        if PaymentSheet.isShopPayEnabled(elementsSession: elementsSession, configuration: configuration), !shouldShowShopPayInList {
+            visiblePaymentMethods.append(RowButtonType.shopPay.analyticsIdentifier)
         }
         paymentMethodListViewController?.rowButtons.forEach { rowButton in
             let identifier = rowButton.type.analyticsIdentifier
@@ -850,7 +863,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
 
     func shouldSelectPaymentMethod(_ selection: RowButtonType) -> Bool {
         switch selection {
-        case .applePay, .link:
+        case .applePay, .link, .shopPay:
             return true
         case let .new(paymentMethodType: paymentMethodType):
             // Only make payment methods appear selected in the list if they don't push to a form
@@ -871,6 +884,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customer?.id)
         case .link:
             CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+        case .shopPay:
+            break
         case .saved(let paymentMethod):
             CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(paymentMethod.stripeId), forCustomer: configuration.customer?.id)
         case let .new(paymentMethodType: paymentMethodType):

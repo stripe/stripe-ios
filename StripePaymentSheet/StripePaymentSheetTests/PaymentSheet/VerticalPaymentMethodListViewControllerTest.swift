@@ -24,6 +24,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             paymentMethodTypes: [.stripe(.card)],
             shouldShowApplePay: true,
             shouldShowLink: true,
+            shouldShowShopPay: false,
             savedPaymentMethodAccessoryType: .edit,
             overrideHeaderView: nil,
             appearance: .default,
@@ -72,6 +73,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             paymentMethodTypes: [.stripe(.card)],
             shouldShowApplePay: true,
             shouldShowLink: true,
+            shouldShowShopPay: false,
             savedPaymentMethodAccessoryType: .edit,
             overrideHeaderView: nil,
             appearance: .default,
@@ -98,6 +100,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             paymentMethodTypes: [.stripe(.card)],
             shouldShowApplePay: true,
             shouldShowLink: true,
+            shouldShowShopPay: false,
             savedPaymentMethodAccessoryType: .edit,
             overrideHeaderView: nil,
             appearance: .default,
@@ -119,6 +122,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             paymentMethodTypes: [.stripe(.SEPADebit), .stripe(.card)],
             shouldShowApplePay: true,
             shouldShowLink: true,
+            shouldShowShopPay: true,
             savedPaymentMethodAccessoryType: .edit,
             overrideHeaderView: nil,
             appearance: .default,
@@ -127,7 +131,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             incentive: nil,
             delegate: self
         )
-        XCTAssertEqual(["SEPA Debit", "Card", "Apple Pay", "Link"], sut.rowButtons.map { $0.label.text })
+        XCTAssertEqual(["SEPA Debit", "Card", "Apple Pay", "Shop Pay", "Link"], sut.rowButtons.map { $0.label.text })
 
         // If cards only, Apple Pay / Link appear after it
         let sut_cards_only = VerticalPaymentMethodListViewController(
@@ -136,6 +140,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             paymentMethodTypes: [.stripe(.card)],
             shouldShowApplePay: true,
             shouldShowLink: true,
+            shouldShowShopPay: true,
             savedPaymentMethodAccessoryType: .edit,
             overrideHeaderView: nil,
             appearance: .default,
@@ -144,7 +149,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             incentive: nil,
             delegate: self
         )
-        XCTAssertEqual(["Card", "Apple Pay", "Link"], sut_cards_only.rowButtons.map { $0.label.text })
+        XCTAssertEqual(["Card", "Apple Pay", "Shop Pay", "Link"], sut_cards_only.rowButtons.map { $0.label.text })
 
         // Without cards, Apple Pay / Link appear first
         let sut_no_cards = VerticalPaymentMethodListViewController(
@@ -153,6 +158,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             paymentMethodTypes: [.stripe(.SEPADebit)],
             shouldShowApplePay: true,
             shouldShowLink: true,
+            shouldShowShopPay: true,
             savedPaymentMethodAccessoryType: .edit,
             overrideHeaderView: nil,
             appearance: .default,
@@ -161,7 +167,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             incentive: nil,
             delegate: self
         )
-        XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
+        XCTAssertEqual(["Apple Pay", "Shop Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
     }
 }
 
