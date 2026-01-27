@@ -13,11 +13,12 @@ struct LinkPayoutsDemoView: View {
     @State private var isLoading = false
     @State private var testResult: TestResult = .none
     @State private var webViewURL: URL?
+    @State private var lastOnboardingURL: URL?
 
     private let callbackHost = "example.com"
     private let callbackPath = "/link-onboarding"
     private let callbackURL = "https://example.com/link-onboarding"
-    private let publishableKey = "pk_test_51StuO5CqcrH2jR0P8OuJZOsflWbkXwGjlJO2T8VL2jhNwVQphlGLqn1YONtqHnNJcqNHuHCQx0IMvFyxGXYf0P2l00w8PDVPMN"
+    private let publishableKey = "pk_test_51SDsD6CqcrCW3xmZyjsGLU4mk6x9JYlcmcD7mPCzFTevC27Nli6eTrCoG5ziuVCYVuOKA1tHu9RCZxyMnExikeDP00n1ngMsjy"
 
     var body: some View {
         VStack(spacing: 24) {
@@ -60,7 +61,7 @@ struct LinkPayoutsDemoView: View {
             .padding(.horizontal, 32)
 
             if let result {
-                resultView(for: result)
+                resultView(for: result, onboardingURL: lastOnboardingURL)
                     .padding(.horizontal, 16)
             }
 
@@ -95,7 +96,7 @@ struct LinkPayoutsDemoView: View {
     }
 
     @ViewBuilder
-    private func resultView(for result: LinkPayoutsResult) -> some View {
+    private func resultView(for result: LinkPayoutsResult, onboardingURL: URL?) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: result.status == .success ? "checkmark.circle.fill" : "xmark.circle.fill")
@@ -114,20 +115,39 @@ struct LinkPayoutsDemoView: View {
                 }
             }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Callback URL:")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                Text(result.rawURL.absoluteString)
-                    .font(.system(.caption, design: .monospaced))
-                    .padding(8)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
+            if let onboardingURL {
+                urlSection(title: "Onboarding URL:", url: onboardingURL)
             }
+
+            urlSection(title: "Callback URL:", url: result.rawURL)
         }
         .padding()
         .background(Color(.systemGray6).opacity(0.5))
         .cornerRadius(12)
+    }
+
+    @ViewBuilder
+    private func urlSection(title: String, url: URL) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(title)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                Spacer()
+                Button {
+                    UIPasteboard.general.string = url.absoluteString
+                } label: {
+                    Label("Copy", systemImage: "doc.on.doc")
+                        .font(.caption)
+                }
+            }
+            Text(url.absoluteString)
+                .font(.system(.caption, design: .monospaced))
+                .padding(8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+        }
     }
 
     private func launchFlow() {
@@ -171,6 +191,7 @@ struct LinkPayoutsDemoView: View {
             return
         }
 
+        lastOnboardingURL = url
         webViewURL = url
     }
 }
