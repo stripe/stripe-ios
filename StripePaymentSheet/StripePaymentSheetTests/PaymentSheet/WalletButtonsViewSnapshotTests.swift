@@ -145,6 +145,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
             shippingRates: [],
             shopId: "test_shop_123"
         )
+        config.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
 
         let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
         let WalletButtonsView = WalletButtonsView(
@@ -173,6 +174,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
             shippingRates: [],
             shopId: "test_shop_123"
         )
+        config.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
         config.appearance.primaryButton.height = 60
 
         let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
@@ -202,6 +204,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
             shippingRates: [],
             shopId: "test_shop_123"
         )
+        config.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
         config.appearance.primaryButton.height = 80
 
         let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
@@ -231,6 +234,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
             shippingRates: [],
             shopId: "test_shop_123"
         )
+        config.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
         config.appearance.cornerRadius = 12.0
 
         let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
@@ -260,6 +264,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
             shippingRates: [],
             shopId: "test_shop_123"
         )
+        config.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
         config.appearance.cornerRadius = 6.0
         config.appearance.primaryButton.cornerRadius = 16.0
 

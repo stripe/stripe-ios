@@ -22,6 +22,7 @@ class ShopPayECEPresenterTests: XCTestCase {
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration!
     var mockViewController: UIViewController!
     var mockFlowController: PaymentSheet.FlowController!
+    var mockIntent: Intent!
     var analyticsHelper: PaymentSheetAnalyticsHelper!
 
     override func setUp() {
@@ -74,6 +75,7 @@ class ShopPayECEPresenterTests: XCTestCase {
             // Nothing
         }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        mockIntent = intent
         let elementsSession = STPElementsSession.emptyElementsSession
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: intent,
@@ -94,8 +96,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         // Create presenter
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: analyticsHelper
         )
 
@@ -108,6 +111,7 @@ class ShopPayECEPresenterTests: XCTestCase {
         shopPayConfiguration = nil
         mockViewController = nil
         mockFlowController = nil
+        mockIntent = nil
         analyticsHelper = nil
         super.tearDown()
     }
@@ -149,8 +153,9 @@ class ShopPayECEPresenterTests: XCTestCase {
             allowedShippingCountries: shopPayConfiguration.allowedShippingCountries
         )
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: noShippingConfig,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: noShippingConfig,
             analyticsHelper: mockFlowController.analyticsHelper
         )
         let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
@@ -256,8 +261,9 @@ class ShopPayECEPresenterTests: XCTestCase {
         )
 
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: mockFlowController.analyticsHelper
         )
 
@@ -315,8 +321,9 @@ class ShopPayECEPresenterTests: XCTestCase {
         )
 
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: mockFlowController.analyticsHelper
         )
 
@@ -405,8 +412,9 @@ class ShopPayECEPresenterTests: XCTestCase {
         )
 
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: mockFlowController.analyticsHelper
         )
 
@@ -640,22 +648,11 @@ class ShopPayECEPresenterTests: XCTestCase {
             }
         )
         let intent = Intent.deferredIntent(intentConfig: successfulIntentConfig)
-        let elementsSession = STPElementsSession.emptyElementsSession
-        let loadResult = PaymentSheetLoader.LoadResult(
-            intent: intent,
-            elementsSession: elementsSession,
-            savedPaymentMethods: [],
-            paymentMethodTypes: []
-        )
-        let successfulFlowController = PaymentSheet.FlowController(
-            configuration: mockConfiguration,
-            loadResult: loadResult,
-            analyticsHelper: analyticsHelper
-        )
 
         sut = ShopPayECEPresenter(
-            flowController: successfulFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: intent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: analyticsHelper
         )
 
@@ -744,8 +741,9 @@ class ShopPayECEPresenterTests: XCTestCase {
         )
 
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: mockFlowController.analyticsHelper
         )
 
@@ -791,8 +789,9 @@ class ShopPayECEPresenterTests: XCTestCase {
         )
 
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: mockFlowController.analyticsHelper
         )
 
@@ -843,8 +842,9 @@ class ShopPayECEPresenterTests: XCTestCase {
         )
 
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: mockFlowController.analyticsHelper
         )
 
@@ -912,8 +912,9 @@ class ShopPayECEPresenterTests: XCTestCase {
         )
 
         sut = ShopPayECEPresenter(
-            flowController: mockFlowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: mockIntent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: mockFlowController.analyticsHelper
         )
 

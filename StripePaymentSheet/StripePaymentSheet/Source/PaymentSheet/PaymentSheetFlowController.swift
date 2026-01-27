@@ -21,6 +21,7 @@ extension PaymentSheet {
     /// Represents the ways a customer can pay in PaymentSheet
     enum PaymentOption {
         case applePay
+        case shopPay
         case saved(paymentMethod: STPPaymentMethod, confirmParams: IntentConfirmParams?)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
@@ -30,6 +31,8 @@ extension PaymentSheet {
             switch self {
             case .applePay:
                 return "apple_pay"
+            case .shopPay:
+                return "shop_pay"
             case .saved(paymentMethod: let paymentMethod, _):
                 return paymentMethod.type.identifier
             case .new(confirmParams: let confirmParams):
@@ -43,7 +46,7 @@ extension PaymentSheet {
 
         var savedPaymentMethod: STPPaymentMethod? {
             switch self {
-            case .applePay, .link, .new, .external:
+            case .applePay, .shopPay, .link, .new, .external:
                 return nil
             case .saved(let paymentMethod, _):
                 return paymentMethod
@@ -56,7 +59,7 @@ extension PaymentSheet {
                 return .stripe(paymentMethod.type)
             case let .new(confirmParams: intentConfirmParams):
                 return intentConfirmParams.paymentMethodType
-            case .applePay, .link:
+            case .applePay, .shopPay, .link:
                 return nil
             case let .external(paymentMethod: paymentMethod, _):
                 return .external(paymentMethod)
@@ -171,6 +174,12 @@ extension PaymentSheet {
                     label = String.Localized.apple_pay
                     labels = Labels(label: String.Localized.apple_pay, sublabel: nil)
                     paymentMethodType = "apple_pay"
+                    billingDetails = nil
+                    shippingDetails = nil
+                case .shopPay:
+                    label = String.Localized.shop_pay
+                    labels = Labels(label: String.Localized.shop_pay, sublabel: nil)
+                    paymentMethodType = "shop_pay"
                     billingDetails = nil
                     shippingDetails = nil
                 case .saved(let paymentMethod, let confirmParams):
@@ -810,6 +819,10 @@ extension PaymentSheet {
         var showLink: Bool {
             visibleButtons.contains("link")
         }
+
+        var showShopPay: Bool {
+            visibleButtons.contains("shop_pay")
+        }
     }
 }
 
@@ -906,7 +919,7 @@ extension PaymentOption {
             case .withPaymentDetails:
                 return true
             }
-        case .applePay, .new, .external, .saved:
+        case .applePay, .shopPay, .new, .external, .saved:
             return false
         }
     }
@@ -922,7 +935,7 @@ extension PaymentOption {
             case .withPaymentDetails(_, let paymentDetails, _, _):
                 return paymentDetails.stripeID
             }
-        case .applePay, .new, .external:
+        case .applePay, .shopPay, .new, .external:
             return nil
         }
     }

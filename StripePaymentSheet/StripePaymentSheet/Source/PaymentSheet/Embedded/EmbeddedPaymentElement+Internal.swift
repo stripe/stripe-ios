@@ -389,6 +389,13 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             paymentMethodType = paymentMethod.type
             billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
             shippingDetails = nil
+        case .shopPay:
+            // Should never show Shop Pay in Embedded
+            stpAssertionFailure()
+            label = String.Localized.shop_pay
+            paymentMethodType = "shop_pay"
+            billingDetails = nil
+            shippingDetails = nil
         }
     }
 }

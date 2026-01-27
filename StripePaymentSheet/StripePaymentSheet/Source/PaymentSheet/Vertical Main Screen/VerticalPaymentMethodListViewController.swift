@@ -37,6 +37,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?
     private var shouldShowApplePay: Bool
     private var shouldShowLink: Bool
+    private var shouldShowShopPay: Bool
     private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
 
     required init?(coder: NSCoder) {
@@ -55,6 +56,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
+        shouldShowShopPay: Bool,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         overrideHeaderView: UIView?,
         appearance: PaymentSheet.Appearance,
@@ -73,6 +75,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.savedPaymentMethodAccessoryType = savedPaymentMethodAccessoryType
         self.shouldShowApplePay = shouldShowApplePay
         self.shouldShowLink = shouldShowLink
+        self.shouldShowShopPay = shouldShowShopPay
         self.paymentMethodTypes = paymentMethodTypes
 
         super.init(nibName: nil, bundle: nil)
@@ -150,6 +153,18 @@ class VerticalPaymentMethodListViewController: UIViewController {
             }
             return rowButton
         }()
+        let shopPay: RowButton? = {
+            guard shouldShowShopPay else { return nil }
+            let selection = RowButtonType.shopPay
+            let rowButton = RowButton.makeForShopPay(appearance: appearance) { [weak self] in
+                self?.didTap(rowButton: $0, selection: .shopPay)
+            }
+            if initialSelection == selection {
+                rowButton.isSelected = true
+                currentSelection = selection
+            }
+            return rowButton
+        }()
 
         // Payment methods
         var indexAfterCards: Int?
@@ -178,7 +193,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         }
 
         // Insert Apple Pay/Link after card or, if cards aren't present, first
-        views.insert(contentsOf: [applePay, link].compactMap({ $0 }), at: indexAfterCards ?? 0)
+        views.insert(contentsOf: [applePay, shopPay, link].compactMap({ $0 }), at: indexAfterCards ?? 0)
 
         for view in views {
             stackView.addArrangedSubview(view)

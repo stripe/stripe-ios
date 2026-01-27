@@ -538,6 +538,21 @@ extension RowButton {
         return button
     }
 
+    static func makeForShopPay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+        let imageView = UIImageView(image: Image.shoppay_logo.makeImage())
+        imageView.contentMode = .scaleAspectFit
+        let button = RowButton.create(
+            appearance: appearance,
+            type: .shopPay,
+            imageView: imageView,
+            text: String.Localized.shop_pay,
+            isEmbedded: isEmbedded,
+            didTap: didTap
+        )
+        button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_shop_pay
+        return button
+    }
+
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle))
         imageView.contentMode = .scaleAspectFit
@@ -577,12 +592,15 @@ enum RowButtonType: Equatable {
     case saved(paymentMethod: STPPaymentMethod)
     case applePay
     case link
+    case shopPay
 
     static func == (lhs: RowButtonType, rhs: RowButtonType) -> Bool {
         switch (lhs, rhs) {
         case (.link, .link):
             return true
         case (.applePay, .applePay):
+            return true
+        case (.shopPay, .shopPay):
             return true
         case let (.new(lhsPMType), .new(rhsPMType)):
             return lhsPMType == rhsPMType
@@ -608,6 +626,8 @@ enum RowButtonType: Equatable {
             return "apple_pay"
         case .link:
             return "link"
+        case .shopPay:
+            return "shop_pay"
         case .saved:
             return "saved"
         case .new(paymentMethodType: let type):
@@ -617,7 +637,7 @@ enum RowButtonType: Equatable {
 
     var savedPaymentMethod: STPPaymentMethod? {
         switch self {
-        case .applePay, .link, .new:
+        case .applePay, .link, .shopPay, .new:
             return nil
         case .saved(let paymentMethod):
             return paymentMethod
@@ -630,7 +650,7 @@ enum RowButtonType: Equatable {
             return paymentMethodType
         case .saved(let paymentMethod):
             return .stripe(paymentMethod.type)
-        case .applePay, .link:
+        case .applePay, .link, .shopPay:
             return nil
         }
     }

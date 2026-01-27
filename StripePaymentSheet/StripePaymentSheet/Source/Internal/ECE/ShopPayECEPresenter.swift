@@ -12,7 +12,8 @@ import WebKit
 /// Handles presenting Shop Pay via the ECE WebView
 @available(iOS 16.0, *)
 class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
-    private let flowController: PaymentSheet.FlowController
+    private let configuration: PaymentElementConfiguration
+    private let intent: Intent
     private let shopPayConfiguration: PaymentSheet.ShopPayConfiguration
     private var confirmHandler: ((PaymentSheetResult) -> Void)?
     private var eceViewController: ECEViewController?
@@ -22,27 +23,29 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private var currentShippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate]
 
     init(
-        flowController: PaymentSheet.FlowController,
-        configuration: PaymentSheet.ShopPayConfiguration,
+        configuration: PaymentElementConfiguration,
+        intent: Intent,
+        shopPayConfiguration: PaymentSheet.ShopPayConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
-        self.flowController = flowController
-        self.shopPayConfiguration = configuration
+        self.configuration = configuration
+        self.intent = intent
+        self.shopPayConfiguration = shopPayConfiguration
         self.analyticsHelper = analyticsHelper
-        self.currentShippingRates = configuration.shippingRates
+        self.currentShippingRates = shopPayConfiguration.shippingRates
         super.init()
     }
 
     func present(from viewController: UIViewController,
                  confirmHandler: @escaping (PaymentSheetResult) -> Void) {
-        guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
+        guard case .customerSession(let customerSessionClientSecret) = configuration.customer?.customerAccessProvider else {
             stpAssertionFailure("Integration Error: CustomerSessions is required")
             return
         }
         self.presentingViewController = viewController
         analyticsHelper.logShopPayWebviewLoadAttempt()
 
-        let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
+        let eceVC = ECEViewController(apiClient: configuration.apiClient,
                                       shopId: shopPayConfiguration.shopId,
                                       customerSessionClientSecret: customerSessionClientSecret,
                                       delegate: self)
@@ -53,7 +56,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
         eceVC.transitioningDelegate = transitionDelegate
         eceVC.modalPresentationStyle = .custom
-        eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.sheetCornerRadius
+        eceVC.view.layer.cornerRadius = self.configuration.appearance.sheetCornerRadius
         eceVC.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         eceVC.view.clipsToBounds = true
         viewController.present(eceVC, animated: true)
@@ -264,7 +267,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Convert to dictionary and add Shop Pay specific fields
         var response = try ECEBridgeTypes.encode(clickConfig)
 
-        let businessName = flowController.intent.sellerDetails?.businessName ?? flowController.configuration.merchantDisplayName
+        let businessName = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
 
         // Add Shop Pay specific configuration
         response["billingAddressRequired"] = shopPayConfiguration.billingAddressRequired
@@ -314,13 +317,13 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
 
         // Create payment method
         do {
-            let paymentMethod = try await flowController.configuration.apiClient.createPaymentMethod(with: paymentMethodParams)
+            let paymentMethod = try await configuration.apiClient.createPaymentMethod(with: paymentMethodParams)
             // Dismiss ECE and return the payment method ID on the main thread
             Task { @MainActor in
                 dismissECE { [weak self] in
                     guard let self = self else { return }
 
-                    guard case .deferredIntent(let intentConfig) = self.flowController.intent else  {
+                    guard case .deferredIntent(let intentConfig) = self.intent else  {
                         stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a deferred intent.")
                         return
                     }
@@ -331,12 +334,12 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     }
 
                     // Try to create a radar session for the payment method before calling the handler
-                    flowController.configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
+                    configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
                         // If radar session creation fails, just continue with the payment method directly
                         if let error {
                             // Log the error but don't fail the payment
                             let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
-                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: self.flowController.configuration.apiClient)
+                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: self.configuration.apiClient)
                         }
 
                         // Call the handler regardless of radar session success/failure

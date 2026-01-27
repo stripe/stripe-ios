@@ -200,6 +200,10 @@ public final class EmbeddedPaymentElement {
                     return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
                 case .external(paymentMethod: let paymentMethod, billingDetails: _):
                     return loadResult.paymentMethodTypes.contains(.external(paymentMethod))
+                case .shopPay:
+                    // Should never show Shop Pay in Embedded
+                    stpAssertionFailure()
+                    return true
                 }
             }()
             let previousSelectedRowType = self.embeddedPaymentMethodsView.selectedRowButton?.type
@@ -377,6 +381,10 @@ public final class EmbeddedPaymentElement {
             }
         case .saved(paymentMethod: let paymentMethod):
             return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+        case .shopPay:
+            // Should never show Shop Pay in Embedded
+            stpAssertionFailure()
+            return nil
         case .none:
             return nil
         }

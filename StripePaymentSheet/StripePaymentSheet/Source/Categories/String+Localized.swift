@@ -76,6 +76,14 @@ extension String.Localized {
         STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
 
+    static var shop_pay: String {
+        STPLocalizedString("Shop Pay", "Text for the 'Shop Pay' button. 'Shop Pay' is a brand, please do not translate.")
+    }
+
+    static var pay_with_shop_pay: String {
+        STPLocalizedString("Pay with Shop Pay", "Accessibility label for the 'Shop Pay' button. 'Shop Pay' is a brand, please do not translate.")
+    }
+
     static var bank_continue_mandate_text: String {
         STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
     }

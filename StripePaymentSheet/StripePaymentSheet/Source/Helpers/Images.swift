@@ -76,6 +76,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case link_logo_tintable = "link_logo_tintable"
 
     // ShopPay
+    case shoppay_logo = "shoppay_logo"
     case shoppay_logo_bw = "shoppay_logo_bw"
 
     // Carousel

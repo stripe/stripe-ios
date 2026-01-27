@@ -61,6 +61,17 @@ extension PaymentSheet {
         return linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
     }
 
+    /// Canonical source of truth for whether Shop Pay is enabled
+    static func isShopPayEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        guard configuration.shopPay != nil else {
+            return false
+        }
+        guard case .customerSession = configuration.customer?.customerAccessProvider else {
+            return false
+        }
+        return elementsSession.orderedPaymentMethodTypesAndWallets.contains("shop_pay")
+    }
+
     /// Canonical source of truth for reasons why Link is disabled
     static func linkDisabledReasons(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [LinkDisabledReason] {
         var reasons = [LinkDisabledReason]()

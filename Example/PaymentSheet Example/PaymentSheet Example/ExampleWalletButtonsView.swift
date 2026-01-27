@@ -29,8 +29,10 @@ struct ExampleWalletButtonsContainerView: View {
     // Wallet button visibility options
     @State private var applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic
     @State private var linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic
+    @State private var shopPayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic
     @State private var applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic
     @State private var linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic
+    @State private var shopPayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic
 
     // Shop Pay testing options
     @State private var billingAddressRequired: Bool = false
@@ -97,6 +99,16 @@ struct ExampleWalletButtonsContainerView: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                         }
+                        VStack(alignment: .leading) {
+                            Text("Shop Pay in PaymentElement")
+                                .font(.subheadline)
+                            Picker("Shop Pay PaymentElement", selection: $shopPayVisibilityInPaymentElement) {
+                                Text("Automatic").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.automatic)
+                                Text("Always").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.always)
+                                Text("Never").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.never)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
                     }
                     Group {
                         VStack(alignment: .leading) {
@@ -113,6 +125,15 @@ struct ExampleWalletButtonsContainerView: View {
                             Text("Link in WalletButtonsView")
                                 .font(.subheadline)
                             Picker("Link WalletButtonsView", selection: $linkVisibilityInWalletButtonsView) {
+                                Text("Automatic").tag(PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility.automatic)
+                                Text("Never").tag(PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility.never)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+                        VStack(alignment: .leading) {
+                            Text("Shop Pay in WalletButtonsView")
+                                .font(.subheadline)
+                            Picker("Shop Pay WalletButtonsView", selection: $shopPayVisibilityInWalletButtonsView) {
                                 Text("Automatic").tag(PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility.automatic)
                                 Text("Never").tag(PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility.never)
                             }
@@ -163,8 +184,10 @@ struct ExampleWalletButtonsContainerView: View {
                             appearance: appearance,
                             applePayVisibilityInPaymentElement: applePayVisibilityInPaymentElement,
                             linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
+                            shopPayVisibilityInPaymentElement: shopPayVisibilityInPaymentElement,
                             applePayVisibilityInWalletButtonsView: applePayVisibilityInWalletButtonsView,
                             linkVisibilityInWalletButtonsView: linkVisibilityInWalletButtonsView,
+                            shopPayVisibilityInWalletButtonsView: shopPayVisibilityInWalletButtonsView,
                             shopPayTestingOptions: ShopPayTestingOptions(
                                 billingAddressRequired: billingAddressRequired,
                                 emailRequired: emailRequired,
@@ -200,8 +223,10 @@ struct ExampleWalletButtonsView: View {
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(),
         applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
         linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
+        shopPayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
         applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
         linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
+        shopPayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
         shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions(),
         enableClickHandler: Bool = false,
         rejectApplePay: Bool = false,
@@ -216,8 +241,10 @@ struct ExampleWalletButtonsView: View {
             appearance: appearance,
             applePayVisibilityInPaymentElement: applePayVisibilityInPaymentElement,
             linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
+            shopPayVisibilityInPaymentElement: shopPayVisibilityInPaymentElement,
             applePayVisibilityInWalletButtonsView: applePayVisibilityInWalletButtonsView,
             linkVisibilityInWalletButtonsView: linkVisibilityInWalletButtonsView,
+            shopPayVisibilityInWalletButtonsView: shopPayVisibilityInWalletButtonsView,
             shopPayTestingOptions: shopPayTestingOptions,
             enableClickHandler: enableClickHandler,
             rejectApplePay: rejectApplePay,
@@ -360,8 +387,10 @@ class ExampleWalletButtonsModel: ObservableObject {
     let appearance: PaymentSheet.Appearance
     let applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
     let linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
+    let shopPayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
     let applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
     let linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
+    let shopPayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
     let shopPayTestingOptions: ShopPayTestingOptions
     let enableClickHandler: Bool
     let rejectApplePay: Bool
@@ -386,8 +415,10 @@ class ExampleWalletButtonsModel: ObservableObject {
         appearance: PaymentSheet.Appearance,
         applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
         linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
+        shopPayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
         applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
         linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
+        shopPayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
         shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions(),
         enableClickHandler: Bool = false,
         rejectApplePay: Bool = false,
@@ -401,8 +432,10 @@ class ExampleWalletButtonsModel: ObservableObject {
         self.appearance = appearance
         self.applePayVisibilityInPaymentElement = applePayVisibilityInPaymentElement
         self.linkVisibilityInPaymentElement = linkVisibilityInPaymentElement
+        self.shopPayVisibilityInPaymentElement = shopPayVisibilityInPaymentElement
         self.applePayVisibilityInWalletButtonsView = applePayVisibilityInWalletButtonsView
         self.linkVisibilityInWalletButtonsView = linkVisibilityInWalletButtonsView
+        self.shopPayVisibilityInWalletButtonsView = shopPayVisibilityInWalletButtonsView
         self.shopPayTestingOptions = shopPayTestingOptions
         self.enableClickHandler = enableClickHandler
         self.rejectApplePay = rejectApplePay
@@ -504,8 +537,10 @@ class ExampleWalletButtonsModel: ObservableObject {
                 // Configure wallet button visibility
                 configuration.walletButtonsVisibility.paymentElement[.applePay] = self.applePayVisibilityInPaymentElement
                 configuration.walletButtonsVisibility.paymentElement[.link] = self.linkVisibilityInPaymentElement
+                configuration.walletButtonsVisibility.paymentElement[.shopPay] = self.shopPayVisibilityInPaymentElement
                 configuration.walletButtonsVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
                 configuration.walletButtonsVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
+                configuration.walletButtonsVisibility.walletButtonsView[.shopPay] = self.shopPayVisibilityInWalletButtonsView
 
                 self.latestIntentConfig = .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                     self?.isProcessing = true
