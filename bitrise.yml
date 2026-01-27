@@ -374,6 +374,30 @@ workflows:
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
+  latency-tests:
+    steps:
+    - xcode-test@6:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - log_formatter: xcbeautify
+        - scheme: StripePaymentSheet-LatencyTests
+        - test_repetition_mode: up_until_maximum_repetitions
+        - relaunch_tests_for_each_repetition: "yes"
+        - maximum_test_repetitions: "5"
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    after_run:
+    - notify_ci
+    meta:
+      bitrise.io:
+        stack: osx-xcode-16.0.x
+        machine_type_id: g2.mac.large
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE
+    - RECORD_LATENCY_TESTS: "true"
+    - BITRISE_GIT_COMMIT: $BITRISE_GIT_COMMIT
+    - BITRISE_BUILD_URL: $BITRISE_BUILD_URL
   framework-tests-no-mocks:
     steps:
     - fastlane@3:

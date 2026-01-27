@@ -295,6 +295,12 @@ extension Intent {
     }
 }
 
+extension PaymentSheet.IntentConfiguration {
+    static func _testValue() -> Self {
+        return .init(mode: .payment(amount: 100, currency: "USD")) { _, _ in return "" }
+    }
+}
+
 extension PaymentSheet.Appearance {
     static var _testMSPaintTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
