@@ -42,7 +42,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Registers a new Link user with the provided details.
     ///
     /// - Parameter email: The user's email to be used for signup.
-    /// - Parameter fullName: The full name of the user. A name should be collected if the user is located outside of the US, otherwise it is optional.
+    /// - Parameter fullName: The full name of the user. A name must be collected if the user is located outside of the US, otherwise it is optional.
     /// - Parameter phone: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234), otherwise an error will be thrown.
     /// - Parameter country: The two-letter country code of the user (ISO 3166-1 alpha-2).
     /// - Returns: The crypto customer ID.
@@ -62,7 +62,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     func updatePhoneNumber(to phoneNumber: String) async throws
 
     /// Authenticates the user with an encrypted Link auth token.
-    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful call to this API, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
     /// Throws if the auth token is expired, has already been used, has been revoked, or an API error occurs.
     func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws
 
@@ -70,7 +70,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// `hasLinkAccount` must be called before this.
     ///
     /// - Parameter viewController: The view controller from which to present the authentication flow.
-    /// - Returns: A `AuthenticationResult` indicating whether authentication was completed or canceled.
+    /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
     ///   If authentication completes, a crypto customer ID will be included in the result.
     /// Throws if `hasLinkAccount` was not called prior to this, or an API error occurs after the view controller is presented.
     func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult
@@ -79,13 +79,15 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameters:
     ///   - linkAuthIntentId: The Link auth intent ID to authorize.
     ///   - viewController: The view controller from which to present the authentication flow.
-    /// - Returns: The result of the authorization.
+    /// - Returns: An `AuthorizationResult` indicating whether authorization was completed or canceled.
+    ///   If authorization completes, a crypto customer ID will be included in the result.
+    /// Throws if an API error occurs.
     func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizationResult
 
     /// Attaches the specific KYC info to the current Link user. Requires an authenticated Link user.
     ///
     /// - Parameter info: The KYC info to attach to the Link user.
-    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    /// Throws if an authenticated Link user is not available, the user has already attached KYC info, or an API error occurs.
     func attachKYCInfo(info: KycInfo) async throws
 
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.

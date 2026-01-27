@@ -242,7 +242,7 @@ import UIKit
 
     /// Looks up the consumer using the provided auth token.
     ///
-    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful call to this API, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
     /// - Parameter completion: A closure that is called when the lookup completes or fails.
     @_spi(STP) public func lookupLinkAuthToken(
         _ linkAuthTokenClientSecret: String,
