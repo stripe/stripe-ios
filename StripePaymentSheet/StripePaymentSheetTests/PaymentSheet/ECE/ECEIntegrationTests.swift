@@ -81,15 +81,10 @@ class ECEIntegrationTests: XCTestCase {
             configuration: mockConfiguration
         )
 
-        let flowController = PaymentSheet.FlowController(
-            configuration: mockConfiguration,
-            loadResult: loadResult,
-            analyticsHelper: analyticsHelper
-        )
-
         presenter = ShopPayECEPresenter(
-            flowController: flowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: loadResult.intent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: analyticsHelper
         )
 
@@ -243,15 +238,10 @@ class ECEIntegrationTests: XCTestCase {
         mockConfiguration.shopPay = configWithHandlers
 
         // Create flow controller with updated configuration
-        let flowController = PaymentSheet.FlowController(
-            configuration: mockConfiguration,
-            loadResult: loadResult,
-            analyticsHelper: analyticsHelper
-        )
-
         presenter = ShopPayECEPresenter(
-            flowController: flowController,
-            configuration: configWithHandlers,
+            configuration: mockConfiguration,
+            intent: loadResult.intent,
+            shopPayConfiguration: configWithHandlers,
             analyticsHelper: analyticsHelper
         )
         eceViewController.expressCheckoutWebviewDelegate = presenter
@@ -378,14 +368,10 @@ class ECEIntegrationTests: XCTestCase {
         // Create flow controller for no shipping config
         var config2 = mockConfiguration
         config2?.shopPay = configNoShipping
-        let flowController2 = PaymentSheet.FlowController(
-            configuration: config2!,
-            loadResult: loadResult,
-            analyticsHelper: analyticsHelper
-        )
         let presenterNoShipping = ShopPayECEPresenter(
-            flowController: flowController2,
-            configuration: configNoShipping,
+            configuration: config2!,
+            intent: loadResult.intent,
+            shopPayConfiguration: configNoShipping,
             analyticsHelper: analyticsHelper
         )
         let amount2 = presenterNoShipping.amountForECEView(eceViewController)
@@ -407,14 +393,10 @@ class ECEIntegrationTests: XCTestCase {
         // Create flow controller for multi shipping config
         var config3 = mockConfiguration
         config3?.shopPay = configMultiShipping
-        let flowController3 = PaymentSheet.FlowController(
-            configuration: config3!,
-            loadResult: loadResult,
-            analyticsHelper: analyticsHelper
-        )
         let presenterMultiShipping = ShopPayECEPresenter(
-            flowController: flowController3,
-            configuration: configMultiShipping,
+            configuration: config3!,
+            intent: loadResult.intent,
+            shopPayConfiguration: configMultiShipping,
             analyticsHelper: analyticsHelper
         )
         let amount3 = presenterMultiShipping.amountForECEView(eceViewController)
@@ -488,15 +470,10 @@ class ECEIntegrationTests: XCTestCase {
         mockConfiguration.shopPay = shopPayConfiguration
 
         // Create flow controller with updated configuration
-        let flowController = PaymentSheet.FlowController(
-            configuration: mockConfiguration,
-            loadResult: loadResult,
-            analyticsHelper: analyticsHelper
-        )
-
         let presenter = ShopPayECEPresenter(
-            flowController: flowController,
-            configuration: shopPayConfiguration,
+            configuration: mockConfiguration,
+            intent: loadResult.intent,
+            shopPayConfiguration: shopPayConfiguration,
             analyticsHelper: analyticsHelper
         )
 
@@ -566,22 +543,10 @@ class ECEIntegrationTests: XCTestCase {
         // Create flow controller for no shipping config
         var config2 = mockConfiguration!
         config2.shopPay = configNoShipping
-        let flowController2 = PaymentSheet.FlowController(
-            configuration: config2,
-            loadResult: PaymentSheetLoader.LoadResult(
-                intent: loadResult.intent,
-                elementsSession: loadResult.elementsSession,
-                savedPaymentMethods: [],
-                paymentMethodTypes: []
-            ),
-            analyticsHelper: PaymentSheetAnalyticsHelper(
-                integrationShape: .flowController,
-                configuration: config2
-            )
-        )
         let presenterNoShipping = ShopPayECEPresenter(
-            flowController: flowController2,
-            configuration: configNoShipping,
+            configuration: config2,
+            intent: loadResult.intent,
+            shopPayConfiguration: configNoShipping,
             analyticsHelper: analyticsHelper
         )
 
@@ -602,22 +567,10 @@ class ECEIntegrationTests: XCTestCase {
         // Create flow controller for multi shipping config
         var config3 = mockConfiguration!
         config3.shopPay = configMultiShipping
-        let flowController3 = PaymentSheet.FlowController(
-            configuration: config3,
-            loadResult: PaymentSheetLoader.LoadResult(
-                intent: loadResult.intent,
-                elementsSession: loadResult.elementsSession,
-                savedPaymentMethods: [],
-                paymentMethodTypes: []
-            ),
-            analyticsHelper: PaymentSheetAnalyticsHelper(
-                integrationShape: .flowController,
-                configuration: config3
-            )
-        )
         let presenterMultiShipping = ShopPayECEPresenter(
-            flowController: flowController3,
-            configuration: configMultiShipping,
+            configuration: config3,
+            intent: loadResult.intent,
+            shopPayConfiguration: configMultiShipping,
             analyticsHelper: analyticsHelper
         )
 
