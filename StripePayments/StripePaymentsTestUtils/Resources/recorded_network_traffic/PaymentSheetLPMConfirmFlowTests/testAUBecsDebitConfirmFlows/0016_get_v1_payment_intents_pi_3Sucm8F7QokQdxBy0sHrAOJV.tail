@@ -1,0 +1,57 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Sucm8F7QokQdxBy0sHrAOJV\?client_secret=pi_3Sucm8F7QokQdxBy0sHrAOJV_secret_ptrqeQ4USPeI6DnvwN0zqbuPx&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6al8yYiV55u2fyx6xDNwPXMvYCPc4_JRDvz5LhDbFtF_a_0VaviplJoaUmCNVetB2eoFY6m13F-MNw4F
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 28 Jan 2026 17:43:32 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 840
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_8p9GtPoURJyPip
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_payment_method",
+  "object" : "payment_intent",
+  "currency" : "aud",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "payment_method" : null,
+  "client_secret" : "pi_3Sucm8F7QokQdxBy0sHrAOJV_secret_ptrqeQ4USPeI6DnvwN0zqbuPx",
+  "id" : "pi_3Sucm8F7QokQdxBy0sHrAOJV",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "au_becs_debit"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1769622212,
+  "description" : null
+}

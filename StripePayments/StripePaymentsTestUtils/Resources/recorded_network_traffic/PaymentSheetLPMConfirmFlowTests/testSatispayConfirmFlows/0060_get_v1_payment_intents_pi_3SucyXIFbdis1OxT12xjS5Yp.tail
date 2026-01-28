@@ -1,0 +1,89 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SucyXIFbdis1OxT12xjS5Yp\?client_secret=pi_3SucyXIFbdis1OxT12xjS5Yp_secret_bPraRZQMtC6xxfnDP0Y5WGW9D&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=r4ijCprbkBQLmCo0AzDYN9-VpupppOzcrnIdI42WdtqZAB0tDwfKFZLAbvYM10TcbMDwuuDMJhmPMEka
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 28 Jan 2026 17:56:21 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1587
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_M32F47VlSmL92i
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "eur",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "foo:\/\/bar",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1PSnETIFbdis1OxT\/pa_nonce_TsNkITcbvm23jO7GWUjtkfFofCAlDxz"
+    }
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1SucyWIFbdis1OxTwRRYkyRw",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "satispay" : {
+
+    },
+    "created" : 1769622980,
+    "allow_redisplay" : "unspecified",
+    "type" : "satispay",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3SucyXIFbdis1OxT12xjS5Yp_secret_bPraRZQMtC6xxfnDP0Y5WGW9D",
+  "id" : "pi_3SucyXIFbdis1OxT12xjS5Yp",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "satispay"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1769622981,
+  "description" : null
+}

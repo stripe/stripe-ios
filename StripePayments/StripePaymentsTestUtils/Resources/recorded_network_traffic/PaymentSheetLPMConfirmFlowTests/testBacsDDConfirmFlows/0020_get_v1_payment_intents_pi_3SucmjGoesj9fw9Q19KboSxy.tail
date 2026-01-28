@@ -1,0 +1,85 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SucmjGoesj9fw9Q19KboSxy\?client_secret=pi_3SucmjGoesj9fw9Q19KboSxy_secret_35fyxfvo7bUj7W3DozvPmd10o&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=_uMy74j9yYIQqyFzSaA46nqd-EizJFJbPckX9Hk7e5i1ySKlacRSPv20Vi3rkcuL7nvBZOOHsUmE2emM
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 28 Jan 2026 17:44:10 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1510
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_HQaSkozkjLi0Yq
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "processing",
+  "object" : "payment_intent",
+  "currency" : "gbp",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1SucmjGoesj9fw9Q8VTJIYka",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : "CA",
+        "country" : "US",
+        "line2" : "",
+        "city" : "South San Francisco",
+        "line1" : "354 Oyster Point Blvd",
+        "postal_code" : "94080"
+      }
+    },
+    "livemode" : false,
+    "bacs_debit" : {
+      "fingerprint" : "t1p3TcYKGDRQAC4o",
+      "last4" : "2345",
+      "sort_code" : "108800"
+    },
+    "allow_redisplay" : "unspecified",
+    "created" : 1769622249,
+    "customer" : null,
+    "type" : "bacs_debit",
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3SucmjGoesj9fw9Q19KboSxy_secret_35fyxfvo7bUj7W3DozvPmd10o",
+  "id" : "pi_3SucmjGoesj9fw9Q19KboSxy",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "bacs_debit"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1769622249,
+  "description" : null
+}

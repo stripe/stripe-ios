@@ -1,0 +1,22 @@
+GET
+https:\/\/pm-redirects\.stripe\.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_TsNdN2BEDG35bwocjN7Ciapb1UjBNCy\?useWebAuthSession=true&followRedirectsInSDK=true$
+302
+text/plain
+Content-Type: text/plain;charset=utf-8
+reporting-endpoints: coop="https://q.stripe.com/coop-report", wsp_coop="https://q.stripe.com/coop-report?s=D8lzpsYnnGjqgxzEE6qPwEPzLFyI7kcQmO8jtMpgGHUuJ32GGOF-LvLyzPwDDN6M-8mny8TW2Yk=",wsp_coep="https://q.stripe.com/coep-report?s=D8lzpsYnnGjqgxzEE6qPwEPzLFyI7kcQmO8jtMpgGHUuJ32GGOF-LvLyzPwDDN6M-8mny8TW2Yk="
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action https:; frame-ancestors 'self'; img-src data:; object-src 'none'; script-src 'nonce-oM1TD2gOJvCgJZaAHFKwWg==' 'sha256-YZlprLcs6+DTMkWq0JdBb3xClwCRD54FhhFkvyrwKes=' 'sha256-CQ+jrTkUK6W2IPK95+6h1iIpeiNa07PT13lH/vifgK8=' 'report-sample'; style-src 'nonce-oM1TD2gOJvCgJZaAHFKwWg==' 'sha256-aR5Sp5stHIF+thqtAZobSN0ajjYkfr5RReQbFrjo0mI=' 'sha256-oYDgCv+4CaC/XxHqj8pUl1mvPK08iQviB6rfc2qAi9c='; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=D8lzpsYnnGjqgxzEE6qPwEPzLFyI7kcQmO8jtMpgGHUuJ32GGOF-LvLyzPwDDN6M-8mny8TW2Yk%3D
+x-stripe-proxy-response: upstream
+x-wc: ABCDEFGHIJ
+Server: nginx
+cross-origin-opener-policy-report-only: unsafe-none; report-to="wsp_coop"
+report-to: {"group":"wsp_coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=D8lzpsYnnGjqgxzEE6qPwEPzLFyI7kcQmO8jtMpgGHUuJ32GGOF-LvLyzPwDDN6M-8mny8TW2Yk="}],"include_subdomains":true},{"group":"wsp_coep","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coep-report?s=D8lzpsYnnGjqgxzEE6qPwEPzLFyI7kcQmO8jtMpgGHUuJ32GGOF-LvLyzPwDDN6M-8mny8TW2Yk="}],"include_subdomains":true}
+Location: https://pay.test.klarna.com/na/requests/a9b37760-d70e-6f20-9ba3-260ebf28d6ad/start
+Date: Wed, 28 Jan 2026 17:50:02 GMT
+Content-Length: 0
+cross-origin-opener-policy: unsafe-none; report-to="wsp_coop"
+x-stripe-routing-context-priority-tier: livemode-critical
+x-stripe-server-rpc-duration-micros: 178493
+x-content-type-options: nosniff
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+

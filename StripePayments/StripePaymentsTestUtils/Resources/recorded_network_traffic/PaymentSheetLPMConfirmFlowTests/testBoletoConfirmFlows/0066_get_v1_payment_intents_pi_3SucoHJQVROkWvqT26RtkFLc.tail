@@ -1,0 +1,92 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SucoHJQVROkWvqT26RtkFLc\?client_secret=pi_3SucoHJQVROkWvqT26RtkFLc_secret_e5JcvQ3DytmkI4nqTlQOyslH3&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=rU84BLEwG_NSaTvxY5oxkzQqQiSkavSS-GPhwK8NgbVLW_o_PCU0TjW11VirG47bYrVGFVsSEH0WVE4s
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 28 Jan 2026 17:45:46 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1986
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_ZVLNw9zmLFFo3A
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "brl",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "boleto_display_details" : {
+      "expires_at" : 1769622526,
+      "number" : "01010101010101010101010101010101010101010101010",
+      "pdf" : "https:\/\/payments.stripe.com\/boleto\/voucher\/test_YWNjdF8xSllGRmpKUVZST2tXdnFULF9Uc05aOVJwaUZ0VE55eVRxWDdpVmx4aVpaSUtaazRN01004qJeceji\/pdf",
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/boleto\/voucher\/test_YWNjdF8xSllGRmpKUVZST2tXdnFULF9Uc05aOVJwaUZ0VE55eVRxWDdpVmx4aVpaSUtaazRN01004qJeceji"
+    },
+    "type" : "boleto_display_details"
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "boleto" : {
+      "fingerprint" : "48wcl030Axz32v7b",
+      "tax_id" : "00000000000"
+    },
+    "id" : "pm_1SucoGJQVROkWvqTVaabqrer",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : "SP",
+        "country" : "BR",
+        "line2" : "",
+        "city" : "São Paulo",
+        "line1" : "Rua das Flores, 123",
+        "postal_code" : "01234567"
+      }
+    },
+    "livemode" : false,
+    "created" : 1769622344,
+    "allow_redisplay" : "unspecified",
+    "type" : "boleto",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3SucoHJQVROkWvqT26RtkFLc_secret_e5JcvQ3DytmkI4nqTlQOyslH3",
+  "id" : "pi_3SucoHJQVROkWvqT26RtkFLc",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "boleto"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1769622345,
+  "description" : null
+}
