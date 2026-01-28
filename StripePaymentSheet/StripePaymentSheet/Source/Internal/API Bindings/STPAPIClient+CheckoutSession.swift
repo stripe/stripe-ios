@@ -57,6 +57,7 @@ extension STPAPIClient {
     ///   - expectedPaymentMethodType: The expected payment method type (e.g., "card")
     ///   - returnURL: Optional return URL for redirect-based payment methods
     ///   - shipping: Optional shipping details
+    ///   - paymentMethodOptions: Optional payment method options. BLIK code is extracted and passed as top-level `blik_code` parameter.
     ///   - clientAttributionMetadata: Optional client attribution metadata for analytics
     ///   - passiveCaptchaToken: Optional hCaptcha challenge response token
     /// - Returns: CheckoutSessionConfirmResponse containing the confirmation result
@@ -67,6 +68,7 @@ extension STPAPIClient {
         expectedPaymentMethodType: String,
         returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
+        paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         passiveCaptchaToken: String? = nil
     ) async throws -> CheckoutSessionConfirmResponse {
@@ -74,6 +76,12 @@ extension STPAPIClient {
             "payment_method": paymentMethod,
             "expected_amount": expectedAmount,
             "expected_payment_method_type": expectedPaymentMethodType,
+            "expand": [
+                "payment_intent",
+                "payment_intent.payment_method",
+                "setup_intent",
+                "setup_intent.payment_method",
+            ],
         ]
 
         if let returnURL {
@@ -82,6 +90,11 @@ extension STPAPIClient {
 
         if let shipping {
             parameters["shipping"] = STPFormEncoder.dictionary(forObject: shipping)
+        }
+
+        // Checkout session confirm API uses top-level parameters for payment method specific options
+        if let blikCode = paymentMethodOptions?.blikOptions?.code {
+            parameters["blik_code"] = blikCode
         }
 
         if let clientAttributionMetadata {

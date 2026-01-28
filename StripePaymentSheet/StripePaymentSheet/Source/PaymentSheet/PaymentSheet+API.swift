@@ -276,8 +276,24 @@ extension PaymentSheet {
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
                     // MARK: ↪ CheckoutSession
-                case .checkoutSession:
-                    completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
+                case .checkoutSession(let checkoutSession):
+                    Task { @MainActor in
+                        let result = await handleCheckoutSessionConfirmation(
+                            checkoutSession: checkoutSession,
+                            confirmType: .new(
+                                params: confirmParams.paymentMethodParams,
+                                paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                                shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
+                                shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                            ),
+                            configuration: configuration,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            elementsSession: elementsSession
+                        )
+                        await confirmationChallenge?.complete()
+                        completion(result, nil)
+                    }
                 }
             }
 
@@ -336,7 +352,7 @@ extension PaymentSheet {
                 }
                 // MARK: ↪ CheckoutSession
             case .checkoutSession:
-                completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
+                completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Saved payment method confirmation is not yet supported by CheckoutSession.")), nil)
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -410,7 +426,7 @@ extension PaymentSheet {
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
                     case .checkoutSession:
-                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
+                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Link confirmation is not yet supported by CheckoutSession.")), nil)
                     }
                 }
             }
@@ -485,7 +501,7 @@ extension PaymentSheet {
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
                     case .checkoutSession:
-                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
+                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Link confirmation is not yet supported by CheckoutSession.")), nil)
                     }
                 }
             }

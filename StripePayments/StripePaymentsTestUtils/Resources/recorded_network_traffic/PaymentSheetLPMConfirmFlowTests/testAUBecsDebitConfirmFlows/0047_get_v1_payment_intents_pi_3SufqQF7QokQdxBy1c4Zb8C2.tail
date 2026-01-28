@@ -1,0 +1,85 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SufqQF7QokQdxBy1c4Zb8C2\?client_secret=pi_3SufqQF7QokQdxBy1c4Zb8C2_secret_9bsgec5dPyRC5dCOu3mtKIoO7&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zjBFu801stb7bqDVTd-XMa_o4w1jdCulipz9VPazY9D003gqXPpRb1Mh170F5ixvLWiIjVsG3xE9XMJk
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 28 Jan 2026 21:00:11 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1510
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_U2IPN4hUy55Ppu
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "processing",
+  "object" : "payment_intent",
+  "currency" : "aud",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1SufqQF7QokQdxByVhNhB6SA",
+    "billing_details" : {
+      "email" : "example@link.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Tester McTesterface",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "au_becs_debit" : {
+      "bsb_number" : "000000",
+      "fingerprint" : "Ywo370ZoKyYRnGCA",
+      "last4" : "3456"
+    },
+    "livemode" : false,
+    "created" : 1769634010,
+    "allow_redisplay" : "unspecified",
+    "type" : "au_becs_debit",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3SufqQF7QokQdxBy1c4Zb8C2_secret_9bsgec5dPyRC5dCOu3mtKIoO7",
+  "id" : "pi_3SufqQF7QokQdxBy1c4Zb8C2",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "au_becs_debit"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1769634010,
+  "description" : null
+}
