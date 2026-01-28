@@ -87,4 +87,33 @@ enum DocumentScannerOutput: Equatable {
     func getAllClassificationScores() -> [IDDetectorOutput.Classification: Float] {
         return idDetectorOutput.allClassificationScores
     }
+
+    func qualityScore(side: DocumentSide) -> Float {
+        switch self {
+        case let .legacy(idDetectorOutput, _, motionBlur, _, _):
+            var components: [Float] = []
+
+            let scores = idDetectorOutput.allClassificationScores
+            let classificationScore: Float = {
+                switch side {
+                case .front:
+                    let front = scores[.idCardFront] ?? 0
+                    let passport = scores[.passport] ?? 0
+                    return max(front, passport)
+                case .back:
+                    return scores[.idCardBack] ?? 0
+                }
+            }()
+            components.append(classificationScore)
+
+            if let iou = motionBlur.iou {
+                components.append(iou)
+            }
+
+            let total = components.reduce(0, +)
+            let score: Float = components.isEmpty ? 0 : total / Float(components.count)
+
+            return score
+        }
+    }
 }
