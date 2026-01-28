@@ -1,12 +1,12 @@
 ## X.Y.Z - changes pending release 
 
+### Identity
+* [Added] More live feedback during document capture. 
+
 ## 25.6.0 2026-01-26
 
 ### Payments
 * [Added] Added API bindings support for TWINT payment methods.
-
-### Identity
-* [Added] More live feedback during document capture. 
 
 ## 25.5.0 2026-01-15
 ### StripeIssuing
