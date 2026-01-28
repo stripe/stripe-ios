@@ -62,7 +62,8 @@ final class PaymentSheetLoader {
         }
     }
 
-    /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
+    /// Loads everything needed to render and use all MPE variants (PaymentSheet, FlowController, EmbeddedPaymentElement).
+    /// ⚠️ Everything that takes time to load (eg fetched from network or disk) should be in this method so that `logLoadSucceeded` accurately captures the amount of time it took to load.
     @MainActor
     static func load(
         mode: PaymentSheet.InitializationMode,
@@ -165,16 +166,6 @@ final class PaymentSheetLoader {
             let remoteFcLiteOverrideEnabled = elementsSession.flags["elements_prefer_fc_lite"] == true
             FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
 
-            // Send load finished analytic
-            // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
-            let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
-                savedPaymentMethods: filteredSavedPaymentMethods,
-                customerID: configuration.customer?.id,
-                showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
-                showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
-                elementsSession: elementsSession,
-                defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
-            )
             let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
 
             // Assert if using konbini or blik with confirmation tokens
@@ -193,15 +184,26 @@ final class PaymentSheetLoader {
                 analyticsHelper.startTimeMeasurement(.checkout)
             }
 
-            // Initialize telemetry. Don't wait for this to finish to call completion.
+            // Initialize telemetry. Don't wait for this to finish to return.
             STPTelemetryClient.shared.sendTelemetryData()
 
-            // Call completion
             let loadResult = LoadResult(
                 intent: intent,
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes
+            )
+
+            // Send load finished analytic
+            // ⚠️ Important: Log load succeeded at the very end, to ensure it measures the entire amount of time this method took.
+            // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
+            let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                customerID: configuration.customer?.id,
+                showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
+                showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
+                elementsSession: elementsSession,
+                defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
             analyticsHelper.logLoadSucceeded(
                 intent: intent,
