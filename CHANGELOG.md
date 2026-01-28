@@ -1,5 +1,8 @@
 ## X.Y.Z - changes pending release 
 
+### Identity
+* [Added] Added a best frame detector to document capture.
+
 ## 25.6.0 2026-01-26
 
 ### Payments
@@ -38,11 +41,6 @@
 
 ### Payment Method Messaging Element
 * [Added] `PaymentMethodMessagingElement` is now in public preview
-
-## XX.XX.XX
-
-### Identity
-* [Added] Added a best frame detector to document capture.
 
 ## 25.1.1 2025-11-24
 
