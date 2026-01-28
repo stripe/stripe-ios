@@ -172,7 +172,8 @@ public final class EmbeddedPaymentElement {
                     mode: .deferredIntent(intentConfiguration),
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
-                    integrationShape: .embedded
+                    integrationShape: .embedded,
+                    isUpdate: true
                 )
             } catch {
                 return UpdateResult.failed(error: error)
