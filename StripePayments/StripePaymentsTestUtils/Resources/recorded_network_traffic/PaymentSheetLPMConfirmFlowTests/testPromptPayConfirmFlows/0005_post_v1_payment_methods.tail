@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Ic2ddt7-rAQrG6IvrU0U0cuUl5Qxm13e7QW4t24fPLMKWNihLoBdcoE0Gig-y9o-rtfPUy7v94pygdgG
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=WF-BYErWkMkSo8_wrw6jMg19Hdsr6gtGWH_d1bb-1hlU6sYDUb4IOdE-BXiAPBFF6x86rW3wtrbWtxb8
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Gek61dcRgDraNs
+request-id: req_ea4g9WOyroRybw
 Content-Length: 511
 Vary: Origin
-Date: Wed, 28 Jan 2026 17:52:47 GMT
-original-request: req_Gek61dcRgDraNs
+Date: Wed, 28 Jan 2026 21:08:57 GMT
+original-request: req_ea4g9WOyroRybw
 stripe-version: 2020-08-27
-idempotency-key: c9e2190a-b4fc-4071-9c8d-73b9e849e06e
+idempotency-key: d1c846e1-126a-4183-b3bf-3dc2b475063c
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bemail%5D=fo
   "promptpay" : {
 
   },
-  "id" : "pm_1Sucv5BgCYKNuUnntvq3ckYR",
+  "id" : "pm_1SufyvBgCYKNuUnnmRYdcfkB",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bemail%5D=fo
     }
   },
   "livemode" : false,
-  "created" : 1769622767,
+  "created" : 1769634537,
   "allow_redisplay" : "unspecified",
   "type" : "promptpay",
   "customer" : null,

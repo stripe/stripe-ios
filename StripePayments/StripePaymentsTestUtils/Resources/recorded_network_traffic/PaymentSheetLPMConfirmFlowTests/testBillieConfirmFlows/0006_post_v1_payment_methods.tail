@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BGj0R3kCwsvDL-3W5L6vrEO00aEohYwyxO3dSunlm29fxCLW1QMhR8UQ5i8S3zv58e4NgPiMzxU_SvDX
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=uTdkxZGTRBGpVR4sEMk0EyPgtW80g9_3jWLaGzzwbsveibf0WZNSedbVQU4f_0ZTcXG3T3mfr-ZAyf6K
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Vs1bgjA1SWr3wk
+request-id: req_rGt7sN5ib1nICI
 Content-Length: 496
 Vary: Origin
-Date: Wed, 28 Jan 2026 17:45:05 GMT
-original-request: req_Vs1bgjA1SWr3wk
+Date: Wed, 28 Jan 2026 21:01:25 GMT
+original-request: req_rGt7sN5ib1nICI
 stripe-version: 2020-08-27
-idempotency-key: b5166887-9cd5-437d-ab18-91634cbefd06
+idempotency-key: 464a1a88-91e9-490a-aba5-20534d866943
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "billie" : {
 
   },
-  "id" : "pm_1SucndAlz2yHYCNZgZjjGVmQ",
+  "id" : "pm_1SufrdAlz2yHYCNZvqANkGi0",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1769622305,
+  "created" : 1769634085,
   "allow_redisplay" : "unspecified",
   "type" : "billie",
   "customer" : null,

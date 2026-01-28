@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KfC0RjUP14sgtynf4Z2S7-Vb_b9qWsC17VALsLiebGwwaWhvPmYSGJJYmUct1uGimo8B0D4BGSTdScZJ
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=g4ib0aIHStjcvK99YBsV96rx53rBCDCm6Ir3LnRC9at_x-CL0uwqcquWoLwy_duA0OspkgmKfUGePa-M
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_FxTH94VXWf4weq
+request-id: req_OIvMFrEK5BpLBA
 Content-Length: 610
 Vary: Origin
-Date: Wed, 28 Jan 2026 17:45:41 GMT
-original-request: req_FxTH94VXWf4weq
+Date: Wed, 28 Jan 2026 21:02:00 GMT
+original-request: req_OIvMFrEK5BpLBA
 stripe-version: 2020-08-27
-idempotency-key: 6d5c5bed-990a-45cd-96ce-db3c5610ed80
+idempotency-key: 4eafc2fc-a671-4e88-a56d-6acd50f30c38
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -31,7 +31,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     "fingerprint" : "48wcl030Axz32v7b",
     "tax_id" : "00000000000"
   },
-  "id" : "pm_1SucoDJQVROkWvqTmXgTGKDT",
+  "id" : "pm_1SufsCJQVROkWvqTudFTg1KN",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -47,7 +47,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     }
   },
   "livemode" : false,
-  "created" : 1769622341,
+  "created" : 1769634120,
   "allow_redisplay" : "unspecified",
   "type" : "boleto",
   "customer" : null,

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MVeIr4wv8gp1Gi3JQUygWoeexQ6mbODjhKh8EpiTjRwoVrIhD-50YEjsFRpuJnOJjaKdyHv026cgGeR7
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=lZZb0gJHw1Se9UHDkdYtj5w1DXvA_m8bvxtFAXmPgrKAFI2mWLTbE2RjpVu7ZIOUMzt73YpUIp7hGXSc
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_yDwur0JdWUZPky
+request-id: req_wcv5BHOQYUfmpW
 Content-Length: 820
 Vary: Origin
-Date: Wed, 28 Jan 2026 17:44:53 GMT
-original-request: req_yDwur0JdWUZPky
+Date: Wed, 28 Jan 2026 21:01:14 GMT
+original-request: req_wcv5BHOQYUfmpW
 stripe-version: 2020-08-27
-idempotency-key: 0677321f-f4a5-4285-9cbf-d91ac94568b5
+idempotency-key: a5305c4e-0a81-43a4-a644-3d8ba06bc9ff
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +26,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=EUR&client_context\[mode]=payment&client_context\[payment_method_options]\[bancontact]\[setup_future_usage]=off_session&client_context\[payment_method_types]\[0]=bancontact&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[email]=f%40z\.c&payment_method_data\[billing_details]\[name]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=bancontact&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1SucnRFY0qyl6XeWOogTPPJF",
+  "id" : "ctoken_1SufrSFY0qyl6XeWKeN33q5s",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1769665493,
+  "expires_at" : 1769677274,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -57,7 +57,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "bancontact",
     "customer_account" : null
   },
-  "created" : 1769622293,
+  "created" : 1769634074,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null
