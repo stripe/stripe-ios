@@ -20,13 +20,13 @@ public struct KycInfo: Equatable {
     public struct DateOfBirth: Codable, Equatable {
 
         /// The day of birth.
-        public let day: Int
+        public var day: Int
 
         /// The month of birth.
-        public let month: Int
+        public var month: Int
 
         /// The year of birth.
-        public let year: Int
+        public var year: Int
 
         /// Creates a new `DateOfBirth`.
         /// - Parameters:
@@ -41,22 +41,22 @@ public struct KycInfo: Equatable {
     }
 
     /// The customer’s first name.
-    public let firstName: String
+    public var firstName: String
 
     /// The customer’s last name.
-    public let lastName: String
+    public var lastName: String
 
     /// The number associated with the customer’s id.
-    public let idNumber: String
+    public var idNumber: String
 
     /// The type of id provided by the customer.
-    public let idType: IdType = .socialSecurityNumber
+    public var idType: IdType = .socialSecurityNumber
 
     /// The address of the customer.
-    public let address: Address
+    public var address: Address
 
     /// The customer’s date of birth.
-    public let dateOfBirth: DateOfBirth
+    public var dateOfBirth: DateOfBirth
 
     /// Creates a new instance of `KycInfo`.
     /// - Parameters:
