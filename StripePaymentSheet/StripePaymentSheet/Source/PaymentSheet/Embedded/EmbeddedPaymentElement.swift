@@ -88,6 +88,37 @@ public final class EmbeddedPaymentElement {
         return embeddedPaymentElement
     }
 
+    /// An asynchronous failable initializer for CheckoutSession mode
+    /// Loads the CheckoutSession's payment methods and configuration.
+    /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
+    /// - Returns: A valid EmbeddedPaymentElement instance
+    /// - Throws: An error if loading failed.
+    @_spi(CheckoutSessionPreview) public static func create(
+        checkoutSessionId: String,
+        configuration: Configuration
+    ) async throws -> EmbeddedPaymentElement {
+        try validateRowSelectionConfiguration(configuration: configuration)
+
+        AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
+
+        let loadResult = try await PaymentSheetLoader.load(
+            mode: .checkoutSession(checkoutSessionId),
+            configuration: configuration,
+            analyticsHelper: analyticsHelper,
+            integrationShape: .embedded
+        )
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
+        )
+        embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        return embeddedPaymentElement
+    }
+
     /// The result of an `update` call
     @frozen public enum UpdateResult {
         /// The update succeeded
@@ -463,6 +494,9 @@ extension EmbeddedPaymentElement {
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
     public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
+    @_spi(CardFundingFilteringPrivatePreview) public typealias CardFundingType = PaymentSheet.CardFundingType
+    public typealias CardBrandAcceptance = PaymentSheet.CardBrandAcceptance
+    public typealias BrandCategory = PaymentSheet.CardBrandAcceptance.BrandCategory
 }
 
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData

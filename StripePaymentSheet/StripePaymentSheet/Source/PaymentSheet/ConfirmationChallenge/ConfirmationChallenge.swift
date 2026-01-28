@@ -47,7 +47,7 @@ actor ConfirmationChallenge {
 
     func fetchTokensWithTimeout() async -> ChallengeTokens {
         let startTime = Date()
-        let isReady = await passiveCaptchaChallenge?.hasFetchedToken ?? false
+        let isReady = await passiveCaptchaChallenge?.isTokenReady ?? false
         let getPassiveCaptchaToken: () async throws -> String? = {
             guard let passiveCaptchaChallenge = self.passiveCaptchaChallenge else {
                 return nil

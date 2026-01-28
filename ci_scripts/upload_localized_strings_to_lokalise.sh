@@ -6,8 +6,8 @@ if [[ -z $(which lokalise2) ]]; then
     brew install lokalise2
 fi
 
-sh ci_scripts/check_for_new_localized_strings.sh
-if [[ $? -ne 0 ]]; then
+sh ci_scripts/check_for_new_localized_strings.sh || CHECK_EXIT_CODE=$?
+if [[ ${CHECK_EXIT_CODE:-0} -ne 0 ]]; then
     echo "check_for_new_localized_strings.sh detected strings not added to Localizable.strings. Commit any new strings to Localizable.strings then re-run this script"
     exit 1
 fi

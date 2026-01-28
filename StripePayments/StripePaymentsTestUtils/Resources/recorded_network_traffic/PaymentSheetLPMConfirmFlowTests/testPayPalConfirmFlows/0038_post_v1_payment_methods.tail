@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=vETIZ2_cKPtnqjwnWsYnuSFd-bqgidF-b_oz4RROn35A5iSLm3TVdT0J3qie8FONjcoT-zoLxHDxWuHB
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KHo1qoTabrXnDXnn1k8wamhqQ7UktK2y1guxW6Ql2S1rWk7nZ-YvpA-y71TLmnAuEwyv5Dn2GAf6tj3O
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_WmYkqdGQBLEZEg
-Content-Length: 538
+request-id: req_F1v3dXn1zOaMHI
+Content-Length: 566
 Vary: Origin
-Date: Thu, 13 Nov 2025 15:59:59 GMT
-original-request: req_WmYkqdGQBLEZEg
+Date: Wed, 14 Jan 2026 20:46:01 GMT
+original-request: req_F1v3dXn1zOaMHI
 stripe-version: 2020-08-27
-idempotency-key: 41b55eb9-ad98-4839-8542-21863c4656ae
+idempotency-key: 9416d9dc-5bd5-4015-9771-4b876a23d966
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -32,7 +32,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     "payer_id" : null,
     "payer_email" : null
   },
-  "id" : "pm_1ST2wFKG6vc7r7YCuwsIBa13",
+  "id" : "pm_1Spax3KG6vc7r7YCMiX6jEju",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -48,8 +48,9 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1763049599,
+  "created" : 1768423561,
   "allow_redisplay" : "unspecified",
   "type" : "paypal",
-  "customer" : null
+  "customer" : null,
+  "customer_account" : null
 }

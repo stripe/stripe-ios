@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=7EA3oHo56eAdYCu5hofLso4uwrQHTkyBHaHHV1SA0srcweoBS4Q6A_xez4P9NEBmEbyE3JMOGauqh2jq
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=UJW2cZZ_3Efb1iuT8cRYnaasAe_zvJkBIAIPpFji799w5_Dlp3ONzI5SFDWD0Xh8rmkAsBnd2VyS9-06
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_fK3BMJHVoNuXwM
-Content-Length: 787
+request-id: req_IeArRGzpozPq2x
+Content-Length: 817
 Vary: Origin
-Date: Thu, 13 Nov 2025 15:59:15 GMT
-original-request: req_fK3BMJHVoNuXwM
+Date: Wed, 14 Jan 2026 20:32:38 GMT
+original-request: req_IeArRGzpozPq2x
 stripe-version: 2020-08-27
-idempotency-key: 9d4a690e-6273-4d05-85cb-0145262e5bdd
+idempotency-key: 570f5853-9a45-4d40-b8f9-ef42f9f2c014
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +26,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=klarna&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details%5Baddress%5D%5Bcountry%5D]=US&payment_method_data\[billing_details%5Bemail%5D]=foo%40bar\.com&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=klarna&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1ST2vXFY0qyl6XeW5Cfs4gK7",
+  "id" : "ctoken_1Spak6FY0qyl6XeWKUUv2GVK",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1763092755,
+  "expires_at" : 1768465958,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -54,9 +54,10 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "klarna" : {
 
     },
-    "type" : "klarna"
+    "type" : "klarna",
+    "customer_account" : null
   },
-  "created" : 1763049555,
+  "created" : 1768422758,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

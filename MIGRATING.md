@@ -1,4 +1,7 @@
 ## Migration Guides
+### Migrating from versions < 25.5.0
+* StripeIssuing is now a separate component for Carthage and manual binary users. If you use the legacy `Stripe` framework, you must also embed `StripeIssuing.xcframework` in your app, which will be included in `Stripe.xcframework.zip` in the [release assets](https://github.com/stripe/stripe-ios/releases/). No action is required for Cocoapods and Swift Package Manager users, or users of the individual `StripePayments`, `StripePaymentsUI`, and `StripePaymentSheet` modules.
+
 ### Migrating from versions < 25.0.0 
 #### PaymentSheet
 `PaymentSheet.IntentConfiguration.confirmHandler` has been replaced by an async equivalent. You can use the following example to quickly migrate completion-block based code:

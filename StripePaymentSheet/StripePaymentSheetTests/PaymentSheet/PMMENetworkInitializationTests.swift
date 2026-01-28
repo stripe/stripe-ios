@@ -18,7 +18,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
     // Test publishable keys
     static let usPublishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
     static let frenchPublishableKey = "pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"
-    static let britishPublishableKey = "pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"
+    static let ukPublishableKey = "pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"
     static let usConnectedAccountId = "acct_1SSPcCLmk7lnVRaw"
 
     var downloadManager: DownloadManager!
@@ -90,7 +90,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
             appearance: appearance,
@@ -143,7 +143,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 dark: loadTestImage("affirm-logo-dark"),
                 altText: "Affirm", code: "affirm"
             )),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=Learn%20more")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50 with {partner}",
             appearance: appearance,
@@ -210,7 +210,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
             appearance: appearance,
@@ -277,7 +277,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Learn%20more")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
             appearance: appearance,
@@ -328,7 +328,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 dark: loadTestImage("klarna-logo-dark"),
                 altText: "Klarna", code: "klarna"
             )),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50 with {partner}",
             appearance: appearance,
@@ -578,7 +578,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 dark: loadTestImage("klarna-logo-dark"),
                 altText: "Klarna", code: "klarna"
             )),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=FR&currency=EUR&key=\(Self.frenchPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=FR&currency=EUR&key=\(Self.frenchPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "3 interest-free payments of €16.67 with {partner}",
             appearance: appearance,
@@ -641,7 +641,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=fr&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=En%20savoir%20plus")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=fr&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Consulter%20les%20offres")!,
             legalDisclosure: nil,
             promotion: "4 paiements de 12,50 $US sans intérêts",
             appearance: appearance,
@@ -659,14 +659,14 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
     }
 
-    func testCreate_britishAccount_klarna_withLegalDisclosure() async {
-        // Given: A configuration with British publishable key and Klarna
+    func testCreate_ukAccount_klarna_withLegalDisclosure() async {
+        // Given: A configuration with uk publishable key and Klarna
         let appearance = PaymentMethodMessagingElement.Appearance()
-        let britishAPIClient = STPAPIClient(publishableKey: Self.britishPublishableKey)
+        let ukAPIClient = STPAPIClient(publishableKey: Self.ukPublishableKey)
         var configuration = PaymentMethodMessagingElement.Configuration(
             amount: 5000,
             currency: "gbp",
-            apiClient: britishAPIClient,
+            apiClient: ukAPIClient,
             countryCode: "GB",
             appearance: appearance
         )
@@ -682,7 +682,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
         // Then: Verify success with legal disclosure text
         guard case .success(let pmme) = result else {
-            XCTFail("Expected success for British account with Klarna, got \(result)")
+            XCTFail("Expected success for uk account with Klarna, got \(result)")
             return
         }
 
@@ -694,7 +694,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 dark: loadTestImage("klarna-logo-dark"),
                 altText: "Klarna", code: "klarna"
             )),
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=GB&currency=GBP&key=\(Self.britishPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=Learn%20more")!,
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=GB&currency=GBP&key=\(Self.ukPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!,
             legalDisclosure: "18+, T&C apply. Credit subject to status.",
             promotion: "3 interest-free payments of £16.67 with {partner}",
             appearance: appearance,

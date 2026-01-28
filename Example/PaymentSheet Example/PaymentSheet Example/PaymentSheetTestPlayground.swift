@@ -139,10 +139,19 @@ struct PaymentSheetTestPlayground: View {
                             SettingPickerView(setting: $playgroundController.settings.currency)
                         }
                         SettingPickerView(setting: merchantCountryBinding)
+                        if playgroundController.settings.merchantCountryCode == .custom {
+                            TextField("sk_(test/live)_...", text: customSecretKeyBinding)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
+                            TextField("pk_(test/live)_...", text: customPublishableKeyBinding)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
+                        }
                         SettingView(setting: $playgroundController.settings.apmsEnabled)
                         if playgroundController.settings.apmsEnabled == .off {
                             TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
                                 .autocapitalization(.none)
+                                .autocorrectionDisabled()
                         }
                     }
                     Group {
@@ -193,6 +202,7 @@ struct PaymentSheetTestPlayground: View {
                         clientSettings
                         TextField("Custom CTA", text: customCTABinding)
                         TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
+                            .autocorrectionDisabled()
                     }
                     Divider()
                     Group {
@@ -287,7 +297,28 @@ struct PaymentSheetTestPlayground: View {
             if newCountry != .US {
                 playgroundController.settings.customPaymentMethods = .off
             }
+            // Clear custom keys if we switch to non-custom merchant
+            if newCountry != .custom {
+                playgroundController.settings.customSecretKey = nil
+                playgroundController.settings.customPublishableKey = nil
+            }
             playgroundController.settings.merchantCountryCode = newCountry
+        }
+    }
+
+    var customSecretKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customSecretKey ?? ""
+        } set: { newString in
+            playgroundController.settings.customSecretKey = newString
+        }
+    }
+
+    var customPublishableKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customPublishableKey ?? ""
+        } set: { newString in
+            playgroundController.settings.customPublishableKey = newString
         }
     }
 

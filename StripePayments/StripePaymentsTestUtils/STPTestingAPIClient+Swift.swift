@@ -187,6 +187,23 @@ extension STPTestingAPIClient {
         ]
         return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
     }
+    // MARK: - /create_checkout_session
+
+    struct CreateCheckoutSessionResponse: Decodable {
+        let id: String
+        let clientSecret: String
+        let publishableKey: String
+    }
+
+    func fetchCheckoutSession(
+        merchantCountry: String? = "us"
+    ) async throws -> CreateCheckoutSessionResponse {
+        let params: [String: Any?] = [
+            "account": merchantCountry,
+        ]
+        return try await makeRequest(endpoint: "create_checkout_session", params: params)
+    }
+
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(

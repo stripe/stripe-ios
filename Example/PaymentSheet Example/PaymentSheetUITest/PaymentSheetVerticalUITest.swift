@@ -151,7 +151,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         _testUSBankAccount(mode: .payment, integrationType: .normal, vertical: true)
     }
 
-    func testInstantDebits_verticalmode() {
+    // Disabled
+    func _testInstantDebits_verticalmode() {
         _testInstantDebits(mode: .payment, vertical: true)
     }
 

@@ -184,7 +184,7 @@ workflows:
     before_run:
     - prep_all
     steps:
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -221,7 +221,7 @@ workflows:
     before_run:
     - prep_all
     steps:
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -242,98 +242,98 @@ workflows:
         - lane: threeds2_tests
         title: fastlane threeds2_tests
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeiOS
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePayments
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentsUI
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentSheet
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCameraCore
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCore
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeConnect
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeIdentity
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeIssuing
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeFinancialConnections
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCardScan
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeApplePay
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeUICore
         is_always_run: true
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -356,7 +356,7 @@ workflows:
         - content: |
             ruby ci_scripts/generate_ios26_testplan.rb
         title: Generate iOS 26 test plan
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE_26_1
         - test_repetition_mode: retry_on_failure
@@ -380,7 +380,7 @@ workflows:
         inputs:
         - lane: preflight
         title: fastlane preflight
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -478,7 +478,7 @@ workflows:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   integration-all:
     steps:
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -599,6 +599,12 @@ workflows:
     - xcode-start-simulator@0:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
+    - script@1:
+        inputs:
+        - content: |
+            xcrun simctl spawn booted defaults write com.apple.keyboard.preferences DidShowContinuousPathIntroduction -bool true
+            xcrun simctl spawn booted defaults write com.apple.keyboard.preferences DidShowGestureKeyboardIntroduction -bool true
+        title: Disable keyboard introduction popups
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_BUILD_DIR
@@ -673,7 +679,7 @@ workflows:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -695,7 +701,7 @@ workflows:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
@@ -717,7 +723,7 @@ workflows:
         inputs:
         - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
         title: Warm up emulator (iPhone 12 mini, OS=16.4)
-    - xcode-test@4:
+    - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure

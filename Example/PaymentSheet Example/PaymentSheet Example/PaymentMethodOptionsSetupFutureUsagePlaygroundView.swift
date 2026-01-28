@@ -38,6 +38,7 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
                     SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.affirm, customDisplayLabel: "Affirm")
                     TextField("pm_type:sfu_value (comma separated)", text: additionalPaymentMethodOptionsSetupFutureUsageBinding)
                         .autocapitalization(.none)
+                        .autocorrectionDisabled()
                 }
             }.padding()
 
