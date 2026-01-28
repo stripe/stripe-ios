@@ -62,7 +62,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     func updatePhoneNumber(to phoneNumber: String) async throws
 
     /// Authenticates the user with an encrypted Link auth token.
-    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful call to this API, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    /// - Parameter linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful call to this API, logs the Link user in without displaying UI for authentication / one time passcodes.
     /// Throws if the auth token is expired, has already been used, has been revoked, or an API error occurs.
     func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws
 
