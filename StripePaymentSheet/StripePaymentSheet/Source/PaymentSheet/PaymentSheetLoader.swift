@@ -189,12 +189,6 @@ final class PaymentSheetLoader {
             guard !paymentMethodTypes.isEmpty else {
                 throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
             }
-            analyticsHelper.logLoadSucceeded(
-                intent: intent,
-                elementsSession: elementsSession,
-                defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
-                orderedPaymentMethodTypes: paymentMethodTypes
-            )
             if integrationShape.shouldStartCheckoutMeasurementOnLoad {
                 analyticsHelper.startTimeMeasurement(.checkout)
             }
@@ -208,6 +202,12 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes
+            )
+            analyticsHelper.logLoadSucceeded(
+                intent: intent,
+                elementsSession: elementsSession,
+                defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
+                orderedPaymentMethodTypes: paymentMethodTypes
             )
             return loadResult
         } catch {
