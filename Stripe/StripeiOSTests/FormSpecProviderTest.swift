@@ -43,7 +43,7 @@ class FormSpecProviderTest: XCTestCase {
             return
         }
         XCTAssertEqual(selector.apiPath?["v1"], "ideal[bank]")
-        XCTAssertEqual(selector.items.count, 13)
+        XCTAssertEqual(selector.items.count, 14)
     }
 
     func testLoadJsonCanOverwriteLoadedSpecs() throws {
@@ -61,8 +61,7 @@ class FormSpecProviderTest: XCTestCase {
             eps.fields.first,
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
-        let updatedSpecJson =
-            """
+        let updatedSpecJson = Data("""
             [{
                 "type": "eps",
                 "async": false,
@@ -75,7 +74,7 @@ class FormSpecProviderTest: XCTestCase {
                     }
                 ]
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
         let result = sut.loadFrom(formSpec)
@@ -126,8 +125,7 @@ class FormSpecProviderTest: XCTestCase {
             eps.fields.first,
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
-        let updatedSpecJson =
-            """
+        let updatedSpecJson = Data("""
             [{
                 "INVALID_type": "eps",
                 "async": false,
@@ -140,7 +138,7 @@ class FormSpecProviderTest: XCTestCase {
                     }
                 ]
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
         let result = sut.loadFrom(formSpec)
@@ -170,10 +168,9 @@ class FormSpecProviderTest: XCTestCase {
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
 
-        let updatedSpecJson =
-            """
+        let updatedSpecJson = Data("""
             NOT VALID JSON
-            """.data(using: .utf8)!
+            """.utf8)
 
         let result = sut.loadFrom(updatedSpecJson)
         XCTAssertFalse(result)
@@ -201,8 +198,7 @@ class FormSpecProviderTest: XCTestCase {
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
 
-        let updatedSpecJson =
-            """
+        let updatedSpecJson = Data("""
             [{
                 "type": "eps",
                 "async": false,
@@ -230,7 +226,7 @@ class FormSpecProviderTest: XCTestCase {
                     }
                 }
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
         let result = sut.loadFrom(formSpec)
