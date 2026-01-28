@@ -74,6 +74,12 @@ extension STPAPIClient {
             "payment_method": paymentMethod,
             "expected_amount": expectedAmount,
             "expected_payment_method_type": expectedPaymentMethodType,
+            "expand": [
+                "payment_intent",
+                "payment_intent.payment_method",
+                "setup_intent",
+                "setup_intent.payment_method",
+            ],
         ]
 
         if let returnURL {
