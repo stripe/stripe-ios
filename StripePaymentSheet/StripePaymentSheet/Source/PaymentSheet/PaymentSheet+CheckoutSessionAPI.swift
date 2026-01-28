@@ -30,8 +30,9 @@ extension PaymentSheet {
             // 1. Get or create payment method
             let paymentMethod: STPPaymentMethod
             let paymentMethodType: STPPaymentMethodType
+            let paymentMethodOptions: STPConfirmPaymentMethodOptions?
             switch confirmType {
-            case let .new(params, _, newPaymentMethod, _, _):
+            case let .new(params, paymentOptions, newPaymentMethod, _, _):
                 if let newPaymentMethod {
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
                                                       error: PaymentSheetError.unexpectedNewPaymentMethod,
@@ -40,6 +41,7 @@ extension PaymentSheet {
                 }
                 stpAssert(newPaymentMethod == nil)
                 paymentMethodType = params.type
+                paymentMethodOptions = paymentOptions
                 params.clientAttributionMetadata = clientAttributionMetadata
                 paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
             case .saved:
@@ -60,6 +62,7 @@ extension PaymentSheet {
                 expectedPaymentMethodType: paymentMethodType.identifier,
                 returnURL: configuration.returnURL,
                 shipping: makeCheckoutSessionShippingParams(configuration: configuration),
+                paymentMethodOptions: paymentMethodOptions,
                 clientAttributionMetadata: clientAttributionMetadata
             )
 

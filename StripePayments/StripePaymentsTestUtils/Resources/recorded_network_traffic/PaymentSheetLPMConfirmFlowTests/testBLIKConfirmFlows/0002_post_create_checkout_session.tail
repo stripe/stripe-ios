@@ -3,10 +3,10 @@ http:\/\/127\.0\.0\.1:4567\/create_checkout_session$
 200
 text/html
 X-Content-Type-Options: nosniff
-Set-Cookie: rack.session=JCg%2FIE65jbc7vIWRjfpPf8aVshPUqtVxkWCsziiC631caWz0y%2FKBf9WinTttYWoCnU8rqJpLPZH3v%2FxNJgdJ%2BoE7gi0C5AX41O7GDGJbFT3spfylzMYXekG8yW%2BSxT4m5hz26Pfv%2BS%2FAMSYmjZyOZHfGNBFinvKoudB5A3F0z%2Fi1RqXFkoS2EkdDpR5xymZ8; path=/
+Set-Cookie: rack.session=pkrGbOM%2Fbh8oKXW12YiodP6xl%2BjaZilyQi6gbaStpBKHnQjwasiULj1irQ8pwnDMFGc89t84Ievh%2F8nlu%2BpbLtMwkvwvCLqVoix9784OOPYCTzepyFpqarzLwoxt4mQyjcR3FPNUfsN4JK7TyyzkVUWWHEXBuCqEqwrz9bRRbMzeq%2FVdNQ3tEg8oMgnkTT4i; path=/
 Content-Length: 358
 Content-Type: text/html;charset=utf-8
 X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 
-{"id":"cs_test_a1aLsshodRfn0OVKwYztcXtcfR2SWjkd13J9Ma5apTX58Au8FgIgZGL1zZ","client_secret":"cs_test_a1aLsshodRfn0OVKwYztcXtcfR2SWjkd13J9Ma5apTX58Au8FgIgZGL1zZ_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51HZi0VArGMi59tL4sIXUjwXbMiM5uSHVfsKjNXcepJ80C5niX4bCm5rJ3CeDI1vjZ5Mz55Phsmw9QqjoZTsBFoWh009RQaGx0R"}
+{"id":"cs_test_a1tUZRlnF7ryEmCCqxjDUROeHe4EEs6dA85YPR70NpVQIfxYDf45wOATRe","client_secret":"cs_test_a1tUZRlnF7ryEmCCqxjDUROeHe4EEs6dA85YPR70NpVQIfxYDf45wOATRe_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51HZi0VArGMi59tL4sIXUjwXbMiM5uSHVfsKjNXcepJ80C5niX4bCm5rJ3CeDI1vjZ5Mz55Phsmw9QqjoZTsBFoWh009RQaGx0R"}
