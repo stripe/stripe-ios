@@ -369,6 +369,37 @@ def print_statistical_report(test_stats, all_results)
 end
 
 # ============================================================================
+# TESTING
+# ============================================================================
+
+# Runs a simple sanity check on the statistics calculations with known test data
+def run_statistics_test
+  puts "=" * 80
+  puts "STATISTICS TEST MODE"
+  puts "=" * 80
+
+  # Test data: base values around 1.0, new values around 1.1 (~10% increase)
+  base = [1.0, 1.1, 1.2, 1.1, 1.0] * 2  # n=10, mean=1.08
+  new = [1.1, 1.2, 1.3, 1.2, 1.1] * 2   # n=10, mean=1.18
+
+  stats = compute_independent_statistics(base, new)
+
+  puts "\nTest data:"
+  puts "  Base: #{base.inspect}"
+  puts "  Base mean: #{mean(base).round(3)}"
+  puts "  New: #{new.inspect}"
+  puts "  New mean: #{mean(new).round(3)}"
+
+  puts "\nComputed statistics:"
+  puts "  Percentage delta: #{stats[:pct_mean].round(1)}% ± #{stats[:pct_margin].round(1)}%"
+  puts "  Absolute delta: #{(stats[:abs_mean] * 1000).round(0)}ms ± #{(stats[:abs_margin] * 1000).round(0)}ms"
+  puts "  Statistically significant: #{stats[:significant]}"
+
+  puts "\nExpected output: 9.3% +/- 6.9%, 100ms +/- 74ms, statistically significant = true"
+  puts "=" * 80
+end
+
+# ============================================================================
 # MAIN EXECUTION
 # ============================================================================
 
@@ -416,6 +447,12 @@ OptionParser.new do |opts|
     exit
   end
 end.parse!
+
+# STATISTICS TEST MODE - Run with: TEST_STATS=1 ruby measure_latency_difference.rb
+if ENV['TEST_STATS'] == '1'
+  run_statistics_test
+  exit
+end
 
 # Validate required arguments
 if options[:base_commit].nil? || options[:commit].nil?
