@@ -72,7 +72,6 @@ extension DocumentCaptureViewController {
             if foundClassification == .invalid {
                 return String.Localized.invalid_document
             }
-            
             // If document appears off-center, ask user to center it (only when the side matches)
             if matchesClassification && !idDetectorOutput.isCentered() {
                 return String.Localized.center_id_in_view
