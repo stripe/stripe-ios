@@ -39,7 +39,7 @@ extension PaymentSheet {
                                                       additionalNonPIIParams: ["payment_method_type": newPaymentMethod.type])
                     STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 }
-                stpAssert(newPaymentMethod == nil)
+                stpAssert(newPaymentMethod == nil, "newPaymentMethod should be nil when confirming with a new payment method; the payment method is created from params.")
                 paymentMethodType = params.type
                 paymentMethodOptions = paymentOptions
                 params.clientAttributionMetadata = clientAttributionMetadata
