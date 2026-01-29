@@ -21,13 +21,13 @@ final class PaymentSheetLoader {
     }
 
     enum IntegrationShape {
-        case complete
+        case paymentSheet
         case flowController
         case embedded
 
         var canDefaultToLinkOrApplePay: Bool {
             switch self {
-            case .complete:
+            case .paymentSheet:
                 return false
             case .flowController, .embedded:
                 return true
@@ -36,7 +36,7 @@ final class PaymentSheetLoader {
 
         var shouldStartCheckoutMeasurementOnLoad: Bool {
             switch self {
-            case .complete, .embedded: // TODO(porter) Figure out when we want to start checkout measurement for embedded
+            case .paymentSheet, .embedded: // TODO(porter) Figure out when we want to start checkout measurement for embedded
                 return false
             case .flowController:
                 return true
