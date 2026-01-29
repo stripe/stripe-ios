@@ -1,4 +1,6 @@
-## X.Y.Z - changes pending release
+## X.Y.Z - changes pending release 
+
+## 25.6.0 2026-01-26
 
 ### Payments
 * [Added] Added API bindings support for TWINT payment methods.

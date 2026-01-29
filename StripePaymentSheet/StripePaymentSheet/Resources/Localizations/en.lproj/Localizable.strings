@@ -268,6 +268,9 @@ to be saved and used in future checkout sessions. */
 /* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
 "Only card brand can be changed." = "Only card brand can be changed.";
 
+/* Accessibility hint to tell the user that they can open a form sheet with more information. */
+"Open to see more information." = "Open to see more information.";
+
 /* Countdown timer text on a screen asking the user to approve a payment */
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
 
