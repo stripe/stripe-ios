@@ -229,12 +229,7 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
 extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
         guard let url = navigationAction.request.url else {
-            return .allow
-        }
-
-        // Allow initial page load and same-origin requests
-        if navigationAction.navigationType == .other {
-            return .allow
+            return .cancel
         }
 
         // Open links (e.g., Privacy, Terms) in Safari instead of navigating within the webview
