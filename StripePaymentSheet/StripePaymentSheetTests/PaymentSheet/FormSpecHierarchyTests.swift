@@ -59,47 +59,6 @@ class FormSpecHierarchyTests: XCTestCase {
 
     // MARK: - Form Spec Tests
 
-    func testAffirmFormHierarchy() throws {
-        let factory = makeFactory(for: .affirm)
-        let form = try XCTUnwrap(makeFormFromSpec(for: "affirm", factory: factory))
-
-        let actual = form.toHierarchyNode()
-        let expected = FormHierarchyNode(type: "FormElement", children: [
-            FormHierarchyNode(type: "SubtitleElement")
-        ])
-
-        XCTAssertEqual(actual, expected)
-    }
-
-    func testAfterpayFormHierarchy() throws {
-        let factory = makeFactory(for: .afterpayClearpay)
-        let form = try XCTUnwrap(makeFormFromSpec(for: "afterpay_clearpay", factory: factory))
-
-        let actual = form.toHierarchyNode()
-        // Afterpay has a header - the form spec requires name/email but we disabled collection
-        let expected = FormHierarchyNode(type: "FormElement", children: [
-            FormHierarchyNode(type: "SubtitleElement")
-        ])
-
-        XCTAssertEqual(actual, expected)
-    }
-
-    func testKlarnaFormHierarchy() throws {
-        let factory = makeFactory(for: .klarna)
-        let form = try XCTUnwrap(makeFormFromSpec(for: "klarna", factory: factory))
-
-        let actual = form.toHierarchyNode()
-        // Klarna has header + country dropdown
-        let expected = FormHierarchyNode(type: "FormElement", children: [
-            FormHierarchyNode(type: "SubtitleElement"),
-            FormHierarchyNode(type: "SectionElement", children: [
-                FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"])
-            ]),
-        ])
-
-        XCTAssertEqual(actual, expected)
-    }
-
     func testEPSFormHierarchy() throws {
         let factory = makeFactory(for: .EPS)
         let form = try XCTUnwrap(makeFormFromSpec(for: "eps", factory: factory))
@@ -646,6 +605,53 @@ class ExplicitFormHierarchyTests: XCTestCase {
             FormHierarchyNode(type: "SubtitleElement"),
             FormHierarchyNode(type: "SectionElement", children: [
                 FormHierarchyNode(type: "TextFieldElement", properties: ["label": "UPI ID"])
+            ]),
+        ])
+
+        XCTAssertEqual(actual, expected)
+    }
+
+    // MARK: - Affirm Form (explicit builder)
+
+    func testAffirmFormHierarchy() throws {
+        let factory = makeFactory(for: .affirm)
+        let form = factory.make()
+
+        let actual = form.toHierarchyNode()
+        let expected = FormHierarchyNode(type: "FormElement", children: [
+            FormHierarchyNode(type: "SubtitleElement")
+        ])
+
+        XCTAssertEqual(actual, expected)
+    }
+
+    // MARK: - Afterpay Form (explicit builder)
+
+    func testAfterpayFormHierarchy() throws {
+        let factory = makeFactory(for: .afterpayClearpay)
+        let form = factory.make()
+
+        let actual = form.toHierarchyNode()
+        // Afterpay has a header - requires name/email but we disabled collection
+        let expected = FormHierarchyNode(type: "FormElement", children: [
+            FormHierarchyNode(type: "SubtitleElement")
+        ])
+
+        XCTAssertEqual(actual, expected)
+    }
+
+    // MARK: - Klarna Form (explicit builder)
+
+    func testKlarnaFormHierarchy() throws {
+        let factory = makeFactory(for: .klarna)
+        let form = factory.make()
+
+        let actual = form.toHierarchyNode()
+        // Klarna has header + country dropdown
+        let expected = FormHierarchyNode(type: "FormElement", children: [
+            FormHierarchyNode(type: "SubtitleElement"),
+            FormHierarchyNode(type: "SectionElement", children: [
+                FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"])
             ]),
         ])
 
