@@ -119,30 +119,14 @@ extension PaymentSheet {
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async -> PaymentSheetResult {
-        switch paymentIntent.status {
-        case .requiresAction:
-            // Handle 3DS or other next actions
-            return await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: paymentIntent,
-                    with: authenticationContext,
-                    returnURL: configuration.returnURL
-                ) { status, _, error in
-                    continuation.resume(returning: makePaymentSheetResult(for: status, error: error))
-                }
+        return await withCheckedContinuation { continuation in
+            paymentHandler.handleNextAction(
+                for: paymentIntent,
+                with: authenticationContext,
+                returnURL: configuration.returnURL
+            ) { status, _, error in
+                continuation.resume(returning: makePaymentSheetResult(for: status, error: error))
             }
-
-        case .succeeded, .processing:
-            return .completed
-
-        case .requiresPaymentMethod:
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Payment requires payment method"))
-
-        case .canceled:
-            return .canceled
-
-        default:
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Unexpected payment intent status: \(paymentIntent.status)"))
         }
     }
 
@@ -153,30 +137,15 @@ extension PaymentSheet {
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async -> PaymentSheetResult {
-        switch setupIntent.status {
-        case .requiresAction:
-            // Handle 3DS or other next actions
-            return await withCheckedContinuation { continuation in
-                paymentHandler.handleNextAction(
-                    for: setupIntent,
-                    with: authenticationContext,
-                    returnURL: configuration.returnURL
-                ) { status, _, error in
-                    continuation.resume(returning: makePaymentSheetResult(for: status, error: error))
-                }
+        // Use handleNextAction to handle all statuses correctly
+        return await withCheckedContinuation { continuation in
+            paymentHandler.handleNextAction(
+                for: setupIntent,
+                with: authenticationContext,
+                returnURL: configuration.returnURL
+            ) { status, _, error in
+                continuation.resume(returning: makePaymentSheetResult(for: status, error: error))
             }
-
-        case .succeeded:
-            return .completed
-
-        case .requiresPaymentMethod:
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Setup requires payment method"))
-
-        case .canceled:
-            return .canceled
-
-        default:
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Unexpected setup intent status: \(setupIntent.status)"))
         }
     }
 
