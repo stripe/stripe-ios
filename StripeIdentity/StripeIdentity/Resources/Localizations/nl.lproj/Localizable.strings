@@ -1,192 +1,276 @@
+/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "In de volgende stap worden er automatisch een paar foto's gemaakt om te verifiëren dat jij het bent";
-
+/* Title for accepted types of ids */
 "Accepted forms of ID include" = "Geaccepteerde identiteitsbewijzen";
-
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Als alternatief kun je ook handmatig een foto van je identiteitsbewijs uploaden.";
-
+/* Opens the app's settings in the Settings app */
 "App Settings" = "App-instellingen";
-
+/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
 "Back %@ photo successfully uploaded" = "Terug %@ foto succesvol geüpload";
-
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Foto van achterkant van rijbewijs is geüpload";
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Foto van achterkant van identiteitskaart is geüpload";
+/* Accessibility label when back identity document photo has successfully uploaded */
 "Back identity document photo successfully uploaded" = "Foto van identiteitsbewijs succesvol geüpload";
-
+/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
 "Back of %@" = "Achterkant van %@";
-
+/* Description of back of driver's license image */
+"Back of driver's license" = "Achterkant van rijbewijs";
+/* Back of driver's license or government-issued photo ID */
 "Back of driver's license or government-issued photo ID" = "Achterkant van rijbewijs of officieel identiteitsbewijs met foto";
-
+/* Back of driver's license or passport */
+"Back of driver's license or passport" = "Achterkant van rijbewijs of paspoort";
+/* Back of driver's license, passport, or government-issued photo ID */
+"Back of driver's license, passport, or government-issued photo ID" = "Achterkant van rijbewijs, paspoort of officieel identiteitsbewijs met foto";
+/* Description of back of identity card image */
+"Back of identity card" = "Achterkant van identiteitskaart";
+/* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Achterkant van identiteitsbewijs";
-
+/* Back of passport or government-issued photo ID */
+"Back of passport or government-issued photo ID" = "Achterkant van paspoort of officieel identiteitsbewijs met foto";
+/* Title displayed when requesting camera permissions */
 "Camera permission" = "Toestemming voor camera";
-
+/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Camera niet beschikbaar";
-
+/* Instructional text during selfie is being captured */
 "Capturing…" = "Selfie wordt gemaakt...";
-
+/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Bestand kiezen";
-
+/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Toestaan";
-
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Niet gelukt om afbeelding vast te leggen";
-
+/* Label for Date of birth field */
+"Date of Birth" = "Geboortedatum";
+/* Label for Date of birth field */
+"Date of birth" = "Geboortedatum";
+/* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Geboortedatum lijkt ongeldig te zijn";
-
+/* Instructional text when environement is too bright
+   Instructional text when the document is too glarry
+   Instructional text when user needs remove anything blocking the document */
 "Details not visible" = "Details niet zichtbaar";
-
+/* Button that opens file upload screen */
+"File Upload" = "Bestand uploaden";
+/* Title of identity document file upload screen */
+"File upload" = "Bestand uploaden";
+/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
 "Flip your %@ over to the other side" = "Draai je %@ naar de andere kant om";
-
+/* Flip your driver's license or government-issued photo ID over to the other side */
 "Flip your driver's license or government-issued photo ID over to the other side" = "Draai het rijbewijs of officieel identiteitsbewijs met foto om zodat de andere kant zichtbaar is";
-
+/* Flip your driver's license or passport over to the other side */
+"Flip your driver's license or passport over to the other side" = "Draai het rijbewijs of paspoort om zodat de andere kant zichtbaar is";
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Draai je rijbewijs om, zodat de andere kant zichtbaar is";
+/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
+"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Draai het rijbewijs, paspoort of officieel identiteitsbewijs met foto om zodat de andere kant zichtbaar is";
+/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
-
+/* Flip your passport or government-issued photo ID over to the other side */
+"Flip your passport or government-issued photo ID over to the other side" = "Draai het paspoort of officieel identiteitsbewijs met foto om zodat de andere kant zichtbaar is";
+/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Voorkant %@ foto succesvol geüpload";
-
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Foto van voorkant van rijbewijs is geüpload";
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Foto van voorkant van identiteitskaart is geüpload";
+/* Accessibility label when front identity document photo has successfully uploaded */
 "Front identity document photo successfully uploaded" = "Foto voor identiteitsbewijs succesvol geüpload";
-
+/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
 "Front of %@" = "Voorkant van %@";
-
+/* Description of front of driver's license image */
+"Front of driver's license" = "Voorkant van rijbewijs";
+/* Front of driver's license or government-issued photo ID */
 "Front of driver's license or government-issued photo ID" = "Voorkant van rijbewijs of officieel identiteitsbewijs met foto";
-
+/* Front of driver's license or passport */
 "Front of driver's license or passport" = "Voorkant van rijbewijs of paspoort";
-
+/* Front of driver's license, passport, or government-issued photo ID */
 "Front of driver's license, passport, or government-issued photo ID" = "Voorkant van rijbewijs, paspoort of officieel identiteitsbewijs met foto";
-
+/* Description of front of identity card image */
+"Front of identity card" = "Voorkant van identiteitskaart";
+/* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Voorkant van identiteitsbewijs";
-
+/* Front of passport or government-issued photo ID */
 "Front of passport or government-issued photo ID" = "Voorkant van paspoort of officieel identiteitsbewijs met foto";
-
+/* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Bereid je voor om je foto-ID te scannen";
-
+/* Title for selfie warmup page */
 "Get ready to take a selfie" = "Maak je klaar om een selfie te nemen";
-
+/* Button to go back to the previous screen */
 "Go Back" = "Terug";
-
+/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Niet bewegen, het document wordt gescand";
-
+/* Ready button text on warmup screen */
 "I'm ready" = "Ik ben klaar";
-
+/* Label for ID number section */
 "ID Number" = "Identificatienummer";
-
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "ID-type";
+/* Description of passport image */
+"Image of passport" = "Afbeelding van paspoort";
+/* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "CPF natuurlijk persoon";
-
+/* Instructional text when user align the edge with camera
+   Instructional text when user needs to rorate to document to align with camera */
 "Keep ID level" = "Houd het identiteitsbewijs recht";
-
+/* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Laatste vier cijfers van socialezekerheidsnummer";
-
+/* Status while screen is loading */
 "Loading" = "Bezig met laden";
-
-
+/* Instructional text when the document is too blurry */
+"Make sure all details are visible and focus" = "Zorg dat alle details goed zichtbaar en in focus zijn";
+/* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Zorg dat er voldoende belichting is.";
-
+/* Instructional text when camera is too far from a document */
 "Move closer" = "Dichterbij houden";
-
+/* Instructional text when camera is too close to a document */
 "Move farther" = "Verder weg houden";
-
+/* Instructional text when environement is too bright */
 "Move to a darker area" = "Ga naar een donkerdere plek";
-
+/* Instructional text when environement is too dark */
 "Move to a well-lit area" = "Zorg dat er voldoende belichting is";
-
+/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC of FIN";
-
+/* Instructional text when there is no document in camera frame */
 "No document detected" = "Geen document gedetecteerd";
-
+/* Label of the passport option for document type selection */
+"Passport" = "Paspoort";
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Foto van paspoort is geüpload";
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Persoonlijk identificatienummer";
-
+/* Back button title for returning to the individual's perssonal infomation screen */
 "Personal Information" = "Persoonlijke gegevens";
-
+/* Section title for collection phone number */
 "Phone Number" = "Telefoonnummer";
-
+/* Back button title for returning to the phone verification page */
 "Phone Verification" = "Telefonische verificatie";
-
+/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Fotobibliotheek";
-
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Upload een afbeelding van je paspoort";
+/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
 "Please upload images of the front and back of your %@" = "Upload afbeeldingen van de voor- en achterkant van je %@.";
-
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Upload afbeeldingen van de voor- en achterkant van je rijbewijs";
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Upload afbeeldingen van de voor- en achterkant van je identiteitskaart";
+/* Instructions for uploading images of identity document */
 "Please upload images of the front and back of your identity document" = "Upload foto's van de voor- en achterkant van uw identiteitsbewijs";
-
+/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
 "Position your %@ in the center of the frame" = "Plaats je %@ in het midden van het frame";
-
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Plaats je rijbewijs midden in het frame";
+/* Position your driver's license or government-issued photo ID in the center of the frame */
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Plaats het rijbewijs of officieel identiteitsbewijs met foto in het midden van het frame";
-
+/* Position your driver's license or passport in the center of the frame */
 "Position your driver's license or passport in the center of the frame" = "Plaats het rijbewijs of paspoort midden in het frame";
-
+/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Plaats het rijbewijs, paspoort of officieel identiteitsbewijs met foto in het midden van het frame";
-
+/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "Houd je gezicht in het midden van het frame.";
-
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Plaats je identiteitskaart midden in het frame";
+/* Instructional text for scanning front of a identity document */
 "Position your identity document in the center of the frame" = "Plaats uw identiteitsbewijs in het midden van het frame";
-
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Plaats je paspoort midden in het frame";
+/* Position your passport or government-issued photo ID in the center of the frame */
 "Position your passport or government-issued photo ID in the center of the frame" = "Plaats het paspoort of officieel identiteitsbewijs met foto in het midden van het frame";
-
+/* Button text displayed to the user to retake photo */
 "Retake Photos" = "Nieuwe foto's maken";
-
+/* Back button title for returning to the document scan screen */
 "Scan" = "Scannen";
-
+/* State when identity document has been successfully scanned */
 "Scanned" = "Gescand";
-
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Selecteren";
-
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "Selecteer een locatie vanwaar je de achterkant van je identiteitsbewijs wilt uploaden";
-
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Selecteer een locatie vanwaar je de voorkant van je identiteitsbewijs wilt uploaden";
-
+/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
 "Select back %@ photo" = "Selecteer achterkant %@ foto";
-
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Foto van achterkant van rijbewijs selecteren";
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Foto van achterkant van identiteitskaart selecteren";
+/* Accessibility label to select a photo of back of identity document */
 "Select back identity document photo" = "Selecteer een foto van het identiteitsbewijs aan de achterkant";
-
+/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
 "Select front %@ photo" = "Selecteer voorkant %@ foto";
-
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Foto van voorkant van rijbewijs selecteren";
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Foto van voorkant van identiteitskaart selecteren";
+/* Accessibility label to select a photo of front of identity document */
 "Select front identity document photo" = "Selecteer de foto van het identiteitsbewijs aan de voorkant";
-
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Foto van paspoort selecteren";
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
 "Selfie" = "Selfie";
-
+/* Title of selfie capture screen */
 "Selfie captures" = "Selfieopnamen";
-
+/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "Selfieopnamen zijn voltooid";
-
+/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Foto maken";
-
+/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "De afbeeldingen van je identiteitsbewijs zijn niet opgeslagen. Wil je afsluiten?";
-
+/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "Fout bij het verkrijgen van toegang tot de camera.";
-
+/* Button to attempt to re-scan identity document image */
 "Try Again" = "Opnieuw proberen";
-
+/* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Probeer de glans te verminderen en zorg dat de ID zichtbaar is";
-
+/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Kan geen verbinding maken";
-
+/* Title for warning alert */
 "Unsaved changes" = "Niet-opgeslagen wijzigingen";
-
+/* Back button label for the identity document file upload screen */
 "Upload" = "Uploaden";
-
+/* Button to upload a photo */
 "Upload a Photo" = "Een foto uploaden";
-
+/* Title of document upload screen */
 "Upload your %@" = "Upload je %@";
-
+/* Title of document upload screen */
 "Upload your photo ID" = "Je identiteitsbewijs uploaden";
-
+/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "Foto %@ achterkant uploaden";
-
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Foto van achterkant van rijbewijs uploaden";
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Foto van achterkant van identiteitskaart uploaden";
+/* Accessibility label while photo of back of identity document is uploading */
 "Uploading back identity document photo" = "Foto van achterkant identiteitsbewijs uploaden";
-
+/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
 "Uploading front %@ photo" = "Uploaden voorkant %@ foto";
-
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Foto van voorkant van rijbewijs uploaden";
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Foto van voorkant van identiteitskaart uploaden";
+/* Accessibility label while photo of front of identity document is uploading */
 "Uploading front identity document photo" = "Foto voor voorkant identiteitsbewijs uploaden";
-
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Foto van paspoort uploaden";
+/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Je identiteit verifiëren";
-
+/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "We kunnen geen afbeelding in hoge kwaliteit vastleggen.";
-
+/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "We hebben toestemming nodig om je camera te gebruiken. Sta dit toe via de app-instellingen.";
-
+/* Back button title for returning to welcome screen of Identity verification */
 "Welcome" = "Welkom";
-
+/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "Probeer het nogmaals of upload een afbeelding van je apparaat.";
-
+/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "De afbeeldingen van je selfie zijn niet opgeslagen. Wil je afsluiten?";
-
+/* driver's license */
 "driver's license" = "rijbewijs";
-
+/* id issued by government */
 "government-issued photo ID" = "Overheids-ID met foto";
-
+/* passport */
 "passport" = "paspoort";

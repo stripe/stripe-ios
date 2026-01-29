@@ -1,190 +1,274 @@
+/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "Gerçekten siz olduğunuzu doğrulamak için sonraki adımda otomatik olarak birkaç fotoğraf çekilecek";
-
+/* Title for accepted types of ids */
 "Accepted forms of ID include" = "Kabul edilen kimlik türleri kapsamı";
-
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Kimlik belgenizin fotoğrafını manuel olarak da yükleyebilirsiniz.";
-
+/* Opens the app's settings in the Settings app */
 "App Settings" = "Uygulama Ayarları";
-
+/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
 "Back %@ photo successfully uploaded" = "%@’nin arka yüzünün fotoğrafı başarıyla yüklendi";
-
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Sürücü belgesinin arka yüz fotoğrafı başarıyla yüklendi";
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Kimliğin arka yüz fotoğrafı başarıyla yüklendi";
+/* Accessibility label when back identity document photo has successfully uploaded */
 "Back identity document photo successfully uploaded" = "Kimlik belgesinin arka yüzünün fotoğrafı başarıyla yüklendi";
-
+/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
 "Back of %@" = "%@’nin arka yüzü";
-
+/* Description of back of driver's license image */
+"Back of driver's license" = "Sürücü belgesinin arka yüzü";
+/* Back of driver's license or government-issued photo ID */
 "Back of driver's license or government-issued photo ID" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı bir kimliğin arka yüzü";
-
+/* Back of driver's license or passport */
+"Back of driver's license or passport" = "Ehliyetin veya pasaportun arka yüzü";
+/* Back of driver's license, passport, or government-issued photo ID */
+"Back of driver's license, passport, or government-issued photo ID" = "Ehliyet, pasaport veya devlet tarafından verilmiş fotoğraflı bir kimliğin arka yüzü";
+/* Description of back of identity card image */
+"Back of identity card" = "Kimliğin arka yüzü";
+/* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Kimlik belgesinin arka yüzü";
-
+/* Back of passport or government-issued photo ID */
+"Back of passport or government-issued photo ID" = "Pasaportun veya devlet tarafından verilmiş fotoğraflı bir kimliğin arka yüzü";
+/* Title displayed when requesting camera permissions */
 "Camera permission" = "Kamera izni";
-
+/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kamera kullanılamıyor";
-
+/* Instructional text during selfie is being captured */
 "Capturing…" = "Çekiliyor...";
-
+/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Dosya Seç";
-
+/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Onay";
-
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Fotoğraf alınamadı";
-
+/* Label for Date of birth field */
+"Date of Birth" = "Doğum Tarihi";
+/* Label for Date of birth field */
+"Date of birth" = "Doğum tarihi";
+/* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Doğum tarihi geçerli görünmüyor";
-
+/* Instructional text when environement is too bright
+   Instructional text when the document is too glarry
+   Instructional text when user needs remove anything blocking the document */
 "Details not visible" = "Ayrıntılar görünmüyor";
-
+/* Button that opens file upload screen */
+"File Upload" = "Dosya Yükle";
+/* Title of identity document file upload screen */
+"File upload" = "Dosya yükle";
+/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
 "Flip your %@ over to the other side" = "%@'nizi diğer tarafa çevirin";
-
+/* Flip your driver's license or government-issued photo ID over to the other side */
 "Flip your driver's license or government-issued photo ID over to the other side" = "Ehliyetinizin veya devlet tarafından verilmiş fotoğraflı kimliğinizin diğer yüzünü çevirin";
-
+/* Flip your driver's license or passport over to the other side */
+"Flip your driver's license or passport over to the other side" = "Ehliyetinizin veya pasaportunuzun diğer yüzünü çevirin";
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Sürücü belgenizin diğer yüzünü çevirin";
+/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
+"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Ehliyetinizin, pasaportunuzun veya devlet tarafından verilmiş fotoğraflı kimliğinizin diğer yüzünü çevirin";
+/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Kimliğinizin diğer yüzünü çevirin";
-
+/* Flip your passport or government-issued photo ID over to the other side */
+"Flip your passport or government-issued photo ID over to the other side" = "Pasaportunuzun veya devlet tarafından verilmiş fotoğraflı kimliğinizin diğer yüzünü çevirin";
+/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "%@’nin ön yüzünün fotoğrafı başarıyla yüklendi";
-
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Sürücü belgesinin ön yüz fotoğrafı başarıyla yüklendi";
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Kimliğin ön yüz fotoğrafı başarıyla yüklendi";
+/* Accessibility label when front identity document photo has successfully uploaded */
 "Front identity document photo successfully uploaded" = "Kimlik belgesinin ön yüzünün fotoğrafı başarıyla yüklendi";
-
+/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
 "Front of %@" = "%@’nin ön yüzü";
-
+/* Description of front of driver's license image */
+"Front of driver's license" = "Sürücü belgesinin ön yüzü";
+/* Front of driver's license or government-issued photo ID */
 "Front of driver's license or government-issued photo ID" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
-
+/* Front of driver's license or passport */
 "Front of driver's license or passport" = "Ehliyetin veya pasaportun ön yüzü";
-
+/* Front of driver's license, passport, or government-issued photo ID */
 "Front of driver's license, passport, or government-issued photo ID" = "Ehliyet, pasaport veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
-
+/* Description of front of identity card image */
+"Front of identity card" = "Kimliğin ön yüzü";
+/* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Kimlik belgesinin ön yüzü";
-
+/* Front of passport or government-issued photo ID */
 "Front of passport or government-issued photo ID" = "Pasaportun veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
-
+/* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Fotoğraflı kimliğinizi taramak için hazırlanın";
-
+/* Title for selfie warmup page */
 "Get ready to take a selfie" = "Selfie çekmeye hazırlanın";
-
+/* Button to go back to the previous screen */
 "Go Back" = "Geri Git";
-
+/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Bekleyin, taranıyor";
-
+/* Ready button text on warmup screen */
 "I'm ready" = "Hazırım";
-
+/* Label for ID number section */
 "ID Number" = "Kimlik Numarası";
-
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Kimlik Belgesi Türü";
+/* Description of passport image */
+"Image of passport" = "Pasaport fotoğrafı";
+/* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "Bireysel CPF";
-
+/* Instructional text when user align the edge with camera
+   Instructional text when user needs to rorate to document to align with camera */
 "Keep ID level" = "Kimlik seviyesini koruyun";
-
+/* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Sosyal Güvenlik numarasının son 4 hanesi";
-
+/* Status while screen is loading */
 "Loading" = "Yükleniyor";
-
-
+/* Instructional text when the document is too blurry */
+"Make sure all details are visible and focus" = "Tüm detayların görünür ve odak dahilinde olduğundan emin olun";
+/* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "İyi ışık alan bir alanda olduğunuzdan emin olun.";
-
+/* Instructional text when camera is too far from a document */
 "Move closer" = "Yakınlaştırın";
-
+/* Instructional text when camera is too close to a document */
 "Move farther" = "Uzaklaştırın";
-
+/* Instructional text when environement is too bright */
 "Move to a darker area" = "Daha karanlık bir yere geçin";
-
+/* Instructional text when environement is too dark */
 "Move to a well-lit area" = "İyi aydınlatılmış bir yere geçin";
-
+/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC veya FIN";
-
+/* Instructional text when there is no document in camera frame */
 "No document detected" = "Belge tespit edilmedi";
-
+/* Label of the passport option for document type selection */
+"Passport" = "Pasaport";
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Pasaport fotoğrafı başarıyla yüklendi";
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Kişisel kimlik numarası";
-
+/* Back button title for returning to the individual's perssonal infomation screen */
 "Personal Information" = "Kişisel Bilgiler";
-
+/* Section title for collection phone number */
 "Phone Number" = "Telefon Numarası";
-
+/* Back button title for returning to the phone verification page */
 "Phone Verification" = "Telefon doğrulama";
-
+/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Fotoğraf Kitaplığı";
-
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Lütfen pasaportunuzun bir fotoğrafını yükleyin";
+/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
 "Please upload images of the front and back of your %@" = "Lütfen %@’nizin ön ve arka yüzünün resimlerini yükleyin";
-
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Lütfen sürücü belgenizin ön ve arka yüzünün fotoğraflarını yükleyin";
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Lütfen kimlik belgenizin ön ve arka yüzlerinin fotoğraflarını yükleyin";
+/* Instructions for uploading images of identity document */
 "Please upload images of the front and back of your identity document" = "Lütfen kimlik belgenizin ön ve arka yüzünün resimlerini yükleyin";
-
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Sürücü belgenizi çerçevenin ortasına yerleştirin";
+/* Position your driver's license or government-issued photo ID in the center of the frame */
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Ehliyetinizi veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
-
+/* Position your driver's license or passport in the center of the frame */
 "Position your driver's license or passport in the center of the frame" = "Ehliyetinizi veya pasaportunuzu çerçevenin ortasına yerleştirin";
-
+/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Ehliyetinizi, pasaportunuzu veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
-
+/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "Yüzünüzü çerçevenin ortasına yerleştirin.";
-
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Kimliğinizi çerçevenin ortasına yerleştirin";
+/* Instructional text for scanning front of a identity document */
 "Position your identity document in the center of the frame" = "Kimlik belgenizi çerçevenin ortasına yerleştirin";
-
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Pasaportunuzu çerçevenin ortasına yerleştirin";
+/* Position your passport or government-issued photo ID in the center of the frame */
 "Position your passport or government-issued photo ID in the center of the frame" = "Pasaportunuzu veya devlet tarafından verilmiş fotoğraflı kimliğinizi çerçevenin ortasına yerleştirin";
-
+/* Button text displayed to the user to retake photo */
 "Retake Photos" = "Fotoğrafları Tekrar Çek";
-
+/* Back button title for returning to the document scan screen */
 "Scan" = "Tara";
-
+/* State when identity document has been successfully scanned */
 "Scanned" = "Tarandı";
-
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Seç";
-
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "Kimlik belgenizin arka yüzünü yükleyeceğiniz konumu seçin";
-
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Kimlik belgenizin ön yüzünü yükleyeceğiniz konumu seçin";
-
+/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
 "Select back %@ photo" = "%@’nin arka yüzünün fotoğrafını seçin";
-
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Sürücü belgesinin arka yüz fotoğrafını seç";
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Kimliğin arka yüz fotoğrafını seç";
+/* Accessibility label to select a photo of back of identity document */
 "Select back identity document photo" = "Kimlik belgesinin arka yüzünün fotoğrafını seçin";
-
+/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
 "Select front %@ photo" = "%@’nin ön yüzünün fotoğrafını seçin";
-
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Sürücü belgesinin ön yüz fotoğrafını seç";
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Kimliğin ön yüz fotoğrafını seç";
+/* Accessibility label to select a photo of front of identity document */
 "Select front identity document photo" = "Kimlik belgesinin ön yüzünün fotoğrafını seçin";
-
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Pasaport fotoğrafı seç";
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
 "Selfie" = "Özçekim";
-
+/* Title of selfie capture screen */
 "Selfie captures" = "Özçekim çekimleri";
-
+/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "Özçekim çekimleri tamamlandı";
-
+/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Fotoğraf Çek";
-
+/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "Kimlik belgenizin fotoğrafları kaydedilmedi. Ayrılmak istiyor musunuz?";
-
+/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "Kameraya erişilirken bir hata oluştu.";
-
+/* Button to attempt to re-scan identity document image */
 "Try Again" = "Tekrar Dene";
-
+/* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Parlamayı azaltmaya ve kimlik kartını görünür hale getirmeye çalışın";
-
+/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Bağlantı kurulamıyor.";
-
+/* Title for warning alert */
 "Unsaved changes" = "Kaydedilmemiş değişiklikler";
-
+/* Back button label for the identity document file upload screen */
 "Upload" = "Yükle";
-
+/* Button to upload a photo */
 "Upload a Photo" = "Fotoğraf Yükle";
-
+/* Title of document upload screen */
 "Upload your %@" = "%@’nizi yükleyin";
-
+/* Title of document upload screen */
 "Upload your photo ID" = "Fotoğraflı kimliğinizi yükleyin";
-
+/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "%@’nin arka yüzünün fotoğrafı yükleniyor";
-
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Sürücü belgesinin arka yüz fotoğrafı yükleniyor";
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Kimliğin arka yüz fotoğrafı yükleniyor";
+/* Accessibility label while photo of back of identity document is uploading */
 "Uploading back identity document photo" = "Kimlik belgesinin arka yüzünün fotoğrafı yükleniyor";
-
+/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
 "Uploading front %@ photo" = "%@’nin ön yüzünün fotoğrafı yükleniyor";
-
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Sürücü belgesinin ön yüz fotoğrafı yükleniyor";
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Kimliğin ön yüz fotoğrafı yükleniyor";
+/* Accessibility label while photo of front of identity document is uploading */
 "Uploading front identity document photo" = "Kimlik belgesinin ön yüzünün fotoğrafı yükleniyor";
-
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Pasaport fotoğrafı yükleniyor";
+/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Kimliğinizi doğrulayın";
-
+/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "Yüksek kaliteli bir fotoğraf yakalayamadık.";
-
+/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Kameranızı kullanmamız için izniniz gerekiyor. Lütfen uygulama ayarlarından kamera erişimine izin verin.";
-
+/* Back button title for returning to welcome screen of Identity verification */
 "Welcome" = "Hoş Geldiniz";
-
+/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "Tekrar deneyebilir veya cihazınızdan bir fotoğraf yükleyebilirsiniz.";
-
+/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "Özçekim görüntüleriniz kaydedilmedi. Çıkmak istiyor musunuz?";
-
+/* driver's license */
 "driver's license" = "ehliyet";
-
+/* id issued by government */
 "government-issued photo ID" = "devlet tarafından verilen fotoğraflı kimlik";
-
+/* passport */
 "passport" = "pasaport";

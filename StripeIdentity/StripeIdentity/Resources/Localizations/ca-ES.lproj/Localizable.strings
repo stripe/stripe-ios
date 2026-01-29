@@ -1,192 +1,276 @@
+/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "Es faran unes quantes fotos automàticament al següent pas per verificar que sou vosaltres";
-
+/* Title for accepted types of ids */
 "Accepted forms of ID include" = "Les formes d'identificació acceptades inclouen";
-
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "També podeu pujar manualment una foto del document d'identitat.";
-
+/* Opens the app's settings in the Settings app */
 "App Settings" = "Configuració de l'aplicació";
-
+/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
 "Back %@ photo successfully uploaded" = "La foto de la cara posterior de %@ s'ha carregat correctament";
-
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "La foto del revers del permís de conduir s'ha carregat correctament";
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "La foto del revers document d'identitat s'ha carregat correctament";
+/* Accessibility label when back identity document photo has successfully uploaded */
 "Back identity document photo successfully uploaded" = "La foto de la cara posterior del document d'identitat s'ha carregat correctament";
-
+/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
 "Back of %@" = "Cara posterior de %@";
-
+/* Description of back of driver's license image */
+"Back of driver's license" = "Revers del permís de conduir";
+/* Back of driver's license or government-issued photo ID */
 "Back of driver's license or government-issued photo ID" = "Revers del carnet de conduir o del document d'identitat amb foto emès pel govern";
-
+/* Back of driver's license or passport */
+"Back of driver's license or passport" = "Revers del carnet de conduir o del passaport";
+/* Back of driver's license, passport, or government-issued photo ID */
+"Back of driver's license, passport, or government-issued photo ID" = "Revers del carnet de conduir, del passaport o del document d'identitat amb foto emès pel govern";
+/* Description of back of identity card image */
+"Back of identity card" = "Revers del document d'identitat";
+/* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Dors del document d'identitat";
-
+/* Back of passport or government-issued photo ID */
+"Back of passport or government-issued photo ID" = "Revers del passaport o del document d'identitat amb foto emès pel govern";
+/* Title displayed when requesting camera permissions */
 "Camera permission" = "Permís de càmera";
-
+/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Càmera no disponible";
-
+/* Instructional text during selfie is being captured */
 "Capturing…" = "S'està capturant la imatge...";
-
+/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Selecciona fitxer";
-
+/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Consentiment";
-
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "No s'ha pogut capturar la imatge";
-
+/* Label for Date of birth field */
+"Date of Birth" = "Data de naixement";
+/* Label for Date of birth field */
+"Date of birth" = "Data de naixement";
+/* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "La data de naixement no és vàlida";
-
+/* Instructional text when environement is too bright
+   Instructional text when the document is too glarry
+   Instructional text when user needs remove anything blocking the document */
 "Details not visible" = "Els detalls no es veuen bé";
-
+/* Button that opens file upload screen */
+"File Upload" = "Carrega fitxers";
+/* Title of identity document file upload screen */
+"File upload" = "Càrrega de fitxer";
+/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
 "Flip your %@ over to the other side" = "Gira el %@";
-
+/* Flip your driver's license or government-issued photo ID over to the other side */
 "Flip your driver's license or government-issued photo ID over to the other side" = "Gireu el carnet de conduir o el document d'identitat amb foto emès pel govern cap a l'altre costat";
-
+/* Flip your driver's license or passport over to the other side */
+"Flip your driver's license or passport over to the other side" = "Gireu el carnet de conduir o el passaport cap a l'altre costat";
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Gireu el permís de conduir perquè se'n vegi l'altra cara";
+/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
+"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Gireu el carnet de conduir, el passaport o el document d'identitat amb foto emès pel govern cap a l'altre costat";
+/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Gireu el document d'identitat perquè se'n vegi l'altra cara";
-
+/* Flip your passport or government-issued photo ID over to the other side */
+"Flip your passport or government-issued photo ID over to the other side" = "Gireu el passaport o el document d'identitat amb foto emès pel govern cap a l'altre costat";
+/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "La foto de la cara frontal de %@ s'ha carregat correctament";
-
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "La foto de l'anvers del permís de conduir s'ha carregat correctament";
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "La foto de l'anvers del document d'identitat s'ha carregat correctament";
+/* Accessibility label when front identity document photo has successfully uploaded */
 "Front identity document photo successfully uploaded" = "La foto de la cara frontal del document d'identitat s'ha carregat correctament";
-
+/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
 "Front of %@" = "Cara frontal de %@";
-
+/* Description of front of driver's license image */
+"Front of driver's license" = "Anvers del permís de conduir";
+/* Front of driver's license or government-issued photo ID */
 "Front of driver's license or government-issued photo ID" = "Anvers del carnet de conduir o del document d'identitat amb foto emès pel govern";
-
+/* Front of driver's license or passport */
 "Front of driver's license or passport" = "Anvers del carnet de conduir o del passaport";
-
+/* Front of driver's license, passport, or government-issued photo ID */
 "Front of driver's license, passport, or government-issued photo ID" = "Anvers del carnet de conduir, del passaport o del document d'identitat amb foto emès pel govern";
-
+/* Description of front of identity card image */
+"Front of identity card" = "Anvers del document d'identitat";
+/* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Anvers del document d'identitat";
-
+/* Front of passport or government-issued photo ID */
 "Front of passport or government-issued photo ID" = "Anvers del passaport o del document d'identitat amb foto emès pel govern";
-
+/* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Prepareu-vos per escanejar la vostra identificació amb foto";
-
+/* Title for selfie warmup page */
 "Get ready to take a selfie" = "Prepareu-vos per fer-vos l'autofoto";
-
+/* Button to go back to the previous screen */
 "Go Back" = "Enrere";
-
+/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "S'està escanejant; espereu";
-
+/* Ready button text on warmup screen */
 "I'm ready" = "Estic a punt";
-
+/* Label for ID number section */
 "ID Number" = "Número d'identificació";
-
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Tipus d'identificació";
+/* Description of passport image */
+"Image of passport" = "Imatge del passaport";
+/* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "CPF particular";
-
+/* Instructional text when user align the edge with camera
+   Instructional text when user needs to rorate to document to align with camera */
 "Keep ID level" = "Col·loca bé el document d'identitat";
-
+/* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Últims 4 números de la Seguretat Social";
-
+/* Status while screen is loading */
 "Loading" = "S'està carregant";
-
-
+/* Instructional text when the document is too blurry */
+"Make sure all details are visible and focus" = "Assegureu-vos que tots els detalls siguin visibles";
+/* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Assegureu-vos que esteu en un espai ben il·luminat.";
-
+/* Instructional text when camera is too far from a document */
 "Move closer" = "Apropa'l";
-
+/* Instructional text when camera is too close to a document */
 "Move farther" = "Allunya'l";
-
+/* Instructional text when environement is too bright */
 "Move to a darker area" = "Mou-lo a un espai més fosc";
-
+/* Instructional text when environement is too dark */
 "Move to a well-lit area" = "Mou-te a un espai ben il·luminat";
-
+/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC o FIN";
-
+/* Instructional text when there is no document in camera frame */
 "No document detected" = "No s'ha detectat cap document";
-
+/* Label of the passport option for document type selection */
+"Passport" = "Passaport";
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "La foto del passaport s'ha carregat correctament";
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Número d'identificació personal";
-
+/* Back button title for returning to the individual's perssonal infomation screen */
 "Personal Information" = "Dades personals";
-
+/* Section title for collection phone number */
 "Phone Number" = "Número de telèfon";
-
+/* Back button title for returning to the phone verification page */
 "Phone Verification" = "Verificació del telèfon";
-
+/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Biblioteca de fotos";
-
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Carregueu una imatge del passaport";
+/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
 "Please upload images of the front and back of your %@" = "Si us plau, penja la foto de la cara frontal i de la cara posterior del teu %@";
-
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Carregueu les imatges de l'anvers i el revers del permís de conduir";
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Carregueu les imatges de l'anvers i el revers del document d'identitat";
+/* Instructions for uploading images of identity document */
 "Please upload images of the front and back of your identity document" = "Carregueu la foto de la cara frontal i de la cara posterior del vostre document d'identitat";
-
+/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
 "Position your %@ in the center of the frame" = "Col·loca el %@ al centre del marc";
-
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Col·loqueu el permís de conduir al centre del marc";
+/* Position your driver's license or government-issued photo ID in the center of the frame */
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Col·loqueu el carnet de conduir o el document d'identitat amb foto emès pel govern al centre del marc";
-
+/* Position your driver's license or passport in the center of the frame */
 "Position your driver's license or passport in the center of the frame" = "Col·loqueu el carnet de conduir o el passaport al centre del marc";
-
+/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Col·loqueu el carnet de conduir, el passaport o el document d'identitat amb foto emès pel govern al centre del marc";
-
+/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "Col·loqueu la cara al centre del marc.";
-
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Col·loqueu el document d'identitat al centre del marc";
+/* Instructional text for scanning front of a identity document */
 "Position your identity document in the center of the frame" = "Col·loqueu el vostre document d'identitat al centre del marc";
-
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Col·loqueu el passaport al centre del marc";
+/* Position your passport or government-issued photo ID in the center of the frame */
 "Position your passport or government-issued photo ID in the center of the frame" = "Col·loqueu el passaport o el document d'identitat amb foto emès pel govern al centre del marc";
-
+/* Button text displayed to the user to retake photo */
 "Retake Photos" = "Torna a fer les fotos";
-
+/* Back button title for returning to the document scan screen */
 "Scan" = "Escaneig";
-
+/* State when identity document has been successfully scanned */
 "Scanned" = "S'ha escanejat correctament";
-
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Selecciona";
-
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "Seleccioneu una ubicació des d'on carregar el revers del document d'identitat";
-
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Seleccioneu una ubicació des d'on carregar l'anvers del document d'identitat";
-
+/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
 "Select back %@ photo" = "Selecciona la foto de la cara posterior de %@";
-
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Seleccioneu la foto del revers del permís de conduir";
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Seleccioneu la foto del revers del document d'identitat";
+/* Accessibility label to select a photo of back of identity document */
 "Select back identity document photo" = "Selecciona la foto de la cara posterior del document d'identitat";
-
+/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
 "Select front %@ photo" = "Selecciona la foto de la cara frontal de %@";
-
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Seleccioneu la foto de l'anvers del permís de conduir";
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Seleccioneu la foto del document d'identitat";
+/* Accessibility label to select a photo of front of identity document */
 "Select front identity document photo" = "Selecciona la foto de la cara frontal del document d'identitat";
-
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Seleccioneu la foto del passaport";
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
 "Selfie" = "Autofoto";
-
+/* Title of selfie capture screen */
 "Selfie captures" = "Autofotos";
-
+/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "S'han completat les autofotos";
-
+/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Fes foto";
-
+/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "No s'han desat les imatges del document d'identitat. Voleu sortir?";
-
+/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "Hi ha hagut un error en accedir a la càmera.";
-
+/* Button to attempt to re-scan identity document image */
 "Try Again" = "Torna-ho a intentar";
-
+/* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Intenteu reduir l'enlluernament i feu que l'ID sigui visible.";
-
+/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "No s'ha pogut establir la connexió.";
-
+/* Title for warning alert */
 "Unsaved changes" = "Canvis no desats";
-
+/* Back button label for the identity document file upload screen */
 "Upload" = "Carrega";
-
+/* Button to upload a photo */
 "Upload a Photo" = "Carrega una foto";
-
+/* Title of document upload screen */
 "Upload your %@" = "Puja el teu %@";
-
+/* Title of document upload screen */
 "Upload your photo ID" = "Carregueu la vostra ID amb foto";
-
+/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "S'està carregant la foto de la cara posterior de %@";
-
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "S'està carregant la foto del revers del permís de conduir";
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "S'està carregant la foto del revers del document d'identitat";
+/* Accessibility label while photo of back of identity document is uploading */
 "Uploading back identity document photo" = "S'està carregant la foto de la cara posterior del document d'identitat";
-
+/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
 "Uploading front %@ photo" = "S'està carregant la foto de la cara frontal de %@";
-
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "S'està carregant la foto de l'anvers del permís de conduir";
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "S'està carregant la foto de l'anvers del document d'identitat";
+/* Accessibility label while photo of front of identity document is uploading */
 "Uploading front identity document photo" = "S'està carregant la foto de la cara frontal del document d'identitat";
-
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "S'està carregant la foto del passaport";
+/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verifica la teva identitat";
-
+/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "No hem pogut capturar una imatge d'alta qualitat.";
-
+/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Necessitem permís per utilitzar la càmera. Permeteu l'accés a la càmera a la configuració de l'aplicació.";
-
+/* Back button title for returning to welcome screen of Identity verification */
 "Welcome" = "Hola";
-
+/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "Podeu tornar-ho a provar o carregar una imatge des del vostre dispositiu.";
-
+/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "No s'han desat les autofotos. Voleu sortir?";
-
+/* driver's license */
 "driver's license" = "permís de conduir";
-
+/* id issued by government */
 "government-issued photo ID" = "identificació governamental amb foto";
-
+/* passport */
 "passport" = "passaport";

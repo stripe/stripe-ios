@@ -1,192 +1,276 @@
+/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "Järgmises etapis tehakse automaatselt mõned fotod, et kinnitada, et see olete teie";
-
+/* Title for accepted types of ids */
 "Accepted forms of ID include" = "Aktsepteeritud isikut tõendavad dokumendid hõlmavad järgmist";
-
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Samuti võite oma isikut tõendava dokumendi foto käsitsi üles laadida.";
-
+/* Opens the app's settings in the Settings app */
 "App Settings" = "Rakenduse sätted";
-
+/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
 "Back %@ photo successfully uploaded" = "%@ tagumine foto on edukalt üles laaditud.";
-
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Juhiloa tagakülje foto üleslaadimine õnnestus";
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "ID-kaardi tagakülje foto üleslaadimine õnnestus";
+/* Accessibility label when back identity document photo has successfully uploaded */
 "Back identity document photo successfully uploaded" = "Foto isikut tõendava dokumendi tagaküljest on edukalt üles laaditud";
-
+/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
 "Back of %@" = "%@ tagakülg";
-
+/* Description of back of driver's license image */
+"Back of driver's license" = "Juhiloa tagakülg";
+/* Back of driver's license or government-issued photo ID */
 "Back of driver's license or government-issued photo ID" = "Juhiloa või valitsuse väljastatud fotoga isikut tõendava dokumendi tagakülg";
-
+/* Back of driver's license or passport */
+"Back of driver's license or passport" = "Juhiloa või passi tagakülg";
+/* Back of driver's license, passport, or government-issued photo ID */
+"Back of driver's license, passport, or government-issued photo ID" = "Juhiloa, passi või valitsuse väljastatud fotoga isikut tõendava dokumendi tagakülg.";
+/* Description of back of identity card image */
+"Back of identity card" = "ID-kaardi tagakülg";
+/* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Isikut tõendava dokumendi tagakülg";
-
+/* Back of passport or government-issued photo ID */
+"Back of passport or government-issued photo ID" = "Passi või valitsuse väljastatud fotoga isikut tõendava dokumendi tagakülg";
+/* Title displayed when requesting camera permissions */
 "Camera permission" = "Kaamera luba";
-
+/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kaamera pole saadaval";
-
+/* Instructional text during selfie is being captured */
 "Capturing…" = "Pildistamine …";
-
+/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Vali fail";
-
+/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Nõusolek";
-
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Pilti ei saanud teha";
-
+/* Label for Date of birth field */
+"Date of Birth" = "Sünnikuupäev";
+/* Label for Date of birth field */
+"Date of birth" = "Sünnikuupäev";
+/* Message for invalid Date of birth field */
 "Date of birth does not look valid" = "Sünnikuupäev ei näi olevat õige";
-
+/* Instructional text when environement is too bright
+   Instructional text when the document is too glarry
+   Instructional text when user needs remove anything blocking the document */
 "Details not visible" = "Üksikasjad pole nähtaval";
-
+/* Button that opens file upload screen */
+"File Upload" = "Faili üleslaadimine";
+/* Title of identity document file upload screen */
+"File upload" = "Faili üleslaadimine";
+/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
 "Flip your %@ over to the other side" = "Pöörake oma %@ teisele poole";
-
+/* Flip your driver's license or government-issued photo ID over to the other side */
 "Flip your driver's license or government-issued photo ID over to the other side" = "Pöörake oma juhiloa või valitsuse väljastatud fotoga isikut tõendava dokumendi teine pool";
-
+/* Flip your driver's license or passport over to the other side */
+"Flip your driver's license or passport over to the other side" = "Pöörake oma juhiloa või passi teine pool";
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Pöörake juhiluba ümber";
+/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
+"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Pöörake oma juhiloa, passi või valitsuse väljastatud fotoga isikut tõendava dokumendi teine pool";
+/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Pöörake ID-kaart ümber";
-
+/* Flip your passport or government-issued photo ID over to the other side */
+"Flip your passport or government-issued photo ID over to the other side" = "Pöörake oma passi või valitsuse väljastatud fotoga isikut tõendava dokumendi teine pool";
+/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "%@ foto esiosa on edukalt üles laaditud";
-
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Juhiloa esikülje foto üleslaadimine õnnestus";
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "ID-kaardi esikülje foto üleslaadimine õnnestus";
+/* Accessibility label when front identity document photo has successfully uploaded */
 "Front identity document photo successfully uploaded" = "Isikut tõendava dokumendi foto esiküljest on edukalt üles laaditud";
-
+/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
 "Front of %@" = "%@ esikülg";
-
+/* Description of front of driver's license image */
+"Front of driver's license" = "Juhiloa esikülg";
+/* Front of driver's license or government-issued photo ID */
 "Front of driver's license or government-issued photo ID" = "Juhiloa või valitsuse väljastatud fotoga isikut tõendava dokumendi esikülg";
-
+/* Front of driver's license or passport */
 "Front of driver's license or passport" = "Juhiloa või passi esikülg";
-
+/* Front of driver's license, passport, or government-issued photo ID */
 "Front of driver's license, passport, or government-issued photo ID" = "Juhiloa, passi või valitsuse väljastatud fotoga isikut tõendava dokumendi esikülg";
-
+/* Description of front of identity card image */
+"Front of identity card" = "ID-kaardi esikülg";
+/* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Isikut tõendava dokumendi esikülg";
-
+/* Front of passport or government-issued photo ID */
 "Front of passport or government-issued photo ID" = "Passi või valitsuse väljastatud fotoga isikut tõendava dokumendi esikülg";
-
+/* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Valmistuge oma fotoga isikut tõendava dokumendi skannimiseks";
-
+/* Title for selfie warmup page */
 "Get ready to take a selfie" = "Valmistuge tegema selfit";
-
+/* Button to go back to the previous screen */
 "Go Back" = "Mine tagasi";
-
+/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Hoidke paigal, skannimine";
-
+/* Ready button text on warmup screen */
 "I'm ready" = "Olen valmis jätkama";
-
+/* Label for ID number section */
 "ID Number" = "Isikukood";
-
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Isikut tõendava dokumendi liik";
+/* Description of passport image */
+"Image of passport" = "Passi pilt";
+/* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "Eraisiku CPF";
-
+/* Instructional text when user align the edge with camera
+   Instructional text when user needs to rorate to document to align with camera */
 "Keep ID level" = "Hoidke isikut tõendavat dokumenti rõhtsalt";
-
+/* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Sotsiaalkindlustuse numbri viimased 4 numbrit";
-
+/* Status while screen is loading */
 "Loading" = "Laadimine";
-
-
+/* Instructional text when the document is too blurry */
+"Make sure all details are visible and focus" = "Veenduge, et kõik üksikasjad oleksid nähtavad ja teravad";
+/* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Veenduge, et olete hästi valgustatud kohas.";
-
+/* Instructional text when camera is too far from a document */
 "Move closer" = "Asetage lähemale";
-
+/* Instructional text when camera is too close to a document */
 "Move farther" = "Asetage kaugemale";
-
+/* Instructional text when environement is too bright */
 "Move to a darker area" = "Liikuge pimedamasse kohta";
-
+/* Instructional text when environement is too dark */
 "Move to a well-lit area" = "Liikuge hästi valgustatud kohta";
-
+/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
 "NRIC or FIN" = "NRIC või FIN";
-
+/* Instructional text when there is no document in camera frame */
 "No document detected" = "Dokumenti ei tuvastatud";
-
+/* Label of the passport option for document type selection */
+"Passport" = "Pass";
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Passi foto üleslaadimine õnnestus";
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Isikukood";
-
+/* Back button title for returning to the individual's perssonal infomation screen */
 "Personal Information" = "Isikuteave";
-
+/* Section title for collection phone number */
 "Phone Number" = "Telefoninumber";
-
+/* Back button title for returning to the phone verification page */
 "Phone Verification" = "Telefoni kinnitus";
-
+/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Fototeek";
-
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Laadige üles oma passi pilt";
+/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
 "Please upload images of the front and back of your %@" = "Palun laadige üles pildid oma %@ esi- ja tagaküljest";
-
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Laadige üles oma juhiloa esi- ja tagakülje pildid";
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Laadige üles oma ID-kaardi esi- ja tagakülje pildid";
+/* Instructions for uploading images of identity document */
 "Please upload images of the front and back of your identity document" = "Palun laadige üles pildid oma isikut tõendava dokumendi esi- ja tagaküljest.";
-
+/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
 "Position your %@ in the center of the frame" = "Asetage %@ kaadri keskele";
-
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Jälgige, et juhiluba oleks raami keskel";
+/* Position your driver's license or government-issued photo ID in the center of the frame */
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Asetage oma juhiluba või valitsuse väljastatud fotoga isikut tõendav dokument kaadri keskele";
-
+/* Position your driver's license or passport in the center of the frame */
 "Position your driver's license or passport in the center of the frame" = "Asetage oma juhiluba või pass kaadri keskele";
-
+/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Asetage oma juhiluba, pass või valitsuse väljastatud fotoga isikut tõendav dokument kaadri keskele";
-
+/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "Jälgige, et nägu oleks raami keskel.";
-
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Jälgige, et ID-kaart oleks raami keskel";
+/* Instructional text for scanning front of a identity document */
 "Position your identity document in the center of the frame" = "Paigutage isikut tõendava dokument raami keskele";
-
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Jälgige, et pass oleks raami keskel";
+/* Position your passport or government-issued photo ID in the center of the frame */
 "Position your passport or government-issued photo ID in the center of the frame" = "Asetage oma pass või valitsuse väljastatud fotoga isikut tõendav dokument raami keskele";
-
+/* Button text displayed to the user to retake photo */
 "Retake Photos" = "Tee fotod uuesti";
-
+/* Back button title for returning to the document scan screen */
 "Scan" = "Skannimine";
-
+/* State when identity document has been successfully scanned */
 "Scanned" = "Skannitud";
-
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Vali";
-
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "Valige asukoht, kust laadida üles oma isikut tõendava dokumendi tagakülg";
-
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Valige asukoht, kust laadida üles oma isikut tõendava dokumendi esikülg";
-
+/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
 "Select back %@ photo" = "Vali %@ tagakülje foto";
-
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Vali juhiloa tagakülje foto";
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Vali ID-kaardi tagakülje foto";
+/* Accessibility label to select a photo of back of identity document */
 "Select back identity document photo" = "Valige isikut tõendava dokumendi tagumine foto";
-
+/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
 "Select front %@ photo" = "Vali %@ esikülje foto";
-
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Vali juhiloa esikülje foto";
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Vali ID-kaardi esikülje foto";
+/* Accessibility label to select a photo of front of identity document */
 "Select front identity document photo" = "Valige isikut tõendava dokumendi esikülje foto";
-
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Vali passi foto";
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
 "Selfie" = "Selfi";
-
+/* Title of selfie capture screen */
 "Selfie captures" = "Selfi pildistamine";
-
+/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "Selfi on jäädvustatud";
-
+/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Pildista";
-
+/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "Teie isikut tõendava dokumendi pilte pole salvestatud. Kas soovite lahkuda?";
-
+/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "Kaamerale juurdepääsemisel esines tõrge.";
-
+/* Button to attempt to re-scan identity document image */
 "Try Again" = "Proovi uuesti";
-
+/* Instructional text when the document is too glarry */
 "Try reduce glare and make ID visible" = "Proovige vähendada läiget ja veenduge, et ID oleks nähtav";
-
+/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Ühendust ei saa luua.";
-
+/* Title for warning alert */
 "Unsaved changes" = "Salvestamata muudatused";
-
+/* Back button label for the identity document file upload screen */
 "Upload" = "Üleslaadimine";
-
+/* Button to upload a photo */
 "Upload a Photo" = "Laadi foto üles";
-
+/* Title of document upload screen */
 "Upload your %@" = "Laadige üles oma %@";
-
+/* Title of document upload screen */
 "Upload your photo ID" = "Laadige üles fotoga isikut tõendav dokument";
-
+/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "Laaditakse üles %@ tagumist fotot.";
-
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Juhiloa tagakülje foto üleslaadimine";
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "ID-kaardi tagakülje foto üleslaadimine";
+/* Accessibility label while photo of back of identity document is uploading */
 "Uploading back identity document photo" = "Laaditakse üles isikut tõendava dokumendi tagakülje fotot.";
-
+/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
 "Uploading front %@ photo" = "%@ esikülje foto üleslaadimine";
-
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Juhiloa esikülje foto üleslaadimine";
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "ID-kaardi esikülje foto üleslaadimine";
+/* Accessibility label while photo of front of identity document is uploading */
 "Uploading front identity document photo" = "Isikut tõendava dokumendi esikülje foto üleslaadimine";
-
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Passi foto üleslaadimine";
+/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Kinnitage oma isik";
-
+/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "Meil ei õnnestunud teha kõrge kvaliteediga pilti.";
-
+/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Vajame teie kaamera kasutamiseks luba. Andke rakenduse sätete kaudu juurdepääs kaamerale.";
-
+/* Back button title for returning to welcome screen of Identity verification */
 "Welcome" = "Tere tulemast";
-
+/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "Võite kas uuesti proovida või pildi oma seadmest üles laadida.";
-
+/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "Teie selfi pilte pole salvestatud. Kas soovite lahkuda?";
-
+/* driver's license */
 "driver's license" = "juhiluba";
-
+/* id issued by government */
 "government-issued photo ID" = "riigi poolt väljastatud fotoga isikut tõendav dokument";
-
+/* passport */
 "passport" = "pass";

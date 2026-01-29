@@ -22,6 +22,9 @@
 /* Back of driver's license or government-issued photo ID */
 "Back of driver's license or government-issued photo ID" = "Back of driver's license or government-issued photo ID";
 
+/* Instructional text when the user is expected to scan the back of their ID but the camera is seeing the front or a passport instead */
+"Back of ID not detected" = "Back of ID not detected";
+
 /* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Back of identity document";
 
@@ -34,6 +37,9 @@
 
 /* Instructional text for scanning selfies */
 "Capturing…" = "Capturing…";
+
+/* Instructional text when the document is not centered in the frame */
+"Center ID in view" = "Center ID in view";
 
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Choose File";
@@ -64,12 +70,6 @@
 /* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
-/* Instructional text when the user is expected to scan the back of their ID but the camera is seeing the front or a passport instead */
-"Back of ID not detected" = "Back of ID not detected";
-
-/* Instructional text when the user is expected to scan the front of their ID but the camera is seeing the back instead */
-"Front of ID not detected" = "Front of ID not detected";
-
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
 
@@ -87,6 +87,9 @@
 
 /* Front of driver's license, passport, or government-issued photo ID */
 "Front of driver's license, passport, or government-issued photo ID" = "Front of driver's license, passport, or government-issued photo ID";
+
+/* Instructional text when the user is expected to scan the front of their ID but the camera is seeing the back instead */
+"Front of ID not detected" = "Front of ID not detected";
 
 /* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Front of identity document";
@@ -115,8 +118,14 @@
 /* Label for ID number section */
 "ID Number" = "ID Number";
 
+/* Instructional text when the document is too blurry */
+"Image is blurry. Hold your phone steady and try again." = "Image is blurry. Hold your phone steady and try again.";
+
 /* Label for the ID field to collect individual CPF for Brazilian ID */
 "Individual CPF" = "Individual CPF";
+
+/* Instructional text when the scanned document appears not to be a valid ID document */
+"Invalid document" = "Invalid document";
 
 /* Instructional text when user align the edge with camera
    Instructional text when user needs to rorate to document to align with camera */
@@ -127,15 +136,6 @@
 
 /* Status while screen is loading */
 "Loading" = "Loading";
-
-/* Instructional text when the document is too blurry */
-"Image is blurry. Hold your phone steady and try again." = "Image is blurry. Hold your phone steady and try again.";
-
-/* Instructional text when the scanned document appears not to be a valid ID document */
-"Invalid document" = "Invalid document";
-
-/* Instructional text when the document is not centered in the frame */
-"Center ID in view" = "Center ID in view";
 
 /* Body for selfie warmup page */
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
