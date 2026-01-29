@@ -137,7 +137,6 @@ extension PaymentSheet {
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async -> PaymentSheetResult {
-        // Use handleNextAction to handle all statuses correctly
         return await withCheckedContinuation { continuation in
             paymentHandler.handleNextAction(
                 for: setupIntent,
