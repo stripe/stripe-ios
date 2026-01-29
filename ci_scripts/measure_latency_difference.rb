@@ -146,16 +146,37 @@ T_CRITICAL_VALUES = {
   1 => 12.706, 2 => 4.303, 3 => 3.182, 4 => 2.776, 5 => 2.571,
   6 => 2.447, 7 => 2.365, 8 => 2.306, 9 => 2.262, 10 => 2.228,
   11 => 2.201, 12 => 2.179, 13 => 2.160, 14 => 2.145, 15 => 2.131,
-  16 => 2.120, 17 => 2.110, 18 => 2.101, 19 => 2.093, 20 => 2.086,
-  25 => 2.060, 30 => 2.042
+  16 => 2.120, 17 => 2.110, 18 => 2.101,
+  
+  # 19..30 (step 1)
+  19 => 2.093, 20 => 2.086, 21 => 2.080, 22 => 2.074, 23 => 2.069,
+  24 => 2.064, 25 => 2.060, 26 => 2.056, 27 => 2.052, 28 => 2.048,
+  29 => 2.045, 30 => 2.042,
+
+  # 32..50 (step 2)
+  32 => 2.037, 34 => 2.032, 36 => 2.028, 38 => 2.024, 40 => 2.021,
+  42 => 2.018, 44 => 2.015, 46 => 2.013, 48 => 2.011, 50 => 2.009,
+
+  # 55..98 (step 5-ish + cap)
+  55 => 2.004, 60 => 2.000, 65 => 1.997, 70 => 1.994, 75 => 1.992,
+  80 => 1.990, 85 => 1.989, 90 => 1.987, 95 => 1.985, 98 => 1.984
 }.freeze
 
-# Gets t-critical value for 95% CI given degrees of freedom
+T_KEYS  = T_CRITICAL_VALUES.keys.sort.freeze
+MIN_KEY = T_KEYS.first
+MAX_KEY = T_KEYS.last
+
+# Return the two-sided 95% t critical value (t_{0.975, df}) from the lookup table.
+# For fractional df (e.g., Welch), conservatively buckets down to the nearest lower df key; clamps outside the table.
 def get_t_critical(df)
-  return T_CRITICAL_VALUES[df] if T_CRITICAL_VALUES.key?(df)
-  # For large samples, use normal approximation
-  df >= 30 ? 1.96 : T_CRITICAL_VALUES[30]
+  df = df.to_f
+  return T_CRITICAL_VALUES[MIN_KEY] if df <= MIN_KEY
+  return T_CRITICAL_VALUES[MAX_KEY] if df >= MAX_KEY
+
+  lower = T_KEYS.reverse_each.find { |k| k <= df }
+  T_CRITICAL_VALUES[lower]
 end
+
 
 # Calculates mean of an array
 def mean(array)
@@ -168,7 +189,8 @@ def standard_deviation(array, mean_val)
   Math.sqrt(variance)
 end
 
-# Computes paired statistics comparing new commit to base commit.
+# Computes independent samples statistics comparing new commit to base commit using Welch's t-test.
+# This treats base_values and new_values as two independent samples using Welch's t-test.
 #
 # Returns a hash with statistical measures:
 #   {
@@ -176,39 +198,56 @@ end
 #     abs_margin: 0.005,    # 95% CI margin in seconds (±)
 #     pct_mean: 8.3,        # Mean percentage difference ((new - base) / base * 100)
 #     pct_margin: 1.2,      # 95% CI margin in percentage points (±)
-#     n: 10,                # Number of paired observations
 #     significant: true     # Whether the difference is statistically significant (p < 0.05)
 #   }
 #
-# Returns nil if insufficient data (n < 2)
-def compute_paired_statistics(base_values, new_values)
-  # Compute paired differences
-  abs_diffs = base_values.zip(new_values).map { |base, new| new - base }
-  pct_diffs = base_values.zip(new_values).map { |base, new| (new - base) / base * 100.0 }
+def compute_independent_statistics(base_values, new_values)
+  # Calculate means
+  base_mean = mean(base_values)
+  new_mean = mean(new_values)
 
-  # Calculate statistics for absolute differences
-  n = base_values.length
-  abs_mean = mean(abs_diffs)
-  abs_sd = standard_deviation(abs_diffs, abs_mean)
-  abs_se = abs_sd / Math.sqrt(n)
-  abs_margin = get_t_critical(n - 1) * abs_se
+  # Calculate standard deviations
+  base_sd = standard_deviation(base_values, base_mean)
+  new_sd = standard_deviation(new_values, new_mean)
 
-  # Calculate statistics for percentage differences
-  pct_mean = mean(pct_diffs)
-  pct_sd = standard_deviation(pct_diffs, pct_mean)
-  pct_se = pct_sd / Math.sqrt(n)
-  pct_margin = get_t_critical(n - 1) * pct_se
+  # Sample sizes
+  n1 = base_values.length
+  n2 = new_values.length
+
+  # Calculate absolute difference
+  abs_mean = new_mean - base_mean
+
+  # Standard error for independent samples: SE = sqrt(s1²/n1 + s2²/n2)
+  abs_se = Math.sqrt((base_sd**2 / n1) + (new_sd**2 / n2))
+
+  # Welch-Satterthwaite degrees of freedom
+  # df = (s1²/n1 + s2²/n2)² / ((s1²/n1)²/(n1-1) + (s2²/n2)²/(n2-1))
+  numerator = (base_sd**2 / n1 + new_sd**2 / n2)**2
+  denominator = ((base_sd**2 / n1)**2 / (n1 - 1)) + ((new_sd**2 / n2)**2 / (n2 - 1))
+  df = numerator / denominator
+  tcrit = get_t_critical(df)
+
+  # Margin of error for absolute difference
+  abs_margin = tcrit * abs_se
+  abs_lo = abs_mean - abs_margin
+  abs_hi = abs_mean + abs_margin
+
+
+  # Calculate percentage difference by converting the *absolute CI endpoints* to percent-of-base.
+  pct_mean = abs_mean / base_mean * 100.0
+  pct_lo = abs_lo / base_mean * 100.0
+  pct_hi = abs_hi / base_mean * 100.0
+  pct_margin = (pct_hi - pct_mean).abs
 
   # Calculate statistical significance
-  # If the percentage difference (e.g. -10%) is greater than the margin of error, then the result is statistically significant (p < 0.05)
-  significant = pct_mean.abs > pct_margin
+  # If the difference is greater than the margin of error, the result is statistically significant (p < 0.05)
+  significant = abs_mean.abs > abs_margin
 
   {
     abs_mean: abs_mean,
     abs_margin: abs_margin,
     pct_mean: pct_mean,
     pct_margin: pct_margin,
-    n: n,
     significant: significant
   }
 end
@@ -223,7 +262,6 @@ end
 #       abs_margin: 0.005,  # The 95% CI margin in seconds (±)
 #       pct_mean: 8.3,      # The mean percentage difference ((new - base) / base * 100)
 #       pct_margin: 1.2,    # The 95% CI margin in percentage points (±)
-#       n: 10,              # Number of paired observations
 #       significant: true   # Whether the difference is statistically significant (p < 0.05)
 #     }
 #   }
@@ -244,11 +282,8 @@ def compute_statistical_report(all_results)
     base_values = base_tests[test_name]
     new_values = new_tests[test_name]
 
-    # Validate that we have the same number of measurements for paired comparison
-    raise "Test '#{test_name}' has mismatched iteration counts: base=#{base_values.length}, new=#{new_values.length}" unless base_values.length == new_values.length
-
-    # Compute stats for the given test
-    stats = compute_paired_statistics(base_values, new_values)
+    # Compute stats for the given test using independent samples t-test (Welch's)
+    stats = compute_independent_statistics(base_values, new_values)
     test_stats[test_name] = stats if stats
   end
 
@@ -416,10 +451,8 @@ if options[:iterations] >= 10
   merge_results(all_results[:new], run_latency_tests_for_commit(options[:commit], run_size))        # B
   merge_results(all_results[:base], run_latency_tests_for_commit(options[:base_commit], run_size))  # A
 else
-  # Use sequential approach for small iteration counts
-  puts "\nUsing sequential testing (#{options[:iterations]} iterations each)"
-  all_results[:base] = run_latency_tests_for_commit(options[:base_commit], options[:iterations])
-  all_results[:new] = run_latency_tests_for_commit(options[:commit], options[:iterations])
+  puts "Error: Iterations must be at least 10 (got #{options[:iterations]})"
+  exit 1
 end
 
 # all_results data structure:
