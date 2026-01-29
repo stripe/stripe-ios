@@ -228,16 +228,12 @@ extension IntentConfirmationChallengeViewController: WKScriptMessageHandler {
 @available(iOS 14.0, *)
 extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
-        guard let url = navigationAction.request.url else {
-            return .cancel
-        }
-
         // Open links (e.g., Privacy, Terms) in Safari instead of navigating within the webview
-        if navigationAction.navigationType == .linkActivated {
+        if navigationAction.navigationType == .linkActivated,
+           let url = navigationAction.request.url {
             await UIApplication.shared.open(url)
             return .cancel
         }
-
         return .allow
     }
 
