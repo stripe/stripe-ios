@@ -1,276 +1,191 @@
-/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "ระบบจะถ่ายภาพ 2-3 รายการโดยอัตโนมัติในขั้นตอนถัดไปเพื่อยืนยันว่าเป็นคุณจริงๆ";
-/* Title for accepted types of ids */
+
 "Accepted forms of ID include" = "รูปแบบเอกสารประจำตัวที่ยอมรับประกอบด้วย";
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+
 "Alternatively, you may manually upload a photo of your identity document." = "หรือคุณจะทำการอัปโหลดรูปภาพเอกสารประจำตัวด้วยตนเองก็ได้";
-/* Opens the app's settings in the Settings app */
+
 "App Settings" = "การตั้งค่าแอป";
-/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
+
 "Back %@ photo successfully uploaded" = "อัปโหลดรูปภาพ %@ ด้านหลังเรียบร้อย";
-/* Accessibility label when back driver's license photo has successfully uploaded */
-"Back driver's license photo successfully uploaded" = "อัปโหลดรูปภาพด้านหลังของใบอนุญาตขับขี่เรียบร้อยแล้ว";
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "อัปโหลดรูปภาพด้านหลังของบัตรประจำตัวเรียบร้อยแล้ว";
-/* Accessibility label when back identity document photo has successfully uploaded */
+
 "Back identity document photo successfully uploaded" = "อัปโหลดรูปภาพด้านหลังเอกสารประจำตัวเรียบร้อย";
-/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+
 "Back of %@" = "ด้านหลังของ %@";
-/* Description of back of driver's license image */
-"Back of driver's license" = "ด้านหลังของใบอนุญาตขับขี่";
-/* Back of driver's license or government-issued photo ID */
+
 "Back of driver's license or government-issued photo ID" = "ด้านหลังของใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
-/* Back of driver's license or passport */
-"Back of driver's license or passport" = "ด้านหลังของใบอนุญาตขับขี่หรือหนังสือเดินทาง";
-/* Back of driver's license, passport, or government-issued photo ID */
-"Back of driver's license, passport, or government-issued photo ID" = "ด้านหลังของใบอนุญาตขับขี่ หนังสือเดินทาง หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
-/* Description of back of identity card image */
-"Back of identity card" = "ด้านหลังของบัตรประจำตัว";
-/* Title of ID document scanning screen when scanning the back of an identity card */
+
 "Back of identity document" = "ด้านหลังของเอกสารประจำตัว";
-/* Back of passport or government-issued photo ID */
-"Back of passport or government-issued photo ID" = "ด้านหลังของหนังสือเดินทางหรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
-/* Title displayed when requesting camera permissions */
+
 "Camera permission" = "สิทธิ์สำหรับกล้องถ่ายรูป";
-/* Error title displayed to the user when the device's camera is not available */
+
 "Camera unavailable" = "กล้องไม่พร้อมใช้งาน";
-/* Instructional text during selfie is being captured */
+
 "Capturing…" = "กำลังจับภาพ...";
-/* When selected in an action sheet, opens the device's file system browser */
+
 "Choose File" = "เลือกไฟล์";
-/* Back button title for returning to consent screen of Identity verification */
+
 "Consent" = "คำยินยอม";
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+
 "Could not capture image" = "ไม่สามารถถ่ายภาพ";
-/* Label for Date of birth field */
-"Date of Birth" = "วันเกิด";
-/* Label for Date of birth field */
-"Date of birth" = "วันเกิด";
-/* Message for invalid Date of birth field */
+
 "Date of birth does not look valid" = "ดูเหมือนว่าวันเกิดไม่ถูกต้อง";
-/* Instructional text when environement is too bright
-   Instructional text when the document is too glarry
-   Instructional text when user needs remove anything blocking the document */
+
 "Details not visible" = "รายละเอียดไม่ชัดเจน";
-/* Button that opens file upload screen */
-"File Upload" = "อัปโหลดไฟล์";
-/* Title of identity document file upload screen */
-"File upload" = "อัปโหลดไฟล์";
-/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+
 "Flip your %@ over to the other side" = "พลิก %@ ของคุณเป็นอีกด้าน";
-/* Flip your driver's license or government-issued photo ID over to the other side */
+
 "Flip your driver's license or government-issued photo ID over to the other side" = "พลิกใบอนุญาตขับขี่หรือบัตรประจำตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลไปอีกด้านหนึ่ง";
-/* Flip your driver's license or passport over to the other side */
-"Flip your driver's license or passport over to the other side" = "พลิกใบอนุญาตขับขี่หรือหนังสือเดินทางไปยังอีกด้านหนึ่ง";
-/* Instructional text for scanning back of a driver's license */
-"Flip your driver's license over to the other side" = "พลิกไปยังอีกด้านของใบอนุญาตขับขี่";
-/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
-"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "พลิกใบอนุญาตขับขี่ หนังสือเดินทาง หรือบัตรประจำตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลไปอีกด้านหนึ่ง";
-/* Instructional text for scanning back of a identity card */
+
 "Flip your identity card over to the other side" = "พลิกไปยังอีกด้านของบัตรประจำตัว";
-/* Flip your passport or government-issued photo ID over to the other side */
-"Flip your passport or government-issued photo ID over to the other side" = "พลิกหนังสือเดินทางหรือบัตรประจำตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลไปอีกด้านหนึ่ง";
-/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+
 "Front %@ photo successfully uploaded" = "อัปโหลดรูปภาพ %@ ด้านหน้าเรียบร้อย";
-/* Accessibility label when front driver's license photo has successfully uploaded */
-"Front driver's license photo successfully uploaded" = "อัปโหลดรูปภาพด้านหน้าของใบอนุญาตขับขี่เรียบร้อยแล้ว";
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "อัปโหลดรูปภาพด้านหน้าของบัตรประจำตัวเรียบร้อยแล้ว";
-/* Accessibility label when front identity document photo has successfully uploaded */
+
 "Front identity document photo successfully uploaded" = "อัปโหลดรูปภาพด้านหน้าเอกสารประจำตัวเรียบร้อย";
-/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+
 "Front of %@" = "ด้านหน้าของ %@";
-/* Description of front of driver's license image */
-"Front of driver's license" = "ด้านหน้าของใบอนุญาตขับขี่";
-/* Front of driver's license or government-issued photo ID */
+
 "Front of driver's license or government-issued photo ID" = "ด้านหน้าของใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
-/* Front of driver's license or passport */
+
 "Front of driver's license or passport" = "ด้านหน้าของใบอนุญาตขับขี่หรือหนังสือเดินทาง";
-/* Front of driver's license, passport, or government-issued photo ID */
+
 "Front of driver's license, passport, or government-issued photo ID" = "ด้านหน้าของใบอนุญาตขับขี่ หนังสือเดินทาง หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
-/* Description of front of identity card image */
-"Front of identity card" = "ด้านหน้าของบัตรประจำตัว";
-/* Title of ID document scanning screen when scanning the front of an identity card */
+
 "Front of identity document" = "ด้านหน้าของเอกสารประจำตัว";
-/* Front of passport or government-issued photo ID */
+
 "Front of passport or government-issued photo ID" = "ด้านหน้าของหนังสือเดินทางหรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
-/* Title for document front warmup page */
+
 "Get ready to scan your photo ID" = "เตรียมพร้อมสแกนเอกสารประจำตัวที่มีรูปถ่าย";
-/* Title for selfie warmup page */
+
 "Get ready to take a selfie" = "เตรียมตัวถ่ายภาพเซลฟี";
-/* Button to go back to the previous screen */
+
 "Go Back" = "ย้อนกลับ";
-/* Instructional text when camera is focusing on a document while scanning it */
+
 "Hold still, scanning" = "ถือไว้ให้นิ่ง ระบบกำลังสแกน";
-/* Ready button text on warmup screen */
+
 "I'm ready" = "ฉันพร้อมแล้ว";
-/* Label for ID number section */
+
 "ID Number" = "หมายเลขประจำตัวประชาชน";
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
-"ID Type" = "ประเภทบัตรประจำตัว";
-/* Description of passport image */
-"Image of passport" = "รูปภาพหนังสือเดินทาง";
-/* Label for the ID field to collect individual CPF for Brazilian ID */
+
 "Individual CPF" = "CPF ส่วนบุคคล";
-/* Instructional text when user align the edge with camera
-   Instructional text when user needs to rorate to document to align with camera */
+
 "Keep ID level" = "วางเอกสารให้อยู่ในมุมที่พอดี";
-/* Label for the ID field to collect last 4 of social security number for US ID */
+
 "Last 4 of Social Security number" = "ตัวเลข 4 หลักสุดท้ายของหมายเลขประกันสังคม";
-/* Status while screen is loading */
+
 "Loading" = "กำลังโหลด";
-/* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "ตรวจสอบว่ารายละเอียดทั้งหมดสามารถมองเห็นได้และอยู่ในระยะโฟกัส";
-/* Body for selfie warmup page */
+
 "Make sure you're in a well lit space." = "ตรวจสอบว่าคุณอยู่ในสภาพแวดล้อมที่มีแสงสว่างเพียงพอ";
-/* Instructional text when camera is too far from a document */
+
 "Move closer" = "เลื่อนเข้ามา";
-/* Instructional text when camera is too close to a document */
+
 "Move farther" = "เลื่อนออกไป";
-/* Instructional text when environement is too bright */
+
 "Move to a darker area" = "ย้ายไปพื้นที่ที่มีแสงสว่างน้อยลง";
-/* Instructional text when environement is too dark */
+
 "Move to a well-lit area" = "ย้ายไปพื้นที่ที่มีแสงสว่างเพียงพอ";
-/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
+
 "NRIC or FIN" = "NRIC หรือ FIN";
-/* Instructional text when there is no document in camera frame */
+
 "No document detected" = "ตรวจไม่พบเอกสาร";
-/* Label of the passport option for document type selection */
-"Passport" = "หนังสือเดินทาง";
-/* Accessibility label when passport photo has successfully uploaded */
-"Passport photo successfully uploaded" = "อัปโหลดรูปภาพหนังสือเดินทางเรียบร้อยแล้ว";
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+
 "Personal ID number" = "หมายเลขประจำตัวประชาชน";
-/* Back button title for returning to the individual's perssonal infomation screen */
+
 "Personal Information" = "ข้อมูลส่วนตัว";
-/* Section title for collection phone number */
+
 "Phone Number" = "หมายเลขโทรศัพท์";
-/* Back button title for returning to the phone verification page */
+
 "Phone Verification" = "การยืนยันหมายเลขโทรศัพท์";
-/* When selected in an action sheet, opens the device's photo library */
+
 "Photo Library" = "คลังภาพ";
-/* Instructions for uploading images of passport */
-"Please upload an image of your passport" = "โปรดอัปโหลดรูปภาพของหนังสือเดินทาง";
-/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+
 "Please upload images of the front and back of your %@" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของ %@";
-/* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของใบอนุญาตขับขี่";
-/* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของบัตรประจำตัว";
-/* Instructions for uploading images of identity document */
+
 "Please upload images of the front and back of your identity document" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของเอกสารประจำตัวของคุณ";
-/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+
 "Position your %@ in the center of the frame" = "จัดตำแหน่ง %@ ให้อยู่กลางเฟรม";
-/* Instructional text for scanning front of a driver's license */
-"Position your driver's license in the center of the frame" = "จัดตำแหน่งใบอนุญาตขับขี่ให้อยู่กลางเฟรม";
-/* Position your driver's license or government-issued photo ID in the center of the frame */
+
 "Position your driver's license or government-issued photo ID in the center of the frame" = "จัดตำแหน่งใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
-/* Position your driver's license or passport in the center of the frame */
+
 "Position your driver's license or passport in the center of the frame" = "จัดตําแหน่งใบอนุญาตขับขี่หรือหนังสือเดินทางให้อยู่กลางเฟรม";
-/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
+
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "จัดตําแหน่งใบอนุญาตขับขี่ หนังสือเดินทาง หรือ บัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
-/* Instructional text for capturing selfie */
+
 "Position your face in the center of the frame." = "จัดตำแหน่งใบหน้าให้อยู่กลางเฟรม";
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "จัดตำแหน่งบัตรประจำตัวให้อยู่กลางเฟรม";
-/* Instructional text for scanning front of a identity document */
+
 "Position your identity document in the center of the frame" = "จัดตำแหน่งเอกสารประจำตัวของคุณให้อยู่กลางเฟรม";
-/* Instructional text for scanning a passport */
-"Position your passport in the center of the frame" = "จัดตำแหน่งหนังสือเดินทางให้อยู่กลางเฟรม";
-/* Position your passport or government-issued photo ID in the center of the frame */
+
 "Position your passport or government-issued photo ID in the center of the frame" = "จัดตําแหน่งหนังสือเดินทางหรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาลให้อยู่กลางเฟรม";
-/* Button text displayed to the user to retake photo */
+
 "Retake Photos" = "ถ่ายภาพอีกครั้ง";
-/* Back button title for returning to the document scan screen */
+
 "Scan" = "สแกน";
-/* State when identity document has been successfully scanned */
+
 "Scanned" = "สแกนแล้ว";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
 "Select" = "เลือก";
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
+
 "Select a location to upload the back of your identity document from" = "เลือกตำแหน่งที่จะทำการอัปโหลดรูปภาพด้านหลังของเอกสารประจำตัว";
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
+
 "Select a location to upload the front of your identity document from" = "เลือกตำแหน่งที่จะทำการอัปโหลดรูปภาพด้านหน้าของเอกสารประจำตัว";
-/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+
 "Select back %@ photo" = "เลือกรูปภาพ %@ ด้านหลัง";
-/* Accessibility label to select a photo of back of driver's license */
-"Select back driver's license photo" = "เลือกรูปภาพด้านหลังของใบอนุญาตขับขี่";
-/* Accessibility label to select a photo of back of identity card */
-"Select back identity card photo" = "เลือกรูปภาพด้านหลังของบัตรประจำตัว";
-/* Accessibility label to select a photo of back of identity document */
+
 "Select back identity document photo" = "เลือกรูปภาพด้านหลังของเอกสารประจำตัว";
-/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+
 "Select front %@ photo" = "เลือกรูปภาพ %@ ด้านหน้า";
-/* Accessibility label to select a photo of front of driver's license */
-"Select front driver's license photo" = "เลือกรูปภาพด้านหน้าของใบอนุญาตขับขี่";
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "เลือกรูปภาพด้านหน้าของบัตรประจำตัว";
-/* Accessibility label to select a photo of front of identity document */
+
 "Select front identity document photo" = "เลือกรูปภาพด้านหน้าของเอกสารประจำตัว";
-/* Accessibility label to select a photo of passport */
-"Select passport photo" = "เลือกรูปภาพหนังสือเดินทาง";
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
+
 "Selfie" = "เซลฟี";
-/* Title of selfie capture screen */
+
 "Selfie captures" = "ถ่ายเซลฟี";
-/* Instructional text when selfie is captured */
+
 "Selfie captures are complete" = "ถ่ายเซลฟีเรียบร้อยแล้ว";
-/* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "ถ่ายภาพ";
-/* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "ระบบยังไม่ได้บันทึกรูปภาพของเอกสารพิสูจน์ตัวตน คุณต้องการออกจากส่วนนี้ไหม";
-/* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "เกิดข้อผิดพลาดในการเข้าถึงกล้องถ่ายรูป";
-/* Button to attempt to re-scan identity document image */
+
 "Try Again" = "ลองอีกครั้ง";
-/* Instructional text when the document is too glarry */
+
 "Try reduce glare and make ID visible" = "ลองลดแสงสะท้อนในรูปภาพและตรวจสอบว่ามองเห็นเอกสารประจำตัวครบทุกส่วน";
-/* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "เชื่อมต่อไม่ได้";
-/* Title for warning alert */
+
 "Unsaved changes" = "การเปลี่ยนแปลงที่ไม่ได้บันทึก";
-/* Back button label for the identity document file upload screen */
+
 "Upload" = "อัปโหลด";
-/* Button to upload a photo */
+
 "Upload a Photo" = "อัปโหลดรูปภาพ";
-/* Title of document upload screen */
+
 "Upload your %@" = "อัปโหลด %@ ของคุณ";
-/* Title of document upload screen */
+
 "Upload your photo ID" = "อัปโหลดบัตรประจำตัวของคุณ";
-/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading back %@ photo" = "กำลังอัปโหลดรูปภาพ %@ ด้านหลัง";
-/* Accessibility label while photo of back of driver's license is uploading */
-"Uploading back driver's license photo" = "กำลังอัปโหลดรูปภาพด้านหลังของใบอนุญาตขับขี่";
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "กำลังอัปโหลดรูปภาพด้านหลังของบัตรประจำตัว";
-/* Accessibility label while photo of back of identity document is uploading */
+
 "Uploading back identity document photo" = "กำลังอัปโหลดรูปภาพเอกสารประจำตัวด้านหลัง";
-/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading front %@ photo" = "กำลังอัปโหลดรูปภาพด้านหน้า %@";
-/* Accessibility label while photo of front of driver's license is uploading */
-"Uploading front driver's license photo" = "กำลังอัปโหลดรูปภาพด้านหน้าของใบอนุญาตขับขี่";
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "กำลังอัปโหลดรูปภาพด้านหน้าของบัตรประจำตัว";
-/* Accessibility label while photo of front of identity document is uploading */
+
 "Uploading front identity document photo" = "กำลังอัปโหลดรูปภาพเอกสารประจำตัวด้านหน้า";
-/* Accessibility label while photo of passport is uploading */
-"Uploading passport photo" = "อัปโหลดรูปภาพหนังสือเดินทาง";
-/* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "ยืนยันตัวตนของคุณ";
-/* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "ไม่สามารถถ่ายรูปคุณภาพสูงได้";
-/* Text displayed when requesting camera permissions */
+
 "We need permission to use your camera. Please allow camera access in app settings." = "เราต้องการสิทธิ์เข้าถึงกล้องถ่ายรูปของคุณ โปรดให้สิทธิ์ดังกล่าวในการตั้งค่าแอป";
-/* Back button title for returning to welcome screen of Identity verification */
+
 "Welcome" = "ยินดีต้อนรับ";
-/* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "โปรดลองอีกครั้งหรืออัปโหลดรูปภาพจากอุปกรณ์";
-/* Text for message of warning alert when selfie is not yet saved */
+
 "Your selfie images have not been saved. Do you want to leave?" = "ระบบยังไม่ได้บันทึกภาพเซลฟี คุณต้องการออกจากส่วนนี้ไหม";
-/* driver's license */
+
 "driver's license" = "ใบอนุญาตขับขี่";
-/* id issued by government */
+
 "government-issued photo ID" = "บัตรประจำตัวที่มีรูปถ่ายที่รัฐบาลออกให้";
-/* passport */
+
 "passport" = "หนังสือเดินทาง";

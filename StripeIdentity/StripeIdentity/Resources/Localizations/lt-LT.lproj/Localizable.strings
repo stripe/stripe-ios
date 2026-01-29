@@ -1,276 +1,191 @@
-/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "Sekančiame žingsnyje, siekiant patvirtinti jūsų tapatybę, bus padarytos kelios jūsų nuotraukos";
-/* Title for accepted types of ids */
+
 "Accepted forms of ID include" = "Priimtos asmens tapatybės dokumento formos apima";
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+
 "Alternatively, you may manually upload a photo of your identity document." = "Arba galite patys įkelti tapatybės dokumento nuotrauką.";
-/* Opens the app's settings in the Settings app */
+
 "App Settings" = "Programos nustatymai";
-/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
+
 "Back %@ photo successfully uploaded" = "%@ galinės dalies nuotrauka sėkmingai įkelta";
-/* Accessibility label when back driver's license photo has successfully uploaded */
-"Back driver's license photo successfully uploaded" = "Sėkmingai įkelta vairuotojo pažymėjimo galinės pusės nuotrauka";
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "Sėkmingai įkelta asmens tapatybės kortelės galinės pusės nuotrauka";
-/* Accessibility label when back identity document photo has successfully uploaded */
+
 "Back identity document photo successfully uploaded" = "Asmens dokumento galinės dalies nuotrauka sėkmingai įkelta";
-/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+
 "Back of %@" = "%@ galinė dalis";
-/* Description of back of driver's license image */
-"Back of driver's license" = "Vairuotojo pažymėjimo galinė pusė";
-/* Back of driver's license or government-issued photo ID */
+
 "Back of driver's license or government-issued photo ID" = "Vairuotojo pažymėjimo arba valstybės išduoto asmens tapatybės dokumento su nuotrauka galinė dalis";
-/* Back of driver's license or passport */
-"Back of driver's license or passport" = "Vairuotojo pažymėjimo arba paso galinė dalis";
-/* Back of driver's license, passport, or government-issued photo ID */
-"Back of driver's license, passport, or government-issued photo ID" = "Vairuotojo pažymėjimo, paso arba valstybės išduoto asmens tapatybės dokumento su nuotrauka galinė dalis";
-/* Description of back of identity card image */
-"Back of identity card" = "Asmens tapatybės kortelės galinė pusė";
-/* Title of ID document scanning screen when scanning the back of an identity card */
+
 "Back of identity document" = "Tapatybės dokumento galinė pusė";
-/* Back of passport or government-issued photo ID */
-"Back of passport or government-issued photo ID" = "Paso arba valstybės išduoto asmens tapatybės dokumento su nuotrauka galinė dalis";
-/* Title displayed when requesting camera permissions */
+
 "Camera permission" = "Fotoaparato leidimas";
-/* Error title displayed to the user when the device's camera is not available */
+
 "Camera unavailable" = "Fotoaparatas nepasiekiamas";
-/* Instructional text during selfie is being captured */
+
 "Capturing…" = "Fiksuojama...";
-/* When selected in an action sheet, opens the device's file system browser */
+
 "Choose File" = "Pasirinkite failą";
-/* Back button title for returning to consent screen of Identity verification */
+
 "Consent" = "Sutikti";
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+
 "Could not capture image" = "Nepavyko užfiksuoti vaizdo";
-/* Label for Date of birth field */
-"Date of Birth" = "Gimimo data";
-/* Label for Date of birth field */
-"Date of birth" = "Gimimo data";
-/* Message for invalid Date of birth field */
+
 "Date of birth does not look valid" = "Gimimo data neatrodo tinkama";
-/* Instructional text when environement is too bright
-   Instructional text when the document is too glarry
-   Instructional text when user needs remove anything blocking the document */
+
 "Details not visible" = "Nematyti detalių";
-/* Button that opens file upload screen */
-"File Upload" = "Failo įkėlimas";
-/* Title of identity document file upload screen */
-"File upload" = "Failo įkėlimas";
-/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+
 "Flip your %@ over to the other side" = "Apverskite %@ į kitą pusę";
-/* Flip your driver's license or government-issued photo ID over to the other side */
+
 "Flip your driver's license or government-issued photo ID over to the other side" = "Apverskite vairuotojo pažymėjimą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka į kitą pusę.";
-/* Flip your driver's license or passport over to the other side */
-"Flip your driver's license or passport over to the other side" = "Apverskite vairuotojo pažymėjimą arba pasą į kitą pusę";
-/* Instructional text for scanning back of a driver's license */
-"Flip your driver's license over to the other side" = "Apverskite vairuotojo pažymėjimą kita puse";
-/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
-"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Apverskite vairuotojo pažymėjimą, pasą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka į kitą pusę";
-/* Instructional text for scanning back of a identity card */
+
 "Flip your identity card over to the other side" = "Apverskite asmens tapatybės kortelę kita puse";
-/* Flip your passport or government-issued photo ID over to the other side */
-"Flip your passport or government-issued photo ID over to the other side" = "Apverskite pasą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka į kitą pusę";
-/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+
 "Front %@ photo successfully uploaded" = "%@ priekinės dalies nuotrauka sėkmingai įkelta";
-/* Accessibility label when front driver's license photo has successfully uploaded */
-"Front driver's license photo successfully uploaded" = "Sėkmingai įkelta vairuotojo pažymėjimo priekinės pusės nuotrauka";
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "Sėkmingai įkelta asmens tapatybės kortelės priekinės pusės nuotrauka";
-/* Accessibility label when front identity document photo has successfully uploaded */
+
 "Front identity document photo successfully uploaded" = "Asmens dokumento priekinės dalies nuotrauka sėkmingai įkelta";
-/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+
 "Front of %@" = "%@ priekinė dalis";
-/* Description of front of driver's license image */
-"Front of driver's license" = "Vairuotojo pažymėjimo priekinė pusė";
-/* Front of driver's license or government-issued photo ID */
+
 "Front of driver's license or government-issued photo ID" = "Vairuotojo pažymėjimo arba valstybės išduoto asmens tapatybės dokumento su nuotrauka priekinė dalis";
-/* Front of driver's license or passport */
+
 "Front of driver's license or passport" = "Vairuotojo pažymėjimo arba paso priekinė dalis";
-/* Front of driver's license, passport, or government-issued photo ID */
+
 "Front of driver's license, passport, or government-issued photo ID" = "Vairuotojo pažymėjimo, paso arba valstybės išduoto asmens tapatybės dokumento su nuotrauka priekinė dalis";
-/* Description of front of identity card image */
-"Front of identity card" = "Asmens tapatybės kortelės priekinė pusė";
-/* Title of ID document scanning screen when scanning the front of an identity card */
+
 "Front of identity document" = "Tapatybės dokumento priekinė pusė";
-/* Front of passport or government-issued photo ID */
+
 "Front of passport or government-issued photo ID" = "Paso arba valstybės išduoto asmens tapatybės dokumento su nuotrauka priekinė dalis";
-/* Title for document front warmup page */
+
 "Get ready to scan your photo ID" = "Pasiruoškite nuskaityti savo asmens tapatybės dokumento nuotrauką";
-/* Title for selfie warmup page */
+
 "Get ready to take a selfie" = "Pasiruoškite nusifotografuoti";
-/* Button to go back to the previous screen */
+
 "Go Back" = "Atgal";
-/* Instructional text when camera is focusing on a document while scanning it */
+
 "Hold still, scanning" = "Išlaikyti nejudinant, nuskaitoma";
-/* Ready button text on warmup screen */
+
 "I'm ready" = "Esu pasiruošęs";
-/* Label for ID number section */
+
 "ID Number" = "Identifikacinis numeris";
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
-"ID Type" = "Tapatybės dokumento tipas";
-/* Description of passport image */
-"Image of passport" = "Paso vaizdas";
-/* Label for the ID field to collect individual CPF for Brazilian ID */
+
 "Individual CPF" = "Asmens CPF";
-/* Instructional text when user align the edge with camera
-   Instructional text when user needs to rorate to document to align with camera */
+
 "Keep ID level" = "Sulygiuokite tapatybės dokumentą";
-/* Label for the ID field to collect last 4 of social security number for US ID */
+
 "Last 4 of Social Security number" = "Paskutiniai 4 socialinio draudimo numerio skaitmenys";
-/* Status while screen is loading */
+
 "Loading" = "Įkeliama";
-/* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "Įsitikinkite, kad visos detalės yra matomos ir sufokusuotos";
-/* Body for selfie warmup page */
+
 "Make sure you're in a well lit space." = "Įsitikinkite, kad esate gerai apšviestoje erdvėje.";
-/* Instructional text when camera is too far from a document */
+
 "Move closer" = "Pastumkite arčiau";
-/* Instructional text when camera is too close to a document */
+
 "Move farther" = "Patraukite toliau";
-/* Instructional text when environement is too bright */
+
 "Move to a darker area" = "Pereikite į tamsesnę vietą";
-/* Instructional text when environement is too dark */
+
 "Move to a well-lit area" = "Padėkite gerai apšviestoje vietoje";
-/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
+
 "NRIC or FIN" = "NRIC arba FIN";
-/* Instructional text when there is no document in camera frame */
+
 "No document detected" = "Neaptiktas joks dokumentas";
-/* Label of the passport option for document type selection */
-"Passport" = "Pasas";
-/* Accessibility label when passport photo has successfully uploaded */
-"Passport photo successfully uploaded" = "Sėkmingai įkelta paso nuotrauka";
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+
 "Personal ID number" = "Asmens kodas";
-/* Back button title for returning to the individual's perssonal infomation screen */
+
 "Personal Information" = "Asmeninė informacija";
-/* Section title for collection phone number */
+
 "Phone Number" = "Telefono numeris";
-/* Back button title for returning to the phone verification page */
+
 "Phone Verification" = "Telefono patvirtinimas";
-/* When selected in an action sheet, opens the device's photo library */
+
 "Photo Library" = "Nuotraukų biblioteka";
-/* Instructions for uploading images of passport */
-"Please upload an image of your passport" = "Įkelkite paso vaizdą";
-/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+
 "Please upload images of the front and back of your %@" = "Įkelkite %@ priekinės ir galinės dalies nuotraukas";
-/* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "Įkelkite vairuotojo pažymėjimo priekinės ir galinės pusės vaizdus";
-/* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "Įkelkite asmens tapatybės kortelės priekinės ir galinės pusės vaizdus";
-/* Instructions for uploading images of identity document */
+
 "Please upload images of the front and back of your identity document" = "Įkelkite savo asmens tapatybės dokumento priekinės ir galinės pusės nuotraukas";
-/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+
 "Position your %@ in the center of the frame" = "Padėkite %@ rėmelio centre";
-/* Instructional text for scanning front of a driver's license */
-"Position your driver's license in the center of the frame" = "Vairuotojo pažymėjimas turi būti rėmelio centre";
-/* Position your driver's license or government-issued photo ID in the center of the frame */
+
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Padėkite vairuotojo pažymėjimą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka rėmelio centre";
-/* Position your driver's license or passport in the center of the frame */
+
 "Position your driver's license or passport in the center of the frame" = "Padėkite vairuotojo pažymėjimą arba pasą rėmo centre";
-/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
+
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Padėkite vairuotojo pažymėjimą, pasą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka rėmelio centre";
-/* Instructional text for capturing selfie */
+
 "Position your face in the center of the frame." = "Veidas turi būti rėmelio centre.";
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "Asmens tapatybės kortelė turi būti rėmelio centre";
-/* Instructional text for scanning front of a identity document */
+
 "Position your identity document in the center of the frame" = "Padėkite savo tapatybės dokumentą rėmelio centre";
-/* Instructional text for scanning a passport */
-"Position your passport in the center of the frame" = "Pasas turi būti rėmelio centre";
-/* Position your passport or government-issued photo ID in the center of the frame */
+
 "Position your passport or government-issued photo ID in the center of the frame" = "Padėkite pasą arba valstybės išduotą asmens tapatybės dokumentą su nuotrauka rėmelio centre";
-/* Button text displayed to the user to retake photo */
+
 "Retake Photos" = "Perfotografuoti";
-/* Back button title for returning to the document scan screen */
+
 "Scan" = "Nuskaityti";
-/* State when identity document has been successfully scanned */
+
 "Scanned" = "Nuskaityta";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
 "Select" = "Pasirinkti";
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
+
 "Select a location to upload the back of your identity document from" = "Pasirinkite vietą, iš kur įkelsite asmens tapatybės dokumento galinės pusės vaizdą";
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
+
 "Select a location to upload the front of your identity document from" = "Pasirinkite vietą, iš kur įkelsite asmens tapatybės dokumento priekinės pusės vaizdą";
-/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+
 "Select back %@ photo" = "Pasirinkti %@ galinės dalies nuotrauką";
-/* Accessibility label to select a photo of back of driver's license */
-"Select back driver's license photo" = "Pasirinkite vairuotojo pažymėjimo galinės pusės nuotrauką";
-/* Accessibility label to select a photo of back of identity card */
-"Select back identity card photo" = "Pasirinkite asmens tapatybės kortelės galinės pusės nuotrauką";
-/* Accessibility label to select a photo of back of identity document */
+
 "Select back identity document photo" = "Pasirinkti asmens dokumento galinės dalies nuotrauką";
-/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+
 "Select front %@ photo" = "Pasirinkti %@ priekinės dalies nuotrauką";
-/* Accessibility label to select a photo of front of driver's license */
-"Select front driver's license photo" = "Pasirinkite vairuotojo pažymėjimo priekinės pusės nuotrauką";
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "Pasirinkite asmens tapatybės kortelės priekinės pusės nuotrauką";
-/* Accessibility label to select a photo of front of identity document */
+
 "Select front identity document photo" = "Pasirinkti asmens dokumento priekinės dalies nuotrauką";
-/* Accessibility label to select a photo of passport */
-"Select passport photo" = "Pasirinkite paso nuotrauką";
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
+
 "Selfie" = "Asmenukė";
-/* Title of selfie capture screen */
+
 "Selfie captures" = "Asmenukių įrašai";
-/* Instructional text when selfie is captured */
+
 "Selfie captures are complete" = "Baigti asmenukių įrašai";
-/* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Fotografuoti";
-/* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Jūsų asmens tapatybės dokumento vaizdai neįrašyti. Ar norite išeiti?";
-/* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Bandant pasiekti fotoaparatą įvyko klaida.";
-/* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Bandyti dar kartą";
-/* Instructional text when the document is too glarry */
+
 "Try reduce glare and make ID visible" = "Pabandykite sumažinti atsispindėjimą ir padarykite tapatybės dokumentą matomą";
-/* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Nepavyko prisijungti.";
-/* Title for warning alert */
+
 "Unsaved changes" = "Neįrašyti keitimai";
-/* Back button label for the identity document file upload screen */
+
 "Upload" = "Įkelti";
-/* Button to upload a photo */
+
 "Upload a Photo" = "Įkelti nuotrauką";
-/* Title of document upload screen */
+
 "Upload your %@" = "Įkelti savo %@";
-/* Title of document upload screen */
+
 "Upload your photo ID" = "Įkelkite savo asmens dokumento nuotrauką";
-/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading back %@ photo" = "Įkeliama %@ galinės dalies nuotrauka";
-/* Accessibility label while photo of back of driver's license is uploading */
-"Uploading back driver's license photo" = "Įkeliama vairuotojo pažymėjimo galinės pusės nuotrauka";
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "Įkeliama asmens tapatybės kortelės galinės pusės nuotrauka";
-/* Accessibility label while photo of back of identity document is uploading */
+
 "Uploading back identity document photo" = "Įkeliama galinės asmens tapatybės dokumento dalies nuotrauka";
-/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading front %@ photo" = "Įkeliama %@ priekinės dalies nuotrauka";
-/* Accessibility label while photo of front of driver's license is uploading */
-"Uploading front driver's license photo" = "Įkeliama vairuotojo pažymėjimo priekinės pusės nuotrauka";
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "Įkeliama asmens tapatybės kortelės priekinės pusės nuotrauka";
-/* Accessibility label while photo of front of identity document is uploading */
+
 "Uploading front identity document photo" = "Įkeliama priekinės asmens tapatybės dokumento dalies nuotrauka";
-/* Accessibility label while photo of passport is uploading */
-"Uploading passport photo" = "Įkeliama paso nuotrauka";
-/* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Patvirtinkite tapatybę";
-/* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Nepavyko užfiksuoti aukštos kokybės vaizdo.";
-/* Text displayed when requesting camera permissions */
+
 "We need permission to use your camera. Please allow camera access in app settings." = "Mums reikia leidimo naudoti jūsų fotoaparatą. Suteikite priegą prie fotoaparato programos nustatymuose.";
-/* Back button title for returning to welcome screen of Identity verification */
+
 "Welcome" = "Pasveikinimas";
-/* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Galite bandyti dar kartą arba įkelti vaizdą iš savo įrenginio.";
-/* Text for message of warning alert when selfie is not yet saved */
+
 "Your selfie images have not been saved. Do you want to leave?" = "Jūsų asmenukės vaizdai neįrašyti. Ar norite išeiti?";
-/* driver's license */
+
 "driver's license" = "vairuotojo pažymėjimas";
-/* id issued by government */
+
 "government-issued photo ID" = "vyriausybės išduotas asmens tapatybės dokumentas su nuotrauka";
-/* passport */
+
 "passport" = "pasas";

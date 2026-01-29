@@ -1,276 +1,191 @@
-/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "Στο επόμενο βήμα θα ληφθούν αυτόματα μερικές φωτογραφίες για να επαληθεύσουμε ότι είστε εσείς";
-/* Title for accepted types of ids */
+
 "Accepted forms of ID include" = "Οι αποδεκτές μορφές εγγράφου ταυτότητας περιλαμβάνουν";
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+
 "Alternatively, you may manually upload a photo of your identity document." = "Εναλλακτικά, μπορείτε να αποστείλετε με μη αυτόματο τρόπο μια φωτογραφία του εγγράφου της ταυτότητάς σας.";
-/* Opens the app's settings in the Settings app */
+
 "App Settings" = "Ρυθμίσεις εφαρμογής";
-/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
+
 "Back %@ photo successfully uploaded" = "Η πίσω %@ φωτογραφία ανέβηκε επιτυχώς";
-/* Accessibility label when back driver's license photo has successfully uploaded */
-"Back driver's license photo successfully uploaded" = "Η φωτογραφία της πίσω πλευράς του διπλώματος οδήγησης στάλθηκε με επιτυχία";
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "Η φωτογραφία της πίσω πλευράς της ταυτότητας στάλθηκε με επιτυχία";
-/* Accessibility label when back identity document photo has successfully uploaded */
+
 "Back identity document photo successfully uploaded" = "Η πίσω φωτογραφία του εγγράφου ταυτότητας ανέβηκε επιτυχώς";
-/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+
 "Back of %@" = "Πίσω από το %@";
-/* Description of back of driver's license image */
-"Back of driver's license" = "Πίσω πλευρά διπλώματος οδήγησης";
-/* Back of driver's license or government-issued photo ID */
+
 "Back of driver's license or government-issued photo ID" = "Πίσω πλευρά της άδειας οδήγησης ή της ταυτότητας με φωτογραφία εκδοθείσα από την κυβέρνηση";
-/* Back of driver's license or passport */
-"Back of driver's license or passport" = "Πίσω πλευρά της άδειας οδήγησης ή του διαβατηρίου";
-/* Back of driver's license, passport, or government-issued photo ID */
-"Back of driver's license, passport, or government-issued photo ID" = "Πίσω πλευρά της άδειας οδήγησης, του διαβατηρίου ή της ταυτότητας με φωτογραφία εκδοθείσα από την κυβέρνηση";
-/* Description of back of identity card image */
-"Back of identity card" = "Πίσω πλευρά ταυτότητας";
-/* Title of ID document scanning screen when scanning the back of an identity card */
+
 "Back of identity document" = "Πίσω πλευρά εγγράφου ταυτότητας";
-/* Back of passport or government-issued photo ID */
-"Back of passport or government-issued photo ID" = "Πίσω πλευρά του διαβατηρίου ή της ταυτότητας με φωτογραφία εκδοθείσα από την κυβέρνηση";
-/* Title displayed when requesting camera permissions */
+
 "Camera permission" = "Άδεια κάμερας";
-/* Error title displayed to the user when the device's camera is not available */
+
 "Camera unavailable" = "Μη διαθέσιμη κάμερα";
-/* Instructional text during selfie is being captured */
+
 "Capturing…" = "Καταγραφή…";
-/* When selected in an action sheet, opens the device's file system browser */
+
 "Choose File" = "Επιλέξτε αρχείο";
-/* Back button title for returning to consent screen of Identity verification */
+
 "Consent" = "Συγκατάθεση";
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+
 "Could not capture image" = "Δεν ήταν δυνατή η καταγραφή εικόνας";
-/* Label for Date of birth field */
-"Date of Birth" = "Ημερομηνία γέννησης";
-/* Label for Date of birth field */
-"Date of birth" = "Ημερομηνία γέννησης";
-/* Message for invalid Date of birth field */
+
 "Date of birth does not look valid" = "Η ημερομηνία γέννησης δεν φαίνεται έγκυρη";
-/* Instructional text when environement is too bright
-   Instructional text when the document is too glarry
-   Instructional text when user needs remove anything blocking the document */
+
 "Details not visible" = "Οι λεπτομέρειες δεν είναι ορατές";
-/* Button that opens file upload screen */
-"File Upload" = "Αποστολή αρχείου";
-/* Title of identity document file upload screen */
-"File upload" = "Αποστολή αρχείου";
-/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+
 "Flip your %@ over to the other side" = "Γυρίστε το %@ από την άλλη πλευρά";
-/* Flip your driver's license or government-issued photo ID over to the other side */
+
 "Flip your driver's license or government-issued photo ID over to the other side" = "Γυρίστε την άδεια οδήγησης ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στην άλλη πλευρά";
-/* Flip your driver's license or passport over to the other side */
-"Flip your driver's license or passport over to the other side" = "Γυρίστε την άδεια οδήγησης ή το διαβατήριο στην άλλη πλευρά";
-/* Instructional text for scanning back of a driver's license */
-"Flip your driver's license over to the other side" = "Γυρίστε το δίπλωμα οδήγησής σας από την άλλη πλευρά";
-/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
-"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Γυρίστε την άδεια οδήγησης, το διαβατήριο ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στην άλλη πλευρά";
-/* Instructional text for scanning back of a identity card */
+
 "Flip your identity card over to the other side" = "Γυρίστε την ταυτότητά σας από την άλλη πλευρά";
-/* Flip your passport or government-issued photo ID over to the other side */
-"Flip your passport or government-issued photo ID over to the other side" = "Γυρίστε το διαβατήριό σας ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στην άλλη πλευρά";
-/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+
 "Front %@ photo successfully uploaded" = "Η μπροστινή φωτογραφία %@ ανέβηκε επιτυχώς";
-/* Accessibility label when front driver's license photo has successfully uploaded */
-"Front driver's license photo successfully uploaded" = "Η φωτογραφία της μπροστινής πλευράς του διπλώματος οδήγησης στάλθηκε με επιτυχία";
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "Η φωτογραφία της μπροστινής πλευράς της ταυτότητας στάλθηκε με επιτυχία";
-/* Accessibility label when front identity document photo has successfully uploaded */
+
 "Front identity document photo successfully uploaded" = "Η μπροστινή φωτογραφία του εγγράφου ταυτότητας ανέβηκε επιτυχώς";
-/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+
 "Front of %@" = "Μπροστά από το %@";
-/* Description of front of driver's license image */
-"Front of driver's license" = "Μπροστινή πλευρά διπλώματος οδήγησης";
-/* Front of driver's license or government-issued photo ID */
+
 "Front of driver's license or government-issued photo ID" = "Μπροστινό μέρος άδειας οδήγησης ή ταυτότητας με φωτογραφία εκδοθείσα από την κυβέρνηση";
-/* Front of driver's license or passport */
+
 "Front of driver's license or passport" = "Μπροστινό μέρος άδειας οδήγησης ή διαβατηρίου";
-/* Front of driver's license, passport, or government-issued photo ID */
+
 "Front of driver's license, passport, or government-issued photo ID" = "Μπροστινό μέρος άδειας οδήγησης, διαβατηρίου ή ταυτότητας με φωτογραφία εκδοθείσας από την κυβέρνηση";
-/* Description of front of identity card image */
-"Front of identity card" = "Μπροστινή πλευρά ταυτότητας";
-/* Title of ID document scanning screen when scanning the front of an identity card */
+
 "Front of identity document" = "Μπροστινή πλευρά εγγράφου ταυτότητας";
-/* Front of passport or government-issued photo ID */
+
 "Front of passport or government-issued photo ID" = "Μπροστινό μέρος διαβατηρίου ή ταυτότητας με φωτογραφία εκδοθείσας από την κυβέρνηση";
-/* Title for document front warmup page */
+
 "Get ready to scan your photo ID" = "Ετοιμαστείτε να σαρώσετε την ταυτότητα με φωτογραφία";
-/* Title for selfie warmup page */
+
 "Get ready to take a selfie" = "Ετοιμαστείτε να βγάλετε μια selfie";
-/* Button to go back to the previous screen */
+
 "Go Back" = "Επιστροφή";
-/* Instructional text when camera is focusing on a document while scanning it */
+
 "Hold still, scanning" = "Κρατήστε σταθερά, γίνεται σάρωση";
-/* Ready button text on warmup screen */
+
 "I'm ready" = "Είμαι έτοιμος";
-/* Label for ID number section */
+
 "ID Number" = "Αριθμός ταυτότητας";
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
-"ID Type" = "Τύπος αναγνωριστικού";
-/* Description of passport image */
-"Image of passport" = "Εικόνα διαβατηρίου";
-/* Label for the ID field to collect individual CPF for Brazilian ID */
+
 "Individual CPF" = "Ατομικό CPF";
-/* Instructional text when user align the edge with camera
-   Instructional text when user needs to rorate to document to align with camera */
+
 "Keep ID level" = "Κρατήστε οριζόντια την ταυτότητα";
-/* Label for the ID field to collect last 4 of social security number for US ID */
+
 "Last 4 of Social Security number" = "Τελευταία 4 ψηφία του Αριθμού κοινωνικής ασφάλισης";
-/* Status while screen is loading */
+
 "Loading" = "Φόρτωση";
-/* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "Βεβαιωθείτε ότι όλες οι λεπτομέρειες είναι ορατές και εστιασμένες";
-/* Body for selfie warmup page */
+
 "Make sure you're in a well lit space." = "Βεβαιωθείτε ότι βρίσκεστε σε έναν καλά φωτισμένο χώρο.";
-/* Instructional text when camera is too far from a document */
+
 "Move closer" = "Μετακινήστε πιο κοντά";
-/* Instructional text when camera is too close to a document */
+
 "Move farther" = "Μετακινήστε πιο μακριά";
-/* Instructional text when environement is too bright */
+
 "Move to a darker area" = "Μεταβείτε σε έναν σκοτεινότερο χώρο";
-/* Instructional text when environement is too dark */
+
 "Move to a well-lit area" = "Μεταβείτε σε έναν χώρο με καλό φωτισμό";
-/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
+
 "NRIC or FIN" = "NRIC ή FIN";
-/* Instructional text when there is no document in camera frame */
+
 "No document detected" = "Δεν ανιχνεύτηκε κανένα έγγραφο";
-/* Label of the passport option for document type selection */
-"Passport" = "Διαβατήριο";
-/* Accessibility label when passport photo has successfully uploaded */
-"Passport photo successfully uploaded" = "Η φωτογραφία του διαβατηρίου στάλθηκε με επιτυχία";
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+
 "Personal ID number" = "Αριθμός ταυτότητας";
-/* Back button title for returning to the individual's perssonal infomation screen */
+
 "Personal Information" = "Προσωπικές πληροφορίες";
-/* Section title for collection phone number */
+
 "Phone Number" = "Αριθμός τηλεφώνου";
-/* Back button title for returning to the phone verification page */
+
 "Phone Verification" = "Επαλήθευση αριθμού τηλεφώνου";
-/* When selected in an action sheet, opens the device's photo library */
+
 "Photo Library" = "Βιβλιοθήκη φωτογραφιών";
-/* Instructions for uploading images of passport */
-"Please upload an image of your passport" = "Αποστείλετε μια εικόνα του διαβατηρίου σας";
-/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+
 "Please upload images of the front and back of your %@" = "Ανεβάστε εικόνες από το μπροστινό και το πίσω μέρος του %@";
-/* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "Αποστείλετε εικόνες της μπροστινής και της πίσω πλευράς του διπλώματος οδήγησης";
-/* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "Αποστείλετε εικόνες της μπροστινής και της πίσω πλευράς της ταυτότητάς σας";
-/* Instructions for uploading images of identity document */
+
 "Please upload images of the front and back of your identity document" = "Ανεβάστε εικόνες της μπροστινής και πίσω πλευράς του εγγράφου ταυτότητας";
-/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+
 "Position your %@ in the center of the frame" = "Τοποθετήστε το %@ στο κέντρο του πλαισίου";
-/* Instructional text for scanning front of a driver's license */
-"Position your driver's license in the center of the frame" = "Τοποθετήστε το δίπλωμα οδήγησής σας στο κέντρο του πλαισίου";
-/* Position your driver's license or government-issued photo ID in the center of the frame */
+
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Τοποθετήστε την άδεια οδήγησης ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στο κέντρο του πλαισίου";
-/* Position your driver's license or passport in the center of the frame */
+
 "Position your driver's license or passport in the center of the frame" = "Τοποθετήστε την άδεια οδήγησης ή το διαβατήριο στο κέντρο του πλαισίου";
-/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
+
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Τοποθετήστε την άδεια οδήγησης, το διαβατήριο ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στο κέντρο του πλαισίου";
-/* Instructional text for capturing selfie */
+
 "Position your face in the center of the frame." = "Τοποθετήστε το πρόσωπό σας στο κέντρο του πλαισίου.";
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "Τοποθετήστε την ταυτότητά σας στο κέντρο του πλαισίου";
-/* Instructional text for scanning front of a identity document */
+
 "Position your identity document in the center of the frame" = "Τοποθετήστε το έγγραφο ταυτότητας στο κέντρο του πλαισίου";
-/* Instructional text for scanning a passport */
-"Position your passport in the center of the frame" = "Τοποθετήστε το διαβατήριό σας στο κέντρο του πλαισίου";
-/* Position your passport or government-issued photo ID in the center of the frame */
+
 "Position your passport or government-issued photo ID in the center of the frame" = "Τοποθετήστε το διαβατήριό σας ή την ταυτότητα με φωτογραφία εκδοθείσα από την κυβέρνηση στο κέντρο του πλαισίου";
-/* Button text displayed to the user to retake photo */
+
 "Retake Photos" = "Λήψη φωτογραφιών εκ νέου";
-/* Back button title for returning to the document scan screen */
+
 "Scan" = "Σάρωση";
-/* State when identity document has been successfully scanned */
+
 "Scanned" = "Σαρώθηκε";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
 "Select" = "Επιλογή";
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
+
 "Select a location to upload the back of your identity document from" = "Επιλέξτε την τοποθεσία από την οποία θα αποστείλετε την πίσω πλευρά του εγγράφου ταυτότητάς σας";
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
+
 "Select a location to upload the front of your identity document from" = "Επιλέξτε την τοποθεσία από την οποία θα αποστείλετε την μπροστινή πλευρά του εγγράφου ταυτότητάς σας";
-/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+
 "Select back %@ photo" = "Επιλέξτε πίσω %@ φωτογραφία";
-/* Accessibility label to select a photo of back of driver's license */
-"Select back driver's license photo" = "Επιλογή φωτογραφίας πίσω πλευράς διπλώματος οδήγησης";
-/* Accessibility label to select a photo of back of identity card */
-"Select back identity card photo" = "Επιλογή φωτογραφίας πίσω πλευράς ταυτότητας";
-/* Accessibility label to select a photo of back of identity document */
+
 "Select back identity document photo" = "Επιλέξτε πίσω τη φωτογραφία εγγράφου ταυτότητας";
-/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+
 "Select front %@ photo" = "Επιλογή μπροστινής %@ φωτογραφίας";
-/* Accessibility label to select a photo of front of driver's license */
-"Select front driver's license photo" = "Επιλογή φωτογραφίας μπροστινής πλευράς διπλώματος οδήγησης";
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "Επιλογή φωτογραφίας μπροστινής πλευράς ταυτότητας";
-/* Accessibility label to select a photo of front of identity document */
+
 "Select front identity document photo" = "Επιλέξτε τη μπροστινή φωτογραφία του εγγράφου ταυτότητας";
-/* Accessibility label to select a photo of passport */
-"Select passport photo" = "Επιλογή φωτογραφίας διαβατηρίου";
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
+
 "Selfie" = "Selfie";
-/* Title of selfie capture screen */
+
 "Selfie captures" = "Λήψεις selfie";
-/* Instructional text when selfie is captured */
+
 "Selfie captures are complete" = "Οι λήψεις selfie ολοκληρώθηκαν";
-/* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Λήψη φωτογραφίας";
-/* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Οι εικόνες του εγγράφου ταυτότητάς σας δεν έχουν αποθηκευτεί. Θέλετε να αποχωρήσετε;";
-/* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Προέκυψε σφάλμα κατά την πρόσβαση στην κάμερα.";
-/* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Δοκιμάστε ξανά";
-/* Instructional text when the document is too glarry */
+
 "Try reduce glare and make ID visible" = "Δοκιμάστε να μειώσετε την αντανάκλαση για να είναι ορατή η ταυτότητα";
-/* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Δεν είναι δυνατή η σύνδεση.";
-/* Title for warning alert */
+
 "Unsaved changes" = "Μη αποθηκευμένες αλλαγές";
-/* Back button label for the identity document file upload screen */
+
 "Upload" = "Αποστολή";
-/* Button to upload a photo */
+
 "Upload a Photo" = "Αποστολή φωτογραφίας";
-/* Title of document upload screen */
+
 "Upload your %@" = "Ανεβάστε το %@";
-/* Title of document upload screen */
+
 "Upload your photo ID" = "Αποστείλετε την ταυτότητα με φωτογραφία";
-/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading back %@ photo" = "Ανέβασμα πίσω %@ φωτογραφίας";
-/* Accessibility label while photo of back of driver's license is uploading */
-"Uploading back driver's license photo" = "Αποστολή φωτογραφίας πίσω πλευράς διπλώματος οδήγησης";
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "Αποστολή φωτογραφίας πίσω πλευράς ταυτότητας";
-/* Accessibility label while photo of back of identity document is uploading */
+
 "Uploading back identity document photo" = "Ανέβασμα της πίσω φωτογραφίας εγγράφου ταυτότητας";
-/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading front %@ photo" = "Ανέβασμα μπροστινής %@ φωτογραφίας";
-/* Accessibility label while photo of front of driver's license is uploading */
-"Uploading front driver's license photo" = "Αποστολή φωτογραφίας μπροστινής πλευράς διπλώματος οδήγησης";
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "Αποστολή φωτογραφίας μπροστινής πλευράς ταυτότητας";
-/* Accessibility label while photo of front of identity document is uploading */
+
 "Uploading front identity document photo" = "Ανέβασμα της μπροστινής φωτογραφίας του εγγράφου ταυτότητας";
-/* Accessibility label while photo of passport is uploading */
-"Uploading passport photo" = "Αποστολή φωτογραφίας διαβατηρίου";
-/* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Επαληθεύστε την ταυτότητά σας";
-/* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Δεν ήταν δυνατή η καταγραφή εικόνας υψηλής ποιότητας.";
-/* Text displayed when requesting camera permissions */
+
 "We need permission to use your camera. Please allow camera access in app settings." = "Χρειαζόμαστε άδεια για να χρησιμοποιήσουμε την κάμερά σας. Επιτρέψτε την πρόσβαση της κάμερας από τις ρυθμίσεις εφαρμογής.";
-/* Back button title for returning to welcome screen of Identity verification */
+
 "Welcome" = "Καλωσήρθατε";
-/* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Μπορείτε να δοκιμάσετε ξανά ή να αποστείλετε μια εικόνα από τη συσκευή σας.";
-/* Text for message of warning alert when selfie is not yet saved */
+
 "Your selfie images have not been saved. Do you want to leave?" = "Οι selfie δεν αποθηκεύτηκαν. Θέλετε να πραγματοποιήσετε έξοδο;";
-/* driver's license */
+
 "driver's license" = "δίπλωμα οδήγησης";
-/* id issued by government */
+
 "government-issued photo ID" = "ταυτότητα με φωτογραφία που έχει εκδοθεί από κρατική υπηρεσία";
-/* passport */
+
 "passport" = "διαβατήριο";

@@ -1,276 +1,191 @@
-/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "En el siguiente paso, se tomarán automáticamente algunas fotos para verificar tu identidad.";
-/* Title for accepted types of ids */
+
 "Accepted forms of ID include" = "Se aceptan las siguientes formas de documentos de identidad";
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+
 "Alternatively, you may manually upload a photo of your identity document." = "También puedes subir una foto del documento de identidad manualmente.";
-/* Opens the app's settings in the Settings app */
+
 "App Settings" = "Configuración de la aplicación";
-/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
+
 "Back %@ photo successfully uploaded" = "Foto del dorso %@ cargada correctamente";
-/* Accessibility label when back driver's license photo has successfully uploaded */
-"Back driver's license photo successfully uploaded" = "La foto del dorso de la licencia de conducir se cargó correctamente.";
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "La foto del dorso del documento de identidad se cargó correctamente.";
-/* Accessibility label when back identity document photo has successfully uploaded */
+
 "Back identity document photo successfully uploaded" = "La foto del dorso del documento de identidad se cargó correctamente.";
-/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+
 "Back of %@" = "Dorso de %@";
-/* Description of back of driver's license image */
-"Back of driver's license" = "Dorso de la licencia de conducir";
-/* Back of driver's license or government-issued photo ID */
+
 "Back of driver's license or government-issued photo ID" = "Reverso de la licencia de conducir u otro documento de identidad con foto, emitido por un organismo público";
-/* Back of driver's license or passport */
-"Back of driver's license or passport" = "Reverso de la licencia de conducir o pasaporte";
-/* Back of driver's license, passport, or government-issued photo ID */
-"Back of driver's license, passport, or government-issued photo ID" = "Reverso de la licencia de conducir, pasaporte u otro documento de identidad con foto, emitido por un organismo público";
-/* Description of back of identity card image */
-"Back of identity card" = "Dorso del documento de identidad";
-/* Title of ID document scanning screen when scanning the back of an identity card */
+
 "Back of identity document" = "Reverso del documento de identidad";
-/* Back of passport or government-issued photo ID */
-"Back of passport or government-issued photo ID" = "Reverso del pasaporte o documento de identidad con foto, emitido por un organismo público";
-/* Title displayed when requesting camera permissions */
+
 "Camera permission" = "Permiso de acceso a la cámara";
-/* Error title displayed to the user when the device's camera is not available */
+
 "Camera unavailable" = "Cámara no disponible";
-/* Instructional text during selfie is being captured */
+
 "Capturing…" = "Capturando...";
-/* When selected in an action sheet, opens the device's file system browser */
+
 "Choose File" = "Elegir archivo";
-/* Back button title for returning to consent screen of Identity verification */
+
 "Consent" = "Consentimiento";
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+
 "Could not capture image" = "No se pudo captar la imagen.";
-/* Label for Date of birth field */
-"Date of Birth" = "Fecha de nacimiento";
-/* Label for Date of birth field */
-"Date of birth" = "Fecha de nacimiento";
-/* Message for invalid Date of birth field */
+
 "Date of birth does not look valid" = "La fecha de nacimiento no parece válida.";
-/* Instructional text when environement is too bright
-   Instructional text when the document is too glarry
-   Instructional text when user needs remove anything blocking the document */
+
 "Details not visible" = "No se ven los datos";
-/* Button that opens file upload screen */
-"File Upload" = "Carga del archivo";
-/* Title of identity document file upload screen */
-"File upload" = "Carga del archivo";
-/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+
 "Flip your %@ over to the other side" = "Voltea tu %@ hacia el otro lado";
-/* Flip your driver's license or government-issued photo ID over to the other side */
+
 "Flip your driver's license or government-issued photo ID over to the other side" = "Voltea tu licencia de conducir o documento de identidad con foto, emitido por un organismo público, del otro lado";
-/* Flip your driver's license or passport over to the other side */
-"Flip your driver's license or passport over to the other side" = "Da vuelta tu licencia de conducir o pasaporte del otro lado";
-/* Instructional text for scanning back of a driver's license */
-"Flip your driver's license over to the other side" = "Da vuelta tu licencia de conducir.";
-/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
-"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Voltea tu licencia de conducir, pasaporte o documento de identidad con foto, emitido por un organismo público, del otro lado";
-/* Instructional text for scanning back of a identity card */
+
 "Flip your identity card over to the other side" = "Da vuelta tu documento de identidad.";
-/* Flip your passport or government-issued photo ID over to the other side */
-"Flip your passport or government-issued photo ID over to the other side" = "Voltea tu pasaporte o documento de identidad con foto, emitido por un organismo público, del otro lado";
-/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+
 "Front %@ photo successfully uploaded" = "Foto frontal %@ cargada correctamente";
-/* Accessibility label when front driver's license photo has successfully uploaded */
-"Front driver's license photo successfully uploaded" = "La foto del frente de la licencia de conducir se cargó correctamente.";
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "La foto del frente del documento de identidad se cargó correctamente.";
-/* Accessibility label when front identity document photo has successfully uploaded */
+
 "Front identity document photo successfully uploaded" = "La foto frontal del documento de identidad se cargó correctamente.";
-/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+
 "Front of %@" = "Frente de %@";
-/* Description of front of driver's license image */
-"Front of driver's license" = "Frente de la licencia de conducir";
-/* Front of driver's license or government-issued photo ID */
+
 "Front of driver's license or government-issued photo ID" = "Frente de la licencia de conducir u otro documento de identidad con foto, emitido por un organismo público";
-/* Front of driver's license or passport */
+
 "Front of driver's license or passport" = "Frente de la licencia de conducir o pasaporte";
-/* Front of driver's license, passport, or government-issued photo ID */
+
 "Front of driver's license, passport, or government-issued photo ID" = "Frente de la licencia de conducir, pasaporte u otro documento de identidad con foto, emitido por un organismo público";
-/* Description of front of identity card image */
-"Front of identity card" = "Frente del documento de identidad";
-/* Title of ID document scanning screen when scanning the front of an identity card */
+
 "Front of identity document" = "Anverso del documento de identidad";
-/* Front of passport or government-issued photo ID */
+
 "Front of passport or government-issued photo ID" = "Frente del pasaporte o documento de identidad con foto, emitido por un organismo público";
-/* Title for document front warmup page */
+
 "Get ready to scan your photo ID" = "Prepárate para escanear tu documento de identidad con foto";
-/* Title for selfie warmup page */
+
 "Get ready to take a selfie" = "Prepárate para hacerte la selfie";
-/* Button to go back to the previous screen */
+
 "Go Back" = "Volver";
-/* Instructional text when camera is focusing on a document while scanning it */
+
 "Hold still, scanning" = "No te muevas. Escaneando...";
-/* Ready button text on warmup screen */
+
 "I'm ready" = "Listo";
-/* Label for ID number section */
+
 "ID Number" = "Número de documento";
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
-"ID Type" = "Tipo de ID";
-/* Description of passport image */
-"Image of passport" = "Imagen del pasaporte";
-/* Label for the ID field to collect individual CPF for Brazilian ID */
+
 "Individual CPF" = "CPF individual";
-/* Instructional text when user align the edge with camera
-   Instructional text when user needs to rorate to document to align with camera */
+
 "Keep ID level" = "Mantén el documento de identidad nivelado";
-/* Label for the ID field to collect last 4 of social security number for US ID */
+
 "Last 4 of Social Security number" = "Últimos 4 dígitos del número de seguridad social";
-/* Status while screen is loading */
+
 "Loading" = "Cargando";
-/* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "Asegúrate de que todos tus datos se vean y estén enfocados";
-/* Body for selfie warmup page */
+
 "Make sure you're in a well lit space." = "Asegúrate de que estás en un lugar bien iluminado.";
-/* Instructional text when camera is too far from a document */
+
 "Move closer" = "Acércalo";
-/* Instructional text when camera is too close to a document */
+
 "Move farther" = "Aleja la cámara";
-/* Instructional text when environement is too bright */
+
 "Move to a darker area" = "Muévete a una zona más oscura";
-/* Instructional text when environement is too dark */
+
 "Move to a well-lit area" = "Muévete a una zona bien iluminada";
-/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
+
 "NRIC or FIN" = "NRIC o FIN";
-/* Instructional text when there is no document in camera frame */
+
 "No document detected" = "No se detectó ningún documento";
-/* Label of the passport option for document type selection */
-"Passport" = "Pasaporte";
-/* Accessibility label when passport photo has successfully uploaded */
-"Passport photo successfully uploaded" = "La foto del pasaporte se cargó correctamente.";
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+
 "Personal ID number" = "Número de documento personal";
-/* Back button title for returning to the individual's perssonal infomation screen */
+
 "Personal Information" = "Información personal";
-/* Section title for collection phone number */
+
 "Phone Number" = "Número de teléfono";
-/* Back button title for returning to the phone verification page */
+
 "Phone Verification" = "Verificación por teléfono";
-/* When selected in an action sheet, opens the device's photo library */
+
 "Photo Library" = "Librería de fotos";
-/* Instructions for uploading images of passport */
-"Please upload an image of your passport" = "Carga una imagen del pasaporte.";
-/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+
 "Please upload images of the front and back of your %@" = "Por favor, carga imágenes de la parte delantera y trasera de tu %@";
-/* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "Carga las imágenes del frente y el dorso de tu licencia de conducir.";
-/* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "Carga las imágenes del frente y el dorso de tu documento de identidad.";
-/* Instructions for uploading images of identity document */
+
 "Please upload images of the front and back of your identity document" = "Carga las imágenes del frente y el dorso de tu documento de identidad.";
-/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+
 "Position your %@ in the center of the frame" = "Coloca tu %@ en el centro del encuadre";
-/* Instructional text for scanning front of a driver's license */
-"Position your driver's license in the center of the frame" = "Coloca la licencia de conducir en el centro del recuadro.";
-/* Position your driver's license or government-issued photo ID in the center of the frame */
+
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Coloca tu licencia de conducir o documento de identidad con foto, emitido por un organismo público, en el centro del recuadro";
-/* Position your driver's license or passport in the center of the frame */
+
 "Position your driver's license or passport in the center of the frame" = "Coloca la licencia de conducir o el pasaporte en el centro del recuadro";
-/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
+
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Coloca tu licencia de conducir, pasaporte o documento de identidad con foto, emitido por un organismo público, en el centro del recuadro";
-/* Instructional text for capturing selfie */
+
 "Position your face in the center of the frame." = "Coloca la cara en el centro del recuadro.";
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "Coloca el documento de identidad en el centro del recuadro.";
-/* Instructional text for scanning front of a identity document */
+
 "Position your identity document in the center of the frame" = "Coloca el documento de identidad en el centro del recuadro.";
-/* Instructional text for scanning a passport */
-"Position your passport in the center of the frame" = "Coloca el pasaporte en el centro del recuadro.";
-/* Position your passport or government-issued photo ID in the center of the frame */
+
 "Position your passport or government-issued photo ID in the center of the frame" = "Coloca tu pasaporte o documento de identidad con foto, emitido por un organismo público, en el centro del recuadro";
-/* Button text displayed to the user to retake photo */
+
 "Retake Photos" = "Volver a sacar las fotos";
-/* Back button title for returning to the document scan screen */
+
 "Scan" = "Escanear";
-/* State when identity document has been successfully scanned */
+
 "Scanned" = "Escaneado";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
 "Select" = "Seleccionar";
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
+
 "Select a location to upload the back of your identity document from" = "Selecciona una ubicación desde donde cargar el dorso de tu documento de identidad.";
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
+
 "Select a location to upload the front of your identity document from" = "Selecciona una ubicación desde donde cargar el frente de tu documento de identidad.";
-/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+
 "Select back %@ photo" = "Vuelve a seleccionar la foto %@";
-/* Accessibility label to select a photo of back of driver's license */
-"Select back driver's license photo" = "Seleccionar la foto del dorso de la licencia de conducir";
-/* Accessibility label to select a photo of back of identity card */
-"Select back identity card photo" = "Seleccionar la foto del dorso del documento de identidad";
-/* Accessibility label to select a photo of back of identity document */
+
 "Select back identity document photo" = "Selecciona la foto del dorso del documento de identidad";
-/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+
 "Select front %@ photo" = "Selecciona la foto frontal %@";
-/* Accessibility label to select a photo of front of driver's license */
-"Select front driver's license photo" = "Seleccionar la foto del frente de la licencia de conducir";
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "Seleccionar la foto del frente del documento de identidad";
-/* Accessibility label to select a photo of front of identity document */
+
 "Select front identity document photo" = "Selecciona la foto frontal del documento de identidad";
-/* Accessibility label to select a photo of passport */
-"Select passport photo" = "Seleccionar la foto del pasaporte";
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
+
 "Selfie" = "Selfie";
-/* Title of selfie capture screen */
+
 "Selfie captures" = "Capturas de selfie";
-/* Instructional text when selfie is captured */
+
 "Selfie captures are complete" = "Se completaron las capturas de selfie.";
-/* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Tomar una foto";
-/* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "No se guardaron las imágenes de tu documento de identidad. ¿Quieres salir?";
-/* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Se produjo un error al acceder a la cámara.";
-/* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Vuelve a intentarlo";
-/* Instructional text when the document is too glarry */
+
 "Try reduce glare and make ID visible" = "Intenta reducir el brillo y haz que el documento de identidad sea visible.";
-/* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "No fue posible establecer conexión.";
-/* Title for warning alert */
+
 "Unsaved changes" = "Cambios no guardados";
-/* Back button label for the identity document file upload screen */
+
 "Upload" = "Cargar";
-/* Button to upload a photo */
+
 "Upload a Photo" = "Cargar una foto";
-/* Title of document upload screen */
+
 "Upload your %@" = "Sube tu %@";
-/* Title of document upload screen */
+
 "Upload your photo ID" = "Carga tu documento de identidad con foto";
-/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading back %@ photo" = "Cargando de nuevo la foto %@";
-/* Accessibility label while photo of back of driver's license is uploading */
-"Uploading back driver's license photo" = "Cargando la foto del dorso de la licencia de conducir";
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "Cargando la foto del dorso del documento de identidad";
-/* Accessibility label while photo of back of identity document is uploading */
+
 "Uploading back identity document photo" = "Carga la foto del dorso del documento de identidad";
-/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading front %@ photo" = "Cargando foto frontal %@";
-/* Accessibility label while photo of front of driver's license is uploading */
-"Uploading front driver's license photo" = "Cargando la foto del frente de la licencia de conducir";
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "Cargando la foto del frente del documento de identidad";
-/* Accessibility label while photo of front of identity document is uploading */
+
 "Uploading front identity document photo" = "Cargando la foto frontal del documento de identidad";
-/* Accessibility label while photo of passport is uploading */
-"Uploading passport photo" = "Cargando la foto del pasaporte";
-/* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Verifica tu identidad";
-/* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "No pudimos captar una imagen de alta calidad.";
-/* Text displayed when requesting camera permissions */
+
 "We need permission to use your camera. Please allow camera access in app settings." = "Necesitamos tu autorización para usar la cámara. Permite el acceso a la cámara en la configuración de la aplicación.";
-/* Back button title for returning to welcome screen of Identity verification */
+
 "Welcome" = "Te damos la bienvenida";
-/* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Puedes volver a intentarlo o cargar una imagen desde tu dispositivo.";
-/* Text for message of warning alert when selfie is not yet saved */
+
 "Your selfie images have not been saved. Do you want to leave?" = "No se guardaron las capturas de selfie. ¿Quieres salir?";
-/* driver's license */
+
 "driver's license" = "licencia de conducir";
-/* id issued by government */
+
 "government-issued photo ID" = "documento de identidad con foto, emitido por un organismo público";
-/* passport */
+
 "passport" = "pasaporte";

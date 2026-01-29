@@ -1,276 +1,191 @@
-/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "次のステップで写真が数枚撮影され、本人確認が行われます。";
-/* Title for accepted types of ids */
+
 "Accepted forms of ID include" = "身分証明書として受け付けられる書式は次のとおりです";
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+
 "Alternatively, you may manually upload a photo of your identity document." = "または、身分証明書の写真を手動でアップロードすることもできます。";
-/* Opens the app's settings in the Settings app */
+
 "App Settings" = "アプリの設定";
-/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
+
 "Back %@ photo successfully uploaded" = "%@ 裏面の写真が正常にアップロードされました";
-/* Accessibility label when back driver's license photo has successfully uploaded */
-"Back driver's license photo successfully uploaded" = "運転免許証の裏面の写真のアップロードが完了しました";
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "身分証明書の裏面の写真のアップロードが完了しました";
-/* Accessibility label when back identity document photo has successfully uploaded */
+
 "Back identity document photo successfully uploaded" = "身分証明書裏面の写真が正常にアップロードされました";
-/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+
 "Back of %@" = "%@ 裏面";
-/* Description of back of driver's license image */
-"Back of driver's license" = "運転免許証の裏面";
-/* Back of driver's license or government-issued photo ID */
+
 "Back of driver's license or government-issued photo ID" = "運転免許証の裏面、または政府発行の写真付き身分証明書の裏面";
-/* Back of driver's license or passport */
-"Back of driver's license or passport" = "運転免許証の裏面、またはパスポートの写真ページ";
-/* Back of driver's license, passport, or government-issued photo ID */
-"Back of driver's license, passport, or government-issued photo ID" = "運転免許証の裏面、パスポートの写真ページ、または政府発行の写真付き身分証明書の裏面";
-/* Description of back of identity card image */
-"Back of identity card" = "身分証明書の裏面";
-/* Title of ID document scanning screen when scanning the back of an identity card */
+
 "Back of identity document" = "本人確認書類の裏面";
-/* Back of passport or government-issued photo ID */
-"Back of passport or government-issued photo ID" = "パスポートの写真ページ、または政府発行の写真付き身分証明書の裏面";
-/* Title displayed when requesting camera permissions */
+
 "Camera permission" = "カメラの使用許可";
-/* Error title displayed to the user when the device's camera is not available */
+
 "Camera unavailable" = "カメラを利用できません";
-/* Instructional text during selfie is being captured */
+
 "Capturing…" = "キャプチャーしています...";
-/* When selected in an action sheet, opens the device's file system browser */
+
 "Choose File" = "ファイルを選択";
-/* Back button title for returning to consent screen of Identity verification */
+
 "Consent" = "同意する";
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+
 "Could not capture image" = "画像をキャプチャーできませんでした";
-/* Label for Date of birth field */
-"Date of Birth" = "生年月日";
-/* Label for Date of birth field */
-"Date of birth" = "生年月日";
-/* Message for invalid Date of birth field */
+
 "Date of birth does not look valid" = "生年月日が無効のようです";
-/* Instructional text when environement is too bright
-   Instructional text when the document is too glarry
-   Instructional text when user needs remove anything blocking the document */
+
 "Details not visible" = "詳細が見えません";
-/* Button that opens file upload screen */
-"File Upload" = "ファイルをアップロード";
-/* Title of identity document file upload screen */
-"File upload" = "ファイルのアップロード";
-/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+
 "Flip your %@ over to the other side" = "%@ を裏返してください";
-/* Flip your driver's license or government-issued photo ID over to the other side */
+
 "Flip your driver's license or government-issued photo ID over to the other side" = "運転免許証または政府発行の写真付き身分証明書を裏返してください";
-/* Flip your driver's license or passport over to the other side */
-"Flip your driver's license or passport over to the other side" = "運転免許証は裏面を、パスポートの場合は写真ページを開いてください";
-/* Instructional text for scanning back of a driver's license */
-"Flip your driver's license over to the other side" = "運転免許証を裏返してください";
-/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
-"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "運転免許証や政府発行の写真付き身分証明書は裏面を、パスポートの場合は写真ページを開いてください";
-/* Instructional text for scanning back of a identity card */
+
 "Flip your identity card over to the other side" = "身分証明書を裏返してください";
-/* Flip your passport or government-issued photo ID over to the other side */
-"Flip your passport or government-issued photo ID over to the other side" = "政府発行の写真付き身分証明書は裏面を、パスポートの場合は写真ページを開いてください";
-/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+
 "Front %@ photo successfully uploaded" = "%@ 表面の写真が正常にアップロードされました";
-/* Accessibility label when front driver's license photo has successfully uploaded */
-"Front driver's license photo successfully uploaded" = "運転免許証の表面の写真のアップロードが完了しました";
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "身分証明書の表面の写真のアップロードが完了しました";
-/* Accessibility label when front identity document photo has successfully uploaded */
+
 "Front identity document photo successfully uploaded" = "身分証明書表面の写真が正常にアップロードされました";
-/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+
 "Front of %@" = "%@ 表面";
-/* Description of front of driver's license image */
-"Front of driver's license" = "運転免許証の表面";
-/* Front of driver's license or government-issued photo ID */
+
 "Front of driver's license or government-issued photo ID" = "運転免許証、または政府発行の写真付き身分証明書の表面";
-/* Front of driver's license or passport */
+
 "Front of driver's license or passport" = "運転免許証の表面、またはパスポートの写真ページ";
-/* Front of driver's license, passport, or government-issued photo ID */
+
 "Front of driver's license, passport, or government-issued photo ID" = "運転免許証、政府発行の写真付き身分証明書の表面、またはパスポートの写真ページ";
-/* Description of front of identity card image */
-"Front of identity card" = "身分証明書の表面";
-/* Title of ID document scanning screen when scanning the front of an identity card */
+
 "Front of identity document" = "本人確認書類の表面";
-/* Front of passport or government-issued photo ID */
+
 "Front of passport or government-issued photo ID" = "パスポートの写真ページ、または政府発行の写真付き身分証明書の表面";
-/* Title for document front warmup page */
+
 "Get ready to scan your photo ID" = "写真付き身分証明書の直接撮影を準備する";
-/* Title for selfie warmup page */
+
 "Get ready to take a selfie" = "顔写真の撮影準備をする";
-/* Button to go back to the previous screen */
+
 "Go Back" = "戻る";
-/* Instructional text when camera is focusing on a document while scanning it */
+
 "Hold still, scanning" = "動かさないでください、スキャンしています";
-/* Ready button text on warmup screen */
+
 "I'm ready" = "準備完了";
-/* Label for ID number section */
+
 "ID Number" = "ID 番号";
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
-"ID Type" = "ID タイプ";
-/* Description of passport image */
-"Image of passport" = "パスポートの画像";
-/* Label for the ID field to collect individual CPF for Brazilian ID */
+
 "Individual CPF" = "個人 CPF";
-/* Instructional text when user align the edge with camera
-   Instructional text when user needs to rorate to document to align with camera */
+
 "Keep ID level" = "身分証明書を水平に保持してください";
-/* Label for the ID field to collect last 4 of social security number for US ID */
+
 "Last 4 of Social Security number" = "社会保障番号の末尾 4 桁";
-/* Status while screen is loading */
+
 "Loading" = "読み込み中";
-/* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "すべての詳細が表示され、焦点が合っていることを確認してください";
-/* Body for selfie warmup page */
+
 "Make sure you're in a well lit space." = "明るい場所にいることを確認してください。";
-/* Instructional text when camera is too far from a document */
+
 "Move closer" = "近付けてください";
-/* Instructional text when camera is too close to a document */
+
 "Move farther" = "少し遠ざけてください";
-/* Instructional text when environement is too bright */
+
 "Move to a darker area" = "もっと暗い場所に移動してください";
-/* Instructional text when environement is too dark */
+
 "Move to a well-lit area" = "明るい場所に移動してください";
-/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
+
 "NRIC or FIN" = "NRIC または FIN";
-/* Instructional text when there is no document in camera frame */
+
 "No document detected" = "書類を検出できませんでした";
-/* Label of the passport option for document type selection */
-"Passport" = "パスポート";
-/* Accessibility label when passport photo has successfully uploaded */
-"Passport photo successfully uploaded" = "パスポートの写真のアップロードが完了しました";
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+
 "Personal ID number" = "身分証明書番号";
-/* Back button title for returning to the individual's perssonal infomation screen */
+
 "Personal Information" = "個人情報";
-/* Section title for collection phone number */
+
 "Phone Number" = "電話番号";
-/* Back button title for returning to the phone verification page */
+
 "Phone Verification" = "電話番号の確認";
-/* When selected in an action sheet, opens the device's photo library */
+
 "Photo Library" = "フォトライブラリー";
-/* Instructions for uploading images of passport */
-"Please upload an image of your passport" = "パスポートの画像をアップロードしてください";
-/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+
 "Please upload images of the front and back of your %@" = "%@ 表裏両面の画像をアップロードしてください";
-/* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "運転免許証の表裏両面の画像をアップロードしてください";
-/* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "身分証明書の表裏両面の画像をアップロードしてください";
-/* Instructions for uploading images of identity document */
+
 "Please upload images of the front and back of your identity document" = "本人確認書類の両面画像をアップロードしてください";
-/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+
 "Position your %@ in the center of the frame" = "フレームの中央に %@ を置いてください";
-/* Instructional text for scanning front of a driver's license */
-"Position your driver's license in the center of the frame" = "運転免許証をフレームの中央に置いてください";
-/* Position your driver's license or government-issued photo ID in the center of the frame */
+
 "Position your driver's license or government-issued photo ID in the center of the frame" = "運転免許証または政府発行の写真付き身分証明書をフレームの中央に配置してください";
-/* Position your driver's license or passport in the center of the frame */
+
 "Position your driver's license or passport in the center of the frame" = "運転免許証またはパスポートの写真ページをフレームの中央に配置してください";
-/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
+
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "運転免許証、パスポートの写真ページ、または政府発行の写真付き身分証明書をフレームの中央に配置してください";
-/* Instructional text for capturing selfie */
+
 "Position your face in the center of the frame." = "フレームの中央に顔を置いてください。";
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "身分証明書をフレームの中央に置いてください";
-/* Instructional text for scanning front of a identity document */
+
 "Position your identity document in the center of the frame" = "身分証明書をフレームの中央に配置してください";
-/* Instructional text for scanning a passport */
-"Position your passport in the center of the frame" = "パスポートをフレームの中央に置いてください";
-/* Position your passport or government-issued photo ID in the center of the frame */
+
 "Position your passport or government-issued photo ID in the center of the frame" = "パスポートの写真ページ、または政府発行の写真付き身分証明書をフレームの中央に配置してください";
-/* Button text displayed to the user to retake photo */
+
 "Retake Photos" = "写真を撮り直す";
-/* Back button title for returning to the document scan screen */
+
 "Scan" = "スキャン";
-/* State when identity document has been successfully scanned */
+
 "Scanned" = "スキャン終了";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
 "Select" = "選択";
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
+
 "Select a location to upload the back of your identity document from" = "身分証明書の裏面をどこからアップロードするのかを選択してください";
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
+
 "Select a location to upload the front of your identity document from" = "身分証明書の表面をどこからアップロードするのかを選択してください";
-/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+
 "Select back %@ photo" = "%@ 裏面の写真を選択";
-/* Accessibility label to select a photo of back of driver's license */
-"Select back driver's license photo" = "運転免許証の裏面の写真を選択";
-/* Accessibility label to select a photo of back of identity card */
-"Select back identity card photo" = "身分証明書の裏面の写真を選択";
-/* Accessibility label to select a photo of back of identity document */
+
 "Select back identity document photo" = "身分証明書裏面の写真を選択";
-/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+
 "Select front %@ photo" = "%@ 表面の写真を選択";
-/* Accessibility label to select a photo of front of driver's license */
-"Select front driver's license photo" = "運転免許証の表面の写真を選択";
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "身分証明書の表面の写真を選択";
-/* Accessibility label to select a photo of front of identity document */
+
 "Select front identity document photo" = "身分証明書表面の写真を選択";
-/* Accessibility label to select a photo of passport */
-"Select passport photo" = "パスポートの写真を選択";
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
+
 "Selfie" = "顔写真";
-/* Title of selfie capture screen */
+
 "Selfie captures" = "顔写真の記録";
-/* Instructional text when selfie is captured */
+
 "Selfie captures are complete" = "顔写真の記録が完了しました";
-/* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "写真を撮る";
-/* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "身分証明書の画像が保存されていません。終了しますか？";
-/* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "カメラへのアクセス中にエラーが発生しました。";
-/* Button to attempt to re-scan identity document image */
+
 "Try Again" = "やり直す";
-/* Instructional text when the document is too glarry */
+
 "Try reduce glare and make ID visible" = "光の反射を抑えて、身分証明書が見えるようにしてください";
-/* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "接続を確立できません";
-/* Title for warning alert */
+
 "Unsaved changes" = "保存されていない変更";
-/* Back button label for the identity document file upload screen */
+
 "Upload" = "アップロード";
-/* Button to upload a photo */
+
 "Upload a Photo" = "写真をアップロード";
-/* Title of document upload screen */
+
 "Upload your %@" = "%@ をアップロードしてください";
-/* Title of document upload screen */
+
 "Upload your photo ID" = "写真付き身分証明書をアップロードする";
-/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading back %@ photo" = "%@ 裏面の写真をアップロードしています";
-/* Accessibility label while photo of back of driver's license is uploading */
-"Uploading back driver's license photo" = "運転免許証の裏面をアップロードしています";
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "身分証明書の裏面をアップロードしています";
-/* Accessibility label while photo of back of identity document is uploading */
+
 "Uploading back identity document photo" = "身分証明書裏面の写真をアップロードしています";
-/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading front %@ photo" = "%@ 表面の写真をアップロードしています";
-/* Accessibility label while photo of front of driver's license is uploading */
-"Uploading front driver's license photo" = "運転免許証の表面をアップロードしています";
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "身分証明書の表面をアップロードしています";
-/* Accessibility label while photo of front of identity document is uploading */
+
 "Uploading front identity document photo" = "身分証明書表面の写真をアップロードしています";
-/* Accessibility label while photo of passport is uploading */
-"Uploading passport photo" = "パスポートの写真をアップロードしています";
-/* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "本人確認を行う";
-/* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "高画質の画像をキャプチャーできませんでした。";
-/* Text displayed when requesting camera permissions */
+
 "We need permission to use your camera. Please allow camera access in app settings." = "カメラへのアクセス許可が必要です。アプリの設定でカメラへのアクセスを許可してください。";
-/* Back button title for returning to welcome screen of Identity verification */
+
 "Welcome" = "初期画面";
-/* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "もう一度お試しいただくか、デバイスから画像をアプロードしてください。";
-/* Text for message of warning alert when selfie is not yet saved */
+
 "Your selfie images have not been saved. Do you want to leave?" = "顔写真の画像が保存されていません。終了しますか？";
-/* driver's license */
+
 "driver's license" = "運転免許証";
-/* id issued by government */
+
 "government-issued photo ID" = "政府発行の写真付き身分証明書";
-/* passport */
+
 "passport" = "パスポート";

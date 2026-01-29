@@ -1,276 +1,191 @@
-/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "На следующем этапе будет автоматически сделано несколько фотографий: это нужно, чтобы подтвердить вашу личность";
-/* Title for accepted types of ids */
+
 "Accepted forms of ID include" = "Принимаются следующие виды удостоверений";
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+
 "Alternatively, you may manually upload a photo of your identity document." = "В качестве альтернативы вы можете загрузить фотографию своего удостоверения личности.";
-/* Opens the app's settings in the Settings app */
+
 "App Settings" = "Настройки приложения";
-/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
+
 "Back %@ photo successfully uploaded" = "Фото оборотной стороны документа (%@) успешно загружено";
-/* Accessibility label when back driver's license photo has successfully uploaded */
-"Back driver's license photo successfully uploaded" = "Фотография оборотной стороны водительских прав успешно отправлена";
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "Фотография оборотной стороны удостоверения личности успешно отправлена";
-/* Accessibility label when back identity document photo has successfully uploaded */
+
 "Back identity document photo successfully uploaded" = "Фото оборотной стороны документа, удостоверяющего личность, успешно загружено";
-/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+
 "Back of %@" = "Оборотная сторона (%@)";
-/* Description of back of driver's license image */
-"Back of driver's license" = "Оборот водительского удостоверения";
-/* Back of driver's license or government-issued photo ID */
+
 "Back of driver's license or government-issued photo ID" = "Обратная сторона водительских прав или удостоверения личности государственного образца с фотографией";
-/* Back of driver's license or passport */
-"Back of driver's license or passport" = "Обратная сторона водительских прав или паспорта";
-/* Back of driver's license, passport, or government-issued photo ID */
-"Back of driver's license, passport, or government-issued photo ID" = "Обратная сторона водительских прав, паспорта или удостоверения личности государственного образца с фотографией";
-/* Description of back of identity card image */
-"Back of identity card" = "Оборот удостоверения личности";
-/* Title of ID document scanning screen when scanning the back of an identity card */
+
 "Back of identity document" = "Оборотная сторона документа, удостоверяющего личность";
-/* Back of passport or government-issued photo ID */
-"Back of passport or government-issued photo ID" = "Обратная сторона паспорта или удостоверения личности государственного образца с фотографией";
-/* Title displayed when requesting camera permissions */
+
 "Camera permission" = "Разрешение на доступ к камере";
-/* Error title displayed to the user when the device's camera is not available */
+
 "Camera unavailable" = "Камера недоступна";
-/* Instructional text during selfie is being captured */
+
 "Capturing…" = "Идет съемка...";
-/* When selected in an action sheet, opens the device's file system browser */
+
 "Choose File" = "Выберите файл";
-/* Back button title for returning to consent screen of Identity verification */
+
 "Consent" = "Согласие";
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+
 "Could not capture image" = "Не удалось получить изображение";
-/* Label for Date of birth field */
-"Date of Birth" = "Дата рождения";
-/* Label for Date of birth field */
-"Date of birth" = "Дата рождения";
-/* Message for invalid Date of birth field */
+
 "Date of birth does not look valid" = "Похоже, дата рождения недействительна";
-/* Instructional text when environement is too bright
-   Instructional text when the document is too glarry
-   Instructional text when user needs remove anything blocking the document */
+
 "Details not visible" = "Детали не видны";
-/* Button that opens file upload screen */
-"File Upload" = "Отправка файла";
-/* Title of identity document file upload screen */
-"File upload" = "Файл отправлен";
-/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+
 "Flip your %@ over to the other side" = "Переверните документ (%@) на другую сторону";
-/* Flip your driver's license or government-issued photo ID over to the other side */
+
 "Flip your driver's license or government-issued photo ID over to the other side" = "Переверните водительские права или удостоверение личности государственного образца с фотографией на обратную сторону";
-/* Flip your driver's license or passport over to the other side */
-"Flip your driver's license or passport over to the other side" = "Переверните водительские права или паспорт на обратную сторону";
-/* Instructional text for scanning back of a driver's license */
-"Flip your driver's license over to the other side" = "Переверните водительские права другой стороной";
-/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
-"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Переверните водительские права, паспорт или удостоверение личности государственного образца с фотографией на обратную сторону";
-/* Instructional text for scanning back of a identity card */
+
 "Flip your identity card over to the other side" = "Переверните удостоверение личности другой стороной";
-/* Flip your passport or government-issued photo ID over to the other side */
-"Flip your passport or government-issued photo ID over to the other side" = "Переверните паспорт или удостоверение личности государственного образца с фотографией на обратную сторону";
-/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+
 "Front %@ photo successfully uploaded" = "Фото лицевой стороны документа (%@) успешно загружено";
-/* Accessibility label when front driver's license photo has successfully uploaded */
-"Front driver's license photo successfully uploaded" = "Фотография лицевой стороны водительских прав успешно отправлена";
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "Фотография лицевой стороны удостоверения личности успешно отправлена";
-/* Accessibility label when front identity document photo has successfully uploaded */
+
 "Front identity document photo successfully uploaded" = "Фото лицевой стороны документа, удостоверяющего личность, успешно загружено";
-/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+
 "Front of %@" = "Лицевая сторона (%@)";
-/* Description of front of driver's license image */
-"Front of driver's license" = "Лицевая сторона водительского удостоверения";
-/* Front of driver's license or government-issued photo ID */
+
 "Front of driver's license or government-issued photo ID" = "Лицевая сторона водительских прав или удостоверения личности государственного образца с фотографией";
-/* Front of driver's license or passport */
+
 "Front of driver's license or passport" = "Лицевая сторона водительских прав или паспорта";
-/* Front of driver's license, passport, or government-issued photo ID */
+
 "Front of driver's license, passport, or government-issued photo ID" = "Лицевая сторона водительских прав, паспорта или удостоверения личности государственного образца с фотографией";
-/* Description of front of identity card image */
-"Front of identity card" = "Лицевая сторона удостоверения личности";
-/* Title of ID document scanning screen when scanning the front of an identity card */
+
 "Front of identity document" = "Лицевая сторона документа, удостоверяющего личность";
-/* Front of passport or government-issued photo ID */
+
 "Front of passport or government-issued photo ID" = "Лицевая сторона паспорта или удостоверения личности государственного образца с фотографией";
-/* Title for document front warmup page */
+
 "Get ready to scan your photo ID" = "Приготовьтесь сканировать удостоверение личности с фотографией";
-/* Title for selfie warmup page */
+
 "Get ready to take a selfie" = "Приготовьтесь сделать селфи";
-/* Button to go back to the previous screen */
+
 "Go Back" = "Назад";
-/* Instructional text when camera is focusing on a document while scanning it */
+
 "Hold still, scanning" = "Держите документ неподвижно, идет сканирование";
-/* Ready button text on warmup screen */
+
 "I'm ready" = "Готово";
-/* Label for ID number section */
+
 "ID Number" = "Номер удостоверения личности";
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
-"ID Type" = "Тип удостоверения";
-/* Description of passport image */
-"Image of passport" = "Изображение паспорта";
-/* Label for the ID field to collect individual CPF for Brazilian ID */
+
 "Individual CPF" = "Личный номер CPF";
-/* Instructional text when user align the edge with camera
-   Instructional text when user needs to rorate to document to align with camera */
+
 "Keep ID level" = "Держите документ ровно";
-/* Label for the ID field to collect last 4 of social security number for US ID */
+
 "Last 4 of Social Security number" = "Последние 4 цифры номера социального страхования";
-/* Status while screen is loading */
+
 "Loading" = "Идет загрузка";
-/* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "Проследите, чтобы все детали были видны и в фокусе";
-/* Body for selfie warmup page */
+
 "Make sure you're in a well lit space." = "Позаботьтесь о хорошем освещении.";
-/* Instructional text when camera is too far from a document */
+
 "Move closer" = "Придвиньтесь поближе";
-/* Instructional text when camera is too close to a document */
+
 "Move farther" = "Отодвиньтесь подальше";
-/* Instructional text when environement is too bright */
+
 "Move to a darker area" = "Перейдите в более темное место";
-/* Instructional text when environement is too dark */
+
 "Move to a well-lit area" = "Переместитесь в хорошо освещенное место";
-/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
+
 "NRIC or FIN" = "Номер NRIC или FIN";
-/* Instructional text when there is no document in camera frame */
+
 "No document detected" = "Документ не найден";
-/* Label of the passport option for document type selection */
-"Passport" = "Паспорт";
-/* Accessibility label when passport photo has successfully uploaded */
-"Passport photo successfully uploaded" = "Фотография паспорта успешно отправлена";
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+
 "Personal ID number" = "Номер документа, удостоверяющего личность";
-/* Back button title for returning to the individual's perssonal infomation screen */
+
 "Personal Information" = "Персональная информация";
-/* Section title for collection phone number */
+
 "Phone Number" = "Номер телефона";
-/* Back button title for returning to the phone verification page */
+
 "Phone Verification" = "Проверка по телефону";
-/* When selected in an action sheet, opens the device's photo library */
+
 "Photo Library" = "Библиотека фотографий";
-/* Instructions for uploading images of passport */
-"Please upload an image of your passport" = "Отправьте изображение вашего паспорта";
-/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+
 "Please upload images of the front and back of your %@" = "Загрузите изображения лицевой и оборотной стороны вашего документа (%@)";
-/* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "Отправьте изображения лицевой стороны и оборота вашего водительского удостоверения";
-/* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "Отправьте изображения лицевой стороны и оборота вашего удостоверения личности";
-/* Instructions for uploading images of identity document */
+
 "Please upload images of the front and back of your identity document" = "Загрузите изображения лицевой и оборотной стороны вашего документа, удостоверяющего личность";
-/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+
 "Position your %@ in the center of the frame" = "Расположите документ (%@) в центре кадра";
-/* Instructional text for scanning front of a driver's license */
-"Position your driver's license in the center of the frame" = "Поместите водительское удостоверение в центр рамки";
-/* Position your driver's license or government-issued photo ID in the center of the frame */
+
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Расположите водительские права или удостоверение личности государственного образца с фотографией в центре кадра";
-/* Position your driver's license or passport in the center of the frame */
+
 "Position your driver's license or passport in the center of the frame" = "Расположите водительские права или паспорт в центре кадра";
-/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
+
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Расположите водительские права, паспорт или удостоверение личности государственного образца с фотографией в центре кадра";
-/* Instructional text for capturing selfie */
+
 "Position your face in the center of the frame." = "Расположите лицо по центру рамки";
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "Поместите удостоверение личности в центр рамки";
-/* Instructional text for scanning front of a identity document */
+
 "Position your identity document in the center of the frame" = "Расположите документ, удостоверяющий вашу личность, в центре рамки";
-/* Instructional text for scanning a passport */
-"Position your passport in the center of the frame" = "Поместите паспорт в центр рамки";
-/* Position your passport or government-issued photo ID in the center of the frame */
+
 "Position your passport or government-issued photo ID in the center of the frame" = "Расположите паспорт или удостоверение личности государственного образца с фотографией в центре кадра";
-/* Button text displayed to the user to retake photo */
+
 "Retake Photos" = "Повторные фото";
-/* Back button title for returning to the document scan screen */
+
 "Scan" = "Сканировать";
-/* State when identity document has been successfully scanned */
+
 "Scanned" = "Сканировано";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
 "Select" = "Выбрать";
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
+
 "Select a location to upload the back of your identity document from" = "Выберите папку с изображением оборота вашего документа, удостоверяющего личность, для отправки";
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
+
 "Select a location to upload the front of your identity document from" = "Выберите папку с изображением лицевой стороны вашего документа, удостоверяющего личность, для отправки";
-/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+
 "Select back %@ photo" = "Выберите фото оборотной стороны документа (%@)";
-/* Accessibility label to select a photo of back of driver's license */
-"Select back driver's license photo" = "Выбрать фотографию оборотной стороны водительских прав";
-/* Accessibility label to select a photo of back of identity card */
-"Select back identity card photo" = "Выбрать фотографию оборотной стороны удостоверения личности";
-/* Accessibility label to select a photo of back of identity document */
+
 "Select back identity document photo" = "Выберите фото оборотной стороны документа, удостоверяющего личность";
-/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+
 "Select front %@ photo" = "Выберите фото лицевой стороны документа (%@)";
-/* Accessibility label to select a photo of front of driver's license */
-"Select front driver's license photo" = "Выбрать фотографию лицевой стороны водительских прав";
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "Выбрать фотографию лицевой стороны удостоверения личности";
-/* Accessibility label to select a photo of front of identity document */
+
 "Select front identity document photo" = "Выберите фото лицевой стороны документа, удостоверяющего личность";
-/* Accessibility label to select a photo of passport */
-"Select passport photo" = "Выбрать фотографию паспорта";
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
+
 "Selfie" = "Селфи";
-/* Title of selfie capture screen */
+
 "Selfie captures" = "Съемка селфи";
-/* Instructional text when selfie is captured */
+
 "Selfie captures are complete" = "Съемка селфи выполнена";
-/* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Сделать фото";
-/* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Изображения вашего удостоверения личности не сохранены. Вы все-таки хотите выйти?";
-/* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "При попытке доступа к камере произошла ошибка.";
-/* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Повторите попытку";
-/* Instructional text when the document is too glarry */
+
 "Try reduce glare and make ID visible" = "Постарайтесь, чтобы не было бликов и чтобы документ был хорошо виден";
-/* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Не удалось установить соединение.";
-/* Title for warning alert */
+
 "Unsaved changes" = "Несохраненные изменения";
-/* Back button label for the identity document file upload screen */
+
 "Upload" = "Отправить";
-/* Button to upload a photo */
+
 "Upload a Photo" = "Отправьте фотографию";
-/* Title of document upload screen */
+
 "Upload your %@" = "Загрузите свой документ (%@)";
-/* Title of document upload screen */
+
 "Upload your photo ID" = "Отправьте удостоверение личности с фото";
-/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading back %@ photo" = "Загрузка фото оборотной стороны документа (%@)";
-/* Accessibility label while photo of back of driver's license is uploading */
-"Uploading back driver's license photo" = "Отправляется фотография оборотной стороны водительских прав";
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "Отправляется фотография оборотной стороны удостоверения личности";
-/* Accessibility label while photo of back of identity document is uploading */
+
 "Uploading back identity document photo" = "Загрузка фото оборотной стороны документа, удостоверяющего личность";
-/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading front %@ photo" = "Загрузка фото лицевой стороны документа (%@)";
-/* Accessibility label while photo of front of driver's license is uploading */
-"Uploading front driver's license photo" = "Отправляется фотография лицевой стороны водительских прав";
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "Отправляется фотография лицевой стороны удостоверения личности";
-/* Accessibility label while photo of front of identity document is uploading */
+
 "Uploading front identity document photo" = "Загрузка фото лицевой стороны документа, удостоверяющего личность";
-/* Accessibility label while photo of passport is uploading */
-"Uploading passport photo" = "Отправляется фотография паспорта";
-/* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Подтвердите свою личность";
-/* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Не удалось получить качественное изображение.";
-/* Text displayed when requesting camera permissions */
+
 "We need permission to use your camera. Please allow camera access in app settings." = "Нам требуется разрешение на доступ к камере. Разрешите доступ к камере в настройках приложения.";
-/* Back button title for returning to welcome screen of Identity verification */
+
 "Welcome" = "Добро пожаловать";
-/* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Попробуйте еще раз или загрузите изображение со своего устройства.";
-/* Text for message of warning alert when selfie is not yet saved */
+
 "Your selfie images have not been saved. Do you want to leave?" = "Ваши селфи-изображения не были сохранены. Хотите выйти?";
-/* driver's license */
+
 "driver's license" = "водительские права";
-/* id issued by government */
+
 "government-issued photo ID" = "государственное удостоверение личности с фотографией";
-/* passport */
+
 "passport" = "паспорт";

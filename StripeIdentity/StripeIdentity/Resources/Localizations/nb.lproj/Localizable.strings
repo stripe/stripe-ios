@@ -1,276 +1,191 @@
-/* Body for selfie warmup page */
 "A few photos will be taken automatically on the next step to verify it's you" = "Noen få bilder tas automatisk i neste trinn for å bekrefte at det er deg";
-/* Title for accepted types of ids */
+
 "Accepted forms of ID include" = "Godkjente former for ID inkluderer";
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+
 "Alternatively, you may manually upload a photo of your identity document." = "Alternativt kan du laste opp et bilde av identitetsdokumentet manuelt.";
-/* Opens the app's settings in the Settings app */
+
 "App Settings" = "Appinnstillinger";
-/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
+
 "Back %@ photo successfully uploaded" = "Baksiden av bildet, %@, ble lastet opp";
-/* Accessibility label when back driver's license photo has successfully uploaded */
-"Back driver's license photo successfully uploaded" = "Bilde av baksiden av førerkortet ble lastet opp";
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "Bilde av baksiden av identitetskortet ble lastet opp";
-/* Accessibility label when back identity document photo has successfully uploaded */
+
 "Back identity document photo successfully uploaded" = "Baksiden av bildet for identitetsdokumentet ble lastet opp";
-/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+
 "Back of %@" = "Baksiden av %@";
-/* Description of back of driver's license image */
-"Back of driver's license" = "Baksiden av førerkortet";
-/* Back of driver's license or government-issued photo ID */
+
 "Back of driver's license or government-issued photo ID" = "Baksiden av et førerkort eller en offentlig utstedt ID med bilde";
-/* Back of driver's license or passport */
-"Back of driver's license or passport" = "Baksiden av et førerkort eller et pass";
-/* Back of driver's license, passport, or government-issued photo ID */
-"Back of driver's license, passport, or government-issued photo ID" = "Baksiden av et førerkort, et pass eller en offentlig utstedt ID med bilde";
-/* Description of back of identity card image */
-"Back of identity card" = "Baksiden av identitetskortet";
-/* Title of ID document scanning screen when scanning the back of an identity card */
+
 "Back of identity document" = "Baksiden av identitetsdokumentet";
-/* Back of passport or government-issued photo ID */
-"Back of passport or government-issued photo ID" = "Baksiden av et pass eller en offentlig utstedt ID med bilde";
-/* Title displayed when requesting camera permissions */
+
 "Camera permission" = "Kameratilgang";
-/* Error title displayed to the user when the device's camera is not available */
+
 "Camera unavailable" = "Kamera utilgjengelig";
-/* Instructional text during selfie is being captured */
+
 "Capturing…" = "Tar bilde …";
-/* When selected in an action sheet, opens the device's file system browser */
+
 "Choose File" = "Velg fil";
-/* Back button title for returning to consent screen of Identity verification */
+
 "Consent" = "Samtykke";
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+
 "Could not capture image" = "Kunne ikke ta bilde";
-/* Label for Date of birth field */
-"Date of Birth" = "Fødselsdato";
-/* Label for Date of birth field */
-"Date of birth" = "Fødselsdato";
-/* Message for invalid Date of birth field */
+
 "Date of birth does not look valid" = "Fødselsdato ser ikke gyldig ut";
-/* Instructional text when environement is too bright
-   Instructional text when the document is too glarry
-   Instructional text when user needs remove anything blocking the document */
+
 "Details not visible" = "Detaljer er ikke synlige";
-/* Button that opens file upload screen */
-"File Upload" = "Filopplasting";
-/* Title of identity document file upload screen */
-"File upload" = "Filopplasting";
-/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+
 "Flip your %@ over to the other side" = "Snu %@ over til den andre siden";
-/* Flip your driver's license or government-issued photo ID over to the other side */
+
 "Flip your driver's license or government-issued photo ID over to the other side" = "Snu førerkortet eller den offentlig utstedte ID-en med bilde over til den andre siden";
-/* Flip your driver's license or passport over to the other side */
-"Flip your driver's license or passport over to the other side" = "Snu førerkortet eller passet over til den andre siden";
-/* Instructional text for scanning back of a driver's license */
-"Flip your driver's license over to the other side" = "Snu førerkortet over til den andre siden";
-/* Flip your driver's license, passport, or government-issued photo ID over to the other side */
-"Flip your driver's license, passport, or government-issued photo ID over to the other side" = "Snu førerkortet, passet eller den offentlig utstedte ID-en med bilde over til den andre siden";
-/* Instructional text for scanning back of a identity card */
+
 "Flip your identity card over to the other side" = "Snu identitetskortet over til den andre siden";
-/* Flip your passport or government-issued photo ID over to the other side */
-"Flip your passport or government-issued photo ID over to the other side" = "Snu passet eller den offentlig utstedte ID-en med bilde over til den andre siden";
-/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+
 "Front %@ photo successfully uploaded" = "Forsiden av bildet, %@, ble lastet opp";
-/* Accessibility label when front driver's license photo has successfully uploaded */
-"Front driver's license photo successfully uploaded" = "Bilde av forsiden av førerkortet ble lastet opp";
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "Bilde av forsiden av identitetskortet ble lastet opp";
-/* Accessibility label when front identity document photo has successfully uploaded */
+
 "Front identity document photo successfully uploaded" = "Forsiden av bildet for identitetsdokumentet ble lastet opp";
-/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+
 "Front of %@" = "Forsiden av %@";
-/* Description of front of driver's license image */
-"Front of driver's license" = "Forsiden av førerkortet";
-/* Front of driver's license or government-issued photo ID */
+
 "Front of driver's license or government-issued photo ID" = "Forsiden av et førerkort eller en offentlig utstedt ID med bilde";
-/* Front of driver's license or passport */
+
 "Front of driver's license or passport" = "Forsiden av et førerkort eller et pass";
-/* Front of driver's license, passport, or government-issued photo ID */
+
 "Front of driver's license, passport, or government-issued photo ID" = "Forsiden av et førerkort, et pass eller en offentlig utstedt ID med bilde";
-/* Description of front of identity card image */
-"Front of identity card" = "Forsiden av identitetskortet";
-/* Title of ID document scanning screen when scanning the front of an identity card */
+
 "Front of identity document" = "Forsiden av identitetsdokumentet";
-/* Front of passport or government-issued photo ID */
+
 "Front of passport or government-issued photo ID" = "Forsiden av et pass eller en offentlig utstedt ID med bilde";
-/* Title for document front warmup page */
+
 "Get ready to scan your photo ID" = "Gjør deg klar til å skanne bilde-ID-en din";
-/* Title for selfie warmup page */
+
 "Get ready to take a selfie" = "Gjør deg klar til å ta en selfie";
-/* Button to go back to the previous screen */
+
 "Go Back" = "Gå tilbake";
-/* Instructional text when camera is focusing on a document while scanning it */
+
 "Hold still, scanning" = "Vær rolig, skanner";
-/* Ready button text on warmup screen */
+
 "I'm ready" = "Jeg er klar";
-/* Label for ID number section */
+
 "ID Number" = "ID-nummer";
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
-"ID Type" = "ID-type";
-/* Description of passport image */
-"Image of passport" = "Bilde av pass";
-/* Label for the ID field to collect individual CPF for Brazilian ID */
+
 "Individual CPF" = "Individuell CPF";
-/* Instructional text when user align the edge with camera
-   Instructional text when user needs to rorate to document to align with camera */
+
 "Keep ID level" = "Hold ID-en rett";
-/* Label for the ID field to collect last 4 of social security number for US ID */
+
 "Last 4 of Social Security number" = "Siste 4 sifre i personnummer";
-/* Status while screen is loading */
+
 "Loading" = "Laster inn";
-/* Instructional text when the document is too blurry */
-"Make sure all details are visible and focus" = "Sørg for at alle detaljer er synlige og i fokus.";
-/* Body for selfie warmup page */
+
 "Make sure you're in a well lit space." = "Sørg for at du befinner deg i et godt opplyst rom.";
-/* Instructional text when camera is too far from a document */
+
 "Move closer" = "Flytt nærmere";
-/* Instructional text when camera is too close to a document */
+
 "Move farther" = "Flytt lenger unna";
-/* Instructional text when environement is too bright */
+
 "Move to a darker area" = "Flytt til et mørkere område";
-/* Instructional text when environement is too dark */
+
 "Move to a well-lit area" = "Flytt til et godt belyst område";
-/* Label for the ID field to collect NRIC or FIN for Singaporean ID */
+
 "NRIC or FIN" = "NRIC eller FIN";
-/* Instructional text when there is no document in camera frame */
+
 "No document detected" = "Ingen dokumenter er oppdaget";
-/* Label of the passport option for document type selection */
-"Passport" = "Pass";
-/* Accessibility label when passport photo has successfully uploaded */
-"Passport photo successfully uploaded" = "Passbildet ble lastet opp";
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+
 "Personal ID number" = "Personlig ID-nummer";
-/* Back button title for returning to the individual's perssonal infomation screen */
+
 "Personal Information" = "Personopplysninger";
-/* Section title for collection phone number */
+
 "Phone Number" = "Telefonnummer";
-/* Back button title for returning to the phone verification page */
+
 "Phone Verification" = "Telefonverifisering";
-/* When selected in an action sheet, opens the device's photo library */
+
 "Photo Library" = "Bildebibliotek";
-/* Instructions for uploading images of passport */
-"Please upload an image of your passport" = "Last opp et bilde av passet ditt";
-/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+
 "Please upload images of the front and back of your %@" = "Last opp bilder av forsiden og baksiden av %@";
-/* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "Last opp bilder av for- og baksiden av førerkortet ditt";
-/* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "Last opp bilder av for- og baksiden av identitetskortet ditt";
-/* Instructions for uploading images of identity document */
+
 "Please upload images of the front and back of your identity document" = "Last opp bilder av forsiden og baksiden av identitetsdokumentet ditt";
-/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+
 "Position your %@ in the center of the frame" = "Plasser %@ i midten av rammen";
-/* Instructional text for scanning front of a driver's license */
-"Position your driver's license in the center of the frame" = "Plasser førerkortet midt i bildet";
-/* Position your driver's license or government-issued photo ID in the center of the frame */
+
 "Position your driver's license or government-issued photo ID in the center of the frame" = "Plasser førerkortet eller den offentlig utstedte ID-en med bilde i midten av rammen";
-/* Position your driver's license or passport in the center of the frame */
+
 "Position your driver's license or passport in the center of the frame" = "Plasser førerkortet eller passet i midten av rammen";
-/* Position your driver's license, passport, or government-issued photo ID in the center of the frame */
+
 "Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Plasser førerkortet, passet eller den offentlig utstedte ID-en med bilde i midten av rammen";
-/* Instructional text for capturing selfie */
+
 "Position your face in the center of the frame." = "Plasser ansiktet midt i bildet.";
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "Plasser identitetskortet midt i bildet";
-/* Instructional text for scanning front of a identity document */
+
 "Position your identity document in the center of the frame" = "Plasser identitetsdokumentet ditt i midten av rammen";
-/* Instructional text for scanning a passport */
-"Position your passport in the center of the frame" = "Plasser passet midt i bildet";
-/* Position your passport or government-issued photo ID in the center of the frame */
+
 "Position your passport or government-issued photo ID in the center of the frame" = "Plasser passet eller den offentlig utstedte ID-en med bilde i midten av rammen";
-/* Button text displayed to the user to retake photo */
+
 "Retake Photos" = "Ta bilder på nytt";
-/* Back button title for returning to the document scan screen */
+
 "Scan" = "Skann";
-/* State when identity document has been successfully scanned */
+
 "Scanned" = "Skannet";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+
 "Select" = "Velg";
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
+
 "Select a location to upload the back of your identity document from" = "Velg en plassering du vil laste opp baksiden av identitetsdokumentet ditt fra";
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
+
 "Select a location to upload the front of your identity document from" = "Velg en plassering du vil laste opp forsiden av identitetsdokumentet ditt fra";
-/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+
 "Select back %@ photo" = "Velg baksiden av bildet, %@";
-/* Accessibility label to select a photo of back of driver's license */
-"Select back driver's license photo" = "Velg bilde av baksiden av førerkortet";
-/* Accessibility label to select a photo of back of identity card */
-"Select back identity card photo" = "Velg bilde av baksiden av identitetskortet";
-/* Accessibility label to select a photo of back of identity document */
+
 "Select back identity document photo" = "Velg baksiden av bildet for identitetsdokumentet";
-/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+
 "Select front %@ photo" = "Velg forsiden av bildet, %@";
-/* Accessibility label to select a photo of front of driver's license */
-"Select front driver's license photo" = "Velg bilde av forsiden av førerkortet";
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "Velg bilde av forsiden av identitetskortet";
-/* Accessibility label to select a photo of front of identity document */
+
 "Select front identity document photo" = "Velg forsiden av bildet for identitetsdokumentet";
-/* Accessibility label to select a photo of passport */
-"Select passport photo" = "Velg passbilde";
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
+
 "Selfie" = "Selfie";
-/* Title of selfie capture screen */
+
 "Selfie captures" = "Selfiebilder";
-/* Instructional text when selfie is captured */
+
 "Selfie captures are complete" = "Selfiebilder er fullført";
-/* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Ta bilde";
-/* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Bildet av identitetsdokumentet er ikke lagret. Vil du forlate?";
-/* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Det oppstod en feil med å få tilgang til kameraet.";
-/* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Prøv igjen";
-/* Instructional text when the document is too glarry */
+
 "Try reduce glare and make ID visible" = "Prøv å redusere gjenskinn og gjør ID-en synlig";
-/* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Kan ikke opprette en tilkobling.";
-/* Title for warning alert */
+
 "Unsaved changes" = "Ulagrede endringer";
-/* Back button label for the identity document file upload screen */
+
 "Upload" = "Last opp";
-/* Button to upload a photo */
+
 "Upload a Photo" = "Last opp et bilde";
-/* Title of document upload screen */
+
 "Upload your %@" = "Last opp %@";
-/* Title of document upload screen */
+
 "Upload your photo ID" = "Last opp din bilde-ID";
-/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading back %@ photo" = "Laster opp baksiden av bildet for %@";
-/* Accessibility label while photo of back of driver's license is uploading */
-"Uploading back driver's license photo" = "Laster opp bilde av baksiden av førerkortet";
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "Laster opp bilde av baksiden av identitetskortet";
-/* Accessibility label while photo of back of identity document is uploading */
+
 "Uploading back identity document photo" = "Laster opp baksiden av bildet for identitetsdokumentet";
-/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+
 "Uploading front %@ photo" = "Laster opp forsiden av bildet for %@";
-/* Accessibility label while photo of front of driver's license is uploading */
-"Uploading front driver's license photo" = "Laster opp bilde av forsiden av førerkortet";
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "Laster opp bilde av forsiden av identitetskortet";
-/* Accessibility label while photo of front of identity document is uploading */
+
 "Uploading front identity document photo" = "Laster opp forsiden av bildet for identitetsdokumentet";
-/* Accessibility label while photo of passport is uploading */
-"Uploading passport photo" = "Laster opp passbilde";
-/* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Verifiser identiteten din";
-/* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Vi kunne ikke ta et bilde av høy kvalitet.";
-/* Text displayed when requesting camera permissions */
+
 "We need permission to use your camera. Please allow camera access in app settings." = "Vi trenger tillatelse for å bruke kameraet ditt. Gi tilgang til kameraet i appinnstillingene.";
-/* Back button title for returning to welcome screen of Identity verification */
+
 "Welcome" = "Velkommen";
-/* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Du kan enten prøve på nytt eller laste opp et bilde fra enheten din.";
-/* Text for message of warning alert when selfie is not yet saved */
+
 "Your selfie images have not been saved. Do you want to leave?" = "Selfiebildene er ikke lagret. Vil du forlate?";
-/* driver's license */
+
 "driver's license" = "førerkort";
-/* id issued by government */
+
 "government-issued photo ID" = "offentlig godkjente foto-ID";
-/* passport */
+
 "passport" = "pass";
