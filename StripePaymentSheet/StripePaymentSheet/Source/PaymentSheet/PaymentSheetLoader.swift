@@ -33,15 +33,6 @@ final class PaymentSheetLoader {
                 return true
             }
         }
-
-        var shouldStartCheckoutMeasurementOnLoad: Bool {
-            switch self {
-            case .paymentSheet, .embedded: // TODO(porter) Figure out when we want to start checkout measurement for embedded
-                return false
-            case .flowController:
-                return true
-            }
-        }
     }
 
     static func load(
@@ -179,9 +170,6 @@ final class PaymentSheetLoader {
             // Ensure that there's at least 1 payment method type available for the intent and configuration.
             guard !paymentMethodTypes.isEmpty else {
                 throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
-            }
-            if integrationShape.shouldStartCheckoutMeasurementOnLoad {
-                analyticsHelper.startTimeMeasurement(.checkout)
             }
 
             // Initialize telemetry. Don't wait for this to finish to return.
