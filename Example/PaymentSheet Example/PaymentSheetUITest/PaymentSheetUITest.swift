@@ -1247,6 +1247,21 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
+    func testCheckoutSession_ApplePay() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.integrationType = .checkoutSession
+        settings.apmsEnabled = .off
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+
+        payWithApplePay()
+    }
+
     func testPaymentSheetFlowControllerSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
