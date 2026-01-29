@@ -1252,6 +1252,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         settings.layout = .horizontal
         settings.integrationType = .checkoutSession
         settings.apmsEnabled = .off
+        settings.collectEmail = .always // CheckoutSession requires email
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
