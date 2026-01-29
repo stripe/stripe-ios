@@ -83,39 +83,56 @@ final class MPELatencyTest: XCTestCase {
         )
         return apiClient
     }()
+    /// This customer has
+    /// - Email, so that when Link is enabled it can trigger Link lookup (if email was not provided via default billing details)
+    /// - 2 PMs attached, card and US Bank Account.
+    let customerIDWithEmail = "cus_TqanA973bOrpoP"
 
-    // MARK: - Tests
+    /// This customer has
+    /// - 2 PMs attached, card and US Bank Account.
+    let customerIDWithoutEmail = "cus_TZCcZWKC57HHmr"
 
-    func test_default() async throws {
+    // MARK: - Tests w/ Link disabled
+
+    /// Link: disabled
+    /// Customer API: none
+    func test_link_off_with_no_customer() async throws {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
+        configuration.link.display = .never
 
         try await _measureLoadLatency(configuration: configuration)
 
         XCTAssertFalse(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called")
     }
 
-    func test_customer_legacy() async throws {
+    /// Link: disabled
+    /// Customer API: Ephemeral Key
+    func test_link_off_with_ek() async throws {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
+        configuration.link.display = .never
 
         // Use a customer w/ saved card and bank account
-        let testCustomerID = "cus_TZCcZWKC57HHmr"
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
-        configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+        // No email to prevent the Link lookup call, otherwise this test is ~identical to test_link_on_with_ek because our code makes the same link lookups regardless of whether link is actually disabled/enabled.
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: customerIDWithoutEmail, merchantCountry: "us")
+        configuration.customer = .init(id: customerIDWithoutEmail, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertFalse(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called")
     }
 
-    func test_customer_customersession() async throws {
+    /// Link: disabled
+    /// Customer API: CustomerSession
+    func test_link_off_with_cs() async throws {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
+        configuration.link.display = .never
 
         // Use a customer w/ saved card and bank account
-        let testCustomerID = "cus_TZCcZWKC57HHmr"
+        // No email to prevent the Link lookup call. If there was a Link lookup call this test would be ~identical to one that enabled Link, since we look up Link regardless of whether link is enabled today.
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
-            customerID: testCustomerID,
+            customerID: customerIDWithoutEmail,
             merchantCountry: "us",
             paymentMethodSave: true,
             paymentMethodRemove: true,
@@ -127,17 +144,47 @@ final class MPELatencyTest: XCTestCase {
         XCTAssertFalse(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called")
     }
 
-    /// CustomerSession + Customer w/ an email, triggering link lookup
-    func test_customer_customersession_and_link() async throws {
+    // MARK: - Tests w/ Link enabled
+
+    /// Link: enabled
+    /// Customer API: Ephemeral Key
+    /// Customer email: Available via Customer object
+    func test_link_on_with_no_customer() async throws {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.apiClient = apiClient
+
+        try await _measureLoadLatency(configuration: configuration)
+        XCTAssertFalse(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called because there is no customer email to look up")
+    }
+
+    /// Link: enabled
+    /// Customer API: Ephemeral Key
+    /// Customer email: Available via Customer object
+    func test_link_on_with_ek() async throws {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
 
         // Use a customer w/ an email
         // Why email? It's very specific to the current link lookup logic. The slowest codepath is when there is (1) no defaultBillingDetails.email (2) customer has email because it retrieves the Customer before doing the link lookup
-        let testCustomerID = "cus_TqanA973bOrpoP"
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: customerIDWithEmail, merchantCountry: "us")
+        configuration.customer = .init(id: customerIDWithEmail, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+        try await _measureLoadLatency(configuration: configuration)
+        XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
+    }
+
+    /// Link: enabled
+    /// Customer API: CustomerSession
+    /// Customer email: Available via Customer object
+    func test_link_on_with_cs() async throws {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.apiClient = apiClient
+
+        // Use a customer w/ an email
+        // Why email? It's very specific to the current link lookup logic. The slowest codepath is when there is (1) no defaultBillingDetails.email (2) customer has email because it retrieves the Customer before doing the link lookup
 
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
-            customerID: testCustomerID,
+            customerID: customerIDWithEmail,
             merchantCountry: "us",
             paymentMethodSave: true,
             paymentMethodRemove: true,
@@ -147,6 +194,50 @@ final class MPELatencyTest: XCTestCase {
 
         try await _measureLoadLatency(configuration: configuration)
         XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
+    }
+
+    // MARK: - Tests w/ Link enabled + default billing email
+
+    /// Link: enabled
+    /// Customer API: Ephemeral Key
+    /// Customer email: Available via default billing details
+    func test_link_on_with_ek_default_email() async throws {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.apiClient = apiClient
+
+        // Use a customer w/ an email
+        // Supply default email as well - this should remove the Customer lookup call
+        configuration.defaultBillingDetails.email = "yuki@stripe.com"
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: customerIDWithEmail, merchantCountry: "us")
+        configuration.customer = .init(id: customerIDWithEmail, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+
+        try await _measureLoadLatency(configuration: configuration)
+        XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
+    }
+
+    /// Link: enabled
+    /// Customer API: CustomerSession
+    /// Customer email: Available via default billing details
+    func test_link_on_with_cs_default_email() async throws {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.apiClient = apiClient
+
+        // Use a customer w/ an email
+        // Supply default email as well - this should remove the Customer lookup call
+        configuration.defaultBillingDetails.email = "yuki@stripe.com"
+
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+            customerID: customerIDWithEmail,
+            merchantCountry: "us",
+            paymentMethodSave: true,
+            paymentMethodRemove: true,
+            paymentMethodSetAsDefault: true
+        )
+        configuration.customer = .init(id: customerAndCustomerSession.customer, customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret)
+
+        try await _measureLoadLatency(configuration: configuration)
+        XCTAssertTrue(didCallLinkLookupEndpoint, "Expected Link lookup endpoint to be called")
+
     }
 }
 
@@ -174,9 +265,13 @@ extension MPELatencyTest {
     }
 
     func _measureLoadLatency(configuration: PaymentSheet.Configuration) async throws {
+        // Use an analytics client that acts like it's in production and makes network requests, for addt'l realism.
+        let analyticsClient = STPTestingAnalyticsClient()
         let analyticsHelper = PaymentSheetAnalyticsHelper(
             integrationShape: .complete,
-            configuration: configuration
+            configuration: configuration,
+            analyticsClient: analyticsClient
+            // TODO: AnalyticsClientV2
         )
         let mode = PaymentSheet.InitializationMode.deferredIntent(._testValue())
 
@@ -192,7 +287,6 @@ extension MPELatencyTest {
 
         // 2. Log load stats
         let duration = endDate.timeIntervalSince(startDate)
-        let analyticsClient = STPTestingAnalyticsClient()
         // Only send analytics in the CI latency-tests job so that the environment is consistent.
         if isCILatencyTestRun {
             analyticsClient.forceAlwaysSendAnalytics = true
