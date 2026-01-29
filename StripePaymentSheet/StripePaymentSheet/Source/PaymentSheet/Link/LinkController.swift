@@ -739,7 +739,7 @@ import UIKit
             configuration: configuration,
             analyticsHelper: analyticsHelper,
             // TODO: Add a non-logging integration shape or something
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         )
 
         return result
