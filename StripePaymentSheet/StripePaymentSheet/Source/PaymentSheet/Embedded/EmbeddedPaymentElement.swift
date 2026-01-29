@@ -402,6 +402,7 @@ public final class EmbeddedPaymentElement {
         self.analyticsHelper = analyticsHelper
 
         analyticsHelper.logInitialized()
+        analyticsHelper.startTimeMeasurement(.checkout)
         self.containerView.needsUpdateSuperviewHeight = { [weak self] in
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)

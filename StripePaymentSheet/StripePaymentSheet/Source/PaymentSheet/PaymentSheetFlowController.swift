@@ -294,6 +294,7 @@ extension PaymentSheet {
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
+            self.analyticsHelper.startTimeMeasurement(.checkout)
             self.viewController = Self.makeViewController(
                 configuration: configuration,
                 loadResult: loadResult,
