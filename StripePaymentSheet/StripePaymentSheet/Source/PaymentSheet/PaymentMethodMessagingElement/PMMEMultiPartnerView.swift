@@ -14,6 +14,7 @@ class PMMEMultiPartnerView: UIView {
 
     private let logoSets: [PaymentMethodMessagingElement.LogoSet]
     private let promotion: String
+    private let infoMessage: String
     private let appearance: PaymentMethodMessagingElement.Appearance
 
     private var logoViews = [UIImageView]()
@@ -43,10 +44,12 @@ class PMMEMultiPartnerView: UIView {
     init(
         logoSets: [PaymentMethodMessagingElement.LogoSet],
         promotion: String,
+        infoMessage: String,
         appearance: PaymentMethodMessagingElement.Appearance
     ) {
         self.logoSets = logoSets
         self.promotion = promotion
+        self.infoMessage = infoMessage
         self.appearance = appearance
         super.init(frame: .zero)
 
@@ -108,13 +111,14 @@ class PMMEMultiPartnerView: UIView {
         }
     }
 
-    private func getPromotionAttributedString() -> NSMutableAttributedString? {
-        return NSMutableAttributedString.bnplPromoString(
+    private func getPromotionAttributedString() -> NSMutableAttributedString {
+        let promotionWithPeriod = promotion.hasSuffix(".") ? promotion : promotion + "."
+        return NSMutableAttributedString.pmmePromoString(
             font: appearance.scaledFont,
             textColor: appearance.textColor,
-            infoIconColor: appearance.infoIconColor ?? appearance.textColor,
-            template: promotion,
-            substitution: nil
+            template: promotionWithPeriod,
+            substitution: nil,
+            infoMessage: infoMessage
         )
     }
 }

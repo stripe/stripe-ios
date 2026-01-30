@@ -65,13 +65,62 @@ class AfterpayPriceBreakdownView: UIView {
             "Buy now or pay later with  <img/>",
             "Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay"
         )
-        return NSMutableAttributedString.bnplPromoString(
-            font: appearance.asElementsTheme.fonts.subheadline,
-            textColor: appearance.colors.text,
-            infoIconColor: appearance.colors.text,
-            template: template,
-            substitution: ("<img/>", afterpayMarkImage)
-        )
+
+        let font = appearance.asElementsTheme.fonts.subheadline
+        let textColor = appearance.colors.text
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 2
+        let stringAttributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: textColor,
+            .paragraphStyle: paragraphStyle,
+        ]
+
+        let resultingString = NSMutableAttributedString()
+        let placeholder = "<img/>"
+
+        guard let imgRange = template.range(of: placeholder) else {
+            return resultingString
+        }
+
+        var imgAppended = false
+        for (indexOffset, currCharacter) in template.enumerated() {
+            let currIndex = template.index(template.startIndex, offsetBy: indexOffset)
+            if imgRange.contains(currIndex) {
+                if imgAppended {
+                    continue
+                }
+                imgAppended = true
+                let logoAttachment = NSTextAttachment()
+                let scaledSize = afterpayMarkImage.sizeMatchingFont(font, additionalScale: 2.0)
+                let heightDifference = font.capHeight - scaledSize.height
+                let verticalOffset = heightDifference.rounded() / 2
+                logoAttachment.bounds = CGRect(origin: .init(x: 0, y: verticalOffset), size: scaledSize)
+                logoAttachment.image = afterpayMarkImage
+                resultingString.append(NSAttributedString(attachment: logoAttachment))
+            } else {
+                resultingString.append(NSAttributedString(string: String(currCharacter), attributes: stringAttributes))
+            }
+        }
+
+        // Add info icon
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: font.pointSize)
+        if let infoIconImage = UIImage(systemName: "info.circle", withConfiguration: symbolConfig)?
+            .withTintColor(textColor, renderingMode: .alwaysTemplate) {
+            let infoAttachment = NSTextAttachment()
+            let scaledSize = infoIconImage.sizeMatchingFont(font, additionalScale: 1.5)
+            let heightDifference = font.capHeight - scaledSize.height
+            let verticalOffset = heightDifference.rounded() / 2
+            infoAttachment.bounds = CGRect(origin: .init(x: 0, y: verticalOffset), size: scaledSize)
+            infoAttachment.image = infoIconImage
+            resultingString.append(NSAttributedString(string: "\u{00A0}", attributes: stringAttributes))
+            resultingString.append(NSAttributedString(attachment: infoAttachment))
+        } else {
+            stpAssertionFailure("Failed to load system image info.circle")
+        }
+
+        return resultingString
     }
 
     @objc

@@ -13,6 +13,7 @@ class PMMESinglePartnerView: UIView {
 
     private let logoSet: PaymentMethodMessagingElement.LogoSet
     private let promotion: String
+    private let infoMessage: String
     private let appearance: PaymentMethodMessagingElement.Appearance
 
     private let promotionLabel = UILabel()
@@ -25,10 +26,12 @@ class PMMESinglePartnerView: UIView {
     init(
         logoSet: PaymentMethodMessagingElement.LogoSet,
         promotion: String,
+        infoMessage: String,
         appearance: PaymentMethodMessagingElement.Appearance
     ) {
         self.logoSet = logoSet
         self.promotion = promotion
+        self.infoMessage = infoMessage
         self.appearance = appearance
         super.init(frame: .zero)
 
@@ -54,12 +57,12 @@ class PMMESinglePartnerView: UIView {
     }
 
     func getPromotionAttributedString() -> NSMutableAttributedString {
-        NSMutableAttributedString.bnplPromoString(
+        NSMutableAttributedString.pmmePromoString(
             font: appearance.scaledFont,
             textColor: appearance.textColor,
-            infoIconColor: appearance.infoIconColor ?? appearance.textColor,
             template: promotion,
-            substitution: ("{partner}", traitCollection.isDarkMode ? logoSet.dark : logoSet.light)
+            substitution: ("{partner}", traitCollection.isDarkMode ? logoSet.dark : logoSet.light),
+            infoMessage: infoMessage
         )
     }
 }

@@ -69,11 +69,11 @@ class PMMEUIView: UIView {
         // choose which style to initialize
         switch viewData.mode {
         case .singlePartner(let logo):
-            let view = PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
+            let view = PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, infoMessage: viewData.infoMessage, appearance: appearance)
             stackView.addArrangedSubview(view)
             accessibilityLabel = view.customAccessibilityLabel
         case .multiPartner(let logos):
-            let view = PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
+            let view = PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, infoMessage: viewData.infoMessage, appearance: appearance)
             stackView.addArrangedSubview(view)
             accessibilityLabel = view.customAccessibilityLabel
         }
