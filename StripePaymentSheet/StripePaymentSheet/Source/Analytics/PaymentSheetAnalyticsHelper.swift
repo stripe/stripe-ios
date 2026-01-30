@@ -101,7 +101,9 @@ final class PaymentSheetAnalyticsHelper {
 
     func logLoadStarted() {
         loadingStartDate = Date()
+        printTimingLog("START logLoadStarted")
         log(event: .paymentSheetLoadStarted, params: ["integration_shape": integrationShape.analyticsValue])
+        printTimingLog("END logLoadStarted")
     }
 
     func logLoadFailed(error: Error) {
@@ -124,6 +126,7 @@ final class PaymentSheetAnalyticsHelper {
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
         orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
     ) {
+        printTimingLog("START logLoadStarted")
         stpAssert(loadingStartDate != nil)
         self.intent = intent
         self.elementsSession = elementsSession
@@ -173,6 +176,7 @@ final class PaymentSheetAnalyticsHelper {
             duration: duration,
             params: params
         )
+        printTimingLog("END logLoadStarted")
     }
 
     func logShow(showingSavedPMList: Bool) {
