@@ -3574,8 +3574,8 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
         cardButton.forceTapElement()
 
-        addApplePayBillingIfNeeded(applePay)
         addApplePayContactIfNeeded(applePay)
+        addApplePayBillingIfNeeded(applePay)
 
         let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
         XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
