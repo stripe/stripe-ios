@@ -3568,13 +3568,14 @@ extension PaymentSheetUITestCase {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
+        addApplePayContactIfNeeded(applePay)
+        
         let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
 
         let cardButton = applePay.buttons.containing(predicate).firstMatch
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
         cardButton.forceTapElement()
 
-        addApplePayContactIfNeeded(applePay)
         addApplePayBillingIfNeeded(applePay)
 
         let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
