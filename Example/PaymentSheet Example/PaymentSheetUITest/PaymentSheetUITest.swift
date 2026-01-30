@@ -3569,7 +3569,7 @@ extension PaymentSheetUITestCase {
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
         addApplePayContactIfNeeded(applePay)
-        
+
         let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
 
         let cardButton = applePay.buttons.containing(predicate).firstMatch
