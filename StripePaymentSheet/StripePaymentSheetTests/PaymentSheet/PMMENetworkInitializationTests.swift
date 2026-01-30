@@ -90,6 +90,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
+            infoMessage: "See plans",
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
@@ -143,6 +144,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 dark: loadTestImage("affirm-logo-dark"),
                 altText: "Affirm", code: "affirm"
             )),
+            infoMessage: "See if you qualify",
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50 with {partner}",
@@ -210,6 +212,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
+            infoMessage: "See plans",
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
@@ -277,6 +280,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
+            infoMessage: "See plans",
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50",
@@ -328,6 +332,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 dark: loadTestImage("klarna-logo-dark"),
                 altText: "Klarna", code: "klarna"
             )),
+            infoMessage: "See plans",
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "4 interest-free payments of $12.50 with {partner}",
@@ -578,6 +583,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 dark: loadTestImage("klarna-logo-dark"),
                 altText: "Klarna", code: "klarna"
             )),
+            infoMessage: "See plans",
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=FR&currency=EUR&key=\(Self.frenchPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!,
             legalDisclosure: nil,
             promotion: "3 interest-free payments of €16.67 with {partner}",
@@ -641,6 +647,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                     altText: "Klarna", code: "klarna"
                 ),
             ]),
+            infoMessage: "Consulter les offres",
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=fr&payment_methods%5B0%5D=afterpay_clearpay&payment_methods%5B1%5D=affirm&payment_methods%5B2%5D=klarna&title=Consulter%20les%20offres")!,
             legalDisclosure: nil,
             promotion: "4 paiements de 12,50 $US sans intérêts",
@@ -694,6 +701,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
                 dark: loadTestImage("klarna-logo-dark"),
                 altText: "Klarna", code: "klarna"
             )),
+            infoMessage: "See plans",
             infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=GB&currency=GBP&key=\(Self.ukPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!,
             legalDisclosure: "18+, T&C apply. Credit subject to status.",
             promotion: "3 interest-free payments of £16.67 with {partner}",
@@ -785,6 +793,9 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
         // Compare info URL
         XCTAssertEqual(actual.infoUrl, expected.infoUrl, "Info URL mismatch", file: file, line: line)
+
+        // Compare info message
+        XCTAssertEqual(actual.infoMessage, expected.infoMessage, "Info message mismatch", file: file, line: line)
 
         // Compare legal disclosure
         XCTAssertEqual(actual.legalDisclosure, expected.legalDisclosure, "Legal disclosure mismatch", file: file, line: line)
