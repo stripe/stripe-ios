@@ -25,7 +25,12 @@ extension PaymentMethodMessagingElement {
             let legalDisclosure = paymentPlan.content.legalDisclosure?.message
 
             // unexpected / error cases
-            guard let infoUrl = paymentPlan.content.learnMore?.url else {
+            guard let infoData = paymentPlan.content.learnMore else {
+                Self.assertAndLogMissingField("learn_more", apiClient: configuration.apiClient)
+                return nil
+            }
+            let infoMessage = infoData.message
+            guard let infoUrl = infoData.url else {
                 Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
                 return nil
             }
@@ -42,6 +47,7 @@ extension PaymentMethodMessagingElement {
                 if let topLevelPromotion = apiResponse.content.promotion?.message {
                     self.init(
                         mode: .multiPartner(logos: []),
+                        infoMessage: infoMessage,
                         infoUrl: infoUrl,
                         legalDisclosure: legalDisclosure,
                         promotion: topLevelPromotion,
@@ -58,6 +64,7 @@ extension PaymentMethodMessagingElement {
             // success
             self.init(
                 mode: .singlePartner(logo: logo),
+                infoMessage: infoMessage,
                 infoUrl: infoUrl,
                 legalDisclosure: legalDisclosure,
                 promotion: inlinePromo,
@@ -77,7 +84,12 @@ extension PaymentMethodMessagingElement {
             let legalDisclosure = apiResponse.content.legalDisclosure?.message
 
             // unexpected / error case
-            guard let infoUrl = apiResponse.content.learnMore?.url else {
+            guard let infoData = apiResponse.content.learnMore else {
+                Self.assertAndLogMissingField("learn_more", apiClient: configuration.apiClient)
+                return nil
+            }
+            let infoMessage = infoData.message
+            guard let infoUrl = infoData.url else {
                 Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
                 return nil
             }
@@ -93,6 +105,7 @@ extension PaymentMethodMessagingElement {
             // success
             self.init(
                 mode: .multiPartner(logos: logos),
+                infoMessage: infoMessage,
                 infoUrl: infoUrl,
                 legalDisclosure: legalDisclosure,
                 promotion: promo,

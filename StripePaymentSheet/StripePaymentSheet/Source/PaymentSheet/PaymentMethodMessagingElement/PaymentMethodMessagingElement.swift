@@ -106,14 +106,16 @@ public class PaymentMethodMessagingElement {
     // MARK: - Internal
 
     let mode: Mode
+    let infoMessage: String
     let infoUrl: URL
     let legalDisclosure: String?
     let promotion: String
     let appearance: Appearance
     let analyticsHelper: PMMEAnalyticsHelper
 
-    init(mode: Mode, infoUrl: URL, legalDisclosure: String?, promotion: String, appearance: PaymentMethodMessagingElement.Appearance, analyticsHelper: PMMEAnalyticsHelper) {
+    init(mode: Mode, infoMessage: String, infoUrl: URL, legalDisclosure: String?, promotion: String, appearance: PaymentMethodMessagingElement.Appearance, analyticsHelper: PMMEAnalyticsHelper) {
         self.mode = mode
+        self.infoMessage = infoMessage
         self.infoUrl = infoUrl
         self.legalDisclosure = legalDisclosure
         self.promotion = promotion

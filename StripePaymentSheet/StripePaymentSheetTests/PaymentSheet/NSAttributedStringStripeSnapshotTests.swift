@@ -16,15 +16,15 @@ import UIKit
 @MainActor
 class NSAttributedStringStripeSnapshotTests: STPSnapshotTestCase {
 
-    func testBnplPromoString_UILabel_ImageAsset() {
+    func testPmmePromoString_UILabel_ImageAsset() {
         let template = "Buy now or pay later with <img/>"
         let image = Image.affirm_copy.makeImage()
-        let attributedString = NSMutableAttributedString.bnplPromoString(
+        let attributedString = NSMutableAttributedString.pmmePromoString(
             font: .boldSystemFont(ofSize: 20),
             textColor: UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 1.0),
-            infoIconColor: UIColor.purple,
             template: template,
-            substitution: ("<img/>", image)
+            substitution: ("<img/>", image),
+            infoMessage: "Learn more"
         )
 
         let label = UILabel()
@@ -34,15 +34,15 @@ class NSAttributedStringStripeSnapshotTests: STPSnapshotTestCase {
         verify(label)
     }
 
-    func testBnplPromoString_UILabel_SystemImage() {
+    func testPmmePromoString_UILabel_SystemImage() {
         let template = "4 interest-free payments of $12.50 with {partner}"
         let systemImage = UIImage(systemName: "creditcard.fill")!
-        let attributedString = NSMutableAttributedString.bnplPromoString(
+        let attributedString = NSMutableAttributedString.pmmePromoString(
             font: .systemFont(ofSize: 14),
             textColor: .darkGray,
-            infoIconColor: UIColor.red,
             template: template,
-            substitution: ("{partner}", systemImage)
+            substitution: ("{partner}", systemImage),
+            infoMessage: "Learn more"
         )
 
         let label = UILabel()
@@ -52,14 +52,14 @@ class NSAttributedStringStripeSnapshotTests: STPSnapshotTestCase {
         verify(label)
     }
 
-    func testBnplPromoString_UILabel_NoSubstitution() {
+    func testPmmePromoString_UILabel_NoSubstitution() {
         let template = "Flexible payment options available"
-        let attributedString = NSMutableAttributedString.bnplPromoString(
+        let attributedString = NSMutableAttributedString.pmmePromoString(
             font: .italicSystemFont(ofSize: 14),
             textColor: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0),
-            infoIconColor: UIColor.green,
             template: template,
-            substitution: nil
+            substitution: nil,
+            infoMessage: "Learn more"
         )
 
         let label = UILabel()
