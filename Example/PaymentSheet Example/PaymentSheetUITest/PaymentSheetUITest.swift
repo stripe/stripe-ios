@@ -3630,8 +3630,8 @@ extension PaymentSheetUITestCase {
         let addEmailButton = applePay.buttons["Add Email Address"]
         if addEmailButton.waitForExistence(timeout: 4.0) {
             addEmailButton.tap()
-            // Tap again to highlight the text field
-            addEmailButton.tap()
+            XCTAssertTrue(applePay.staticTexts["Select An Email Address"].waitForExistence(timeout: 4.0))
+            applePay.buttons.matching(identifier: "Add Email Address").element(boundBy: 1).tap()
             applePay.typeText("test@example.com")
             // Hit the checkmark done button in the top right
             applePay.buttons["Done"].tap()
