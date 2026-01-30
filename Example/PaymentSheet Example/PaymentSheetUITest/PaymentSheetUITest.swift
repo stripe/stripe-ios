@@ -3575,6 +3575,7 @@ extension PaymentSheetUITestCase {
         cardButton.forceTapElement()
 
         addApplePayBillingIfNeeded(applePay)
+        addApplePayContactIfNeeded(applePay)
 
         let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
         XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
@@ -3619,6 +3620,19 @@ extension PaymentSheetUITestCase {
             zipCell.tap()
             zipCell.typeText("95014")
 
+            applePay.buttons["Done"].tap()
+        }
+    }
+
+    func addApplePayContactIfNeeded(_ applePay: XCUIApplication) {
+        // Fill out contact info (email) if required
+        let addEmailButton = applePay.buttons["Add Email Address"]
+        if addEmailButton.waitForExistence(timeout: 4.0) {
+            addEmailButton.tap()
+            // Tap again to highlight the text field
+            addEmailButton.tap()
+            applePay.typeText("test@example.com")
+            // Hit the checkmark done button in the top right
             applePay.buttons["Done"].tap()
         }
     }
