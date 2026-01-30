@@ -293,6 +293,30 @@ extension Intent {
     ) -> Intent {
         return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
+
+    static func _testCheckoutSession(
+        mode: STPCheckoutSessionMode = .payment,
+        amount: Int = 2345,
+        currency: String = "USD"
+    ) -> Intent {
+        let json: [String: Any] = [
+            "session_id": "cs_test_xxx",
+            "object": "checkout.session",
+            "mode": mode == .payment ? "payment" : "setup",
+            "status": "open",
+            "payment_status": "unpaid",
+            "currency": currency.lowercased(),
+            "livemode": false,
+            "total_summary": [
+                "due": amount,
+                "subtotal": amount,
+                "total": amount,
+            ],
+            "payment_method_types": ["card"],
+        ]
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        return .checkoutSession(checkoutSession)
+    }
 }
 
 extension PaymentSheet.Appearance {

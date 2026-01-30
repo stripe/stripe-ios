@@ -76,3 +76,26 @@ extension CheckoutSessionConfirmResponse: STPAPIResponseDecodable {
         ) as? Self
     }
 }
+
+extension CheckoutSessionConfirmResponse {
+    /// Extracts the client secret from the confirm response based on checkout session mode.
+    /// - Parameter mode: The checkout session mode (payment, setup, or subscription)
+    /// - Returns: The client secret string from the underlying intent
+    /// - Throws: PaymentSheetError if the expected intent is missing
+    func clientSecret(for mode: STPCheckoutSessionMode) throws -> String {
+        switch mode {
+        case .setup:
+            guard let setupIntent = setupIntent else {
+                throw PaymentSheetError.unknown(debugDescription: "Missing setup intent in confirm response")
+            }
+            return setupIntent.clientSecret
+        case .payment, .subscription:
+            guard let paymentIntent = paymentIntent else {
+                throw PaymentSheetError.unknown(debugDescription: "Missing payment intent in confirm response")
+            }
+            return paymentIntent.clientSecret
+        case .unknown:
+            throw PaymentSheetError.unknown(debugDescription: "Unknown checkout session mode")
+        }
+    }
+}

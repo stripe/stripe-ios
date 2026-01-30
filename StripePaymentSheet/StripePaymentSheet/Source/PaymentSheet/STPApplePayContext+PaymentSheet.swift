@@ -26,9 +26,11 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
 
     let intent: Intent
+    let elementsSession: STPElementsSession
 
     init(
         intent: Intent,
+        elementsSession: STPElementsSession,
         authorizationResultHandler: PaymentSheet.ApplePayConfiguration.Handlers.AuthorizationResultHandler?,
         shippingMethodUpdateHandler: (
             (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
@@ -43,6 +45,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
         self.shippingContactUpdateHandler = shippingContactUpdateHandler
         self.intent = intent
+        self.elementsSession = elementsSession
         super.init()
         self.selfRetainer = self
     }
@@ -57,8 +60,13 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkoutSession:
-            throw STPApplePayContext.makeUnknownError(message: "Apple Pay is not yet supported by CheckoutSession.")
+        case .checkoutSession(let checkoutSession):
+            return try await handleCheckoutSessionApplePay(
+                checkoutSession: checkoutSession,
+                paymentMethod: paymentMethod,
+                paymentInformation: paymentInformation,
+                context: context
+            )
         case .deferredIntent(let intentConfig):
             guard let stpPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: paymentMethod.allResponseFields) else {
                 assertionFailure("Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod!")
@@ -140,26 +148,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         }
 
         // Set shipping details if available
-        if let shippingContact = paymentInformation.shippingContact,
-           let nameComponents = shippingContact.name {
-            let name = PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
-            let shippingAddress = STPAddress(pkContact: shippingContact)
-
-            // Only set shipping details if we have a valid address line1
-            if let line1 = shippingAddress.line1 {
-                // Create address params manually
-                let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
-                addressParams.line2 = shippingAddress.line2
-                addressParams.city = shippingAddress.city
-                addressParams.state = shippingAddress.state
-                addressParams.postalCode = shippingAddress.postalCode
-                addressParams.country = shippingAddress.country
-
-                let shippingDetailsParams = STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
-                shippingDetailsParams.phone = shippingAddress.phone
-                confirmationTokenParams.shipping = shippingDetailsParams
-            }
-        }
+        confirmationTokenParams.shipping = makeShippingDetailsParams(from: paymentInformation)
 
         // Create the confirmation token
         let confirmationToken = try await context.apiClient.createConfirmationToken(
@@ -176,6 +165,71 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
         }
         return clientSecret
+    }
+
+    /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
+    private func handleCheckoutSessionApplePay(
+        checkoutSession: STPCheckoutSession,
+        paymentMethod: StripeAPI.PaymentMethod,
+        paymentInformation: PKPayment,
+        context: STPApplePayContext
+    ) async throws -> String {
+        // 1. Build client attribution metadata
+        let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+            intent: intent,
+            elementsSession: elementsSession
+        )
+
+        // 2. Get expected amount from checkout session
+        guard let expectedAmount = checkoutSession.totalSummary?.total else {
+            throw PaymentSheetError.unknown(debugDescription: "Missing expected amount from checkout session")
+        }
+
+        // 3. Extract shipping details from PKPayment (if provided)
+        let shipping = makeShippingDetailsParams(from: paymentInformation)
+
+        // 4. Call confirm API with the Apple Pay payment method
+        let response = try await context.apiClient.confirmCheckoutSession(
+            sessionId: checkoutSession.stripeId,
+            paymentMethod: paymentMethod.id,
+            expectedAmount: expectedAmount,
+            expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
+            returnURL: context.returnUrl,
+            shipping: shipping,
+            paymentMethodOptions: nil,
+            clientAttributionMetadata: clientAttributionMetadata
+        )
+
+        // 5. Return client secret based on checkout session mode
+        return try response.clientSecret(for: checkoutSession.mode)
+    }
+
+    /// Extracts shipping details from a PKPayment for CheckoutSession confirmation.
+    private func makeShippingDetailsParams(from payment: PKPayment) -> STPPaymentIntentShippingDetailsParams? {
+        guard let shippingContact = payment.shippingContact,
+              let nameComponents = shippingContact.name else {
+            return nil
+        }
+
+        let name = PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
+        let shippingAddress = STPAddress(pkContact: shippingContact)
+
+        // Only create shipping params if we have a valid address line1
+        guard let line1 = shippingAddress.line1 else {
+            return nil
+        }
+
+        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
+        addressParams.line2 = shippingAddress.line2
+        addressParams.city = shippingAddress.city
+        addressParams.state = shippingAddress.state
+        addressParams.postalCode = shippingAddress.postalCode
+        addressParams.country = shippingAddress.country
+
+        let shippingDetailsParams = STPPaymentIntentShippingDetailsParams(address: addressParams, name: name)
+        shippingDetailsParams.phone = shippingAddress.phone
+
+        return shippingDetailsParams
     }
 
     func applePayContext(
@@ -271,6 +325,7 @@ extension STPApplePayContext {
         }
         let delegate = ApplePayContextClosureDelegate(
             intent: intent,
+            elementsSession: elementsSession,
             authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler,
             shippingMethodUpdateHandler: configuration.applePay?.customHandlers?.shippingMethodUpdateHandler,
             shippingContactUpdateHandler: configuration.applePay?.customHandlers?.shippingContactUpdateHandler,
