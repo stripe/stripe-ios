@@ -12,6 +12,8 @@
 
 "Back of %@" = "Spatele %@";
 
+"Back of ID not detected" = "Versoul actului de identitate nu a fost detectat";
+
 "Back of driver's license or government-issued photo ID" = "Spatele permisului de conducere sau al documentului de identitate cu fotografie emis de guvern";
 
 "Back of identity document" = "Spatele documentului de identitate";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Cameră indisponibilă";
 
 "Capturing…" = "Se captează…";
+
+"Center ID in view" = "Centru act de identitate vizibil";
 
 "Choose File" = "Selectare fișier";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Fața %@";
 
+"Front of ID not detected" = "Fața actului de identitate nu a fost detectată";
+
 "Front of driver's license or government-issued photo ID" = "Partea frontală a permisului de conducere sau a documentului de identitate cu fotografie emis de guvern";
 
 "Front of driver's license or passport" = "Partea frontală a permisului de conducere sau a pașaportului";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Număr de identificare";
 
+"Image is blurry. Hold your phone steady and try again." = "Imaginea este neclară. Țineți telefonul nemișcat și încercați din nou.";
+
 "Individual CPF" = "CPF persoană fizică";
+
+"Invalid document" = "Document nevalid";
 
 "Keep ID level" = "Țineți documentul de identitate drept";
 

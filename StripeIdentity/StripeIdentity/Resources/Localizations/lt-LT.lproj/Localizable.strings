@@ -12,6 +12,8 @@
 
 "Back of %@" = "%@ galinė dalis";
 
+"Back of ID not detected" = "Galinė ID dalis neaptikta";
+
 "Back of driver's license or government-issued photo ID" = "Vairuotojo pažymėjimo arba valstybės išduoto asmens tapatybės dokumento su nuotrauka galinė dalis";
 
 "Back of identity document" = "Tapatybės dokumento galinė pusė";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Fotoaparatas nepasiekiamas";
 
 "Capturing…" = "Fiksuojama...";
+
+"Center ID in view" = "Matoma centrinė ID dalis";
 
 "Choose File" = "Pasirinkite failą";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "%@ priekinė dalis";
 
+"Front of ID not detected" = "Priekinė ID dalis neaptikta";
+
 "Front of driver's license or government-issued photo ID" = "Vairuotojo pažymėjimo arba valstybės išduoto asmens tapatybės dokumento su nuotrauka priekinė dalis";
 
 "Front of driver's license or passport" = "Vairuotojo pažymėjimo arba paso priekinė dalis";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Identifikacinis numeris";
 
+"Image is blurry. Hold your phone steady and try again." = "Vaizdas neryškus. Stabiliai laikykite telefoną ir pabandykite dar kartą.";
+
 "Individual CPF" = "Asmens CPF";
+
+"Invalid document" = "Neleistinas dokumentas";
 
 "Keep ID level" = "Sulygiuokite tapatybės dokumentą";
 

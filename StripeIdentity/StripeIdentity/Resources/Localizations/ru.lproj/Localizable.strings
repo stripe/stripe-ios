@@ -12,6 +12,8 @@
 
 "Back of %@" = "Оборотная сторона (%@)";
 
+"Back of ID not detected" = "Оборот удостоверения не найден";
+
 "Back of driver's license or government-issued photo ID" = "Обратная сторона водительских прав или удостоверения личности государственного образца с фотографией";
 
 "Back of identity document" = "Оборотная сторона документа, удостоверяющего личность";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Камера недоступна";
 
 "Capturing…" = "Идет съемка...";
+
+"Center ID in view" = "Вид центральной части удостоверения";
 
 "Choose File" = "Выберите файл";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Лицевая сторона (%@)";
 
+"Front of ID not detected" = "Лицевая сторона удостоверения не найдена";
+
 "Front of driver's license or government-issued photo ID" = "Лицевая сторона водительских прав или удостоверения личности государственного образца с фотографией";
 
 "Front of driver's license or passport" = "Лицевая сторона водительских прав или паспорта";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Номер удостоверения личности";
 
+"Image is blurry. Hold your phone steady and try again." = "Изображение размыто. Попробуйте еще раз, удерживая телефон неподвижно.";
+
 "Individual CPF" = "Личный номер CPF";
+
+"Invalid document" = "Недействительный документ";
 
 "Keep ID level" = "Держите документ ровно";
 

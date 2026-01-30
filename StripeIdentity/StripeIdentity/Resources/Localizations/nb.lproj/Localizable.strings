@@ -12,6 +12,8 @@
 
 "Back of %@" = "Baksiden av %@";
 
+"Back of ID not detected" = "Baksiden av ID-en ble ikke registrert";
+
 "Back of driver's license or government-issued photo ID" = "Baksiden av et førerkort eller en offentlig utstedt ID med bilde";
 
 "Back of identity document" = "Baksiden av identitetsdokumentet";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera utilgjengelig";
 
 "Capturing…" = "Tar bilde …";
+
+"Center ID in view" = "Midten av ID-en vises";
 
 "Choose File" = "Velg fil";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Forsiden av %@";
 
+"Front of ID not detected" = "Forsiden av ID-en ble ikke registrert";
+
 "Front of driver's license or government-issued photo ID" = "Forsiden av et førerkort eller en offentlig utstedt ID med bilde";
 
 "Front of driver's license or passport" = "Forsiden av et førerkort eller et pass";
@@ -66,7 +72,11 @@
 
 "ID Number" = "ID-nummer";
 
+"Image is blurry. Hold your phone steady and try again." = "Bildet er uklart. Hold telefonen din stødig og prøv på nytt.";
+
 "Individual CPF" = "Individuell CPF";
+
+"Invalid document" = "Ugyldig dokument";
 
 "Keep ID level" = "Hold ID-en rett";
 

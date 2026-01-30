@@ -12,6 +12,8 @@
 
 "Back of %@" = "Задна част на %@";
 
+"Back of ID not detected" = "Гърбът на личната карта не е засечен";
+
 "Back of driver's license or government-issued photo ID" = "Задна част на шофьорска книжка или издаден от съответната държава документ за самоличност със снимка";
 
 "Back of identity document" = "Задна страна на документ за самоличност";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Камерата не е достъпна";
 
 "Capturing…" = "Заснемане...";
+
+"Center ID in view" = "Поставете картата в центъра, за да се вижда";
 
 "Choose File" = "Избор на файл";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Предната част на %@";
 
+"Front of ID not detected" = "Лицето на личната карта не е засечено";
+
 "Front of driver's license or government-issued photo ID" = "Предна част на шофьорска книжка или издаден от съответната държава документ за самоличност със снимка";
 
 "Front of driver's license or passport" = "Предна част на шофьорска книжка или паспорт";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Идентификационен номер";
 
+"Image is blurry. Hold your phone steady and try again." = "Изображението е размазано. Дръжте телефона си стабилно и опитайте отново.";
+
 "Individual CPF" = "CPF на физическо лице";
+
+"Invalid document" = "Невалиден документ";
 
 "Keep ID level" = "Подравнете документа за самоличност";
 

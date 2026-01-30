@@ -12,6 +12,8 @@
 
 "Back of %@" = "%@ 裏面";
 
+"Back of ID not detected" = "身分証明書の裏面が検出されません";
+
 "Back of driver's license or government-issued photo ID" = "運転免許証の裏面、または政府発行の写真付き身分証明書の裏面";
 
 "Back of identity document" = "本人確認書類の裏面";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "カメラを利用できません";
 
 "Capturing…" = "キャプチャーしています...";
+
+"Center ID in view" = "身分証明書を画面中央に配置してください";
 
 "Choose File" = "ファイルを選択";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "%@ 表面";
 
+"Front of ID not detected" = "身分証明書の表面が検出されません";
+
 "Front of driver's license or government-issued photo ID" = "運転免許証、または政府発行の写真付き身分証明書の表面";
 
 "Front of driver's license or passport" = "運転免許証の表面、またはパスポートの写真ページ";
@@ -66,7 +72,11 @@
 
 "ID Number" = "ID 番号";
 
+"Image is blurry. Hold your phone steady and try again." = "画像がぼやけています。スマホをしっかり持って、もう一度お試しください。";
+
 "Individual CPF" = "個人 CPF";
+
+"Invalid document" = "書類が無効です";
 
 "Keep ID level" = "身分証明書を水平に保持してください";
 

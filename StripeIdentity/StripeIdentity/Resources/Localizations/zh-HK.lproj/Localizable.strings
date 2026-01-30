@@ -12,6 +12,8 @@
 
 "Back of %@" = "%@背面";
 
+"Back of ID not detected" = "未偵測到身份證明文件背面";
+
 "Back of driver's license or government-issued photo ID" = "駕照或政府核發附有照片的身分證背面";
 
 "Back of identity document" = "身份證件背面";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "相機不可用";
 
 "Capturing…" = "正在拍攝...";
+
+"Center ID in view" = "將身份證明文件置於中心";
 
 "Choose File" = "選擇文件";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "%@正面";
 
+"Front of ID not detected" = "未偵測到身份證明文件正面";
+
 "Front of driver's license or government-issued photo ID" = "駕照或政府核發附有照片的身分證正面";
 
 "Front of driver's license or passport" = "駕照或護照正面";
@@ -66,7 +72,11 @@
 
 "ID Number" = "證件號碼";
 
+"Image is blurry. Hold your phone steady and try again." = "影像模糊。請拿穩手機並重試。";
+
 "Individual CPF" = "個人 CPF";
+
+"Invalid document" = "文件無效";
 
 "Keep ID level" = "保持證件水平";
 

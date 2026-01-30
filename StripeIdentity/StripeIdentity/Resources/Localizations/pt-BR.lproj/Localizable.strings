@@ -12,6 +12,8 @@
 
 "Back of %@" = "Verso do %@";
 
+"Back of ID not detected" = "Verso do documento de identidade não detectado";
+
 "Back of driver's license or government-issued photo ID" = "Verso da carteira de habilitação ou documento de identificação oficial com foto";
 
 "Back of identity document" = "Verso do documento de identificação";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Câmera indisponível";
 
 "Capturing…" = "Capturando…";
+
+"Center ID in view" = "Centralize o documento de identidade na área de visualização";
 
 "Choose File" = "Escolher arquivo";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Frente de %@";
 
+"Front of ID not detected" = "Frente do documento de identidade não detectado";
+
 "Front of driver's license or government-issued photo ID" = "Frente da carteira de habilitação ou documento de identificação oficial com foto";
 
 "Front of driver's license or passport" = "Frente da carteira de habilitação ou passaporte";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Número da identificação";
 
+"Image is blurry. Hold your phone steady and try again." = "A imagem está borrada. Segure o celular firme e tente novamente.";
+
 "Individual CPF" = "CPF";
+
+"Invalid document" = "Documento inválido";
 
 "Keep ID level" = "Mantenha o documento nivelado";
 

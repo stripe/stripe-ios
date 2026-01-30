@@ -12,6 +12,8 @@
 
 "Back of %@" = "Cara posterior de %@";
 
+"Back of ID not detected" = "No s'ha detectat el revers del document d'identitat";
+
 "Back of driver's license or government-issued photo ID" = "Revers del carnet de conduir o del document d'identitat amb foto emès pel govern";
 
 "Back of identity document" = "Dors del document d'identitat";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Càmera no disponible";
 
 "Capturing…" = "S'està capturant la imatge...";
+
+"Center ID in view" = "Centreu el document d'identitat a la imatge";
 
 "Choose File" = "Selecciona fitxer";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Cara frontal de %@";
 
+"Front of ID not detected" = "No s'ha detectat l'anvers del document d'identitat";
+
 "Front of driver's license or government-issued photo ID" = "Anvers del carnet de conduir o del document d'identitat amb foto emès pel govern";
 
 "Front of driver's license or passport" = "Anvers del carnet de conduir o del passaport";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Número d'identificació";
 
+"Image is blurry. Hold your phone steady and try again." = "La imatge és borrosa. Mantingueu el telèfon ferm i torneu-ho a provar.";
+
 "Individual CPF" = "CPF particular";
+
+"Invalid document" = "Document no vàlid";
 
 "Keep ID level" = "Col·loca bé el document d'identitat";
 

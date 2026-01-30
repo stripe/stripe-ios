@@ -12,6 +12,8 @@
 
 "Back of %@" = "Zadnja stran %@";
 
+"Back of ID not detected" = "Zadnji del identifikacije ni zaznan";
+
 "Back of driver's license or government-issued photo ID" = "Hrbtna stran vozniškega dovoljenja ali osebnega dokumenta s fotografijo, ki ga je izdal državni organ";
 
 "Back of identity document" = "Hrbtna stran osebnega dokumenta";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera ni na voljo";
 
 "Capturing…" = "Zajemanje ...";
+
+"Center ID in view" = "Sredinski ID v vidnem polju";
 
 "Choose File" = "Izberite datoteko";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Sprednja stran %@";
 
+"Front of ID not detected" = "Sprednji del identifikacije ni zaznan";
+
 "Front of driver's license or government-issued photo ID" = "Sprednja stran vozniškega dovoljenja ali osebnega dokumenta s fotografijo, ki ga je izdal državni organ";
 
 "Front of driver's license or passport" = "Sprednja stran vozniškega dovoljenja ali potnega lista";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Številka osebnega dokumenta";
 
+"Image is blurry. Hold your phone steady and try again." = "Slika je zamegljena. Telefon držite pri miru in poskusite znova.";
+
 "Individual CPF" = "CPF posameznika";
+
+"Invalid document" = "Neveljaven dokument";
 
 "Keep ID level" = "Osebni dokument naj ostane raven";
 

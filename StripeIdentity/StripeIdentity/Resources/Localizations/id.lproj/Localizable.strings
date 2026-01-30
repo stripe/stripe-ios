@@ -12,6 +12,8 @@
 
 "Back of %@" = "Bagian belakang %@";
 
+"Back of ID not detected" = "Bagian belakang ID tidak terdeteksi";
+
 "Back of driver's license or government-issued photo ID" = "Bagian belakang SIM atau identitas berfoto yang dikeluarkan pemerintah";
 
 "Back of identity document" = "Bagian belakang dokumen identitas";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera tidak tersedia";
 
 "Capturing…" = "Mengambil gambar...";
+
+"Center ID in view" = "Pusatkan ID sampai terlihat";
 
 "Choose File" = "Pilih File";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Bagian depan %@";
 
+"Front of ID not detected" = "Bagian depan ID tidak terdeteksi";
+
 "Front of driver's license or government-issued photo ID" = "Bagian depan SIM atau identitas berfoto yang dikeluarkan pemerintah";
 
 "Front of driver's license or passport" = "Bagian depan SIM atau paspor";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Nomor Identifikasi";
 
+"Image is blurry. Hold your phone steady and try again." = "Gambar buram. Stabilkan ponsel Anda dan coba lagi.";
+
 "Individual CPF" = "CPF perorangan";
+
+"Invalid document" = "Dokumen tidak valid";
 
 "Keep ID level" = "Sejajarkan identitas";
 

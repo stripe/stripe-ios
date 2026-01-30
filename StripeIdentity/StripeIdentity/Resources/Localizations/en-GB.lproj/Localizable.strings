@@ -12,6 +12,8 @@
 
 "Back of %@" = "Back of %@";
 
+"Back of ID not detected" = "Back of ID not detected";
+
 "Back of driver's license or government-issued photo ID" = "Back of driving licence or government-issued photo ID";
 
 "Back of identity document" = "Back of identity document";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Camera unavailable";
 
 "Capturing…" = "Capturing…";
+
+"Center ID in view" = "Centre ID in view";
 
 "Choose File" = "Choose File";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Front of %@";
 
+"Front of ID not detected" = "Front of ID not detected";
+
 "Front of driver's license or government-issued photo ID" = "Front of driving licence or government-issued photo ID";
 
 "Front of driver's license or passport" = "Front of driving licence or passport";
@@ -66,7 +72,11 @@
 
 "ID Number" = "ID Number";
 
+"Image is blurry. Hold your phone steady and try again." = "Image is blurry. Hold your phone steady and try again.";
+
 "Individual CPF" = "Individual CPF";
+
+"Invalid document" = "Invalid document";
 
 "Keep ID level" = "Keep ID level";
 
