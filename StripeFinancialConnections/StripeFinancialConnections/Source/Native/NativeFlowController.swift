@@ -1322,31 +1322,6 @@ extension NativeFlowController: NetworkingSaveToLinkVerificationViewControllerDe
     }
 }
 
-// MARK: - NetworkingLinkStepUpVerificationViewControllerDelegate
-
-extension NativeFlowController: NetworkingLinkStepUpVerificationViewControllerDelegate {
-
-    func networkingLinkStepUpVerificationViewController(
-        _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didCompleteVerificationWithInstitution institution: FinancialConnectionsInstitution?,
-        nextPane: FinancialConnectionsSessionManifest.NextPane,
-        customSuccessPaneCaption: String?,
-        customSuccessPaneSubCaption: String?
-    ) {
-        dataManager.institution = institution
-        dataManager.customSuccessPaneCaption = customSuccessPaneCaption
-        dataManager.customSuccessPaneSubCaption = customSuccessPaneSubCaption
-        pushPane(nextPane, animated: true)
-    }
-
-    func networkingLinkStepUpVerificationViewController(
-        _ viewController: NetworkingLinkStepUpVerificationViewController,
-        didReceiveTerminalError error: Error
-    ) {
-        showTerminalError(error)
-    }
-}
-
 // MARK: - LinkLoginViewControllerDelegate
 
 extension NativeFlowController: LinkLoginViewControllerDelegate {
@@ -1633,28 +1608,6 @@ private func CreatePaneViewController(
             )
             networkingSaveToLinkVerificationViewController.delegate = nativeFlowController
             viewController = networkingSaveToLinkVerificationViewController
-        } else {
-            assertionFailure("Code logic error. Missing parameters for \(pane).")
-            viewController = nil
-        }
-    case .networkingLinkStepUpVerification:
-        if
-            let consumerSession = dataManager.consumerSession,
-            let selectedAccountIds = dataManager.linkedAccounts?.map({ $0.id })
-        {
-            let networkingLinkStepUpVerificationDataSource = NetworkingLinkStepUpVerificationDataSourceImplementation(
-                consumerSession: consumerSession,
-                selectedAccountIds: selectedAccountIds,
-                manifest: dataManager.manifest,
-                apiClient: dataManager.apiClient,
-                clientSecret: dataManager.clientSecret,
-                analyticsClient: dataManager.analyticsClient
-            )
-            let networkingLinkStepUpVerificationViewController = NetworkingLinkStepUpVerificationViewController(
-                dataSource: networkingLinkStepUpVerificationDataSource
-            )
-            networkingLinkStepUpVerificationViewController.delegate = nativeFlowController
-            viewController = networkingLinkStepUpVerificationViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil

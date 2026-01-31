@@ -221,12 +221,6 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
     }
 
-    func markLinkStepUpAuthenticationVerified(
-        clientSecret: String
-    ) -> Future<FinancialConnectionsSessionManifest> {
-        return Promise<StripeFinancialConnections.FinancialConnectionsSessionManifest>()
-    }
-
     func linkAccountSignUp(
         emailAddress: String,
         phoneNumber: String,

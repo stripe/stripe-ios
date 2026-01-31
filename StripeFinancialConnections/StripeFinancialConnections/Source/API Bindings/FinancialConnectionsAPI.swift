@@ -143,10 +143,6 @@ protocol FinancialConnectionsAPI {
         consentAcquired: Bool?
     ) -> Future<ShareNetworkedAccountsResponse>
 
-    func markLinkStepUpAuthenticationVerified(
-        clientSecret: String
-    ) -> Future<FinancialConnectionsSessionManifest>
-
     func consumerSessionLookup(
         emailAddress: String,
         clientSecret: String,

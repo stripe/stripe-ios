@@ -415,7 +415,7 @@ final class LinkAccountPickerViewController: UIViewController {
                         hideBackButtonOnNextPane: false
                     )
                 } else {
-                    // non-sheet next pane -- likely step up
+                    // non-sheet next pane
                     delegate?.linkAccountPickerViewController(
                         self,
                         didRequestNextPane: nextPane,
