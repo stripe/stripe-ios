@@ -38,7 +38,7 @@ protocol LinkAccountServiceProtocol {
 
     /// Looks up an account by link auth token.
     /// - Parameters:
-    ///   - linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful validation, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
+    ///   - linkAuthTokenClientSecret: An encrypted one-time-use auth token that, upon successful call to this API, leaves the Link account’s consumer session in an already-verified state, allowing the client to skip verification.
     ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
     ///   - completion: Completion block.
     func lookupLinkAuthToken(
