@@ -12,6 +12,8 @@
 
 "Back of %@" = "Likod ng %@";
 
+"Back of ID not detected" = "Hindi na-detect ang likod ng ID";
+
 "Back of driver's license or government-issued photo ID" = "Likod ng lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno";
 
 "Back of identity document" = "Likod ng dokumento ng pagkakakilanlan";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Hindi magamit ang kamera";
 
 "Capturing…" = "Kinukunan...";
+
+"Center ID in view" = "Igitna ang ID sa view";
 
 "Choose File" = "Pumili ng File";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Harap ng %@";
 
+"Front of ID not detected" = "Hindi na-detect ang harap ng ID";
+
 "Front of driver's license or government-issued photo ID" = "Harap ng lisensya sa pagmamaneho o photo ID na inisyu ng gobyerno";
 
 "Front of driver's license or passport" = "Harap ng lisensya sa pagmamaneho o pasaporte";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Numero ng ID";
 
+"Image is blurry. Hold your phone steady and try again." = "Malabo ang larawan. Hawakan nang maayos at huwag igalaw ang iyong telepono at subukang muli.";
+
 "Individual CPF" = "Indibidwal na CPF";
+
+"Invalid document" = "Invalid na dokumento";
 
 "Keep ID level" = "Panatilihin ang lebel ng ID";
 
 "Last 4 of Social Security number" = "Huling 4 ng numero ng Social Security";
 
 "Loading" = "Niloload";
-
-"Make sure all details are visible and focus" = "Siguraduhing nakikita at nakapokus ang lahat ng mga detalye";
 
 "Make sure you're in a well lit space." = "Siguraduhing ikaw ay nasa maliwanag na lugar.";
 

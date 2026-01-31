@@ -12,6 +12,8 @@
 
 "Back of %@" = "%@-a vissza";
 
+"Back of ID not detected" = "Az igazolvány hátlapja nem észlelhető";
+
 "Back of driver's license or government-issued photo ID" = "A vezetői engedély vagy más hivatalos fényképes igazolvány hátlapja";
 
 "Back of identity document" = "Személyazonosító okmány hátulja";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "A kamera nem érhető el";
 
 "Capturing…" = "Felvétel...";
+
+"Center ID in view" = "Igazítsa középre az igazolványt";
 
 "Choose File" = "Fájl kiválasztása";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "%@ elülső oldal";
 
+"Front of ID not detected" = "Az igazolvány előlapja nem észlelhető";
+
 "Front of driver's license or government-issued photo ID" = "A vezetői engedély vagy más hivatalos fényképes igazolvány előlapja";
 
 "Front of driver's license or passport" = "A vezetői engedély vagy az útlevél előlapja";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Azonosítószám";
 
+"Image is blurry. Hold your phone steady and try again." = "A kép elmosódott. Tartsa stabilan a telefonját, és próbálja újra.";
+
 "Individual CPF" = "Személyes CPF";
+
+"Invalid document" = "Érvénytelen dokumentum";
 
 "Keep ID level" = "Tartsa egyenesen az igazolványt";
 
 "Last 4 of Social Security number" = "A társadalombiztosítási szám utolsó 4 számjegye";
 
 "Loading" = "Betöltés folyamatban";
-
-"Make sure all details are visible and focus" = "Győződjön meg arról, hogy minden részlet látható és fókuszban van.";
 
 "Make sure you're in a well lit space." = "Válasszon jól megvilágított helyet.";
 

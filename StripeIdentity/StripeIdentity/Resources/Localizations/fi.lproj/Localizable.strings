@@ -12,6 +12,8 @@
 
 "Back of %@" = "Kohteen %@ taustapuoli";
 
+"Back of ID not detected" = "Henkilökortin takapuolta ei havaittu";
+
 "Back of driver's license or government-issued photo ID" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen kääntöpuoli.";
 
 "Back of identity document" = "Henkilötodistuksen takapuoli";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera ei käytössä";
 
 "Capturing…" = "Otetaan kuvaa...";
+
+"Center ID in view" = "Keskuksen tunnus näkyvillä";
 
 "Choose File" = "Valitse tiedosto";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Kohteen %@ etupuoli";
 
+"Front of ID not detected" = "Henkilökortin etupuolta ei havaittu";
+
 "Front of driver's license or government-issued photo ID" = "Ajokortin tai valtion myöntämän kuvallisen henkilötodistuksen etupuoli.";
 
 "Front of driver's license or passport" = "Ajokortin tai passin etupuoli";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Tunnusnumero";
 
+"Image is blurry. Hold your phone steady and try again." = "Kuva on sumea. Pidä puhelimesi paikoillaan ja yritä uudelleen.";
+
 "Individual CPF" = "Yksityishenkilön CPF";
+
+"Invalid document" = "Virheellinen asiakirja";
 
 "Keep ID level" = "Pidä henkilöllisyystodistus tasaisena";
 
 "Last 4 of Social Security number" = "Sosiaaliturvatunnuksen 4 viimeistä merkkiä";
 
 "Loading" = "Ladataan";
-
-"Make sure all details are visible and focus" = "Varmista, että kaikki tiedot ovat näkyvissä ja tarkennettuja";
 
 "Make sure you're in a well lit space." = "Varmista, että olet hyvin valaistussa tilassa.";
 

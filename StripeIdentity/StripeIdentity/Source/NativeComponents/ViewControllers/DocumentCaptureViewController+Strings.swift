@@ -64,14 +64,32 @@ extension DocumentCaptureViewController {
         switch documentScannerOutput {
         case .none:
             return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
-        case .some(.legacy(let idDetectorOutput, _, _, _, _)):
+        case .some(.legacy(let idDetectorOutput, _, let motionblur, _, _)):
             let foundClassification = idDetectorOutput.classification
             let matchesClassification = foundClassification.matchesDocument(side: side)
             let zoomLevel = idDetectorOutput.computeZoomLevel()
+
+            if foundClassification == .invalid {
+                return String.Localized.invalid_document
+            }
+            // If document appears off-center, ask user to center it (only when the side matches)
+            if matchesClassification && !idDetectorOutput.isCentered() {
+                return String.Localized.center_id_in_view
+            }
             switch (side, matchesClassification, zoomLevel) {
             case (.front, false, _), (.back, false, _):
-                return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
+                switch (side, foundClassification) {
+                case (.front, .idCardBack):
+                    return String.Localized.front_of_id_not_detected
+                case (.back, .idCardFront), (.back, .passport):
+                    return String.Localized.back_of_id_not_detected
+                default:
+                    return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
+                }
             case (_, true, .ok):
+                if motionblur.hasMotionBlur {
+                    return String.Localized.reduce_blur
+                }
                 return String.Localized.scanning
             case (_, true, .tooClose):
                 return String.Localized.move_farther

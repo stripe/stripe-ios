@@ -12,6 +12,8 @@
 
 "Back of %@" = "%@ tagakülg";
 
+"Back of ID not detected" = "ID tagakülge ei tuvastatud";
+
 "Back of driver's license or government-issued photo ID" = "Juhiloa või valitsuse väljastatud fotoga isikut tõendava dokumendi tagakülg";
 
 "Back of identity document" = "Isikut tõendava dokumendi tagakülg";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kaamera pole saadaval";
 
 "Capturing…" = "Pildistamine …";
+
+"Center ID in view" = "ID keskosa nähtaval";
 
 "Choose File" = "Vali fail";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "%@ esikülg";
 
+"Front of ID not detected" = "ID esikülge ei tuvastatud";
+
 "Front of driver's license or government-issued photo ID" = "Juhiloa või valitsuse väljastatud fotoga isikut tõendava dokumendi esikülg";
 
 "Front of driver's license or passport" = "Juhiloa või passi esikülg";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Isikukood";
 
+"Image is blurry. Hold your phone steady and try again." = "Pilt on udune. Hoidke telefoni kindlalt ja proovige uuesti.";
+
 "Individual CPF" = "Eraisiku CPF";
+
+"Invalid document" = "Kehtetu dokument";
 
 "Keep ID level" = "Hoidke isikut tõendavat dokumenti rõhtsalt";
 
 "Last 4 of Social Security number" = "Sotsiaalkindlustuse numbri viimased 4 numbrit";
 
 "Loading" = "Laadimine";
-
-"Make sure all details are visible and focus" = "Veenduge, et kõik üksikasjad oleksid nähtavad ja teravad";
 
 "Make sure you're in a well lit space." = "Veenduge, et olete hästi valgustatud kohas.";
 

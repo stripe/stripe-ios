@@ -12,6 +12,8 @@
 
 "Back of %@" = "Retro di %@";
 
+"Back of ID not detected" = "Retro del documento di identità non rilevato";
+
 "Back of driver's license or government-issued photo ID" = "Retro della patente di guida o documento di identità con foto rilasciato da un'autorità governativa";
 
 "Back of identity document" = "Retro documento di identità";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Fotocamera non disponibile";
 
 "Capturing…" = "Acquisizione in corso...";
+
+"Center ID in view" = "Centra il documento di identità in un punto visibile";
 
 "Choose File" = "Scegli file";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Fronte di %@";
 
+"Front of ID not detected" = "Fronte del documento di identità non rilevato";
+
 "Front of driver's license or government-issued photo ID" = "Parte anteriore della patente di guida o del documento di identità con foto rilasciato da un'autorità governativa";
 
 "Front of driver's license or passport" = "Fronte della patente di guida o del passaporto";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Numero documento di identità";
 
+"Image is blurry. Hold your phone steady and try again." = "L'immagine è sfocata. Tieni fermo il telefono e riprova.";
+
 "Individual CPF" = "CPF personale";
+
+"Invalid document" = "Documento non valido";
 
 "Keep ID level" = "Allinea il documento di identità all'angolo destro";
 
 "Last 4 of Social Security number" = "Ultime quattro cifre del Social Security Number (SSN)";
 
 "Loading" = "Caricamento in corso";
-
-"Make sure all details are visible and focus" = "Assicurati che tutti i dettagli siano visibili e a fuoco";
 
 "Make sure you're in a well lit space." = "Assicurati che l'illuminazione sia adeguata.";
 

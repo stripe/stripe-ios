@@ -12,6 +12,8 @@
 
 "Back of %@" = "Πίσω από το %@";
 
+"Back of ID not detected" = "Δεν εντοπίστηκε πίσω πλευρά της ταυτότητας";
+
 "Back of driver's license or government-issued photo ID" = "Πίσω πλευρά της άδειας οδήγησης ή της ταυτότητας με φωτογραφία εκδοθείσα από την κυβέρνηση";
 
 "Back of identity document" = "Πίσω πλευρά εγγράφου ταυτότητας";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Μη διαθέσιμη κάμερα";
 
 "Capturing…" = "Καταγραφή…";
+
+"Center ID in view" = "Αναγνωριστικό κέντρου σε προβολή";
 
 "Choose File" = "Επιλέξτε αρχείο";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Μπροστά από το %@";
 
+"Front of ID not detected" = "Δεν εντοπίστηκε μπροστινή πλευρά της ταυτότητας";
+
 "Front of driver's license or government-issued photo ID" = "Μπροστινό μέρος άδειας οδήγησης ή ταυτότητας με φωτογραφία εκδοθείσα από την κυβέρνηση";
 
 "Front of driver's license or passport" = "Μπροστινό μέρος άδειας οδήγησης ή διαβατηρίου";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Αριθμός ταυτότητας";
 
+"Image is blurry. Hold your phone steady and try again." = "Η εικόνα είναι θολή. Κρατήστε σταθερό το τηλέφωνο και δοκιμάστε ξανά.";
+
 "Individual CPF" = "Ατομικό CPF";
+
+"Invalid document" = "Μη έγκυρο έγγραφο";
 
 "Keep ID level" = "Κρατήστε οριζόντια την ταυτότητα";
 
 "Last 4 of Social Security number" = "Τελευταία 4 ψηφία του Αριθμού κοινωνικής ασφάλισης";
 
 "Loading" = "Φόρτωση";
-
-"Make sure all details are visible and focus" = "Βεβαιωθείτε ότι όλες οι λεπτομέρειες είναι ορατές και εστιασμένες";
 
 "Make sure you're in a well lit space." = "Βεβαιωθείτε ότι βρίσκεστε σε έναν καλά φωτισμένο χώρο.";
 

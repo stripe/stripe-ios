@@ -12,6 +12,8 @@
 
 "Back of %@" = "%@ aizmugure";
 
+"Back of ID not detected" = "ID aizmugurējā daļa nav uztverta";
+
 "Back of driver's license or government-issued photo ID" = "Autovadītāja apliecības vai valsts izsniegta personu apliecinoša dokumenta ar fotogrāfiju aizmugurējā daļa";
 
 "Back of identity document" = "Identifikācijas dokumenta aizmugure";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera nav pieejama";
 
 "Capturing…" = "Uzņem attēlu…";
+
+"Center ID in view" = "Centrējiet ID skatā";
 
 "Choose File" = "Izvēlieties failu";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "%@ priekšpuse";
 
+"Front of ID not detected" = "ID priekšpuse nav uztverta";
+
 "Front of driver's license or government-issued photo ID" = "Autovadītāja apliecības vai valsts izsniegta personu apliecinoša dokumenta priekšpuse";
 
 "Front of driver's license or passport" = "Autovadītāja apliecības vai pases priekšpuse";
@@ -66,15 +72,17 @@
 
 "ID Number" = "ID numurs";
 
+"Image is blurry. Hold your phone steady and try again." = "Attēls ir neskaidrs. Turiet tālruni stabili un mēģiniet vēlreiz.";
+
 "Individual CPF" = "Fiziskas personas CPF";
+
+"Invalid document" = "Nederīgs dokuments";
 
 "Keep ID level" = "Paturēt ID līmeni";
 
 "Last 4 of Social Security number" = "Pēdējie 4 cipari no sociālās apdrošināšanas numura";
 
 "Loading" = "Ielādē";
-
-"Make sure all details are visible and focus" = "Pārliecinieties, vai visas detaļas ir redzamas un fokusētas.";
 
 "Make sure you're in a well lit space." = "Pārliecinieties, ka atrodaties labi apgaismotā vietā.";
 

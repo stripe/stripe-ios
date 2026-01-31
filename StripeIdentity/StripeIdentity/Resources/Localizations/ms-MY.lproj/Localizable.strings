@@ -12,6 +12,8 @@
 
 "Back of %@" = "Bahagian belakang %@";
 
+"Back of ID not detected" = "Belakang ID tidak dikesan";
+
 "Back of driver's license or government-issued photo ID" = "Belakang lesen memandu atau ID bergambar yang dikeluarkan kerajaan";
 
 "Back of identity document" = "Bahagian belakang dokumen pengenalan";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera tidak tersedia";
 
 "Capturing…" = "Sedang ditangkap...";
+
+"Center ID in view" = "ID pusat dalam pandangan";
 
 "Choose File" = "Pilih Fail";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Bahagian hadapan %@";
 
+"Front of ID not detected" = "Bahagian hadapan ID tidak dikesan";
+
 "Front of driver's license or government-issued photo ID" = "Hadapan lesen memandu atau ID bergambar yang dikeluarkan kerajaan";
 
 "Front of driver's license or passport" = "Hadapan lesen memandu atau pasport";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Nombor ID";
 
+"Image is blurry. Hold your phone steady and try again." = "Imej kabur. Pegang telefon anda dengan stabil dan cuba lagi.";
+
 "Individual CPF" = "CPF Individu";
+
+"Invalid document" = "Dokumen tidak sah";
 
 "Keep ID level" = "Pastikan ID mendatar";
 
 "Last 4 of Social Security number" = "Empat digit terakhir nombor Keselamatan Sosial";
 
 "Loading" = "Sedang dimuatkan";
-
-"Make sure all details are visible and focus" = "Pastikan semua butiran dapat dilihat dan berada dalam fokus";
 
 "Make sure you're in a well lit space." = "Pastikan anda berada di ruang yang cukup terang.";
 

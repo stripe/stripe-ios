@@ -12,6 +12,8 @@
 
 "Back of %@" = "Tylna strona dokumentu %@";
 
+"Back of ID not detected" = "Nie wykryto rewersu dokumentu tożsamości";
+
 "Back of driver's license or government-issued photo ID" = "Tył prawa jazdy lub dokumentu tożsamości ze zdjęciem wydanego przez organ państwowy";
 
 "Back of identity document" = "Tylna strona dokumentu tożsamości";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Aparat niedostępny";
 
 "Capturing…" = "Przechwytywanie…";
+
+"Center ID in view" = "Środek dokumentu tożsamości w widoku";
 
 "Choose File" = "Wybierz plik";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Przednia strona dokumentu %@";
 
+"Front of ID not detected" = "Nie wykryto przedniej strony dokumentu tożsamości";
+
 "Front of driver's license or government-issued photo ID" = "Przód prawa jazdy lub dokument tożsamości ze zdjęciem wydany przez organ państwowy";
 
 "Front of driver's license or passport" = "Przód prawa jazdy lub paszportu";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Numer identyfikacyjny";
 
+"Image is blurry. Hold your phone steady and try again." = "Obraz jest rozmyty. Trzymaj telefon stabilnie i spróbuj ponownie.";
+
 "Individual CPF" = "CPF osoby fizycznej";
+
+"Invalid document" = "Nieprawidłowy dokument";
 
 "Keep ID level" = "Utrzymaj dokument tożsamości w poziomie";
 
 "Last 4 of Social Security number" = "Ostatnie 4 cyfry numeru ubezpieczenia społecznego";
 
 "Loading" = "Wczytywanie";
-
-"Make sure all details are visible and focus" = "Upewnij się, że wszystkie szczegóły są widoczne i ostre";
 
 "Make sure you're in a well lit space." = "Upewnij się, że znajdujesz się w dobrze oświetlonym miejscu.";
 
