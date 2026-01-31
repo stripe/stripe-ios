@@ -34,7 +34,7 @@ final class SectionView: UIView {
 
     init(viewModel: SectionViewModel) {
         self.viewModel = viewModel
-        self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme)
+        self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme, separatorStyle: viewModel.separatorStyle)
         super.init(frame: .zero)
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorOrSubLabel])
