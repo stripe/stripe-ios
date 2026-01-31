@@ -1,5 +1,8 @@
 ## X.Y.Z - changes pending release 
 
+### Identity
+* [Added] Added a best frame detector to document capture.
+
 ## 25.6.0 2026-01-26
 
 ### Payments
