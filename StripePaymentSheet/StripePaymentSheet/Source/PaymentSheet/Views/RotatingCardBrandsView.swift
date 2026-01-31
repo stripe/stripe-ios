@@ -9,7 +9,6 @@
 import UIKit
 
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
 /// A view that displays a horizontal collection of card brand images.
@@ -92,7 +91,7 @@ class RotatingCardBrandsView: UIView {
                 stopAnimating()
             } else {
                 rotatingCardBrandView.setHiddenIfNecessary(false)
-                rotatingCardBrandView.image = STPImageLibrary.cardBrandImage(
+                rotatingCardBrandView.image = PaymentSheetImageLibrary.cardBrandImage(
                     for: rotatingCardBrands[0]
                 )
                 rotatingIndex = 0
@@ -120,7 +119,7 @@ class RotatingCardBrandsView: UIView {
                               duration: Self.AnimationDuration,
                               options: [.transitionCrossDissolve],
                               animations: {
-                self.rotatingCardBrandView.image = STPImageLibrary.cardBrandImage(for: self.rotatingCardBrands[nextIndex])
+                self.rotatingCardBrandView.image = PaymentSheetImageLibrary.cardBrandImage(for: self.rotatingCardBrands[nextIndex])
 
             })
         }
@@ -170,7 +169,7 @@ class RotatingCardBrandsView: UIView {
                 let imageView = UIImageView()
                 imageView.contentMode = .scaleAspectFit
                 imageView.setContentHuggingPriority(.required, for: .horizontal)
-                imageView.image = STPImageLibrary.cardBrandImage(for: brand)
+                imageView.image = PaymentSheetImageLibrary.cardBrandImage(for: brand)
                 return imageView
             }) + [rotatingCardBrandView]
             rotatingCardBrands = Array(cardBrands.suffix(from: min(cardBrands.count, Self.MaxStaticBrands)))
