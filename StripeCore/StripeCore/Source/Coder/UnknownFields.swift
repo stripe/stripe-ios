@@ -77,7 +77,8 @@ extension UnknownFieldsDecodable {
             // When the object is later re-encoded, the additionalParameters will
             // be re-added to the encoded JSON.
             if var encodableValue = object as? UnknownFieldsEncodable {
-                let encodedDictionary = try encodableValue.encodeJSONDictionary(
+                let encodedDictionary = try StripeJSONEncoder().encodeJSONDictionary(
+                    encodableValue,
                     includingUnknownFields: false
                 )
                 encodableValue.additionalParameters = jsonDictionary.subtracting(encodedDictionary)

@@ -482,7 +482,7 @@ extension STPAPIClient {
         completion: @escaping (Result<O, Error>) -> Void
     ) {
         do {
-            let jsonDictionary = try object.encodeJSONDictionary()
+            let jsonDictionary = try StripeJSONEncoder().encodeJSONDictionary(object)
             let formData = URLEncoder.queryString(from: jsonDictionary).data(using: .utf8)
             var request = configuredRequest(
                 for: url,

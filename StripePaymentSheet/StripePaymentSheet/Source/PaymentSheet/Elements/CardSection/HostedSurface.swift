@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 // Used to indicate if this card section is being used by either PaymentSheet or CustomerSheet
-@_spi(STP) public enum HostedSurface {
+@_spi(STP) @frozen public enum HostedSurface {
     case paymentSheet
     case customerSheet
 

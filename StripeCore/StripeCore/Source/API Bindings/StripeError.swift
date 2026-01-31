@@ -9,7 +9,7 @@
 import Foundation
 
 /// Error codes returned from STPAPIClient.
-@_spi(STP) public enum StripeError: Error {
+@_spi(STP) @frozen public enum StripeError: Error {
     /// The server returned an API error.
     case apiError(StripeAPIError)
 

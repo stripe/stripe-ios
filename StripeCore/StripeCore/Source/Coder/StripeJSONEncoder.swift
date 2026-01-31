@@ -14,6 +14,8 @@ import Foundation
 
     @_spi(STP) public var outputFormatting: JSONSerialization.WritingOptions = []
 
+    @_spi(STP) public init() {}
+
     @_spi(STP) public func encode<T>(_ value: T, includingUnknownFields: Bool = true) throws -> Data
     where T: Encodable {
         var outputFormatting = self.outputFormatting
@@ -30,7 +32,7 @@ import Foundation
             )
         } else {
             return try JSONSerialization.data(
-                withJSONObject: castToNSObject(value),
+                withJSONObject: StripeEncodingUtils.castToNSObject(userInfo: userInfo, value),
                 options: outputFormatting
             )
         }
@@ -55,7 +57,7 @@ import Foundation
 
         // Encode the object to JSON data
         let jsonData = try JSONSerialization.data(
-            withJSONObject: castToNSObject(value),
+            withJSONObject: StripeEncodingUtils.castToNSObject(userInfo: userInfo, value),
             options: outputFormatting
         )
 
@@ -72,9 +74,6 @@ import Foundation
         return jsonDictionary
     }
 }
-
-// Make sure StripeJSONEncoder can call castToNSObject
-extension StripeJSONEncoder: StripeEncodingContainer {}
 
 class _stpinternal_JSONEncoder: Encoder {
     var codingPath: [CodingKey] = []
@@ -131,8 +130,7 @@ class _stpinternal_JSONEncoder: Encoder {
     }
 }
 
-struct STPKeyedEncodingContainer<K>: StripeEncodingContainer, KeyedEncodingContainerProtocol
-where K: CodingKey {
+struct STPKeyedEncodingContainer<K>: KeyedEncodingContainerProtocol where K: CodingKey {
     var codingPath: [CodingKey]
 
     typealias Key = K
@@ -155,59 +153,59 @@ where K: CodingKey {
     }
 
     mutating func encode(_ value: Bool, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: String, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: Double, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: Float, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: Int, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: Int8, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: Int16, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: Int32, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: Int64, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: UInt, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: UInt8, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: UInt16, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: UInt32, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode(_ value: UInt64, forKey key: K) throws {
-        try encode(object: castToNSObject(value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value), forKey: key)
     }
 
     mutating func encode<T>(_ value: T, forKey key: K) throws where T: Encodable {
@@ -219,7 +217,7 @@ where K: CodingKey {
         if let seValue = value as? UnknownFieldsEncodable {
             seValue.applyUnknownFieldEncodingTransforms(userInfo: userInfo, codingPath: newPath)
         }
-        try encode(object: castToNSObject(codingPath: newPath, value), forKey: key)
+        try encode(object: StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: newPath, value), forKey: key)
     }
 
     mutating func nestedContainer<NestedKey>(
@@ -264,7 +262,7 @@ where K: CodingKey {
     }
 }
 
-struct STPUnkeyedEncodingContainer: UnkeyedEncodingContainer, StripeEncodingContainer {
+struct STPUnkeyedEncodingContainer: UnkeyedEncodingContainer {
     var codingPath: [CodingKey]
 
     var count: Int = 0
@@ -278,72 +276,72 @@ struct STPUnkeyedEncodingContainer: UnkeyedEncodingContainer, StripeEncodingCont
     }
 
     mutating func encode(_ value: Bool) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: String) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: Double) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: Float) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: Int) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: Int8) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: Int16) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: Int32) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: Int64) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: UInt) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: UInt8) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: UInt16) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: UInt32) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
     mutating func encode(_ value: UInt64) throws {
-        try array.add(castToNSObject(value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
         count += 1
     }
 
@@ -356,7 +354,7 @@ struct STPUnkeyedEncodingContainer: UnkeyedEncodingContainer, StripeEncodingCont
         if let seValue = value as? UnknownFieldsEncodable {
             seValue.applyUnknownFieldEncodingTransforms(userInfo: userInfo, codingPath: newPath)
         }
-        try array.add(castToNSObject(codingPath: newPath, value))
+        try array.add(StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: newPath, value))
 
         count += 1
     }
@@ -401,7 +399,7 @@ struct STPUnkeyedEncodingContainer: UnkeyedEncodingContainer, StripeEncodingCont
 
 }
 
-struct STPSingleValueEncodingContainer: SingleValueEncodingContainer, StripeEncodingContainer {
+struct STPSingleValueEncodingContainer: SingleValueEncodingContainer {
     var codingPath: [CodingKey]
 
     var encodingBlock: (NSObject) -> Void
@@ -412,59 +410,59 @@ struct STPSingleValueEncodingContainer: SingleValueEncodingContainer, StripeEnco
     }
 
     mutating func encode(_ value: Bool) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: String) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: Double) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: Float) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: Int) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: Int8) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: Int16) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: Int32) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: Int64) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: UInt) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: UInt8) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: UInt16) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: UInt32) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode(_ value: UInt64) throws {
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 
     mutating func encode<T>(_ value: T) throws where T: Encodable {
@@ -475,19 +473,17 @@ struct STPSingleValueEncodingContainer: SingleValueEncodingContainer, StripeEnco
         if let seValue = value as? UnknownFieldsEncodable {
             seValue.applyUnknownFieldEncodingTransforms(userInfo: userInfo, codingPath: codingPath)
         }
-        encodingBlock(try castToNSObject(value))
+        encodingBlock(try StripeEncodingUtils.castToNSObject(userInfo: userInfo, codingPath: codingPath, value))
     }
 }
 
-protocol StripeEncodingContainer {
-    var userInfo: [CodingUserInfoKey: Any] {
-        get set
-    }
-}
-
-extension StripeEncodingContainer {
-    fileprivate func castToNSObject<T>(codingPath: [CodingKey] = [], _ value: T) throws -> NSObject
-    where T: Encodable {
+/// Utility for encoding Swift values to NSObject types compatible with NSJSONSerialization
+enum StripeEncodingUtils {
+    static func castToNSObject<T>(
+        userInfo: [CodingUserInfoKey: Any],
+        codingPath: [CodingKey] = [],
+        _ value: T
+    ) throws -> NSObject where T: Encodable {
         switch value {
         case let n as Bool:
             return n as NSObject

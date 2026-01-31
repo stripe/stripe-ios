@@ -574,7 +574,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
             )
         }
         updateMandateView()
-        cvcFormElement.clearTextFields()
+        PaymentMethodElementUtils.clearTextFields(in: cvcFormElement)
         updateFormElement()
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }

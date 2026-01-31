@@ -6,7 +6,7 @@
 import Foundation
 
 /// A representation of a Payment Method option, used for persisting the user's default payment method.
-public enum CustomerPaymentOption: Equatable {
+@frozen public enum CustomerPaymentOption: Equatable {
     /// The user's default payment method is Apple Pay.
     /// This is not a specific Apple Pay card. Stripe will present an Apple Pay sheet to the user.
     case applePay

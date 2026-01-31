@@ -42,7 +42,7 @@ extension TruncatedDecimalTest {
         // wrapped in quotations or represented as a nested container
         let container = Container(number: truncatedDecimal)
 
-        let jsonDict = try container.encodeJSONDictionary()
+        let jsonDict = try StripeJSONEncoder().encodeJSONDictionary(container)
         let queryString = URLEncoder.queryString(from: jsonDict)
         XCTAssertEqual(
             queryString,

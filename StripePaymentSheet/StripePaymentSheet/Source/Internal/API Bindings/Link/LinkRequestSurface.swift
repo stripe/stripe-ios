@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public enum LinkRequestSurface: String {
+@_spi(STP) @frozen public enum LinkRequestSurface: String {
     /// Used for requests from the `StripePaymentSheet` SDK.
     case paymentElement = "ios_payment_element"
     /// Used for requests from the `StripeCryptoOnramp` SDK.

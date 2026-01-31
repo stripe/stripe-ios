@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public enum ExperimentGroup: String {
+@_spi(STP) @frozen public enum ExperimentGroup: String {
     case control
     case treatment
     case holdback
