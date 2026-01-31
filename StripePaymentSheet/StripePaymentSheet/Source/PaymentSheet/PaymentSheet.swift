@@ -160,7 +160,7 @@ public class PaymentSheet {
             mode: mode,
             configuration: configuration,
             analyticsHelper: analyticsHelper,
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         ) { result in
             switch result {
             case .success(let loadResult):
