@@ -128,6 +128,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):
+                // TODO: Since success can include cases where we *don't* look up, we log "look up complete" even when no lookup was performed - is this intentional or desired?
                 STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
