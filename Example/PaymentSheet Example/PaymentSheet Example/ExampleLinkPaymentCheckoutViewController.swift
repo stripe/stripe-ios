@@ -35,45 +35,54 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     private func loadBackend() {
         token += 1
         let thisToken = token
-        makeRequest(with: backendCheckoutUrl, body: ["mode": "payment", "use_link": true]) {
-            [weak self] (data, _, _) in
-            guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                    as? [String: Any],
-                  let paymentIntentClientSecret = json["intentClientSecret"] as? String,
-                  let publishableKey = json["publishableKey"] as? String,
-                  let self = self,
-                  self.token == thisToken
-            else {
-                // Handle error
-                return
-            }
-            // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
-            STPAPIClient.shared.publishableKey = publishableKey
-            let returnURL = "payments-example://stripe-redirect"
-            DispatchQueue.main.async {
-                if self.deferredSwitch.isOn {
-                    let intentConfiguration = PaymentSheet
-                        .IntentConfiguration(
-                            mode: .payment(amount: 100, currency: "usd"),
-                            paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod in
-                                try await withCheckedThrowingContinuation { continuation in
-                                    self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
-                                                               paymentMethod: paymentMethod,
-                                                               shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
-                                        continuation.resume(with: result)
-                                    }
-                                }
-                            }
 
-                    self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
-                } else {
-                    self.linkPaymentController = LinkPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: returnURL, billingDetails: self.billingDetails)
-                }
-
-                self.updateButtons()
+        Task {
+            do {
+                try await performLoadBackend(token: thisToken)
+            } catch {
+                print("Failed to load backend: \(error)")
             }
         }
+    }
+
+    private func performLoadBackend(token: Int) async throws {
+        let (data, _) = try await makeRequest(with: backendCheckoutUrl, body: ["mode": "payment", "use_link": true])
+        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        guard
+            let paymentIntentClientSecret = json?["intentClientSecret"] as? String,
+            let publishableKey = json?["publishableKey"] as? String,
+            self.token == token
+        else {
+            throw LinkPaymentError.invalidResponse
+        }
+        // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
+        STPAPIClient.shared.publishableKey = publishableKey
+        let returnURL = "payments-example://stripe-redirect"
+
+        if self.deferredSwitch.isOn {
+            let intentConfiguration = PaymentSheet
+                .IntentConfiguration(
+                    mode: .payment(amount: 100, currency: "usd"),
+                    paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod in
+                        guard let self = self else {
+                            throw LinkPaymentError.viewControllerDeallocated
+                        }
+                        return try await self.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
+                                                                   paymentMethod: paymentMethod,
+                                                                   shouldSavePaymentMethod: shouldSavePaymentMethod)
+                    }
+
+            self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
+        } else {
+            self.linkPaymentController = LinkPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: returnURL, billingDetails: self.billingDetails)
+        }
+
+        self.updateButtons()
+    }
+
+    enum LinkPaymentError: Error {
+        case viewControllerDeallocated
+        case invalidResponse
     }
 
     override func viewDidLoad() {
@@ -154,12 +163,10 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
 
     func handleDeferredIntent(clientSecret: String,
                               paymentMethod: STPPaymentMethod,
-                              shouldSavePaymentMethod: Bool,
-                              intentCreationCallback: @escaping ((Result<String, Error>) -> Void) ) {
+                              shouldSavePaymentMethod: Bool) async throws -> String {
         enum ConfirmHandlerError: Error, LocalizedError {
             case clientSecretNotFound
             case confirmError(String)
-            case unknown
 
             public var errorDescription: String? {
                 switch self {
@@ -167,55 +174,50 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                     return "Client secret not found in response from server."
                 case .confirmError(let errorMessage):
                     return errorMessage
-                case .unknown:
-                    return "An unknown error occurred."
                 }
             }
         }
-        makeRequest(with: confirmEndpoint, body: ["mode": "payment",
-                                                  "client_secret": clientSecret,
-                                                  "payment_method_id": paymentMethod.stripeId,
-                                                  "should_save_payment_method": shouldSavePaymentMethod,
-                                                  "merchant_country_code": "US",
-                                                  "return_url": "payments-example://stripe-redirect", ], completionHandler: { data, response, error in
-            guard
-                error == nil,
-                let data = data,
-                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            else {
-                if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400 {
-                    // read the error message
-                    let errorMessage = String(data: data, encoding: .utf8) ?? "unknown error"
-                    intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
-                } else {
-                    intentCreationCallback(.failure(error ?? ConfirmHandlerError.unknown))
-                }
-                return
+
+        do {
+            let (data, _) = try await makeRequest(
+                with: confirmEndpoint,
+                body: [
+                    "mode": "payment",
+                    "client_secret": clientSecret,
+                    "payment_method_id": paymentMethod.stripeId,
+                    "should_save_payment_method": shouldSavePaymentMethod,
+                    "merchant_country_code": "US",
+                    "return_url": "payments-example://stripe-redirect",
+                ]
+            )
+            let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+
+            guard let clientSecret = json?["client_secret"] as? String else {
+                throw ConfirmHandlerError.clientSecretNotFound
             }
 
-            guard let clientSecret = json["client_secret"] as? String else {
-                intentCreationCallback(.failure(ConfirmHandlerError.clientSecretNotFound))
-                return
+            return clientSecret
+        } catch {
+            // Check for 400 error with message
+            if let urlError = error as? URLError,
+               let data = urlError.userInfo[NSURLErrorFailingURLStringErrorKey] as? Data,
+               let errorMessage = String(data: data, encoding: .utf8) {
+                throw ConfirmHandlerError.confirmError(errorMessage)
             }
-
-            intentCreationCallback(.success(clientSecret))
-        })
+            throw error
+        }
     }
 
-    func makeRequest(with url: String, body: [String: Any], completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    func makeRequest(with url: String, body: [String: Any]) async throws -> (Data, URLResponse) {
         let session = URLSession.shared
         let url = URL(string: url)!
 
-        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+        let json = try JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = session.dataTask(with: urlRequest) { data, response, error in
-            completionHandler(data, response, error)
-        }
 
-        task.resume()
+        return try await session.data(for: urlRequest)
     }
 }
