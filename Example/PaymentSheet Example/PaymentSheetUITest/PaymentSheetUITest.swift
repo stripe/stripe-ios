@@ -1247,6 +1247,22 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
+    func testCheckoutSession_ApplePay() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.integrationType = .checkoutSession
+        settings.apmsEnabled = .off
+        settings.collectEmail = .always // CheckoutSession requires email
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+
+        payWithApplePay()
+    }
+
     func testPaymentSheetFlowControllerSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -3552,6 +3568,8 @@ extension PaymentSheetUITestCase {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
+        addApplePayContactIfNeeded(applePay)
+
         let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
 
         let cardButton = applePay.buttons.containing(predicate).firstMatch
@@ -3603,6 +3621,19 @@ extension PaymentSheetUITestCase {
             zipCell.tap()
             zipCell.typeText("95014")
 
+            applePay.buttons["Done"].tap()
+        }
+    }
+
+    func addApplePayContactIfNeeded(_ applePay: XCUIApplication) {
+        // Fill out contact info (email) if required
+        let addEmailButton = applePay.buttons["Add Email Address"]
+        if addEmailButton.waitForExistence(timeout: 4.0) {
+            addEmailButton.tap()
+            XCTAssertTrue(applePay.staticTexts["Select An Email Address"].waitForExistence(timeout: 4.0))
+            applePay.buttons.matching(identifier: "Add Email Address").element(boundBy: 1).tap()
+            applePay.typeText("test@example.com")
+            // Hit the checkmark done button in the top right
             applePay.buttons["Done"].tap()
         }
     }

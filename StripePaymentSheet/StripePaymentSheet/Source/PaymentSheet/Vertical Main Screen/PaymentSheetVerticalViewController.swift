@@ -415,9 +415,17 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        // 2. Default to Apple Pay if WalletButtonsView is not in use
-        if shouldShowApplePayInList && !configuration.willUseWalletButtonsView {
-            return .applePay
+        // 2. Default to Apple Pay if WalletsButtonsView is not in use
+        // If WalletButtonsView is in use, only default to Apple Pay if it's the saved PM.
+        if shouldShowApplePayInList {
+            if configuration.willUseWalletButtonsView {
+                if CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay {
+                    return .applePay
+                }
+            } else {
+                // Always return Apple Pay
+                return .applePay
+            }
         }
 
         // 3. Default to the saved PM
@@ -439,10 +447,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
         var initialSelection = selection ?? calculateInitialSelection()
-        // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option.
+        // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then unselect any default option. The only exception is if Apple Pay was previously saved as the user's default PM -- in that case, it *is* a valid initialSelection.
         if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && previousPaymentOption == nil &&
             (
-                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always) ||
+                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always && !(CustomerPaymentOption.localDefaultPaymentMethod(for: configuration.customer?.id) == .applePay)) ||
                 initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {
             initialSelection = nil
         }

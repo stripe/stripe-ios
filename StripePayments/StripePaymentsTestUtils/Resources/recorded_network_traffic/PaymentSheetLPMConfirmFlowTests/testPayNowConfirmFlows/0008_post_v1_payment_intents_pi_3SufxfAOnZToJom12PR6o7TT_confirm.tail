@@ -1,0 +1,95 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SufxfAOnZToJom12PR6o7TT\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=7I2sN_wXNhUEmRvdCbFL9k6u60osx9gHHGbE-xL0XYyMydtZbcq9KIaeX3LPfZcswp1ZQx7BKeihEH6r
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_hAx6nZtLSYWA0O
+Content-Length: 2052
+Vary: Origin
+Date: Wed, 28 Jan 2026 21:07:40 GMT
+original-request: req_hAx6nZtLSYWA0O
+stripe-version: 2020-08-27
+idempotency-key: 132a24d9-ec3c-473a-bc1e-199cb133089b
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=pi_3SufxfAOnZToJom12PR6o7TT_secret_gcGxMjuJobqJ74PGzrzrFGWlj&expand\[0]=payment_method&payment_method=pm_1SufxfAOnZToJom1RrqR8igO&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "sgd",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "paynow_display_qr_code" : {
+      "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xSDdvWE1BT25aVG9Kb20xLF9Uc1FwVEtsTjNXSk93MmlhWDQxa2tXS2h3U1lXc0V40100qIT4Le9B.svg",
+      "data" : "https:\/\/payments.stripe.com\/payment_methods\/test_payment?payment_attempt=payatt_3SufxfAOnZToJom12cKAIHbD",
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/paynow\/instructions\/CCIaFwoVYWNjdF8xSDdvWE1BT25aVG9Kb20xKJv16csGMgbdRleB82s6L3dSXNztpMDiO5f1LNpUuO8ZH-V6TUawwLo1DzqMhlVY3ULn4f9iK8nJAEejl6W0",
+      "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xSDdvWE1BT25aVG9Kb20xLF9Uc1FwVEtsTjNXSk93MmlhWDQxa2tXS2h3U1lXc0V40100qIT4Le9B.png"
+    },
+    "type" : "paynow_display_qr_code"
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "paynow" : {
+
+    },
+    "id" : "pm_1SufxfAOnZToJom1RrqR8igO",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1769634459,
+    "allow_redisplay" : "unspecified",
+    "type" : "paynow",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3SufxfAOnZToJom12PR6o7TT_secret_gcGxMjuJobqJ74PGzrzrFGWlj",
+  "id" : "pi_3SufxfAOnZToJom12PR6o7TT",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "paynow"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1769634459,
+  "description" : null
+}
