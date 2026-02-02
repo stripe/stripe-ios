@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Zadejte kód zaslaný na %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Zadejte kód, který jsme vám odeslali na %@. Tento dodatečný krok pravidelně vyžadujeme, abychom zajistili bezpečnost vašeho účtu.";
-
 "Exit without connecting?" = "Ukončit bez připojení?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, tento kód nefungoval. Zkontrolujte ho ještě jednou a zkuste to znovu.";
@@ -117,8 +115,6 @@
 "Use test account" = "Použít zkušební účet";
 
 "Use test code" = "Použít zkušební kód";
-
-"Verify your email" = "Ověřte svůj e-mail";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Našli jsme %1$li %2$@ účtů, ale s %3$@ můžete propojit pouze běžné účty v USA.";
 

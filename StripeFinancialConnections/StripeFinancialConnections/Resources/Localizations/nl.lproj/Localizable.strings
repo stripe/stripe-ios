@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Voer de code in die is verstuurd naar %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Voer de code in die naar %@ is gestuurd. We vragen je regelmatig om deze extra stap uit te voeren, zodat je account veilig blijft.";
-
 "Exit without connecting?" = "Afsluiten zonder te koppelen?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "De code werkt niet. Controleer de code en probeer het nogmaals.";
@@ -117,8 +115,6 @@
 "Use test account" = "Testaccount gebruiken";
 
 "Use test code" = "Testcode gebruiken";
-
-"Verify your email" = "Je e-mailadres verifiëren";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "We hebben %1$li %2$@ accounts gevonden, maar je kunt alleen Amerikaanse betaalrekeningen aan %3$@ koppelen.";
 

@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Εισαγάγετε τον κωδικό που έχει σταλεί στο %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Εισαγάγετε τον κωδικό που έχει σταλεί στο %@. Ζητάμε περιοδικά αυτό το επιπλέον βήμα για να διατηρούμε ασφαλή τον λογαριασμό σας.";
-
 "Exit without connecting?" = "Έξοδος χωρίς σύνδεση;";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Χμμ, αυτός ο κωδικός δε λειτουργεί. Επανελέγξτε τον και δοκιμάστε ξανά.";
@@ -117,8 +115,6 @@
 "Use test account" = "Χρήση δοκιμαστικού λογαριασμού";
 
 "Use test code" = "Χρήση δοκιμαστικού κωδικού";
-
-"Verify your email" = "Επαληθεύστε το email σας";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Εντοπίσαμε %1$li %2$@ λογαριασμούς, αλλά μπορείτε να συνδέσετε μόνο τρεχούμενους λογαριασμούς ΗΠΑ με %3$@.";
 
