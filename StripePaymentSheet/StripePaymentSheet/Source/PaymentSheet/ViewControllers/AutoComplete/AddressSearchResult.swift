@@ -34,11 +34,8 @@ extension MKLocalSearchCompletion: AddressSearchResult {
         let search = MKLocalSearch(request: searchRequest)
 
         search.start { (response, _) in
-            guard let mapItem = response?.mapItems.first else {
-                completion(nil)
-                return
-            }
-            completion(mapItem.placemark.asAddress)
+            let placemark = response?.mapItems.first?.placemark
+            completion(placemark?.asAddress)
         }
         #endif
     }
