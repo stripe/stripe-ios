@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Masukkan kod yang dihantar ke %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Masukkan kod yang dihantar ke %@. Kami meminta langkah tambahan ini secara berkala untuk memastikan akaun anda selamat.";
-
 "Exit without connecting?" = "Keluar tanpa membuat sambungan?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, kod tersebut tidak betul. Semak sekali lagi dan cuba semula.";
@@ -117,8 +115,6 @@
 "Use test account" = "Gunakan akaun ujian";
 
 "Use test code" = "Gunakan kod ujian";
-
-"Verify your email" = "Tentusahkan e-mel anda";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Kami menemui akaun %1$li %2$@ tetapi anda hanya boleh memautkan akaun semakan AS kepada %3$@.";
 

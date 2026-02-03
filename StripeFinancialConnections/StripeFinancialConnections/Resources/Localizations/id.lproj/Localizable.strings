@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Masukkan kode yang dikirim ke %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Masukkan kode yang dikirim ke %@. Kami secara berkala meminta langkah ekstra ini agar akun Anda tetap aman.";
-
 "Exit without connecting?" = "Keluar tanpa menghubungkan?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, kode itu tidak berfungsi. Periksa kembali dan coba lagi.";
@@ -117,8 +115,6 @@
 "Use test account" = "Gunakan rekening percobaan";
 
 "Use test code" = "Gunakan kode percobaan";
-
-"Verify your email" = "Verifikasikan email Anda";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Kami menemukan rekening %1$li %2$@, namun Anda hanya bisa menautkan rekening giro AS ke %3$@.";
 

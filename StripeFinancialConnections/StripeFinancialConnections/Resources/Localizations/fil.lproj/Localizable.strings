@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Ilagay ang code na ipinadala sa %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Ilagay ang code na ipinadala sa %@. Paminsan-minsan naming hinihingi ang karagdagang hakbang na ito para panatilihing ligtas ang iyong account.";
-
 "Exit without connecting?" = "Lumabas nang hindi kumokonekta?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, hindi gumana ang code na iyan. Tingnan muli ito at subukan muli.";
@@ -117,8 +115,6 @@
 "Use test account" = "Gumamit ng test account";
 
 "Use test code" = "Gumamit ng test code";
-
-"Verify your email" = "Patunayan ang iyong email";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "May nakita kaming %1$li %2$@ (na) account pero mga US checking account lang ang puwede mong i-link sa %3$@.";
 

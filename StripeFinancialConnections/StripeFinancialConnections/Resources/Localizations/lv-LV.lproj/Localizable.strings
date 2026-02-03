@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Ievadiet kodu, kas nosūtīts uz %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Ievadiet uz %@ nosūtīto kodu. Mēs periodiski pieprasām šo papildu darbību, lai pasargātu jūsu kontu.";
-
 "Exit without connecting?" = "Iziet bez savienošanas?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Šis kods nav derīgs. Vēlreiz pārbaudiet to un mēģiniet vēlreiz.";
@@ -117,8 +115,6 @@
 "Use test account" = "Izmantojiet testa kontu";
 
 "Use test code" = "Izmantojiet testa kodu";
-
-"Verify your email" = "Pārbaudīt savu e-pastu";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Mēs atradām %1$li %2$@ kontus, bet ar %3$@ var saistīt tikai ASV norēķinu kontus.";
 

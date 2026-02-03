@@ -12,6 +12,8 @@
 
 "Back of %@" = "Achterkant van %@";
 
+"Back of ID not detected" = "Achterkant van identiteitsbewijs niet gedetecteerd";
+
 "Back of driver's license or government-issued photo ID" = "Achterkant van rijbewijs of officieel identiteitsbewijs met foto";
 
 "Back of identity document" = "Achterkant van identiteitsbewijs";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Camera niet beschikbaar";
 
 "Capturing…" = "Selfie wordt gemaakt...";
+
+"Center ID in view" = "Centreer het identiteitsbewijs";
 
 "Choose File" = "Bestand kiezen";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Voorkant van %@";
 
+"Front of ID not detected" = "Voorkant van identiteitsbewijs niet gedetecteerd";
+
 "Front of driver's license or government-issued photo ID" = "Voorkant van rijbewijs of officieel identiteitsbewijs met foto";
 
 "Front of driver's license or passport" = "Voorkant van rijbewijs of paspoort";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Identificatienummer";
 
+"Image is blurry. Hold your phone steady and try again." = "Het beeld is wazig. Houd je telefoon stil en probeer het opnieuw.";
+
 "Individual CPF" = "CPF natuurlijk persoon";
+
+"Invalid document" = "Ongeldig document";
 
 "Keep ID level" = "Houd het identiteitsbewijs recht";
 
 "Last 4 of Social Security number" = "Laatste vier cijfers van socialezekerheidsnummer";
 
 "Loading" = "Bezig met laden";
-
-"Make sure all details are visible and focus" = "Zorg dat alle details goed zichtbaar en in focus zijn";
 
 "Make sure you're in a well lit space." = "Zorg dat er voldoende belichting is.";
 

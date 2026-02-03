@@ -78,7 +78,6 @@
     "product": "external_api",
     "single_account": false,
     "skip_success_pane": false,
-    "step_up_authentication_required": false,
     "theme": "light",
     "use_single_sort_search": false,
     "version": "v3"

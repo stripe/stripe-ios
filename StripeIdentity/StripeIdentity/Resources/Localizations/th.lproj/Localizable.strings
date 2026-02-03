@@ -12,6 +12,8 @@
 
 "Back of %@" = "ด้านหลังของ %@";
 
+"Back of ID not detected" = "ตรวจจับด้านหลังของเอกสารไม่ได้";
+
 "Back of driver's license or government-issued photo ID" = "ด้านหลังของใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
 
 "Back of identity document" = "ด้านหลังของเอกสารประจำตัว";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "กล้องไม่พร้อมใช้งาน";
 
 "Capturing…" = "กำลังจับภาพ...";
+
+"Center ID in view" = "วางเอกสารให้อยู่ตรงกลาง";
 
 "Choose File" = "เลือกไฟล์";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "ด้านหน้าของ %@";
 
+"Front of ID not detected" = "ตรวจจับด้านหน้าของเอกสารไม่ได้";
+
 "Front of driver's license or government-issued photo ID" = "ด้านหน้าของใบอนุญาตขับขี่หรือบัตรประจําตัวที่มีรูปถ่ายที่ออกโดยรัฐบาล";
 
 "Front of driver's license or passport" = "ด้านหน้าของใบอนุญาตขับขี่หรือหนังสือเดินทาง";
@@ -66,15 +72,17 @@
 
 "ID Number" = "หมายเลขประจำตัวประชาชน";
 
+"Image is blurry. Hold your phone steady and try again." = "รูปภาพเบลอ โปรดถือโทรศัพท์ให้นิ่งแล้วลองอีกครั้ง";
+
 "Individual CPF" = "CPF ส่วนบุคคล";
+
+"Invalid document" = "เอกสารไม่ถูกต้อง";
 
 "Keep ID level" = "วางเอกสารให้อยู่ในมุมที่พอดี";
 
 "Last 4 of Social Security number" = "ตัวเลข 4 หลักสุดท้ายของหมายเลขประกันสังคม";
 
 "Loading" = "กำลังโหลด";
-
-"Make sure all details are visible and focus" = "ตรวจสอบว่ารายละเอียดทั้งหมดสามารถมองเห็นได้และอยู่ในระยะโฟกัส";
 
 "Make sure you're in a well lit space." = "ตรวจสอบว่าคุณอยู่ในสภาพแวดล้อมที่มีแสงสว่างเพียงพอ";
 

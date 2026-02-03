@@ -12,6 +12,8 @@
 
 "Back of %@" = "Rückseite Ihres %@";
 
+"Back of ID not detected" = "Rückseite des Ausweisdokuments nicht erkannt";
+
 "Back of driver's license or government-issued photo ID" = "Rückseite des Führerscheins oder des amtlichen Lichtbildausweises";
 
 "Back of identity document" = "Rückseite des Ausweisdokuments";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera nicht verfügbar";
 
 "Capturing…" = "Aufnahme läuft ...";
+
+"Center ID in view" = "Ausweisdokument mittig positionieren";
 
 "Choose File" = "Datei auswählen";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Vorderseite Ihres %@";
 
+"Front of ID not detected" = "Vorderseite des Ausweisdokuments nicht erkannt";
+
 "Front of driver's license or government-issued photo ID" = "Vorderseite des Führerscheins oder amtlicher Lichtbildausweis";
 
 "Front of driver's license or passport" = "Vorderseite des Führerscheins oder Reisepasses";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Ausweisnummer";
 
+"Image is blurry. Hold your phone steady and try again." = "Das Bild ist verschwommen. Halten Sie Ihr Handy ruhig und versuche es erneut.";
+
 "Individual CPF" = "Individuelle CPF";
+
+"Invalid document" = "Ungültiges Dokument";
 
 "Keep ID level" = "Ausweisdokument gerade halten";
 
 "Last 4 of Social Security number" = "Letzte vier Ziffern der Sozialversicherungsnummer";
 
 "Loading" = "Wird geladen";
-
-"Make sure all details are visible and focus" = "Vergewissern Sie sich, dass alle Details sichtbar und scharf sind";
 
 "Make sure you're in a well lit space." = "Sorgen Sie für ausreichende Beleuchtung.";
 

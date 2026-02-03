@@ -75,6 +75,20 @@ extension String.Localized {
         )
     }
 
+    static var back_of_id_not_detected: String {
+        return STPLocalizedString(
+            "Back of ID not detected",
+            "Instructional text when the user is expected to scan the back of their ID but the camera is seeing the front or a passport instead"
+        )
+    }
+
+    static var front_of_id_not_detected: String {
+        return STPLocalizedString(
+            "Front of ID not detected",
+            "Instructional text when the user is expected to scan the front of their ID but the camera is seeing the back instead"
+        )
+    }
+
     static var position_in_center_identity_card: String {
         return STPLocalizedString(
             "Position your identity document in the center of the frame",
@@ -167,8 +181,22 @@ extension String.Localized {
 
     static var reduce_blur: String {
         return STPLocalizedString(
-            "Make sure all details are visible and focus",
+            "Image is blurry. Hold your phone steady and try again.",
             "Instructional text when the document is too blurry"
+        )
+    }
+
+    static var invalid_document: String {
+        return STPLocalizedString(
+            "Invalid document",
+            "Instructional text when the scanned document appears not to be a valid ID document"
+        )
+    }
+
+    static var center_id_in_view: String {
+        return STPLocalizedString(
+            "Center ID in view",
+            "Instructional text when the document is not centered in the frame"
         )
     }
 

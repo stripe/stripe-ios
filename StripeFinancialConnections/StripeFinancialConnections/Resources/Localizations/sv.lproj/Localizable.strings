@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Ange koden som skickades till %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Ange koden som skickades till %@. Vi begär regelbundet att du genomför detta extrasteg för att skydda ditt konto.";
-
 "Exit without connecting?" = "Stäng utan att ansluta?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Den koden fungerade inte. Kontrollera den och försök igen.";
@@ -117,8 +115,6 @@
 "Use test account" = "Använd testkonto";
 
 "Use test code" = "Använd testkod";
-
-"Verify your email" = "Verifiera din e-postadress";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Vi hittade %1$li %2$@ konton men du kan bara koppla amerikanska checkkonton till %3$@.";
 
