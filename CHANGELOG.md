@@ -1,5 +1,8 @@
 ## X.Y.Z - changes pending release 
 
+### CryptoOnramp
+* [Removed] Removed `CryptoOnrampCoordinator.authenticateUser(from:)` in favor of `CryptoOnrampCoordinator.authorize(linkAuthIntentId:from:)`.
+
 ## 25.6.1 2026-02-03
 
 ### Identity
