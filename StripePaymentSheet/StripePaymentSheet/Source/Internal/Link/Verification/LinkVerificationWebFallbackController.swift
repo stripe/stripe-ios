@@ -6,6 +6,7 @@
 //
 
 import AuthenticationServices
+@_spi(STP) import StripeCore
 import UIKit
 
 final class LinkVerificationWebFallbackController: NSObject {
@@ -80,19 +81,6 @@ final class LinkVerificationWebFallbackController: NSObject {
 extension LinkVerificationWebFallbackController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        if let window = window {
-            return window
-        }
-        // Try to find an existing window scene to create the window with
-        if let windowScene = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .first {
-            return UIWindow(windowScene: windowScene)
-        }
-        #if os(visionOS)
-        fatalError("No window scene available for ASPresentationAnchor on visionOS")
-        #else
-        return ASPresentationAnchor()
-        #endif
+        return window ?? stp_makeFallbackPresentationAnchor()
     }
 }
