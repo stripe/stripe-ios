@@ -40,7 +40,7 @@ struct PassiveCaptchaData: Equatable, Hashable {
         // Optional
         let rqdata = response["rqdata"] as? String
         let tokenTimeoutMs = response["token_timeout_ms"] as? Double
-        let tokenTimeout: TimeInterval = (tokenTimeoutMs ?? TimeInterval.infinity) / 1000 
+        let tokenTimeout: TimeInterval = (tokenTimeoutMs ?? TimeInterval.infinity) / 1000
         return PassiveCaptchaData(
             siteKey: siteKey,
             rqdata: rqdata,
