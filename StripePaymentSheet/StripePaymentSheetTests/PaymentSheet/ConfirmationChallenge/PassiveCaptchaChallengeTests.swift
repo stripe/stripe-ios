@@ -90,7 +90,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
 
     func testTokenResetAndRefetchAfterExpiration() async throws {
         // Use a very short expiration time (5 seconds) for testing
-        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeout: 5)
+        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutMs: 5000)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
 
         // Fetch first token
