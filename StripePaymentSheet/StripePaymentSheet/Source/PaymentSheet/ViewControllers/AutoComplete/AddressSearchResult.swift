@@ -35,7 +35,8 @@ extension MKLocalSearchCompletion: AddressSearchResult {
                 return
             }
             #if os(visionOS)
-            completion(mapItem.asAddress)
+            assertionFailure("MKMapItem.asAddress is not yet implemented for visionOS")
+            completion(PaymentSheet.Address())
             #else
             completion(mapItem.placemark.asAddress)
             #endif
@@ -43,15 +44,7 @@ extension MKLocalSearchCompletion: AddressSearchResult {
     }
 }
 
-#if os(visionOS)
-extension MKMapItem {
-    /// Converts this map item into an address that can be interpreted by PaymentSheet (visionOS)
-    var asAddress: PaymentSheet.Address {
-        assertionFailure("MKMapItem.asAddress is not yet implemented for visionOS")
-        return PaymentSheet.Address()
-    }
-}
-#else
+#if !os(visionOS)
 extension MKPlacemark {
     /// Converts this placemark into an address that can be interpreted by PaymentSheet
     var asAddress: PaymentSheet.Address {

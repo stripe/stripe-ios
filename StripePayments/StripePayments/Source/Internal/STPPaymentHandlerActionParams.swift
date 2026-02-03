@@ -9,7 +9,6 @@
 import AuthenticationServices
 import Foundation
 @_spi(STP) import StripeCore
-import UIKit
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
