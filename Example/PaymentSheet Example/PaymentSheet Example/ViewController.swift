@@ -69,7 +69,16 @@ class ViewController: UIViewController {
 extension UIViewController {
 
     static func topMostViewController() -> UIViewController? {
-        guard let window = UIApplication.shared.keyWindow else {
+        let window: UIWindow?
+        #if os(visionOS)
+        window = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }
+        #else
+        window = UIApplication.shared.keyWindow
+        #endif
+        guard let window else {
             return nil
         }
         var topMostViewController = window.rootViewController
