@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Nhập mã đã được gửi tới %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Nhập mã được gửi tới %@. Chúng tôi yêu cầu bước bổ sung này theo định kỳ để giữ an toàn cho tài khoản của bạn.";
-
 "Exit without connecting?" = "Thoát mà không kết nối?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Rất tiếc, mã đó không đúng. Hãy kiểm tra kỹ mã và thử lại.";
@@ -117,8 +115,6 @@
 "Use test account" = "Sử dụng tài khoản thử nghiệm";
 
 "Use test code" = "Sử dụng mã thử nghiệm";
-
-"Verify your email" = "Xác minh email của bạn";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Chúng tôi tìm thấy %1$li %2$@ tài khoản nhưng bạn chỉ có thể liên kết tài khoản vãng lai Hoa Kỳ với %3$@.";
 

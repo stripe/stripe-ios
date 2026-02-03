@@ -29,7 +29,6 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case manualEntrySuccess = "manual_entry_success"
         case networkingLinkLoginWarmup = "networking_link_login_warmup"
         case networkingLinkSignupPane = "networking_link_signup_pane"
-        case networkingLinkStepUpVerification = "networking_link_step_up_verification"
         case networkingLinkVerification = "networking_link_verification"
         case networkingSaveToLinkVerification = "networking_save_to_link_verification"
         case partnerAuth = "partner_auth"
@@ -110,7 +109,6 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let product: String
     let singleAccount: Bool
     let skipSuccessPane: Bool?
-    let stepUpAuthenticationRequired: Bool?
     let successUrl: String?
     let theme: Theme?
 
@@ -176,7 +174,6 @@ struct FinancialConnectionsSessionManifest: Decodable {
         product: String,
         singleAccount: Bool,
         skipSuccessPane: Bool? = nil,
-        stepUpAuthenticationRequired: Bool? = nil,
         successUrl: String? = nil,
         theme: Theme? = nil
     ) {
@@ -217,7 +214,6 @@ struct FinancialConnectionsSessionManifest: Decodable {
         self.product = product
         self.singleAccount = singleAccount
         self.skipSuccessPane = skipSuccessPane
-        self.stepUpAuthenticationRequired = stepUpAuthenticationRequired
         self.successUrl = successUrl
         self.theme = theme
     }

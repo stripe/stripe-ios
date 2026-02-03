@@ -33,7 +33,6 @@ enum FinancialConnectionsAPIEndpoint: String {
 
     // Networking
     case disableNetworking = "link_account_sessions/disable_networking"
-    case linkStepUpAuthenticationVerified = "link_account_sessions/link_step_up_authentication_verified"
     case linkVerified = "link_account_sessions/link_verified"
     case networkedAccounts = "link_account_sessions/networked_accounts"
     case saveAccountsToLink = "link_account_sessions/save_accounts_to_link"
@@ -67,7 +66,7 @@ enum FinancialConnectionsAPIEndpoint: String {
              .authSessionsRepair, .consentAcquired:
             return true
         case .listAccounts, .sessionReceipt, .disableNetworking,
-             .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
+             .linkVerified, .saveAccountsToLink,
              .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
              .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
              .sharePaymentDetails, .paymentMethods, .mobileLinkAccountSignup, .mobileConsumerSessionLookup,

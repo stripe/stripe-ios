@@ -59,9 +59,6 @@
 /* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
 "Enter the code sent to %@" = "Enter the code sent to %@";
 
-/* The subtitle/description of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. '%@' is replaced with an email, for example, 'test@test.com'. */
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Enter the code sent to %@. We periodically request this extra step to keep your account safe.";
-
 /* The title of a sheet that appears when the user attempts to exit the bank linking screen. */
 "Exit without connecting?" = "Exit without connecting?";
 
@@ -190,9 +187,6 @@
 
 /* Label for a button shown to a user who is in test mode, which will give them the option to autofill a mock one time passcode. */
 "Use test code" = "Use test code";
-
-/* The title of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. */
-"Verify your email" = "Verify your email";
 
 /* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.' */
 "We found %d %@ accounts but you can only link checking or savings accounts to %@." = "We found %1$d %2$@ accounts but you can only link checking or savings accounts to %3$@.";

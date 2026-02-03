@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "請輸入發送至 %@ 的驗證碼";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "請輸入發送至 %@ 的驗證碼。我們會定期要求進行這個額外步驟，以保持您的賬戶安全。";
-
 "Exit without connecting?" = "退出而不關聯？";
 
 "Hmm, that code didn’t work. Double check it and try again." = "呃，這個驗證碼無效。請再次檢查並重試。";
@@ -117,8 +115,6 @@
 "Use test account" = "使用測試賬戶";
 
 "Use test code" = "使用測試碼";
-
-"Verify your email" = "驗證電郵地址";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "我們找到 %1$li 個 %2$@ 帳戶，但您僅能將美國支票帳戶連結至 %3$@。";
 
