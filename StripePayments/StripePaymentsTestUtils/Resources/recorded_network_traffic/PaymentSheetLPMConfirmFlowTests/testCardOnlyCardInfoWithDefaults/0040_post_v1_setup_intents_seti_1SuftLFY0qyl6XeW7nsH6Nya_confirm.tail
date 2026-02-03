@@ -1,0 +1,96 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SuftLFY0qyl6XeW7nsH6Nya\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=TZaNRxpc3qz4l-W3Lhrq6ANbPaa9crUdL39sZh_MPBd0Xvh2kl_tsWASYho8LBd2UzeCoY1vUvvapPvo
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_vAIVnlm7x3417j
+Content-Length: 1673
+Vary: Origin
+Date: Wed, 28 Jan 2026 21:03:12 GMT
+original-request: req_vAIVnlm7x3417j
+stripe-version: 2020-08-27
+idempotency-key: 77582da9-67ca-437e-a35b-ebf61a7834dd
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1SuftLFY0qyl6XeW7nsH6Nya_secret_TsQkCcwTE92sl4BGN3vmbcuL4FoeEat&expand\[0]=payment_method&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[card]\[cvc]=123&payment_method_data\[card]\[exp_month]=12&payment_method_data\[card]\[exp_year]=28&payment_method_data\[card]\[number]=4242424242424242&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=standard&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=card&use_stripe_sdk=true
+
+{
+  "id" : "seti_1SuftLFY0qyl6XeW7nsH6Nya",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1SuftMFY0qyl6XeWbZNZECiJ",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "card" : {
+      "regulated_status" : "unregulated",
+      "last4" : "4242",
+      "funding" : "credit",
+      "generated_from" : null,
+      "networks" : {
+        "available" : [
+          "visa"
+        ],
+        "preferred" : null
+      },
+      "brand" : "visa",
+      "checks" : {
+        "address_postal_code_check" : null,
+        "cvc_check" : null,
+        "address_line1_check" : null
+      },
+      "three_d_secure_usage" : {
+        "supported" : true
+      },
+      "wallet" : null,
+      "display_brand" : "visa",
+      "exp_month" : 12,
+      "exp_year" : 2028,
+      "country" : "US"
+    },
+    "livemode" : false,
+    "created" : 1769634192,
+    "allow_redisplay" : "unspecified",
+    "type" : "card",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "card"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1769634191,
+  "client_secret" : "seti_1SuftLFY0qyl6XeW7nsH6Nya_secret_TsQkCcwTE92sl4BGN3vmbcuL4FoeEat",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "succeeded"
+}

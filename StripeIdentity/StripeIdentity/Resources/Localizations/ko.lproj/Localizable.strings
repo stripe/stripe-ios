@@ -12,6 +12,8 @@
 
 "Back of %@" = "%@ 뒷면";
 
+"Back of ID not detected" = "신분증 뒷면이 감지되지 않음";
+
 "Back of driver's license or government-issued photo ID" = "운전면허증 또는 정부에서 발급한 사진이 부착된 신분증의 뒷면";
 
 "Back of identity document" = "신분증 뒷면";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "카메라 사용 불가";
 
 "Capturing…" = "캡처 중…";
+
+"Center ID in view" = "신분증을 화면 중앙에 맞춤";
 
 "Choose File" = "파일 선택";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "%@ 앞면";
 
+"Front of ID not detected" = "신분증 앞면이 감지되지 않음";
+
 "Front of driver's license or government-issued photo ID" = "운전면허증 또는 정부에서 발급한 사진이 부착된 신분증의 앞면";
 
 "Front of driver's license or passport" = "운전면허증 또는 여권의 앞면";
@@ -66,15 +72,17 @@
 
 "ID Number" = "ID 번호";
 
+"Image is blurry. Hold your phone steady and try again." = "이미지가 흐릿합니다. 휴대폰을 안정적으로 잡고 다시 시도해 보십시오.";
+
 "Individual CPF" = "개별 CPF";
+
+"Invalid document" = "유효하지 않은 문서";
 
 "Keep ID level" = "신분증 수준 유지";
 
 "Last 4 of Social Security number" = "사회 보장 번호의 마지막 4자리 숫자";
 
 "Loading" = "로드 중";
-
-"Make sure all details are visible and focus" = "모든 세부사항이 보이고 초점이 맞춰져 있는지 확인하십시오";
 
 "Make sure you're in a well lit space." = "공간의 조명이 밝은지 확인하십시오.";
 
