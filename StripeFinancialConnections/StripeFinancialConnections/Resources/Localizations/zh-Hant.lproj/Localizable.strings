@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "請輸入傳送至 %@ 的驗證碼";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "請輸入傳送至 %@ 的驗證碼。我們會定期要求進行這個額外步驟，以保持您的帳戶安全。";
-
 "Exit without connecting?" = "退出而不關聯？";
 
 "Hmm, that code didn’t work. Double check it and try again." = "呃，這個驗證碼無效。請再次檢查並重試。";
@@ -117,8 +115,6 @@
 "Use test account" = "使用測試帳戶";
 
 "Use test code" = "使用測試碼";
-
-"Verify your email" = "驗證電郵地址";
 
 "Yes, exit" = "是，退出";
 

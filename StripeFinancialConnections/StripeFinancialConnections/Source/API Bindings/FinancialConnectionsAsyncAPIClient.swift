@@ -710,16 +710,6 @@ extension FinancialConnectionsAsyncAPIClient {
         return try await post(endpoint: .shareNetworkedAccount, parameters: parameters)
     }
 
-    func markLinkStepUpAuthenticationVerified(
-        clientSecret: String
-    ) async throws -> FinancialConnectionsSessionManifest {
-        let parameters: [String: Any] = [
-            "client_secret": clientSecret,
-            "expand": ["active_auth_session"],
-        ]
-        return try await post(endpoint: .linkStepUpAuthenticationVerified, parameters: parameters)
-    }
-
     func consumerSessionLookup(
         emailAddress: String,
         clientSecret: String,

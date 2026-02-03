@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Introduceți codul trimis la %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Introduceți codul trimis la %@. Solicităm periodic acest pas suplimentar pentru a vă menține contul în siguranță.";
-
 "Exit without connecting?" = "Ieșiți fără conectare?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, acel cod nu a funcționat. Verificați și încercați din nou.";
@@ -117,8 +115,6 @@
 "Use test account" = "Utilizați un cont de testare";
 
 "Use test code" = "Utilizați un cod de testare";
-
-"Verify your email" = "Verificați-vă e-mailul";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Am găsit %1$li %2$@ conturi, dar puteți asocia doar conturile curente din SUA la %3$@.";
 

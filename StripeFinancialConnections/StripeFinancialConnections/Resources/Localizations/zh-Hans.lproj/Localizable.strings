@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "请输入发送至 %@ 的验证码";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "请输入发送至 %@ 的验证码。我们会定期要求进行这个额外步骤，以保持您的账户安全。";
-
 "Exit without connecting?" = "退出而不关联？";
 
 "Hmm, that code didn’t work. Double check it and try again." = "呃，这个验证码无效。请再次检查并重试。";
@@ -117,8 +115,6 @@
 "Use test account" = "使用测试账户";
 
 "Use test code" = "使用测试代码";
-
-"Verify your email" = "验证邮件地址";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "我们找到 %1$li 个 %2$@ 账户，但您只能将美国支票账户关联到 %3$@。";
 

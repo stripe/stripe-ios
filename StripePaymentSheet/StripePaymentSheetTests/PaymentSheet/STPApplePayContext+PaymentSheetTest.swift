@@ -7,7 +7,8 @@
 
 @testable import StripeApplePay
 @_spi(STP) import StripeCore
-@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@_spi(STP) import StripePayments
+@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -434,6 +435,23 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 #if compiler(>=5.9)
         if #available(macOS 14.0, iOS 17.0, *) {
             XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
+        }
+#endif
+    }
+
+    // MARK: - CheckoutSession Tests
+
+    func testCreatePaymentRequest_CheckoutSession_PaymentMode() {
+        let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
+        XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+        XCTAssertEqual(sut.currencyCode, "USD")
+        XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+        XCTAssertEqual(sut.countryCode, "GB")
+#if compiler(>=5.9)
+        if #available(macOS 14.0, iOS 17.0, *) {
+            XCTAssertEqual(sut.applePayLaterAvailability, .available)
         }
 #endif
     }
