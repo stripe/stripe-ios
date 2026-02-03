@@ -1,7 +1,9 @@
 ## X.Y.Z - changes pending release 
 
+## 25.6.1 2026-02-03
+
 ### Identity
-* [Added] More live feedback during document capture. 
+* [Added] More live feedback during document capture.
 
 ## 25.6.0 2026-01-26
 

@@ -12,6 +12,8 @@
 
 "Back of %@" = "%@’nin arka yüzü";
 
+"Back of ID not detected" = "Kimlik belgesinin arka yüzü tespit edilemedi";
+
 "Back of driver's license or government-issued photo ID" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı bir kimliğin arka yüzü";
 
 "Back of identity document" = "Kimlik belgesinin arka yüzü";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera kullanılamıyor";
 
 "Capturing…" = "Çekiliyor...";
+
+"Center ID in view" = "Kimliği ortalayarak görüntüleyin";
 
 "Choose File" = "Dosya Seç";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "%@’nin ön yüzü";
 
+"Front of ID not detected" = "Kimlik belgesinin ön yüzü tespit edilemedi";
+
 "Front of driver's license or government-issued photo ID" = "Ehliyetin veya devlet tarafından verilmiş fotoğraflı kimliğin ön yüzü";
 
 "Front of driver's license or passport" = "Ehliyetin veya pasaportun ön yüzü";
@@ -66,7 +72,11 @@
 
 "ID Number" = "Kimlik Numarası";
 
+"Image is blurry. Hold your phone steady and try again." = "Görüntü bulanık. Telefonunuzu sabit tutun ve tekrar deneyin.";
+
 "Individual CPF" = "Bireysel CPF";
+
+"Invalid document" = "Geçersiz belge";
 
 "Keep ID level" = "Kimlik seviyesini koruyun";
 
