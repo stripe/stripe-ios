@@ -66,15 +66,6 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if the auth token is expired, has already been used, has been revoked, or an API error occurs.
     func authenticateUserWithToken(_ linkAuthTokenClientSecret: String) async throws
 
-    /// Presents Link UI to authenticate an existing Link user.
-    /// `hasLinkAccount` must be called before this.
-    ///
-    /// - Parameter viewController: The view controller from which to present the authentication flow.
-    /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
-    ///   If authentication completes, a crypto customer ID will be included in the result.
-    /// Throws if `hasLinkAccount` was not called prior to this, or an API error occurs after the view controller is presented.
-    func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult
-
     /// Authorizes a Link auth intent and authenticates the user if necessary.
     /// - Parameters:
     ///   - linkAuthIntentId: The Link auth intent ID to authorize.
@@ -328,30 +319,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.linkUserAuthenticationWithTokenCompleted)
         } catch {
             analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
-            throw error
-        }
-    }
-
-    public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
-        analyticsClient.log(.linkUserAuthenticationStarted)
-        do {
-            let verificationResult = try await linkController.presentForVerification(from: viewController)
-            switch verificationResult {
-            case .canceled:
-                return .canceled
-            case .completed:
-                do {
-                    let customerId = try await apiClient.createCryptoCustomer(with: linkAccountInfo).id
-                    await cryptoCustomerState.setCustomerId(customerId)
-                    analyticsClient.log(.linkUserAuthenticationCompleted)
-                    return .completed(customerId: customerId)
-                } catch {
-                    analyticsClient.log(.errorOccurred(during: .authenticateUser, errorMessage: error.localizedDescription))
-                    throw error
-                }
-            }
-        } catch {
-            analyticsClient.log(.errorOccurred(during: .authenticateUser, errorMessage: error.localizedDescription))
             throw error
         }
     }
