@@ -12,6 +12,8 @@
 
 "Back of %@" = "Baksidan av %@";
 
+"Back of ID not detected" = "Id-handlingens baksida inte identifierad";
+
 "Back of driver's license or government-issued photo ID" = "Baksidan av körkort eller en myndighetsutfärdad id-handling med foto";
 
 "Back of identity document" = "Id-handlingens baksida";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Kamera ej tillgänglig";
 
 "Capturing…" = "Tar bild …";
+
+"Center ID in view" = "Centrera id-handlingen";
 
 "Choose File" = "Välj fil";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Framsidan av %@";
 
+"Front of ID not detected" = "Id-handlingens framsida inte identifierad";
+
 "Front of driver's license or government-issued photo ID" = "Framsidan av körkort eller en myndighetsutfärdad id-handling med foto";
 
 "Front of driver's license or passport" = "Framsidan av körkort eller pass";
@@ -66,15 +72,17 @@
 
 "ID Number" = "ID-nummer";
 
+"Image is blurry. Hold your phone steady and try again." = "Bilden är suddig. Håll telefonen stadigt och försök igen.";
+
 "Individual CPF" = "Personligt CPF";
+
+"Invalid document" = "Ogiltigt dokument";
 
 "Keep ID level" = "Se till att id-handlingen ligger rakt";
 
 "Last 4 of Social Security number" = "Fyra sista siffrorna i socialförsäkringsnumret";
 
 "Loading" = "Laddar";
-
-"Make sure all details are visible and focus" = "Se till att alla uppgifter är synliga och i fokus";
 
 "Make sure you're in a well lit space." = "Se till att du befinner dig på en plats med bra belysning.";
 

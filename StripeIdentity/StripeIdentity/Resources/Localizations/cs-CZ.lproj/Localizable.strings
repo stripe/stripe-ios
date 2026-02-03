@@ -12,6 +12,8 @@
 
 "Back of %@" = "Zadní strana %@";
 
+"Back of ID not detected" = "Zadní strana průkazu totožnosti nebyla detekována";
+
 "Back of driver's license or government-issued photo ID" = "Zadní strana řidičského průkazu nebo státem vydaného průkazu totožnosti s fotografií";
 
 "Back of identity document" = "Zadní strana průkazu totožnosti";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Fotoaparát není dostupný";
 
 "Capturing…" = "Probíhá fotografování...";
+
+"Center ID in view" = "Zobrazen střed průkazu totožnosti";
 
 "Choose File" = "Vybrat soubor";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Přední strana %@";
 
+"Front of ID not detected" = "Přední strana průkazu totožnosti nebyla detekována";
+
 "Front of driver's license or government-issued photo ID" = "Přední strana řidičského průkazu nebo státem vydaného průkazu totožnosti s fotografií";
 
 "Front of driver's license or passport" = "Přední strana řidičského průkazu nebo pasu";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Identifikační číslo";
 
+"Image is blurry. Hold your phone steady and try again." = "Snímek je rozmazaný. Držte telefon pevně a zkuste to znovu.";
+
 "Individual CPF" = "Individuální CPF";
+
+"Invalid document" = "Neplatný dokument";
 
 "Keep ID level" = "Zachovat úroveň dokladu";
 
 "Last 4 of Social Security number" = "Poslední 4 pozice čísla sociálního pojištění";
 
 "Loading" = "Načítání";
-
-"Make sure all details are visible and focus" = "Ujistěte se, že jsou všechny detaily viditelné a zaostřené";
 
 "Make sure you're in a well lit space." = "Ujistěte se, že jste v řádně  osvětleném prostoru.";
 

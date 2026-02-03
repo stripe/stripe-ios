@@ -12,6 +12,8 @@
 
 "Back of %@" = "Mặt sau của %@";
 
+"Back of ID not detected" = "Không phát hiện mặt sau giấy tờ tùy thân";
+
 "Back of driver's license or government-issued photo ID" = "Mặt sau của bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
 "Back of identity document" = "Mặt sau giấy tờ nhận dạng";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Máy ảnh không khả dụng";
 
 "Capturing…" = "Đang chụp…";
+
+"Center ID in view" = "Đặt giấy tờ tùy thân vào giữa tầm nhìn";
 
 "Choose File" = "Chọn tệp";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Mặt trước của %@";
 
+"Front of ID not detected" = "Không phát hiện mặt trước giấy tờ tùy thân";
+
 "Front of driver's license or government-issued photo ID" = "Mặt trước của bằng lái xe hoặc giấy tờ tùy thân có ảnh do chính phủ cấp";
 
 "Front of driver's license or passport" = "Mặt trước của bằng lái xe hoặc hộ chiếu";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Số ID";
 
+"Image is blurry. Hold your phone steady and try again." = "Hình ảnh bị mờ. Giữ chắc điện thoại và thử lại.";
+
 "Individual CPF" = "CPF cá nhân";
+
+"Invalid document" = "Tài liệu không hợp lệ";
 
 "Keep ID level" = "Giữ ID cân bằng";
 
 "Last 4 of Social Security number" = "4 số cuối của số An Sinh Xã Hội";
 
 "Loading" = "Đang tải";
-
-"Make sure all details are visible and focus" = "Đảm bảo tất cả các thông tin nhìn rõ và được lấy nét";
 
 "Make sure you're in a well lit space." = "Hãy đảm bảo bạn đang ở trong không gian đủ ánh sáng.";
 
