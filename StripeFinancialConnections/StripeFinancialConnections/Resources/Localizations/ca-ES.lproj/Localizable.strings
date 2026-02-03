@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Introduïu el codi que us hem enviat a %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Introduïu el codi que us hem enviat a %@. Periòdicament demanem aquest pas addicional per garantir la seguretat del compte.";
-
 "Exit without connecting?" = "Voleu sortir sense enllaçar-lo?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Vaja, aquest codi no ha funcionat. Comproveu-lo i torneu-ho a intentar.";
@@ -117,8 +115,6 @@
 "Use test account" = "Utilitza el compte de prova";
 
 "Use test code" = "Utilitza el codi de prova";
-
-"Verify your email" = "Verifiqueu el correu electrònic";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Hem trobat %1$li comptes %2$@, però només podeu enllaçar comptes corrents dels EUA a %3$@.";
 

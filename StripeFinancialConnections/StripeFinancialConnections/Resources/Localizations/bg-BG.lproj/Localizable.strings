@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Въведете кода, изпратен на %@.";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Въведете кода, изпратен на %@. Периодично изискваме тази допълнителна стъпка, за да запазим профила ви в безопасност.";
-
 "Exit without connecting?" = "Изход без свързване?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Хм, този код не проработи. Проверете го повторно и опитайте отново.";
@@ -117,8 +115,6 @@
 "Use test account" = "Използване на тестов акаунт";
 
 "Use test code" = "Използване на тестов код";
-
-"Verify your email" = "Потвърдете имейла си";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Открихме %1$li %2$@ акаунта, но можете да свържете само американски разплащателни сметки към %3$@.";
 

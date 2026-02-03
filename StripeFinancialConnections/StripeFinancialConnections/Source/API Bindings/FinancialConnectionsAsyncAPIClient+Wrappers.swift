@@ -326,14 +326,6 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         }
     }
 
-    func markLinkStepUpAuthenticationVerified(
-        clientSecret: String
-    ) -> Future<FinancialConnectionsSessionManifest> {
-        wrapAsyncToFuture {
-            try await self.markLinkStepUpAuthenticationVerified(clientSecret: clientSecret)
-        }
-    }
-
     func consumerSessionLookup(
         emailAddress: String,
         clientSecret: String,

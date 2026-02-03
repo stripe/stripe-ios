@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Syötä koodi, joka lähetettiin numeroon %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Syötä sähköpostiin %@ lähetetty koodi. Pyydämme tätä ylimääräistä vaihetta säännöllisesti pitääksemme tilisi turvassa.";
-
 "Exit without connecting?" = "Poistutaanko ilman yhdistämistä?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, kyseinen koodi ei toiminut. Tarkista se ja yritä uudelleen.";
@@ -117,8 +115,6 @@
 "Use test account" = "Käytä testitiliä";
 
 "Use test code" = "Käytä testikoodia";
-
-"Verify your email" = "Vahvista sähköposti";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Löysimme %1$li %2$@ tiliä, mutta voit linkittää vain yhdysvaltalaisia käyttötilejä %3$@.";
 
