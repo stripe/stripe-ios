@@ -6,7 +6,6 @@
 //
 
 import AuthenticationServices
-@_spi(STP) import StripeCore
 import UIKit
 
 final class LinkVerificationWebFallbackController: NSObject {
