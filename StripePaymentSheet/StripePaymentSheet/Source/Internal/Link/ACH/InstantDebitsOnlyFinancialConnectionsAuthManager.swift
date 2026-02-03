@@ -145,7 +145,19 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
 extension InstantDebitsOnlyAuthenticationSessionManager: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return self.window ?? ASPresentationAnchor()
+        if let window = self.window {
+            return window
+        }
+        if let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first {
+            return UIWindow(windowScene: windowScene)
+        }
+        #if os(visionOS)
+        fatalError("No window scene available for ASPresentationAnchor on visionOS")
+        #else
+        return ASPresentationAnchor()
+        #endif
     }
 }
 

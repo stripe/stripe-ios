@@ -9,10 +9,29 @@
 import AuthenticationServices
 import Foundation
 @_spi(STP) import StripeCore
+import UIKit
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
 #endif
+
+/// Creates a fallback ASPresentationAnchor when no window is available.
+/// On visionOS, UIWindow() without a scene is deprecated, so we find a scene first.
+private func makeFallbackPresentationAnchor() -> ASPresentationAnchor {
+    // Try to find an existing window scene to create the window with
+    if let windowScene = UIApplication.shared.connectedScenes
+        .compactMap({ $0 as? UIWindowScene })
+        .first {
+        return UIWindow(windowScene: windowScene)
+    }
+    #if os(visionOS)
+    // On visionOS we must have a window scene - this is an invalid state
+    fatalError("No window scene available for ASPresentationAnchor on visionOS")
+    #else
+    // Fallback for iOS when no scene is available (rare edge case)
+    return UIWindow()
+    #endif
+}
 
 @_spi(STP) public protocol STPPaymentHandlerActionParams: NSObject, ASWebAuthenticationPresentationContextProviding {
     var threeDS2Service: STDSThreeDS2Service? { get }
@@ -105,7 +124,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return authenticationContext.authenticationPresentingViewController().view.window ?? ASPresentationAnchor()
+        return authenticationContext.authenticationPresentingViewController().view.window ?? makeFallbackPresentationAnchor()
     }
 }
 
@@ -185,6 +204,6 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return authenticationContext.authenticationPresentingViewController().view.window ?? ASPresentationAnchor()
+        return authenticationContext.authenticationPresentingViewController().view.window ?? makeFallbackPresentationAnchor()
     }
 }

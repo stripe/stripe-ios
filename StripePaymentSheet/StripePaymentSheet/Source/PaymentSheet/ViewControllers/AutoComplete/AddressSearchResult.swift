@@ -30,12 +30,28 @@ extension MKLocalSearchCompletion: AddressSearchResult {
         let search = MKLocalSearch(request: searchRequest)
 
         search.start { (response, _) in
-            let placemark = response?.mapItems.first?.placemark
-            completion(placemark?.asAddress)
+            guard let mapItem = response?.mapItems.first else {
+                completion(nil)
+                return
+            }
+            #if os(visionOS)
+            completion(mapItem.asAddress)
+            #else
+            completion(mapItem.placemark.asAddress)
+            #endif
         }
     }
 }
 
+#if os(visionOS)
+extension MKMapItem {
+    /// Converts this map item into an address that can be interpreted by PaymentSheet (visionOS)
+    var asAddress: PaymentSheet.Address {
+        assertionFailure("MKMapItem.asAddress is not yet implemented for visionOS")
+        return PaymentSheet.Address()
+    }
+}
+#else
 extension MKPlacemark {
     /// Converts this placemark into an address that can be interpreted by PaymentSheet
     var asAddress: PaymentSheet.Address {
@@ -47,3 +63,4 @@ extension MKPlacemark {
                                     state: administrativeArea)
     }
 }
+#endif
