@@ -20,6 +20,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         static let cardPaymentMethod = STPTestUtils.jsonNamed("CardPaymentMethod")!
         static let paymentIntent = STPTestUtils.jsonNamed("PaymentIntent")!
         static let setupIntent = STPTestUtils.jsonNamed("SetupIntent")!
+        static let checkoutSession = STPTestUtils.jsonNamed("CheckoutSession")!
     }
 
     enum MockParams {
@@ -291,6 +292,78 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         waitForExpectations(timeout: 10)
     }
+
+    func testCheckoutSessionConfirmWithNewPaymentMethodViaLink() {
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+
+        // In non-passthrough mode, Link payment details are converted to params and
+        // a new payment method is created before calling checkout session confirm
+        stubCheckoutSessionConfirm(sessionId: checkoutSession.stripeId)
+        stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
+
+        let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
+        let exp = expectation(description: "confirm completed")
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        // Use Link elements/session
+        let elementsSession = STPElementsSession.linkElementsSession
+
+        // Create Link payment option with payment details
+        let paymentOption: PaymentOption = .link(
+            option: .withPaymentDetails(
+                account: .init(
+                    email: "test@example.com",
+                    session: .init(
+                        clientSecret: "cs_xxx",
+                        emailAddress: "test@example.com",
+                        redactedFormattedPhoneNumber: "(***) *** **55",
+                        unredactedPhoneNumber: "(555) 555-5555",
+                        phoneNumberCountry: "US",
+                        verificationSessions: [.init(type: .sms, state: .verified)],
+                        supportedPaymentDetailsTypes: [.card],
+                        mobileFallbackWebviewParams: nil
+                    ),
+                    publishableKey: MockParams.publicKey,
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false,
+                    canSyncAttestationState: false
+                ),
+                paymentDetails: .init(
+                    stripeID: "pd1",
+                    details: .card(card: .init(
+                        expiryYear: 2055,
+                        expiryMonth: 12,
+                        brand: "visa",
+                        networks: ["visa"],
+                        last4: "1234",
+                        funding: .credit,
+                        checks: nil
+                    )),
+                    billingAddress: nil,
+                    billingEmailAddress: "test@example.com",
+                    nickname: nil,
+                    isDefault: true
+                ),
+                confirmationExtras: nil,
+                shippingAddress: nil
+            )
+        )
+
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .checkoutSession(checkoutSession),
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { result, confirmationType in
+                XCTAssertEqual(result, .completed)
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
 }
 
 extension PaymentSheetAPIMockTest: STPAuthenticationContext {
@@ -441,6 +514,40 @@ private extension PaymentSheetAPIMockTest {
             ) as! [AnyHashable: Any]
 
             return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
+        }
+    }
+
+    func stubCheckoutSessionConfirm(
+        sessionId: String,
+        shouldSucceed: Bool = true,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "checkout session confirm requested")
+
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("payment_pages/\(sessionId)/confirm") ?? false
+        } response: { _ in
+            defer { exp.fulfill() }
+
+            if shouldSucceed {
+                var paymentIntentJson = MockJson.paymentIntent
+                paymentIntentJson["status"] = "succeeded"
+
+                let json: [String: Any] = [
+                    "status": "complete",
+                    "payment_status": "paid",
+                    "payment_intent": paymentIntentJson,
+                ]
+                return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+            } else {
+                let errorJson: [String: Any] = [
+                    "error": [
+                        "type": "invalid_request_error",
+                        "message": "Test error",
+                    ],
+                ]
+                return HTTPStubsResponse(jsonObject: errorJson, statusCode: 400, headers: nil)
+            }
         }
     }
 
