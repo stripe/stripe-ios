@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "%@ に送信されたコードを入力してください";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "%@ に送信されたコードを入力してください。この追加手順は、アカウントを安全に保つために定期的に実行いたします。";
-
 "Exit without connecting?" = "連結せずに終了しますか？";
 
 "Hmm, that code didn’t work. Double check it and try again." = "そのコードは一致しませんでした。再度確認してから、もう一度お試しください。";
@@ -117,8 +115,6 @@
 "Use test account" = "テストアカウントを使用";
 
 "Use test code" = "テストコードを使用";
-
-"Verify your email" = "メールアドレスを確認する";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "%1$li %2$@ 口座が見つかりましたが、%3$@ にリンクできるのはアメリカの当座預金口座のみです。";
 

@@ -199,6 +199,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testAlmaConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
+                               amount: 5000, // Alma requires minimum €50.00
                                paymentMethodType: .alma,
                                merchantCountry: .FR,
                                expectedHierarchy: ExpectedFormHierarchy.Alma.paymentIntent) { _ in }
@@ -435,7 +436,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                         configuration: configuration
                     )
                 case .checkoutSession:
-                    // TODO(porter) Support these tests when we implement confirmation
+                    // TODO(porter) Support these tests when we implement confirmation for saved payment methods
                     continue
                 }
 
@@ -589,8 +590,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testAffirmConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", paymentMethodType: .affirm, merchantCountry: .US,
-                               expectedHierarchy: ExpectedFormHierarchy.Affirm.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", amount: 3500, paymentMethodType: .affirm, merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Affirm.paymentIntent) { _ in }  // Affirm requires minimum $35.00
     }
 
     func testZipConfirmFlows() async throws {
@@ -821,6 +822,11 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             }
             XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
 
+            // Checkout sessions require a billing email on the payment method
+            if case .checkoutSession = intent {
+                intentConfirmParams.paymentMethodParams.nonnil_billingDetails.email = "test@example.com"
+            }
+
             let e = expectation(description: "Confirm")
             let paymentHandler = STPPaymentHandler(apiClient: apiClient)
             var redirectShimCalled = false
@@ -918,9 +924,22 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 )
             }
 
+            // CheckoutSession
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+                types: paymentMethodTypes,
+                currency: currency,
+                amount: amount,
+                merchantCountry: merchantCountry.rawValue
+            )
+            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            let initResponse = try await csApiClient.initCheckoutSession(
+                checkoutSessionId: checkoutSessionResponse.id
+            )
+
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+                ("CheckoutSession", .checkoutSession(initResponse.checkoutSession)),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation

@@ -240,10 +240,10 @@ extension LinkUI {
         var appearance = PaymentSheet.Appearance.default
 
         #if !os(visionOS)
-        if useLiquidGlass, #available(iOS 26.0, *) {
+        if useLiquidGlass, #available(iOS 26.0, visionOS 26.0, *) {
             appearance.applyLiquidGlass()
         }
-        if useLiquidGlassNavigationBar, #available(iOS 26.0, *) {
+        if useLiquidGlassNavigationBar, #available(iOS 26.0, visionOS 26.0, *) {
             appearance.navigationBarStyle = .glass
         }
         #endif

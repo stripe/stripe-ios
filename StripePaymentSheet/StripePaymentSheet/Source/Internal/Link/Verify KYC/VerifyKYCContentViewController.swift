@@ -162,8 +162,13 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         let divider = UIView()
         divider.translatesAutoresizingMaskIntoConstraints = false
         divider.backgroundColor = .linkBorderDefault
+        #if os(visionOS)
+        let dividerHeight: CGFloat = 1.0
+        #else
+        let dividerHeight: CGFloat = 1.0 / UIScreen.main.scale
+        #endif
         NSLayoutConstraint.activate([
-            divider.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.scale)
+            divider.heightAnchor.constraint(equalToConstant: dividerHeight)
         ])
         return divider
     }

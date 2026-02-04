@@ -26,6 +26,10 @@ protocol AddressSearchResult {
 
 extension MKLocalSearchCompletion: AddressSearchResult {
     func asAddress(completion: @escaping (PaymentSheet.Address?) -> Void) {
+        #if os(visionOS)
+        assertionFailure("MKMapItem.asAddress is not yet implemented for visionOS")
+        completion(PaymentSheet.Address())
+        #else
         let searchRequest = MKLocalSearch.Request(completion: self)
         let search = MKLocalSearch(request: searchRequest)
 
@@ -33,9 +37,11 @@ extension MKLocalSearchCompletion: AddressSearchResult {
             let placemark = response?.mapItems.first?.placemark
             completion(placemark?.asAddress)
         }
+        #endif
     }
 }
 
+#if !os(visionOS)
 extension MKPlacemark {
     /// Converts this placemark into an address that can be interpreted by PaymentSheet
     var asAddress: PaymentSheet.Address {
@@ -47,3 +53,4 @@ extension MKPlacemark {
                                     state: administrativeArea)
     }
 }
+#endif

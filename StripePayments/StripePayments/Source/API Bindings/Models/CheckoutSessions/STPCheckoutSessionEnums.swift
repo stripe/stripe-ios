@@ -49,7 +49,7 @@ import Foundation
 }
 
 /// Mode types for an STPCheckoutSession
-@_spi(STP) @objc public enum STPCheckoutSessionMode: Int {
+@_spi(STP) @frozen public enum STPCheckoutSessionMode {
     /// Unknown mode
     case unknown
     /// Accept one-time payments for cards, iDEAL, and more

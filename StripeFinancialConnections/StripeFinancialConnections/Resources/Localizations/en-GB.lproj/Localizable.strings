@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Enter the code sent to %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Enter the code sent to %@. We periodically request this extra step to keep your account safe.";
-
 "Exit without connecting?" = "Exit without connecting?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, that code didn’t work. Double check it and try again.";
@@ -117,8 +115,6 @@
 "Use test account" = "Use test account";
 
 "Use test code" = "Use test code";
-
-"Verify your email" = "Verify your email address";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "We found %1$li %2$@ accounts but you can only link US checking accounts to %3$@.";
 

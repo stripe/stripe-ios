@@ -17,7 +17,7 @@ import UIKit
 // @iOS26
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
-    // MARK: Normal mode
+    // MARK: Checkbox mode
 
     func testDefaultState() {
         let sut = makeSUT()
@@ -51,7 +51,17 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    // MARK: Default opt-in
+    // MARK: Default opt-in (checkboxWithDefaultOptIn mode)
+
+    func testDefaultOptIn_unchecked() {
+        let sut = makeSUT(
+            saveCheckboxChecked: false,
+            linkAccountEmailAddress: "user@example.com",
+            preFillPhone: "+13105551234",
+            allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
 
     func testDefaultOptIn_fully_preFilled() {
         let sut = makeSUT(
@@ -82,6 +92,8 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    // MARK: SignupOptIn mode
+
     func testSignupOptInFeatureEnabled_unchecked() {
         let sut = makeSUT(
             linkAccountEmailAddress: "unknown@stripe.com",
@@ -90,7 +102,16 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    // MARK: Textfield only mode
+    func testSignupOptInFeatureEnabled_checked() {
+        let sut = makeSUT(
+            linkAccountEmailAddress: "unknown@stripe.com",
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true
+        )
+        verify(sut)
+    }
+
+    // MARK: TextFieldsOnlyEmailFirst mode
 
     func testDefaultState_textFieldsOnly() {
         let sut = makeSUT(showCheckbox: false)
@@ -123,6 +144,17 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
             country: "CA",
             preFillName: "Jane Diaz",
             preFillPhone: "+13105551234",
+            showCheckbox: false
+        )
+        verify(sut)
+    }
+
+    // MARK: TextFieldsOnlyPhoneFirst mode
+
+    func testDefaultState_textFieldsOnlyPhoneFirst() {
+        // Phone first mode is triggered when showCheckbox is false and email is prefilled
+        let sut = makeSUT(
+            linkAccountEmailAddress: "user@example.com",
             showCheckbox: false
         )
         verify(sut)
@@ -216,7 +248,8 @@ extension LinkInlineSignupElementSnapshotTests {
         preFillPhone: String? = nil,
         showCheckbox: Bool = true,
         allowsDefaultOptIn: Bool = false,
-        signupOptInFeatureEnabled: Bool = false
+        signupOptInFeatureEnabled: Bool = false,
+        signupOptInInitialValue: Bool = false
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
@@ -243,7 +276,7 @@ extension LinkInlineSignupElementSnapshotTests {
             accountService: MockAccountService(),
             allowsDefaultOptIn: allowsDefaultOptIn,
             signupOptInFeatureEnabled: signupOptInFeatureEnabled,
-            signupOptInInitialValue: false,
+            signupOptInInitialValue: signupOptInInitialValue,
             linkAccount: linkAccount,
             country: country
         )

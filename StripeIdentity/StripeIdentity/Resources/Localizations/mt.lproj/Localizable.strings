@@ -12,6 +12,8 @@
 
 "Back of %@" = "Wara ta' %@";
 
+"Back of ID not detected" = "Il-parti ta' wara tal-ID ma nstabitx";
+
 "Back of driver's license or government-issued photo ID" = "In-naħa ta’ wara tal-liċenzja tas-sewqan jew ID bir-ritratt maħruġa mill-gvern";
 
 "Back of identity document" = "In-naħa ta' wara tad-dokument tal-identità";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Il-kamera mhux disponibbli";
 
 "Capturing…" = "Qed nieħdu l-istessi...";
+
+"Center ID in view" = "Poġġi l-ID fejn tidher";
 
 "Choose File" = "Agħżel Fajl";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Quddiem ta' %@";
 
+"Front of ID not detected" = "Il-parti ta'  quddiem tal-ID ma nstabitx";
+
 "Front of driver's license or government-issued photo ID" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan jew ID bir-ritratt maħruġa mill-gvern";
 
 "Front of driver's license or passport" = "In-naħa ta’ quddiem tal-liċenzja tas-sewqan jew il-passaport";
@@ -66,15 +72,17 @@
 
 "ID Number" = "In-Numru tal-ID";
 
+"Image is blurry. Hold your phone steady and try again." = "L-immaġni hija mċajpra. Iċċaqlaqx it-telefon u erġa' pprova.";
+
 "Individual CPF" = "CPF personali";
+
+"Invalid document" = "Dokument invalidu";
 
 "Keep ID level" = "Żomm id-dokument tal-identità ċatt";
 
 "Last 4 of Social Security number" = "L-aħħar 4 ċifri tan-numru tas-Sigurtà Soċjali";
 
 "Loading" = "Tielgħa";
-
-"Make sure all details are visible and focus" = "Ara li d-dettalji kollha jidhru sewwa u huma ffukati";
 
 "Make sure you're in a well lit space." = "Ara li tinsab f'post imdawwal sew.";
 
