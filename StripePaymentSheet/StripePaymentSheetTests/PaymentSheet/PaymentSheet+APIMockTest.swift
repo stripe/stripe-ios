@@ -356,7 +356,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             analyticsHelper: ._testValue(),
-            completion: { result, confirmationType in
+            completion: { result, _ in
                 XCTAssertEqual(result, .completed)
                 exp.fulfill()
             }
