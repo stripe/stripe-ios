@@ -11,7 +11,7 @@ import UIKit
 @_spi(STP) public class LiquidGlassDetector {
     /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
     @_spi(STP) public static var isEnabledInMerchantApp: Bool {
-        guard #available(iOS 26.0, *) else {
+        guard #available(iOS 26.0, visionOS 26.0, *) else {
             return false
         }
         return meetsCompilerRequirements && !hasOptedOut
@@ -39,7 +39,7 @@ import UIKit
 extension UIView {
     @_spi(STP) public func ios26_applyCapsuleCornerConfiguration() {
 #if compiler(>=6.2)
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             cornerConfiguration = .capsule()
         }
 #endif
@@ -47,7 +47,7 @@ extension UIView {
 
     @_spi(STP) public func ios26_applyDefaultCornerConfiguration() {
 #if compiler(>=6.2)
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             cornerConfiguration = .uniformCorners(radius: 26)
         }
 #endif
@@ -56,7 +56,7 @@ extension UIView {
     /// Convenience method that returns whether or not `cornerConfiguration` was set.
     @_spi(STP) public var didSetCornerConfiguration: Bool {
 #if compiler(>=6.2)
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             return UIView.plainUIView.cornerConfiguration != cornerConfiguration
         }
 #endif
@@ -78,7 +78,7 @@ extension UIButton {
         // when compiling with XCode 26
 #if compiler(>=6.2)
         #if !os(visionOS)
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             configuration = .glass()
         }
         #endif
