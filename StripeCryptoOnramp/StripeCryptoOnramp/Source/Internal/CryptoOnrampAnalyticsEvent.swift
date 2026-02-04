@@ -12,7 +12,6 @@ enum CryptoOnrampOperation: String {
     case hasLinkAccount = "has_link_account"
     case registerLinkUser = "register_link_user"
     case updatePhoneNumber = "update_phone_number"
-    case authenticateUser = "authenticate_user"
     case authenticateUserWithAuthToken = "authenticate_user_with_auth_token"
     case authorize = "authorize"
     case attachKycInfo = "attach_kyc_info"
@@ -30,8 +29,6 @@ enum CryptoOnrampAnalyticsEvent {
     case linkAccountLookupCompleted(hasLinkAccount: Bool)
     case linkRegistrationCompleted
     case linkPhoneNumberUpdated
-    case linkUserAuthenticationStarted
-    case linkUserAuthenticationCompleted
     case linkUserAuthenticationWithTokenCompleted
     case linkAuthorizationStarted
     case linkAuthorizationCompleted(consented: Bool)
@@ -59,10 +56,6 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.link_registration_completed"
         case .linkPhoneNumberUpdated:
             return "onramp.link_phone_number_updated"
-        case .linkUserAuthenticationStarted:
-            return "onramp.link_user_authentication_started"
-        case .linkUserAuthenticationCompleted:
-            return "onramp.link_user_authentication_completed"
         case .linkUserAuthenticationWithTokenCompleted:
             return "onramp.link_user_authentication_with_token_completed"
         case .linkAuthorizationStarted:
@@ -103,8 +96,6 @@ enum CryptoOnrampAnalyticsEvent {
         case .sessionCreated,
              .linkRegistrationCompleted,
              .linkPhoneNumberUpdated,
-             .linkUserAuthenticationStarted,
-             .linkUserAuthenticationCompleted,
              .linkUserAuthenticationWithTokenCompleted,
              .linkAuthorizationStarted,
              .identityVerificationStarted,

@@ -23,7 +23,7 @@ public extension PaymentSheet.Configuration {
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             configuration.appearance.applyLiquidGlassIfPossible()
         }
         return configuration
@@ -47,7 +47,7 @@ public extension EmbeddedPaymentElement.Configuration {
 public extension PaymentSheet.Appearance {
     mutating func applyLiquidGlassIfPossible() {
         #if !os(visionOS)
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             self.applyLiquidGlass()
         }
         #endif
@@ -55,7 +55,7 @@ public extension PaymentSheet.Appearance {
     func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
         var copy = self
         #if !os(visionOS)
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             copy.applyLiquidGlass()
         }
         #endif

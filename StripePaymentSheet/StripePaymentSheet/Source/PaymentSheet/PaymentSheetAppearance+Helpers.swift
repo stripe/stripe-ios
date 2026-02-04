@@ -18,7 +18,7 @@ internal extension PaymentSheet.Appearance {
 extension PaymentSheet.Appearance.NavigationBarStyle {
     var isGlass: Bool {
         #if !os(visionOS)
-        guard #available(iOS 26.0, *) else {
+        guard #available(iOS 26.0, visionOS 26.0, *) else {
             return false
         }
         return self == .glass
