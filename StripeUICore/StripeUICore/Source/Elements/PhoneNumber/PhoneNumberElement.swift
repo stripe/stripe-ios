@@ -23,13 +23,10 @@ import UIKit
     public lazy var view: UIView = {
         countryDropdownElement.view.directionalLayoutMargins.trailing = 0
         let hStackView = UIStackView(arrangedSubviews: elements.map { $0.view })
+        textFieldElement.textFieldView.setContentCompressionResistancePriority(.required, for: .horizontal)
         if let infoView = infoView {
             infoView.translatesAutoresizingMaskIntoConstraints = false
             hStackView.addArrangedSubview(infoView)
-
-            NSLayoutConstraint.activate([
-                infoView.trailingAnchor.constraint(equalTo: hStackView.trailingAnchor)
-            ])
 
             // Add some extra padding to the right side
             hStackView.isLayoutMarginsRelativeArrangement = true

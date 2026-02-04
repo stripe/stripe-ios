@@ -75,12 +75,12 @@ struct CardFundingFilter: Equatable {
             return nil
         }
 
-        var capabilities: PKMerchantCapability = .capability3DS
+        var capabilities: PKMerchantCapability = .threeDSecure
         if allowedFundingTypes.contains(.debit) {
-            capabilities.insert(.capabilityDebit)
+            capabilities.insert(.debit)
         }
         if allowedFundingTypes.contains(.credit) {
-            capabilities.insert(.capabilityCredit)
+            capabilities.insert(.credit)
         }
         return capabilities
     }

@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "%@ yoluyla gönderilen kodu girin";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "%@ yoluyla gönderilen kodu girin. Hesabınızı güvende tutmak için bu ek adımı düzenli olarak talep ederiz.";
-
 "Exit without connecting?" = "Bağlantı kurulmadan çıkış yapılsın mı?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, bu kod çalışmıyor. İki kez kontrol edip tekrar deneyin.";
@@ -117,8 +115,6 @@
 "Use test account" = "Test hesabı kullan";
 
 "Use test code" = "Test kodu kullan";
-
-"Verify your email" = "E-postanızı doğrulayın";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "%1$li %2$@ hesaplarını bulduk ancak yalnızca ABD vadesiz hesaplarını %3$@ hesaplarına bağlayabilirsiniz.";
 

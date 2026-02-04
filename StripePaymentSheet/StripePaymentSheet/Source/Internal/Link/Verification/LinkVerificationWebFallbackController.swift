@@ -80,6 +80,6 @@ final class LinkVerificationWebFallbackController: NSObject {
 extension LinkVerificationWebFallbackController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return window ?? ASPresentationAnchor()
+        return window ?? stp_makeFallbackPresentationAnchor()
     }
 }

@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "ป้อนรหัสที่ส่งไปยัง %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "ป้อนรหัสที่ส่งไปยัง %@ เราจะขอให้ดำเนินการเพิ่มเติมเป็นระยะๆ เพื่อรักษาบัญชีของคุณให้ปลอดภัย";
-
 "Exit without connecting?" = "ออกโดยไม่เชื่อมโยงใช่ไหม";
 
 "Hmm, that code didn’t work. Double check it and try again." = "รหัสไม่ถูกต้อง โปรดตรวจสอบแล้วลองอีกครั้ง";
@@ -117,8 +115,6 @@
 "Use test account" = "ใช้บัญชีทดสอบ";
 
 "Use test code" = "ใช้รหัสทดสอบ";
-
-"Verify your email" = "ยืนยันอีเมลของคุณ";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "เราพบบัญชี %1$li %2$@ รายการ แต่คุณสามารถเชื่อมโยงเฉพาะบัญชีกระแสรายวันของสหรัฐอเมริกากับ %3$@ เท่านั้น";
 

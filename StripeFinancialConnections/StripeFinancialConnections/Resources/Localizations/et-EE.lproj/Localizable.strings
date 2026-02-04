@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Sisestage kood, mis saadeti telefoninumbrile %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Sisestage kood, mis saadeti e-posti aadressile %@. Nõuame aeg-ajalt selle täiendava meetme võtmist teie konto turvalisena hoidmiseks.";
-
 "Exit without connecting?" = "Kas soovite väljuda ilma ühendamata?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, see kood ei töötanud. Kontrollige seda ja proovige uuesti.";
@@ -117,8 +115,6 @@
 "Use test account" = "Kasuta testkontot";
 
 "Use test code" = "Kasuta testkoodi";
-
-"Verify your email" = "Kinnitage oma e-posti aadress";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Leidsime %1$li %2$@ kontod, kuid USA arvelduskontosid saab siduda ainult %3$@-ga.";
 

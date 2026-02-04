@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Daħħal il-kodiċi li bgħatna lil %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Daħħal il-kodiċi li bgħatna lil %@. Kull tant żmien nitolbuk tagħmel dal-pass miżjud biex il-kont tiegħek jinżamm sigur.";
-
 "Exit without connecting?" = "Tixtieq toħroġ mingħajr ma taqbad?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Mmm, dak il-kodiċi mhux tajjeb. Iċċekkjah sew u erġa' pprova.";
@@ -117,8 +115,6 @@
 "Use test account" = "Uża l-kont ta' prova";
 
 "Use test code" = "Uża l-kodiċi ta' prova";
-
-"Verify your email" = "Ivverifika l-indirizz tal-email tiegħek";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Sibna kontijiet ta’ %1$li %2$@ imma tista’ torbot biss kontijiet checking tal-Istati Uniti ma’ %3$@.";
 

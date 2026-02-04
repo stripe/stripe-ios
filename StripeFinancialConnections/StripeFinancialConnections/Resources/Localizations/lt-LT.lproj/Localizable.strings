@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Įveskite kodą, išsiųstą %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Įveskite kodą, išsiųstą %@. Periodiškai prašome atlikti šį papildomą veiksmą, kad išlaikytume jūsų paskyrą saugią.";
-
 "Exit without connecting?" = "Išeiti nesusiejus?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, tas kodas neveikė. Dar kartą jį patikrinkite ir bandykite iš naujo.";
@@ -117,8 +115,6 @@
 "Use test account" = "Naudoti bandomąją sąskaitą";
 
 "Use test code" = "Naudoti bandomąjį kodą";
-
-"Verify your email" = "Patvirtinkite savo el. pašto adresą";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Radome %1$li %2$@ sąskaitas, bet su %3$@ galite susieti tik JAV atsiskaitomąsias sąskaitas.";
 

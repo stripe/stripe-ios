@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "%@에 전송된 코드를 입력하십시오.";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "%@(으)로 전송된 코드를 입력하십시오. 계정을 안전하게 보호하기 위해 정기적으로 이 추가 단계를 요청합니다.";
-
 "Exit without connecting?" = "연결하지 않고 종료하시겠습니까?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "이 코드는 작동하지 않는 것 같습니다. 한 번 더 확인하고 다시 시도하십시오.";
@@ -117,8 +115,6 @@
 "Use test account" = "테스트 계정 사용";
 
 "Use test code" = "테스트 코드 사용";
-
-"Verify your email" = "이메일 확인";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "%1$li개의 %2$@ 계좌를 찾았지만 %3$@에는 미국 당좌예금 계좌만 링크할 수 있습니다.";
 

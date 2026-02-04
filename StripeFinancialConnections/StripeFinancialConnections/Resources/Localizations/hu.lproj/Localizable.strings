@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Adja meg a(z) %@ telefonszámra küldött kódot.";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Adja meg a(z) %@ címre küldött kódot. Időnként kérjük ezt a plusz lépést, hogy biztonságban tartsuk a fiókját.";
-
 "Exit without connecting?" = "Kilép csatlakoztatás nélkül?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Nem jó kód, ellenőrizze és próbálja újra.";
@@ -117,8 +115,6 @@
 "Use test account" = "Próbaszámla használata";
 
 "Use test code" = "Próbakód használata";
-
-"Verify your email" = "E-mail-cím igazolása";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Találtunk %1$li %2$@ számlákat, de csak egyesült államokbeli folyószámlákat lehet összekapcsolni a következővel: %3$@.";
 

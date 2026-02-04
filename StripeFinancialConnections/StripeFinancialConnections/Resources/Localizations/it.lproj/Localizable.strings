@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Inserisci il codice inviato al numero %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Inserisci il codice inviato a %@. Periodicamente ti chiediamo di eseguire questo ulteriore passaggio per garantire la sicurezza del tuo account.";
-
 "Exit without connecting?" = "Uscire senza collegare?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Il codice non è valido. Verifica di nuovo e riprova.";
@@ -117,8 +115,6 @@
 "Use test account" = "Usa account di test";
 
 "Use test code" = "Usa codice di test";
-
-"Verify your email" = "Verifica il tuo indirizzo email";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Abbiamo trovato %1$li %2$@ conti, ma puoi collegare solo conti correnti statunitensi a %3$@.";
 
