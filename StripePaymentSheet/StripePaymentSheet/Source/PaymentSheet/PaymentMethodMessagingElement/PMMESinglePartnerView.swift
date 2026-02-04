@@ -48,10 +48,12 @@ class PMMESinglePartnerView: UIView {
         promotionLabel.attributedText = getPromotionAttributedString()
     }
 
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         promotionLabel.attributedText = getPromotionAttributedString()
     }
+    #endif
 
     func getPromotionAttributedString() -> NSMutableAttributedString {
         NSMutableAttributedString.bnplPromoString(

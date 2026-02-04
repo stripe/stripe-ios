@@ -4,6 +4,9 @@
 
 * [Added] Added a best frame detector to document capture.
 
+### PaymentSheet
+* [Fixed] Fixed build for visionOS 26.2 SDK.
+
 ## 25.6.1 2026-02-03
 
 ### Identity
