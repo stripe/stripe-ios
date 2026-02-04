@@ -1,5 +1,8 @@
 ## X.Y.Z - changes pending release 
 
+### CryptoOnramp (Beta)
+* [Removed] Removed `CryptoOnrampCoordinator.authenticateUser()` in favor of `CryptoOnrampCoordinator.authorize()`.
+
 ### PaymentSheet
 * [Fixed] Fixed build for visionOS 26.2 SDK.
 

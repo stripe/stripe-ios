@@ -25,7 +25,6 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 **Link authentication**:
 - Check if an email has a Link account with `hasLinkAccount(with:)`
 - Register new users with `registerLinkUser(email:fullName:phone:country:)`
-- Authenticate existing users with `authenticateUser(from:)`
 - Authorize a Link auth intent with `authorize(linkAuthIntentId:from:)`
 - Support seamless sign-in for returning users with `authenticateUserWithToken(_:)`
 
