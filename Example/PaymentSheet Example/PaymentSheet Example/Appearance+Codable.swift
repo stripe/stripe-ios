@@ -77,21 +77,29 @@ private struct CodableNavigationBarStyle: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let styleString = try container.decode(String.self, forKey: .style)
 
+        #if os(visionOS)
+        navigationBarStyle = .plain
+        #else
         if styleString == "glass", #available(iOS 26, *) {
             navigationBarStyle = .glass
         } else {
             navigationBarStyle = .plain
         }
+        #endif
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
+        #if os(visionOS)
+        try container.encode("plain", forKey: .style)
+        #else
         if case .plain = navigationBarStyle {
             try container.encode("plain", forKey: .style)
         } else if #available(iOS 26, *), .glass == navigationBarStyle {
             try container.encode("glass", forKey: .style)
         }
+        #endif
     }
 
 }

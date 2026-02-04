@@ -123,6 +123,6 @@ class FCLiteSecureAuthFlowViewController: UIViewController {
 // MARK: - ASWebAuthenticationPresentationContextProviding
 extension FCLiteSecureAuthFlowViewController: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return self.view.window ?? ASPresentationAnchor()
+        return self.view.window ?? stp_makeFallbackPresentationAnchor()
     }
 }

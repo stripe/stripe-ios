@@ -89,6 +89,7 @@ class PMMEMultiPartnerView: UIView {
         promotionLabel.attributedText = getPromotionAttributedString()
     }
 
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateLogoStyles()
@@ -100,6 +101,7 @@ class PMMEMultiPartnerView: UIView {
         logoStack.spacing = logoHorizontalPadding
         mainStack.spacing = verticalPadding
     }
+    #endif
 
     private func updateLogoStyles() {
         for (logoSet, logoViews) in zip(logoSets, logoViews) {

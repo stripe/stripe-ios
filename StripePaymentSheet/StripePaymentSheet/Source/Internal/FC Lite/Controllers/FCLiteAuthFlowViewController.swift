@@ -191,6 +191,6 @@ extension FCLiteAuthFlowViewController: WKUIDelegate {
 // MARK: ASWebAuthenticationPresentationContextProviding
 extension FCLiteAuthFlowViewController: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return self.view.window ?? ASPresentationAnchor()
+        return self.view.window ?? stp_makeFallbackPresentationAnchor()
     }
 }

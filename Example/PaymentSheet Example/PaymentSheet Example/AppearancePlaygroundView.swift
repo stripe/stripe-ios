@@ -483,7 +483,8 @@ struct AppearancePlaygroundView: View {
                     AppearancePlaygroundView_EmbeddedPaymentElement(appearance: $appearance)
                 }
 
-                if #available(iOS 26.0, *) {
+                #if !os(visionOS)
+                if #available(iOS 26.0, visionOS 26.0, *) {
                     Section(header: Text("iOS 26 Liquid Glass")) {
                         Picker("Navigation bar style", selection: $appearance.navigationBarStyle) {
                             ForEach([PaymentSheet.Appearance.NavigationBarStyle.plain, PaymentSheet.Appearance.NavigationBarStyle.glass], id: \.self) {
@@ -506,6 +507,7 @@ struct AppearancePlaygroundView: View {
                         }
                     }
                 }
+                #endif
                 Button {
                     resetLinkUI()
                     appearance = PaymentSheet.Appearance()
