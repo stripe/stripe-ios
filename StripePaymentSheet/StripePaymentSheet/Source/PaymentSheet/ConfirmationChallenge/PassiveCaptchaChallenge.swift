@@ -53,7 +53,7 @@ actor PassiveCaptchaChallenge {
     private var hasFetchedToken: Bool = false
     private var sessionExpirationDate: Date?
     private var hasSessionExpired: Bool {
-        guard let sessionExpirationDate else { return false } // if we don't have a session expiration date, then we don't have a token yet
+        guard let sessionExpirationDate else { return false }
         return Date() >= sessionExpirationDate
     }
 
