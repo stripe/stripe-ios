@@ -4,6 +4,9 @@
 
 * [Added] Added a best frame detector to document capture.
 
+### CryptoOnramp (Beta)
+* [Removed] Removed `CryptoOnrampCoordinator.authenticateUser()` in favor of `CryptoOnrampCoordinator.authorize()`.
+
 ### PaymentSheet
 * [Fixed] Fixed build for visionOS 26.2 SDK.
 
