@@ -15,7 +15,7 @@ struct PassiveCaptchaData: Equatable, Hashable {
 
     let siteKey: String
     let rqdata: String?
-    let tokenTimeoutMs: Double?
+    let tokenTimeoutSeconds: TimeInterval?
 
     /// Helper method to decode the `v1/elements/sessions` response's `passive_captcha` hash.
     /// - Parameter response: The value of the `passive_captcha` key in the `v1/elements/sessions` response.
@@ -33,11 +33,11 @@ struct PassiveCaptchaData: Equatable, Hashable {
 
         // Optional
         let rqdata = response["rqdata"] as? String
-        let tokenTimeoutMs = response["token_timeout_ms"] as? Double
+        let tokenTimeoutSeconds = response["token_timeout_seconds"] as? TimeInterval
         return PassiveCaptchaData(
             siteKey: siteKey,
             rqdata: rqdata,
-            tokenTimeoutMs: tokenTimeoutMs
+            tokenTimeoutSeconds: tokenTimeoutSeconds
         )
     }
 
@@ -139,8 +139,10 @@ actor PassiveCaptchaChallenge {
     }
 
     private func setSessionExpirationDate() {
-        let tokenTimeoutInterval: TimeInterval = (passiveCaptchaData.tokenTimeoutMs ?? Double.infinity) / 1000
-        self.sessionExpirationDate = Date().addingTimeInterval(tokenTimeoutInterval)
+        guard let tokenTimeoutSeconds = passiveCaptchaData.tokenTimeoutSeconds else {
+            return
+        }
+        self.sessionExpirationDate = Date().addingTimeInterval(tokenTimeoutSeconds)
     }
 
     private func setValidationComplete() {
