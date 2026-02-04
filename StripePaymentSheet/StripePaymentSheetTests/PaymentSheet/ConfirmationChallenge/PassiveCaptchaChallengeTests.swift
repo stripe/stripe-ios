@@ -47,7 +47,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
     let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
 
     func testPassiveCaptcha() async throws {
-        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutMs: nil)
+        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutSeconds: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
         // wait to make sure that the token will be ready by the time we call fetchToken
         try await Task.sleep(nanoseconds: 6_000_000_000)
@@ -62,7 +62,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
     }
 
     func testPassiveCaptchaTimeout() async throws {
-        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutMs: nil)
+        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutSeconds: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: TestDelayHCaptchaFactory())
         let startTime = Date()
         let hcaptchaTokenResult = await withTimeout(1) {
@@ -77,7 +77,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
     }
 
     func testPassiveCaptchaLongTimeout() async throws {
-        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutMs: nil)
+        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutSeconds: nil)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData)
         let startTime = Date()
         let hcaptchaToken = try await withTimeout(30) {
@@ -90,7 +90,7 @@ class PassiveCaptchaChallengeTests: XCTestCase {
 
     func testTokenResetAndRefetchAfterExpiration() async throws {
         // Use a very short expiration time (5 seconds) for testing
-        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutMs: 5000)
+        let passiveCaptchaData = PassiveCaptchaData(siteKey: siteKey, rqdata: nil, tokenTimeoutSeconds: 5)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: PassiveHCaptchaFactory())
 
         // Fetch first token
