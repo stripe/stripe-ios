@@ -160,7 +160,7 @@ extension PayWithLinkViewController {
         }()
 
         private var bottomInset: CGFloat {
-            if #available(iOS 26.0, *) {
+            if #available(iOS 26.0, visionOS 26.0, *) {
                 0
             } else {
                 LinkUI.bottomInset
