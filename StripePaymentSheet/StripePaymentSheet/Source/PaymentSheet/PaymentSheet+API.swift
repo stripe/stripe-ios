@@ -425,8 +425,24 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkoutSession:
-                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Link confirmation is not yet supported by CheckoutSession.")), nil)
+                    case .checkoutSession(let checkoutSession):
+                        let result = await handleCheckoutSessionConfirmation(
+                            checkoutSession: checkoutSession,
+                            confirmType: .new(
+                                params: paymentMethodParams,
+                                paymentOptions: STPConfirmPaymentMethodOptions(),
+                                shouldSave: shouldSave
+                            ),
+                            configuration: configuration,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            elementsSession: elementsSession
+                        )
+                        if shouldLogOutOfLink(result: result, elementsSession: elementsSession) {
+                            linkAccount?.logout()
+                        }
+                        await confirmationChallenge?.complete()
+                        completion(result, nil)
                     }
                 }
             }
@@ -500,8 +516,20 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkoutSession:
-                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Link confirmation is not yet supported by CheckoutSession.")), nil)
+                    case .checkoutSession(let checkoutSession):
+                        let result = await handleCheckoutSessionConfirmation(
+                            checkoutSession: checkoutSession,
+                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
+                            configuration: configuration,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            elementsSession: elementsSession
+                        )
+                        if shouldLogOutOfLink(result: result, elementsSession: elementsSession) {
+                            linkAccount?.logout()
+                        }
+                        await confirmationChallenge?.complete()
+                        completion(result, nil)
                     }
                 }
             }
