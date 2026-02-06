@@ -473,8 +473,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                         configuration: configuration
                     )
                 case .checkoutSession:
-                    // TODO(porter) Support these tests when we implement confirmation for saved payment methods
-                    continue
+                    elementsSession = ._testValue(intent: intent)
                 }
 
                 let e = expectation(description: "")
@@ -984,7 +983,8 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 types: paymentMethodTypes,
                 currency: currency,
                 amount: amount,
-                merchantCountry: merchantCountry.rawValue
+                merchantCountry: merchantCountry.rawValue,
+                customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
             let initResponse = try await csApiClient.initCheckoutSession(

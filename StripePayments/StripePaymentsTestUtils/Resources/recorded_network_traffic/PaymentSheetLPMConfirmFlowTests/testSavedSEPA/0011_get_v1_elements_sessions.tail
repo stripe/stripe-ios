@@ -5,21 +5,21 @@ application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=AVrPCOuTvKxFaV8jE64AuQ4-Tm5dxufNuQiUIPZLAm1bF4kxaOIza1Jf4LcWsYLjIRG4fExr4u0J9xxF
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=hsjptNSmIMdATZHmWbwUkS5oZu7jMyM7QRxkm3DhyF6fFmhCUkwJ3bAMv9L7_HgpE7DIAJ67oi1m-Ezu
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Fri, 06 Feb 2026 17:24:05 GMT
+Date: Fri, 06 Feb 2026 17:24:08 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 16761
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_JnXTzhCbvFUQl9
+request-id: req_T1A16LCTdMeDwa
 
 {
   "payment_method_preference" : {
@@ -177,10 +177,10 @@ request-id: req_JnXTzhCbvFUQl9
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1Zaq0FRFl38",
+  "session_id" : "elements_session_1rrPwq2b9SV",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "7ce50000-930b-41b3-8e39-2c51a2b4590a",
+  "config_id" : "9066477a-68fd-4a96-ac6a-defb9d7e59de",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -208,7 +208,7 @@ request-id: req_JnXTzhCbvFUQl9
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "f340b561-24aa-4827-89d2-a27762905d70",
+    "arb_id" : "b09980aa-5c48-4f5d-9aa9-6b5f1dec35b5",
     "experiment_metadata" : {
       "seed" : "5a2550473ebe56ea60336fd4ba01324cb39ca581721f38543e865862e93a9a41",
       "semi_dominant_payment_methods" : [

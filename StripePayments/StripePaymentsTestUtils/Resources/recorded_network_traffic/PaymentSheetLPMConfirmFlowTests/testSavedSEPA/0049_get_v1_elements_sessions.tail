@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_TvkFULsmiihquaJ6OYxesOZS4t8cgiSWPT8CXXFS4Mruv3s&deferred_intent%5Bamount%5D=1099&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_TvkFULsmiihquaJ6OYxesOZS4t8cgiSWPT8CXXFS4Mruv3s&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=AVrPCOuTvKxFaV8jE64AuQ4-Tm5dxufNuQiUIPZLAm1bF4kxaOIza1Jf4LcWsYLjIRG4fExr4u0J9xxF
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=d6v2otunaZweq4PBiCX1VaCIY2_USK3gZs0JXD_KClA0HMXF8r9T006Npm-bAVC393DaSdbrGsdfOxJG
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Fri, 06 Feb 2026 17:24:05 GMT
+Date: Fri, 06 Feb 2026 17:24:26 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 16761
+Content-Length: 17120
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_JnXTzhCbvFUQl9
+request-id: req_IQi8JuNUm94r3Q
 
 {
   "payment_method_preference" : {
@@ -28,7 +28,9 @@ request-id: req_JnXTzhCbvFUQl9
     "type" : "deferred_intent",
     "ordered_payment_method_types" : [
       "card",
-      "multibanco"
+      "cashapp",
+      "us_bank_account",
+      "amazon_pay"
     ]
   },
   "capability_enabled_card_networks" : [
@@ -177,10 +179,10 @@ request-id: req_JnXTzhCbvFUQl9
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1Zaq0FRFl38",
+  "session_id" : "elements_session_1ZgawyjsTzs",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "7ce50000-930b-41b3-8e39-2c51a2b4590a",
+  "config_id" : "4f5c2c46-91b4-45c7-b086-85d2ea9766a3",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -208,18 +210,18 @@ request-id: req_JnXTzhCbvFUQl9
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "f340b561-24aa-4827-89d2-a27762905d70",
+    "arb_id" : "65a44d0e-dda3-4089-9f4c-5d7f3194802a",
     "experiment_metadata" : {
       "seed" : "5a2550473ebe56ea60336fd4ba01324cb39ca581721f38543e865862e93a9a41",
       "semi_dominant_payment_methods" : [
 
       ],
       "lpm_holdback_t1_payment_methods" : [
-        "multibanco"
+
       ],
       "lpm_adoption_ranking_upe_v2_ignore_fixed_lpms" : false,
       "lpm_holdback_t2_payment_methods" : [
-        "multibanco"
+
       ]
     },
     "experiment_assignments" : {
@@ -227,7 +229,6 @@ request-id: req_JnXTzhCbvFUQl9
       "ocs_buyer_xp_elements_ece_plain_buttons" : "control",
       "link_ab_test_aa" : "control",
       "ocs_buyer_xp_elements_ece_timeout_time" : "control",
-      "ocs_buyer_xp_elements_lpm_holdback" : "control",
       "ocs_mobile_horizontal_mode" : "control",
       "paypal_payment_handler" : "control",
       "link_in_ewcs_fixes" : "control",
@@ -319,27 +320,46 @@ request-id: req_JnXTzhCbvFUQl9
   "payment_method_specs" : [
     {
       "async" : false,
+      "fields" : [
+
+      ],
+      "selector_icon" : {
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-amazonpay_light@3x-46eb8b8a4a252b78d7b4c3b96d4ed7ae.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-amazonpay_light-22cdec0f5f5609554a34fa62fa583f23.svg"
+      },
+      "type" : "amazon_pay",
+      "next_action_spec" : {
+        "confirm_response_status_specs" : {
+          "requires_action" : {
+            "type" : "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs" : {
+          "requires_action" : {
+            "type" : "canceled"
+          },
+          "succeeded" : {
+            "type" : "finished"
+          }
+        }
+      }
+    },
+    {
+      "async" : false,
       "type" : "card",
       "fields" : [
 
       ]
     },
     {
-      "async" : true,
+      "async" : false,
       "fields" : [
-        {
-          "type" : "email",
-          "api_path" : {
-            "v1" : "billing_details[email]"
-          }
-        }
+
       ],
-      "type" : "multibanco",
+      "type" : "cashapp",
       "selector_icon" : {
-        "dark_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-multibanco_dark@3x-d7e4e5d3443cb0333fa2a6f3e8b3f29f.png",
-        "dark_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-multibanco_dark-b340a5b485615e5fbf627daccd388fa2.svg",
-        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-multibanco@3x-45f2f83ae37b716a1e1ec8d9469a8451.png",
-        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-multibanco-5c6f8655a2792b3cf5b8e4216cdebc76.svg"
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
       }
     }
   ],
@@ -352,7 +372,9 @@ request-id: req_JnXTzhCbvFUQl9
     }
   },
   "unactivated_payment_method_types" : [
-    "multibanco"
+    "cashapp",
+    "us_bank_account",
+    "amazon_pay"
   ],
   "unverified_payment_methods_on_domain" : [
     "apple_pay"
@@ -435,8 +457,10 @@ request-id: req_JnXTzhCbvFUQl9
   "ordered_payment_method_types_and_wallets" : [
     "card",
     "apple_pay",
-    "multibanco",
-    "google_pay"
+    "cashapp",
+    "google_pay",
+    "us_bank_account",
+    "amazon_pay"
   ],
   "customer_error" : null
 }

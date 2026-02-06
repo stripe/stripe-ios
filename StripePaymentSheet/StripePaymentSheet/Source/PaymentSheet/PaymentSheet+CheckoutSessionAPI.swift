@@ -44,9 +44,10 @@ extension PaymentSheet {
                 paymentMethodOptions = paymentOptions
                 params.clientAttributionMetadata = clientAttributionMetadata
                 paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
-            case .saved:
-                // TODO(porter) Support saved payment methods
-                throw PaymentSheetError.unknown(debugDescription: "Saved payment method confirmation is not yet supported by CheckoutSession.")
+            case let .saved(savedPaymentMethod, paymentOptions, _, _):
+                paymentMethod = savedPaymentMethod
+                paymentMethodType = paymentMethod.type
+                paymentMethodOptions = paymentOptions
             }
 
             // 2. Get expected amount from checkout session
