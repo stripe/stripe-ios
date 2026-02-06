@@ -109,6 +109,17 @@ extension EmbeddedPaymentElement.Configuration.FormSheetAction {
     }
 }
 
+extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior {
+    var analyticValue: String {
+        switch self {
+        case .default:
+            return "default"
+        case .immediateAction:
+            return "immediate_action"
+        }
+    }
+}
+
 extension PaymentSheet.BillingDetailsCollectionConfiguration {
     var analyticPayload: [String: Any] {
         return [

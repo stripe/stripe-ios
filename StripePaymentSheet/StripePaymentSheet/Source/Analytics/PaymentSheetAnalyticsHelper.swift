@@ -535,6 +535,7 @@ extension EmbeddedPaymentElement.Configuration {
     var analyticPayload: [String: Any] {
         var payload = commonAnalyticPayload
         payload["form_sheet_action"] = formSheetAction.analyticValue
+        payload["row_selection_behavior"] = rowSelectionBehavior.analyticValue
         payload["embedded_view_displays_mandate_text"] = embeddedViewDisplaysMandateText
         return payload
     }
