@@ -31,6 +31,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.currency = .eur
         settings.customerKeyType = .customerSession
+        settings.integrationType = .normal
         settings.uiStyle = .flowController
         settings.layout = .vertical
         loadPlayground(app, settings)
@@ -221,6 +222,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.layout = .vertical
         settings.merchantCountryCode = .FR
         settings.mode = .setup
+        settings.integrationType = .normal
         loadPlayground(app, settings)
 
         // Add one more test card
