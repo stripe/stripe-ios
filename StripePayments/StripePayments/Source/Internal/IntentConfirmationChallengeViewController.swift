@@ -22,6 +22,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
     private var webView: WKWebView!
     private var dimmedBackgroundView: UIView!
+    private var closeButton: UIButton!
 
     // Hard-coded challenge URL
     private static let challengeHost = "b.stripecdn.com"
@@ -58,6 +59,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         setupDimmedBackground()
         setupWebView()
+        setupCloseButton()
         loadChallenge()
     }
 
@@ -116,6 +118,26 @@ class IntentConfirmationChallengeViewController: UIViewController {
         ])
     }
 
+    private func setupCloseButton() {
+        closeButton = UIButton(type: .system)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.setTitle("CLOSE", for: .normal)
+
+        // Add action
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+
+        // Initially hidden, will show when webview is ready
+        closeButton.alpha = 0
+
+        view.addSubview(closeButton)
+
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            closeButton.heightAnchor.constraint(equalToConstant: 36),
+        ])
+    }
+
     private func loadChallenge() {
         let request = URLRequest(url: Self.challengeURL)
         webView.load(request)
@@ -129,6 +151,12 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: "onError")
     }
 
+    @objc private func closeButtonTapped() {
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime))
+        cleanup()
+        completion(.failure(ChallengeError.userCanceled))
+    }
+
     // MARK: - Handlers
     private func handleReady() {
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime))
@@ -136,6 +164,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
             UIView.animate(withDuration: 0.3) {
                 self.dimmedBackgroundView.alpha = 1.0
                 self.webView.alpha = 1.0
+                self.closeButton.alpha = 1.0
             }
         }
     }
@@ -250,6 +279,7 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
 enum ChallengeError: LocalizedError, AnalyticLoggableError {
     case webError(message: String, type: String, code: String?)
     case navigationFailed(Error)
+    case userCanceled
     case unknownError
 
     var analyticsErrorType: String {
@@ -285,6 +315,8 @@ enum ChallengeError: LocalizedError, AnalyticLoggableError {
             return message
         case .navigationFailed(let error):
             return "Navigation failed: \(error.localizedDescription)"
+        case .userCanceled:
+            return nil  // No error message for user cancellation
         case .unknownError:
             return "Unknown error."
         }
@@ -315,6 +347,12 @@ extension STPAnalyticsClient {
     func logIntentConfirmationChallengeError(error: Error, duration: TimeInterval) {
         log(
             analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: ["duration": duration * 1000])
+        )
+    }
+
+    func logIntentConfirmationChallengeCanceled(duration: TimeInterval) {
+        log(
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeCanceled, params: ["duration": duration * 1000])
         )
     }
 }

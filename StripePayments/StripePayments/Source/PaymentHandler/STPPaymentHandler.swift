@@ -1975,7 +1975,13 @@ public class STPPaymentHandler: NSObject {
                             self._retrieveAndCheckIntentForCurrentAction()
 
                         case .failure(let error):
-                            currentAction.complete(with: .failed, error: error as NSError)
+                            // Handle user cancellation separately - don't show error message
+                            if case ChallengeError.userCanceled = error {
+                                // We don't forward cancelation errors
+                                currentAction.complete(with: .canceled, error: nil)
+                            } else {
+                                currentAction.complete(with: .failed, error: error as NSError)
+                            }
                         }
                     }
                 }
