@@ -1856,16 +1856,19 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
         line1Field.tap()
+        line1Field.clearText()
         line1Field.typeText("123 main")
 
         let cityField = app.textFields["City"]
         XCTAssertTrue(cityField.waitForExistence(timeout: 3.0))
         cityField.tap()
+        cityField.clearText()
         cityField.typeText("San Francisco")
 
         let zipField = app.textFields["ZIP"]
         XCTAssertTrue(zipField.waitForExistence(timeout: 3.0))
         zipField.tap()
+        zipField.clearText()
         zipField.typeText("12345" + XCUIKeyboardKey.return.rawValue)
 
         XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
