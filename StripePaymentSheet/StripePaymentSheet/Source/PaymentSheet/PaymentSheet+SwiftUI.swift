@@ -303,8 +303,8 @@ extension PaymentSheet {
                 let presenter = findViewControllerPresenter(from: controller)
 
                 parent.paymentSheet?.present(from: presenter) { (result: PaymentSheetResult) in
-                    self.parent.presented = false
                     Task { @MainActor in
+                        self.parent.presented = false
                         self.parent.onCompletion(result)
                     }
                 }
@@ -371,21 +371,25 @@ extension PaymentSheet {
                 switch parent.action {
                 case .confirm:
                     parent.paymentSheetFlowController?.confirm(from: presenter) { (result) in
-                        self.parent.presented = false
                         Task { @MainActor in
+                            self.parent.presented = false
                             self.parent.paymentCompletion?(result)
                         }
                     }
                 case .presentPaymentOptions:
                     if let completionWithResult = parent.optionsCompletionWithResult {
                         parent.paymentSheetFlowController?.presentPaymentOptions(from: presenter) { didCancel in
-                            self.parent.presented = false
-                            completionWithResult(didCancel)
+                            Task { @MainActor in
+                                self.parent.presented = false
+                                completionWithResult(didCancel)
+                            }
                         }
                     } else {
                         parent.paymentSheetFlowController?.presentPaymentOptions(from: presenter) {
-                            self.parent.presented = false
-                            self.parent.optionsCompletion?()
+                            Task { @MainActor in
+                                self.parent.presented = false
+                                self.parent.optionsCompletion?()
+                            }
                         }
                     }
                 }
