@@ -4,6 +4,8 @@
 
 * [Added] Added a best frame detector to document capture.
 
+## 25.6.2 2026-02-09
+
 ### CryptoOnramp (Beta)
 * [Removed] Removed `CryptoOnrampCoordinator.authenticateUser()` in favor of `CryptoOnrampCoordinator.authorize()`.
 
