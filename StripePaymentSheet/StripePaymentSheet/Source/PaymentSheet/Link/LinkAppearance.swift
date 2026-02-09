@@ -33,10 +33,10 @@ public struct LinkAppearance {
     /// Custom colors used throughout the Link UI. Defaults to Link colors.
     public struct Colors {
         /// The primary color used in the Link UI. Defaults to the Link brand color.
-        public var primary: UIColor? = nil
+        public var primary: UIColor?
 
         /// The border color used for selected elements, such as text fields.
-        public var selectedBorder: UIColor? = nil
+        public var selectedBorder: UIColor?
 
         /// Creates a new instance of `Colors`.
         /// - Parameters:
@@ -49,10 +49,10 @@ public struct LinkAppearance {
     }
 
     /// Custom colors used throughout the Link UI. Defaults to Link colors.
-    public var colors: Colors? = nil
+    public var colors: Colors?
 
     /// Configuration values for the primary button. Uses reasonable defaults if nothing is provided.
-    public var primaryButton: PrimaryButtonConfiguration? = nil
+    public var primaryButton: PrimaryButtonConfiguration?
 
     /// Style options for colors in the Link UI. Defaults to automatic.
     public var style: PaymentSheet.UserInterfaceStyle = .automatic
