@@ -141,7 +141,7 @@ private extension NSMutableAttributedString {
                 imgAppended = true
 
                 // Add logo with 2x scale
-                let logoAttr = attributedStringOfImage(uiImage: logo, font: font, additionalScale: 2.0)
+                let logoAttr = NSAttributedString.attributedStringForImage(logo, font: font, additionalScale: 2.0)
                 resultingString.append(logoAttr)
             } else {
                 resultingString.append(NSAttributedString(string: String(currCharacter), attributes: stringAttributes))
@@ -152,7 +152,7 @@ private extension NSMutableAttributedString {
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: font.pointSize)
         if let infoIconImage = UIImage(systemName: "info.circle", withConfiguration: symbolConfig)?
             .withTintColor(textColor, renderingMode: .alwaysTemplate) {
-            let infoIcon = attributedStringOfImage(uiImage: infoIconImage, font: font, additionalScale: 1.5)
+            let infoIcon = NSAttributedString.attributedStringForImage(infoIconImage, font: font, additionalScale: 1.5)
             resultingString.append(NSAttributedString(string: "\u{00A0}", attributes: stringAttributes))
             resultingString.append(infoIcon)
         } else {
@@ -160,21 +160,5 @@ private extension NSMutableAttributedString {
         }
 
         return resultingString
-    }
-
-    // Returns an attributed string containing only a text attachment for the given image.
-    // The image is scaled so that its height matches the `.capHeight` of the font, and it is vertically centered.
-    private static func attributedStringOfImage(
-        uiImage: UIImage,
-        font: UIFont,
-        additionalScale: CGFloat
-    ) -> NSAttributedString {
-        let imageAttachment = NSTextAttachment()
-        let scaledSize = uiImage.sizeMatchingFont(font, additionalScale: additionalScale)
-        let heightDifference = font.capHeight - scaledSize.height
-        let verticalOffset = heightDifference.rounded() / 2
-        imageAttachment.bounds = CGRect(origin: .init(x: 0, y: verticalOffset), size: scaledSize)
-        imageAttachment.image = uiImage
-        return NSAttributedString(attachment: imageAttachment)
     }
 }
