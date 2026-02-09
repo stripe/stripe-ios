@@ -5,6 +5,7 @@
 
 ### PaymentSheet
 * [Fixed] Fixed build for visionOS 26.2 SDK.
+* [Fixed] Fixed an issue where the SwiftUI `isPresented` binding for CustomerSheet would not reset to `false` when dismissing during loading, preventing the sheet from being presented again.
 
 ## 25.6.1 2026-02-03
 
