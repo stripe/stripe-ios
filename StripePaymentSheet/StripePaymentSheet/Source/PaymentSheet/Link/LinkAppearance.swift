@@ -14,17 +14,17 @@ public struct LinkAppearance {
     /// Configuration values for the primary button.
     public struct PrimaryButtonConfiguration {
 
-        /// The corner radius of of the primary button.
-        public let cornerRadius: CGFloat
+        /// The corner radius of of the primary button. Defaults to 0.
+        public var cornerRadius: CGFloat = .zero
 
-        /// The height of the primary button.
-        public let height: CGFloat
+        /// The height of the primary button. Defaults to 0.
+        public var height: CGFloat = .zero
 
         /// Creates a new instance of `PrimaryButtonConfiguration`.
         /// - Parameters:
-        ///   - cornerRadius: The corner radius of of the primary button
-        ///   - height: The height of the primary button.
-        public init(cornerRadius: CGFloat, height: CGFloat) {
+        ///   - cornerRadius: The corner radius of of the primary button. Defaults to 0.
+        ///   - height: The height of the primary button. Defaults to 0.
+        public init(cornerRadius: CGFloat = .zero, height: CGFloat = .zero) {
             self.cornerRadius = cornerRadius
             self.height = height
         }
@@ -33,39 +33,40 @@ public struct LinkAppearance {
     /// Custom colors used throughout the Link UI. Defaults to Link colors.
     public struct Colors {
         /// The primary color used in the Link UI. Defaults to the Link brand color.
-        public let primary: UIColor?
+        public var primary: UIColor? = nil
 
         /// The border color used for selected elements, such as text fields.
-        public let selectedBorder: UIColor?
+        public var selectedBorder: UIColor? = nil
 
         /// Creates a new instance of `Colors`.
         /// - Parameters:
         ///   - primary: The primary color used in the Link UI. Defaults to the Link brand color.
         ///   - selectedBorder: The border color used for selected elements, such as text fields.
-        public init(primary: UIColor?, selectedBorder: UIColor?) {
+        public init(primary: UIColor? = nil, selectedBorder: UIColor? = nil) {
             self.primary = primary
             self.selectedBorder = selectedBorder
         }
     }
 
     /// Custom colors used throughout the Link UI. Defaults to Link colors.
-    public let colors: Colors?
+    public var colors: Colors? = nil
 
     /// Configuration values for the primary button. Uses reasonable defaults if nothing is provided.
-    public let primaryButton: PrimaryButtonConfiguration?
+    public var primaryButton: PrimaryButtonConfiguration? = nil
 
-    /// Style options for colors in the Link UI.
-    public let style: PaymentSheet.UserInterfaceStyle
+    /// Style options for colors in the Link UI. Defaults to automatic.
+    public var style: PaymentSheet.UserInterfaceStyle = .automatic
 
     /// When true, reduces Link branding in payment method previews by showing payment
     /// method-specific icons (e.g., Visa, Mastercard) instead of the Link icon.
-    public let reduceLinkBranding: Bool
+    /// Defaults to false.
+    public var reduceLinkBranding: Bool = false
 
     /// Creates a new instance of `LinkAppearance`.
     /// - Parameters:
     ///   - colors: Custom colors used throughout the Link UI. Defaults to Link colors.
     ///   - primaryButton: Configuration values for the primary button. Uses reasonable defaults if nothing is provided.
-    ///   - style: Style options for colors in the Link UI.
+    ///   - style: Style options for colors in the Link UI. Defaults to automatic.
     ///   - reduceLinkBranding: When true, reduces Link branding by showing payment method-specific icons. Defaults to false.
     public init(
         colors: Colors? = nil,
