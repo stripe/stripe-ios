@@ -62,9 +62,9 @@ public class PaymentMethodMessagingElement {
         /// Defaults to the system `UIColor.label`.
         public var textColor: UIColor = .label
 
-        /// The color for the PaymentMethodElement's info icon.
-        /// Defaults to `textColor`.
-        public var infoIconColor: UIColor?
+        /// The color for the PaymentMethodElement's text that links to available BNPL plans.
+        /// Defaults to `UIColor.systemBlue`.
+        public var linkTextColor: UIColor = .systemBlue
     }
 
     /// Describes the configuration of the PaymentMethodMessagingElement.
@@ -107,14 +107,16 @@ public class PaymentMethodMessagingElement {
 
     let mode: Mode
     let infoUrl: URL
+    let learnMoreText: String
     let legalDisclosure: String?
     let promotion: String
     let appearance: Appearance
     let analyticsHelper: PMMEAnalyticsHelper
 
-    init(mode: Mode, infoUrl: URL, legalDisclosure: String?, promotion: String, appearance: PaymentMethodMessagingElement.Appearance, analyticsHelper: PMMEAnalyticsHelper) {
+    init(mode: Mode, infoUrl: URL, learnMoreText: String, legalDisclosure: String?, promotion: String, appearance: PaymentMethodMessagingElement.Appearance, analyticsHelper: PMMEAnalyticsHelper) {
         self.mode = mode
         self.infoUrl = infoUrl
+        self.learnMoreText = learnMoreText
         self.legalDisclosure = legalDisclosure
         self.promotion = promotion
         self.appearance = appearance
@@ -130,12 +132,12 @@ public extension PaymentMethodMessagingElement.Appearance {
         style: UserInterfaceStyle? = nil,
         font: UIFont? = nil,
         textColor: UIColor? = nil,
-        infoIconColor: UIColor? = nil
+        linkTextColor: UIColor? = nil
     ) {
         if let style { self.style = style }
         if let font { self.font = font }
         if let textColor { self.textColor = textColor }
-        if let infoIconColor { self.infoIconColor = infoIconColor }
+        if let linkTextColor { self.linkTextColor = linkTextColor }
     }
 }
 
