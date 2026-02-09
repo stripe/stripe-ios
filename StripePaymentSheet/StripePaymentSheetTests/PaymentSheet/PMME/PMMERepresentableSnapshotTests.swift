@@ -218,6 +218,7 @@ class PMMERepresentableSnapshotTests: STPSnapshotTestCase {
         return PaymentMethodMessagingElement.ViewData(
             mode: mode,
             infoUrl: URL(string: "https://stripe.com")!,
+            learnMoreText: "Learn more",
             legalDisclosure: legalDisclosure,
             promotion: promotion,
             appearance: finalAppearance,

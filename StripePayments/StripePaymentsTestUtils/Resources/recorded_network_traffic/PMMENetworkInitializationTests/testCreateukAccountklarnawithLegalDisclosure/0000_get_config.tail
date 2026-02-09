@@ -3,7 +3,7 @@ https:\/\/ppm\.stripe\.com\/config\?amount=5000&country=GB&currency=gbp&key=pk_t
 200
 application/json
 access-control-allow-methods: DELETE, GET, HEAD, PATCH, POST, PUT
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Uj3yMaEzRpBU2bHFh0rhWMsXsoCg0k1JoTrJEJM51dZn3fNroLPQPuuNHgFdpV1K-30a0qR7k9Wq2UOYVb0MUL3rGsM%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=4XmWJ8-83u50g4b9LlNRsa8IJMm6HQj7c72MAvel7kq2VlC7mZAek6PGfsbIYkxmn0PngJShOCCeWYLccPklHzYakBM%3D
 Server: nginx
 Cache-Control: max-age=300, public
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -16,15 +16,15 @@ x-stripe-proxy-response: upstream
 x-stripe-priority-routing-enabled: true
 report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 7446
+Content-Length: 7527
 Vary: Origin
-Date: Thu, 08 Jan 2026 17:25:40 GMT
+Date: Mon, 09 Feb 2026 23:15:47 GMT
 Expires: 0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-stripe-server-rpc-duration-micros: 57449
+x-stripe-server-rpc-duration-micros: 65598
 x-content-type-options: nosniff
 
 {
@@ -222,7 +222,7 @@ x-content-type-options: nosniff
       "payment_plans" : [
         {
           "installment_amount" : null,
-          "id" : "cc7641b5-58b2-4cca-8a7b-07ab37fd81d0",
+          "id" : "b59ebce3-5838-4037-88a7-c8404813173a",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
@@ -233,7 +233,7 @@ x-content-type-options: nosniff
         },
         {
           "installment_amount" : null,
-          "id" : "abd92d81-7306-41cd-8ed8-929d71fd69e3",
+          "id" : "6bb4c8df-490f-42bb-b968-e4cd51fe282e",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : 30,
@@ -244,7 +244,7 @@ x-content-type-options: nosniff
         },
         {
           "installment_amount" : null,
-          "id" : "5245e3ba-2682-43e1-969a-e8d28fcabd3b",
+          "id" : "6134de3a-cfe0-42b5-a941-a64191a5e358",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
@@ -255,7 +255,7 @@ x-content-type-options: nosniff
         },
         {
           "installment_amount" : 1667,
-          "id" : "456ceac9-fe23-4fdc-a9fe-c142c8dbdb80",
+          "id" : "01f450c3-3faa-4132-9ab7-554216130055",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
@@ -269,7 +269,7 @@ x-content-type-options: nosniff
         },
         {
           "installment_amount" : null,
-          "id" : "caa97d52-b6f1-4d28-b3cd-1a1670e56238",
+          "id" : "b73d99c8-dd64-443b-8c70-fc3d43cca436",
           "interest_rate" : 0,
           "total_amount" : 5000,
           "due_days" : null,
@@ -296,9 +296,9 @@ x-content-type-options: nosniff
 
   },
   "experiments" : {
-    "event_id" : "",
+    "event_id" : "00ae9bef-de14-4c16-9f93-94e4ee80e224",
     "experiment_assignments" : {
-
+      "pmme_list_promos_learn_more_label" : "control"
     }
   }
 }
