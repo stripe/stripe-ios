@@ -381,8 +381,8 @@ extension PaymentSheet {
                         parent.paymentSheetFlowController?.presentPaymentOptions(from: presenter) { didCancel in
                             Task { @MainActor in
                                 self.parent.presented = false
+                                completionWithResult(didCancel)
                             }
-                            completionWithResult(didCancel)
                         }
                     } else {
                         parent.paymentSheetFlowController?.presentPaymentOptions(from: presenter) {
