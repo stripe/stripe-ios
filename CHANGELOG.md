@@ -5,6 +5,10 @@
 
 ### PaymentSheet
 * [Fixed] Fixed build for visionOS 26.2 SDK.
+* [Fixed] Fixed a Swift 6 actor isolation issue in the SwiftUI integration that could cause a crash when presenting PaymentSheet or CustomerSheet.
+
+### Payments
+* [Fixed] Fixed a Swift 6 actor isolation issue in the SwiftUI integration for `paymentConfirmationSheet` and `setupIntentConfirmationSheet`.
 
 ## 25.6.1 2026-02-03
 
