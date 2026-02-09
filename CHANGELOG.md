@@ -1,5 +1,7 @@
 ## X.Y.Z - changes pending release 
 
+## 25.6.2 2026-02-09
+
 ### CryptoOnramp (Beta)
 * [Removed] Removed `CryptoOnrampCoordinator.authenticateUser()` in favor of `CryptoOnrampCoordinator.authorize()`.
 
