@@ -87,7 +87,7 @@ final class PaymentSheetLoader {
                 }
 
                 // List the Customer's saved PaymentMethods
-                async let savedPaymentMethods = fetchSavedPaymentMethods(elementsSession: elementsSession, configuration: configuration)
+                async let savedPaymentMethods = fetchSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration)
 
                 // Load link account session. Continue without Link if it errors.
                 let linkAccount = try? await lookupLinkAccount(
@@ -423,11 +423,14 @@ final class PaymentSheetLoader {
         return paymentMethodId
     }
 
-    static func fetchSavedPaymentMethods(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethods(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             savedPaymentMethods = elementsSessionPaymentMethods
+        } else if case let .checkoutSession(checkoutSession) = intent,
+                  let customerPaymentMethods = checkoutSession.customer?.paymentMethods {
+            savedPaymentMethods = customerPaymentMethods
         } else {
             savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration, elementsSession: elementsSession)
         }

@@ -2889,7 +2889,13 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Assert that card is the returned payment method type
         app.buttons["Continue"].tap()
-        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
+        let paymentMethodButton = app.buttons["Payment method"]
+        // Sometimes this button takes a short bit to update so we give a second of allowance
+        let labelExpectation = expectation(
+            for: NSPredicate(format: "label == %@", "•••• 4242, card, 12345, US"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [labelExpectation], timeout: 5)
     }
 
     func testLinkInlineSignup_gb() throws {

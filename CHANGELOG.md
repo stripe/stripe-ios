@@ -1,14 +1,29 @@
-## X.Y.Z - changes pending release 
+## X.Y.Z - changes pending release
+
+### PaymentSheet
+* [Changed] Afterpay/Clearpay no longer requires billing address by default. Set `billingDetailsCollectionConfiguration.address = .full` if you need to collect billing address for Afterpay.
+
+### Identity
+
+* [Added] Added a best frame detector to document capture.
+
+## 25.6.2 2026-02-09
 
 ### CryptoOnramp (Beta)
 * [Removed] Removed `CryptoOnrampCoordinator.authenticateUser()` in favor of `CryptoOnrampCoordinator.authorize()`.
 
 ### PaymentSheet
 * [Fixed] Fixed build for visionOS 26.2 SDK.
+* [Fixed] Fixed an issue where the SwiftUI `isPresented` binding for CustomerSheet would not reset to `false` when dismissing during loading, preventing the sheet from being presented again.
+* [Fixed] Fixed a Swift 6 actor isolation issue in the SwiftUI integration that could cause a crash when presenting PaymentSheet or CustomerSheet.
+
+### Payments
+* [Fixed] Fixed a Swift 6 actor isolation issue in the SwiftUI integration for `paymentConfirmationSheet` and `setupIntentConfirmationSheet`.
+
 
 ## 25.6.1 2026-02-03
-
 ### Identity
+
 * [Added] More live feedback during document capture.
 
 ## 25.6.0 2026-01-26

@@ -373,16 +373,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
-        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
-            address: PaymentSheet.Address(
-                city: "South San Francisco",
-                country: "US",
-                line1: "354 Oyster Point Blvd",
-                postalCode: "94080",
-                state: "CA"
-            )
-        )
 
         try await _testConfirm(
             intentKinds: [.paymentIntent],
@@ -391,15 +381,10 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             merchantCountry: .US,
             configuration: configuration
         ) { form in
-            // Afterpay shows name, email, and full billing
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 15)
+            // Afterpay shows name and email (no billing address by default)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("foo@bar.com")
-
-            // With default billing details, individual address fields should be shown and pre-populated
-            XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
-            XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
-            XCTAssertEqual(form.getTextFieldElement("ZIP")?.text, "94080")
         }
     }
 
@@ -473,8 +458,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                         configuration: configuration
                     )
                 case .checkoutSession:
-                    // TODO(porter) Support these tests when we implement confirmation for saved payment methods
-                    continue
+                    elementsSession = ._testValue(intent: intent)
                 }
 
                 let e = expectation(description: "")
@@ -984,7 +968,8 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 types: paymentMethodTypes,
                 currency: currency,
                 amount: amount,
-                merchantCountry: merchantCountry.rawValue
+                merchantCountry: merchantCountry.rawValue,
+                customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
             let initResponse = try await csApiClient.initCheckoutSession(
