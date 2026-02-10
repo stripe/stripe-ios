@@ -271,6 +271,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     private let availableIDTypes: [String]
 
+    private let bestFramePicker: BestFramePicker
+
     // MARK: Coordinators
     let documentUploader: DocumentUploaderProtocol
     let imageScanningSession: DocumentImageScanningSession
@@ -282,12 +284,14 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         documentUploader: DocumentUploaderProtocol,
         imageScanningSession: DocumentImageScanningSession,
         sheetController: VerificationSheetControllerProtocol,
-        avaialableIDTypes: [String]
+        avaialableIDTypes: [String],
+        bestFramePicker: BestFramePicker = .init(window: 1.0)
     ) {
         self.apiConfig = apiConfig
         self.documentUploader = documentUploader
         self.imageScanningSession = imageScanningSession
         self.availableIDTypes = avaialableIDTypes
+        self.bestFramePicker = bestFramePicker
         super.init(sheetController: sheetController, analyticsScreenName: .documentCapture)
         imageScanningSession.setDelegate(delegate: self)
     }
@@ -303,7 +307,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         anyDocumentScanner: AnyDocumentScanner,
         concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared,
-        avaialableIDTypes: [String]
+        avaialableIDTypes: [String],
+        bestFramePicker: BestFramePicker = .init(window: 1.0)
     ) {
         self.init(
             apiConfig: apiConfig,
@@ -322,7 +327,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 appSettingsHelper: appSettingsHelper
             ),
             sheetController: sheetController,
-            avaialableIDTypes: avaialableIDTypes
+            avaialableIDTypes: avaialableIDTypes,
+            bestFramePicker: bestFramePicker
         )
         updateUI()
     }
@@ -519,6 +525,8 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         _ scanningSession: DocumentImageScanningSession,
         willStartScanningForClassification documentSide: DocumentSide
     ) {
+        // Reset best-frame window when a new side starts
+        bestFramePicker.reset()
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
 
@@ -579,21 +587,33 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             return
         }
 
-        switch scannerOutput {
-        case .legacy(_, _, _, _, let blurResult):
-            documentUploader.uploadImages(
-                for: documentSide,
-                originalImage: image,
-                documentScannerOutput: scannerOutput,
-                exifMetadata: exifMetadata,
-                method: .autoCapture
-            )
-            sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
+        // Combine all detector outputs into a single quality score for ranking
+        let frameScore = scannerOutput.qualityScore(side: documentSide)
 
-            imageScanningSession.setStateScanned(
-                expectedClassification: documentSide,
-                capturedData: UIImage(cgImage: image)
-            )
+        switch bestFramePicker.consider(cgImage: image,
+                                        output: scannerOutput,
+                                        exif: exifMetadata,
+                                        score: frameScore) {
+        case .idle, .holding:
+            imageScanningSession.updateScanningState(scannerOutputOptional)
+            return
+        case .picked(let best):
+            switch best.output {
+            case .legacy(_, _, _, _, let blurResult):
+                documentUploader.uploadImages(
+                    for: documentSide,
+                    originalImage: best.cgImage,
+                    documentScannerOutput: best.output,
+                    exifMetadata: best.exif,
+                    method: .autoCapture
+                )
+                sheetController?.analyticsClient.updateBlurScore(blurResult.variance, for: documentSide)
+
+                imageScanningSession.setStateScanned(
+                    expectedClassification: documentSide,
+                    capturedData: UIImage(cgImage: best.cgImage)
+                )
+            }
         }
     }
 }

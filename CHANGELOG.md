@@ -1,5 +1,9 @@
 ## X.Y.Z - changes pending release 
 
+### Identity
+
+* [Added] Added a best frame detector to document capture.
+
 ## 25.6.2 2026-02-09
 
 ### CryptoOnramp (Beta)
@@ -15,8 +19,8 @@
 
 
 ## 25.6.1 2026-02-03
-
 ### Identity
+
 * [Added] More live feedback during document capture.
 
 ## 25.6.0 2026-01-26
