@@ -57,6 +57,9 @@ struct PaymentView: View {
                 switch type {
                 case .bankAccount:
                     true
+                case .cardAndBankAccount:
+                    // ehhh
+                    false
                 case .card, .applePay:
                     false
                 @unknown default:
@@ -187,6 +190,8 @@ struct PaymentView: View {
                 makePaymentMethodIcon(systemImageName: "creditcard")
             case .bankAccount:
                 makePaymentMethodIcon(systemImageName: "building.columns")
+            case .cardAndBankAccount:
+                makePaymentMethodIcon(systemImageName: "square.split.2x1.fill")
             default:
                 makePaymentMethodIcon(systemImageName: "creditcard")
             }
@@ -336,6 +341,15 @@ struct PaymentView: View {
                             highlightSubtitle: true
                         ) {
                             presentPaymentMethodSelector(for: .bankAccount)
+                        }
+                        
+                        makePaymentMethodButton(
+                            title: "Add Card or Bank Account",
+                            subtitle: "",
+                            icon: .systemName("square.split.2x1.fill"),
+                            highlightSubtitle: false
+                        ) {
+                            presentPaymentMethodSelector(for: .cardAndBankAccount)
                         }
                     }
                 }

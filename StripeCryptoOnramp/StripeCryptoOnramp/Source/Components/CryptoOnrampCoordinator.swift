@@ -452,13 +452,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         from viewController: UIViewController
     ) async throws -> PaymentMethodDisplayData? {
         switch type {
-        case .card, .bankAccount:
+        case .card, .bankAccount, .cardAndBankAccount:
             let linkAccountInfo = try await linkAccountInfo
             guard linkAccountInfo.sessionState == .verified else {
                 throw Error.linkAccountNotVerified
             }
 
-            guard let supportedPaymentMethodType = type.linkPaymentMethodType else {
+            guard let supportedPaymentMethodTypes = type.linkPaymentMethodType else {
                 return nil
             }
 
@@ -467,7 +467,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             guard let result = await linkController.collectPaymentMethod(
                 from: viewController,
                 with: linkAccountInfo.email,
-                supportedPaymentMethodTypes: [supportedPaymentMethodType],
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 collectName: collectName
             ) else {
                 selectedPaymentSource = nil

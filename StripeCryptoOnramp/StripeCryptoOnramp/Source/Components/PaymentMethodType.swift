@@ -17,18 +17,23 @@ public enum PaymentMethodType: Equatable {
 
     /// Bank account-based payment.
     case bankAccount
-
+    
+    /// Card-based and bank account-based payment.
+    case cardAndBankAccount
+    
     /// Apple Pay payment. Requires a `PKPaymentRequest` containing details about the payment.
     case applePay(paymentRequest: PKPaymentRequest)
 }
 
 extension PaymentMethodType {
-    var linkPaymentMethodType: LinkPaymentMethodType? {
+    var linkPaymentMethodType: [LinkPaymentMethodType]? {
         switch self {
         case .card:
-            .card
+            [.card]
         case .bankAccount:
-            .bankAccount
+            [.bankAccount]
+        case .cardAndBankAccount:
+            [.card, .bankAccount]
         case .applePay:
             nil
         }
@@ -40,6 +45,8 @@ extension PaymentMethodType {
             return "card"
         case .bankAccount:
             return "bank_account"
+        case .cardAndBankAccount:
+            return "card_and_bank_account"
         case .applePay:
             return "apple_pay"
         }
