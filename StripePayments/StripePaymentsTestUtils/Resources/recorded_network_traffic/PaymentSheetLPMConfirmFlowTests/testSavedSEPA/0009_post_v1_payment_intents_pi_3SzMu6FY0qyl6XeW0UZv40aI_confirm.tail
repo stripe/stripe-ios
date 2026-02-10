@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SxslRFY0qyl6XeW0dPiq0C4\/confirm$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SzMu6FY0qyl6XeW0UZv40aI\/confirm$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=z6ILoCM0FnlZuLUdqxWxJkEUOb4IvRs-LfJISH2zKX3_iRT7mZxpP_6can3cfuJLnhB2VfL4KUPlqAM2
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=eG5MZi3AwqQew2biKlqumfy2AOGwU5hJIwIWloex7q4LdnAvZukcw2LaVx9at3orNqSk8qWJrPH0ptqy
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,18 +12,18 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_DmAZnSp03isWAv
-Content-Length: 1785
+request-id: req_a8vXQDD9HhlES5
+Content-Length: 1776
 Vary: Origin
-Date: Fri, 06 Feb 2026 17:24:18 GMT
-original-request: req_DmAZnSp03isWAv
+Date: Tue, 10 Feb 2026 19:47:23 GMT
+original-request: req_a8vXQDD9HhlES5
 stripe-version: 2020-08-27
-idempotency-key: 41687b35-068c-4d96-98ff-dad031209de3
+idempotency-key: 5c204fb8-50f9-4d91-8876-a63394e623a1
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=pi_3SxslRFY0qyl6XeW0dPiq0C4_secret_UnlSNwquFoVqVqP7BTkXgJdFj&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1SXosgFY0qyl6XeWkScLWnUN&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session&use_stripe_sdk=true
+X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=pi_3SzMu6FY0qyl6XeW0UZv40aI_secret_tNnH23QVLA7la6U785Al0zqjA&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1SXosgFY0qyl6XeWkScLWnUN&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
 
 {
   "payment_method_configuration_details" : null,
@@ -81,8 +81,8 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
     "customer" : "cus_TUoUvtvPJvpHPA",
     "customer_account" : null
   },
-  "client_secret" : "pi_3SxslRFY0qyl6XeW0dPiq0C4_secret_UnlSNwquFoVqVqP7BTkXgJdFj",
-  "id" : "pi_3SxslRFY0qyl6XeW0dPiq0C4",
+  "client_secret" : "pi_3SzMu6FY0qyl6XeW0UZv40aI_secret_tNnH23QVLA7la6U785Al0zqjA",
+  "id" : "pi_3SzMu6FY0qyl6XeW0UZv40aI",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -95,7 +95,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
   "payment_method_types" : [
     "sepa_debit"
   ],
-  "setup_future_usage" : "off_session",
-  "created" : 1770398657,
+  "setup_future_usage" : null,
+  "created" : 1770752842,
   "description" : null
 }

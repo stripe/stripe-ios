@@ -1,25 +1,29 @@
-GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SxslJFY0qyl6XeW1ig8jrI4\?client_secret=pi_3SxslJFY0qyl6XeW1ig8jrI4_secret_BcUMuYsFuifOEVcCZIIkxwKSX&expand%5B0%5D=payment_method$
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SzMuCFY0qyl6XeW1WKPoaCZ\/confirm$
 200
 application/json
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=FfM2ItICYzrIrrdCSGAthLt7230TYIrNttGl04lVdNQ_8CbhiFfTLc6PknbNn6u43yc4D7--8ftnvAHt
-x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=1We0dZA9mChmbE-7FXlCG2oDM-ZGLxwd_gr7lAVWZ0iavrdDGqLpGkAXfjISTffc5bopn5aX1zdKXrwI
 Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_eZFsTBukJYIdkb
+Content-Length: 1776
+Vary: Origin
+Date: Tue, 10 Feb 2026 19:47:29 GMT
+original-request: req_eZFsTBukJYIdkb
+stripe-version: 2020-08-27
+idempotency-key: 4fdbe7e9-5e62-487b-85d7-ca39f0f1bd0d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
-Cache-Control: no-cache, no-store
-Date: Fri, 06 Feb 2026 17:24:10 GMT
-stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 1776
-x-stripe-routing-context-priority-tier: api-testmode
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Vary: Origin
-request-id: req_wlnmGtPcSbj9T8
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3SzMuCFY0qyl6XeW1WKPoaCZ_secret_fmevgWODOzex8HvQjUYvc6Tm3&confirmation_token=ctoken_1SzMuBFY0qyl6XeWG7Pez37c&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
 
 {
   "payment_method_configuration_details" : null,
@@ -77,8 +81,8 @@ request-id: req_wlnmGtPcSbj9T8
     "customer" : "cus_TUoUvtvPJvpHPA",
     "customer_account" : null
   },
-  "client_secret" : "pi_3SxslJFY0qyl6XeW1ig8jrI4_secret_BcUMuYsFuifOEVcCZIIkxwKSX",
-  "id" : "pi_3SxslJFY0qyl6XeW1ig8jrI4",
+  "client_secret" : "pi_3SzMuCFY0qyl6XeW1WKPoaCZ_secret_fmevgWODOzex8HvQjUYvc6Tm3",
+  "id" : "pi_3SzMuCFY0qyl6XeW1WKPoaCZ",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -92,6 +96,6 @@ request-id: req_wlnmGtPcSbj9T8
     "sepa_debit"
   ],
   "setup_future_usage" : null,
-  "created" : 1770398649,
+  "created" : 1770752848,
   "description" : null
 }
