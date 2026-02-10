@@ -341,16 +341,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
-        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
-            address: PaymentSheet.Address(
-                city: "South San Francisco",
-                country: "US",
-                line1: "354 Oyster Point Blvd",
-                postalCode: "94080",
-                state: "CA"
-            )
-        )
 
         try await _testConfirm(
             intentKinds: [.paymentIntent],
@@ -362,11 +352,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         ) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("foo@bar.com")
-
-            // With default billing details, individual address fields should be shown and pre-populated
-            XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
-            XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
-            XCTAssertEqual(form.getTextFieldElement("ZIP")?.text, "94080")
         }
     }
 

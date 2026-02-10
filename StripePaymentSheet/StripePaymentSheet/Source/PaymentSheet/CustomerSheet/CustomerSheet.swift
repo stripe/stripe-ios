@@ -319,6 +319,7 @@ extension CustomerSheet: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
         loadingViewController.dismiss(animated: true) {
             self.completion?()
+            self.csCompletion?(.canceled(nil))
         }
     }
 }
