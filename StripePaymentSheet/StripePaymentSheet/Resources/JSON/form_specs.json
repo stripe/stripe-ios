@@ -21,10 +21,6 @@
             {
                 "type": "placeholder",
                 "for": "phone"
-            },
-            {
-                "type": "billing_address",
-                "allowed_country_codes": null
             }
         ],
         "next_action_spec": {

@@ -150,13 +150,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         XCTAssertTrue(emailField.exists)
         XCTAssertTrue(fullNameField.exists)
         XCTAssertFalse(phoneField.exists)
-        XCTAssertTrue(billingAddressField.exists)
-        XCTAssertEqual(countryField.value as? String, "United States")
-        XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
-        XCTAssertEqual(line2Field.value as? String, "")
-        XCTAssertEqual(cityField.value as? String, "San Francisco")
-        XCTAssertEqual(stateField.value as? String, "California")
-        XCTAssertEqual(zipField.value as? String, "94102")
+        XCTAssertFalse(billingAddressField.exists)
 
         let name = fullNameField
         name.tap()

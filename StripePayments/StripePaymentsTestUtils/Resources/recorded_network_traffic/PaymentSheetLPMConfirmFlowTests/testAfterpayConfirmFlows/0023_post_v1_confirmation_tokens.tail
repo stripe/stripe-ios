@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=kx7j1R9ZicAbMycpkDaoiWlHHEWnguS9k1AgYJdvUV_isIpitFdyaEdsXYlnlUp9zYgrDZlphZr6al-k
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=vRISTlmHT0RdW8p9LNxl8Jw_a93mlbIIOCJrcPEjkJtB4zO2vFG1JVwybaJ264qR096Y9PP_1yUc4L8B
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,25 +12,25 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Aom5FUx2BAt4Sk
-Content-Length: 868
+request-id: req_pnSJEuUDwoA82k
+Content-Length: 831
 Vary: Origin
-Date: Wed, 28 Jan 2026 20:56:49 GMT
-original-request: req_Aom5FUx2BAt4Sk
+Date: Mon, 09 Feb 2026 22:40:47 GMT
+original-request: req_pnSJEuUDwoA82k
 stripe-version: 2020-08-27
-idempotency-key: 66c4a9c3-8b48-4fad-bcdd-f415bcf784c1
+idempotency-key: 891f22b7-ab9d-46fa-8d51-24464eb4bd71
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=afterpay_clearpay&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[address]\[city]=South%20San%20Francisco&payment_method_data\[billing_details]\[address]\[country]=US&payment_method_data\[billing_details]\[address]\[line1]=354%20Oyster%20Point%20Blvd&payment_method_data\[billing_details]\[address]\[line2]=&payment_method_data\[billing_details]\[address]\[postal_code]=94080&payment_method_data\[billing_details]\[address]\[state]=CA&payment_method_data\[billing_details%5Bemail%5D]=foo%40bar\.com&payment_method_data\[billing_details%5Bname%5D]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=afterpay_clearpay&return_url=https%3A\/\/foo\.com
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=afterpay_clearpay&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details%5Bemail%5D]=foo%40bar\.com&payment_method_data\[billing_details%5Bname%5D]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=afterpay_clearpay&return_url=https%3A\/\/foo\.com
 
 {
-  "id" : "ctoken_1SufnBFY0qyl6XeWRHFDw5hs",
+  "id" : "ctoken_1Sz38NFY0qyl6XeW8gsojCzW",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1769677009,
+  "expires_at" : 1770720047,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -45,19 +45,19 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
       "tax_id" : null,
       "name" : "Foo",
       "address" : {
-        "state" : "CA",
-        "country" : "US",
-        "line2" : "",
-        "city" : "South San Francisco",
-        "line1" : "354 Oyster Point Blvd",
-        "postal_code" : "94080"
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
       }
     },
     "customer" : null,
     "type" : "afterpay_clearpay",
     "customer_account" : null
   },
-  "created" : 1769633809,
+  "created" : 1770676847,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

@@ -1,4 +1,7 @@
-## X.Y.Z - changes pending release 
+## X.Y.Z - changes pending release
+
+### PaymentSheet
+* [Changed] Afterpay/Clearpay no longer requires billing address by default. Set `billingDetailsCollectionConfiguration.address = .full` if you need to collect billing address for Afterpay.
 
 ## 25.6.2 2026-02-09
 
