@@ -480,22 +480,9 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
                 FormHierarchyNode(type: "SubtitleElement"),
-                FormHierarchyNode(type: "SectionElement", children: [
+                FormHierarchyNode(type: "SectionElement", properties: ["title": "Contact information"], children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"]),
-                ]),
-                FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"]),
-                ]),
-                FormHierarchyNode(type: "AddressSectionElement", children: [
-                    FormHierarchyNode(type: "SectionElement", properties: ["title": "Billing address"], children: [
-                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"]),
-                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 1"]),
-                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 2"]),
-                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "City"]),
-                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "63", "label": "State"]),
-                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "ZIP"]),
-                    ]),
-                    FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
                 ]),
             ])
         }
