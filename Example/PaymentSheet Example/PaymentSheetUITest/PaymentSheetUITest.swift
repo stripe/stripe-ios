@@ -1830,7 +1830,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         settings.layout = .horizontal
         settings.mode = .paymentWithSetup
         settings.uiStyle = .flowController
-        settings.integrationType = .normal
+        settings.integrationType = .deferred_csc
         settings.customerMode = .returning
         settings.applePayEnabled = .on
         settings.apmsEnabled = .off
