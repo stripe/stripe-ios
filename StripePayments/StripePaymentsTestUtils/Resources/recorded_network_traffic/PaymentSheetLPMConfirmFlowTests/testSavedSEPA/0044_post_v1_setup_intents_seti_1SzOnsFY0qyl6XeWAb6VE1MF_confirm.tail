@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SzMuSFY0qyl6XeWssoa18TR\/confirm$
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SzOnsFY0qyl6XeWAb6VE1MF\/confirm$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ZSTtVvopdg6Uufb9Py5NGmtFTKi0xB-PQdWApkc2yLLSBdGYfo0viyDgs7PovXHvuLvBION_1PC3ha_7
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Xb0RsKXyvcLocJ0hBZSHIKO8-Q8YKtlLfQg5CFnugAbDrXF8JbhWz3cGX1AaJzqEXmxFqNSFFYdVnY8v
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,21 +12,21 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_2P3s0UuUzGOjNn
+request-id: req_63yQrM1FTWt0QX
 Content-Length: 1395
 Vary: Origin
-Date: Tue, 10 Feb 2026 19:47:45 GMT
-original-request: req_2P3s0UuUzGOjNn
+Date: Tue, 10 Feb 2026 21:49:05 GMT
+original-request: req_63yQrM1FTWt0QX
 stripe-version: 2020-08-27
-idempotency-key: 3d61f81c-bc3d-4bb4-a3fa-168cf4ddc7fc
+idempotency-key: af9c5d3a-2d68-4ca0-9114-9535383104e8
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=seti_1SzMuSFY0qyl6XeWssoa18TR_secret_TxHTZZ93JV3DfVWtxxRSECRWkqVcqzc&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1SXosgFY0qyl6XeWkScLWnUN&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1SzOnsFY0qyl6XeWAb6VE1MF_secret_TxJQTrOSN3l2uoSLVdgkXBcCoxbyxcQ&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1SXosgFY0qyl6XeWkScLWnUN&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
 
 {
-  "id" : "seti_1SzMuSFY0qyl6XeWssoa18TR",
+  "id" : "seti_1SzOnsFY0qyl6XeWAb6VE1MF",
   "description" : null,
   "excluded_payment_method_types" : null,
   "next_action" : null,
@@ -73,8 +73,8 @@ X-Stripe-Mock-Request: client_attribution_metadata\[elements_session_config_id]=
   ],
   "object" : "setup_intent",
   "last_setup_error" : null,
-  "created" : 1770752864,
-  "client_secret" : "seti_1SzMuSFY0qyl6XeWssoa18TR_secret_TxHTZZ93JV3DfVWtxxRSECRWkqVcqzc",
+  "created" : 1770760144,
+  "client_secret" : "seti_1SzOnsFY0qyl6XeWAb6VE1MF_secret_TxJQTrOSN3l2uoSLVdgkXBcCoxbyxcQ",
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "status" : "succeeded"

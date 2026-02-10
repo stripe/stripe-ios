@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_TxHSQHrHyTQy14HqodDcqfZvA3pAoJaJLhW2QYfOSpVXReY&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_TxJQ7DJ8V1U4u6TULUXz610eq3EVP20JYtDPjzP26a1zPkP&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QL7tA7ew9vHO5rSHYoiRsc1xh12FwRGIaKcQAED7Q16dtHF76Mfw2ybq6Iu79ojqK3nk27D9iuLWp2Eh
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=gTnmNrwI8S2g4d4_GUcO6UhZbwSDhJA5UyZWmkX9PS4FOx2JtSrpq0BpoK6ZQAMmYsv9_veHfJlEA4iZ
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Tue, 10 Feb 2026 19:47:45 GMT
+Date: Tue, 10 Feb 2026 21:49:12 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 17275
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_flnWtcwuWDjnd2
+request-id: req_Ja7FxoGseQRoCJ
 
 {
   "payment_method_preference" : {
@@ -181,10 +181,10 @@ request-id: req_flnWtcwuWDjnd2
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1hCu6DuyRxZ",
+  "session_id" : "elements_session_1hsdfRyEfbl",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "f84eb400-e651-498d-9782-eba3dff007cc",
+  "config_id" : "2dc704c3-79a1-4f07-a059-53aaab255910",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -212,9 +212,9 @@ request-id: req_flnWtcwuWDjnd2
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "825a671c-ad27-43cd-a0f0-af22f9861a87",
+    "arb_id" : "441626f2-6ca2-473e-8434-fe2e7997c65b",
     "experiment_metadata" : {
-      "seed" : "080172be464fd9b3379c4c25b292562cde83df8b3e44bb7a9e8e6fbf79f7e1cb",
+      "seed" : "577e0f5fb9292dccd84d15d7826628b51bbe86fc314a7de617c13cba7083d320",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -400,8 +400,8 @@ request-id: req_flnWtcwuWDjnd2
     "default_payment_method" : null,
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1770756441,
-      "id" : "cuss_1SzMu2FY0qyl6XeWFc0aFwvT",
+      "api_key_expiry" : 1770763723,
+      "id" : "cuss_1SzOnUFY0qyl6XeWI6W0kQ17",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -443,7 +443,7 @@ request-id: req_flnWtcwuWDjnd2
         }
       },
       "customer" : "cus_TUoUvtvPJvpHPA",
-      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLHBLTnpEd3BoZHdPeGxvbkJEczMzVXV1aXlFU2dUSHc_00vIiXgOiy"
+      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLFgzdGh4ZEw0UzN3QlRZUkI4OEVHa1NTU3dKT2xyMEc_00nanjYRC1"
     }
   },
   "klarna_express_config" : {

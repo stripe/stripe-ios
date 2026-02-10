@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SzMuFFY0qyl6XeW0cgLMwxe\?client_secret=pi_3SzMuFFY0qyl6XeW0cgLMwxe_secret_kHXgdvznKGeaMe0yRbdRIDdnm$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SzOnXFY0qyl6XeW12oSMCBm\?client_secret=pi_3SzOnXFY0qyl6XeW12oSMCBm_secret_fY102dV4xILAOUxIV0xUkLoCT&expand%5B0%5D=payment_method$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=OpjhEqcpiylM6al7tM_N0rSF8G8WicTenKLxupTOXmbgEd-uHQ8QtdkI1SSyqsljuTvR01lxadtFhCDB
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MgA_1o8fzj3cIqxupb7H0OsYJL7iAt0BCjAKj_yZdy2FmgRVbu-V0hSCFNptdBP9fyhzIrcWAacuOK2m
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Tue, 10 Feb 2026 19:47:32 GMT
+Date: Tue, 10 Feb 2026 21:48:44 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 969
+Content-Length: 960
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_yp1XDCbK6XQytg
+request-id: req_IsiUGv1pTTv7dN
 
 {
   "payment_method_configuration_details" : null,
@@ -43,8 +43,8 @@ request-id: req_yp1XDCbK6XQytg
     "amount_tax" : 0
   },
   "payment_method" : null,
-  "client_secret" : "pi_3SzMuFFY0qyl6XeW0cgLMwxe_secret_kHXgdvznKGeaMe0yRbdRIDdnm",
-  "id" : "pi_3SzMuFFY0qyl6XeW0cgLMwxe",
+  "client_secret" : "pi_3SzOnXFY0qyl6XeW12oSMCBm_secret_fY102dV4xILAOUxIV0xUkLoCT",
+  "id" : "pi_3SzOnXFY0qyl6XeW12oSMCBm",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -57,7 +57,7 @@ request-id: req_yp1XDCbK6XQytg
   "payment_method_types" : [
     "sepa_debit"
   ],
-  "setup_future_usage" : "off_session",
-  "created" : 1770752851,
+  "setup_future_usage" : null,
+  "created" : 1770760123,
   "description" : null
 }
