@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Sufn4FY0qyl6XeW1AYL8hUk\?client_secret=pi_3Sufn4FY0qyl6XeW1AYL8hUk_secret_iSQMyTGPiiiTXQK0GnDXfwHp6&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SzInrFY0qyl6XeW1yHTkZGq\?client_secret=pi_3SzInrFY0qyl6XeW1yHTkZGq_secret_WOZxoOr3kiajBanObmkQQh1M1&expand%5B0%5D=payment_method$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=H5TxxG0uZalwnXtbeGwYccX4oKnxYP2Gr-WiGcCgFlFye_RzHD4SoBxHWUQA-hmAaAUBAfiY9AbWMDgC
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=81n8eB02lO1YHe6cgLYA3gB43bhpXLeA_4_45-MG6iUhZkAdlwoAlwmKAIKAB0Hy4JNWmf5tSDb20wh3
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Wed, 28 Jan 2026 20:56:44 GMT
+Date: Tue, 10 Feb 2026 15:24:40 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 1802
+Content-Length: 1770
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_GPzZTAUfKUeVwT
+request-id: req_ayFZYCYgWVGqKU
 
 {
   "payment_method_configuration_details" : null,
@@ -40,7 +40,7 @@ request-id: req_GPzZTAUfKUeVwT
     "type" : "redirect_to_url",
     "redirect_to_url" : {
       "return_url" : "https:\/\/foo.com",
-      "url" : "https:\/\/hooks.stripe.com\/afterpay_clearpay\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_TsQeYvZV34hDhfDe6mxhO1Pc3bWXPMY\/redirect"
+      "url" : "https:\/\/hooks.stripe.com\/afterpay_clearpay\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_TxDEbXCiEwtmBNpr0MsqpGdqplsqkIz\/redirect"
     }
   },
   "total_details" : {
@@ -50,33 +50,33 @@ request-id: req_GPzZTAUfKUeVwT
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1Sufn4FY0qyl6XeWTyRFrvMS",
+    "id" : "pm_1SzInqFY0qyl6XeWRCQNwcGM",
     "billing_details" : {
-      "email" : "foo@bar.com",
+      "email" : "test@example.com",
       "phone" : null,
       "tax_id" : null,
       "name" : "Foo",
       "address" : {
-        "state" : "CA",
-        "country" : "US",
-        "line2" : "",
-        "city" : "South San Francisco",
-        "line1" : "354 Oyster Point Blvd",
-        "postal_code" : "94080"
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
       }
     },
     "livemode" : false,
     "afterpay_clearpay" : {
 
     },
-    "created" : 1769633802,
+    "created" : 1770737078,
     "allow_redisplay" : "limited",
     "type" : "afterpay_clearpay",
     "customer" : null,
     "customer_account" : null
   },
-  "client_secret" : "pi_3Sufn4FY0qyl6XeW1AYL8hUk_secret_iSQMyTGPiiiTXQK0GnDXfwHp6",
-  "id" : "pi_3Sufn4FY0qyl6XeW1AYL8hUk",
+  "client_secret" : "pi_3SzInrFY0qyl6XeW1yHTkZGq_secret_WOZxoOr3kiajBanObmkQQh1M1",
+  "id" : "pi_3SzInrFY0qyl6XeW1yHTkZGq",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -90,6 +90,6 @@ request-id: req_GPzZTAUfKUeVwT
     "afterpay_clearpay"
   ],
   "setup_future_usage" : null,
-  "created" : 1769633802,
+  "created" : 1770737079,
   "description" : null
 }

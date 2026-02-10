@@ -99,8 +99,8 @@ extension CustomerSheet {
                 let presenter = findViewControllerPresenter(from: controller)
 
                 parent.customerSheet?.present(from: presenter) { (result: CustomerSheet.CustomerSheetResult) in
-                    self.parent.presented = false
                     Task { @MainActor in
+                        self.parent.presented = false
                         self.parent.onCompletion(result)
                     }
                 }
