@@ -139,12 +139,8 @@ actor PassiveCaptchaChallenge {
     }
 
     private func setSessionExpirationDate() {
-        guard let tokenTimeoutSeconds = passiveCaptchaData.tokenTimeoutSeconds else {
-            // The max_age of the token set on the backend is 1800 seconds, or 30 minutes. As a preventative measure, we expire the token a minute early so a user won't send an expired token
-            self.sessionExpirationDate = Date().addingTimeInterval(29 * 60)
-            return
-        }
-        self.sessionExpirationDate = Date().addingTimeInterval(tokenTimeoutSeconds)
+        // The max_age of the token set on the backend is 1800 seconds, or 30 minutes. As a preventative measure, we expire the token a minute early so a user won't send an expired token
+        self.sessionExpirationDate = Date().addingTimeInterval(passiveCaptchaData.tokenTimeoutSeconds ?? 29 * 60)
     }
 
     private func setValidationComplete() {
