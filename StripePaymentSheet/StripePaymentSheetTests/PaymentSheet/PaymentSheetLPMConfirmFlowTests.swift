@@ -513,11 +513,16 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .payPal,
                                merchantCountry: .FR,
                                expectedHierarchy: ExpectedFormHierarchy.PayPal.paymentIntent) { _ in }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage],
                                currency: "EUR",
                                paymentMethodType: .payPal,
                                merchantCountry: .FR,
-                               expectedHierarchy: ExpectedFormHierarchy.PayPal.settingUp) { _ in }
+                               expectedHierarchy: ExpectedFormHierarchy.PayPal.paymentIntentWithSetupFutureUsage) { _ in }
+        try await _testConfirm(intentKinds: [.setupIntent],
+                               currency: "EUR",
+                               paymentMethodType: .payPal,
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.PayPal.setupIntent) { _ in }
     }
 
     func testCashAppConfirmFlows() async throws {
@@ -805,6 +810,11 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             // Assert form hierarchy if expected value provided
             if let expectedHierarchy {
                 let actualHierarchy = paymentMethodForm.toHierarchyNode()
+                if actualHierarchy != expectedHierarchy {
+                    print("❌ Form hierarchy mismatch for \(description)")
+                    print("📋 Copy this Swift code for the expected hierarchy:")
+                    print(actualHierarchy.asSwiftCode())
+                }
                 XCTAssertEqual(actualHierarchy, expectedHierarchy, "Form hierarchy mismatch for \(description)")
             }
 

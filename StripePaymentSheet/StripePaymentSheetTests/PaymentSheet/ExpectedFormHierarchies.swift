@@ -101,36 +101,71 @@ enum ExpectedFormHierarchy {
     // MARK: - Amazon Pay
 
     enum AmazonPay {
+        /// Amazon Pay has an empty form for regular PaymentIntent
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { formWithMandateOnly }
+        /// Amazon Pay shows a mandate when setting up for future use
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing to Amazon Pay, you allow StripePayme..."])
+            ])
+        }
     }
 
     // MARK: - CashApp
 
     enum CashApp {
+        /// CashApp has an empty form for regular PaymentIntent
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { formWithMandateOnly }
+        /// CashApp shows a mandate when setting up for future use
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing, you authorize StripePaymentSheetTes..."])
+            ])
+        }
     }
 
     // MARK: - PayPal
 
     enum PayPal {
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { formWithMandateOnly }
+        /// PayPal shows a mandate when PI+SFU
+        static var paymentIntentWithSetupFutureUsage: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By confirming your payment with PayPal, you allow ..."])
+            ])
+        }
+        /// PayPal shows a different mandate for SetupIntent
+        static var setupIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing to PayPal, you allow StripePaymentSh..."])
+            ])
+        }
     }
 
     // MARK: - RevolutPay
 
     enum RevolutPay {
+        /// RevolutPay has an empty form for regular PaymentIntent
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { formWithMandateOnly }
+        /// RevolutPay shows a mandate when setting up for future use
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing to Revolut Pay, you allow StripePaym..."])
+            ])
+        }
     }
 
     // MARK: - Satispay
 
     enum Satispay {
+        /// Satispay has an empty form for regular PaymentIntent
         static var paymentIntent: FormHierarchyNode { emptyForm }
-        static var settingUp: FormHierarchyNode { formWithMandateOnly }
+        /// Satispay shows a mandate when setting up for future use
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing, you authorize StripePaymentSheetTes..."])
+            ])
+        }
     }
 
     // MARK: - FPX
@@ -177,9 +212,11 @@ enum ExpectedFormHierarchy {
     enum Przelewy24 {
         static var paymentIntent: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
-                FormHierarchyNode(type: "SectionElement", properties: ["title": "Contact information"], children: [
-                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"]),
-                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"]),
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"])
+                ]),
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"])
                 ]),
                 FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "23", "label": "Przelewy24 Bank"])
@@ -251,6 +288,7 @@ enum ExpectedFormHierarchy {
     // MARK: - Klarna
 
     enum Klarna {
+        /// Klarna form fields for PaymentIntent (no mandate)
         static var paymentIntent: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
                 FormHierarchyNode(type: "SubtitleElement"),
@@ -262,7 +300,7 @@ enum ExpectedFormHierarchy {
                 ]),
             ])
         }
-
+        /// Klarna with mandate for setting up for future use
         static var settingUp: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
                 FormHierarchyNode(type: "SubtitleElement"),
@@ -272,7 +310,7 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"])
                 ]),
-                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By providing your payment information and confirmi..."]),
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing to Klarna, you allow StripePaymentSh..."]),
             ])
         }
     }
@@ -335,9 +373,11 @@ enum ExpectedFormHierarchy {
     enum AUBECSDebit {
         static var all: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
-                FormHierarchyNode(type: "SectionElement", properties: ["title": "Contact information"], children: [
-                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Name on account"]),
-                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"]),
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Name on account"])
+                ]),
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"])
                 ]),
                 FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "BSB number"])
@@ -365,7 +405,11 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "AddressSectionElement", children: [
                     FormHierarchyNode(type: "SectionElement", properties: ["title": "Billing address"], children: [
                         FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"]),
-                        FormHierarchyNode(type: "DummyAddressLine"),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 1"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 2"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "City"]),
+                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "63", "label": "State"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "ZIP"]),
                     ]),
                     FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
                 ]),
@@ -390,7 +434,11 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "AddressSectionElement", children: [
                     FormHierarchyNode(type: "SectionElement", properties: ["title": "Billing address"], children: [
                         FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"]),
-                        FormHierarchyNode(type: "DummyAddressLine"),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 1"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 2"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "City"]),
+                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "63", "label": "State"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "ZIP"]),
                     ]),
                     FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
                 ]),
@@ -414,7 +462,11 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "AddressSectionElement", children: [
                     FormHierarchyNode(type: "SectionElement", properties: ["title": "Billing address"], children: [
                         FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "1", "label": "Country or region"]),
-                        FormHierarchyNode(type: "DummyAddressLine"),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 1"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 2"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "City"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "State"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Postal code"]),
                     ]),
                     FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
                 ]),
@@ -428,14 +480,20 @@ enum ExpectedFormHierarchy {
         static var paymentIntent: FormHierarchyNode {
             FormHierarchyNode(type: "FormElement", children: [
                 FormHierarchyNode(type: "SubtitleElement"),
-                FormHierarchyNode(type: "SectionElement", properties: ["title": "Contact information"], children: [
+                FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"]),
+                ]),
+                FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"]),
                 ]),
                 FormHierarchyNode(type: "AddressSectionElement", children: [
                     FormHierarchyNode(type: "SectionElement", properties: ["title": "Billing address"], children: [
                         FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "235", "label": "Country or region"]),
-                        FormHierarchyNode(type: "DummyAddressLine"),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 1"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 2"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "City"]),
+                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "63", "label": "State"]),
+                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "ZIP"]),
                     ]),
                     FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
                 ]),
