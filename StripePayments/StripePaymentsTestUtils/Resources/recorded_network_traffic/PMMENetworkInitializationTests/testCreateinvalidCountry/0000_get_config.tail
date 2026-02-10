@@ -3,7 +3,7 @@ https:\/\/ppm\.stripe\.com\/config\?amount=5000&country=ZZ&currency=usd&key=pk_t
 400
 application/json
 access-control-allow-methods: DELETE, GET, HEAD, PATCH, POST, PUT
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=4XmWJ8-83u50g4b9LlNRsa8IJMm6HQj7c72MAvel7kq2VlC7mZAek6PGfsbIYkxmn0PngJShOCCeWYLccPklHzYakBM%3D
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=LengOCwS1_afJckQQQYWfj3o4I22WBxna253CqPAVMoT3f8hKNVBvFcregJCr0tRkUxh0_tGm2Nsk5ovZm5WzzUWnws%3D
 Server: nginx
 x-wc: ABCDEFGHIJ
 reporting-endpoints: coop="https://q.stripe.com/coop-report"
@@ -17,13 +17,13 @@ report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.
 x-stripe-routing-context-priority-tier: api-testmode
 Content-Length: 96
 Vary: Origin
-Date: Mon, 09 Feb 2026 23:15:44 GMT
+Date: Thu, 08 Jan 2026 17:25:38 GMT
 Expires: 0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-x-stripe-server-rpc-duration-micros: 28948
+x-stripe-server-rpc-duration-micros: 28445
 x-content-type-options: nosniff
 
 {
