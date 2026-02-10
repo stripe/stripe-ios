@@ -382,7 +382,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             configuration: configuration
         ) { form in
             // Afterpay shows name and email (no billing address by default)
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 6)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("foo@bar.com")
         }
