@@ -6,8 +6,97 @@
 
 require "optparse"
 require "shellwords"
+require "json"
+require "fileutils"
 
 REPO_ROOT = File.expand_path("..", __dir__)
+DEFAULT_RESULT_BUNDLE = "/tmp/stripe-ios-test-results.xcresult"
+DEFAULT_FAILURE_SCREENSHOTS = "/tmp/stripe-ios-failure-screenshots"
+
+# --- Failure inspection ---
+def inspect_failures(xcresult_path)
+  puts "Inspecting: #{xcresult_path}\n\n"
+
+  # 1. Summary
+  summary_json = `xcrun xcresulttool get test-results summary --path #{xcresult_path.shellescape} 2>/dev/null`
+  if $?.success? && !summary_json.strip.empty?
+    summary = JSON.parse(summary_json) rescue nil
+    if summary
+      puts "=== Test Summary ==="
+      puts "Result: #{summary["result"] || "unknown"}"
+      if summary["totalTestCount"]
+        puts "Total tests: #{summary["totalTestCount"]}"
+        puts "  Passed: #{summary["passedTests"] || 0}"
+        puts "  Failed: #{summary["failedTests"] || 0}"
+        puts "  Skipped: #{summary["skippedTests"] || 0}"
+      end
+      failures = summary["testFailures"] || []
+      if failures.any?
+        puts "\n=== Failure Messages ==="
+        failures.each do |f|
+          test_name = f["testName"] || f["testIdentifier"] || "unknown test"
+          message = f["message"] || f["failureText"] || "no message"
+          puts "  FAIL: #{test_name}"
+          puts "        #{message}"
+          puts
+        end
+      end
+    end
+  else
+    puts "Warning: Could not read test summary from xcresult."
+  end
+
+  # 2. Failed test list
+  tests_json = `xcrun xcresulttool get test-results tests --path #{xcresult_path.shellescape} 2>/dev/null`
+  if $?.success? && !tests_json.strip.empty?
+    tests_data = JSON.parse(tests_json) rescue nil
+    if tests_data
+      failed_tests = []
+      collect_failed = lambda do |nodes, path_parts|
+        (nodes || []).each do |node|
+          current_path = path_parts + [node["name"] || ""]
+          if node["nodeType"] == "Test Case" && node["result"] == "Failed"
+            failed_tests << current_path.join("/")
+          end
+          collect_failed.call(node["children"], current_path) if node["children"]
+        end
+      end
+      collect_failed.call(tests_data["testNodes"], [])
+      if failed_tests.any?
+        puts "=== Failed Tests ==="
+        failed_tests.each { |t| puts "  #{t}" }
+        puts "\nRe-run failed tests with:"
+        failed_tests.each { |t| puts "  ci_scripts/run_tests.rb --test #{t}" }
+        puts
+      end
+    end
+  end
+
+  # 3. Export failure screenshots
+  export_dir = DEFAULT_FAILURE_SCREENSHOTS
+  FileUtils.rm_rf(export_dir) if File.exist?(export_dir)
+  FileUtils.mkdir_p(export_dir)
+  system("xcrun", "xcresulttool", "export", "attachments",
+         "--path", xcresult_path,
+         "--output-path", export_dir,
+         "--only-failures",
+         out: File::NULL, err: File::NULL)
+  manifest_path = File.join(export_dir, "manifest.json")
+  if File.exist?(manifest_path)
+    manifest = JSON.parse(File.read(manifest_path)) rescue nil
+    if manifest
+      files = manifest.flat_map { |entry| entry["exportedFiles"] || [] }
+                      .map { |f| File.join(export_dir, f["fileName"]) }
+                      .select { |f| File.exist?(f) }
+      if files.any?
+        puts "=== Failure Screenshots ==="
+        puts "Exported #{files.size} attachment(s) to #{export_dir}:"
+        files.each { |f| puts "  #{f}" }
+        puts
+      end
+    end
+  end
+end
 
 # --- Target-to-Scheme lookup ---
 TARGET_TO_SCHEME = {
@@ -42,6 +131,8 @@ options = {
   dry_run: false,
   tests: [],
   skip_tests: [],
+  result_bundle_path: DEFAULT_RESULT_BUNDLE,
+  failures: nil,
 }
 
 # --- Argument parsing ---
@@ -57,6 +148,8 @@ banner = <<~USAGE
     ci_scripts/run_tests.rb --ui
     ci_scripts/run_tests.rb --scheme StripeCore --retry
     ci_scripts/run_tests.rb --scheme StripeCore --dry-run
+    ci_scripts/run_tests.rb --failures                      # Inspect last test run
+    ci_scripts/run_tests.rb --failures /path/to/result.xcresult
 
 USAGE
 
@@ -96,6 +189,12 @@ parser = OptionParser.new do |opts|
   opts.on("--dry-run", "Print the xcodebuild command without executing") do
     options[:dry_run] = true
   end
+  opts.on("--result-bundle-path PATH", "Path for xcresult bundle (default: #{DEFAULT_RESULT_BUNDLE})") do |v|
+    options[:result_bundle_path] = v
+  end
+  opts.on("--failures [PATH]", "Inspect failures from xcresult bundle (default: last run)") do |v|
+    options[:failures] = v || options[:result_bundle_path]
+  end
   opts.on("-h", "--help", "Show this help message") do
     puts opts
     exit 0
@@ -124,6 +223,17 @@ end
 
 if options[:ui] && (options[:record_snapshots] || options[:record_network])
   abort "Error: --ui cannot be combined with --record-snapshots or --record-network."
+end
+
+# --- Failure inspection mode (early exit) ---
+if options[:failures]
+  Dir.chdir(REPO_ROOT)
+  unless File.exist?(options[:failures])
+    abort "Error: xcresult not found at #{options[:failures]}\n" \
+          "Run tests first, or specify path: --failures /path/to/result.xcresult"
+  end
+  inspect_failures(options[:failures])
+  exit 0
 end
 
 # --- Resolve scheme ---
@@ -198,10 +308,21 @@ end
 # --- Execute ---
 puts "Scheme: #{scheme}"
 
+cmd << "-resultBundlePath" << options[:result_bundle_path]
+
 if options[:dry_run]
   puts "[dry-run] #{cmd.shelljoin}"
   exit 0
 end
 
+FileUtils.rm_rf(options[:result_bundle_path]) if File.exist?(options[:result_bundle_path])
+
 puts "Running: #{cmd.shelljoin}"
-exec(*cmd)
+puts "Result bundle: #{options[:result_bundle_path]}"
+success = system(*cmd)
+unless success
+  exit_code = $?.exitstatus || 1
+  puts "\nTests failed! Inspect failures with:"
+  puts "  ci_scripts/run_tests.rb --failures"
+  exit exit_code
+end

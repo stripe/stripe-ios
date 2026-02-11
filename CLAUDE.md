@@ -45,9 +45,34 @@ ci_scripts/run_tests.rb --scheme StripeCore --dry-run
 # Build without running tests
 ci_scripts/run_tests.rb --scheme StripePaymentSheet --build-only
 
+# Inspect failures from the last test run
+ci_scripts/run_tests.rb --failures
+
+# Inspect failures from a specific xcresult bundle
+ci_scripts/run_tests.rb --failures /path/to/result.xcresult
+
+# Use a custom result bundle path
+ci_scripts/run_tests.rb --scheme StripeCore --result-bundle-path /tmp/my-results.xcresult
+
 # Full usage
 ci_scripts/run_tests.rb --help
 ```
+
+### Inspecting Test Failures
+
+When tests fail, the runner saves an xcresult bundle and prints an inspection hint. Use `--failures` to get a structured summary:
+
+```bash
+ci_scripts/run_tests.rb --failures
+```
+
+This prints:
+- Test summary with pass/fail/skip counts
+- Failure messages for each failed test
+- Re-run commands for each failed test
+- Paths to exported failure screenshot attachments
+
+**For Claude Code**: after a test failure, run `--failures` and use the Read tool to view any exported screenshot paths. Analyzing the screenshots alongside the failure messages helps determine root cause (e.g. snapshot mismatches, unexpected UI state).
 
 ### CI Commands (Fastlane)
 
