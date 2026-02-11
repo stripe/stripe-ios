@@ -13,29 +13,46 @@ class PMMESinglePartnerView: UIView {
 
     private let logoSet: PaymentMethodMessagingElement.LogoSet
     private let promotion: String
+    private let learnMoreText: String
+    private let infoUrl: URL
     private let appearance: PaymentMethodMessagingElement.Appearance
 
-    private let promotionLabel = UILabel()
+    private lazy var promotionTextView: UITextView = {
+        let textView = UITextView()
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.backgroundColor = .clear
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.clipsToBounds = false
+        textView.adjustsFontForContentSizeCategory = true
+        textView.linkTextAttributes = [.foregroundColor: appearance.linkTextColor]
+        return textView
+    }()
 
     // Needs to be set on the appropriate view to take effect
     var customAccessibilityLabel: String {
-        promotion.replacingOccurrences(of: "{partner}", with: logoSet.altText)
+        promotion.replacingOccurrences(of: "{partner}", with: logoSet.altText) + " " + learnMoreText
     }
 
     init(
         logoSet: PaymentMethodMessagingElement.LogoSet,
         promotion: String,
-        appearance: PaymentMethodMessagingElement.Appearance
+        learnMoreText: String,
+        infoUrl: URL,
+        appearance: PaymentMethodMessagingElement.Appearance,
+        textViewDelegate: UITextViewDelegate
     ) {
         self.logoSet = logoSet
         self.promotion = promotion
+        self.learnMoreText = learnMoreText
+        self.infoUrl = infoUrl
         self.appearance = appearance
         super.init(frame: .zero)
 
-        promotionLabel.attributedText = getPromotionAttributedString()
-        promotionLabel.adjustsFontForContentSizeCategory = true
-        promotionLabel.numberOfLines = 0
-        addAndPinSubview(promotionLabel)
+        promotionTextView.delegate = textViewDelegate
+        promotionTextView.attributedText = getPromotionAttributedString()
+        addAndPinSubview(promotionTextView)
     }
 
     required init(coder: NSCoder) {
@@ -45,23 +62,104 @@ class PMMESinglePartnerView: UIView {
     // user interface style may be different because of the new superview overriding it
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
-        promotionLabel.attributedText = getPromotionAttributedString()
+        promotionTextView.attributedText = getPromotionAttributedString()
     }
 
     #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        promotionLabel.attributedText = getPromotionAttributedString()
+        promotionTextView.attributedText = getPromotionAttributedString()
     }
     #endif
 
     func getPromotionAttributedString() -> NSMutableAttributedString {
-        NSMutableAttributedString.bnplPromoString(
+        .pmmePromoString(
             font: appearance.scaledFont,
             textColor: appearance.textColor,
-            infoIconColor: appearance.infoIconColor ?? appearance.textColor,
             template: promotion,
-            substitution: ("{partner}", traitCollection.isDarkMode ? logoSet.dark : logoSet.light)
+            substitution: ("{partner}", traitCollection.isDarkMode ? logoSet.dark : logoSet.light),
+            learnMoreText: learnMoreText,
+            learnMoreUrl: infoUrl
         )
+    }
+}
+
+extension NSMutableAttributedString {
+    /// Generates an attributed string for PMME promo text with a clickable "Learn more" link at the end.
+    static func pmmePromoString(
+        font: UIFont,
+        textColor: UIColor,
+        template: String,
+        substitution: (placeholder: String, bnplLogo: UIImage)?,
+        learnMoreText: String,
+        learnMoreUrl: URL
+    ) -> NSMutableAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 2
+        let stringAttributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: textColor,
+            .paragraphStyle: paragraphStyle,
+        ]
+
+        let resultingString = NSMutableAttributedString()
+        var endsWithLogo = false
+
+        // Replace placeholder with BNPL image if needed
+        if let (partnerPlaceholder, bnplLogoImage) = substitution {
+            guard let imgRange = template.range(of: partnerPlaceholder) else {
+                return resultingString
+            }
+
+            var imgAppended = false
+            let lastCharIndex = template.index(before: template.endIndex)
+
+            // Go through string, replacing the placeholder with the BNPL logo
+            for (indexOffset, currCharacter) in template.enumerated() {
+                let currIndex = template.index(template.startIndex, offsetBy: indexOffset)
+                if imgRange.contains(currIndex) {
+                    if imgAppended {
+                        continue
+                    }
+                    imgAppended = true
+
+                    // Add BNPL logo with 2x scale
+                    let bnplLogo = NSAttributedString.attributedStringForImage(bnplLogoImage, font: font, additionalScale: 2.0)
+                    resultingString.append(bnplLogo)
+
+                    // Check if logo is at the end of the template
+                    if imgRange.upperBound == template.endIndex || imgRange.upperBound > lastCharIndex {
+                        endsWithLogo = true
+                    }
+                } else {
+                    resultingString.append(NSAttributedString(string: String(currCharacter), attributes: stringAttributes))
+                }
+            }
+        } else {
+            // Otherwise just fill in the whole template
+            resultingString.append(NSAttributedString(string: template, attributes: stringAttributes))
+        }
+
+        // Add separator before "Learn more" text
+        // - If template ends with period: add just a space
+        // - If template ends with logo: add just a space
+        // - Otherwise: add ". " (period + space)
+        let trimmedTemplate = template.trimmingCharacters(in: .whitespaces)
+        if trimmedTemplate.hasSuffix(".") || endsWithLogo {
+            resultingString.append(NSAttributedString(string: " ", attributes: stringAttributes))
+        } else {
+            resultingString.append(NSAttributedString(string: ". ", attributes: stringAttributes))
+        }
+
+        // Add learn more text with link attribute
+        // Tapping anywhere on the PMME will open the link. However, we want the link to feel like a link/button when tapped and help, which this attribute accomplishes
+        let linkAttributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .link: learnMoreUrl,
+            .paragraphStyle: paragraphStyle,
+        ]
+        resultingString.append(NSAttributedString(string: learnMoreText, attributes: linkAttributes))
+
+        return resultingString
     }
 }
