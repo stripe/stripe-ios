@@ -186,7 +186,7 @@ extension MPELatencyTest {
             mode: mode,
             configuration: configuration,
             analyticsHelper: analyticsHelper,
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         )
         let endDate = Date()
 
