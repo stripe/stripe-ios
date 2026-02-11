@@ -339,6 +339,78 @@ final class PaymentSheetFormFactorySnapshotTest: STPSnapshotTestCase {
         XCTAssertTrue(formElement.validationState.isValid)
     }
 
+    func testLpm_Affirm_AutomaticFields_NoDefaults() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = factory(
+            for: .affirm,
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
+    }
+
+    func testLpm_Affirm_AllFields_NoDefaults() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let factory = factory(
+            for: .affirm,
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+        XCTAssertFalse(formElement.validationState.isValid)
+    }
+
+    func testLpm_Affirm_AllFields_WithDefaults() {
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "US",
+            line1: "510 Townsend St.",
+            line2: "Line 2",
+            postalCode: "94102",
+            state: "CA"
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.name = "Jane Doe"
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+        configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = defaultAddress
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .always
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        let factory = factory(
+            for: .affirm,
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
+    }
+
+    func testLpm_Affirm_MinimalFields() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.name = .never
+        configuration.billingDetailsCollectionConfiguration.email = .never
+        configuration.billingDetailsCollectionConfiguration.phone = .never
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        let factory = factory(
+            for: .affirm,
+            configuration: configuration)
+        let formElement = factory.make()
+        let view = formElement.view
+        view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(view)
+        XCTAssertTrue(formElement.validationState.isValid)
+    }
+
     func testLpm_Klarna_AutomaticFields_NoDefaults() {
         let configuration = PaymentSheet.Configuration()
         let factory = factory(
