@@ -25,10 +25,15 @@ extension PaymentMethodMessagingElement {
             let legalDisclosure = paymentPlan.content.legalDisclosure?.message
 
             // unexpected / error cases
-            guard let infoUrl = paymentPlan.content.learnMore?.url else {
+            guard let learnMore = paymentPlan.content.learnMore else {
+                Self.assertAndLogMissingField("learn_more", apiClient: configuration.apiClient)
+                return nil
+            }
+            guard let infoUrl = learnMore.url else {
                 Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
                 return nil
             }
+            let learnMoreText = learnMore.message
             guard let logo = try await Self.getIconSet(
                 for: paymentPlan.content.images,
                 style: configuration.appearance.style,
@@ -43,6 +48,7 @@ extension PaymentMethodMessagingElement {
                     self.init(
                         mode: .multiPartner(logos: []),
                         infoUrl: infoUrl,
+                        learnMoreText: learnMoreText,
                         legalDisclosure: legalDisclosure,
                         promotion: topLevelPromotion,
                         appearance: configuration.appearance,
@@ -59,6 +65,7 @@ extension PaymentMethodMessagingElement {
             self.init(
                 mode: .singlePartner(logo: logo),
                 infoUrl: infoUrl,
+                learnMoreText: learnMoreText,
                 legalDisclosure: legalDisclosure,
                 promotion: inlinePromo,
                 appearance: configuration.appearance,
@@ -77,10 +84,15 @@ extension PaymentMethodMessagingElement {
             let legalDisclosure = apiResponse.content.legalDisclosure?.message
 
             // unexpected / error case
-            guard let infoUrl = apiResponse.content.learnMore?.url else {
+            guard let learnMore = apiResponse.content.learnMore else {
+                Self.assertAndLogMissingField("learn_more", apiClient: configuration.apiClient)
+                return nil
+            }
+            guard let infoUrl = learnMore.url else {
                 Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
                 return nil
             }
+            let learnMoreText = learnMore.message
 
             // Use the list of images returned as the source of truth for what images to display and thus don't validate
             let apiImages = apiResponse.paymentPlanGroups.flatMap { $0.content.images }
@@ -94,6 +106,7 @@ extension PaymentMethodMessagingElement {
             self.init(
                 mode: .multiPartner(logos: logos),
                 infoUrl: infoUrl,
+                learnMoreText: learnMoreText,
                 legalDisclosure: legalDisclosure,
                 promotion: promo,
                 appearance: configuration.appearance,
