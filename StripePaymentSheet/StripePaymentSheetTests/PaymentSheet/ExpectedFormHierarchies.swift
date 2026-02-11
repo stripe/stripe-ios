@@ -219,7 +219,7 @@ enum ExpectedFormHierarchy {
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"])
                 ]),
                 FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "23", "label": "Przelewy24 Bank"])
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "24", "label": "Przelewy24 Bank"])
                 ]),
             ])
         }
@@ -266,7 +266,7 @@ enum ExpectedFormHierarchy {
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"])
                 ]),
                 FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "13", "label": "iDEAL Bank"])
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "14", "label": "iDEAL Bank"])
                 ]),
             ])
         }
@@ -278,7 +278,7 @@ enum ExpectedFormHierarchy {
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"]),
                 ]),
                 FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "13", "label": "iDEAL Bank"])
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "14", "label": "iDEAL Bank"])
                 ]),
                 FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By providing your payment information and confirmi..."]),
             ])
