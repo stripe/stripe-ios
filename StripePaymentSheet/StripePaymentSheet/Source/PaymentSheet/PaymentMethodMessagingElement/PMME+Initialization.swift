@@ -25,8 +25,11 @@ extension PaymentMethodMessagingElement {
             let legalDisclosure = paymentPlan.content.legalDisclosure?.message
 
             // unexpected / error cases
-            guard let learnMore = paymentPlan.content.learnMore,
-                  let infoUrl = learnMore.url else {
+            guard let learnMore = paymentPlan.content.learnMore else {
+                Self.assertAndLogMissingField("learn_more", apiClient: configuration.apiClient)
+                return nil
+            }
+            guard let infoUrl = learnMore.url else {
                 Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
                 return nil
             }
@@ -81,8 +84,11 @@ extension PaymentMethodMessagingElement {
             let legalDisclosure = apiResponse.content.legalDisclosure?.message
 
             // unexpected / error case
-            guard let learnMore = apiResponse.content.learnMore,
-                  let infoUrl = learnMore.url else {
+            guard let learnMore = apiResponse.content.learnMore else {
+                Self.assertAndLogMissingField("learn_more", apiClient: configuration.apiClient)
+                return nil
+            }
+            guard let infoUrl = learnMore.url else {
                 Self.assertAndLogMissingField("info_url", apiClient: configuration.apiClient)
                 return nil
             }
