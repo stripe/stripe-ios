@@ -1,0 +1,51 @@
+{
+  "configurations" : [
+    {
+      "id" : "D653BF40-E68A-4854-832D-22DDD92D9344",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "environmentVariableEntries" : [
+      {
+        "key" : "FB_REFERENCE_IMAGE_DIR",
+        "value" : "$(SRCROOT)\/..\/Tests\/ReferenceImages"
+      },
+      {
+        "key" : "RECORD_LATENCY_TESTS",
+        "value" : "$(RECORD_LATENCY_TESTS)"
+      },
+      {
+        "key" : "BITRISE_GIT_COMMIT",
+        "value" : "$(BITRISE_GIT_COMMIT)"
+      },
+      {
+        "key" : "BITRISE_BUILD_URL",
+        "value" : "$(BITRISE_BUILD_URL)"
+      }
+    ],
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:StripePaymentSheet\/StripePaymentSheet.xcodeproj",
+      "identifier" : "A74928FD0171C3213676E29C",
+      "name" : "StripePaymentSheet"
+    }
+  },
+  "testTargets" : [
+    {
+      "selectedTests" : [
+        "MPELatencyTest"
+      ],
+      "target" : {
+        "containerPath" : "container:StripePaymentSheet\/StripePaymentSheet.xcodeproj",
+        "identifier" : "9A93AB1D98A0A1EC6ADEA65D",
+        "name" : "StripePaymentSheetTests"
+      }
+    }
+  ],
+  "version" : 1
+}
