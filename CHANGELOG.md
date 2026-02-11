@@ -3,6 +3,9 @@
 ### PaymentSheet
 * [Changed] Afterpay/Clearpay no longer requires billing address by default. Set `billingDetailsCollectionConfiguration.address = .full` if you need to collect billing address for Afterpay.
 
+### CustomerSheet
+* [Fixed] Fixed a view controller lifecycle issue that could cause keyboard avoidance and layout problems on the Add Card screen.
+
 ### Identity
 
 * [Added] Added a best frame detector to document capture.

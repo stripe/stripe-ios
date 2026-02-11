@@ -44,11 +44,16 @@ import UIKit
 
     @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
-    private(set) var urlSession: URLSession = URLSession(
-        configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
-    )
+    let urlSession: URLSession
     let url = URL(string: "https://q.stripe.com")!
     private let analyticsEventTranslator = STPAnalyticsEventTranslator()
+
+    public init(
+        urlSession: URLSession = URLSession(configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
+    ) {
+        self.urlSession = urlSession
+    }
+
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
 
@@ -140,7 +145,7 @@ import UIKit
         }
 
         // If in testing, don't log analytic, instead append payload to log history
-        guard !STPAnalyticsClient.isUnitOrUITest else {
+        guard shouldSendAnalytic() else {
             objc_sync_enter(self)
             _testLogHistoryStorage.append(payload)
             objc_sync_exit(self)
@@ -151,6 +156,12 @@ import UIKit
         request.stp_addParameters(toURL: payload)
         let task: URLSessionDataTask = urlSession.dataTask(with: request as URLRequest)
         task.resume()
+    }
+
+    /// Whether to send the analytic  or not. If `false`, appends payload to `self._testLogHistory` instead.
+    /// This is a function so that it can be overriden by subclasses.
+    public func shouldSendAnalytic() -> Bool {
+        return !STPAnalyticsClient.isUnitOrUITest
     }
 }
 
