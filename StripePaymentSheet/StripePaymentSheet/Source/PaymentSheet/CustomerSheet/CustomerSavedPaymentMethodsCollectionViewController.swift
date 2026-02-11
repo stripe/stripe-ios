@@ -331,7 +331,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenPresented()
 
         guard let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first else {
