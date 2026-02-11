@@ -15,7 +15,15 @@ struct PassiveCaptchaData: Equatable, Hashable {
 
     let siteKey: String
     let rqdata: String?
-    let tokenTimeoutSeconds: TimeInterval?
+    let tokenTimeoutSeconds: TimeInterval
+    // The max_age of the token set on the backend is 1800 seconds, or 30 minutes. As a preventative measure, we expire the token a minute early so a user won't send an expired token
+    static let defaultTokenTimeoutSeconds: TimeInterval = 29 * 30
+
+    init(siteKey: String, rqdata: String?, tokenTimeoutSeconds: TimeInterval = defaultTokenTimeoutSeconds) {
+        self.siteKey = siteKey
+        self.rqdata = rqdata
+        self.tokenTimeoutSeconds = tokenTimeoutSeconds
+    }
 
     /// Helper method to decode the `v1/elements/sessions` response's `passive_captcha` hash.
     /// - Parameter response: The value of the `passive_captcha` key in the `v1/elements/sessions` response.
@@ -33,7 +41,7 @@ struct PassiveCaptchaData: Equatable, Hashable {
 
         // Optional
         let rqdata = response["rqdata"] as? String
-        let tokenTimeoutSeconds = response["token_timeout_seconds"] as? TimeInterval
+        let tokenTimeoutSeconds = response["token_timeout_seconds"] as? TimeInterval ?? defaultTokenTimeoutSeconds
         return PassiveCaptchaData(
             siteKey: siteKey,
             rqdata: rqdata,
@@ -139,8 +147,7 @@ actor PassiveCaptchaChallenge {
     }
 
     private func setSessionExpirationDate() {
-        // The max_age of the token set on the backend is 1800 seconds, or 30 minutes. As a preventative measure, we expire the token a minute early so a user won't send an expired token
-        self.sessionExpirationDate = Date().addingTimeInterval(passiveCaptchaData.tokenTimeoutSeconds ?? 29 * 60)
+        self.sessionExpirationDate = Date().addingTimeInterval(passiveCaptchaData.tokenTimeoutSeconds)
     }
 
     private func setValidationComplete() {
