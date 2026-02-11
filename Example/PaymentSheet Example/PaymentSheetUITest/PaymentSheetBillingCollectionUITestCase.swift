@@ -43,7 +43,3 @@ class PaymentSheetBillingCollectionUITestCase: XCTestCase {
     var continueButton: XCUIElement { app.buttons["Continue"] }
 
 }
-
-
-
-

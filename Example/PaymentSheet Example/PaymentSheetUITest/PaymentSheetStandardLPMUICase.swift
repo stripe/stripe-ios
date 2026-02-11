@@ -7,7 +7,6 @@
 
 import XCTest
 
-
 // MARK: - Helpers
 class PaymentSheetStandardLPMUICase: PaymentSheetUITestCase {
 
